@@ -5,14 +5,14 @@ import Home from './Home';
 import './index.css';
 import './Grid.css';
 import {
-    BrowserRouter as Router,
+    HashRouter as Router,
     Switch,
     Route
 } from "react-router-dom";
 
 function App() {
     return (
-        <Router>
+        <Router basename='/'>
             <div>
                 <Switch>
                     <Route path="/back">
