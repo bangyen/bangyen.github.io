@@ -1,0 +1,43 @@
+:root {
+    --table-size: 500px;
+    --font-size: 1.5rem;
+}
+
+table {
+    width: var(--table-size);
+    height: var(--table-size);
+    margin: auto;
+    font-size: var(--font-size);
+    border-spacing: 5px;
+}
+
+td {
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    width: calc(var(--table-size) / 3);
+    max-width: calc(var(--table-size) / 3);
+    max-height: calc(var(--table-size) / 3);
+    overflow: hidden;
+    font-family: monospace;
+    border-radius: 0.4em;
+    color: black;
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                    supported by Chrome, Edge, Opera and Firefox */
+}
+
+td:hover {
+    cursor: pointer;
+}
+
+.output {
+    overflow-x: scroll;
+    white-space: nowrap;
+    width: 35vw;
+    margin: auto;
+}
