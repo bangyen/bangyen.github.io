@@ -29,9 +29,6 @@ td {
           -ms-user-select: none; /* Internet Explorer/Edge */
               user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
-}
-
-td:hover {
     cursor: pointer;
 }
 
