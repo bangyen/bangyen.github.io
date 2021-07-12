@@ -1,7 +1,8 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import Grid from './Grid';
-import Home from './Home';
+import Snake from './Components/Snake';
+import Grid from './Components/Grid';
+import Home from './Components/Home';
 import './index.css';
 import './Grid.css';
 import {
@@ -17,6 +18,9 @@ function App() {
                 <Switch>
                     <Route path="/back">
                         <Grid />
+                    </Route>
+                    <Route path="/snake">
+                        <Snake />
                     </Route>
                     <Route path="/">
                         <Home />
