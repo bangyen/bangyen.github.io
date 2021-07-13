@@ -137,7 +137,6 @@ export default class Snake extends React.Component {
             this.randomPos();
             arr = this.state.arr.map(a => a.map(
                 n => n > 0 ? n + 1 : -(n < 0)));
-            console.log(this.state.arr);
         }
 
         arr[x][y] = this.state.len;
