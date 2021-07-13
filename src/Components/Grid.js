@@ -179,6 +179,7 @@ export default class Grid extends React.Component {
         let pos = [row, col];
 
         return <td
+                key={`${row}-${col}`}
                 onClick={this.changeColor(pos).bind(this)}
                 bgcolor={this.chooseColor(pos)}>
             <div>&nbsp;{val}&nbsp;</div>
@@ -193,7 +194,7 @@ export default class Grid extends React.Component {
                         <table>
                             <tbody>
                                 {this.state.grid.map((arr, row) =>
-                                    (<tr>{
+                                    (<tr key={row.toString()}>{
                                         arr.map((val, col) =>
                                         this.tile(val, row, col))
                                     }</tr>)
@@ -226,7 +227,9 @@ export default class Grid extends React.Component {
                             {this.state.output.tape.map((val, ind) => {
                                 let color = this.state.output.cell === ind
                                     ? 'red' : 'white';
-                                return <code style={{color: color}}>
+                                return <code
+                                        key={ind.toString()}
+                                        style={{color: color}}>
                                     {val}&nbsp;
                                 </code>;})}
                         </div>

@@ -159,9 +159,10 @@ export default class Snake extends React.Component {
                 <table style={{height: '85vh', width: '95vw'}}>
                     <tbody>
                         {this.state.arr.map((a, row) =>
-                            (<tr>{
+                            (<tr key={row.toString()}>{
                                 a.map((val, col) =>
-                                <td bgcolor={val > 0 ? 'white' :
+                                <td key={`${row}-${col}`}
+                                    bgcolor={val > 0 ? 'white' :
                                         val < 0 ? 'red' : 'black'}
                                         style={{cursor: 'default'}}>
                                     <div>&nbsp;</div>
