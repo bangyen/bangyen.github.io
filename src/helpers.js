@@ -10,3 +10,8 @@ export function pairEquals(x, y) {
     return x[0] === y[0]
         && x[1] === y[1];
 }
+
+export function includes(arr, pair) {
+    return arr.some(p =>
+        pairEquals(p, pair));
+}

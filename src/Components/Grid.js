@@ -1,4 +1,4 @@
-import {emptyArray, pairEquals} from '../helpers';
+import {emptyArray, pairEquals, includes} from '../helpers';
 import Buttons from './Buttons';
 import React from 'react';
 import run from '../back';
@@ -56,7 +56,9 @@ export default class Grid extends React.Component {
             if (mode === 'run')
                 do {
                     temp = this.func();
-                } while (!temp.end);
+                } while (!(includes(
+                    this.state.curr.breaks,
+                    temp.pos) || temp.end));
             else if (mode === 'fore')
                 temp = this.func();
             else if (mode === 'back')
@@ -83,7 +85,20 @@ export default class Grid extends React.Component {
             let [row, col] = obj.select;
             let value;
 
-            if (e.key.length === 1) {
+            if (e.key.toLowerCase() === 'b') {
+                let curr = {...this.state.curr};
+                let breaks = curr.breaks;
+                let select = curr.select;
+
+                if (includes(breaks, select))
+                    curr.breaks = breaks.filter(p =>
+                        !pairEquals(p, select));
+                else
+                    breaks.push(select);
+
+                this.setState({curr: curr});
+                return;
+            } else if (e.key.length === 1) {
                 value = e.key;
             } else if (e.key === 'Backspace'
                     || e.key === 'Delete') {
@@ -137,11 +152,16 @@ export default class Grid extends React.Component {
                 curr.pointer,
                 pos))
             return 'red';
+        else if (includes(
+                curr.breaks,
+                pos))
+            return 'yellow';
 
         return 'white';
     }
 
     componentDidMount() {
+        document.title = 'Interpreter';
         document.addEventListener(
             'keydown',
             this.changeText,
