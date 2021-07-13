@@ -38,7 +38,7 @@ export default function Buttons(props) {
                 onClick={() => {
                     let num = arr.length + 1;
 
-                    arr.map(x => x.push(' '));
+                    arr.forEach(x => x.push(' '));
                     arr.push(Array(num).fill(' '));
                     set({size: num, grid: arr});
                 }}>
@@ -51,7 +51,7 @@ export default function Buttons(props) {
                     if (!num) return;
 
                     arr.pop();
-                    arr.map(x => x.pop());
+                    arr.forEach(x => x.pop());
                     set({size: num, grid: arr});
                 }}>
             ➖&#xfe0e;
