@@ -7,57 +7,51 @@ export default class Grid extends React.Component {
     constructor(props: Props) {
         super(props);
 
+        let size = 5;
         this.changeText =
             this.changeText
                 .bind(this);
-        let size = 5;
 
         this.state = {
-            output: {tape: []},
             grid: emptyArray(size),
             size,
-            curr: {
-                select: null,
-                pointer: null,
-                breaks: []
-            }
+            tape: [],
+            cell: 0,
+            select: null,
+            pointer: null,
+            breaks: []
         };
     }
 
     runCode(mode) {
         return function() {
-            let curr = this.state.curr;
-            curr.select = null;
-
             if (this.state.grid.every(e => !e.includes('*'))) {
                 alert('No halt instruction detected!');
-                this.setState({curr: curr});
+                this.setState({select: null});
                 return;
             }
 
-            if (curr.pointer === null) {
+            if (this.state.pointer === null) {
                 this.func = run(this.state.grid);
                 if (mode !== 'run') {
-                    curr.pointer = [0, 0];
                     this.setState({
-                        curr: curr,
-                        output: {
-                            tape: [0],
-                            cell: 0
-                        }
+                        pointer: [0, 0],
+                        select: null,
+                        tape: [0],
+                        cell: 0
                     });
                     return;
                 }
             }
 
             let temp;
-            this.setState({curr: curr});
+            this.setState({select: null});
 
             if (mode === 'run')
                 do {
                     temp = this.func();
                 } while (!(includes(
-                    this.state.curr.breaks,
+                    this.state.breaks,
                     temp.pos) || temp.end));
             else if (mode === 'fore')
                 temp = this.func();
@@ -65,38 +59,31 @@ export default class Grid extends React.Component {
                 temp = this.func(true);
 
             let {pos, end, tape, cell} = temp;
-            curr.pointer = end ? null : pos;
 
             this.setState({
-                curr: curr,
-                output: {
-                    tape: tape,
-                    cell: cell
-                }
+                pointer: end ? null : pos,
+                tape: tape,
+                cell: cell
             });
         }.bind(this);
     }
 
     changeText(e) {
-        let obj = this.state.curr;
+        let {select, breaks} = this.state;
 
-        if (obj.select !== null) {
+        if (select !== null) {
             let arr = this.state.grid;
-            let [row, col] = obj.select;
+            let [row, col] = select;
             let value;
 
             if (e.key.toLowerCase() === 'b') {
-                let curr = {...this.state.curr};
-                let breaks = curr.breaks;
-                let select = curr.select;
-
                 if (includes(breaks, select))
-                    curr.breaks = breaks.filter(p =>
+                    breaks = breaks.filter(p =>
                         !pairEquals(p, select));
                 else
                     breaks.push(select);
 
-                this.setState({curr: curr});
+                this.setState({breaks: breaks});
                 return;
             } else if (e.key.length === 1) {
                 value = e.key;
@@ -116,8 +103,8 @@ export default class Grid extends React.Component {
                 let size = this.state.size;
                 row = (row + size) % size;
                 col = (col + size) % size;
-                obj.select = [row, col];
-                this.setState({curr: obj});
+                this.setState({
+                    select: [row, col]});
 
                 return;
             } else {
@@ -131,30 +118,22 @@ export default class Grid extends React.Component {
 
     changeColor(pos) {
         return function() {
-            let curr = this.state.curr;
-            curr.select =
-                pairEquals(
-                        curr.select,
-                        pos)
-                    ? null : pos;
-            this.setState({curr: curr});
+            let select = this.state.select;
+            select = pairEquals(select, pos)
+                ? null : pos;
+            this.setState({select: select});
         };
     }
 
     chooseColor(pos) {
-        let curr = this.state.curr;
+        let {select, pointer, breaks}
+            = this.state;
 
-        if (pairEquals(
-                curr.select,
-                pos))
+        if (pairEquals(select, pos))
             return 'grey';
-        else if (pairEquals(
-                curr.pointer,
-                pos))
+        else if (pairEquals(pointer, pos))
             return 'red';
-        else if (includes(
-                curr.breaks,
-                pos))
+        else if (includes(breaks, pos))
             return 'yellow';
 
         return 'white';
@@ -224,8 +203,8 @@ export default class Grid extends React.Component {
                         <br />
                         <div className='output'>
                             <code>&nbsp;</code>
-                            {this.state.output.tape.map((val, ind) => {
-                                let color = this.state.output.cell === ind
+                            {this.state.tape.map((val, ind) => {
+                                let color = this.state.cell === ind
                                     ? 'red' : 'white';
                                 return <code
                                         key={ind.toString()}

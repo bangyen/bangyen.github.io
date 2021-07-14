@@ -21,15 +21,11 @@ export default function Buttons(props) {
         </button>
         <button className='custom'
                 type='button'
-                onClick={() => set({curr: {
-                        select: null,
-                        pointer: null,
-                        breaks: []
-                    },
-                    output: {
-                        tape: [],
-                        cell: 0
-                    }})}>
+                onClick={() => set({
+                    pointer: null,
+                    tape: [],
+                    cell: 0
+                    })}>
             ✖
         </button>
         <br />
