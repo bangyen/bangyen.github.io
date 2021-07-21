@@ -81,15 +81,15 @@ export default class Snake extends React.Component {
         else
             return;
 
-        if (this.state.move) {
-            if (old[0] + vel[0])
+        if (old[0] + vel[0] &&
+                old[0] !== vel[0])
+            if (this.state.move)
                 this.setState({
                     vel: vel,
                     move: false});
-        } else {
-            this.setState({
-                buff: vel});
-        }
+            else
+                this.setState({
+                    buff: vel});
     }
 
     componentDidMount() {
@@ -147,7 +147,7 @@ export default class Snake extends React.Component {
                 vel: buff});
 
         this.setState({
-            move: true,
+            move: !buff,
             pos: [x, y],
             arr: arr
         });
