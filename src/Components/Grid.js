@@ -1,7 +1,7 @@
 import {emptyArray, pairEquals, includes} from '../helpers';
 import Buttons from './Buttons';
 import React from 'react';
-import run from '../back';
+import run from '../Interpreters/back';
 
 export default class Grid extends React.Component {
     constructor(props: Props) {
@@ -25,7 +25,8 @@ export default class Grid extends React.Component {
 
     runCode(mode) {
         return function() {
-            if (this.state.grid.every(e => !e.includes('*'))) {
+            if (this.state.grid.every(
+                    e => !e.includes('*'))) {
                 alert('No halt instruction detected!');
                 this.setState({select: null});
                 return;
