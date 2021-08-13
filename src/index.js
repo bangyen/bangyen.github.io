@@ -3,6 +3,7 @@ import React from 'react';
 import Snake from './Components/Snake';
 import Grid from './Components/Grid';
 import Home from './Components/Home';
+import Error from './Components/Error';
 import './index.css';
 import './Grid.css';
 import {
@@ -16,14 +17,17 @@ function App() {
         <Router basename='/'>
             <div>
                 <Switch>
-                    <Route path="/back">
+                    <Route exact path="/back">
                         <Grid />
                     </Route>
-                    <Route path="/snake">
+                    <Route exact path="/snake">
                         <Snake />
                     </Route>
-                    <Route path="/">
+                    <Route exact path="/">
                         <Home />
+                    </Route>
+                    <Route >
+                        <Error />
                     </Route>
                 </Switch>
             </div>
