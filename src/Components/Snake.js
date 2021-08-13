@@ -5,8 +5,8 @@ function createArr() {
     let x = window.innerHeight;
     let y = window.innerWidth;
 
-    x = Math.round(x / 50);
-    y = Math.round(y / 50);
+    x = Math.floor(x / 50);
+    y = Math.floor(y / 50);
     let arr = [...Array(x)]
         .map(_ => Array(y).fill(0));
 
