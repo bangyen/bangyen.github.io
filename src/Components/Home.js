@@ -1,11 +1,13 @@
 import React from 'react';
-import {Link} from "react-router-dom";
+import {Link} from 'react-router-dom';
 
 export default function Home() {
     document.title = 'Home';
     return (
         <header className='App-header'>
-            <h1>Bangyen</h1>
+            <h1 className='logo'>
+                Bangyen
+            </h1>
             <div>
                 <Link to='/back'>
                     <button className='custom'
