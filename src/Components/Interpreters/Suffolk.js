@@ -76,6 +76,6 @@ function run(input) {
     };
 }
 
-export default Suffolk() {
+export default function Suffolk() {
     return <TextBox run={run} />;
 }

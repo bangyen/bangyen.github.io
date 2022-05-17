@@ -62,6 +62,6 @@ function run(code) {
     };
 }
 
-export default Back() {
+export default function Back() {
     return <Grid run={run} />;
 }
