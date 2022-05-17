@@ -1,7 +1,6 @@
 import {emptyArray, pairEquals, includes} from '../helpers';
 import Buttons from './Buttons';
 import React from 'react';
-import run from '../Interpreters/back';
 
 export default class Grid extends React.Component {
     constructor(props: Props) {
@@ -33,7 +32,7 @@ export default class Grid extends React.Component {
             }
 
             if (this.state.pointer === null) {
-                this.func = run(this.state.grid);
+                this.func = this.props.run(this.state.grid);
                 if (mode !== 'run') {
                     this.setState({
                         pointer: [0, 0],
