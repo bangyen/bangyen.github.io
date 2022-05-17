@@ -9,7 +9,7 @@ export default function Error() {
             <Link to='/' style={{ marginBottom: '20px' }}>
                 <button className='custom'
                             type='button'>
-                        ??&#xfe0e;
+                        🏠&#xfe0e;
                     </button>
             </Link>
         </header>
