@@ -77,5 +77,7 @@ function run(input) {
 }
 
 export default function Suffolk() {
-    return <TextBox run={run} />;
+    return <TextBox
+        run={run}
+        name='Suffolk' />;
 }

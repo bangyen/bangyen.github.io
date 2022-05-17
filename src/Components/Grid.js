@@ -166,6 +166,8 @@ export default class Grid extends React.Component {
     }
 
     render() {
+        let name = this.props.name;
+
         return (
             <header className='App-header'>
                 <div className='split left'>
@@ -188,9 +190,10 @@ export default class Grid extends React.Component {
                         <ul style={{fontSize: '75%', textAlign: 'left'}}>
                             <li>Click to select/unselect</li>
                             <li>Type to change selected cell</li>
+                            <li>Press (b) to use breakpoints</li>
                             <li>
-                                Commands located&nbsp;
-                                <a href='https://esolangs.org/wiki/Back'>here</a>
+                                {name} commands located&nbsp;
+                                <a href={`https://esolangs.org/wiki/${name}`}>here</a>
                             </li>
                         </ul>
                         <Buttons

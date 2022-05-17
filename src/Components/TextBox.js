@@ -42,9 +42,10 @@ export default class Grid extends React.Component {
     }
 
     render() {
+        let name = this.props.name;
         let arr = this.state.value.split('\n');
-        let row = arr.length;
         let col = Math.max(...arr.map(val => val.length));
+        let row = arr.length;
 
         if (row < 3)
             row = 12;
@@ -53,43 +54,55 @@ export default class Grid extends React.Component {
 
         return (
             <header className='App-header'>
-                <code>
-                    Suffolk
-                    (<a href="https://esolangs.org/wiki/Suffolk">
-                        Commands
-                    </a>)
-                </code>
-                &nbsp;
-                <form onSubmit={this.handleSubmit}>
-                    <label>
-                        <textarea
-                            value={this.state.value}
-                            onChange={this.handleChange}
-                            onPaste={this.handlePaste}
-                            rows={row} cols={col} />
-                    </label>
-                    <center>
-                        <input type="submit" value="Next" />
-                    </center>
-                </form>
-                &nbsp;
-                <code>
-                    Output: {this.state.out}
-                </code>
-                <code>
-                    Accumulator: {this.state.acc}
-                </code>
-                <div className='output'>
-                    <code>&nbsp;</code>
-                        {this.state.tape.map((val, ind) => {
-                            let color = this.state.ptr === ind
-                                ? 'red' : 'white';
-                            return <code
-                                    key={ind.toString()}
-                                    style={{color: color}}>
-                                {val}&nbsp;
-                    </code>;})}
+                <div className='split left'>
+                    <div className='centered'>
+                        <code>
+                            {name}&nbsp;
+                            (<a href={`https://esolangs.org/wiki/${name}`}>
+                                Commands
+                            </a>)
+                        </code>
+                        <br />
+                        <br />
+                        <form onSubmit={this.handleSubmit}>
+                            <label>
+                                <textarea
+                                    value={this.state.value}
+                                    onChange={this.handleChange}
+                                    onPaste={this.handlePaste}
+                                    rows={row} cols={col} />
+                            </label>
+                            <center>
+                                <input type="submit" value="Next" />
+                            </center>
+                        </form>
+                    </div>
                 </div>
+                <div className='split right'>
+                    <div className='centered'>
+                        <code>
+                            Output: {this.state.out}
+                        </code>
+                        <br />
+                        <code>
+                            Accumulator: {this.state.acc}
+                        </code>
+                        <br />
+                        <br />
+                        <div className='output'>
+                            <code>&nbsp;</code>
+                                {this.state.tape.map((val, ind) => {
+                                    let color = this.state.ptr === ind
+                                        ? 'red' : 'white';
+                                    return <code
+                                            key={ind.toString()}
+                                            style={{color: color}}>
+                                        {val}&nbsp;
+                            </code>;})}
+                        </div>
+                    </div>
+                </div>
+
             </header>
         );
     }

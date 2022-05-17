@@ -63,5 +63,7 @@ function run(code) {
 }
 
 export default function Back() {
-    return <Grid run={run} />;
+    return <Grid
+        run={run}
+        name='Back' />;
 }
