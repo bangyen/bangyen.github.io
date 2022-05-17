@@ -1,4 +1,4 @@
-import Interpret from '../Interpret';
+import TextBox from '../TextBox';
 
 function run(input) {
     let code = '';
@@ -77,5 +77,5 @@ function run(input) {
 }
 
 export default Suffolk() {
-    return <Interpret run={run} />;
+    return <TextBox run={run} />;
 }
