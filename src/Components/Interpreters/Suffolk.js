@@ -81,5 +81,9 @@ function run(code) {
 export default function Suffolk() {
     return <TextBox
         run={run}
-        name='Suffolk' />;
+        name='Suffolk'
+        prog={true}
+        tape={true}
+        out={true}
+        reg={true} />;
 }

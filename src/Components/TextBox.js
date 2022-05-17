@@ -51,6 +51,9 @@ export default class Grid extends React.Component {
     }
 
     getProgram() {
+        if (!this.props.prog)
+            return (null);
+
         let code = this.state.code;
         let prog = [...code].map((val, ind) => {
             let color = this.state.ind === ind
@@ -64,10 +67,17 @@ export default class Grid extends React.Component {
         if (prog.length)
             text += ' ';
 
-        return <code>{text}{prog}</code>;
+        return <div className='output'>
+                <code>
+                    {text}{prog}
+                </code>
+            </div>;
     }
 
     getTape() {
+        if (!this.props.tape)
+            return (null);
+
         let tape = this.state.tape;
         let text = tape.map((val, ind) => {
             let color = this.state.ptr === ind
@@ -77,7 +87,11 @@ export default class Grid extends React.Component {
                     &nbsp;{val}
                 </code>;});
 
-        return <code>Tape:{text}</code>;
+        return <div className='output'>
+                <code>
+                    Tape:{text}
+                </code>
+            </div>;
     }
 
     render() {
@@ -85,6 +99,29 @@ export default class Grid extends React.Component {
         let arr = this.state.value.split('\n');
         let col = Math.max(...arr.map(val => val.length));
         let row = arr.length;
+        let out;
+        let reg;
+
+        if (this.props.out)
+            out = <div className='output'>
+                    <code>
+                        Output:
+                        {this.state.out === ''
+                            ? '' : ' '}
+                        {this.state.out}
+                    </code>
+                </div>;
+        else
+            out = (null);
+
+        if (this.props.reg)
+            reg = <div className='output'>
+                    <code>
+                        Register: {this.state.acc}
+                    </code>
+                </div>;
+        else
+            reg = (null);
 
         if (row < 3)
             row = 12;
@@ -146,25 +183,10 @@ export default class Grid extends React.Component {
                 </div>
                 <div className='split right'>
                     <div className='centered'>
-                        <div className='output'>
-                            {this.getProgram()}
-                        </div>
-                        <div className='output'>
-                            {this.getTape()}
-                        </div>
-                        <div className='output'>
-                            <code>
-                                Output:
-                                {this.state.out == ''
-                                    ? '' : ' '}
-                                {this.state.out}
-                            </code>
-                        </div>
-                        <div className='output'>
-                            <code>
-                                Register: {this.state.acc}
-                            </code>
-                        </div>
+                        {this.getProgram()}
+                        {this.getTape()}
+                        {out}
+                        {reg}
                     </div>
                 </div>
 
