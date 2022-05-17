@@ -146,32 +146,24 @@ export default class Grid extends React.Component {
                 </div>
                 <div className='split right'>
                     <div className='centered'>
-                        <div>
-                            <div className='output'>
-                                {this.getProgram()}
-                            </div>
+                        <div className='output'>
+                            {this.getProgram()}
                         </div>
-                        <div>
-                            <div className='output'>
-                                {this.getTape()}
-                            </div>
+                        <div className='output'>
+                            {this.getTape()}
                         </div>
-                        <div>
-                            <div className='output'>
-                                <code>
-                                    Output:
-                                    {this.state.out == ''
-                                        ? '' : ' '}
-                                    {this.state.out}
-                                </code>
-                            </div>
+                        <div className='output'>
+                            <code>
+                                Output:
+                                {this.state.out == ''
+                                    ? '' : ' '}
+                                {this.state.out}
+                            </code>
                         </div>
-                        <div>
-                            <div className='output'>
-                                <code>
-                                    Register: {this.state.acc}
-                                </code>
-                            </div>
+                        <div className='output'>
+                            <code>
+                                Register: {this.state.acc}
+                            </code>
                         </div>
                     </div>
                 </div>
