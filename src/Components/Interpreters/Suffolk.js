@@ -7,6 +7,7 @@ function run(input) {
         if ('><!,.'.includes(c))
             code += c;
 
+    let num = 0;
     let len = code.length;
     let arr = [{
         tape: [0],
@@ -19,19 +20,25 @@ function run(input) {
 
     return function(back = false) {
         let state = arr[arr.length - 1];
-        let ind = state.ind;
-        let c = code[ind % len];
+        let {end} = state;
+        let c = code[num % len];
 
-        if (back && ind)
-            ind -= 1;
-        else if (!back && !state.end)
-            ind += 1;
+        if (back) {
+            if (num)
+                num -= 1;
+        } else {
+            num += 1;
 
-        if (ind < arr.length)
-            return arr[ind];
+            if (num % len === 0)
+                end = true;
+            else if (state.end)
+                end = false;
+        }
 
-        let {tape, acc, ptr, out, end}
-            = state;
+        if (num < arr.length)
+            return arr[num];
+
+        let {tape, acc, ptr, out} = state;
         tape = [...tape];
 
         if (c === '>') {
@@ -65,7 +72,7 @@ function run(input) {
         state = {
             tape: tape,
             acc: acc,
-            ind: ind,
+            ind: num,
             ptr: ptr,
             out: out,
             end: end

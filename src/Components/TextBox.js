@@ -1,3 +1,4 @@
+import {Link} from 'react-router-dom';
 import React from 'react';
 
 export default class Grid extends React.Component {
@@ -11,12 +12,12 @@ export default class Grid extends React.Component {
             ind: 0,
             ptr: 0,
             out: '',
-            end: false
+            end: true
         };
 
+        this.func = () => this.state;
         this.handleChange = this.handleChange.bind(this);
         this.handlePaste = this.handlePaste.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     componentDidMount() {
@@ -36,11 +37,6 @@ export default class Grid extends React.Component {
         this.handleChange(event);
     }
 
-    handleSubmit(event) {
-        if (this.state.value !== '')
-            this.setState(this.func());
-    }
-
     render() {
         let name = this.props.name;
         let arr = this.state.value.split('\n');
@@ -57,8 +53,8 @@ export default class Grid extends React.Component {
                 <div className='split left'>
                     <div className='centered'>
                         <code>
-                            {name}&nbsp;
-                            (<a href={`https://esolangs.org/wiki/${name}`}>
+                            {name + ' '}
+                            (<a href={"https://esolangs.org/wiki/" + name}>
                                 Commands
                             </a>)
                         </code>
@@ -72,10 +68,38 @@ export default class Grid extends React.Component {
                                     onPaste={this.handlePaste}
                                     rows={row} cols={col} />
                             </label>
-                            <center>
-                                <input type="submit" value="Next" />
-                            </center>
                         </form>
+                        <button className='custom'
+                                type='button'
+                                onClick={() => {
+                                    let temp = {end: false};
+
+                                    do {
+                                        temp = this.func();
+                                    } while (!temp.end);
+
+                                    this.setState(temp);
+                                }}>
+                            ▶
+                        </button>
+                        <button className='custom'
+                                type='button'
+                                onClick={() => this.setState(
+                                    this.func(true))}>
+                            &nbsp;❮&nbsp;
+                        </button>
+                        <button className='custom'
+                                type='button'
+                                onClick={() => this.setState(
+                                    this.func())}>
+                            &nbsp;❯&nbsp;
+                        </button>
+                        <Link to='/'>
+                            <button className='custom'
+                                    type='button'>
+                                🏠&#xfe0e;
+                            </button>
+                        </Link>
                     </div>
                 </div>
                 <div className='split right'>
