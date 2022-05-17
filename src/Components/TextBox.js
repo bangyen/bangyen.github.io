@@ -8,6 +8,7 @@ export default class Grid extends React.Component {
         this.state = {
             value: '',
             tape: [0],
+            code: '',
             acc: 0,
             ind: 0,
             ptr: 0,
@@ -26,10 +27,27 @@ export default class Grid extends React.Component {
 
     handleChange(event) {
         let val = event.target.value;
+        let code = '';
 
         if (val !== this.state.value) {
-            this.setState({value: val});
-            this.func = this.props.run(val);
+            for (let c of val)
+                if ('><!,.'.includes(c))
+                    code += c;
+
+            this.setState({
+                value: val,
+                code: code
+            });
+
+            this.func = this.props.run(code);
+            this.setState({
+                tape: [0],
+                acc: 0,
+                ind: 0,
+                ptr: 0,
+                out: '',
+                end: false
+            });
         }
     }
 
@@ -54,7 +72,7 @@ export default class Grid extends React.Component {
                     <div className='centered'>
                         <code>
                             {name + ' '}
-                            (<a href={"https://esolangs.org/wiki/" + name}>
+                            (<a href={'https://esolangs.org/wiki/' + name}>
                                 Commands
                             </a>)
                         </code>
@@ -104,6 +122,24 @@ export default class Grid extends React.Component {
                 </div>
                 <div className='split right'>
                     <div className='centered'>
+                        <div className='output'>
+                                {[...this.state.code].map((val, ind) => {
+                                    let color = this.state.ind === ind
+                                        ? 'red' : 'white';
+                                    return <code key={ind.toString()}
+                                                 style={{color: color}}>
+                                            {val}
+                                        </code>;})}
+                        </div>
+                        <div className='output'>
+                                {this.state.tape.map((val, ind) => {
+                                    let color = this.state.ptr === ind
+                                        ? 'red' : 'white';
+                                    return <code key={ind.toString()}
+                                                 style={{color: color}}>
+                                            {val}&nbsp;
+                                        </code>;})}
+                        </div>
                         <code>
                             Output: {this.state.out}
                         </code>
@@ -111,19 +147,6 @@ export default class Grid extends React.Component {
                         <code>
                             Accumulator: {this.state.acc}
                         </code>
-                        <br />
-                        <br />
-                        <div className='output'>
-                            <code>&nbsp;</code>
-                                {this.state.tape.map((val, ind) => {
-                                    let color = this.state.ptr === ind
-                                        ? 'red' : 'white';
-                                    return <code
-                                            key={ind.toString()}
-                                            style={{color: color}}>
-                                        {val}&nbsp;
-                            </code>;})}
-                        </div>
                     </div>
                 </div>
 

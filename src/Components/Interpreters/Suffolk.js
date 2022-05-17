@@ -1,12 +1,6 @@
 import TextBox from '../TextBox';
 
-function run(input) {
-    let code = '';
-
-    for (let c of input)
-        if ('><!,.'.includes(c))
-            code += c;
-
+function run(code) {
     let num = 0;
     let len = code.length;
     let arr = [{
@@ -20,8 +14,8 @@ function run(input) {
 
     return function(back = false) {
         let state = arr[arr.length - 1];
-        let {end} = state;
         let c = code[num % len];
+        let {end} = state;
 
         if (back) {
             if (num)
@@ -39,6 +33,7 @@ function run(input) {
             return arr[num];
 
         let {tape, acc, ptr, out} = state;
+        let ind = num % len;
         tape = [...tape];
 
         if (c === '>') {
@@ -72,7 +67,7 @@ function run(input) {
         state = {
             tape: tape,
             acc: acc,
-            ind: num,
+            ind: ind,
             ptr: ptr,
             out: out,
             end: end

@@ -193,7 +193,7 @@ export default class Grid extends React.Component {
                             <li>Press (b) to use breakpoints</li>
                             <li>
                                 {name} commands located&nbsp;
-                                <a href={`https://esolangs.org/wiki/${name}`}>here</a>
+                                <a href={'https://esolangs.org/wiki/' + name}>here</a>
                             </li>
                         </ul>
                         <Buttons
