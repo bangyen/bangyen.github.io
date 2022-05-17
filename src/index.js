@@ -1,16 +1,19 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
-import Snake from './Components/Snake';
-import Grid from './Components/Grid';
-import Home from './Components/Home';
-import Error from './Components/Error';
-import './index.css';
-import './Grid.css';
 import {
     HashRouter as Router,
     Switch,
     Route
 } from "react-router-dom";
+
+import Back from './Components/Interpreters/Back';
+import Suffolk from './Components/Interpreters/Suffolk';
+import Snake from './Components/Snake';
+import Home from './Components/Home';
+import Error from './Components/Error';
+
+import './index.css';
+import './Grid.css';
 
 function App() {
     return (
@@ -18,7 +21,10 @@ function App() {
             <div>
                 <Switch>
                     <Route exact path="/back">
-                        <Grid />
+                        <Back />
+                    </Route>
+                    <Route exact path="/suffolk">
+                        <Suffolk />
                     </Route>
                     <Route exact path="/snake">
                         <Snake />
