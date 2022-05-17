@@ -18,7 +18,6 @@ export default class Grid extends React.Component {
 
         this.func = () => this.state;
         this.handleChange = this.handleChange.bind(this);
-        this.handlePaste = this.handlePaste.bind(this);
     }
 
     componentDidMount() {
@@ -51,8 +50,34 @@ export default class Grid extends React.Component {
         }
     }
 
-    handlePaste(event) {
-        this.handleChange(event);
+    getProgram() {
+        let code = this.state.code;
+        let prog = [...code].map((val, ind) => {
+            let color = this.state.ind === ind
+                ? 'red' : 'white';
+            return <code key={ind.toString()}
+                         style={{color: color}}>
+                    {val}
+                </code>;});
+        let text = 'Program:';
+
+        if (prog.length)
+            text += ' ';
+
+        return <code>{text}{prog}</code>;
+    }
+
+    getTape() {
+        let tape = this.state.tape;
+        let text = tape.map((val, ind) => {
+            let color = this.state.ptr === ind
+                ? 'red' : 'white';
+            return <code key={ind.toString()}
+                         style={{color: color}}>
+                    &nbsp;{val}
+                </code>;});
+
+        return <code>Tape:{text}</code>;
     }
 
     render() {
@@ -76,14 +101,13 @@ export default class Grid extends React.Component {
                                 Commands
                             </a>)
                         </code>
-                        <br />
-                        <br />
+                        <br /><br />
                         <form onSubmit={this.handleSubmit}>
                             <label>
                                 <textarea
                                     value={this.state.value}
                                     onChange={this.handleChange}
-                                    onPaste={this.handlePaste}
+                                    onPaste={this.handleChange}
                                     rows={row} cols={col} />
                             </label>
                         </form>
@@ -122,31 +146,33 @@ export default class Grid extends React.Component {
                 </div>
                 <div className='split right'>
                     <div className='centered'>
-                        <div className='output'>
-                                {[...this.state.code].map((val, ind) => {
-                                    let color = this.state.ind === ind
-                                        ? 'red' : 'white';
-                                    return <code key={ind.toString()}
-                                                 style={{color: color}}>
-                                            {val}
-                                        </code>;})}
+                        <div>
+                            <div className='output'>
+                                {this.getProgram()}
+                            </div>
                         </div>
-                        <div className='output'>
-                                {this.state.tape.map((val, ind) => {
-                                    let color = this.state.ptr === ind
-                                        ? 'red' : 'white';
-                                    return <code key={ind.toString()}
-                                                 style={{color: color}}>
-                                            {val}&nbsp;
-                                        </code>;})}
+                        <div>
+                            <div className='output'>
+                                {this.getTape()}
+                            </div>
                         </div>
-                        <code>
-                            Output: {this.state.out}
-                        </code>
-                        <br />
-                        <code>
-                            Accumulator: {this.state.acc}
-                        </code>
+                        <div>
+                            <div className='output'>
+                                <code>
+                                    Output:
+                                    {this.state.out == ''
+                                        ? '' : ' '}
+                                    {this.state.out}
+                                </code>
+                            </div>
+                        </div>
+                        <div>
+                            <div className='output'>
+                                <code>
+                                    Register: {this.state.acc}
+                                </code>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
