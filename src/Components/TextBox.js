@@ -1,4 +1,5 @@
 import {Link} from 'react-router-dom';
+import {button} from './helpers';
 import React from 'react';
 
 export default class Grid extends React.Component {
@@ -19,6 +20,23 @@ export default class Grid extends React.Component {
 
     componentDidMount() {
         document.title = 'Interpreter';
+    }
+
+    runCode(mode) {
+        return function() {
+            let state;
+
+            if (mode === 'run')
+                do {
+                    state = this.func();
+                } while (!state.end);
+            else if (mode === 'prev')
+                state = this.func(true);
+            else
+                state = this.func();
+
+            this.setState(state);
+        }.bind(this);
     }
 
     handleChange(event) {
@@ -135,31 +153,9 @@ export default class Grid extends React.Component {
                                     rows={row} cols={col} />
                             </label>
                         </form>
-                        <button className='custom'
-                                type='button'
-                                onClick={() => {
-                                    let temp = {end: false};
-
-                                    do {
-                                        temp = this.func();
-                                    } while (!temp.end);
-
-                                    this.setState(temp);
-                                }}>
-                            ▶
-                        </button>
-                        <button className='custom'
-                                type='button'
-                                onClick={() => this.setState(
-                                    this.func(true))}>
-                            &nbsp;❮&nbsp;
-                        </button>
-                        <button className='custom'
-                                type='button'
-                                onClick={() => this.setState(
-                                    this.func())}>
-                            &nbsp;❯&nbsp;
-                        </button>
+                        {button('▶', this.runCode('run'))}
+                        {button('\xa0❮\xa0', this.runCode('prev'))}
+                        {button('\xa0❯\xa0', this.runCode('next'))}
                         <Link to='/'>
                             <button className='custom'
                                     type='button'>

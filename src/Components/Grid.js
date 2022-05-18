@@ -1,5 +1,5 @@
-import {emptyArray, pairEquals, includes} from '../helpers';
-import Buttons from './Buttons';
+import {button, emptyArray, pairEquals, includes} from './helpers';
+import {Link} from 'react-router-dom';
 import React from 'react';
 
 export default class Grid extends React.Component {
@@ -187,9 +187,54 @@ export default class Grid extends React.Component {
                 <li>Press (b) to use breakpoints</li>
                 <li>
                     {name} commands located&nbsp;
-                    <a href={link + name}>here</a>
+                    <a href={link}>here</a>
                 </li>
             </ul>;
+    }
+
+    getButtons() {
+        let arr = this.state.grid;
+        let obj = this.props.start;
+
+        let change = function (num) {
+            return function() {
+                if (!num)
+                    return;
+
+                let diff = emptyArray(num);
+
+                for (let i in diff)
+                    for (let j in diff[0])
+                        if (arr[i])
+                            diff[i][j] = arr[i][j];
+                        else
+                            diff[i][j] = ' ';
+
+                this.setState({grid: diff});
+            }.bind(this);
+        }.bind(this);
+
+        return (<div>
+                {button('▶', this.runCode('run'))}
+                {button('\xa0❮\xa0', this.runCode('prev'))}
+                {button('\xa0❯\xa0', this.runCode('next'))}
+                {button('✖', () => this.setState({
+                    ...obj, pos: null
+                }))}
+                <br />
+                {button('➕\ufe0e', change(arr.length + 1))}
+                {button('➖\ufe0e', change(arr.length - 1))}
+                {button('📥\ufe0e', () => {
+                    navigator.clipboard.writeText(
+                        arr.map(x => x.join('')).join('\n')
+                )})}
+                <Link to='/'>
+                    <button className='custom'
+                            type='button'>
+                        🏠&#xfe0e;
+                    </button>
+                </Link>
+            </div>);
     }
 
     getTape() {
@@ -245,11 +290,7 @@ export default class Grid extends React.Component {
                     <div className='centered'>
                         <code>Instructions:</code>
                         {this.getInfo()}
-                        <Buttons
-                            run={(m) => this.runCode(m)}
-                            set={(s) => this.setState(s)}
-                            arr={this.state.grid}
-                        />
+                        {this.getButtons()}
                         <br />
                         {this.getTape()}
                         {this.getOutput()}
