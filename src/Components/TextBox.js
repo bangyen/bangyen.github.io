@@ -13,7 +13,8 @@ export default class Grid extends React.Component {
         };
 
         this.func = () => this.state;
-        this.handleChange = this.handleChange.bind(this);
+        this.handleChange
+            = this.handleChange.bind(this);
     }
 
     componentDidMount() {
@@ -77,16 +78,9 @@ export default class Grid extends React.Component {
             </div>;
     }
 
-    render() {
-        let {name, link} = this.props;
-        let arr = this.state.value.split('\n');
-        let col = Math.max(...arr.map(val => val.length));
-        let row = arr.length;
-        let out;
-        let reg;
-
+    getOutput() {
         if (this.props.out)
-            out = <div className='output'>
+            return <div className='output'>
                     <code>
                         Output:
                         {this.state.out === ''
@@ -94,17 +88,26 @@ export default class Grid extends React.Component {
                         {this.state.out}
                     </code>
                 </div>;
-        else
-            out = (null);
 
+        return (null);
+    }
+
+    getRegister() {
         if (this.props.reg)
-            reg = <div className='output'>
+            return <div className='output'>
                     <code>
                         Register: {this.state.acc}
                     </code>
                 </div>;
-        else
-            reg = (null);
+
+        return (null);
+    }
+
+    render() {
+        let {name, link} = this.props;
+        let arr = this.state.value.split('\n');
+        let col = Math.max(...arr.map(val => val.length));
+        let row = arr.length;
 
         if (row < 3)
             row = 12;
@@ -169,8 +172,8 @@ export default class Grid extends React.Component {
                     <div className='centered'>
                         {this.getProgram()}
                         {this.getTape()}
-                        {out}
-                        {reg}
+                        {this.getOutput()}
+                        {this.getRegister()}
                     </div>
                 </div>
 
