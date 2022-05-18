@@ -6,46 +6,51 @@ export default class Grid extends React.Component {
     constructor(props: Props) {
         super(props);
 
+        this.changeColor = this.changeColor.bind(this);
+        this.changeText  = this.changeText.bind(this);
         let size = 5;
-        this.changeText =
-            this.changeText
-                .bind(this);
 
         this.state = {
+            ...this.props.start,
             grid: emptyArray(size),
-            size,
-            tape: [],
-            cell: 0,
             select: null,
-            pointer: null,
+            pos:    null,
             breaks: []
         };
     }
 
+    componentDidMount() {
+        document.title = 'Interpreter';
+        document.addEventListener(
+            'keydown',
+            this.changeText,
+            false);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener(
+            'keydown',
+            this.changeText,
+            false);
+    }
+
     runCode(mode) {
         return function() {
-            if (this.state.grid.every(
-                    e => !e.includes('*'))) {
-                alert('No halt instruction detected!');
-                this.setState({select: null});
-                return;
-            }
+            if (this.state.pos === null) {
+                this.func = this.props.run(
+                    this.state.grid);
 
-            if (this.state.pointer === null) {
-                this.func = this.props.run(this.state.grid);
                 if (mode !== 'run') {
                     this.setState({
-                        pointer: [0, 0],
+                        ...this.props.start,
                         select: null,
-                        tape: [0],
-                        cell: 0
                     });
                     return;
                 }
             }
 
-            let temp;
             this.setState({select: null});
+            let temp;
 
             if (mode === 'run')
                 do {
@@ -53,18 +58,12 @@ export default class Grid extends React.Component {
                 } while (!(includes(
                     this.state.breaks,
                     temp.pos) || temp.end));
-            else if (mode === 'fore')
+            else if (mode === 'next')
                 temp = this.func();
-            else if (mode === 'back')
+            else if (mode === 'prev')
                 temp = this.func(true);
 
-            let {pos, end, tape, cell} = temp;
-
-            this.setState({
-                pointer: end ? null : pos,
-                tape: tape,
-                cell: cell
-            });
+            this.setState(temp);
         }.bind(this);
     }
 
@@ -100,7 +99,7 @@ export default class Grid extends React.Component {
                 else
                     row += 1;
 
-                let size = this.state.size;
+                let size = this.state.grid.length;
                 row = (row + size) % size;
                 col = (col + size) % size;
                 this.setState({
@@ -122,99 +121,139 @@ export default class Grid extends React.Component {
             select = pairEquals(select, pos)
                 ? null : pos;
             this.setState({select: select});
-        };
+        }.bind(this);
     }
 
-    chooseColor(pos) {
-        let {select, pointer, breaks}
+    chooseColor(cell) {
+        let {select, pos, breaks}
             = this.state;
 
-        if (pairEquals(select, pos))
+        if (pairEquals(select, cell))
             return 'grey';
-        else if (pairEquals(pointer, pos))
+        else if (pairEquals(pos, cell))
             return 'red';
-        else if (includes(breaks, pos))
+        else if (includes(breaks, cell))
             return 'yellow';
 
         return 'white';
     }
 
-    componentDidMount() {
-        document.title = 'Interpreter';
-        document.addEventListener(
-            'keydown',
-            this.changeText,
-            false);
+    getTable() {
+        let grid = this.state.grid;
+        let table = emptyArray(grid.length);
+        let pos;
+
+        for (let i in table) {
+            for (let j in table) {
+                pos = [i, j];
+
+                table[i][j] = <td key={`${i}-${j}`}
+                            onClick={this.changeColor(pos)}
+                            bgcolor={this.chooseColor(pos)}>
+                        <div>
+                            &nbsp;{grid[i][j]}&nbsp;
+                        </div>
+                    </td>;
+            }
+        }
+
+        table = table.map((arr, row) =>
+                <tr key={row.toString()}>
+                    {arr}
+                </tr>
+            );
+
+        return <div className='split left'>
+                <div className='centered'>
+                    <table>
+                        <tbody>
+                            {table}
+                        </tbody>
+                    </table>
+                </div>
+            </div>;
     }
 
-    componentWillUnmount() {
-        document.removeEventListener(
-            'keydown',
-            this.changeText,
-            false);
+    getInfo() {
+        let {name, link} = this.props;
+        link = 'https://esolangs.org/wiki/'
+            + (link ? link : name);
+
+        return <ul style={{
+                    fontSize: '75%',
+                    textAlign: 'left'}}>
+                <li>Click to select/unselect</li>
+                <li>Type to change selected cell</li>
+                <li>Press (b) to use breakpoints</li>
+                <li>
+                    {name} commands located&nbsp;
+                    <a href={link + name}>here</a>
+                </li>
+            </ul>;
     }
 
-    tile(val, row, col) {
-        let pos = [row, col];
+    getTape() {
+        if (!this.props.tape)
+            return (null);
 
-        return <td
-                key={`${row}-${col}`}
-                onClick={this.changeColor(pos).bind(this)}
-                bgcolor={this.chooseColor(pos)}>
-            <div>&nbsp;{val}&nbsp;</div>
-        </td>;
+        let tape = this.state.tape;
+        let text = tape.map((val, ind) => {
+            let color = this.state.cell === ind
+                ? 'red' : 'white';
+            return <code key={ind.toString()}
+                         style={{color: color}}>
+                    &nbsp;{val}
+                </code>;});
+
+        return <div className='output'>
+                <code>
+                    Tape:{text}
+                </code>
+            </div>;
+    }
+
+    getOutput() {
+        if (this.props.out)
+            return <div className='output'>
+                    <code>
+                        Output:
+                        {this.state.out === ''
+                            ? '' : ' '}
+                        {this.state.out}
+                    </code>
+                </div>;
+
+        return (null);
+    }
+
+    getRegister() {
+        if (this.props.reg)
+            return <div className='output'>
+                    <code>
+                        Register: {this.state.acc}
+                    </code>
+                </div>;
+
+        return (null);
     }
 
     render() {
-        let name = this.props.name;
-
         return (
             <header className='App-header'>
-                <div className='split left'>
-                    <div className='centered'>
-                        <table>
-                            <tbody>
-                                {this.state.grid.map((arr, row) =>
-                                    (<tr key={row.toString()}>{
-                                        arr.map((val, col) =>
-                                        this.tile(val, row, col))
-                                    }</tr>)
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                {this.getTable()}
                 <div className='split right'>
                     <div className='centered'>
                         <code>Instructions:</code>
-                        <ul style={{fontSize: '75%', textAlign: 'left'}}>
-                            <li>Click to select/unselect</li>
-                            <li>Type to change selected cell</li>
-                            <li>Press (b) to use breakpoints</li>
-                            <li>
-                                {name} commands located&nbsp;
-                                <a href={'https://esolangs.org/wiki/' + name}>here</a>
-                            </li>
-                        </ul>
+                        {this.getInfo()}
                         <Buttons
                             run={(m) => this.runCode(m)}
                             set={(s) => this.setState(s)}
                             arr={this.state.grid}
                         />
                         <br />
-                        <code>Output:</code>
-                        <br />
-                        <div className='output'>
-                            <code>&nbsp;</code>
-                            {this.state.tape.map((val, ind) => {
-                                let color = this.state.cell === ind
-                                    ? 'red' : 'white';
-                                return <code
-                                        key={ind.toString()}
-                                        style={{color: color}}>
-                                    {val}&nbsp;
-                                </code>;})}
-                        </div>
+                        {this.getTape()}
+                        {this.getOutput()}
+                        {this.getRegister()}
                     </div>
                 </div>
             </header>

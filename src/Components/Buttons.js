@@ -11,12 +11,12 @@ export default function Buttons(props) {
         </button>
         <button className='custom'
                 type='button'
-                onClick={run('back')}>
+                onClick={run('prev')}>
             &nbsp;❮&nbsp;
         </button>
         <button className='custom'
                 type='button'
-                onClick={run('fore')}>
+                onClick={run('next')}>
             &nbsp;❯&nbsp;
         </button>
         <button className='custom'
@@ -36,7 +36,7 @@ export default function Buttons(props) {
 
                     arr.forEach(x => x.push(' '));
                     arr.push(Array(num).fill(' '));
-                    set({size: num, grid: arr});
+                    set({grid: arr});
                 }}>
             ➕&#xfe0e;
         </button>
@@ -48,7 +48,7 @@ export default function Buttons(props) {
 
                     arr.pop();
                     arr.forEach(x => x.pop());
-                    set({size: num, grid: arr});
+                    set({grid: arr});
                 }}>
             ➖&#xfe0e;
         </button>
