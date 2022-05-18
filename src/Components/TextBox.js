@@ -6,13 +6,9 @@ export default class Grid extends React.Component {
         super(props);
 
         this.state = {
+            ...this.props.start,
             value: '',
-            tape: [0],
             code: '',
-            acc: 0,
-            ind: 0,
-            ptr: 0,
-            out: '',
             end: true
         };
 
@@ -26,34 +22,21 @@ export default class Grid extends React.Component {
 
     handleChange(event) {
         let val = event.target.value;
-        let code = '';
 
         if (val !== this.state.value) {
-            for (let c of val)
-                if ('><!,.'.includes(c))
-                    code += c;
+            let {run, code}
+                = this.props.run(val);
 
+            this.func = run;
             this.setState({
+                ...this.props.start,
                 value: val,
                 code: code
-            });
-
-            this.func = this.props.run(code);
-            this.setState({
-                tape: [0],
-                acc: 0,
-                ind: 0,
-                ptr: 0,
-                out: '',
-                end: false
             });
         }
     }
 
     getProgram() {
-        if (!this.props.prog)
-            return (null);
-
         let code = this.state.code;
         let prog = [...code].map((val, ind) => {
             let color = this.state.ind === ind
@@ -95,7 +78,7 @@ export default class Grid extends React.Component {
     }
 
     render() {
-        let name = this.props.name;
+        let {name, link} = this.props;
         let arr = this.state.value.split('\n');
         let col = Math.max(...arr.map(val => val.length));
         let row = arr.length;
@@ -134,7 +117,8 @@ export default class Grid extends React.Component {
                     <div className='centered'>
                         <code>
                             {name + ' '}
-                            (<a href={'https://esolangs.org/wiki/' + name}>
+                            (<a href={'https://esolangs.org/wiki/'
+                                    + (link ? link : name)}>
                                 Commands
                             </a>)
                         </code>

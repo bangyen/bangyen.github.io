@@ -1,18 +1,26 @@
 import TextBox from '../TextBox';
 
-function run(code) {
-    let num = 0;
-    let len = code.length;
-    let arr = [{
+let obj = {
         tape: [0],
         acc: 0,
         ind: 0,
         ptr: 0,
         out: '',
         end: false
-    }];
+    };
 
-    return function(back = false) {
+function run(input) {
+    let code = '';
+
+    for (let c of input)
+        if ('><!,.'.includes(c))
+            code += c;
+
+    let len = code.length;
+    let arr = [obj];
+    let num = 0;
+
+    function inner(back = false) {
         let state = arr[arr.length - 1];
         let c = code[num % len];
         let {end} = state;
@@ -58,7 +66,7 @@ function run(code) {
                 inp = prompt('Input: ');
 
             acc = inp.charCodeAt(0);
-        } else if (c === '.') {
+        } else {
             if (acc > 0)
                 out += String
                     .fromCharCode(acc - 1);
@@ -76,13 +84,18 @@ function run(code) {
         arr.push(state);
         return state;
     };
+
+    return {
+        run: inner,
+        code: code
+    };
 }
 
 export default function Suffolk() {
     return <TextBox
-        run={run}
         name='Suffolk'
-        prog={true}
+        start={obj}
+        run={run}
         tape={true}
         out={true}
         reg={true} />;

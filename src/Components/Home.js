@@ -23,7 +23,9 @@ class Home extends React.Component {
     }
 
     handleSubmit(event) {
-        this.props.history.push(`/${this.state.value}`);
+        this.props
+            .history
+            .push(`/${this.state.value}`);
     }
 
     render() {
@@ -33,8 +35,11 @@ class Home extends React.Component {
             select = (
                 <form onSubmit={this.handleSubmit}>
                     <label>
-                        <select value={this.state.value} onChange={this.handleChange}>
+                        <select
+                                value={this.state.value}
+                                onChange={this.handleChange}>
                             <option value="back">Back</option>
+                            <option value="stun_step">Stun Step</option>
                             <option value="suffolk">Suffolk</option>
                         </select>
                     </label>

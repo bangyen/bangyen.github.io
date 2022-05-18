@@ -8,6 +8,7 @@ import {
 
 import Back from './Components/Interpreters/Back';
 import Suffolk from './Components/Interpreters/Suffolk';
+import StunStep from './Components/Interpreters/StunStep';
 import Snake from './Components/Snake';
 import Home from './Components/Home';
 import Error from './Components/Error';
@@ -22,6 +23,9 @@ function App() {
                 <Switch>
                     <Route exact path="/back">
                         <Back />
+                    </Route>
+                    <Route exact path="/stun_step">
+                        <StunStep />
                     </Route>
                     <Route exact path="/suffolk">
                         <Suffolk />
