@@ -1,16 +1,31 @@
+import {find} from '../helper';
 import Grid from '../Grid';
 
 function outer(obj) {
+
+
     function run(code) {
         if (code.every(
                 e => !e.includes('*'))) {
             alert('No halt instruction detected!');
         }
 
-        let row = code.length;
-        let col = code[0].length;
+        let size = code.length;
+        let area = Math.pow(size, 2);
+        let vel = [0, 1];
         let arr = [obj];
         let ind = 0;
+
+        function move(pos) {
+            let [a, b] = vel;
+            let mod = pos % size;
+            pos += (size * a) + area;
+
+            if (!(mod % size - 1))
+                pos += b * -size;
+
+            return (pos + b) % area;
+        }
 
         return function(back = false) {
             let state = arr[arr.length - 1];
@@ -29,9 +44,8 @@ function outer(obj) {
                 return arr[ind];
 
             let {tape, cell, end, pos} = state;
-            let [x, y] = pos;
-            let [a, b] = state.vel;
-            let c = code[x][y];
+            let c = find(code, pos)[pos % size];
+            let [a, b] = vel;
             tape = [...tape];
 
             if (c === '\\') {
@@ -47,17 +61,17 @@ function outer(obj) {
             } else if (c === '-') {
                 tape[cell] ^= 1;
             } else if (c === '+' && !tape[cell]) {
-                [x, y] = [x + a, y + b];
+                pos = move(pos);
             } else if (c === '*') {
                 end = true;
                 pos = null;
             }
 
-            x = (x + a + row) % row;
-            y = (y + b + col) % col;
+            if (pos !== null)
+                pos = move(pos);
+
             state = {
-                pos: pos ? [x, y] : pos,
-                vel: [a, b],
+                pos: pos,
                 tape: tape,
                 cell: cell,
                 end: end
@@ -74,8 +88,7 @@ function outer(obj) {
 export default function Back() {
     let obj = {
         end: false,
-        pos: [0, 0],
-        vel: [0, 1],
+        pos: 0,
         tape: [0],
         cell: 0
     };

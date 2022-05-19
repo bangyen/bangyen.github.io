@@ -1,4 +1,4 @@
-import {button, emptyArray, pairEquals, includes} from './helper';
+import {button, find, emptyArray} from './helper';
 import {Link} from 'react-router-dom';
 import React from 'react';
 
@@ -55,9 +55,10 @@ export default class Grid extends React.Component {
             if (mode === 'run')
                 do {
                     temp = this.func();
-                } while (!(includes(
-                    this.state.breaks,
-                    temp.pos) || temp.end));
+                } while (!(this.state
+                               .breaks
+                               .includes(temp.pos)
+                    || temp.end));
             else if (mode === 'next')
                 temp = this.func();
             else if (mode === 'prev')
@@ -71,14 +72,14 @@ export default class Grid extends React.Component {
         let {select, breaks} = this.state;
 
         if (select !== null) {
-            let arr = this.state.grid;
-            let [row, col] = select;
+            let arr  = this.state.grid;
+            let size = arr.length;
             let value;
 
             if (e.key.toLowerCase() === 'b') {
-                if (includes(breaks, select))
+                if (breaks.includes(select))
                     breaks = breaks.filter(p =>
-                        !pairEquals(p, select));
+                        p !== select);
                 else
                     breaks.push(select);
 
@@ -90,27 +91,28 @@ export default class Grid extends React.Component {
                     || e.key === 'Delete') {
                 value = ' ';
             } else if (e.key.includes('Arrow')) {
-                if (e.key.includes('Left'))
-                    col -= 1;
-                else if (e.key.includes('Right'))
-                    col += 1;
-                else if (e.key.includes('Up'))
-                    row -= 1;
-                else
-                    row += 1;
+                let area = Math.pow(size, 2);
 
-                let size = this.state.grid.length;
-                row = (row + size) % size;
-                col = (col + size) % size;
-                this.setState({
-                    select: [row, col]});
+                if (e.key.includes('Left')
+                        && select % size)
+                    select -= 1;
+                else if (e.key.includes('Right')
+                        && (select + 1) % size)
+                    select += 1;
+                else if (e.key.includes('Up')
+                        && select > (size - 1))
+                    select -= size;
+                else if (e.key.includes('Down')
+                        && select < (area - size))
+                    select += size;
 
+                this.setState({select: select});
                 return;
             } else {
                 return;
             }
 
-            arr[row][col] = value;
+            find(arr, select)[select % size] = value;
             this.setState({grid: arr});
         }
     }
@@ -118,7 +120,7 @@ export default class Grid extends React.Component {
     changeColor(pos) {
         return function() {
             let select = this.state.select;
-            select = pairEquals(select, pos)
+            select = select === pos
                 ? null : pos;
             this.setState({select: select});
         }.bind(this);
@@ -128,11 +130,11 @@ export default class Grid extends React.Component {
         let {select, pos, breaks}
             = this.state;
 
-        if (pairEquals(select, cell))
+        if (cell === select)
             return 'grey';
-        else if (pairEquals(pos, cell))
+        else if (cell === pos)
             return 'red';
-        else if (includes(breaks, cell))
+        else if (breaks.includes(cell))
             return 'yellow';
 
         return 'white';
@@ -145,8 +147,7 @@ export default class Grid extends React.Component {
 
         for (let i in table) {
             for (let j in table) {
-                pos = [i, j].map(Number);
-
+                pos = grid.length * Number(i) + Number(j);
                 table[i][j] = <td key={`${i}-${j}`}
                             onClick={this.changeColor(pos)}
                             bgcolor={this.chooseColor(pos)}>
