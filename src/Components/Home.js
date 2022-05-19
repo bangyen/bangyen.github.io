@@ -58,7 +58,7 @@ class Home extends React.Component {
                     <button className='custom'
                             type='button'
                             onClick={() => this.setState({
-                                select: true})}>
+                                select: !select})}>
                         Interpreter
                     </button>
                     <Link to='/snake'>

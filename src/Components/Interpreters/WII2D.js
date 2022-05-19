@@ -3,14 +3,12 @@ import Grid from '../Grid';
 
 function outer(obj) {
     function error(str) {
-        obj.pos = null;
-        let res = {
-            ...obj,
-            end: true
-        };
-
         alert(str + ' start '
             + 'location detected!');
+
+        let res = {end: true};
+        obj.pos = null;
+
         return () => res;
     }
 
@@ -130,7 +128,7 @@ function outer(obj) {
                 end = true;
             }
 
-            if (pos !== null)
+            if (pos !== null && c !== '@')
                 pos = wrap(pos);
 
             state = {pos, end, out, acc};
