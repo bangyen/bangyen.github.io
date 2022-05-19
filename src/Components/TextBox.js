@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom';
-import {button} from './helpers';
+import {button} from './helper';
 import React from 'react';
 
 export default class Grid extends React.Component {

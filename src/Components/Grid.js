@@ -1,4 +1,4 @@
-import {button, emptyArray, pairEquals, includes} from './helpers';
+import {button, emptyArray, pairEquals, includes} from './helper';
 import {Link} from 'react-router-dom';
 import React from 'react';
 
@@ -145,7 +145,7 @@ export default class Grid extends React.Component {
 
         for (let i in table) {
             for (let j in table) {
-                pos = [i, j];
+                pos = [i, j].map(Number);
 
                 table[i][j] = <td key={`${i}-${j}`}
                             onClick={this.changeColor(pos)}

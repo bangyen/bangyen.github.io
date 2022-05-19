@@ -15,9 +15,6 @@ export function pairEquals(x, y) {
     if (x === null || y === null)
         return x === y;
 
-    x = x.map(Number);
-    y = y.map(Number);
-
     return x[0] === y[0]
         && x[1] === y[1];
 }
