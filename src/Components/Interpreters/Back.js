@@ -1,4 +1,4 @@
-import {find} from '../helper';
+import {get, move} from '../helper';
 import Grid from '../Grid';
 
 function outer(obj) {
@@ -14,15 +14,12 @@ function outer(obj) {
         let arr = [obj];
         let ind = 0;
 
-        function move(pos) {
-            let [a, b] = vel;
-            let mod = pos % size;
-            pos += (size * a) + area;
-
-            if (!(mod % size - 1))
-                pos += b * -size;
-
-            return (pos + b) % area;
+        function wrap(pos) {
+            return move({
+                pos: pos,
+                vel: vel,
+                old: size
+            });
         }
 
         return function(back = false) {
@@ -42,14 +39,14 @@ function outer(obj) {
                 return arr[ind];
 
             let {tape, cell, end, pos} = state;
-            let c = find(code, pos)[pos % size];
+            let c = get(code, pos);
             let [a, b] = vel;
             tape = [...tape];
 
             if (c === '\\') {
-                [a, b] = [b, a];
+                vel = [b, a];
             } else if (c === '/') {
-                [a, b] = [-b, -a];
+                vel = [-b, -a];
             } else if (c === '<' && cell) {
                 cell -= 1;
             } else if (c === '>') {
@@ -59,14 +56,17 @@ function outer(obj) {
             } else if (c === '-') {
                 tape[cell] ^= 1;
             } else if (c === '+' && !tape[cell]) {
-                pos = move(pos);
+                do {
+                    pos = wrap(pos);
+                    c = get(code, pos);
+                } while (!'\\/<>-+*'.includes(c));
             } else if (c === '*') {
                 end = true;
                 pos = null;
             }
 
             if (pos !== null)
-                pos = move(pos);
+                pos = wrap(pos);
 
             state = {
                 pos: pos,
@@ -74,8 +74,8 @@ function outer(obj) {
                 cell: cell,
                 end: end
             };
-            arr.push(state);
 
+            arr.push(state);
             return state;
         };
     }

@@ -1,4 +1,4 @@
-import {button, find, emptyArray} from './helper';
+import {button, emptyArray, find, move} from './helper';
 import {Link} from 'react-router-dom';
 import React from 'react';
 
@@ -91,20 +91,22 @@ export default class Grid extends React.Component {
                     || e.key === 'Delete') {
                 value = ' ';
             } else if (e.key.includes('Arrow')) {
-                let area = Math.pow(size, 2);
+                let vel;
 
-                if (e.key.includes('Left')
-                        && select % size)
-                    select -= 1;
-                else if (e.key.includes('Right')
-                        && (select + 1) % size)
-                    select += 1;
-                else if (e.key.includes('Up')
-                        && select > (size - 1))
-                    select -= size;
-                else if (e.key.includes('Down')
-                        && select < (area - size))
-                    select += size;
+                if (e.key.includes('Left'))
+                    vel = [0, -1];
+                else if (e.key.includes('Right'))
+                    vel = [0, 1];
+                else if (e.key.includes('Up'))
+                    vel = [-1, 0];
+                else if (e.key.includes('Down'))
+                    vel = [1, 0];
+
+                select = move({
+                    pos: select,
+                    vel: vel,
+                    old: size
+                });
 
                 this.setState({select: select});
                 return;
@@ -194,7 +196,7 @@ export default class Grid extends React.Component {
     }
 
     getButtons() {
-        let arr = this.state.grid;
+        let {grid, select} = this.state;
         let obj = this.props.start;
 
         let change = function (num) {
@@ -202,16 +204,26 @@ export default class Grid extends React.Component {
                 if (!num)
                     return;
 
-                let diff = emptyArray(num);
+                let arr = emptyArray(num);
+                select = move({
+                    pos: select,
+                    vel: [0, 0],
+                    old: grid.length,
+                    size: num,
+                    wrap: false
+                });
 
-                for (let i in diff)
-                    for (let j in diff[0])
-                        if (arr[i])
-                            diff[i][j] = arr[i][j];
+                for (let i in arr)
+                    for (let j in arr)
+                        if (grid[i])
+                            arr[i][j] = grid[i][j];
                         else
-                            diff[i][j] = ' ';
+                            arr[i][j] = ' ';
 
-                this.setState({grid: diff});
+                this.setState({
+                    select: select,
+                    grid: arr
+                });
             }.bind(this);
         }.bind(this);
 
@@ -223,11 +235,11 @@ export default class Grid extends React.Component {
                     ...obj, pos: null
                 }))}
                 <br />
-                {button('➕\ufe0e', change(arr.length + 1))}
-                {button('➖\ufe0e', change(arr.length - 1))}
+                {button('➕\ufe0e', change(grid.length + 1))}
+                {button('➖\ufe0e', change(grid.length - 1))}
                 {button('📥\ufe0e', () => {
                     navigator.clipboard.writeText(
-                        arr.map(x => x.join('')).join('\n')
+                        grid.map(x => x.join('')).join('\n')
                 )})}
                 <Link to='/'>
                     <button className='custom'

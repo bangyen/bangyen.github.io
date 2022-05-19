@@ -6,6 +6,11 @@ export function button(sym, func) {
         </button>;
 }
 
+export function emptyArray(size) {
+    let arr = Array(size).fill(' ');
+    return arr.map(x => [...arr]);
+}
+
 export function find(arr, ind) {
     let len = arr.length;
     let quo = Math.floor(ind / len);
@@ -13,7 +18,38 @@ export function find(arr, ind) {
     return arr[quo];
 }
 
-export function emptyArray(size) {
-    let arr = Array(size).fill(' ');
-    return arr.map(x => [...arr]);
+export function get(arr, ind) {
+    let row = find(arr, ind);
+    return row[ind % arr.length];
+}
+
+export function move(obj) {
+    let {
+        pos, vel, old,
+        size = old,
+        wrap = true
+    } = obj;
+
+    let [quo, mod] = vel;
+    quo += Math.floor(pos / old);
+    mod += pos % old;
+
+    if (wrap) {
+        quo = (quo + size) % size;
+        mod = (mod + size) % size;
+    } else {
+        quo = bind(quo, size);
+        mod = bind(mod, size);
+    }
+
+    return quo * size + mod;
+}
+
+function bind(num, lim) {
+    if (num >= lim)
+        num = lim - 1;
+    else if (num < 0)
+        num = 0;
+
+    return num;
 }
