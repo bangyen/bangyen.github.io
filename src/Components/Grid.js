@@ -83,7 +83,7 @@ export default class Grid extends React.Component {
                 else
                     breaks.push(select);
 
-                this.setState({breaks: breaks});
+                this.setState({breaks});
                 return;
             } else if (e.key.length === 1) {
                 value = e.key;
@@ -104,11 +104,11 @@ export default class Grid extends React.Component {
 
                 select = move({
                     pos: select,
-                    vel: vel,
-                    old: size
+                    old: size,
+                    vel
                 });
 
-                this.setState({select: select});
+                this.setState({select});
                 return;
             } else {
                 return;
@@ -124,7 +124,7 @@ export default class Grid extends React.Component {
             let select = this.state.select;
             select = select === pos
                 ? null : pos;
-            this.setState({select: select});
+            this.setState({select});
         }.bind(this);
     }
 
@@ -221,8 +221,8 @@ export default class Grid extends React.Component {
                             arr[i][j] = ' ';
 
                 this.setState({
-                    select: select,
-                    grid: arr
+                    grid: arr,
+                    select
                 });
             }.bind(this);
         }.bind(this);
@@ -259,7 +259,7 @@ export default class Grid extends React.Component {
             let color = this.state.cell === ind
                 ? 'red' : 'white';
             return <code key={ind.toString()}
-                         style={{color: color}}>
+                         style={{color}}>
                     &nbsp;{val}
                 </code>;});
 

@@ -35,9 +35,9 @@ export default class Snake extends React.Component {
             len: 3,
             pos: [0, 0],
             vel: [0, 1],
-            arr: arr,
             move: true,
-            buff: null
+            buff: null,
+            arr
         }
     }
 
@@ -53,7 +53,7 @@ export default class Snake extends React.Component {
         } while (arr[x][y]);
 
         arr[x][y] = -1;
-        this.setState({arr: arr});
+        this.setState({arr});
     }
 
     updateDim() {
@@ -62,7 +62,7 @@ export default class Snake extends React.Component {
         this.setState({
             row: arr.length,
             col: arr[0].length,
-            arr: arr});
+            arr});
     }
 
     changeDir(e) {
@@ -85,8 +85,8 @@ export default class Snake extends React.Component {
                 old[0] !== vel[0])
             if (this.state.move)
                 this.setState({
-                    vel: vel,
-                    move: false});
+                    move: false,
+                    vel});
             else
                 this.setState({
                     buff: vel});
@@ -149,7 +149,7 @@ export default class Snake extends React.Component {
         this.setState({
             move: !buff,
             pos: [x, y],
-            arr: arr
+            arr
         });
     }
 

@@ -57,10 +57,10 @@ function outer(obj) {
             }
 
             state = {
-                tape: tape,
-                ind: ind,
-                ptr: ptr,
-                end: end
+                tape,
+                ind,
+                ptr,
+                end
             };
 
             arr.push(state);
@@ -69,7 +69,7 @@ function outer(obj) {
 
         return {
             run: inner,
-            code: code
+            code
         };
     }
 

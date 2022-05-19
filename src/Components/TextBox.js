@@ -50,7 +50,7 @@ export default class Grid extends React.Component {
             this.setState({
                 ...this.props.start,
                 value: val,
-                code: code
+                code
             });
         }
     }
@@ -61,7 +61,7 @@ export default class Grid extends React.Component {
             let color = this.state.ind === ind
                 ? 'red' : 'white';
             return <code key={ind.toString()}
-                         style={{color: color}}>
+                         style={{color}}>
                     {val}
                 </code>;});
         let text = 'Program:';
@@ -85,7 +85,7 @@ export default class Grid extends React.Component {
             let color = this.state.ptr === ind
                 ? 'red' : 'white';
             return <code key={ind.toString()}
-                         style={{color: color}}>
+                         style={{color}}>
                     &nbsp;{val}
                 </code>;});
 

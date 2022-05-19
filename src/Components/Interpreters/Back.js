@@ -15,8 +15,8 @@ function outer(obj) {
 
         function wrap(pos) {
             return move({
-                pos: pos,
-                vel: vel,
+                pos,
+                vel,
                 old: size
             });
         }
@@ -68,10 +68,10 @@ function outer(obj) {
                 pos = wrap(pos);
 
             state = {
-                pos: pos,
-                tape: tape,
-                cell: cell,
-                end: end
+                pos,
+                tape,
+                cell,
+                end
             };
 
             arr.push(state);
@@ -84,8 +84,8 @@ function outer(obj) {
 
 export default function Back() {
     let obj = {
-        end: false,
         pos: 0,
+        end: false,
         tape: [0],
         cell: 0
     };
