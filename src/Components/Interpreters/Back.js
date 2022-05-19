@@ -9,7 +9,6 @@ function outer(obj) {
         }
 
         let size = code.length;
-        let area = Math.pow(size, 2);
         let vel = [0, 1];
         let arr = [obj];
         let ind = 0;
