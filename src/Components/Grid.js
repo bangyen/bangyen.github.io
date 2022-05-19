@@ -8,6 +8,7 @@ export default class Grid extends React.Component {
 
         this.changeColor = this.changeColor.bind(this);
         this.changeText  = this.changeText.bind(this);
+        this.changeSize  = this.changeSize.bind(this);
         let size = 5;
 
         this.state = {
@@ -195,48 +196,53 @@ export default class Grid extends React.Component {
             </ul>;
     }
 
-    getButtons() {
+    changeSize(num) {
         let {grid, select} = this.state;
-        let obj = this.props.start;
 
-        let change = function (num) {
-            return function() {
-                if (!num)
-                    return;
+        return function() {
+            if (!num)
+                return;
 
-                let arr = emptyArray(num);
-                select = move({
-                    pos: select,
-                    vel: [0, 0],
-                    old: grid.length,
-                    size: num,
-                    wrap: false
-                });
+            let arr = emptyArray(num);
+            select = move({
+                pos: select,
+                vel: [0, 0],
+                old: grid.length,
+                size: num,
+                wrap: false
+            });
 
-                for (let i in arr)
-                    for (let j in arr)
-                        if (grid[i])
-                            arr[i][j] = grid[i][j];
-                        else
-                            arr[i][j] = ' ';
+            for (let i in arr)
+                for (let j in arr)
+                    if (grid[i])
+                        arr[i][j] = grid[i][j];
+                    else
+                        arr[i][j] = ' ';
 
-                this.setState({
-                    grid: arr,
-                    select
-                });
-            }.bind(this);
+            this.setState({
+                grid: arr,
+                select
+            });
         }.bind(this);
+    }
+
+    getButtons() {
+        let {grid} = this.state;
+        let size   = grid.length;
 
         return (<div>
                 {button('▶', this.runCode('run'))}
                 {button('\xa0❮\xa0', this.runCode('prev'))}
                 {button('\xa0❯\xa0', this.runCode('next'))}
-                {button('✖', () => this.setState({
-                    ...obj, pos: null
-                }))}
+                {button('✖', () => {
+                    let obj = this.props.start;
+                    obj.pos = null;
+
+                    this.setState(obj);
+                })}
                 <br />
-                {button('➕\ufe0e', change(grid.length + 1))}
-                {button('➖\ufe0e', change(grid.length - 1))}
+                {button('➕\ufe0e', this.changeSize(size + 1))}
+                {button('➖\ufe0e', this.changeSize(size - 1))}
                 {button('📥\ufe0e', () => {
                     navigator.clipboard.writeText(
                         grid.map(x => x.join('')).join('\n')

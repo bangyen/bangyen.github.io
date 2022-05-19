@@ -41,6 +41,7 @@ class Home extends React.Component {
                             <option value="back">Back</option>
                             <option value="stun_step">Stun Step</option>
                             <option value="suffolk">Suffolk</option>
+                            <option value="WII2D">WII2D</option>
                         </select>
                     </label>
                     <input type="submit" value="Submit" />
