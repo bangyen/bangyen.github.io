@@ -51,7 +51,7 @@ class Home extends React.Component {
 
         return (
             <header className='App-header'>
-                <h1 className='logo'>
+                <h1 className='logo select'>
                     Bangyen
                 </h1>
                 <div>

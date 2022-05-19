@@ -152,6 +152,7 @@ export default class Grid extends React.Component {
             for (let j in table) {
                 pos = grid.length * +i + +j;
                 table[i][j] = <td key={`${i}-${j}`}
+                            className='cell select'
                             onClick={this.changeColor(pos)}
                             bgcolor={this.chooseColor(pos)}>
                         <div>
@@ -169,7 +170,7 @@ export default class Grid extends React.Component {
 
         return <div className='split left'>
                 <div className='centered'>
-                    <table>
+                    <table className='grid'>
                         <tbody>
                             {table}
                         </tbody>
