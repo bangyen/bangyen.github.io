@@ -147,7 +147,7 @@ export default class Grid extends React.Component {
 
         for (let i in table) {
             for (let j in table) {
-                pos = grid.length * Number(i) + Number(j);
+                pos = grid.length * +i + +j;
                 table[i][j] = <td key={`${i}-${j}`}
                             onClick={this.changeColor(pos)}
                             bgcolor={this.chooseColor(pos)}>

@@ -2,8 +2,6 @@ import {find} from '../helper';
 import Grid from '../Grid';
 
 function outer(obj) {
-
-
     function run(code) {
         if (code.every(
                 e => !e.includes('*'))) {
