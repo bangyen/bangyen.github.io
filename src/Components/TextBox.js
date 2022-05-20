@@ -40,10 +40,10 @@ export default class Grid extends React.Component {
     }
 
     handleChange(event) {
-        let val = event.target.value;
+        const val = event.target.value;
 
         if (val !== this.state.value) {
-            let {run, code}
+            const {run, code}
                 = this.props.run(val);
 
             this.func = run;
@@ -56,9 +56,9 @@ export default class Grid extends React.Component {
     }
 
     getProgram() {
-        let code = this.state.code;
-        let prog = [...code].map((val, ind) => {
-            let color = this.state.ind === ind
+        const code = this.state.code;
+        const prog = [...code].map((val, ind) => {
+            const color = this.state.ind === ind
                 ? 'red' : 'white';
             return <code key={ind.toString()}
                          style={{color}}>
@@ -80,9 +80,9 @@ export default class Grid extends React.Component {
         if (!this.props.tape)
             return (null);
 
-        let tape = this.state.tape;
-        let text = tape.map((val, ind) => {
-            let color = this.state.ptr === ind
+        const tape = this.state.tape;
+        const text = tape.map((val, ind) => {
+            const color = this.state.ptr === ind
                 ? 'red' : 'white';
             return <code key={ind.toString()}
                          style={{color}}>
@@ -122,8 +122,8 @@ export default class Grid extends React.Component {
     }
 
     render() {
-        let {name, link} = this.props;
-        let arr = this.state.value.split('\n');
+        const {name, link} = this.props;
+        const arr = this.state.value.split('\n');
         let col = Math.max(...arr.map(val => val.length));
         let row = arr.length;
 

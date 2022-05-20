@@ -9,7 +9,7 @@ export default class Grid extends React.Component {
         this.changeColor = this.changeColor.bind(this);
         this.changeText  = this.changeText.bind(this);
         this.changeSize  = this.changeSize.bind(this);
-        let size = 5;
+        const size = 5;
 
         this.state = {
             ...this.props.start,
@@ -73,8 +73,8 @@ export default class Grid extends React.Component {
         let {select, breaks} = this.state;
 
         if (select !== null) {
-            let arr  = this.state.grid;
-            let size = arr.length;
+            const arr  = this.state.grid;
+            const size = arr.length;
             let value;
 
             if (e.key.toLowerCase() === 'b') {
@@ -130,7 +130,7 @@ export default class Grid extends React.Component {
     }
 
     chooseColor(cell) {
-        let {select, pos, breaks}
+        const {select, pos, breaks}
             = this.state;
 
         if (cell === select)
@@ -144,12 +144,12 @@ export default class Grid extends React.Component {
     }
 
     getTable() {
-        let grid = this.state.grid;
+        const grid = this.state.grid;
         let table = emptyArray(grid.length);
         let pos;
 
-        for (let i in table) {
-            for (let j in table) {
+        for (const i in table) {
+            for (const j in table) {
                 pos = grid.length * +i + +j;
                 table[i][j] = <td key={`${i}-${j}`}
                             className='cell select'
@@ -204,7 +204,7 @@ export default class Grid extends React.Component {
             if (!num)
                 return;
 
-            let arr = emptyArray(num);
+            const arr = emptyArray(num);
             select = move({
                 pos: select,
                 vel: [0, 0],
@@ -213,8 +213,8 @@ export default class Grid extends React.Component {
                 wrap: false
             });
 
-            for (let i in arr)
-                for (let j in arr)
+            for (const i in arr)
+                for (const j in arr)
                     if (grid[i])
                         arr[i][j] = grid[i][j];
                     else
@@ -228,15 +228,15 @@ export default class Grid extends React.Component {
     }
 
     getButtons() {
-        let {grid} = this.state;
-        let size   = grid.length;
+        const {grid} = this.state;
+        const size   = grid.length;
 
         return (<div>
                 {button('▶', this.runCode('run'))}
                 {button('\xa0❮\xa0', this.runCode('prev'))}
                 {button('\xa0❯\xa0', this.runCode('next'))}
                 {button('✖', () => {
-                    let obj = this.props.start;
+                    const obj = this.props.start;
                     obj.pos = null;
 
                     this.setState(obj);
@@ -261,14 +261,15 @@ export default class Grid extends React.Component {
         if (!this.props.tape)
             return (null);
 
-        let tape = this.state.tape;
-        let text = tape.map((val, ind) => {
-            let color = this.state.cell === ind
+        const tape = this.state.tape;
+        const text = tape.map((val, ind) => {
+            const color = this.state.cell === ind
                 ? 'red' : 'white';
             return <code key={ind.toString()}
                          style={{color}}>
                     &nbsp;{val}
-                </code>;});
+                </code>;
+        });
 
         return <div className='output'>
                 <code>

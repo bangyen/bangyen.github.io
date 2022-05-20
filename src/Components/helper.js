@@ -7,24 +7,24 @@ export function button(sym, func) {
 }
 
 export function emptyArray(size) {
-    let arr = Array(size).fill(' ');
+    const arr = Array(size).fill(' ');
     return arr.map(x => [...arr]);
 }
 
 export function find(arr, ind) {
-    let len = arr.length;
-    let quo = Math.floor(ind / len);
+    const len = arr.length;
+    const quo = Math.floor(ind / len);
 
     return arr[quo];
 }
 
 export function get(arr, ind) {
-    let row = find(arr, ind);
+    const row = find(arr, ind);
     return row[ind % arr.length];
 }
 
 export function move(obj) {
-    let {
+    const {
         pos, vel, old,
         size = old,
         wrap = true

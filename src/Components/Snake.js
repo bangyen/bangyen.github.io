@@ -1,5 +1,5 @@
-import React from 'react';
 import {Link} from 'react-router-dom';
+import React from 'react';
 
 function createArr() {
     let x = window.innerHeight;
@@ -7,11 +7,11 @@ function createArr() {
 
     x = Math.floor(x / 50);
     y = Math.floor(y / 50);
-    let arr = [...Array(x)]
+    const arr = [...Array(x)]
         .map(_ => Array(y).fill(0));
 
-    let a = Math.floor(Math.random() * x);
-    let b = Math.floor(Math.random() * y);
+    const a = Math.floor(Math.random() * x);
+    const b = Math.floor(Math.random() * y);
     arr[a][b] = -1;
 
     return arr;
@@ -28,7 +28,7 @@ export default class Snake extends React.Component {
             this.changeDir
                 .bind(this);
 
-        let arr = createArr();
+        const arr = createArr();
         this.state = {
             row: arr.length,
             col: arr[0].length,
@@ -42,9 +42,9 @@ export default class Snake extends React.Component {
     }
 
     randomPos() {
-        let arr = [...this.state.arr];
-        let row = this.state.row;
-        let col = this.state.col;
+        const arr = [...this.state.arr];
+        const row = this.state.row;
+        const col = this.state.col;
         let x, y;
 
         do {
@@ -57,7 +57,7 @@ export default class Snake extends React.Component {
     }
 
     updateDim() {
-        let arr = createArr();
+        const arr = createArr();
 
         this.setState({
             row: arr.length,
@@ -66,8 +66,8 @@ export default class Snake extends React.Component {
     }
 
     changeDir(e) {
-        let s = e.key.toLowerCase();
-        let old = this.state.vel;
+        const s = e.key.toLowerCase();
+        const old = this.state.vel;
         let vel;
 
         if (s === 'arrowleft' || s === 'a')
@@ -117,8 +117,8 @@ export default class Snake extends React.Component {
 
     move() {
         let [x, y] = this.state.pos;
-        let [a, b] = this.state.vel;
-        let {row, col} = this.state;
+        const [a, b] = this.state.vel;
+        const {row, col} = this.state;
         let arr = this.state.arr
             .map(a => a.map(
                 n => n > 0 ? n - 1 : n
@@ -128,7 +128,7 @@ export default class Snake extends React.Component {
         y = (y + b + col) % col;
 
         if (arr[x][y] > 0) {
-            let num = arr[x][y];
+            const num = arr[x][y];
             this.setState({len: this.state.len - num});
             arr = arr.map(a => a.map(
                 n => n > num ? n - num : -(n < 0)));
@@ -140,7 +140,7 @@ export default class Snake extends React.Component {
         }
 
         arr[x][y] = this.state.len;
-        let buff = this.state.buff;
+        const buff = this.state.buff;
         if (buff)
             this.setState({
                 buff: null,
