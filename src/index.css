@@ -32,30 +32,6 @@ li, code {
     color: white;
 }
 
-/* custom button */
-.custom {
-  display: inline-block;
-  padding: 0.65em 1.6em;
-  border: 3px solid #ffffff;
-  margin: 0 0.3em 0.3em 0;
-  border-radius: 0.12em;
-  box-sizing: border-box;
-  text-decoration: none;
-  font-family: "Roboto", sans-serif;
-  font-weight: 700;
-  color: #ffffff;
-  text-align: center;
-  transition: all 0.2s;
-  position: relative;
-  background-color: black;
-}
-
-.custom:hover {
-    background-color: white;
-    color: #000000;
-    cursor: pointer;
-}
-
 /* Split the screen in half */
 .split {
   height: 100%;
@@ -103,38 +79,3 @@ li, code {
               user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
-
-.dropdown {
-  position: relative;
-  display: inline-block;
-}
-
-.dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: #f1f1f1;
-  min-width: 122px;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-
-  border-radius: 0.12em;
-}
-
-.dropdown-content a {
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-
-  font-size: 13px;
-  font-family: "Roboto", sans-serif;
-  font-weight: 700;
-  text-align: center;
-}
-
-.dropdown-content a:hover {
-    background-color: #ddd;
-    border-radius: 0.3em;
-}
-
-.dropdown:hover .dropdown-content {display: block;}

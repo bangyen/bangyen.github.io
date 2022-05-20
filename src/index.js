@@ -17,6 +17,7 @@ import Error from './Components/Error';
 
 import './index.css';
 import './Grid.css';
+import './Button.css';
 
 function App() {
     return (

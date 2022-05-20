@@ -1,12 +1,12 @@
 import React from 'react';
-import {withRouter, Link} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 export default function Home() {
     document.title = 'Home';
 
     return (
-        <header className='App-header'>
-            <h1 className='logo select'>
+        <header className='App-header select'>
+            <h1 className='logo'>
                 Bangyen
             </h1>
             <div>
@@ -14,7 +14,7 @@ export default function Home() {
                     <button class='custom'>
                         Interpreters
                     </button>
-                    <div class="dropdown-content">
+                    <div class='dropdown-content'>
                         <Link to='/back'>
                             Back
                         </Link>
