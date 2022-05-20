@@ -1,5 +1,5 @@
-import React from 'react';
 import {Link} from 'react-router-dom';
+import React from 'react';
 
 export default function Home() {
     document.title = 'Home';
@@ -29,6 +29,12 @@ export default function Home() {
                         </Link>
                     </div>
                 </div>
+                <Link to='/videos'>
+                    <button className='custom'
+                            type='button'>
+                        Videos
+                    </button>
+                </Link>
                 <Link to='/snake'>
                     <button className='custom'
                             type='button'>

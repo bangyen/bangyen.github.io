@@ -14,6 +14,7 @@ import WII2D from './Components/Interpreters/WII2D';
 import Snake from './Components/Snake';
 import Home from './Components/Home';
 import Error from './Components/Error';
+import Videos from './Components/Videos';
 
 import './index.css';
 import './Grid.css';
@@ -35,6 +36,9 @@ function App() {
                     </Route>
                     <Route exact path="/WII2D">
                         <WII2D />
+                    </Route>
+                    <Route exact path="/videos">
+                        <Videos />
                     </Route>
                     <Route exact path="/snake">
                         <Snake />
