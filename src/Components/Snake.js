@@ -156,12 +156,14 @@ export default class Snake extends React.Component {
     render() {
         return (
             <header className='App-header'>
-                <table style={{height: '85vh', width: '95vw'}}>
+                <table style={{height: '85vh', width: '95vw'}}
+                        className='grid'>
                     <tbody>
                         {this.state.arr.map((a, row) =>
                             (<tr key={row.toString()}>{
                                 a.map((val, col) =>
                                 <td key={`${row}-${col}`}
+                                    className='cell select'
                                     bgcolor={val > 0 ? 'white' :
                                         val < 0 ? 'red' : 'black'}
                                         style={{cursor: 'default'}}>
