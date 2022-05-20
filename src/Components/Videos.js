@@ -3,7 +3,7 @@ import {button} from './helper';
 import React from "react";
 
 const YoutubeEmbed = ({embedId, name}) => (
-    <div className="video-responsive">
+    <div>
         <iframe
             width="853"
             height="480"
