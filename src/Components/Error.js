@@ -2,15 +2,17 @@ import React from 'react';
 import { Link } from "react-router-dom";
 
 export default function Error() {
-    document.title = '404';
+    document.title = 'Page Not Found | Bangyen';
     return (
         <header className='App-header'>
-            <h1>404 Error</h1>
+            <code style={{padding: '10px'}}>
+                This page isn't available.
+            </code>
             <Link to='/' style={{ marginBottom: '20px' }}>
                 <button className='custom'
-                            type='button'>
-                        🏠&#xfe0e;
-                    </button>
+                        type='button'>
+                    🏠&#xfe0e;
+                </button>
             </Link>
         </header>
     );
