@@ -2,8 +2,8 @@ import {Link} from 'react-router-dom';
 import {button} from './helper';
 import React from "react";
 
-const YoutubeEmbed = ({embedId, name}) => (
-    <div>
+function getVideo(embedId, name) {
+    return <div>
         <iframe
             width="853"
             height="480"
@@ -20,8 +20,8 @@ const YoutubeEmbed = ({embedId, name}) => (
             allowFullScreen
             title={name}
         />
-    </div>
-);
+    </div>;
+}
 
 export default class Videos extends React.Component {
     constructor(props: Props) {
@@ -40,8 +40,8 @@ export default class Videos extends React.Component {
     }
 
     change(val) {
-        let len = this.id.length;
-        let {num} = this.state;
+        const len = this.id.length;
+        const {num} = this.state;
         val = num + val + len;
 
         return () => {
@@ -52,8 +52,8 @@ export default class Videos extends React.Component {
     }
 
     render() {
-        let {num} = this.state;
-        let [name, id] = this.id[num];
+        const {num} = this.state;
+        const [name, id] = this.id[num];
 
         return (
             <header className='App-header'>
@@ -62,9 +62,7 @@ export default class Videos extends React.Component {
                         {name}
                     </code>
                 </h1>
-                <YoutubeEmbed
-                    embedId={id}
-                    name={name} />
+                {getVideo(id, name)}
                 <div>
                     {button('\xa0❮\xa0',
                         this.change(-1))}
