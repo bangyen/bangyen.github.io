@@ -21,7 +21,8 @@ export default class Grid extends React.Component {
     }
 
     componentDidMount() {
-        document.title = 'Interpreter';
+        document.title = this.props.name
+            + ' Interpreter | Bangyen';
         document.addEventListener(
             'keydown',
             this.changeText,
@@ -246,7 +247,8 @@ export default class Grid extends React.Component {
                 {button('➖\ufe0e', this.changeSize(size - 1))}
                 {button('📥\ufe0e', () => {
                     navigator.clipboard.writeText(
-                        grid.map(x => x.join('')).join('\n')
+                        grid.map(x => x.join(''))
+                            .join('\n')
                 )})}
                 <Link to='/'>
                     <button className='custom'

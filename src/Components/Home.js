@@ -2,7 +2,7 @@ import {Link} from 'react-router-dom';
 import React from 'react';
 
 export default function Home() {
-    document.title = 'Home';
+    document.title = 'Home | Bangyen';
 
     return (
         <header className='App-header select'>

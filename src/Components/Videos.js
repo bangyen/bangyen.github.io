@@ -39,6 +39,10 @@ export default class Videos extends React.Component {
         this.state = {num: 0};
     }
 
+    componentDidMount() {
+        document.title = 'Videos | Bangyen';
+    }
+
     change(val) {
         const len = this.id.length;
         const {num} = this.state;

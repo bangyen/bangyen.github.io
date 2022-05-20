@@ -19,7 +19,8 @@ export default class Grid extends React.Component {
     }
 
     componentDidMount() {
-        document.title = 'Interpreter';
+        document.title = this.props.name
+            + ' Interpreter | Bangyen';
     }
 
     runCode(mode) {

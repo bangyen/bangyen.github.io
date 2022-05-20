@@ -95,7 +95,7 @@ export default class Snake extends React.Component {
     componentDidMount() {
         this.timerID = setInterval(
             () => this.move(), 100);
-        document.title = 'Snake';
+        document.title = 'Snake | Bangyen';
         document.addEventListener(
             'keydown',
             this.changeDir,
