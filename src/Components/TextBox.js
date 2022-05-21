@@ -22,18 +22,29 @@ export default class Grid extends React.Component {
             + ' Interpreter | Bangyen';
     }
 
+    componentWillUnmount() {
+        clearInterval(this.timerID);
+    }
+
     runCode(mode) {
         return function() {
+            clearInterval(this.timerID);
             let state;
 
-            if (mode === 'run')
-                do {
-                    state = this.func();
-                } while (!state.end);
-            else if (mode === 'prev')
+            if (mode === 'run') {
+                const move = () => {
+                    this.setState(this.func());
+
+                    if (this.state.end)
+                        clearInterval(this.timerID);
+                };
+
+                this.timerID = setInterval(move, 200);
+            } else if (mode === 'prev') {
                 state = this.func(true);
-            else
+            } else {
                 state = this.func();
+            }
 
             this.setState(state);
         }.bind(this);

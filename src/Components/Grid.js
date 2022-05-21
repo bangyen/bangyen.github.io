@@ -11,7 +11,6 @@ export default class Grid extends React.Component {
         this.changeColor = this.changeColor.bind(this);
         this.changeText = this.changeText.bind(this);
         this.changeSize = this.changeSize.bind(this);
-        this.changeGrid = this.changeGrid.bind(this);
         this.message = 'Input program here...';
         const size = 5;
 
@@ -37,6 +36,7 @@ export default class Grid extends React.Component {
     }
 
     componentWillUnmount() {
+        clearInterval(this.timerID);
         document.removeEventListener(
             'keydown',
             this.changeText,
@@ -45,38 +45,47 @@ export default class Grid extends React.Component {
 
     runCode(mode) {
         return function() {
-            if (this.state.edit)
+            if (this.state.edit) {
                 this.clean();
+                return;
+            } else if (this.state.text) {
+                this.setState({text: false});
+                return;
+            }
 
             if (this.state.pos === null) {
                 const {grid, size} = this.state;
                 const {run, start} = this.props;
                 this.func = run(grid, size);
 
-                if (mode !== 'run') {
-                    this.setState({
-                        ...start,
-                        select: null,
-                    });
+                this.setState({
+                    ...start,
+                    select: null,
+                });
 
+                if (mode !== 'run')
                     return;
-                }
             }
 
-            this.setState({select: null});
+            clearInterval(this.timerID);
             let temp;
 
-            if (mode === 'run')
-                do {
-                    temp = this.func();
-                } while (!(this.state
-                               .breaks
-                               .includes(temp.pos)
-                    || temp.end));
-            else if (mode === 'next')
+            if (mode === 'run') {
+                const move = () => {
+                    this.setState(this.func());
+                    const {pos, end, breaks}
+                        = this.state;
+
+                    if (breaks.includes(pos) || end)
+                        clearInterval(this.timerID);
+                };
+
+                this.timerID = setInterval(move, 200);
+            } else if (mode === 'next') {
                 temp = this.func();
-            else if (mode === 'prev')
+            } else {
                 temp = this.func(true);
+            }
 
             this.setState(temp);
         }.bind(this);
@@ -158,14 +167,6 @@ export default class Grid extends React.Component {
         return 'white';
     }
 
-    changeGrid(event) {
-        const val = event.target.value;
-        this.setState({
-            grid: val,
-            edit: true
-        });
-    }
-
     clean() {
         const {grid, size} = this.state;
         let val = grid
@@ -234,13 +235,18 @@ export default class Grid extends React.Component {
 
             const [row, col]
                 = resize(value);
+            const changeGrid = (e) =>
+                this.setState({
+                    grid: e.target.value,
+                    edit: true
+                });
 
             return <form>
                 <label>
                     <textarea
                         value={value}
-                        onChange={this.changeGrid}
-                        onPaste={this.changeGrid}
+                        onChange={changeGrid}
+                        onPaste={changeGrid}
                         rows={row} cols={col} />
                 </label>
             </form>;
@@ -304,6 +310,7 @@ export default class Grid extends React.Component {
             if (!num || text)
                 return;
 
+            clearInterval(this.timerID);
             let arr = '';
 
             if (select !== null)
@@ -322,7 +329,6 @@ export default class Grid extends React.Component {
                     else
                         arr += ' ';
 
-            console.log(arr);
             this.setState({
                 ...this.props.start,
                 grid: arr,
@@ -344,6 +350,7 @@ export default class Grid extends React.Component {
                     if (this.state.text)
                         return;
 
+                    clearInterval(this.timerID);
                     this.setState({
                         ...this.props.start,
                         pos: null
@@ -354,9 +361,11 @@ export default class Grid extends React.Component {
                 {button('➖\ufe0e', this.changeSize(size - 1), 'Shrink')}
                 {button('📥\ufe0e',
                     () => {
+                        clearInterval(this.timerID);
+
                         if (edit)
                             this.clean();
-                         else
+                        else
                             this.setState({
                                 select: null,
                                 text: !text
