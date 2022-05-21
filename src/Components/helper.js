@@ -6,21 +6,18 @@ export function button(sym, func) {
         </button>;
 }
 
-export function emptyArray(size) {
-    const arr = Array(size).fill(' ');
-    return arr.map(x => [...arr]);
-}
+export function resize(str) {
+    const arr = str.split('\n')
+        .map(val => val.length);
+    let col = Math.max(...arr);
+    let row = arr.length;
 
-export function find(arr, ind) {
-    const len = arr.length;
-    const quo = Math.floor(ind / len);
+    if (row < 15)
+        row = 15;
+    if (col < 65)
+        col = 65;
 
-    return arr[quo];
-}
-
-export function get(arr, ind) {
-    const row = find(arr, ind);
-    return row[ind % arr.length];
+    return [row, col];
 }
 
 export function move(obj) {

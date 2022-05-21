@@ -1,5 +1,5 @@
+import {button, resize} from './helper';
 import {Link} from 'react-router-dom';
-import {button} from './helper';
 import React from 'react';
 
 export default class Grid extends React.Component {
@@ -124,14 +124,8 @@ export default class Grid extends React.Component {
 
     render() {
         const {name, link} = this.props;
-        const arr = this.state.value.split('\n');
-        let col = Math.max(...arr.map(val => val.length));
-        let row = arr.length;
-
-        if (row < 3)
-            row = 12;
-        if (col < 30)
-            col = 60;
+        const [row, col]
+            = resize(this.state.value);
 
         return (
             <header className='App-header'>
@@ -145,7 +139,7 @@ export default class Grid extends React.Component {
                             </a>)
                         </code>
                         <br /><br />
-                        <form onSubmit={this.handleSubmit}>
+                        <form>
                             <label>
                                 <textarea
                                     value={this.state.value}
