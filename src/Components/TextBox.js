@@ -122,7 +122,10 @@ export default class Grid extends React.Component {
     }
 
     render() {
-        const {name, link} = this.props;
+        let {name, link} = this.props;
+        link = 'https://esolangs.org/wiki/'
+            + (link ? link : name);
+
         const [row, col]
             = resize(this.state.value);
 
@@ -131,13 +134,17 @@ export default class Grid extends React.Component {
                 <div className='split left'>
                     <div className='centered'>
                         <code>
-                            {name + ' '}
-                            (<a href={'https://esolangs.org/wiki/'
-                                    + (link ? link : name)}>
-                                Commands
-                            </a>)
+                            {name}
                         </code>
-                        <br /><br />
+                        <ul style={{
+                                fontSize: '75%',
+                                textAlign: 'left'}}>
+                            <li>Hover over buttons for usage</li>
+                            <li>
+                                Commands located&nbsp;
+                                <a href={link}>here</a>
+                            </li>
+                        </ul>
                         <form>
                             <label>
                                 <textarea
