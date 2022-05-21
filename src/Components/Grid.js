@@ -1,4 +1,4 @@
-import {button, emptyArray, find, move} from './helper';
+import {button, resize, move} from './helper';
 import {Link} from 'react-router-dom';
 import React from 'react';
 
@@ -7,16 +7,20 @@ export default class Grid extends React.Component {
         super(props);
 
         this.changeColor = this.changeColor.bind(this);
-        this.changeText  = this.changeText.bind(this);
-        this.changeSize  = this.changeSize.bind(this);
+        this.changeText = this.changeText.bind(this);
+        this.changeSize = this.changeSize.bind(this);
+        this.changeGrid = this.changeGrid.bind(this);
         const size = 5;
 
         this.state = {
             ...this.props.start,
-            grid: emptyArray(size),
+            grid: ' '.repeat(size * size),
+            size,
             select: null,
             pos:    null,
-            breaks: []
+            breaks: [],
+            text: false,
+            edit: false
         };
     }
 
@@ -38,6 +42,9 @@ export default class Grid extends React.Component {
 
     runCode(mode) {
         return function() {
+            if (this.state.edit)
+                this.clean();
+
             if (this.state.pos === null) {
                 this.func = this.props.run(
                     this.state.grid);
@@ -71,11 +78,11 @@ export default class Grid extends React.Component {
     }
 
     changeText(e) {
-        let {select, breaks} = this.state;
+        let {select, breaks, text} = this.state;
 
-        if (select !== null) {
-            const arr  = this.state.grid;
-            const size = arr.length;
+        if (select !== null && !text) {
+            let str = this.state.grid;
+            const size = str.length;
             let value;
 
             if (e.key.toLowerCase() === 'b') {
@@ -116,8 +123,10 @@ export default class Grid extends React.Component {
                 return;
             }
 
-            find(arr, select)[select % size] = value;
-            this.setState({grid: arr});
+            str = str.substring(0, select)
+                + value
+                + str.substring(select + 1);
+            this.setState({grid: str});
         }
     }
 
@@ -144,40 +153,116 @@ export default class Grid extends React.Component {
         return 'white';
     }
 
+    changeGrid(event) {
+        const val = event.target.value;
+        this.setState({
+            grid: val,
+            edit: true
+        });
+    }
+
+    clean() {
+        let val = this.state.grid
+            .split('\n')
+            .map(v => v.trimEnd())
+            .filter(v => v !== '');
+
+        const max = Math.max(val.length,
+            ...val.map(v => v.length));
+
+        while (val.length < max)
+            val.push('');
+
+        val = val.map(v => {
+            const len = v.length;
+
+            if (len < max)
+                v += ' '.repeat(max - len);
+            else
+                v = v.substring(0, max);
+
+            return v;
+        });
+
+        this.setState({
+            ...this.props.start,
+            grid: val.join(''),
+            size: max,
+            pos: null,
+            text: false,
+            edit: false
+        });
+    }
+
     getTable() {
-        const grid = this.state.grid;
-        let table = emptyArray(grid.length);
+        const {grid, size, edit} = this.state;
+
+        if (this.state.text) {
+            let value = '';
+
+            if (edit) {
+                value = grid;
+            } else {
+                if (grid === ' '.repeat(size * size)) {
+                    value = 'Input program here...';
+                } else {
+                    const empty = ' '.repeat(size);
+                    const split = [...Array(5).keys()]
+                        .map(v => grid.substring(
+                            size * v, size * (v + 1)))
+                        .filter(v => v !== empty);
+                    const len = split.length;
+
+                    for (let i = 0; i < len; i++) {
+                        value += split[i].trimEnd();
+
+                        if (i + 1 !== len)
+                            value += '\n';
+                    }
+                }
+            }
+
+            const [row, col]
+                = resize(value);
+
+            return <form>
+                <label>
+                    <textarea
+                        value={value}
+                        onChange={this.changeGrid}
+                        onPaste={this.changeGrid}
+                        rows={row} cols={col} />
+                </label>
+            </form>;
+        }
+
+        let table = [...Array(size)]
+            .map(x => Array(size));
         let pos;
 
-        for (const i in table) {
-            for (const j in table) {
-                pos = grid.length * +i + +j;
-                table[i][j] = <td key={`${i}-${j}`}
-                            className='cell select'
-                            onClick={this.changeColor(pos)}
-                            bgcolor={this.chooseColor(pos)}>
-                        <div>
-                            &nbsp;{grid[i][j]}&nbsp;
-                        </div>
-                    </td>;
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                pos = size * i + j;
+                table[i][j] = <td key={`${pos}`}
+                        className='cell select'
+                        onClick={this.changeColor(pos)}
+                        bgcolor={this.chooseColor(pos)}>
+                    <div>
+                        &nbsp;{grid[pos]}&nbsp;
+                    </div>
+                </td>;
             }
         }
 
-        table = table.map((arr, row) =>
-                <tr key={row.toString()}>
-                    {arr}
-                </tr>
-            );
-
-        return <div className='split left'>
-                <div className='centered'>
-                    <table className='grid'>
-                        <tbody>
-                            {table}
-                        </tbody>
-                    </table>
-                </div>
-            </div>;
+        return <table className='grid'>
+            <tbody>
+                {table.map((arr, row) =>
+                    <tr key={row.toString()}>
+                        {arr}
+                    </tr>
+                )}
+            </tbody>
+        </table>;
     }
 
     getInfo() {
@@ -199,44 +284,50 @@ export default class Grid extends React.Component {
     }
 
     changeSize(num) {
-        let {grid, select} = this.state;
+        let {
+            grid, size,
+            select, text
+        } = this.state;
 
         return function() {
-            if (!num)
+            if (!num || text)
                 return;
 
-            const arr = emptyArray(num);
+            let arr = '';
             select = move({
                 pos: select,
                 vel: [0, 0],
-                old: grid.length,
+                old: size,
                 size: num,
                 wrap: false
             });
 
-            for (const i in arr)
-                for (const j in arr)
-                    if (grid[i])
-                        arr[i][j] = grid[i][j];
+            for (let i = 0; i < num; i++)
+                for (let j = 0; j < num; j++)
+                    if (i < size && j < size)
+                        arr += grid[size * i + j];
                     else
-                        arr[i][j] = ' ';
+                        arr += ' ';
 
             this.setState({
                 grid: arr,
+                size: num,
                 select
             });
         }.bind(this);
     }
 
     getButtons() {
-        const {grid} = this.state;
-        const size   = grid.length;
+        const {size, text, edit} = this.state;
 
         return (<div>
                 {button('▶', this.runCode('run'))}
                 {button('\xa0❮\xa0', this.runCode('prev'))}
                 {button('\xa0❯\xa0', this.runCode('next'))}
                 {button('✖', () => {
+                    if (this.state.text)
+                        return;
+
                     const obj = this.props.start;
                     obj.pos = null;
 
@@ -245,11 +336,14 @@ export default class Grid extends React.Component {
                 <br />
                 {button('➕\ufe0e', this.changeSize(size + 1))}
                 {button('➖\ufe0e', this.changeSize(size - 1))}
-                {button('📥\ufe0e', () => {
-                    navigator.clipboard.writeText(
-                        grid.map(x => x.join(''))
-                            .join('\n')
-                )})}
+                {button('📥\ufe0e',
+                    () => {
+                        if (edit)
+                            this.clean();
+                         else
+                            this.setState({
+                                text: !text
+                    })})}
                 <Link to='/'>
                     <button className='custom'
                             type='button'>
@@ -308,7 +402,11 @@ export default class Grid extends React.Component {
     render() {
         return (
             <header className='App-header'>
-                {this.getTable()}
+                <div className='split left'>
+                    <div className='centered'>
+                        {this.getTable()}
+                    </div>
+                </div>
                 <div className='split right'>
                     <div className='centered'>
                         <code>Instructions:</code>
