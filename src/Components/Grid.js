@@ -46,14 +46,16 @@ export default class Grid extends React.Component {
                 this.clean();
 
             if (this.state.pos === null) {
-                this.func = this.props.run(
-                    this.state.grid);
+                const {grid, size} = this.state;
+                const {run, start} = this.props;
+                this.func = run(grid, size);
 
                 if (mode !== 'run') {
                     this.setState({
-                        ...this.props.start,
+                        ...start,
                         select: null,
                     });
+
                     return;
                 }
             }
@@ -294,13 +296,15 @@ export default class Grid extends React.Component {
                 return;
 
             let arr = '';
-            select = move({
-                pos: select,
-                vel: [0, 0],
-                old: size,
-                size: num,
-                wrap: false
-            });
+
+            if (select !== null)
+                select = move({
+                    pos: select,
+                    vel: [0, 0],
+                    old: size,
+                    size: num,
+                    wrap: false
+                });
 
             for (let i = 0; i < num; i++)
                 for (let j = 0; j < num; j++)
@@ -309,9 +313,12 @@ export default class Grid extends React.Component {
                     else
                         arr += ' ';
 
+            console.log(arr);
             this.setState({
+                ...this.props.start,
                 grid: arr,
                 size: num,
+                pos: null,
                 select
             });
         }.bind(this);
@@ -328,10 +335,10 @@ export default class Grid extends React.Component {
                     if (this.state.text)
                         return;
 
-                    const obj = this.props.start;
-                    obj.pos = null;
-
-                    this.setState(obj);
+                    this.setState({
+                        ...this.props.start,
+                        pos: null
+                    });
                 })}
                 <br />
                 {button('➕\ufe0e', this.changeSize(size + 1))}
