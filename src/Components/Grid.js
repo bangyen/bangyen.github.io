@@ -209,7 +209,7 @@ export default class Grid extends React.Component {
                     value = 'Input program here...';
                 } else {
                     const empty = ' '.repeat(size);
-                    const split = [...Array(5).keys()]
+                    const split = [...Array(size).keys()]
                         .map(v => grid.substring(
                             size * v, size * (v + 1)))
                         .filter(v => v !== empty);
