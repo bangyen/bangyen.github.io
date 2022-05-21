@@ -28,6 +28,17 @@ export default class Grid extends React.Component {
 
     runCode(mode) {
         return function() {
+            const {value, reset, end} = this.state;
+            const {start, run} = this.props;
+
+            if (end) {
+                this.func = run(value).run;
+                this.setState(start);
+
+                if (mode !== 'run' && !reset)
+                    return;
+            }
+
             clearInterval(this.timerID);
             let state;
 
@@ -46,7 +57,10 @@ export default class Grid extends React.Component {
                 state = this.func();
             }
 
-            this.setState(state);
+            this.setState({
+                reset: false,
+                ...state
+            });
         }.bind(this);
     }
 
@@ -54,12 +68,12 @@ export default class Grid extends React.Component {
         const val = event.target.value;
 
         if (val !== this.state.value) {
-            const {run, code}
+            const {code}
                 = this.props.run(val);
 
-            this.func = run;
             this.setState({
                 ...this.props.start,
+                end: true,
                 value: val,
                 code
             });
@@ -168,6 +182,14 @@ export default class Grid extends React.Component {
                         {button('▶', this.runCode('run'), 'Run')}
                         {button('\xa0❮\xa0', this.runCode('prev'), 'Previous')}
                         {button('\xa0❯\xa0', this.runCode('next'), 'Next')}
+                        {button('✖', () => {
+                            clearInterval(this.timerID);
+                            this.setState({
+                                ...this.props.start,
+                                reset: true,
+                                end: true
+                            });
+                        }, 'Stop')}
                         {home()}
                     </div>
                 </div>
