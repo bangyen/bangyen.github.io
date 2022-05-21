@@ -1,5 +1,7 @@
-import {button, resize, move} from './helper';
-import {Link} from 'react-router-dom';
+import {
+    button, home,
+    resize, move
+} from './helper';
 import React from 'react';
 
 export default class Grid extends React.Component {
@@ -10,6 +12,7 @@ export default class Grid extends React.Component {
         this.changeText = this.changeText.bind(this);
         this.changeSize = this.changeSize.bind(this);
         this.changeGrid = this.changeGrid.bind(this);
+        this.message = 'Input program here...';
         const size = 5;
 
         this.state = {
@@ -164,10 +167,14 @@ export default class Grid extends React.Component {
     }
 
     clean() {
-        let val = this.state.grid
+        const {grid, size} = this.state;
+        let val = grid
             .split('\n')
             .map(v => v.trimEnd())
             .filter(v => v !== '');
+
+        if (!val.length || val[0] === this.message)
+            val = Array(size).fill(' '.repeat(size));
 
         const max = Math.max(val.length,
             ...val.map(v => v.length));
@@ -191,6 +198,7 @@ export default class Grid extends React.Component {
             grid: val.join(''),
             size: max,
             pos: null,
+            select: null,
             text: false,
             edit: false
         });
@@ -206,7 +214,7 @@ export default class Grid extends React.Component {
                 value = grid;
             } else {
                 if (grid === ' '.repeat(size * size)) {
-                    value = 'Input program here...';
+                    value = this.message;
                 } else {
                     const empty = ' '.repeat(size);
                     const split = [...Array(size).keys()]
@@ -278,6 +286,7 @@ export default class Grid extends React.Component {
                 <li>Click to select/unselect</li>
                 <li>Type to change selected cell</li>
                 <li>Press (b) to use breakpoints</li>
+                <li>Hover over buttons for usage</li>
                 <li>
                     {name} commands located&nbsp;
                     <a href={link}>here</a>
@@ -328,9 +337,9 @@ export default class Grid extends React.Component {
         const {size, text, edit} = this.state;
 
         return (<div>
-                {button('▶', this.runCode('run'))}
-                {button('\xa0❮\xa0', this.runCode('prev'))}
-                {button('\xa0❯\xa0', this.runCode('next'))}
+                {button('▶', this.runCode('run'), 'Run')}
+                {button('\xa0❮\xa0', this.runCode('prev'), 'Previous')}
+                {button('\xa0❯\xa0', this.runCode('next'), 'Next')}
                 {button('✖', () => {
                     if (this.state.text)
                         return;
@@ -339,24 +348,20 @@ export default class Grid extends React.Component {
                         ...this.props.start,
                         pos: null
                     });
-                })}
+                }, 'Stop')}
                 <br />
-                {button('➕\ufe0e', this.changeSize(size + 1))}
-                {button('➖\ufe0e', this.changeSize(size - 1))}
+                {button('➕\ufe0e', this.changeSize(size + 1), 'Expand')}
+                {button('➖\ufe0e', this.changeSize(size - 1), 'Shrink')}
                 {button('📥\ufe0e',
                     () => {
                         if (edit)
                             this.clean();
                          else
                             this.setState({
+                                select: null,
                                 text: !text
-                    })})}
-                <Link to='/'>
-                    <button className='custom'
-                            type='button'>
-                        🏠&#xfe0e;
-                    </button>
-                </Link>
+                    })}, 'Copy/Paste')}
+                {home()}
             </div>);
     }
 
