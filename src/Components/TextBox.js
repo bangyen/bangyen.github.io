@@ -9,6 +9,7 @@ export default class Grid extends React.Component {
             ...this.props.start,
             value: '',
             code: '',
+            reset: true,
             end: true
         };
 
@@ -32,7 +33,7 @@ export default class Grid extends React.Component {
             const {start, run} = this.props;
 
             if (end) {
-                this.func = run(value).run;
+                this.func = run(value);
                 this.setState(start);
 
                 if (mode !== 'run' && !reset)
@@ -68,8 +69,8 @@ export default class Grid extends React.Component {
         const val = event.target.value;
 
         if (val !== this.state.value) {
-            const {code}
-                = this.props.run(val);
+            const code
+                = this.props.clean(val);
 
             this.setState({
                 ...this.props.start,

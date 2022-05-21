@@ -1,18 +1,23 @@
 import TextBox from '../TextBox';
 
+function clean(input) {
+    let code = '';
+
+    for (let c of input)
+        if ('+-><'.includes(c))
+            code += c;
+
+    return code;
+}
+
 function outer(obj) {
     function run(input) {
-        let code = '';
-
-        for (let c of input)
-            if ('+-><'.includes(c))
-                code += c;
-
-        let len = code.length;
+        const code = clean(input);
+        const len = code.length;
         let arr = [obj];
         let num = 0;
 
-        function inner(back = false) {
+        return function (back = false) {
             let state = arr[arr.length - 1];
             let {tape, ptr, end} = state;
             let c = code[num % len];
@@ -66,11 +71,6 @@ function outer(obj) {
             arr.push(state);
             return state;
         };
-
-        return {
-            run: inner,
-            code
-        };
     }
 
     return run;
@@ -90,5 +90,6 @@ export default function StunStep() {
         link='Stun_Step'
         start={obj}
         run={run}
+        clean={clean}
         tape={true} />;
 }
