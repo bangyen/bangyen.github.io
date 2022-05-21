@@ -65,11 +65,6 @@ li, code {
   white-space: nowrap;
 }
 
-.logo {
-    font-size: 150px;
-    font-family: 'AloeVera';
-}
-
 .select {
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
