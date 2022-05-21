@@ -10,11 +10,11 @@ export default function Home() {
                 Bangyen
             </h1>
             <div>
-                <div class='dropdown'>
-                    <button class='custom'>
+                <div className='dropdown'>
+                    <button className='custom'>
                         Interpreters
                     </button>
-                    <div class='dropdown-content'>
+                    <div className='dropdown-content'>
                         <Link to='/back'>
                             Back
                         </Link>
