@@ -2,13 +2,10 @@ import {move} from '../helper';
 import Grid from '../Grid';
 
 function outer(obj) {
-    function run(code) {
-        if (code.every(
-                e => !e.includes('*'))) {
+    function run(code, size) {
+        if (!code.includes('*'))
             alert('No halt instruction detected!');
-        }
 
-        let size = code.length;
         let vel = [0, 1];
         let arr = [obj];
         let ind = 0;

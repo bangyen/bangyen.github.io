@@ -30,10 +30,9 @@ function outer(obj) {
         let size = arr.length;
         let warp = [];
 
-        for (let i in arr)
-            for (let j in arr)
-                if (arr[i][j] === '@')
-                    warp.push(size * i + +j);
+        for (let k in arr)
+            if (arr[k] === '@')
+                warp.push(k);
 
         warp.sort(comp(pos, size));
         return warp.length > 1
@@ -42,31 +41,29 @@ function outer(obj) {
 
     let str = '^v<>';
     let dir = [
-            [-1, 0],
-            [1, 0],
-            [0, -1],
-            [0, 1]
-        ];
+        [-1, 0],
+        [1, 0],
+        [0, -1],
+        [0, 1]
+    ];
 
-    function run(code) {
-        let size = code.length;
+    function run(code, size) {
+        obj.pos = null;
         let vel = dir[0];
         let arr = [obj];
         let ind = 0;
 
-        if (code.every(
-                e => !e.includes('!'))) {
+        if (!code.includes('!')) {
             return error('No');
         }
 
-        for (let i in code)
-            for (let j in code)
-                if (code[i][j] === '!') {
-                    if (obj.pos !== null)
-                        return error('Additional');
+        for (let k in code)
+            if (code[k] === '!') {
+                if (obj.pos !== null)
+                    return error('Additional');
 
-                    obj.pos = size * i + +j;
-                }
+                obj.pos = k;
+            }
 
         function wrap(pos) {
             return move({
@@ -123,7 +120,6 @@ function outer(obj) {
                 let rnd = Math.random() * 4;
                 vel = dir[Math.floor(rnd)];
             } else if (c === '.') {
-                obj.pos = null;
                 pos = null;
                 end = true;
             }
