@@ -1,4 +1,4 @@
-import {get, move} from '../helper';
+import {move} from '../helper';
 import Grid from '../Grid';
 
 function outer(obj) {
@@ -38,7 +38,7 @@ function outer(obj) {
                 return arr[ind];
 
             let {tape, cell, end, pos} = state;
-            let c = get(code, pos);
+            let c = code[pos];
             let [a, b] = vel;
             tape = [...tape];
 
@@ -57,7 +57,7 @@ function outer(obj) {
             } else if (c === '+' && !tape[cell]) {
                 do {
                     pos = wrap(pos);
-                    c = get(code, pos);
+                    c = code[pos];
                 } while (!'\\/<>-+*'.includes(c));
             } else if (c === '*') {
                 end = true;

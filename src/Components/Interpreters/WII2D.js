@@ -1,4 +1,4 @@
-import {get, move} from '../helper';
+import {move} from '../helper';
 import Grid from '../Grid';
 
 function outer(obj) {
@@ -93,7 +93,7 @@ function outer(obj) {
                 return arr[ind];
 
             let {pos, end, out, acc} = state;
-            let c = get(code, pos);
+            let c = code[pos];
 
             if (str.includes(c)) {
                 vel = dir[str.indexOf(c)];
