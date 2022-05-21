@@ -1,5 +1,5 @@
+import {home} from './helper';
 import React from 'react';
-import { Link } from "react-router-dom";
 
 export default function Error() {
     document.title = 'Page Not Found | Bangyen';
@@ -8,12 +8,7 @@ export default function Error() {
             <code style={{padding: '10px'}}>
                 This page isn't available.
             </code>
-            <Link to='/' style={{ marginBottom: '20px' }}>
-                <button className='custom'
-                        type='button'>
-                    🏠&#xfe0e;
-                </button>
-            </Link>
+            {home()}
         </header>
     );
 }

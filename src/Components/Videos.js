@@ -1,5 +1,4 @@
-import {Link} from 'react-router-dom';
-import {button} from './helper';
+import {button, home} from './helper';
 import React from "react";
 
 function getVideo(embedId, name) {
@@ -61,15 +60,12 @@ export default class Videos extends React.Component {
                 {getVideo(id, name)}
                 <div>
                     {button('\xa0❮\xa0',
-                        this.change(-1))}
-                    <Link to='/'>
-                        <button className='custom'
-                                type='button'>
-                            🏠&#xfe0e;
-                        </button>
-                    </Link>
+                        this.change(-1),
+                        'Previous')}
+                    {home()}
                     {button('\xa0❯\xa0',
-                        this.change(1))}
+                        this.change(1),
+                        'Next')}
                 </div>
             </header>
         );

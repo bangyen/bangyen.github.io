@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom';
+import {home} from './helper';
 import React from 'react';
 
 function createArr() {
@@ -173,12 +173,9 @@ export default class Snake extends React.Component {
                         )}
                     </tbody>
                 </table>
-                <Link to='/' style={{marginBottom: '20px'}}>
-                    <button className='custom'
-                            type='button'>
-                        🏠&#xfe0e;
-                    </button>
-                </Link>
+                <div style={{marginBottom: '20px'}}>
+                    {home()}
+                </div>
             </header>
         );
     }

@@ -1,5 +1,4 @@
-import {button, resize} from './helper';
-import {Link} from 'react-router-dom';
+import {button, home, resize} from './helper';
 import React from 'react';
 
 export default class Grid extends React.Component {
@@ -148,15 +147,10 @@ export default class Grid extends React.Component {
                                     rows={row} cols={col} />
                             </label>
                         </form>
-                        {button('▶', this.runCode('run'))}
-                        {button('\xa0❮\xa0', this.runCode('prev'))}
-                        {button('\xa0❯\xa0', this.runCode('next'))}
-                        <Link to='/'>
-                            <button className='custom'
-                                    type='button'>
-                                🏠&#xfe0e;
-                            </button>
-                        </Link>
+                        {button('▶', this.runCode('run'), 'Run')}
+                        {button('\xa0❮\xa0', this.runCode('prev'), 'Previous')}
+                        {button('\xa0❯\xa0', this.runCode('next'), 'Next')}
+                        {home()}
                     </div>
                 </div>
                 <div className='split right'>

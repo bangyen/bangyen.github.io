@@ -1,9 +1,22 @@
-export function button(sym, func) {
+import {Link} from 'react-router-dom';
+
+export function button(sym, func, title) {
     return <button className='custom'
                 type='button'
-                onClick={func}>
+                onClick={func}
+                title={title}>
             {sym}
         </button>;
+}
+
+export function home() {
+    return <Link to='/'>
+        <button className='custom'
+                type='button'
+                title='Home'>
+            🏠&#xfe0e;
+        </button>
+    </Link>;
 }
 
 export function resize(str) {
