@@ -181,8 +181,8 @@ export default class Grid extends React.Component {
                             </label>
                         </form>
                         {button('▶', this.runCode('run'), 'Run')}
-                        {button('\xa0❮\xa0', this.runCode('prev'), 'Previous')}
-                        {button('\xa0❯\xa0', this.runCode('next'), 'Next')}
+                        {button('❮', this.runCode('prev'), 'Previous')}
+                        {button('❯', this.runCode('next'), 'Next')}
                         {button('✖', () => {
                             clearInterval(this.timerID);
                             this.setState({
