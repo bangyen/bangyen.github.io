@@ -201,7 +201,7 @@ export default class Grid extends React.Component {
                         />
                     </label>
                 </form>
-                {button('▶', 'Run', this.runCode('run'))}
+                {button('▶\ufe0e', 'Run', this.runCode('run'))}
                 {button('❮', 'Previous', this.runCode('prev'))}
                 {button('❯', 'Next', this.runCode('next'))}
                 {button('✖', 'Stop', () => {

@@ -6,15 +6,12 @@ export function getDim() {
     return height > 1.25 * width;
 }
 
-function calc(mode, n) {
-    return `calc(${mode} / ${n})`;
-}
-
 export function button(sym, title, func, max = false) {
+    const min  = (n) => `max(${n * 1.1}vh, ${n * 10}px)`;
+    const calc = (m, n) => `calc(${m} / ${n})`;
     const mode = getDim()
         ? 'var(--stack)'
         : 'var(--table-size)';
-    const size = 1.1;
 
     return <button className='custom'
             type='button'
@@ -23,13 +20,13 @@ export function button(sym, title, func, max = false) {
             style={{
                 width: calc(mode, 7),
                 height: calc(mode, 10.5),
-                maxWidth:  max ? `${6 * size}vh` : '',
-                maxHeight: max ? `${4 * size}vh` : ''
+                maxWidth:  max ? min(6) : '',
+                maxHeight: max ? min(4) : ''
             }}>
         <div style={{
                 fontSize: max ?
                     `min(${calc(mode, 40)},
-                    ${size}vh)` : '',
+                    ${min(1)})` : '',
                 lineHeight: '1em'
             }}>
             {sym}
