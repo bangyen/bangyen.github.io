@@ -157,7 +157,8 @@ export default class Grid extends React.Component {
             = resize(this.state.value);
 
         return (
-            <header className='App-header'>
+            <header className='App-header'
+                    style={{fontSize: 'min(10vh, 3vw)'}}>
                 <div className='split left'>
                     <div className='centered'>
                         <code>

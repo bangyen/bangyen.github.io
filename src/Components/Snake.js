@@ -163,10 +163,14 @@ export default class Snake extends React.Component {
                             (<tr key={row.toString()}>{
                                 a.map((val, col) =>
                                 <td key={`${row}-${col}`}
-                                    className='cell select'
-                                    bgcolor={val > 0 ? 'white' :
-                                        val < 0 ? 'red' : 'black'}
-                                        style={{cursor: 'default'}}>
+                                        className='cell select'
+                                        bgcolor={
+                                            val > 0 ? 'white' :
+                                            val < 0 ? 'red' : 'black'
+                                        }
+                                        style={{
+                                            cursor: 'default'
+                                        }}>
                                     <div>&nbsp;</div>
                                 </td>)
                             }</tr>)

@@ -1,8 +1,7 @@
 /* custom button */
 .custom {
   display: inline-block;
-  padding: 0.65em 1.6em;
-  border: 3px solid #ffffff;
+  border: 0.2em solid #ffffff;
   margin: 0 0.3em 0.3em 0;
   border-radius: 0.12em;
   box-sizing: border-box;
@@ -15,8 +14,10 @@
   position: relative;
   background-color: black;
   -webkit-appearance: none;
-  min-width: 62px;
-  min-height: 40px;
+  width: max(6.5vh, 6.5vw);
+  height: max(4vh, 4vw);
+  max-width: 75px;
+  max-height: 50px;
 }
 
 .custom:hover {

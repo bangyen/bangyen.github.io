@@ -5,7 +5,12 @@ export function button(sym, func, title) {
                 type='button'
                 onClick={func}
                 title={title}>
-            {sym}
+            <div style={{
+                    fontSize: 'min(1.5vh, 1.5vw)',
+                    lineHeight: '1em'
+                }}>
+                {sym}
+            </div>
         </button>;
 }
 
@@ -14,7 +19,12 @@ export function home() {
         <button className='custom'
                 type='button'
                 title='Home'>
-            🏠&#xfe0e;
+            <div style={{
+                    fontSize: 'min(1.5vh, 1.5vw)',
+                    lineHeight: '1em'
+                }}>
+                🏠&#xfe0e;
+            </div>
         </button>
     </Link>;
 }

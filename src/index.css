@@ -76,9 +76,10 @@ li, code {
 }
 
 .logo {
+    margin-top: 4vh;
     font-family: AloeVera;
     font-size: min(
-        20vw,
-        (100vh - 200px) / 6
+        17.5vw,
+        25vh
     );
 }

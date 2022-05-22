@@ -354,8 +354,8 @@ export default class Grid extends React.Component {
 
         return (<div>
                 {button('▶', this.runCode('run'), 'Run')}
-                {button('❮', this.runCode('prev'), 'Previous')}
-                {button('❯', this.runCode('next'), 'Next')}
+                {button('\xa0❮\xa0', this.runCode('prev'), 'Previous')}
+                {button('\xa0❯\xa0', this.runCode('next'), 'Next')}
                 {button('✖', () => {
                     if (this.state.text)
                         return;
@@ -439,7 +439,8 @@ export default class Grid extends React.Component {
                     </div>
                 </div>
                 <div className='split right'>
-                    <div className='centered'>
+                    <div className='centered'
+                            style={{fontSize: 'min(10vh, 3vw)'}}>
                         <code>Instructions:</code>
                         {this.getInfo()}
                         {this.getButtons()}

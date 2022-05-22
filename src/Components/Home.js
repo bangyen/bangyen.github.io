@@ -3,15 +3,19 @@ import React from 'react';
 
 export default function Home() {
     document.title = 'Home | Bangyen';
+    const style = {
+        width: 'auto',
+        height: 'auto',
+        padding: '0.65em 1.6em',
+        maxWidth: 150
+    };
 
     return (
         <header className='App-header select'>
-            <h1 className='logo'>
-                Bangyen
-            </h1>
             <div>
                 <div className='dropdown'>
-                    <button className='custom'>
+                    <button className='custom'
+                            style={style}>
                         Interpreters
                     </button>
                     <div className='dropdown-content'>
@@ -31,13 +35,15 @@ export default function Home() {
                 </div>
                 <Link to='/videos'>
                     <button className='custom'
-                            type='button'>
+                            type='button'
+                            style={style}>
                         Videos
                     </button>
                 </Link>
                 <Link to='/snake'>
                     <button className='custom'
-                            type='button'>
+                            type='button'
+                            style={style}>
                         Snake
                     </button>
                 </Link>
@@ -45,9 +51,13 @@ export default function Home() {
                         style={{display: 'inline-block'}}>
                     <input type='submit'
                         value='GitHub'
-                        className='custom' />
+                        className='custom'
+                        style={style} />
                 </form>
             </div>
+            <h1 className='logo'>
+                Bangyen
+            </h1>
         </header>
     );
 }
