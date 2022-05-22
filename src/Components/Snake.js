@@ -156,7 +156,11 @@ export default class Snake extends React.Component {
     render() {
         return (
             <header className='App-header'>
-                <table style={{height: '85vh', width: '95vw'}}
+                <table style={{
+                            height: '85vh',
+                            width: '95vw',
+                            borderSpacing: '0.5vh'
+                        }}
                         className='grid'>
                     <tbody>
                         {this.state.arr.map((a, row) =>
@@ -169,7 +173,8 @@ export default class Snake extends React.Component {
                                             val < 0 ? 'red' : 'black'
                                         }
                                         style={{
-                                            cursor: 'default'
+                                            cursor: 'default',
+                                            borderRadius: '1vh'
                                         }}>
                                     <div>&nbsp;</div>
                                 </td>)
