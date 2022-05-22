@@ -53,9 +53,11 @@ export default class Videos extends React.Component {
         return (
             <header className='App-header'>
                 <h1>
-                    <code>
-                        {name}
-                    </code>
+                    <center>
+                        <code>
+                            {name}
+                        </code>
+                    </center>
                 </h1>
                 {getVideo(id, name)}
                 <div>
