@@ -154,9 +154,6 @@ export default class Snake extends React.Component {
     }
 
     render() {
-        const height = window.innerHeight;
-        const width  = window.innerWidth;
-
         return (
             <header className='App-header'
                     style={{
@@ -189,12 +186,10 @@ export default class Snake extends React.Component {
                     </tbody>
                 </table>
                 <div style={{
-                        transform: 1.25 * height < width
-                            ? 'scale(0.75, 0.75)' : '',
                         position: 'absolute',
                         bottom: '1vh'
                     }}>
-                    {home()}
+                    {home(true)}
                 </div>
             </header>
         );

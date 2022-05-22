@@ -4,8 +4,6 @@ import React from 'react';
 export default function Home() {
     document.title = 'Home | Bangyen';
     const style = {
-        width: 'auto',
-        height: 'auto',
         padding: '0.65em 1.6em',
         maxWidth: 150
     };

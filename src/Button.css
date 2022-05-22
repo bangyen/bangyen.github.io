@@ -14,8 +14,6 @@
   position: relative;
   background-color: black;
   -webkit-appearance: none;
-  width: max(6.5vh, 6.5vw);
-  height: max(4vh, 4vw);
   max-width: 75px;
   max-height: 50px;
 }

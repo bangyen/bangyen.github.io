@@ -10,10 +10,11 @@ function calc(mode, n) {
     return `calc(${mode} / ${n})`;
 }
 
-export function button(sym, title, func) {
+export function button(sym, title, func, max = false) {
     const mode = getDim()
         ? 'var(--stack)'
         : 'var(--table-size)';
+    const size = 1.1;
 
     return <button className='custom'
             type='button'
@@ -21,10 +22,14 @@ export function button(sym, title, func) {
             title={title}
             style={{
                 width: calc(mode, 7),
-                height: calc(mode, 10.5)
+                height: calc(mode, 10.5),
+                maxWidth:  max ? `${6 * size}vh` : '',
+                maxHeight: max ? `${4 * size}vh` : ''
             }}>
         <div style={{
-                fontSize: calc(mode, 40),
+                fontSize: max ?
+                    `min(${calc(mode, 40)},
+                    ${size}vh)` : '',
                 lineHeight: '1em'
             }}>
             {sym}
@@ -32,9 +37,9 @@ export function button(sym, title, func) {
     </button>;
 }
 
-export function home() {
+export function home(max) {
     return <Link to='/'>
-        {button('🏠\ufe0e', 'Home')}
+        {button('🏠\ufe0e', 'Home', null, max)}
     </Link>;
 }
 
