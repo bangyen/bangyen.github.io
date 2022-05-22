@@ -259,7 +259,7 @@ export default class Grid extends React.Component {
                         onPaste={changeGrid}
                         rows={row} cols={col}
                         style={{
-                            minWidth: `calc(${css})`,
+                            minWidth: css,
                             minHeight: `calc(${css} / 3)`
                         }}
                     />
@@ -305,22 +305,26 @@ export default class Grid extends React.Component {
         </table>;
     }
 
-    getInfo() {
+    getInfo(css) {
         let {name, link} = this.props;
         link = 'https://esolangs.org/wiki/'
             + (link ? link : name);
 
-        return <ul style={{fontSize: '75%'}}>
+        return <ul style={{
+                    fontSize: '75%',
+                    width: `calc(${css} / 1.25)`,
+                    margin: 'auto',
+                    padding: '3vh',
+                    textAlign: 'left'
+                }}>
                 <code>
-                    <li>Click to select/unselect
-                        {'\xa0'.repeat(4)}</li>
+                    <li>Click to select/unselect</li>
                     <li>Type to change selected cell</li>
                     <li>Press (b) to use breakpoints</li>
                     <li>Hover over buttons for usage</li>
                     <li>
                         Commands located&nbsp;
                         <a href={link}>here</a>
-                        {'\xa0'.repeat(7)}
                     </li>
                 </code>
             </ul>;
@@ -366,10 +370,7 @@ export default class Grid extends React.Component {
     }
 
     getButtons() {
-        const {size, text, edit, stack} = this.state;
-        const mode = stack
-            ? 'var(--stack)'
-            : 'var(--table-size)';
+        const {size, text, edit} = this.state;
 
         return (<div>
                 {button('▶\ufe0e', 'Run', this.runCode('run'))}
@@ -399,7 +400,7 @@ export default class Grid extends React.Component {
                                 select: null,
                                 text: !text
                     })})}
-                {home(mode)}
+                {home()}
             </div>);
     }
 
@@ -457,7 +458,7 @@ export default class Grid extends React.Component {
         const left = (size) => (
             <div style={{fontSize: size}}>
                 <code>{this.props.name}</code>
-                {this.getInfo()}
+                {this.getInfo(val)}
                 {this.getButtons()}
                 <br />
                 {this.getTape()}

@@ -173,13 +173,17 @@ export default class Grid extends React.Component {
                 <code>
                     {name}
                 </code>
-                <ul style={{fontSize: '75%'}}>
+                <ul style={{
+                        fontSize: '75%',
+                        margin: 'auto',
+                        padding: '3vh',
+                        textAlign: 'left'
+                    }}>
                     <code>
                         <li>Hover over buttons for usage</li>
                         <li>
                             Commands located&nbsp;
                             <a href={link}>here</a>
-                            {'\xa0'.repeat(7)}
                         </li>
                     </code>
                 </ul>
@@ -191,7 +195,7 @@ export default class Grid extends React.Component {
                             onPaste={this.handleChange}
                             rows={row} cols={col}
                             style={{
-                                minWidth: `calc(${css})`,
+                                minWidth: css,
                                 minHeight: `calc(${css} / 3)`
                             }}
                         />
