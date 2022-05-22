@@ -11,7 +11,6 @@ export default class Grid extends React.Component {
         this.changeColor = this.changeColor.bind(this);
         this.changeText = this.changeText.bind(this);
         this.changeSize = this.changeSize.bind(this);
-        this.message = 'Input program here...';
         const size = 5;
 
         this.state = {
@@ -174,8 +173,9 @@ export default class Grid extends React.Component {
             .map(v => v.trimEnd())
             .filter(v => v !== '');
 
-        if (!val.length || val[0] === this.message)
-            val = Array(size).fill(' '.repeat(size));
+        if (!val.length)
+            val = Array(size)
+                .fill(' '.repeat(size));
 
         const max = Math.max(val.length,
             ...val.map(v => v.length));
@@ -206,6 +206,7 @@ export default class Grid extends React.Component {
     }
 
     getTable() {
+        const css = 'var(--table-size)';
         const {grid, size, edit} = this.state;
 
         if (this.state.text) {
@@ -214,9 +215,7 @@ export default class Grid extends React.Component {
             if (edit) {
                 value = grid;
             } else {
-                if (grid === ' '.repeat(size * size)) {
-                    value = this.message;
-                } else {
+                if (grid !== ' '.repeat(size * size)) {
                     const empty = ' '.repeat(size);
                     const split = [...Array(size).keys()]
                         .map(v => grid.substring(
@@ -245,13 +244,20 @@ export default class Grid extends React.Component {
                 <label>
                     <textarea
                         value={value}
+                        placeholder='Input program here...'
                         onChange={changeGrid}
                         onPaste={changeGrid}
-                        rows={row} cols={col} />
+                        rows={row} cols={col}
+                        style={{
+                            minWidth: `calc(${css})`,
+                            minHeight: `calc(${css} / 3)`
+                        }}
+                    />
                 </label>
             </form>;
         }
 
+        let cellSize = `calc(${css}/${size}`;
         let table = [...Array(size)]
             .map(x => Array(size));
         let pos;
@@ -262,7 +268,11 @@ export default class Grid extends React.Component {
                 table[i][j] = <td key={`${pos}`}
                         className='cell select'
                         onClick={this.changeColor(pos)}
-                        bgcolor={this.chooseColor(pos)}>
+                        bgcolor={this.chooseColor(pos)}
+                        style={{
+                            maxHeight: cellSize,
+                            maxWidth: cellSize
+                        }}>
                     <div>
                         &nbsp;{grid[pos]}&nbsp;
                     </div>
@@ -286,16 +296,16 @@ export default class Grid extends React.Component {
         link = 'https://esolangs.org/wiki/'
             + (link ? link : name);
 
-        return <ul style={{
-                    fontSize: '75%',
-                    textAlign: 'left'}}>
-                <li>Click to select/unselect</li>
+        return <ul style={{fontSize: '75%'}}>
+                <li>Click to select/unselect
+                    {'\xa0'.repeat(4)}</li>
                 <li>Type to change selected cell</li>
                 <li>Press (b) to use breakpoints</li>
                 <li>Hover over buttons for usage</li>
                 <li>
                     {name} commands located&nbsp;
                     <a href={link}>here</a>
+                    {'\xa0'.repeat(2)}
                 </li>
             </ul>;
     }
