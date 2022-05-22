@@ -1,6 +1,7 @@
 import {
     button, home,
-    resize, move
+    resize, move,
+    getDim
 } from './helper';
 import React from 'react';
 
@@ -11,6 +12,11 @@ export default class Grid extends React.Component {
         this.changeColor = this.changeColor.bind(this);
         this.changeText = this.changeText.bind(this);
         this.changeSize = this.changeSize.bind(this);
+        this.stack = () => {
+            const stack = getDim();
+            this.setState({stack});
+        };
+
         const size = 5;
 
         this.state = {
@@ -21,7 +27,8 @@ export default class Grid extends React.Component {
             pos:    null,
             breaks: [],
             text: false,
-            edit: false
+            edit: false,
+            stack: getDim()
         };
     }
 
@@ -32,6 +39,8 @@ export default class Grid extends React.Component {
             'keydown',
             this.changeText,
             false);
+        window.addEventListener(
+            'resize', this.stack);
     }
 
     componentWillUnmount() {
@@ -40,6 +49,8 @@ export default class Grid extends React.Component {
             'keydown',
             this.changeText,
             false);
+        window.removeEventListener(
+            'resize', this.stack);
     }
 
     runCode(mode) {
@@ -205,8 +216,7 @@ export default class Grid extends React.Component {
         });
     }
 
-    getTable() {
-        const css = 'var(--table-size)';
+    getTable(css) {
         const {grid, size, edit} = this.state;
 
         if (this.state.text) {
@@ -280,7 +290,11 @@ export default class Grid extends React.Component {
             }
         }
 
-        return <table className='grid'>
+        return <table className='grid'
+                style={{
+                    width: css,
+                    height: css
+                }}>
             <tbody>
                 {table.map((arr, row) =>
                     <tr key={row.toString()}>
@@ -297,16 +311,18 @@ export default class Grid extends React.Component {
             + (link ? link : name);
 
         return <ul style={{fontSize: '75%'}}>
-                <li>Click to select/unselect
-                    {'\xa0'.repeat(4)}</li>
-                <li>Type to change selected cell</li>
-                <li>Press (b) to use breakpoints</li>
-                <li>Hover over buttons for usage</li>
-                <li>
-                    {name} commands located&nbsp;
-                    <a href={link}>here</a>
-                    {'\xa0'.repeat(2)}
-                </li>
+                <code>
+                    <li>Click to select/unselect
+                        {'\xa0'.repeat(4)}</li>
+                    <li>Type to change selected cell</li>
+                    <li>Press (b) to use breakpoints</li>
+                    <li>Hover over buttons for usage</li>
+                    <li>
+                        Commands located&nbsp;
+                        <a href={link}>here</a>
+                        {'\xa0'.repeat(7)}
+                    </li>
+                </code>
             </ul>;
     }
 
@@ -350,13 +366,16 @@ export default class Grid extends React.Component {
     }
 
     getButtons() {
-        const {size, text, edit} = this.state;
+        const {size, text, edit, stack} = this.state;
+        const mode = stack
+            ? 'var(--stack)'
+            : 'var(--table-size)';
 
         return (<div>
-                {button('▶', this.runCode('run'), 'Run')}
-                {button('\xa0❮\xa0', this.runCode('prev'), 'Previous')}
-                {button('\xa0❯\xa0', this.runCode('next'), 'Next')}
-                {button('✖', () => {
+                {button('▶\ufe0e', 'Run', this.runCode('run'))}
+                {button('❮', 'Previous', this.runCode('prev'))}
+                {button('❯', 'Next', this.runCode('next'))}
+                {button('✖\ufe0e', 'Stop', () => {
                     if (this.state.text)
                         return;
 
@@ -365,11 +384,11 @@ export default class Grid extends React.Component {
                         ...this.props.start,
                         pos: null
                     });
-                }, 'Stop')}
+                })}
                 <br />
-                {button('➕\ufe0e', this.changeSize(size + 1), 'Expand')}
-                {button('➖\ufe0e', this.changeSize(size - 1), 'Shrink')}
-                {button('📥\ufe0e',
+                {button('➕\ufe0e', 'Expand', this.changeSize(size + 1))}
+                {button('➖\ufe0e', 'Shrink', this.changeSize(size - 1))}
+                {button('📥\ufe0e', 'Copy/Paste',
                     () => {
                         clearInterval(this.timerID);
 
@@ -379,8 +398,8 @@ export default class Grid extends React.Component {
                             this.setState({
                                 select: null,
                                 text: !text
-                    })}, 'Copy/Paste')}
-                {home()}
+                    })})}
+                {home(mode)}
             </div>);
     }
 
@@ -431,23 +450,61 @@ export default class Grid extends React.Component {
     }
 
     render() {
+        const {text, stack} = this.state;
+        const val = stack
+            ? 'var(--stack)'
+            : 'var(--table-size)';
+        const left = (size) => (
+            <div style={{fontSize: size}}>
+                <code>{this.props.name}</code>
+                {this.getInfo()}
+                {this.getButtons()}
+                <br />
+                {this.getTape()}
+                {this.getOutput()}
+                {this.getRegister()}
+            </div>
+        );
+
+        if (stack) {
+            if (text)
+                return (
+                    <header className='App-header'>
+                        <div className='centered'>
+                            {left(`calc(${val} / 12)`)}
+                            <br />
+                            {this.getTable(val)}
+                        </div>
+                    </header>
+                );
+
+            return (
+                <header className='App-header'>
+                    <div className='vsplit top'>
+                        <div className='centered'>
+                            {left(`calc(${val} / 14)`)}
+                        </div>
+                    </div>
+                    <div className='vsplit bottom'>
+                        <div className='centered'
+                                style={{marginTop: '-5vh'}}>
+                            {this.getTable(val)}
+                        </div>
+                    </div>
+                </header>
+            );
+        }
+
         return (
             <header className='App-header'>
                 <div className='split left'>
                     <div className='centered'>
-                        {this.getTable()}
+                        {left(`calc(${val} / 14)`)}
                     </div>
                 </div>
                 <div className='split right'>
-                    <div className='centered'
-                            style={{fontSize: 'min(10vh, 3vw)'}}>
-                        <code>Instructions:</code>
-                        {this.getInfo()}
-                        {this.getButtons()}
-                        <br />
-                        {this.getTape()}
-                        {this.getOutput()}
-                        {this.getRegister()}
+                    <div className='centered'>
+                        {this.getTable(val)}
                     </div>
                 </div>
             </header>

@@ -1,4 +1,7 @@
-import {button, home, resize} from './helper';
+import {
+    getDim, button,
+    home, resize
+} from './helper';
 import React from 'react';
 
 export default class Grid extends React.Component {
@@ -10,21 +13,30 @@ export default class Grid extends React.Component {
             value: '',
             code: '',
             reset: true,
-            end: true
+            end: true,
+            stack: getDim()
         };
 
         this.func = () => this.state;
         this.handleChange
             = this.handleChange.bind(this);
+        this.stack = () => {
+            const stack = getDim();
+            this.setState({stack});
+        };
     }
 
     componentDidMount() {
         document.title = this.props.name
             + ' Interpreter | Bangyen';
+        window.addEventListener(
+            'resize', this.stack);
     }
 
     componentWillUnmount() {
         clearInterval(this.timerID);
+        window.removeEventListener(
+            'resize', this.stack);
     }
 
     runCode(mode) {
@@ -147,68 +159,95 @@ export default class Grid extends React.Component {
         return (null);
     }
 
-    render() {
+    getLeft(css) {
         let {name, link} = this.props;
         link = 'https://esolangs.org/wiki/'
             + (link ? link : name);
 
-        const css = 'var(--table-size)';
         const [row, col]
             = resize(this.state.value);
 
         return (
-            <header className='App-header'
-                    style={{fontSize: 'min(10vh, 3vw)'}}>
+            <div style={{fontSize:
+                    `calc(${css} / 12)`}}>
+                <code>
+                    {name}
+                </code>
+                <ul style={{fontSize: '75%'}}>
+                    <code>
+                        <li>Hover over buttons for usage</li>
+                        <li>
+                            Commands located&nbsp;
+                            <a href={link}>here</a>
+                            {'\xa0'.repeat(7)}
+                        </li>
+                    </code>
+                </ul>
+                <form>
+                    <label>
+                        <textarea
+                            value={this.state.value}
+                            onChange={this.handleChange}
+                            onPaste={this.handleChange}
+                            rows={row} cols={col}
+                            style={{
+                                minWidth: `calc(${css})`,
+                                minHeight: `calc(${css} / 3)`
+                            }}
+                        />
+                    </label>
+                </form>
+                {button('▶', 'Run', this.runCode('run'))}
+                {button('❮', 'Previous', this.runCode('prev'))}
+                {button('❯', 'Next', this.runCode('next'))}
+                {button('✖', 'Stop', () => {
+                    clearInterval(this.timerID);
+                    this.setState({
+                        ...this.props.start,
+                        reset: true,
+                        end: true
+                    });
+                })}
+                {home()}
+            </div>
+        );
+    }
+
+    render() {
+        const {stack} = this.state;
+        const val = stack
+            ? 'var(--stack)'
+            : 'var(--table-size)';
+
+        const right = <div style={{
+                fontSize: `calc(${val} / 12)`}}>
+            {this.getProgram()}
+            {this.getTape()}
+            {this.getOutput()}
+            {this.getRegister()}
+        </div>;
+
+        if (stack)
+            return <header className='App-header'>
+                <div className='centered'>
+                    {this.getLeft(val)}
+                    <br />
+                    {right}
+                </div>
+            </header>;
+
+        return (
+            <header className='App-header'>
                 <div className='split left'>
                     <div className='centered'>
-                        <code>
-                            {name}
-                        </code>
-                        <ul style={{fontSize: '75%'}}>
-                            <li>Hover over buttons for usage</li>
-                            <li>
-                                Commands located&nbsp;
-                                <a href={link}>here</a>
-                                {'\xa0'.repeat(7)}
-                            </li>
-                        </ul>
-                        <form>
-                            <label>
-                                <textarea
-                                    value={this.state.value}
-                                    onChange={this.handleChange}
-                                    onPaste={this.handleChange}
-                                    rows={row} cols={col}
-                                    style={{
-                                        minWidth: `calc(${css})`,
-                                        minHeight: `calc(${css} / 3)`
-                                    }}
-                                />
-                            </label>
-                        </form>
-                        {button('▶', this.runCode('run'), 'Run')}
-                        {button('❮', this.runCode('prev'), 'Previous')}
-                        {button('❯', this.runCode('next'), 'Next')}
-                        {button('✖', () => {
-                            clearInterval(this.timerID);
-                            this.setState({
-                                ...this.props.start,
-                                reset: true,
-                                end: true
-                            });
-                        }, 'Stop')}
-                        {home()}
+                        {this.getLeft(val)}
                     </div>
                 </div>
                 <div className='split right'>
                     <div className='centered'>
-                        {this.getProgram()}
-                        {this.getTape()}
-                        {this.getOutput()}
-                        {this.getRegister()}
+                        {right}
                     </div>
                 </div>
-
             </header>
         );
     }
