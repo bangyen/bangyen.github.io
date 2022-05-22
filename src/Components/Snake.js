@@ -154,12 +154,18 @@ export default class Snake extends React.Component {
     }
 
     render() {
+        const height = window.innerHeight;
+        const width  = window.innerWidth;
+
         return (
-            <header className='App-header'>
+            <header className='App-header'
+                    style={{
+                        overflow: 'hidden'
+                    }}>
                 <table style={{
-                            height: '85vh',
-                            width: '95vw',
-                            borderSpacing: '0.5vh'
+                            height: '100vh',
+                            width:  '100vw',
+                            borderSpacing: 'max(0.5vh, 4px)'
                         }}
                         className='grid'>
                     <tbody>
@@ -174,7 +180,7 @@ export default class Snake extends React.Component {
                                         }
                                         style={{
                                             cursor: 'default',
-                                            borderRadius: '1vh'
+                                            borderRadius: 'max(1vh, 8px)'
                                         }}>
                                     <div>&nbsp;</div>
                                 </td>)
@@ -182,7 +188,12 @@ export default class Snake extends React.Component {
                         )}
                     </tbody>
                 </table>
-                <div style={{marginBottom: '20px'}}>
+                <div style={{
+                        transform: 1.25 * height < width
+                            ? 'scale(0.75, 0.75)' : '',
+                        position: 'absolute',
+                        bottom: '1vh'
+                    }}>
                     {home()}
                 </div>
             </header>
