@@ -163,13 +163,12 @@ export default class Grid extends React.Component {
                         <code>
                             {name}
                         </code>
-                        <ul style={{
-                                fontSize: '75%',
-                                textAlign: 'left'}}>
+                        <ul style={{fontSize: '75%'}}>
                             <li>Hover over buttons for usage</li>
                             <li>
                                 Commands located&nbsp;
                                 <a href={link}>here</a>
+                                {'\xa0'.repeat(7)}
                             </li>
                         </ul>
                         <form>
