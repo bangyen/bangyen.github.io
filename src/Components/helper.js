@@ -1,31 +1,40 @@
 import {Link} from 'react-router-dom';
 
-export function button(sym, func, title) {
+export function getDim() {
+    const width  = window.innerWidth;
+    const height = window.innerHeight;
+    return height > 1.25 * width;
+}
+
+function calc(mode, n) {
+    return `calc(${mode} / ${n})`;
+}
+
+export function button(sym, title, func) {
+    const mode = getDim()
+        ? 'var(--stack)'
+        : 'var(--table-size)';
+
     return <button className='custom'
-                type='button'
-                onClick={func}
-                title={title}>
-            <div style={{
-                    fontSize: 'min(1.5vh, 1.5vw)',
-                    lineHeight: '1em'
-                }}>
-                {sym}
-            </div>
-        </button>;
+            type='button'
+            onClick={func}
+            title={title}
+            style={{
+                width: calc(mode, 7),
+                height: calc(mode, 10.5)
+            }}>
+        <div style={{
+                fontSize: calc(mode, 40),
+                lineHeight: '1em'
+            }}>
+            {sym}
+        </div>
+    </button>;
 }
 
 export function home() {
     return <Link to='/'>
-        <button className='custom'
-                type='button'
-                title='Home'>
-            <div style={{
-                    fontSize: 'min(1.5vh, 1.5vw)',
-                    lineHeight: '1em'
-                }}>
-                🏠&#xfe0e;
-            </div>
-        </button>
+        {button('🏠\ufe0e', 'Home')}
     </Link>;
 }
 

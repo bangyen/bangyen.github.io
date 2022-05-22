@@ -5,8 +5,10 @@ export default function Error() {
     document.title = 'Page Not Found | Bangyen';
     return (
         <header className='App-header'>
-            <center>
-                <code style={{padding: '10px'}}>
+            <center style={{
+                    fontSize: '5vh',
+                    paddingBottom: '2vh'}}>
+                <code>
                     This page isn't available.
                 </code>
             </center>

@@ -91,13 +91,11 @@ export default class Videos extends React.Component {
                 </h1>
                 {getVideo(id, name, width)}
                 <div>
-                    {button('❮',
-                        this.changeNum(-1),
-                        'Previous')}
+                    {button('❮', 'Previous',
+                        this.changeNum(-1))}
                     {home()}
-                    {button('❯',
-                        this.changeNum(1),
-                        'Next')}
+                    {button('❯', 'Next',
+                        this.changeNum(1))}
                 </div>
             </header>
         );
