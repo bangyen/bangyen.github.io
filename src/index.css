@@ -74,3 +74,11 @@ li, code {
               user-select: none; /* Non-prefixed version, currently
                                   supported by Chrome, Edge, Opera and Firefox */
 }
+
+.logo {
+    font-family: AloeVera;
+    font-size: min(
+        20vw,
+        (100vh - 200px) / 6
+    );
+}

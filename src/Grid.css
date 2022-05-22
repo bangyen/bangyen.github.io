@@ -1,5 +1,5 @@
 :root {
-    --table-size: 500px;
+    --table-size: min(70vh, 40vw);
     --font-size: 1.5rem;
 }
 
@@ -8,19 +8,18 @@
     height: var(--table-size);
     margin: auto;
     font-size: var(--font-size);
-    border-spacing: 5px;
+    border-spacing:
+        calc(var(--table-size) / 80);
 }
 
 .cell {
     text-align: center;
     vertical-align: middle;
     white-space: nowrap;
-    width: calc(var(--table-size) / 3);
-    max-width: calc(var(--table-size) / 3);
-    max-height: calc(var(--table-size) / 3);
     overflow: hidden;
     font-family: monospace;
-    border-radius: 0.4em;
+    border-radius:
+        calc(var(--table-size) / 40);
     color: black;
     cursor: pointer;
 }

@@ -25,11 +25,6 @@ export function resize(str) {
     let col = Math.max(...arr);
     let row = arr.length;
 
-    if (row < 15)
-        row = 15;
-    if (col < 65)
-        col = 65;
-
     return [row, col];
 }
 

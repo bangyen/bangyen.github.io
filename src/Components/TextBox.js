@@ -152,6 +152,7 @@ export default class Grid extends React.Component {
         link = 'https://esolangs.org/wiki/'
             + (link ? link : name);
 
+        const css = 'var(--table-size)';
         const [row, col]
             = resize(this.state.value);
 
@@ -177,7 +178,12 @@ export default class Grid extends React.Component {
                                     value={this.state.value}
                                     onChange={this.handleChange}
                                     onPaste={this.handleChange}
-                                    rows={row} cols={col} />
+                                    rows={row} cols={col}
+                                    style={{
+                                        minWidth: `calc(${css})`,
+                                        minHeight: `calc(${css} / 3)`
+                                    }}
+                                />
                             </label>
                         </form>
                         {button('▶', this.runCode('run'), 'Run')}
