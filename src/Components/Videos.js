@@ -23,7 +23,7 @@ export default class Videos extends React.Component {
         super(props);
 
         this.id = [
-            ['Project Glow DC 2022', 'uoaCbzWmDVk'],
+            ['Project Glow 2022', 'uoaCbzWmDVk'],
             ['Chicago', 'Ay6w4Fsk8Ec'],
             ['Washington, DC', 'xM4Ttema4cg'],
             ['Firefly 2021', 'nnwVZDGj-SU']
@@ -94,7 +94,7 @@ export default class Videos extends React.Component {
                     </center>
                 </h1>
                 {getVideo(id, name, width)}
-                <div>
+                <div style={{paddingTop: '1vh'}}>
                     {button(BsArrowLeft, 'Previous',
                         this.changeNum(-1), true)}
                     {home(true)}
