@@ -7,7 +7,10 @@ import {
     BsCaretRight,
     BsArrowLeft,
     BsArrowRight,
-    BsStop
+    BsSkipEnd,
+    BsStop,
+    BsSkipBackward,
+    BsSkipForward
 } from 'react-icons/bs';
 
 export default class Grid extends React.Component {
@@ -18,10 +21,12 @@ export default class Grid extends React.Component {
             ...this.props.start,
             value: '',
             code: '',
-            reset: true,
             end: true,
             stack: getDim()
         };
+
+        this.speed = 200;
+        this.change = true;
 
         this.func = () => this.state;
         this.handleChange
@@ -45,41 +50,47 @@ export default class Grid extends React.Component {
             'resize', this.stack);
     }
 
+    setTimer(mult = 1) {
+        const move = () => {
+            this.setState(this.func());
+
+            if (this.state.end)
+                clearInterval(this.timerID);
+        };
+
+        this.speed *= mult;
+        clearInterval(this.timerID);
+        this.timerID = setInterval(move, this.speed);
+    }
+
+    getFunc() {
+        const {value} = this.state;
+        const {start, run} = this.props;
+
+        this.func = run(value);
+        this.setState(start);
+        this.change = false;
+    }
+
     runCode(mode) {
         return function() {
-            const {value, reset, end} = this.state;
-            const {start, run} = this.props;
-
-            if (end) {
-                this.func = run(value);
-                this.setState(start);
-
-                if (mode !== 'run' && !reset)
-                    return;
+            if (this.change) {
+                this.getFunc();
             }
 
             clearInterval(this.timerID);
             let state;
 
             if (mode === 'run') {
-                const move = () => {
-                    this.setState(this.func());
-
-                    if (this.state.end)
-                        clearInterval(this.timerID);
-                };
-
-                this.timerID = setInterval(move, 200);
+                this.speed = 200;
+                this.setTimer();
             } else if (mode === 'prev') {
                 state = this.func(true);
             } else {
                 state = this.func();
             }
 
-            this.setState({
-                reset: false,
-                ...state
-            });
+            this.setState(state);
         }.bind(this);
     }
 
@@ -89,6 +100,7 @@ export default class Grid extends React.Component {
         if (val !== this.state.value) {
             const code
                 = this.props.clean(val);
+            this.change = true;
 
             this.setState({
                 ...this.props.start,
@@ -174,8 +186,10 @@ export default class Grid extends React.Component {
             = resize(this.state.value);
 
         return (
-            <div style={{fontSize:
-                    `calc(${css} / 12)`}}>
+            <div style={{
+                    fontSize:
+                        `calc(${css} / 12)`
+                }}>
                 <code>
                     {name}
                 </code>
@@ -199,10 +213,11 @@ export default class Grid extends React.Component {
                             value={this.state.value}
                             onChange={this.handleChange}
                             onPaste={this.handleChange}
-                            rows={row} cols={col}
+                            rows={row}
                             style={{
-                                minWidth: css,
-                                minHeight: `calc(${css} / 3)`
+                                width: css,
+                                minHeight: `calc(${css} / 3)`,
+                                maxHeight: '50vh'
                             }}
                         />
                     </label>
@@ -212,12 +227,24 @@ export default class Grid extends React.Component {
                 {button(BsArrowRight, 'Next', this.runCode('next'))}
                 {button(BsStop, 'Stop', () => {
                     clearInterval(this.timerID);
-                    this.setState({
-                        ...this.props.start,
-                        reset: true,
-                        end: true
-                    });
+                    this.getFunc();
                 })}
+                <br />
+                {button(BsSkipEnd, 'Fast Forward', () => {
+                    if (this.change)
+                        this.getFunc();
+
+                    clearInterval(this.timerID);
+                    let temp;
+
+                    do {
+                        temp = this.func();
+                    } while (!temp.end);
+
+                    this.setState(temp);
+                })}
+                {button(BsSkipBackward, 'Decelerate', () => this.setTimer(1.5))}
+                {button(BsSkipForward, 'Accelerate', () => this.setTimer(1 / 1.5))}
                 {home()}
             </div>
         );
