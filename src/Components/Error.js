@@ -4,7 +4,7 @@ import React from 'react';
 export default function Error() {
     document.title = 'Page Not Found | Bangyen';
     return (
-        <header className='App-header'>
+        <header className='app'>
             <center style={{
                     fontSize: '5vh',
                     paddingBottom: '2vh'}}>

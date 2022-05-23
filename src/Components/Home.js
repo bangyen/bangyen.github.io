@@ -9,7 +9,7 @@ export default function Home() {
     };
 
     return (
-        <header className='App-header select'>
+        <header className='app select'>
             <div style={{
                     position: 'absolute',
                     top: '1vh'

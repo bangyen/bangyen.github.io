@@ -303,12 +303,12 @@ export default class Grid extends React.Component {
             }
         }
 
-        return <table className='grid'
-                style={{
+        return <table style={{
                     borderSpacing:
                         `calc(${cellSize} / 30)`,
                     fontSize:
                         `calc(${cellSize} / 4)`,
+                    margin: 'auto',
                     width: css,
                     height: css
                 }}>
@@ -539,7 +539,7 @@ export default class Grid extends React.Component {
         }
 
         return (
-            <header className='App-header'>
+            <header className='app'>
                 <div className='split left'>
                     <div className='centered'>
                         {left(`calc(${val} / 14)`)}

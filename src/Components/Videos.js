@@ -85,7 +85,7 @@ export default class Videos extends React.Component {
         const [name, id] = this.id[num];
 
         return (
-            <header className='App-header'>
+            <header className='app'>
                 <h1 style={{fontSize: 'min(10vh, 8vw)'}}>
                     <center>
                         <code>
