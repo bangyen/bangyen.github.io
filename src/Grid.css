@@ -6,9 +6,6 @@
 
 .grid {
     margin: auto;
-    font-size: var(--font-size);
-    border-spacing:
-        calc(var(--table-size) / 80);
 }
 
 .cell {
@@ -17,8 +14,6 @@
     white-space: nowrap;
     overflow: hidden;
     font-family: monospace;
-    border-radius:
-        calc(var(--table-size) / 40);
     color: black;
     cursor: pointer;
 }

@@ -26,7 +26,7 @@ export default class Grid extends React.Component {
             this.setState({stack});
         };
 
-        const size = 5;
+        const size = 4;
 
         this.state = {
             ...this.props.start,
@@ -276,7 +276,9 @@ export default class Grid extends React.Component {
             </form>;
         }
 
-        let cellSize = `calc(${css}/${size}`;
+        css = `max(${css}, ${size} * min(10vh, 10vw))`;
+        const cellSize = `calc(${css}/${size}`;
+
         let table = [...Array(size)]
             .map(x => Array(size));
         let pos;
@@ -289,6 +291,8 @@ export default class Grid extends React.Component {
                         onClick={this.changeColor(pos)}
                         bgcolor={this.chooseColor(pos)}
                         style={{
+                            borderRadius:
+                                `calc(${cellSize} / 10)`,
                             maxHeight: cellSize,
                             maxWidth: cellSize
                         }}>
@@ -301,6 +305,10 @@ export default class Grid extends React.Component {
 
         return <table className='grid'
                 style={{
+                    borderSpacing:
+                        `calc(${cellSize} / 30)`,
+                    fontSize:
+                        `calc(${cellSize} / 4)`,
                     width: css,
                     height: css
                 }}>
@@ -465,7 +473,7 @@ export default class Grid extends React.Component {
     }
 
     render() {
-        const {text, stack} = this.state;
+        const {size, text, stack} = this.state;
         const val = stack
             ? 'var(--stack)'
             : 'var(--table-size)';
@@ -481,6 +489,8 @@ export default class Grid extends React.Component {
             </div>
         );
 
+        let style = {overflow: ''};
+
         if (stack) {
             if (text)
                 return (
@@ -493,6 +503,14 @@ export default class Grid extends React.Component {
                     </header>
                 );
 
+            style = {
+                paddingTop: `calc(min(10vh, 10vw)
+                    * ${size - 6})`,
+                paddingLeft: `calc(min(10vh, 10vw)
+                    * ${size - 9.5})`,
+                ...style
+            }
+
             return (
                 <header className='App-header'>
                     <div className='vsplit top'>
@@ -500,14 +518,24 @@ export default class Grid extends React.Component {
                             {left(`calc(${val} / 14)`)}
                         </div>
                     </div>
-                    <div className='vsplit bottom'>
+                    <div className='vsplit bottom'
+                            style={{overflow: 'scroll'}}>
                         <div className='centered'
-                                style={{marginTop: '-5vh'}}>
+                                style={style}>
                             {this.getTable(val)}
                         </div>
                     </div>
                 </header>
             );
+        }
+
+        style = {
+            position: 'relative',
+            paddingTop: `calc(min(10vh, 10vw)
+                * ${size - 9.5})`,
+            marginBottom: `calc(min(10vh, 10vw)
+                * -${size - 9})`,
+            ...style
         }
 
         return (
@@ -517,8 +545,10 @@ export default class Grid extends React.Component {
                         {left(`calc(${val} / 14)`)}
                     </div>
                 </div>
-                <div className='split right'>
-                    <div className='centered'>
+                <div className='split right'
+                        style={{overflow: 'scroll'}}>
+                    <div className='centered'
+                            style={style}>
                         {this.getTable(val)}
                     </div>
                 </div>
