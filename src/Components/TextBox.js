@@ -265,7 +265,7 @@ export default class Grid extends React.Component {
         </div>;
 
         if (stack)
-            return <header className='App-header'>
+            return <header className='app'>
                 <div className='centered'>
                     {this.getLeft(val)}
                     <br />

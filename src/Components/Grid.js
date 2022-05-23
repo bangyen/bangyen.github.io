@@ -493,7 +493,7 @@ export default class Grid extends React.Component {
         if (stack) {
             if (text)
                 return (
-                    <header className='App-header'>
+                    <header className='app'>
                         <div className='centered'>
                             {left(`calc(${val} / 14)`)}
                             <br />
@@ -511,7 +511,7 @@ export default class Grid extends React.Component {
             }
 
             return (
-                <header className='App-header'>
+                <header className='app'>
                     <div className='vsplit top'>
                         <div className='centered'>
                             {left(`calc(${val} / 14)`)}
