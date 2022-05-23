@@ -5,7 +5,8 @@ import {
     BsCaretUp,
     BsCaretDown,
     BsCaretLeft,
-    BsCaretRight
+    BsCaretRight,
+    BsArrowsAngleContract
 } from 'react-icons/bs';
 
 function createArr() {
@@ -175,7 +176,10 @@ export default class Snake extends React.Component {
                 <div>
                     {button(BsCaretLeft, 'Left',
                         arrow('a'), true)}
-                    {home(true)}
+                    {button(BsArrowsAngleContract, 'Collapse',
+                        () => this.setState({dir: false}),
+                        true
+                    )}
                     {button(BsCaretRight, 'Right',
                         arrow('d'), true)}
                 </div>
