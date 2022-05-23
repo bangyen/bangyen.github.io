@@ -1,5 +1,12 @@
-import {home} from './helper';
+import {button, home} from './helper';
 import React from 'react';
+import {
+    BsArrowsMove,
+    BsCaretUp,
+    BsCaretDown,
+    BsCaretLeft,
+    BsCaretRight
+} from 'react-icons/bs';
 
 function createArr() {
     let x = window.innerHeight;
@@ -37,6 +44,7 @@ export default class Snake extends React.Component {
             vel: [0, 1],
             move: true,
             buff: null,
+            dir: false,
             arr
         }
     }
@@ -154,6 +162,35 @@ export default class Snake extends React.Component {
     }
 
     render() {
+        let buttons;
+        const arrow = (c) =>
+            () => this.changeDir({key: c});
+
+        if (this.state.dir)
+            buttons = <div style={{
+                    textAlign: 'center'
+                }}>
+                {button(BsCaretUp, 'Up',
+                    arrow('w'), true)}
+                <div>
+                    {button(BsCaretLeft, 'Left',
+                        arrow('a'), true)}
+                    {home(true)}
+                    {button(BsCaretRight, 'Right',
+                        arrow('d'), true)}
+                </div>
+                {button(BsCaretDown, 'Down',
+                    arrow('s'), true)}
+            </div>;
+        else
+            buttons = <div>
+                {home(true)}
+                {button(BsArrowsMove, 'Controls',
+                    () => this.setState({dir: true}),
+                    true
+                )}
+            </div>;
+
         return (
             <header className='app'>
                 <table style={{
@@ -186,7 +223,7 @@ export default class Snake extends React.Component {
                         position: 'absolute',
                         bottom: '1vh'
                     }}>
-                    {home(true)}
+                    {buttons}
                 </div>
             </header>
         );
