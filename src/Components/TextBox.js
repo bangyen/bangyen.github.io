@@ -1,7 +1,4 @@
-import {
-    getDim, button,
-    home, resize
-} from './helper';
+import {getDim, button, home} from './helper';
 import React from 'react';
 import {
     BsCaretRight,
@@ -178,12 +175,13 @@ export default class Grid extends React.Component {
     }
 
     getLeft(css) {
+        const {value} = this.state;
         let {name, link} = this.props;
         link = 'https://esolangs.org/wiki/'
             + (link ? link : name);
 
-        const [row, col]
-            = resize(this.state.value);
+        const row = value.split('\n')
+                         .length;
 
         return (
             <div style={{
@@ -210,7 +208,7 @@ export default class Grid extends React.Component {
                 <form>
                     <label>
                         <textarea
-                            value={this.state.value}
+                            value={value}
                             onChange={this.handleChange}
                             onPaste={this.handleChange}
                             rows={row}
@@ -243,8 +241,10 @@ export default class Grid extends React.Component {
 
                     this.setState(temp);
                 })}
-                {button(BsSkipBackward, 'Decelerate', () => this.setTimer(1.5))}
-                {button(BsSkipForward, 'Accelerate', () => this.setTimer(1 / 1.5))}
+                {button(BsSkipBackward, 'Decelerate',
+                    () => this.setTimer(1.5))}
+                {button(BsSkipForward, 'Accelerate',
+                    () => this.setTimer(1 / 1.5))}
                 {home()}
             </div>
         );

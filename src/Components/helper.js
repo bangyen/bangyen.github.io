@@ -41,15 +41,6 @@ export function home(max) {
     </Link>;
 }
 
-export function resize(str) {
-    const arr = str.split('\n')
-        .map(val => val.length);
-    let col = Math.max(...arr);
-    let row = arr.length;
-
-    return [row, col];
-}
-
 export function move(obj) {
     const {
         pos, vel, old,

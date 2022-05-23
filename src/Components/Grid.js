@@ -1,7 +1,6 @@
 import {
     button, home,
-    resize, move,
-    getDim
+    getDim, move
 } from './helper';
 import React from 'react';
 import {
@@ -251,8 +250,8 @@ export default class Grid extends React.Component {
                 }
             }
 
-            const [row, col]
-                = resize(value);
+            const row = value.split('\n')
+                             .length;
             const changeGrid = (e) =>
                 this.setState({
                     grid: e.target.value,
@@ -266,9 +265,9 @@ export default class Grid extends React.Component {
                         placeholder='Input program here...'
                         onChange={changeGrid}
                         onPaste={changeGrid}
-                        rows={row} cols={col}
+                        rows={row}
                         style={{
-                            minWidth: css,
+                            width: css,
                             minHeight: `calc(${css} / 3)`
                         }}
                     />
