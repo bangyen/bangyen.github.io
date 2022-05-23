@@ -486,7 +486,7 @@ export default class Grid extends React.Component {
                 return (
                     <header className='App-header'>
                         <div className='centered'>
-                            {left(`calc(${val} / 12)`)}
+                            {left(`calc(${val} / 14)`)}
                             <br />
                             {this.getTable(val)}
                         </div>
