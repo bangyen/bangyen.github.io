@@ -10,7 +10,10 @@ export default function Home() {
 
     return (
         <header className='App-header select'>
-            <div>
+            <div style={{
+                    position: 'absolute',
+                    top: '1vh'
+                }}>
                 <div className='dropdown'>
                     <button className='custom'
                             style={style}>
