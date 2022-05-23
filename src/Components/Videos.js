@@ -1,5 +1,9 @@
 import {button, home} from './helper';
 import React from "react";
+import {
+    BsArrowLeft,
+    BsArrowRight
+} from 'react-icons/bs';
 
 function getVideo(embedId, name, width) {
     return <div>
@@ -91,10 +95,10 @@ export default class Videos extends React.Component {
                 </h1>
                 {getVideo(id, name, width)}
                 <div>
-                    {button('❮', 'Previous',
+                    {button(BsArrowLeft, 'Previous',
                         this.changeNum(-1), true)}
                     {home(true)}
-                    {button('❯', 'Next',
+                    {button(BsArrowRight, 'Next',
                         this.changeNum(1), true)}
                 </div>
             </header>

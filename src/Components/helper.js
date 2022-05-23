@@ -1,4 +1,6 @@
+import {BsHouse} from 'react-icons/bs';
 import {Link} from 'react-router-dom';
+import React from 'react';
 
 export function getDim() {
     const width  = window.innerWidth;
@@ -19,24 +21,23 @@ export function button(sym, title, func, max = false) {
             title={title}
             style={{
                 width: calc(mode, 7),
-                height: calc(mode, 10.5),
+                height: calc(mode, 7 * 1.5),
                 maxWidth:  max ? min(6) : '',
                 maxHeight: max ? min(4) : ''
             }}>
         <div style={{
-                fontSize: max ?
-                    `min(${calc(mode, 40)},
-                    ${min(1)})` : '',
                 lineHeight: '1em'
             }}>
-            {sym}
+            {React.createElement(sym, {size:
+                `min(calc(${mode} / 22), 24.5px)`})}
         </div>
     </button>;
 }
 
 export function home(max) {
     return <Link to='/'>
-        {button('🏠\ufe0e', 'Home', null, max)}
+        {button(BsHouse, 'Home',
+            null, max)}
     </Link>;
 }
 

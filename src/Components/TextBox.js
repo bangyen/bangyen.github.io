@@ -3,6 +3,12 @@ import {
     home, resize
 } from './helper';
 import React from 'react';
+import {
+    BsCaretRight,
+    BsArrowLeft,
+    BsArrowRight,
+    BsStop
+} from 'react-icons/bs';
 
 export default class Grid extends React.Component {
     constructor(props: Props) {
@@ -201,10 +207,10 @@ export default class Grid extends React.Component {
                         />
                     </label>
                 </form>
-                {button('▶\ufe0e', 'Run', this.runCode('run'))}
-                {button('❮', 'Previous', this.runCode('prev'))}
-                {button('❯', 'Next', this.runCode('next'))}
-                {button('✖', 'Stop', () => {
+                {button(BsCaretRight, 'Run', this.runCode('run'))}
+                {button(BsArrowLeft, 'Previous', this.runCode('prev'))}
+                {button(BsArrowRight, 'Next', this.runCode('next'))}
+                {button(BsStop, 'Stop', () => {
                     clearInterval(this.timerID);
                     this.setState({
                         ...this.props.start,

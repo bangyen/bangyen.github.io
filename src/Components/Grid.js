@@ -4,6 +4,15 @@ import {
     getDim
 } from './helper';
 import React from 'react';
+import {
+    BsCaretRight,
+    BsArrowLeft,
+    BsArrowRight,
+    BsStop,
+    BsArrowsAngleContract,
+    BsArrowsAngleExpand,
+    BsPencilSquare
+} from 'react-icons/bs';
 
 export default class Grid extends React.Component {
     constructor(props: Props) {
@@ -369,14 +378,17 @@ export default class Grid extends React.Component {
         }.bind(this);
     }
 
-    getButtons() {
+    getButtons(css) {
         const {size, text, edit} = this.state;
 
         return (<div>
-                {button('▶\ufe0e', 'Run', this.runCode('run'))}
-                {button('❮', 'Previous', this.runCode('prev'))}
-                {button('❯', 'Next', this.runCode('next'))}
-                {button('✖\ufe0e', 'Stop', () => {
+                {button(BsCaretRight,
+                    'Run', this.runCode('run'))}
+                {button(BsArrowLeft,
+                    'Previous', this.runCode('prev'))}
+                {button(BsArrowRight,
+                    'Next', this.runCode('next'))}
+                {button(BsStop, 'Stop', () => {
                     if (this.state.text)
                         return;
 
@@ -387,9 +399,11 @@ export default class Grid extends React.Component {
                     });
                 })}
                 <br />
-                {button('➕\ufe0e', 'Expand', this.changeSize(size + 1))}
-                {button('➖\ufe0e', 'Shrink', this.changeSize(size - 1))}
-                {button('📥\ufe0e', 'Copy/Paste',
+                {button(BsArrowsAngleExpand,
+                    'Expand', this.changeSize(size + 1))}
+                {button(BsArrowsAngleContract,
+                    'Contract', this.changeSize(size - 1))}
+                {button(BsPencilSquare, 'Copy/Paste',
                     () => {
                         clearInterval(this.timerID);
 
@@ -459,7 +473,7 @@ export default class Grid extends React.Component {
             <div style={{fontSize: size}}>
                 <code>{this.props.name}</code>
                 {this.getInfo(val)}
-                {this.getButtons()}
+                {this.getButtons(val)}
                 <br />
                 {this.getTape()}
                 {this.getOutput()}
