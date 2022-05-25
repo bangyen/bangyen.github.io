@@ -71,34 +71,46 @@ export default class Snake extends React.Component {
         this.setState({
             row: arr.length,
             col: arr[0].length,
-            arr});
+            arr
+        });
     }
 
     changeDir(e) {
-        const s = e.key.toLowerCase();
         const old = this.state.vel;
         let vel;
 
-        if (s === 'arrowleft' || s === 'a')
-            vel = [0, -1];
-        else if (s === 'arrowright' || s === 'd')
-            vel = [0, 1];
-        else if (s === 'arrowup' || s === 'w')
-            vel = [-1, 0];
-        else if (s === 'arrowdown' || s === 's')
-            vel = [1, 0];
-        else
-            return;
+        switch (e.key.toLowerCase()) {
+            case 'arrowup':
+            case 'w':
+                vel = [-1, 0];
+                break;
+            case 'arrowdown':
+            case 's':
+                vel = [1, 0];
+                break;
+            case 'arrowleft':
+            case 'a':
+                vel = [0, -1];
+                break;
+            case 'arrowright':
+            case 'd':
+                vel = [0, 1];
+                break;
+            default:
+                return;
+        }
 
         if (old[0] + vel[0] &&
                 old[0] !== vel[0])
             if (this.state.move)
                 this.setState({
                     move: false,
-                    vel});
+                    vel
+                });
             else
                 this.setState({
-                    buff: vel});
+                    buff: vel
+                });
     }
 
     componentDidMount() {

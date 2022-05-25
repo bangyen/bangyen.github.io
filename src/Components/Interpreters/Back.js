@@ -23,12 +23,12 @@ function outer(obj) {
 
             if (back) {
                 if (ind)
-                    ind -= 1;
+                    ind--;
             } else {
                 if (state.end)
                     arr = [obj];
                 else
-                    ind += 1;
+                    ind++;
             }
 
             if (ind < arr.length)
@@ -39,26 +39,39 @@ function outer(obj) {
             let [a, b] = vel;
             tape = [...tape];
 
-            if (c === '\\') {
-                vel = [b, a];
-            } else if (c === '/') {
-                vel = [-b, -a];
-            } else if (c === '<' && cell) {
-                cell -= 1;
-            } else if (c === '>') {
-                cell += 1;
-                if (cell === tape.length)
-                    tape.push(0);
-            } else if (c === '-') {
-                tape[cell] ^= 1;
-            } else if (c === '+' && !tape[cell]) {
-                do {
-                    pos = wrap(pos);
-                    c = code[pos];
-                } while (!'\\/<>-+*'.includes(c));
-            } else if (c === '*') {
-                end = true;
-                pos = null;
+            switch (c) {
+                case '\\':
+                    vel = [b, a];
+                    break;
+                case '/':
+                    vel = [-b, -a];
+                    break;
+                case '<':
+                    if (cell)
+                        cell--;
+                    break;
+                case '>':
+                    cell++;
+                    if (cell === tape.length)
+                        tape.push(0);
+                    break;
+                case '-':
+                    tape[cell] ^= 1;
+                    break;
+                case '+':
+                    if (!tape[cell])
+                        do {
+                            pos = wrap(pos);
+                            c = code[pos];
+                        } while (!'\\/<>-+*'
+                            .includes(c));
+                    break;
+                case '*':
+                    end = true;
+                    pos = null;
+                    break;
+                default:
+                    break;
             }
 
             if (pos !== null)

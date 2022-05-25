@@ -78,12 +78,12 @@ function outer(obj) {
 
             if (back) {
                 if (ind)
-                    ind -= 1;
+                    ind--;
             } else {
                 if (state.end)
                     arr = [obj];
                 else
-                    ind += 1;
+                    ind++;
             }
 
             if (ind < arr.length)
@@ -92,36 +92,50 @@ function outer(obj) {
             let {pos, end, out, acc} = state;
             let c = code[pos];
 
-            if (str.includes(c)) {
+            if (str.includes(c))
                 vel = dir[str.indexOf(c)];
-            } else if (c === '|') {
-                vel = [-vel[0], -vel[1]];
-            } else if (c === '@') {
-                pos = close(pos, code);
-                pos -= size;
-
-                if (pos < 0)
-                    pos += size * size;
-            } else if (+c) {
+            else if (+c)
                 acc = +c;
-            } else if (c === '+') {
-                acc += 1;
-            } else if (c === '-') {
-                acc -= 1;
-            } else if (c === '*') {
-                acc *= 2;
-            } else if (c === 's') {
-                acc = acc * acc;
-            } else if (c === '/') {
-                acc = Math.floor(acc / 2);
-            } else if (c === '~') {
-                out += String.fromCharCode(acc);
-            } else if (c === '?') {
-                let rnd = Math.random() * 4;
-                vel = dir[Math.floor(rnd)];
-            } else if (c === '.') {
-                pos = null;
-                end = true;
+
+            switch (c) {
+                case '|':
+                    vel = [-vel[0], -vel[1]];
+                    break;
+                case '@':
+                    pos = close(pos, code);
+                    pos -= size;
+
+                    if (pos < 0)
+                        pos += size * size;
+                    break;
+                case '+':
+                    acc++;
+                    break;
+                case '-':
+                    acc--;
+                    break;
+                case '*':
+                    acc *= 2;
+                    break;
+                case 's':
+                    acc = acc * acc;
+                    break;
+                case '/':
+                    acc = Math.floor(acc / 2);
+                    break;
+                case '~':
+                    out += String.fromCharCode(acc);
+                    break;
+                case '?':
+                    let rnd = Math.random() * 4;
+                    vel = dir[Math.floor(rnd)];
+                    break;
+                case '.':
+                    pos = null;
+                    end = true;
+                    break;
+                default:
+                    break;
             }
 
             if (pos !== null && c !== '@')

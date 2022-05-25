@@ -24,9 +24,9 @@ function outer(obj) {
 
             if (back) {
                 if (num)
-                    num -= 1;
+                    num--;
             } else {
-                num += 1;
+                num++;
 
                 if (num % len === 0) {
                     end = true;
@@ -47,17 +47,17 @@ function outer(obj) {
             tape = [...tape];
 
             if (c === '+') {
-                tape[ptr] += 1;
+                tape[ptr]++;
             } else if (tape[ptr]) {
                 if (c === '-') {
-                    tape[ptr] -= 1;
+                    tape[ptr]--;
                 } else if (c === '>') {
-                    ptr += 1;
+                    ptr++;
 
                     if (ptr === tape.length)
                         tape.push(1);
                 } else if (ptr) {
-                    ptr -= 1;
+                    ptr--;
                 }
             }
 

@@ -50,36 +50,47 @@ export default class Snowman extends React.Component {
 
     move(e) {
         const { board } = this.state;
-        const key = e.key.toLowerCase();
         let back = false;
         let icon;
         let vel;
 
-        if (key === 'w') {
-            icon = <FaMale />;
-            vel = [-1, 0];
-        } else if (key === 's') {
-            icon = <FaMale />;
-            vel = [1, 0];
-        } else if (key === 'a') {
-            icon = <div className='flip'>
-                <FaWalking />
-            </div>;
-            vel = [0, -1];
-        } else if (key === 'd') {
-            icon = <FaWalking />;
-            vel = [0, 1];
-        } else if (key === 'z'
-            && this.hist.length) {
-            const arr = this.hist.pop();
-            this.pos = arr.pop();
-            back = true;
+        switch (e.key.toLowerCase()) {
+            case 'arrowup':
+            case 'w':
+                icon = <FaMale />;
+                vel = [-1, 0];
+                break;
+            case 'arrowdown':
+            case 's':
+                icon = <FaMale />;
+                vel = [1, 0];
+                break;
+            case 'arrowleft':
+            case 'a':
+                icon = <div className='flip'>
+                    <FaWalking />
+                </div>;
+                vel = [0, -1];
+                break;
+            case 'arrowright':
+            case 'd':
+                icon = <FaWalking />;
+                vel = [0, 1];
+                break;
+            case 'z':
+                if (this.hist.length) {
+                    const arr = this.hist.pop();
+                    this.pos = arr.pop();
+                    back = true;
 
-            this.setState({
-                board: arr
-            });
-        } else {
-            return;
+                    this.setState({
+                        board: arr
+                    });
+                }
+
+                break;
+            default:
+                return;
         }
 
         const obj = n => {

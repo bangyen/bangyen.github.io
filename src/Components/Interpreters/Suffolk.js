@@ -24,9 +24,9 @@ function outer(obj) {
 
             if (back) {
                 if (num)
-                    num -= 1;
+                    num--;
             } else {
-                num += 1;
+                num++;
 
                 if (num % len === 0)
                     end = true;
@@ -41,32 +41,38 @@ function outer(obj) {
             let ind = num % len;
             tape = [...tape];
 
-            if (c === '>') {
-                ptr += 1;
-                if (ptr === tape.length)
-                    tape.push(0);
-            } else if (c === '<') {
-                acc += tape[ptr];
-                ptr = 0;
-            } else if (c === '!') {
-                tape[ptr] -= acc - 1;
+            switch (c) {
+                case '>':
+                    ptr++;
+                    if (ptr === tape.length)
+                        tape.push(0);
+                    break;
+                case '<':
+                    acc += tape[ptr];
+                    ptr = 0;
+                    break;
+                case '!':
+                    tape[ptr] -= acc - 1;
 
-                if (tape[ptr] < 0)
-                    tape[ptr] = 0;
+                    if (tape[ptr] < 0)
+                        tape[ptr] = 0;
 
-                acc = 0;
-                ptr = 0;
-            } else if (c === ',') {
-                let inp = '';
+                    acc = 0;
+                    ptr = 0;
+                    break;
+                case ',':
+                    let inp = '';
 
-                while (!inp.length)
-                    inp = prompt('Input: ');
+                    while (!inp.length)
+                        inp = prompt('Input: ');
 
-                acc = inp.charCodeAt(0);
-            } else {
-                if (acc > 0)
-                    out += String
-                        .fromCharCode(acc - 1);
+                    acc = inp.charCodeAt(0);
+                    break;
+                default:
+                    if (acc > 0)
+                        out += String
+                            .fromCharCode(acc - 1);
+                    break;
             }
 
             state = {
