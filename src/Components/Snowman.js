@@ -16,6 +16,8 @@ export default class Snowman extends React.Component {
         this.square = this.size
             * this.size;
         this.move = this.move.bind(this);
+        this.font = n =>
+            `calc(var(--board) / ${4 * n})`;
         this.hist = [];
 
         this.random = n => {
@@ -25,7 +27,8 @@ export default class Snowman extends React.Component {
 
         this.state = {
             board: this.setup(),
-            icon: <FaMale />
+            icon: <FaMale size={
+                this.font(this.size)} />
         };
     }
 
@@ -134,7 +137,7 @@ export default class Snowman extends React.Component {
                     board[ball] = 1;
                     board[space] *= type;
 
-                    if (after === 105)
+                    if (after === 35)
                         board[space] = 5;
                 } else {
                     change = false;
@@ -203,29 +206,35 @@ export default class Snowman extends React.Component {
     convert(val, ind, css) {
         const { board } = this.state;
         const s = this.size;
+        const size = this.font(s);
         let icon;
 
         if (val % 2 === 0) {
             icon = this.state.icon;
         } else if (val % 3 === 0) {
-            const size = n => <div style={{
-                marginBottom: '-0.5em'
+            const size = (s, b) => <div style={{
+                marginBottom: `calc(
+                    ${-b / 4} * ${css})`
             }}>
-                <FaCircle size={`${n}em`} />
+                <FaCircle size={`calc(
+                    ${s / 4} * ${css})`} />
             </div>;
+
+            const bot = val > 21
+                ? 0.6 : 0;
             icon = [];
             val /= 3;
 
             if (val % 3 === 0)
-                icon.push(size(0.75));
+                icon.push(size(0.7, bot));
             if (val % 5 === 0)
-                icon.push(size(1));
+                icon.push(size(1, bot * (7 / 6)));
             if (val % 7 === 0)
-                icon.push(size(1.25));
+                icon.push(size(1.3, 0));
         } else if (val === 5) {
-            icon = <FaSnowman />;
+            icon = <FaSnowman size={size}/>;
         } else if (val % 7 === 0) {
-            icon = <FaTree />;
+            icon = <FaTree size={size}/>;
         } else {
             icon = '';
         }
