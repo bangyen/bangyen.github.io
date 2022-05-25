@@ -1,6 +1,8 @@
 :root {
     --table-size: min(70vh, 40vw);
     --stack: min(40vh, 70vw);
+    --board: min(90vh, 90vw);
+    --radius: calc(var(--board) / 20);
 }
 
 .cell {
@@ -18,4 +20,11 @@
     white-space: nowrap;
     width: 35vw;
     margin: auto;
+}
+
+.flip {
+    -moz-transform: scaleX(-1); /* Gecko */
+    -o-transform: scaleX(-1); /* Opera */
+    -webkit-transform: scaleX(-1); /* Webkit */
+    transform: scaleX(-1); /* Standard */
 }

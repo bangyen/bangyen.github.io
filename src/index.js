@@ -15,6 +15,7 @@ import Snake from './Components/Snake';
 import Home from './Components/Home';
 import Error from './Components/Error';
 import Videos from './Components/Videos';
+import Snowman from './Components/Snowman';
 
 import './index.css';
 import './Grid.css';
@@ -42,6 +43,9 @@ function App() {
                     </Route>
                     <Route exact path="/snake">
                         <Snake />
+                    </Route>
+                    <Route exact path="/snowman">
+                        <Snowman />
                     </Route>
                     <Route exact path="/">
                         <Home />

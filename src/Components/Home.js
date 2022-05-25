@@ -19,7 +19,8 @@ export default function Home() {
                             style={style}>
                         Interpreters
                     </button>
-                    <div className='dropdown-content'>
+                    <div className='dropdown-content'
+                            style={{minWidth: '113px'}}>
                         <Link to='/back'>
                             Back
                         </Link>
@@ -34,20 +35,24 @@ export default function Home() {
                         </Link>
                     </div>
                 </div>
-                <Link to='/videos'>
+                <div className='dropdown'>
                     <button className='custom'
-                            type='button'
-                            style={style}>
-                        Videos
+                        style={style}>
+                        Miscellaneous
                     </button>
-                </Link>
-                <Link to='/snake'>
-                    <button className='custom'
-                            type='button'
-                            style={style}>
-                        Snake
-                    </button>
-                </Link>
+                    <div className='dropdown-content'
+                            style={{minWidth: '129.5px'}}>
+                        <Link to='/snake'>
+                            Snake
+                        </Link>
+                        <Link to='/snowman'>
+                            Snowman
+                        </Link>
+                        <Link to='/videos'>
+                            Videos
+                        </Link>
+                    </div>
+                </div>
                 <form action='https://github.com/bangyen'
                         style={{display: 'inline-block'}}>
                     <input type='submit'
