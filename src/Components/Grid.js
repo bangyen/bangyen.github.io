@@ -113,8 +113,7 @@ export default class Grid extends React.Component {
         let {select, breaks, text} = this.state;
 
         if (select !== null && !text) {
-            let str = this.state.grid;
-            const size = str.length;
+            let { grid: str, size } = this.state;
             let value;
 
             if (e.key.toLowerCase() === 'b') {
@@ -336,7 +335,7 @@ export default class Grid extends React.Component {
                 <code>
                     <li>Click to select/unselect</li>
                     <li>Type to change selected cell</li>
-                    <li>Press (b) to use breakpoints</li>
+                    <li>Press <b>b</b> to use breakpoints</li>
                     <li>Hover over buttons for usage</li>
                     <li>
                         Commands located&nbsp;
