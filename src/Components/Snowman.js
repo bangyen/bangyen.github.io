@@ -11,14 +11,13 @@ import {
 export default class Snowman extends React.Component {
     constructor(props: Props) {
         super(props);
-
-        this.size = 5;
-        this.square = this.size
-            * this.size;
-        this.move = this.move.bind(this);
+        
         this.font = n =>
-            `calc(var(--board) / ${4 * n})`;
+            `calc(var(--board) / ${n})`;
+        this.move = this.move.bind(this);
+
         this.hist = [];
+        this.size = 5;
 
         this.random = n => {
             const val = Math.random() * n;
@@ -28,7 +27,7 @@ export default class Snowman extends React.Component {
         this.state = {
             board: this.setup(),
             icon: <FaMale size={
-                this.font(this.size)} />
+                this.font(4 * this.size)} />
         };
     }
 
@@ -93,36 +92,40 @@ export default class Snowman extends React.Component {
                 return;
         }
 
-        const obj = n => {
-            return {
+        const check = n => {
+            return move({
                 pos: n,
                 old: this.size,
                 wrap: false,
                 vel
-            };
+            });
         };
 
-        if (!back)
-            this.hist.push(
-                [...board, this.pos]);
+        if (!back) {
+            const h = this.hist;
+            h.push([...board, this.pos]);
 
-        const ball = move(obj(this.pos));
+            if (h.length > 10)
+                h.splice(0, 1);
+        }
+
+        const ball = check(this.pos);
         let change = true;
         let type = board[ball];
 
         if (type % 3 === 0) {
-            const space = move(obj(ball));
+            const space = check(ball);
             let after = board[space];
             type /= 3;
 
             if (Math.abs(after) === 1) {
                 if (type > 7) {
-                    if (type % 3 === 0) {
-                        board[space] *= 9;
-                        board[ball] /= 3;
-                    } else if (type % 5 === 0) {
+                    if (type % 3) {
                         board[space] *= 15;
                         board[ball] /= 5;
+                    } else {
+                        board[space] *= 9;
+                        board[ball] /= 3;
                     }
 
                     change = false;
@@ -185,7 +188,7 @@ export default class Snowman extends React.Component {
      * 7: Obstacle
      */
     setup() {
-        const s = this.square;
+        const s = this.size * this.size;
         const board = [...Array(s)];
         const sizes = [3, 5, 7];
         let num;
@@ -217,31 +220,37 @@ export default class Snowman extends React.Component {
     convert(val, ind, css) {
         const { board } = this.state;
         const s = this.size;
-        const size = this.font(s);
+        let size = this.font(4 * s);
         let icon;
 
         if (val % 2 === 0) {
             icon = this.state.icon;
         } else if (val % 3 === 0) {
-            const size = (s, b) => <div style={{
-                marginBottom: `calc(
-                    ${-b / 4} * ${css})`
-            }}>
-                <FaCircle size={`calc(
-                    ${s / 4} * ${css})`} />
+            size = n => `calc(${n / 4} * ${css})`;
+            const adj = (s, t, b) => <div style={{
+                    marginTop: size(-t),
+                    marginBottom: size(-b)
+                }}>
+                <FaCircle size={size(s)} />
             </div>;
 
-            const bot = val > 21
-                ? 0.6 : 0;
+            const dub = val > 21;
             icon = [];
-            val /= 3;
 
-            if (val % 3 === 0)
-                icon.push(size(0.7, bot));
+            if (val % 9 === 0)
+                icon.push(adj(0.7, 0,
+                    dub ? 0.5 : 0));
             if (val % 5 === 0)
-                icon.push(size(1, bot * (7 / 6)));
-            if (val % 7 === 0)
-                icon.push(size(1.3, 0));
+                icon.push(adj(1,
+                    val % 9 ? 0 : 0.5,
+                    val % 7 ? 0 : 0.7));
+            if (val % 7 === 0) {
+                const num = val % 9
+                    ? 0.7 : 0.5;
+
+                icon.push(adj(1.3,
+                    dub ? num : 0, 0));
+            }
         } else if (val === 5) {
             icon = <FaSnowman size={size}/>;
         } else if (val % 7 === 0) {
@@ -259,8 +268,8 @@ export default class Snowman extends React.Component {
             borderTopRightRadius: rad,
             borderBottomLeftRadius: rad,
             borderBottomRightRadius: rad,
-            height: `calc(${css})`,
-            width: `calc(${css})`,
+            height: css,
+            width: css,
             cursor: 'default',
             color: val > 2
                 ? 'white' : 'black'
@@ -313,12 +322,11 @@ export default class Snowman extends React.Component {
         </td>;
     }
 
-    getTable(css) {
+    getTable() {
         const { board } = this.state;
         const size = this.size;
-        const cellSize = `${css} / ${size}`;
-        const under = `calc(${css}
-            / ${size} * ${size - 1})`;
+        const cellSize = this.font(size);
+        const under = this.font(size / (size - 1));
 
         const cells = this.state.board
             .map((v, n) => this.convert(v, n, cellSize));
@@ -357,8 +365,8 @@ export default class Snowman extends React.Component {
                     zIndex: 1,
                     backgroundClip: 'border-box',
                     borderSpacing: 0,
-                    width: css,
-                    height: css
+                    width: 'var(--board)',
+                    height: 'var(--board)'
                 }}>
                 <tbody>
                     {[...Array(size).keys()]
@@ -369,10 +377,8 @@ export default class Snowman extends React.Component {
     }
 
     render() {
-        const len = 'var(--board)';
-
         return <header className='app'>
-            {this.getTable(len)}
+            {this.getTable()}
         </header>;
     }
 }

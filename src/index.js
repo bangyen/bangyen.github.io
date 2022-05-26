@@ -22,41 +22,39 @@ import './Grid.css';
 import './Button.css';
 
 function App() {
-    return (
-        <Router basename='/'>
-            <div>
-                <Switch>
-                    <Route exact path="/back">
-                        <Back />
-                    </Route>
-                    <Route exact path="/stun_step">
-                        <StunStep />
-                    </Route>
-                    <Route exact path="/suffolk">
-                        <Suffolk />
-                    </Route>
-                    <Route exact path="/WII2D">
-                        <WII2D />
-                    </Route>
-                    <Route exact path="/videos">
-                        <Videos />
-                    </Route>
-                    <Route exact path="/snake">
-                        <Snake />
-                    </Route>
-                    <Route exact path="/snowman">
-                        <Snowman />
-                    </Route>
-                    <Route exact path="/">
-                        <Home />
-                    </Route>
-                    <Route >
-                        <Error />
-                    </Route>
-                </Switch>
-            </div>
-        </Router>
-    );
+    return <Router basename='/'>
+        <div>
+            <Switch>
+                <Route exact path="/back">
+                    <Back />
+                </Route>
+                <Route exact path="/stun_step">
+                    <StunStep />
+                </Route>
+                <Route exact path="/suffolk">
+                    <Suffolk />
+                </Route>
+                <Route exact path="/WII2D">
+                    <WII2D />
+                </Route>
+                <Route exact path="/videos">
+                    <Videos />
+                </Route>
+                <Route exact path="/snake">
+                    <Snake />
+                </Route>
+                <Route exact path="/snowman">
+                    <Snowman />
+                </Route>
+                <Route exact path="/">
+                    <Home />
+                </Route>
+                <Route >
+                    <Error />
+                </Route>
+            </Switch>
+        </div>
+    </Router>;
 }
 
 ReactDOM.render(
