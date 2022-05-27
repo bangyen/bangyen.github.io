@@ -418,7 +418,7 @@ export default class Snowman extends React.Component {
     }
 
     getInfo() {
-        const size = this.font(5);
+        const size = this.font(6);
         const style = {
             borderRadius: 'var(--radius)',
             textAlign: 'center',
@@ -429,7 +429,7 @@ export default class Snowman extends React.Component {
         const td = (k, f = 1) => <td
             style={style}>
             {React.createElement(
-                k, {size: this.font(20 / f)})}
+                k, {size: this.font(24 / f)})}
         </td>;
 
         return <table>
