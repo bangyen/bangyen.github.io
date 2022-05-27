@@ -6,7 +6,9 @@ import {
     FaWalking,
     FaSnowman,
     FaCircle,
-    FaTree
+    FaTree,
+    FaArrowRight,
+    FaEquals
 } from 'react-icons/fa';
 import {
     BsArrowsMove,
@@ -380,23 +382,25 @@ export default class Snowman extends React.Component {
                     width: under,
                     height: under
                 }}>
-                {[...Array(size - 1).keys()].map(i => <tr>{
-                    [...Array(size - 1).keys()].map(j => {
-                        const bool = n =>
-                            grid[size * i + j + n] < 0;
-                        let count = 0;
+                <tbody>
+                    {[...Array(size - 1).keys()].map(i => <tr>{
+                        [...Array(size - 1).keys()].map(j => {
+                            const bool = n =>
+                                grid[size * i + j + n] < 0;
+                            let count = 0;
 
-                        count += bool(0);
-                        count += bool(1);
-                        count += bool(size);
-                        count += bool(size + 1);
+                            count += bool(0);
+                            count += bool(1);
+                            count += bool(size);
+                            count += bool(size + 1);
 
-                        return <td style={{
-                            backgroundColor: count > 1
-                                ? 'white' : 'green'
-                        }}></td>;
-                    })
-                }</tr>)}
+                            return <td style={{
+                                backgroundColor: count > 1
+                                    ? 'white' : 'green'
+                            }}></td>;
+                        })
+                    }</tr>)}
+                </tbody>
             </table>
             <table style={{
                     zIndex: 1,
@@ -413,28 +417,64 @@ export default class Snowman extends React.Component {
         </>;
     }
 
+    getInfo() {
+        const size = this.font(5);
+        const style = {
+            borderRadius: 'var(--radius)',
+            textAlign: 'center',
+            width: size,
+            height: size
+        };
+
+        const td = (k, f = 1) => <td
+            style={style}>
+            {React.createElement(
+                k, {size: this.font(20 / f)})}
+        </td>;
+
+        return <table>
+            <tbody>
+                <tr>
+                    {td(FaCircle, 0.7)}
+                    {td(FaArrowRight)}
+                    <td className='select'
+                        bgColor='white'
+                        style={style}>
+                        &nbsp;&nbsp;
+                    </td>
+                    {td(FaEquals)}
+                    {td(FaCircle)}
+                </tr>
+                <tr>
+                    {td(FaCircle, 0.7)}
+                    {td(FaArrowRight)}
+                    {td(FaCircle)}
+                    {td(FaEquals)}
+                    <td style={style}>
+                        <FaCircle size={this.font(20 / 0.7)} />
+                        <FaCircle size={this.font(20)}/>
+                    </td>
+                </tr>
+                <tr>
+                    {td(FaCircle, 0.7)}
+                    {td(FaArrowRight)}
+                    <td style={style}>
+                        <FaCircle size={this.font(20)} />
+                        <FaCircle size={this.font(20 / 1.3)} />
+                    </td>
+                    {td(FaEquals)}
+                    {td(FaSnowman)}
+                </tr>
+            </tbody>
+        </table>;
+    }
+
     render() {
         const { info, dir } = this.state;
         let content, buttons;
 
         if (info)
-            content = <div>
-                <ul style={{
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        width: this.font(1.1),
-                        fontSize: this.font(25)
-                    }}>
-                    <code>
-                        <li>Snowballs grow when
-                            pushed through snow</li>
-                        <li>Smaller snowballs can be
-                            stacked on bigger snowballs</li>
-                        <li>Stacking small, medium, and large
-                            snowballs creates a snowman</li>
-                    </code>
-                </ul>
-            </div>;
+            content = this.getInfo();
         else
             content = this.getTable();
 
@@ -445,12 +485,14 @@ export default class Snowman extends React.Component {
             buttons = <>
                 {home(true)}
                 {button(BsArrowsMove, 'Controls',
-                    () => this.setState({ dir: true }),
+                    () => this.setState({
+                        info: false,
+                        dir: true
+                    }),
                     true
                 )}
                 {button(BsQuestion, 'Help',
-                    () => this.setState(
-                        { info: !info }),
+                    () => this.setState({ info: !info }),
                     true)}
             </>;
 
