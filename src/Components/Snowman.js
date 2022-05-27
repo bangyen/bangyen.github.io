@@ -1,3 +1,4 @@
+import { button, home, arrows } from './helper';
 import { move } from './helper';
 import React from 'react';
 import {
@@ -7,17 +8,27 @@ import {
     FaCircle,
     FaTree
 } from 'react-icons/fa';
+import {
+    BsArrowsMove,
+    BsQuestion
+} from 'react-icons/bs';
 
 export default class Snowman extends React.Component {
     constructor(props: Props) {
         super(props);
-        
+
+        this.pos = 0;
+        this.size = 7;
+        this.square = this.size
+            * this.size;
+        this.stroll = false;
+
         this.font = n =>
             `calc(var(--board) / ${n})`;
         this.move = this.move.bind(this);
-
-        this.hist = [];
-        this.size = 5;
+        this.icon = {
+            size: this.font(4 * this.size)
+        };
 
         this.random = n => {
             const val = Math.random() * n;
@@ -25,9 +36,11 @@ export default class Snowman extends React.Component {
         };
 
         this.state = {
-            board: this.setup(),
-            icon: <FaMale size={
-                this.font(4 * this.size)} />
+            board: [...Array(9).keys()]
+                .map(n => this.setup(n)),
+            icon: <FaMale {...this.icon} />,
+            info: false,
+            dir: false
         };
     }
 
@@ -40,7 +53,6 @@ export default class Snowman extends React.Component {
     }
 
     componentWillUnmount() {
-        clearInterval(this.timerID);
         document.removeEventListener(
             'keydown',
             this.move,
@@ -48,111 +60,118 @@ export default class Snowman extends React.Component {
     }
 
     move(e) {
-        const { board } = this.state;
-        let back = false;
+        const { board, info } = this.state;
+        const size = this.size;
+        const grid = board[4];
+        let pos = this.pos;
+        let flip = false;
         let icon;
-        let vel;
+        let a, b;
+
+        if (info)
+            return;
 
         switch (e.key.toLowerCase()) {
             case 'arrowup':
             case 'w':
-                icon = <FaMale />;
-                vel = [-1, 0];
+                icon = FaMale;
+                [a, b] = [-1, 0];
                 break;
             case 'arrowdown':
             case 's':
-                icon = <FaMale />;
-                vel = [1, 0];
+                icon = FaMale;
+                [a, b] = [1, 0];
                 break;
             case 'arrowleft':
             case 'a':
-                icon = <div className='flip'>
-                    <FaWalking />
-                </div>;
-                vel = [0, -1];
+                flip = true;
+                [a, b] = [0, -1];
                 break;
             case 'arrowright':
             case 'd':
-                icon = <FaWalking />;
-                vel = [0, 1];
-                break;
-            case 'z':
-                if (this.hist.length) {
-                    const arr = this.hist.pop();
-                    this.pos = arr.pop();
-                    back = true;
-
-                    this.setState({
-                        board: arr
-                    });
-                }
-
+                icon = FaWalking;
+                [a, b] = [0, 1];
                 break;
             default:
                 return;
         }
 
-        const check = n => {
+        const shift = (n, w) => {
             return move({
-                pos: n,
-                old: this.size,
-                wrap: false,
-                vel
+                vel: [a, b],
+                old: size,
+                wrap: w,
+                pos: n
             });
         };
 
-        if (!back) {
-            const h = this.hist;
-            h.push([...board, this.pos]);
+        const check = (m = 1) => {
+            let num = 4;
+            let res = pos;
+            let two = pos;
 
-            if (h.length > 10)
-                h.splice(0, 1);
-        }
+            for (let k = 0; k < m; k++) {
+                res = shift(res, false);
+                two = shift(two);
+            }
 
-        const ball = check(this.pos);
+            if (res !== two)
+                num += 3 * a + b;
+
+            return [board[num], two];
+        };
+
+        if (flip)
+            icon = <div className='flip'>
+                <FaWalking {...this.icon} />
+            </div>;
+        else
+            icon = React.createElement(
+                icon, this.icon);
+
+        let [ballGrid, ball] = check();
+        let type = ballGrid[ball];
         let change = true;
-        let type = board[ball];
 
         if (type % 3 === 0) {
-            const space = check(ball);
-            let after = board[space];
+            let [spaceGrid, space] = check(2);
+            let after = spaceGrid[space];
+
             type /= 3;
 
             if (Math.abs(after) === 1) {
                 if (type > 7) {
                     if (type % 3) {
-                        board[space] *= 15;
-                        board[ball] /= 5;
+                        spaceGrid[space] *= 15;
+                        ballGrid[ball] /= 5;
                     } else {
-                        board[space] *= 9;
-                        board[ball] /= 3;
+                        spaceGrid[space] *= 9;
+                        ballGrid[ball] /= 3;
                     }
 
                     change = false;
-                    this.hist.push(
-                        this.hist.length - 1);
                 } else {
-                    board[space] *= 3 * type;
-                    board[ball] = 1;
+                    spaceGrid[space] *= 3 * type;
+                    ballGrid[ball] = 1;
                 }
 
                 if (after < 0) {
-                    board[space] *= -1;
+                    spaceGrid[space] *= -1;
 
-                    if (board[space] !== 21)
-                        board[space] += 6;
+                    if (spaceGrid[space] !== 21)
+                        spaceGrid[space] += 6;
                 }
             } else if (after % 3 === 0) {
                 after /= 3;
 
                 if (after > type
-                        && after % type
-                        && after % 3) {
-                    board[ball] = 1;
-                    board[space] *= type;
+                    && after % type
+                    && after % 3) {
+                    ballGrid[ball] = 1;
+                    spaceGrid[space] *= type;
 
                     if (after === 35)
-                        board[space] = 5;
+                        spaceGrid[space] = 5;
                 } else {
                     change = false;
                 }
@@ -165,11 +184,34 @@ export default class Snowman extends React.Component {
         }
 
         if (change) {
-            board[this.pos] /= 2;
+            if (pos === shift(pos, false)) {
+                const arr = [...Array(3)]
+                    .map(_ => this.setup());
+
+                if (a === -1) {
+                    board.splice(6, 3);
+                    board.splice(0, 0, ...arr);
+                } else if (a === 1) {
+                    board.splice(0, 3);
+                    board.push(...arr);
+                } else if (b === -1) {
+                    for (let k in arr) {
+                        board.splice(3 * (2 - k) + 2, 1);
+                        board.splice(3 * (2 - k),
+                            0, arr[k]);
+                    }
+                } else {
+                    for (let k in arr) {
+                        board.splice(3 * (2 - k), 1);
+                        board.splice(3 * (2 - k) + 2,
+                            0, arr[k]);
+                    }
+                }
+            }
+
+            grid[pos] /= 2;
             this.pos = ball;
-            board[ball] *= 2;
-        } else {
-            this.hist.pop();
+            board[4][ball] *= 2;
         }
 
         this.setState({ icon });
@@ -187,25 +229,29 @@ export default class Snowman extends React.Component {
      * 5: Full Snowman
      * 7: Obstacle
      */
-    setup() {
-        const s = this.size * this.size;
+    setup(ind) {
+        const s = this.square;
         const board = [...Array(s)];
-        const sizes = [3, 5, 7];
         let num;
 
         for (let k in board) {
-            const n = this.random(3);
+            const n = this.random(2);
             board[k] = n ? 1 : -1;
         }
 
-        this.pos = this.random(s);
-        board[this.pos] *= 2;
+        if (ind === 4) {
+            const n =
+                this.random(this.square);
 
-        for (let k = 0; k < 3; k++) {
+            board[n] *= 2;
+            this.pos = n;
+        }
+
+        for (let k = 0; k < 2; k++) {
             num = this.random(s);
 
             if (Math.abs(board[num]) === 1)
-                board[num] = 3 * sizes[k];
+                board[num] = 9;
             else
                 k--;
         }
@@ -217,8 +263,10 @@ export default class Snowman extends React.Component {
         return board;
     }
 
-    convert(val, ind, css) {
+    convert(val, num, css) {
         const { board } = this.state;
+        const grid = board[4];
+
         const s = this.size;
         let size = this.font(4 * s);
         let icon;
@@ -227,41 +275,28 @@ export default class Snowman extends React.Component {
             icon = this.state.icon;
         } else if (val % 3 === 0) {
             size = n => `calc(${n / 4} * ${css})`;
-            const adj = (s, t, b) => <div style={{
-                    marginTop: size(-t),
-                    marginBottom: size(-b)
-                }}>
-                <FaCircle size={size(s)} />
-            </div>;
+            const adj = (s, t, b) =>
+                <FaCircle size={size(s)} />;
 
-            const dub = val > 21;
             icon = [];
 
             if (val % 9 === 0)
-                icon.push(adj(0.7, 0,
-                    dub ? 0.5 : 0));
+                icon.push(adj(0.7));
             if (val % 5 === 0)
-                icon.push(adj(1,
-                    val % 9 ? 0 : 0.5,
-                    val % 7 ? 0 : 0.7));
-            if (val % 7 === 0) {
-                const num = val % 9
-                    ? 0.7 : 0.5;
-
-                icon.push(adj(1.3,
-                    dub ? num : 0, 0));
-            }
+                icon.push(adj(1));
+            if (val % 7 === 0)
+                icon.push(adj(1.3));
         } else if (val === 5) {
-            icon = <FaSnowman size={size}/>;
+            icon = <FaSnowman size={size} />;
         } else if (val % 7 === 0) {
-            icon = <FaTree size={size}/>;
+            icon = <FaTree size={size} />;
         } else {
-            icon = '';
+            icon = '\xa0\xa0';
         }
 
         const rad = 'var(--radius)';
-        const quo = Math.floor(ind / s);
-        const mod = ind % s;
+        const quo = Math.floor(num / s);
+        const mod = num % s;
 
         let style = {
             borderTopLeftRadius: rad,
@@ -271,13 +306,13 @@ export default class Snowman extends React.Component {
             height: css,
             width: css,
             cursor: 'default',
-            color: val > 2
+            color: val > 2 && val !== 7
                 ? 'white' : 'black'
         };
 
         const edge = (f) => {
-            if (f(board[ind])) {
-                if (quo > 0 && f(board[ind - s])) {
+            if (f(grid[num])) {
+                if (quo > 0 && f(grid[num - s])) {
                     style = {
                         ...style,
                         borderTopLeftRadius: 0,
@@ -285,7 +320,7 @@ export default class Snowman extends React.Component {
                     };
                 }
 
-                if (quo < s - 1 && f(board[ind + s])) {
+                if (quo < s - 1 && f(grid[num + s])) {
                     style = {
                         ...style,
                         borderBottomLeftRadius: 0,
@@ -293,7 +328,7 @@ export default class Snowman extends React.Component {
                     };
                 }
 
-                if (mod > 0 && f(board[ind - 1])) {
+                if (mod > 0 && f(grid[num - 1])) {
                     style = {
                         ...style,
                         borderTopLeftRadius: 0,
@@ -301,7 +336,7 @@ export default class Snowman extends React.Component {
                     };
                 }
 
-                if (mod < s - 1 && f(board[ind + 1])) {
+                if (mod < s - 1 && f(grid[num + 1])) {
                     style = {
                         ...style,
                         borderTopRightRadius: 0,
@@ -323,13 +358,15 @@ export default class Snowman extends React.Component {
     }
 
     getTable() {
-        const { board } = this.state;
         const size = this.size;
+        const { board } = this.state;
+        const grid = board[4];
+
         const cellSize = this.font(size);
         const under = this.font(size / (size - 1));
 
-        const cells = this.state.board
-            .map((v, n) => this.convert(v, n, cellSize));
+        const cells = grid.map((v, n) =>
+            this.convert(v, n, cellSize));
         const row = n => <tr>
             {cells.slice(size * n,
                 size * (n + 1))}
@@ -337,16 +374,16 @@ export default class Snowman extends React.Component {
 
         return <>
             <table style={{
-                zIndex: 0,
-                position: 'absolute',
-                borderSpacing: 0,
-                width: under,
-                height: under
-            }}>
+                    zIndex: 0,
+                    position: 'absolute',
+                    borderSpacing: 0,
+                    width: under,
+                    height: under
+                }}>
                 {[...Array(size - 1).keys()].map(i => <tr>{
                     [...Array(size - 1).keys()].map(j => {
                         const bool = n =>
-                            board[size * i + j + n] < 0;
+                            grid[size * i + j + n] < 0;
                         let count = 0;
 
                         count += bool(0);
@@ -377,8 +414,55 @@ export default class Snowman extends React.Component {
     }
 
     render() {
+        const { info, dir } = this.state;
+        let content, buttons;
+
+        if (info)
+            content = <div>
+                <ul style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        width: this.font(1.1),
+                        fontSize: this.font(25)
+                    }}>
+                    <code>
+                        <li>Snowballs grow when
+                            pushed through snow</li>
+                        <li>Smaller snowballs can be
+                            stacked on bigger snowballs</li>
+                        <li>Stacking small, medium, and large
+                            snowballs creates a snowman</li>
+                    </code>
+                </ul>
+            </div>;
+        else
+            content = this.getTable();
+
+        if (dir)
+            buttons = arrows.bind(this)(c =>
+                () => this.move({ key: c }));
+        else
+            buttons = <>
+                {home(true)}
+                {button(BsArrowsMove, 'Controls',
+                    () => this.setState({ dir: true }),
+                    true
+                )}
+                {button(BsQuestion, 'Help',
+                    () => this.setState(
+                        { info: !info }),
+                    true)}
+            </>;
+
         return <header className='app'>
-            {this.getTable()}
+            {content}
+                <div style={{
+                    zIndex: 2,
+                    position: 'absolute',
+                    bottom: '1vh'
+                }}>
+                {buttons}
+            </div>
         </header>;
     }
 }

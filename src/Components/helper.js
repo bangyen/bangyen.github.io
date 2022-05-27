@@ -1,6 +1,13 @@
 import {BsHouse} from 'react-icons/bs';
 import {Link} from 'react-router-dom';
 import React from 'react';
+import {
+    BsCaretUp,
+    BsCaretDown,
+    BsCaretLeft,
+    BsCaretRight,
+    BsArrowsAngleContract
+} from 'react-icons/bs';
 
 export function getDim() {
     const width  = window.innerWidth;
@@ -39,6 +46,27 @@ export function home(max) {
         {button(BsHouse, 'Home',
             null, max)}
     </Link>;
+}
+
+export function arrows(move) {
+    return <div style={{
+            textAlign: 'center'
+        }}>
+        {button(BsCaretUp, 'Up',
+            move('w'), true)}
+        <div>
+            {button(BsCaretLeft, 'Left',
+                move('a'), true)}
+            {button(BsArrowsAngleContract, 'Collapse',
+                () => this.setState({ dir: false }),
+                true
+            )}
+            {button(BsCaretRight, 'Right',
+                move('d'), true)}
+        </div>
+        {button(BsCaretDown, 'Down',
+            move('s'), true)}
+    </div>;
 }
 
 export function move(obj) {

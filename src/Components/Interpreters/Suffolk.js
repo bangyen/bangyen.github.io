@@ -1,4 +1,5 @@
 import TextBox from '../TextBox';
+import React from 'react';
 
 function clean(input) {
     let code = '';

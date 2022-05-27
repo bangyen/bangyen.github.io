@@ -1,12 +1,7 @@
-import {button, home} from './helper';
+import {button, home, arrows} from './helper';
 import React from 'react';
 import {
-    BsArrowsMove,
-    BsCaretUp,
-    BsCaretDown,
-    BsCaretLeft,
-    BsCaretRight,
-    BsArrowsAngleContract
+    BsArrowsMove
 } from 'react-icons/bs';
 
 function createArr() {
@@ -180,24 +175,7 @@ export default class Snake extends React.Component {
             () => this.changeDir({key: c});
 
         if (this.state.dir)
-            buttons = <div style={{
-                    textAlign: 'center'
-                }}>
-                {button(BsCaretUp, 'Up',
-                    arrow('w'), true)}
-                <div>
-                    {button(BsCaretLeft, 'Left',
-                        arrow('a'), true)}
-                    {button(BsArrowsAngleContract, 'Collapse',
-                        () => this.setState({dir: false}),
-                        true
-                    )}
-                    {button(BsCaretRight, 'Right',
-                        arrow('d'), true)}
-                </div>
-                {button(BsCaretDown, 'Down',
-                    arrow('s'), true)}
-            </div>;
+            buttons = arrows.bind(this)(arrow);
         else
             buttons = <div>
                 {home(true)}

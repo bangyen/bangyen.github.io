@@ -1,5 +1,6 @@
 import {move} from '../helper';
 import Grid from '../Grid';
+import React from 'react';
 
 function outer(obj) {
     function error(str) {
