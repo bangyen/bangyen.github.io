@@ -14,6 +14,7 @@ import {
     BsArrowsMove,
     BsQuestion
 } from 'react-icons/bs';
+import { IoClose } from 'react-icons/io5';
 
 export default class Snowman extends React.Component {
     constructor(props: Props) {
@@ -491,7 +492,9 @@ export default class Snowman extends React.Component {
                     }),
                     true
                 )}
-                {button(BsQuestion, 'Help',
+                {button(
+                    info ? IoClose : BsQuestion,
+                    info ? 'Close' : 'Help',
                     () => this.setState({ info: !info }),
                     true)}
             </>;
