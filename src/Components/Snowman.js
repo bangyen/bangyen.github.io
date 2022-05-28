@@ -17,7 +17,7 @@ import {
 import { IoClose } from 'react-icons/io5';
 
 export default class Snowman extends React.Component {
-    constructor(props: Props) {
+    constructor(props) {
         super(props);
 
         this.pos = 0;
@@ -277,18 +277,24 @@ export default class Snowman extends React.Component {
         if (val % 2 === 0) {
             icon = this.state.icon;
         } else if (val % 3 === 0) {
-            size = n => `calc(${n / 4} * ${css})`;
-            const adj = (s, t, b) =>
-                <FaCircle size={size(s)} />;
+            const adj = (s) =>
+                <FaCircle size={
+                    `calc(${s / 4} * ${css})`} />;
 
             icon = [];
 
-            if (val % 9 === 0)
-                icon.push(adj(0.7));
-            if (val % 5 === 0)
-                icon.push(adj(1));
-            if (val % 7 === 0)
-                icon.push(adj(1.3));
+            if (val % 45 === 0)
+                icon = this.stack(0.7, 1);
+            else if (val % 63 === 0)
+                icon = this.stack(0.7, 1.3);
+            else if (val % 35 === 0)
+                icon = this.stack(1, 1.3);
+            else if (val % 9 === 0)
+                icon = adj(0.7);
+            else if (val % 5 === 0)
+                icon = adj(1);
+            else if (val % 7 === 0)
+                icon = adj(1.3);
         } else if (val === 5) {
             icon = <FaSnowman size={size} />;
         } else if (val % 7 === 0) {
@@ -358,6 +364,25 @@ export default class Snowman extends React.Component {
                 style={style}>
             {icon}
         </td>;
+    }
+
+    stack(m, n, size = 4 * this.size) {
+        const font = this.font(size / m * -2.25);
+
+        return <>
+            <div className='center'
+                style={{
+                    marginBottom: font
+                }}>
+                <FaCircle size={this.font(size / m)} />
+            </div>
+            <div className='center'
+                style={{
+                    marginTop: font
+                }}>
+                <FaCircle size={this.font(size / n)} />
+            </div>
+        </>;
     }
 
     getTable() {
@@ -452,16 +477,14 @@ export default class Snowman extends React.Component {
                     {td(FaCircle)}
                     {td(FaEquals)}
                     <td style={style}>
-                        <FaCircle size={this.font(20 / 0.7)} />
-                        <FaCircle size={this.font(20)}/>
+                        {this.stack(0.7, 1, 20)}
                     </td>
                 </tr>
                 <tr>
                     {td(FaCircle, 0.7)}
                     {td(FaArrowRight)}
                     <td style={style}>
-                        <FaCircle size={this.font(20)} />
-                        <FaCircle size={this.font(20 / 1.3)} />
+                        {this.stack(1, 1.3, 20)}
                     </td>
                     {td(FaEquals)}
                     {td(FaSnowman)}

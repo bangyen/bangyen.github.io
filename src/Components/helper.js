@@ -50,11 +50,11 @@ export function home(max) {
 
 export function arrows(move) {
     return <div style={{
-            textAlign: 'center'
+            textAlign: 'center',
         }}>
         {button(BsCaretUp, 'Up',
             move('w'), true)}
-        <div>
+        <div className='center'>
             {button(BsCaretLeft, 'Left',
                 move('a'), true)}
             {button(BsArrowsAngleContract, 'Collapse',
@@ -64,8 +64,10 @@ export function arrows(move) {
             {button(BsCaretRight, 'Right',
                 move('d'), true)}
         </div>
+        <div className='center'>
         {button(BsCaretDown, 'Down',
             move('s'), true)}
+        </div>
     </div>;
 }
 
