@@ -175,12 +175,12 @@ export default class Snake extends React.Component {
             () => this.changeDir({key: c});
 
         if (this.state.dir)
-            buttons = arrows.bind(this)(arrow);
+            buttons = arrows.bind(this)(arrow, 400);
         else
             buttons = <div>
-                {home()}
+                {home(400)}
                 {button(BsArrowsMove, 'Controls',
-                    () => this.setState({dir: true})
+                    () => this.setState({dir: true}), 400
                 )}
             </div>;
 

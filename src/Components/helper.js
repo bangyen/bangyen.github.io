@@ -25,11 +25,13 @@ export function button(sym, title, func, max) {
         calc = n =>
             `min(${mode} / ${n},
             ${max}px / ${n})`;
-        font = `clamp(12px, ${mode} / 20, ${max / 20}px)`;
+        font = `clamp(12px, ${mode} / 20,
+            ${max / 20}px)`;
     } else {
         calc = n =>
             `calc(${mode} / ${n})`;
-        font = `clamp(12px, ${mode} / 20, 25px)`;
+        font = `clamp(12px,
+            ${mode} / 20, 25px)`;
     }
 
     return <button className='custom'
@@ -54,26 +56,26 @@ export function home(max) {
     </Link>;
 }
 
-export function arrows(move) {
+export function arrows(move, max) {
     return <div style={{
             textAlign: 'center',
         }}>
         <div className='center'>
         {button(BsCaretUp, 'Up',
-            move('w'))}
+            move('w'), max)}
         </div>
         <div className='center'>
             {button(BsCaretLeft, 'Left',
-                move('a'))}
+                move('a'), max)}
             {button(BsArrowsAngleContract, 'Collapse',
-                () => this.setState({ dir: false })
+                () => this.setState({ dir: false }), max
             )}
             {button(BsCaretRight, 'Right',
-                move('d'))}
+                move('d'), max)}
         </div>
         <div className='center'>
         {button(BsCaretDown, 'Down',
-            move('s'))}
+            move('s'), max)}
         </div>
     </div>;
 }

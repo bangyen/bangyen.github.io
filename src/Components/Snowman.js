@@ -516,20 +516,20 @@ export default class Snowman extends React.Component {
 
         if (dir)
             buttons = arrows.bind(this)(c =>
-                () => this.move({ key: c }));
+                () => this.move({ key: c }), 400);
         else
             buttons = <>
-                {home()}
+                {home(400)}
                 {button(BsArrowsMove, 'Controls',
                     () => this.setState({
                         info: false,
                         dir: true
-                    })
+                    }), 400
                 )}
                 {button(
                     info ? IoClose : BsQuestion,
                     info ? 'Close' : 'Help',
-                    () => this.setState({ info: !info }))}
+                    () => this.setState({ info: !info }), 400)}
             </>;
 
         return <header className='app'>
