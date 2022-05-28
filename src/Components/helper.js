@@ -52,8 +52,10 @@ export function arrows(move) {
     return <div style={{
             textAlign: 'center',
         }}>
+        <div className='center'>
         {button(BsCaretUp, 'Up',
             move('w'), true)}
+        </div>
         <div className='center'>
             {button(BsCaretLeft, 'Left',
                 move('a'), true)}
