@@ -15,28 +15,24 @@ export function getDim() {
     return height > 1.25 * width;
 }
 
-export function button(sym, title, func, max = false) {
-    const min  = (n) => `max(${n * 1.1}vh, ${n * 10}px)`;
-    const calc = (m, n) => `calc(${m} / ${n})`;
+export function button(sym, title, func) {
     const mode = getDim()
         ? 'var(--stack)'
         : 'var(--table-size)';
+    const calc = n =>
+        `max(${mode} / ${n}, 225px / ${n})`;
 
     return <button className='custom'
             type='button'
             onClick={func}
             title={title}
             style={{
-                width: calc(mode, 7),
-                height: calc(mode, 7 * 1.5),
-                maxWidth:  max ? min(6) : '',
-                maxHeight: max ? min(4) : ''
+                width: calc(7),
+                height: calc(7 * 1.5)
             }}>
-        <div style={{
-                lineHeight: '1em'
-            }}>
-            {React.createElement(sym, {size:
-                `min(calc(${mode} / 22), 24.5px)`})}
+        <div className='center'>
+            {React.createElement(sym,
+                {size: calc(22)})}
         </div>
     </button>;
 }
