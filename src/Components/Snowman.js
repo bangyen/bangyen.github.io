@@ -43,7 +43,8 @@ export default class Snowman extends React.Component {
                 .map(n => this.setup(n)),
             icon: <FaMale {...this.icon} />,
             info: false,
-            dir: false
+            dir: false,
+            count: 0
         };
     }
 
@@ -63,7 +64,7 @@ export default class Snowman extends React.Component {
     }
 
     move(e) {
-        const { board, info } = this.state;
+        let { board, info, count } = this.state;
         const size = this.size;
         const grid = board[4];
         let pos = this.pos;
@@ -173,8 +174,10 @@ export default class Snowman extends React.Component {
                     ballGrid[ball] = 1;
                     spaceGrid[space] *= type;
 
-                    if (after === 35)
+                    if (after === 35) {
                         spaceGrid[space] = 5;
+                        count++;
+                    }
                 } else {
                     change = false;
                 }
@@ -217,7 +220,7 @@ export default class Snowman extends React.Component {
             board[4][ball] *= 2;
         }
 
-        this.setState({ icon });
+        this.setState({ icon, count });
     }
 
     /* 1: Grass
@@ -494,11 +497,20 @@ export default class Snowman extends React.Component {
     }
 
     render() {
-        const { info, dir } = this.state;
+        const { info, dir, count } = this.state;
         let content, buttons;
 
         if (info)
-            content = this.getInfo();
+            content = <>
+                {this.getInfo()}
+                <code className='select'
+                    style={{
+                        fontSize: this.font(20),
+                        marginTop: this.font(20)
+                    }}>
+                    Snowmen built: {count}
+                </code>
+            </>;
         else
             content = this.getTable();
 
@@ -507,24 +519,22 @@ export default class Snowman extends React.Component {
                 () => this.move({ key: c }));
         else
             buttons = <>
-                {home(true)}
+                {home()}
                 {button(BsArrowsMove, 'Controls',
                     () => this.setState({
                         info: false,
                         dir: true
-                    }),
-                    true
+                    })
                 )}
                 {button(
                     info ? IoClose : BsQuestion,
                     info ? 'Close' : 'Help',
-                    () => this.setState({ info: !info }),
-                    true)}
+                    () => this.setState({ info: !info }))}
             </>;
 
         return <header className='app'>
             {content}
-                <div style={{
+            <div style={{
                     zIndex: 2,
                     position: 'absolute',
                     bottom: '1vh'
