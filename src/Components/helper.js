@@ -15,24 +15,34 @@ export function getDim() {
     return height > 1.25 * width;
 }
 
-export function button(sym, title, func) {
+export function button(sym, title, func, max) {
     const mode = getDim()
         ? 'var(--stack)'
         : 'var(--table-size)';
-    const calc = n =>
-        `max(${mode} / ${n}, 225px / ${n})`;
+    let calc, font;
+
+    if (max) {
+        calc = n =>
+            `min(${mode} / ${n},
+            ${max}px / ${n})`;
+        font = `clamp(12px, ${mode} / 20, ${max / 20}px)`;
+    } else {
+        calc = n =>
+            `calc(${mode} / ${n})`;
+        font = `clamp(12px, ${mode} / 20, 25px)`;
+    }
 
     return <button className='custom'
             type='button'
             onClick={func}
             title={title}
             style={{
-                width: calc(7),
-                height: calc(7 * 1.5)
+                width: calc(6),
+                height: calc(6 * 1.5)
             }}>
         <div className='center'>
             {React.createElement(sym,
-                {size: calc(22)})}
+                {size: font})}
         </div>
     </button>;
 }
@@ -50,21 +60,20 @@ export function arrows(move) {
         }}>
         <div className='center'>
         {button(BsCaretUp, 'Up',
-            move('w'), true)}
+            move('w'))}
         </div>
         <div className='center'>
             {button(BsCaretLeft, 'Left',
-                move('a'), true)}
+                move('a'))}
             {button(BsArrowsAngleContract, 'Collapse',
-                () => this.setState({ dir: false }),
-                true
+                () => this.setState({ dir: false })
             )}
             {button(BsCaretRight, 'Right',
-                move('d'), true)}
+                move('d'))}
         </div>
         <div className='center'>
         {button(BsCaretDown, 'Down',
-            move('s'), true)}
+            move('s'))}
         </div>
     </div>;
 }

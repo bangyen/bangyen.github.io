@@ -178,10 +178,9 @@ export default class Snake extends React.Component {
             buttons = arrows.bind(this)(arrow);
         else
             buttons = <div>
-                {home(true)}
+                {home()}
                 {button(BsArrowsMove, 'Controls',
-                    () => this.setState({dir: true}),
-                    true
+                    () => this.setState({dir: true})
                 )}
             </div>;
 

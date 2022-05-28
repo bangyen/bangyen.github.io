@@ -5,7 +5,7 @@ export default function Home() {
     document.title = 'Home | Bangyen';
     const style = {
         padding: '0.65em 1.6em',
-        maxWidth: 150
+        maxWidth: 'none'
     };
 
     return (

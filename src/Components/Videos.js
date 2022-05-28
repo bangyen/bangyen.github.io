@@ -52,15 +52,13 @@ export default class Videos extends React.Component {
     }
 
     getWidth() {
-        const height = window.innerHeight;
+        let height = window.innerHeight;
         let width = window.innerWidth;
 
-        if (1.1 * height > width)
-            width = width * 0.9;
-        else
-            width = width / 2;
+        height *= (16 / 9) * 0.5;
+        width *= 0.75;
 
-        return width;
+        return Math.min(height, width);
     }
 
     changeWidth() {
@@ -96,10 +94,10 @@ export default class Videos extends React.Component {
                 {getVideo(id, name, width)}
                 <div style={{paddingTop: '1vh'}}>
                     {button(BsArrowLeft, 'Previous',
-                        this.changeNum(-1), true)}
-                    {home(true)}
+                        this.changeNum(-1), 400)}
+                    {home(400)}
                     {button(BsArrowRight, 'Next',
-                        this.changeNum(1), true)}
+                        this.changeNum(1), 400)}
                 </div>
             </header>
         );

@@ -12,9 +12,11 @@
   position: relative;
   background-color: black;
   -webkit-appearance: none;
+  min-width: 37.5px;
+  min-height: 25px;
   max-width: 75px;
   max-height: 50px;
-  font-family : inherit;
+  font-family: inherit;
 }
 
 .custom:hover {
