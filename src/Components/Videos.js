@@ -19,7 +19,7 @@ function getVideo(embedId, name, width) {
 }
 
 export default class Videos extends React.Component {
-    constructor(props: Props) {
+    constructor(props) {
         super(props);
 
         this.id = [

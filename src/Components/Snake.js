@@ -21,7 +21,7 @@ function createArr() {
 }
 
 export default class Snake extends React.Component {
-    constructor(props: Props) {
+    constructor(props) {
         super(props);
 
         this.updateDim =

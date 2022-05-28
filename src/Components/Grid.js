@@ -14,7 +14,7 @@ import {
 } from 'react-icons/bs';
 
 export default class Grid extends React.Component {
-    constructor(props: Props) {
+    constructor(props) {
         super(props);
 
         this.changeColor = this.changeColor.bind(this);
