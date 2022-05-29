@@ -14,8 +14,8 @@ import './Grid.css';
 import './Button.css';
 
 function getRoute(elem) {
-    return <Route exact
-            path={'/' + elem.name}>
+    return <Route key={elem}
+            exact path={'/' + elem.name}>
         {React.createElement(elem)}
     </Route>;
 }
@@ -26,17 +26,22 @@ function App() {
             <Switch>
                 {Object.keys(run).map(k => {
                     if (k === 'StunStep')
-                        return <Route exact path="/stun_step">
+                        return <Route exact path='/stun_step'
+                                key={k}>
                             <run.StunStep />
                         </Route>;
-                    return getRoute(run[k]);
+                    else if (k !== 'names')
+                        return getRoute(run[k]);
+                    return null;
                 })}
                 {Object.keys(page).map(k => {
                     if (k === 'Home')
-                        return <Route exact path="/">
+                        return <Route exact path='/'
+                                key={k}>
                             <page.Home />
                         </Route>;
-                    else if (k !== 'Error')
+                    else if (k !== 'Error'
+                            && k !== 'pages')
                         return getRoute(page[k]);
                     return null;
                 })}

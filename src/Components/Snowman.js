@@ -362,6 +362,7 @@ export default class Snowman extends React.Component {
         edge(n => n < 0);
 
         return <td className='cell select'
+                key={'cell' + num}
                 bgcolor={val > 0
                     ? 'green' : 'white'}
                 style={style}>
@@ -398,7 +399,7 @@ export default class Snowman extends React.Component {
 
         const cells = grid.map((v, n) =>
             this.convert(v, n, cellSize));
-        const row = n => <tr>
+        const row = n => <tr key={'top' + n}>
             {cells.slice(size * n,
                 size * (n + 1))}
         </tr>;
@@ -412,7 +413,8 @@ export default class Snowman extends React.Component {
                     height: under
                 }}>
                 <tbody>
-                    {[...Array(size - 1).keys()].map(i => <tr>{
+                    {[...Array(size - 1).keys()].map(i => <tr
+                            key={'bot' + i}>{
                         [...Array(size - 1).keys()].map(j => {
                             const bool = n =>
                                 grid[size * i + j + n] < 0;
@@ -423,9 +425,10 @@ export default class Snowman extends React.Component {
                             count += bool(size);
                             count += bool(size + 1);
 
-                            return <td style={{
-                                backgroundColor: count > 1
-                                    ? 'white' : 'green'
+                            return <td key={`bot{i}-${j}`}
+                                style={{
+                                    backgroundColor: count > 1
+                                        ? 'white' : 'green'
                             }}></td>;
                         })
                     }</tr>)}

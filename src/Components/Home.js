@@ -18,7 +18,8 @@ function dropdown(name, size, options) {
         <div className='dropdown-content'
             style={{ minWidth: size + 'px' }}>
             {options.map(k =>
-                <Link to={'/' + k.toLowerCase()}>
+                <Link to={'/' + k.toLowerCase()}
+                        key={k}>
                     {k.replace('_', ' ')}
                 </Link>
             )}
