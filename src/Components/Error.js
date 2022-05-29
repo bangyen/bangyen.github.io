@@ -13,7 +13,7 @@ export default function Error() {
                 </code>
             </center>
             <div>
-                {home(true)}
+                {home(400)}
             </div>
         </header>
     );
