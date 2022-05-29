@@ -220,7 +220,7 @@ export default class Grid extends React.Component {
                         />
                     </label>
                 </form>
-                <div>
+                <div style={{paddingTop: '1vh'}}>
                     {button(BsCaretRight, 'Run', this.runCode('run'))}
                     {button(BsArrowLeft, 'Previous', this.runCode('prev'))}
                     {button(BsArrowRight, 'Next', this.runCode('next'))}
