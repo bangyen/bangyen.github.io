@@ -220,33 +220,34 @@ export default class Grid extends React.Component {
                         />
                     </label>
                 </form>
-                <br />
-                {button(BsCaretRight, 'Run', this.runCode('run'))}
-                {button(BsArrowLeft, 'Previous', this.runCode('prev'))}
-                {button(BsArrowRight, 'Next', this.runCode('next'))}
-                {button(BsStop, 'Stop', () => {
-                    clearInterval(this.timerID);
-                    this.getFunc();
-                })}
-                <br />
-                {button(BsSkipEnd, 'Fast Forward', () => {
-                    if (this.change)
+                <div>
+                    {button(BsCaretRight, 'Run', this.runCode('run'))}
+                    {button(BsArrowLeft, 'Previous', this.runCode('prev'))}
+                    {button(BsArrowRight, 'Next', this.runCode('next'))}
+                    {button(BsStop, 'Stop', () => {
+                        clearInterval(this.timerID);
                         this.getFunc();
+                    })}
+                    <br />
+                    {button(BsSkipEnd, 'Fast Forward', () => {
+                        if (this.change)
+                            this.getFunc();
 
-                    clearInterval(this.timerID);
-                    let temp;
+                        clearInterval(this.timerID);
+                        let temp;
 
-                    do {
-                        temp = this.func();
-                    } while (!temp.end);
+                        do {
+                            temp = this.func();
+                        } while (!temp.end);
 
-                    this.setState(temp);
-                })}
-                {button(BsSkipBackward, 'Decelerate',
-                    () => this.setTimer(1.5))}
-                {button(BsSkipForward, 'Accelerate',
-                    () => this.setTimer(1 / 1.5))}
-                {home()}
+                        this.setState(temp);
+                    })}
+                    {button(BsSkipBackward, 'Decelerate',
+                        () => this.setTimer(1.5))}
+                    {button(BsSkipForward, 'Accelerate',
+                        () => this.setTimer(1 / 1.5))}
+                    {home()}
+                </div>
             </div>
         );
     }
