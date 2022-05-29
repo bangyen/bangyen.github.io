@@ -114,8 +114,7 @@ export default class Snake extends React.Component {
         document.title = 'Snake | Bangyen';
         document.addEventListener(
             'keydown',
-            this.changeDir,
-            false);
+            this.changeDir);
         this.updateDim();
         window.addEventListener(
             'resize', this.updateDim);
@@ -125,8 +124,7 @@ export default class Snake extends React.Component {
         clearInterval(this.timerID);
         document.removeEventListener(
             'keydown',
-            this.changeDir,
-            false);
+            this.changeDir);
         window.removeEventListener(
             'resize', this.updateDim);
     }

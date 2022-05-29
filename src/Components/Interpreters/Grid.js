@@ -45,8 +45,7 @@ export default class Grid extends React.Component {
             + ' Interpreter | Bangyen';
         document.addEventListener(
             'keydown',
-            this.changeText,
-            false);
+            this.changeText);
         window.addEventListener(
             'resize', this.stack);
     }
@@ -55,8 +54,7 @@ export default class Grid extends React.Component {
         clearInterval(this.timerID);
         document.removeEventListener(
             'keydown',
-            this.changeText,
-            false);
+            this.changeText);
         window.removeEventListener(
             'resize', this.stack);
     }

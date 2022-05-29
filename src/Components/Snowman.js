@@ -52,15 +52,13 @@ export default class Snowman extends React.Component {
         document.title = ' Snowman | Bangyen';
         document.addEventListener(
             'keydown',
-            this.move,
-            false);
+            this.move);
     }
 
     componentWillUnmount() {
         document.removeEventListener(
             'keydown',
-            this.move,
-            false);
+            this.move);
     }
 
     move(e) {
