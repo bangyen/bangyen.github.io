@@ -1,5 +1,8 @@
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import React from 'react';
+
+import { names } from './Interpreters';
+import { pages } from './';
 
 const style = {
     padding: '0.65em 1.6em',
@@ -32,10 +35,8 @@ export default function Home() {
                     position: 'absolute',
                     top: '1vh'
                 }}>
-                {dropdown('Interpreters', 113,
-                    ['Back', 'Stun_Step', 'Suffolk', 'WII2D'])}
-                {dropdown('Miscellaneous', 129.5,
-                    ['Snake', 'Snowman', 'Videos'])}
+                {dropdown('Interpreters', 113, names)}
+                {dropdown('Miscellaneous', 129.5, pages)}
                 <form action='https://github.com/bangyen'
                         style={{display: 'inline-block'}}>
                     <input type='submit'
