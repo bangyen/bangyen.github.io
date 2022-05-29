@@ -1,12 +1,30 @@
 import {Link} from 'react-router-dom';
 import React from 'react';
 
+const style = {
+    padding: '0.65em 1.6em',
+    maxWidth: 'none'
+};
+
+function dropdown(name, size, options) {
+    return <div className='dropdown'>
+        <button className='custom'
+            style={style}>
+            {name}
+        </button>
+        <div className='dropdown-content'
+            style={{ minWidth: size + 'px' }}>
+            {options.map(k =>
+                <Link to={'/' + k.toLowerCase()}>
+                    {k.replace('_', ' ')}
+                </Link>
+            )}
+        </div>
+    </div>;
+}
+
 export default function Home() {
     document.title = 'Home | Bangyen';
-    const style = {
-        padding: '0.65em 1.6em',
-        maxWidth: 'none'
-    };
 
     return (
         <header className='app select'>
@@ -14,45 +32,10 @@ export default function Home() {
                     position: 'absolute',
                     top: '1vh'
                 }}>
-                <div className='dropdown'>
-                    <button className='custom'
-                            style={style}>
-                        Interpreters
-                    </button>
-                    <div className='dropdown-content'
-                            style={{minWidth: '113px'}}>
-                        <Link to='/back'>
-                            Back
-                        </Link>
-                        <Link to='/stun_step'>
-                            Stun Step
-                        </Link>
-                        <Link to='/suffolk'>
-                            Suffolk
-                        </Link>
-                        <Link to='/WII2D'>
-                            WII2D
-                        </Link>
-                    </div>
-                </div>
-                <div className='dropdown'>
-                    <button className='custom'
-                        style={style}>
-                        Miscellaneous
-                    </button>
-                    <div className='dropdown-content'
-                            style={{minWidth: '129.5px'}}>
-                        <Link to='/snake'>
-                            Snake
-                        </Link>
-                        <Link to='/snowman'>
-                            Snowman
-                        </Link>
-                        <Link to='/videos'>
-                            Videos
-                        </Link>
-                    </div>
-                </div>
+                {dropdown('Interpreters', 113,
+                    ['Back', 'Stun_Step', 'Suffolk', 'WII2D'])}
+                {dropdown('Miscellaneous', 129.5,
+                    ['Snake', 'Snowman', 'Videos'])}
                 <form action='https://github.com/bangyen'
                         style={{display: 'inline-block'}}>
                     <input type='submit'

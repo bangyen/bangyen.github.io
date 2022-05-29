@@ -6,51 +6,42 @@ import {
     Route
 } from "react-router-dom";
 
-import Back from './Components/Interpreters/Back';
-import Suffolk from './Components/Interpreters/Suffolk';
-import StunStep from './Components/Interpreters/StunStep';
-import WII2D from './Components/Interpreters/WII2D';
-
-import Snake from './Components/Snake';
-import Home from './Components/Home';
-import Error from './Components/Error';
-import Videos from './Components/Videos';
-import Snowman from './Components/Snowman';
+import * as run from './Components/Interpreters';
+import * as page from './Components';
 
 import './index.css';
 import './Grid.css';
 import './Button.css';
 
+function getRoute(elem) {
+    return <Route exact
+            path={'/' + elem.name}>
+        {React.createElement(elem)}
+    </Route>;
+}
+
 function App() {
     return <Router basename='/'>
         <div>
             <Switch>
-                <Route exact path="/back">
-                    <Back />
-                </Route>
-                <Route exact path="/stun_step">
-                    <StunStep />
-                </Route>
-                <Route exact path="/suffolk">
-                    <Suffolk />
-                </Route>
-                <Route exact path="/WII2D">
-                    <WII2D />
-                </Route>
-                <Route exact path="/videos">
-                    <Videos />
-                </Route>
-                <Route exact path="/snake">
-                    <Snake />
-                </Route>
-                <Route exact path="/snowman">
-                    <Snowman />
-                </Route>
-                <Route exact path="/">
-                    <Home />
-                </Route>
-                <Route >
-                    <Error />
+                {Object.keys(run).map(k => {
+                    if (k === 'StunStep')
+                        return <Route exact path="/stun_step">
+                            <run.StunStep />
+                        </Route>;
+                    return getRoute(run[k]);
+                })}
+                {Object.keys(page).map(k => {
+                    if (k === 'Home')
+                        return <Route exact path="/">
+                            <page.Home />
+                        </Route>;
+                    else if (k !== 'Error')
+                        return getRoute(page[k]);
+                    return null;
+                })}
+                <Route>
+                    <page.Error />
                 </Route>
             </Switch>
         </div>

@@ -1,7 +1,7 @@
 import {
     button, home,
     getDim, move
-} from './helper';
+} from '../helper';
 import React from 'react';
 import {
     BsCaretRight,

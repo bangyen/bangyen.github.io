@@ -1,4 +1,4 @@
-import {getDim, button, home} from './helper';
+import {getDim, button, home} from '../helper';
 import React from 'react';
 import {
     BsCaretRight,
@@ -220,6 +220,7 @@ export default class Grid extends React.Component {
                         />
                     </label>
                 </form>
+                <br />
                 {button(BsCaretRight, 'Run', this.runCode('run'))}
                 {button(BsArrowLeft, 'Previous', this.runCode('prev'))}
                 {button(BsArrowRight, 'Next', this.runCode('next'))}
