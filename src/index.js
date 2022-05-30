@@ -13,11 +13,11 @@ import './index.css';
 import './Grid.css';
 import './Button.css';
 
-function getRoute(elem) {
-    return <Route key={elem}
-            exact path={'/' + elem.name}>
-        {React.createElement(elem)}
-    </Route>;
+function getRoute(Elem) {
+    return <Route
+        exact path={'/' + Elem.name}
+        component={Elem}
+        key={Elem.name} />;
 }
 
 function App() {
@@ -27,9 +27,8 @@ function App() {
                 {Object.keys(run).map(k => {
                     if (k === 'StunStep')
                         return <Route exact path='/stun_step'
-                                key={k}>
-                            <run.StunStep />
-                        </Route>;
+                            component={run.StunStep}
+                            key={k} />;
                     else if (k !== 'names')
                         return getRoute(run[k]);
                     return null;
@@ -37,17 +36,14 @@ function App() {
                 {Object.keys(page).map(k => {
                     if (k === 'Home')
                         return <Route exact path='/'
-                                key={k}>
-                            <page.Home />
-                        </Route>;
+                            component={page.Home}
+                            key={k} />;
                     else if (k !== 'Error'
                             && k !== 'pages')
                         return getRoute(page[k]);
                     return null;
                 })}
-                <Route>
-                    <page.Error />
-                </Route>
+                <Route component={page.Error} />
             </Switch>
         </div>
     </Router>;
