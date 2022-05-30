@@ -282,7 +282,7 @@ export default class Grid extends React.Component {
         for (let i = 0; i < size; i++) {
             for (let j = 0; j < size; j++) {
                 pos = size * i + j;
-                table[i][j] = <td key={`${pos}`}
+                table[i][j] = <td key={`${i}-${j}`}
                         className='cell select'
                         onClick={this.changeColor(pos)}
                         bgcolor={this.chooseColor(pos)}
@@ -310,7 +310,7 @@ export default class Grid extends React.Component {
                 }}>
             <tbody>
                 {table.map((arr, row) =>
-                    <tr key={row.toString()}>
+                    <tr key={'row' + row}>
                         {arr}
                     </tr>
                 )}
@@ -430,7 +430,7 @@ export default class Grid extends React.Component {
         const text = tape.map((val, ind) => {
             const color = this.state.cell === ind
                 ? 'red' : 'white';
-            return <code key={ind.toString()}
+            return <code key={'tape' + ind}
                          style={{color}}>
                     &nbsp;{val}
                 </code>;

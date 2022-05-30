@@ -113,7 +113,7 @@ export default class Grid extends React.Component {
         const prog = [...code].map((val, ind) => {
             const color = this.state.ind === ind
                 ? 'red' : 'white';
-            return <code key={ind.toString()}
+            return <code key={'prog' + ind}
                          style={{color}}>
                     {val}
                 </code>;});
@@ -137,7 +137,7 @@ export default class Grid extends React.Component {
         const text = tape.map((val, ind) => {
             const color = this.state.ptr === ind
                 ? 'red' : 'white';
-            return <code key={ind.toString()}
+            return <code key={'tape' + ind}
                          style={{color}}>
                     &nbsp;{val}
                 </code>;});
