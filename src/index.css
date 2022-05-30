@@ -69,6 +69,7 @@ body {
 
 .logo {
     font-family: AloeVera;
+    font-weight: normal;
     font-size: min(
         17.5vw, 25vh
     );

@@ -27,7 +27,7 @@ export default class Snowman extends React.Component {
         this.stroll = false;
 
         this.font = n =>
-            `calc(var(--board) / ${n})`;
+            `calc(min(90vh, 90vw) / ${n})`;
         this.move = this.move.bind(this);
         this.icon = {
             size: this.font(4 * this.size)

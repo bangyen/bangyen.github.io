@@ -22,6 +22,18 @@
     margin: auto;
 }
 
+::-webkit-scrollbar {
+    background: black;
+}
+
+::-webkit-scrollbar-thumb {
+    background: dimgray;
+}
+
+::-webkit-scrollbar-corner {
+    background: black;
+}
+
 .flip {
     -moz-transform: scaleX(-1); /* Gecko */
     -o-transform: scaleX(-1); /* Opera */

@@ -17,8 +17,8 @@ export function getDim() {
 
 export function button(sym, title, func, max) {
     const mode = getDim()
-        ? 'var(--stack)'
-        : 'var(--table-size)';
+        ? 'min(40vh, 70vw)'
+        : 'min(70vh, 40vw)';
     let calc, font;
 
     if (max) {
