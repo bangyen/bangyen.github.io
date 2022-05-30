@@ -1,0 +1,75 @@
+@font-face {
+    font-family: 'AloeVera';
+    src: local('AloeVera'),
+        url(./fonts/aloevera.ttf)
+        format('truetype');
+}
+
+body {
+    margin: 0;
+    font-family: Helvetica, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: black;
+}
+
+.app {
+    background-color: black;
+    min-height: 100vh;
+    min-width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: white;
+}
+
+/* Split the screen in half */
+.split {
+    height: 100%;
+    width: 50%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+}
+
+.vsplit {
+    height: 50%;
+    width: 100%;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+}
+
+.left {left: 0;}
+.right {right: 0;}
+.top {top: 0;}
+.bottom {bottom: 0;}
+
+/* If you want the content centered horizontally and vertically */
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  white-space: nowrap;
+}
+
+.select {
+    -webkit-touch-callout: none; /* iOS Safari */
+      -webkit-user-select: none; /* Safari */
+       -khtml-user-select: none; /* Konqueror HTML */
+         -moz-user-select: none; /* Old versions of Firefox */
+          -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.logo {
+    font-family: AloeVera;
+    font-size: min(
+        17.5vw, 25vh
+    );
+}
