@@ -3,5 +3,9 @@ export { default as StunStep } from './StunStep';
 export { default as Suffolk } from './Suffolk';
 export { default as WII2D } from './WII2D';
 
-export const names =
-    ['Back', 'Stun_Step', 'Suffolk', 'WII2D'];
+export const names = {
+    Back: '/Back',
+    StunStep: '/Stun_Step',
+    Suffolk: '/Suffolk',
+    WII2D: '/WII2D'
+};

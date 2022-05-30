@@ -13,9 +13,9 @@ import './index.css';
 import './Grid.css';
 import './Button.css';
 
-function getRoute(Elem) {
+function getRoute(Elem, url) {
     return <Route
-        exact path={'/' + Elem.name}
+        exact path={url}
         component={Elem}
         key={Elem.name} />;
 }
@@ -25,23 +25,19 @@ function App() {
         <div>
             <Switch>
                 {Object.keys(run).map(k => {
-                    if (k === 'StunStep')
-                        return <Route exact path='/stun_step'
-                            component={run.StunStep}
-                            key={k} />;
-                    else if (k !== 'names')
-                        return getRoute(run[k]);
-                    return null;
+                    if (k === 'names')
+                        return null;
+
+                    const url = run.names[k];
+                    return getRoute(run[k], url);
                 })}
                 {Object.keys(page).map(k => {
-                    if (k === 'Home')
-                        return <Route exact path='/'
-                            component={page.Home}
-                            key={k} />;
-                    else if (k !== 'Error'
-                            && k !== 'pages')
-                        return getRoute(page[k]);
-                    return null;
+                    if (k === 'Error'
+                            || k === 'pages')
+                        return null;
+
+                    const url = page.pages[k] || '/';
+                    return getRoute(page[k], url);
                 })}
                 <Route component={page.Error} />
             </Switch>

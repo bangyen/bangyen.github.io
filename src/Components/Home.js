@@ -17,10 +17,11 @@ function dropdown(name, size, options) {
         </button>
         <div className='dropdown-content'
             style={{ minWidth: size + 'px' }}>
-            {options.map(k =>
-                <Link to={'/' + k.toLowerCase()}
+            {Object.values(options).map(k =>
+                <Link to={k.toLowerCase()}
                         key={k}>
-                    {k.replace('_', ' ')}
+                    {k.slice(1)
+                        .replace('_', ' ')}
                 </Link>
             )}
         </div>
