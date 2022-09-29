@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.c27c72a3.css",
-    "main.js": "/static/js/main.65cac72f.js",
+    "main.css": "/static/css/main.baf4b576.css",
+    "main.js": "/static/js/main.cb1b0240.js",
     "static/media/aloevera.ttf": "/static/media/aloevera.e1afeee5869bb951a95d.ttf",
     "index.html": "/index.html",
-    "main.c27c72a3.css.map": "/static/css/main.c27c72a3.css.map",
-    "main.65cac72f.js.map": "/static/js/main.65cac72f.js.map"
+    "main.baf4b576.css.map": "/static/css/main.baf4b576.css.map",
+    "main.cb1b0240.js.map": "/static/js/main.cb1b0240.js.map"
   },
   "entrypoints": [
-    "static/css/main.c27c72a3.css",
-    "static/js/main.65cac72f.js"
+    "static/css/main.baf4b576.css",
+    "static/js/main.cb1b0240.js"
   ]
 }
