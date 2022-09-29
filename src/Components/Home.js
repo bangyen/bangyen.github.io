@@ -50,7 +50,7 @@ export default function Home() {
                 Bangyen
             </h1>
             <center style={{
-                    fontSize: '30px',
+                    fontSize: '2.5vh',
                     width: '45%',
                     paddingBottom: '5vh'
                 }}>
@@ -60,9 +60,7 @@ export default function Home() {
                         the Arcana Lab at Northwestern University.
                     I have a B.A. in Mathematics and Economics from the University of Virginia.
                     I study compilers, specifically looking into new abstractions and representations.
-                </code>
-                <br></br><br></br>
-                <code>
+                    <div style={{height: '2.5vh'}}></div>
                     <a href="mailto:bangyen@northwestern.edu">bangyen@northwestern.edu</a>
                 </code>
             </center>
