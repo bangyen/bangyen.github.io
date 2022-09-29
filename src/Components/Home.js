@@ -49,6 +49,23 @@ export default function Home() {
             <h1 className='logo'>
                 Bangyen
             </h1>
+            <center style={{
+                    fontSize: '30px',
+                    width: '45%',
+                    paddingBottom: '5vh'
+                }}>
+                <code>
+                    I am a first-year PhD student working
+                        with <a href="https://users.cs.northwestern.edu/~simonec">Simone Campanoni</a> in
+                        the Arcana Lab at Northwestern University.
+                    I have a B.A. in Mathematics and Economics from the University of Virginia.
+                    I study compilers, specifically looking into new abstractions and representations.
+                </code>
+                <br></br><br></br>
+                <code>
+                    <a href="mailto:bangyen@northwestern.edu">bangyen@northwestern.edu</a>
+                </code>
+            </center>
         </header>
     );
 }
