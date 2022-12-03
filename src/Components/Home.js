@@ -49,9 +49,18 @@ export default function Home() {
             <h1 className='logo'>
                 Bangyen
             </h1>
+            <b>
+                <code style={{
+                    fontSize: '3vh'
+                }}>
+                    About Me
+                </code>
+            </b>
             <center style={{
                     fontSize: '2vh',
-                    width: '40%'
+                    width: '40%',
+                    paddingTop: '2vh',
+                    paddingBottom: '2vh'
                 }}>
                 <code>
                     I am a first-year PhD student working
@@ -90,9 +99,9 @@ export default function Home() {
                 }}>
                 <code>
                     <ul style={{textAlign: 'left'}}>
-                        <li>G. Gobieski et al., "RipTide: A Programmable, Energy-Minimal Dataflow Compiler and Architecture"</li>
-                        <li>Rastislav Bodik, Rajiv Gupta, and Vivek Sarkar, "ABCD: eliminating array bounds checks on demand"</li>
-                        <li>Fernando Magno Quintao Pereira and Jens Palsberg, "Register allocation by puzzle solving"</li>
+                        <li><a href="https://ieeexplore.ieee.org/document/9923793">RipTide: A Programmable, Energy-Minimal Dataflow Compiler and Architecture (G. Gobieski et al.)</a></li>
+                        <li><a href="https://dl.acm.org/doi/10.1145/349299.349342">ABCD: eliminating array bounds checks on demand (Rastislav Bodik, Rajiv Gupta, and Vivek Sarkar)</a></li>
+                        <li><a href="https://dl.acm.org/doi/10.1145/1379022.1375609">Register allocation by puzzle solving (Fernando Magno Quintao Pereira and Jens Palsberg)</a></li>
                     </ul>
                 </code>
             </center>
