@@ -50,9 +50,8 @@ export default function Home() {
                 Bangyen
             </h1>
             <center style={{
-                    fontSize: '2.5vh',
-                    width: '45%',
-                    paddingBottom: '5vh'
+                    fontSize: '2vh',
+                    width: '40%'
                 }}>
                 <code>
                     I am a first-year PhD student working
@@ -60,10 +59,52 @@ export default function Home() {
                         the Arcana Lab at Northwestern University.
                     I have a B.A. in Mathematics and Economics from the University of Virginia.
                     I study compilers, specifically looking into new abstractions and representations.
-                    <div style={{height: '2.5vh'}}></div>
-                    <a href="mailto:bangyen@northwestern.edu">bangyen@northwestern.edu</a>
                 </code>
             </center>
+            <b>
+                <code style={{
+                        fontSize: '3vh'
+                    }}>
+                    Contact Info
+                </code>
+            </b>
+            <center>
+                <code style={{
+                        fontSize: '2vh'
+                    }}>
+                    <ul style={{ textAlign: 'left' }}>
+                        <li>bangyen (at) northwestern (dot) edu</li>
+                        <li>Seeley G. Mudd Library, Room 3308</li>
+                    </ul>
+                </code>
+            </center>
+            <b>
+                <code style={{
+                        fontSize: '3vh'
+                    }}>
+                    Favorite Papers
+                </code>
+            </b>
+            <center style={{
+                    fontSize: '2vh'
+                }}>
+                <code>
+                    <ul style={{textAlign: 'left'}}>
+                        <li>G. Gobieski et al., "RipTide: A Programmable, Energy-Minimal Dataflow Compiler and Architecture"</li>
+                        <li>Rastislav Bodik, Rajiv Gupta, and Vivek Sarkar, "ABCD: eliminating array bounds checks on demand"</li>
+                        <li>Fernando Magno Quintao Pereira and Jens Palsberg, "Register allocation by puzzle solving"</li>
+                    </ul>
+                </code>
+            </center>
+            <img
+                src={require('./photo.png')}
+                alt=""
+                style={{
+                    width: 736 / 4,
+                    height: 1078 / 4,
+                    paddingTop: '2vh',
+                    paddingBottom: '2vh'
+                }} />
         </header>
     );
 }
