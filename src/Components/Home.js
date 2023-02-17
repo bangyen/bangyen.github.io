@@ -64,10 +64,10 @@ export default function Home() {
                 }}>
                 <code>
                     I am a first-year PhD student working
-                        with <a href="https://users.cs.northwestern.edu/~simonec">Simone Campanoni</a> in
-                        the Arcana Lab at Northwestern University.
+                        with <a href="http://pdinda.org/">Peter Dinda</a> in
+                        the Prescience Lab at Northwestern University.
                     I have a B.A. in Mathematics and Economics from the University of Virginia.
-                    I study compilers, specifically looking into new abstractions and representations.
+                    I study HPC optimizations, specifically the use of machine learning to autotune MPI collective operations.
                 </code>
             </center>
             <b>
@@ -95,7 +95,8 @@ export default function Home() {
                 </code>
             </b>
             <center style={{
-                    fontSize: '2vh'
+                fontSize: '2vh',
+                paddingBottom: '5vh'
                 }}>
                 <code>
                     <ul style={{textAlign: 'left'}}>
@@ -105,15 +106,6 @@ export default function Home() {
                     </ul>
                 </code>
             </center>
-            <img
-                src={require('./photo.png')}
-                alt=""
-                style={{
-                    width: 736 / 4,
-                    height: 1078 / 4,
-                    paddingTop: '2vh',
-                    paddingBottom: '2vh'
-                }} />
         </header>
     );
 }
