@@ -96,7 +96,7 @@ export default function Home() {
             </b>
             <center style={{
                 fontSize: '2vh',
-                paddingBottom: '5vh'
+                paddingBottom: '2vh'
                 }}>
                 <code>
                     <ul style={{textAlign: 'left'}}>
