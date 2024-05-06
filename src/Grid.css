@@ -3,6 +3,8 @@
     --stack: min(40vh, 70vw);
     --board: min(90vh, 90vw);
     --radius: calc(var(--board) / 20);
+    --black: #181818;
+    --white: #f2f3f4;
 }
 
 .cell {
@@ -11,7 +13,7 @@
     white-space: nowrap;
     overflow: hidden;
     font-family: monospace;
-    color: black;
+    color: var(--black);
     cursor: pointer;
 }
 
@@ -23,7 +25,7 @@
 }
 
 ::-webkit-scrollbar {
-    background: black;
+    background: var(--black);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -31,7 +33,7 @@
 }
 
 ::-webkit-scrollbar-corner {
-    background: black;
+    background: var(--black);
 }
 
 .flip {
