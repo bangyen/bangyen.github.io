@@ -1,0 +1,15 @@
+.snake {
+    height: 100vh;
+    width: 100vw;
+    border-spacing: 3px;
+    font-size: 0;
+}
+
+.square {
+    cursor: default;
+    border-radius: 12px;
+}
+
+.black {background-color: var(--black);}
+.white {background-color: var(--white);}
+.red   {background-color: var(--red);}

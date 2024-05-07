@@ -180,40 +180,29 @@ export default class Snake extends React.Component {
                 {button(BsArrowsMove, 'Controls',
                     () => this.setState({dir: true}), 400
                 )}
-            </div>;
+            </div>; 
 
         return (
             <header className='app'>
-                <table style={{
-                            height: '100vh',
-                            width:  '100vw',
-                            borderSpacing: '3px',
-                            fontSize: '0'
-                        }}>
+                <table className='snake'>
                     <tbody>
                         {this.state.arr.map((a, row) =>
                             (<tr key={row.toString()}>{
                                 a.map((val, col) =>
                                 <td key={`${row}-${col}`}
-                                        className='cell select'
-                                        bgcolor={
-                                            val > 0 ? 'white' :
-                                            val < 0 ? 'red' : 'black'
-                                        }
-                                        style={{
-                                            cursor: 'default',
-                                            borderRadius: '12px'
-                                        }}>
+                                        className={
+                                            'cell select square ' +
+                                            ( val > 0 ? 'white' :
+                                              val < 0 ? 'red'   :
+                                                        'black' )
+                                        }>
                                     <div>&nbsp;</div>
                                 </td>)
                             }</tr>)
                         )}
                     </tbody>
                 </table>
-                <div style={{
-                        position: 'absolute',
-                        bottom: '1vh'
-                    }}>
+                <div className='navigate'>
                     {buttons}
                 </div>
             </header>

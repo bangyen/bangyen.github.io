@@ -25,6 +25,11 @@
     cursor: pointer;
 }
 
+.navigate {
+    position: absolute;
+    bottom: 1vh;
+}
+
 .dropdown {
   position: relative;
   display: inline-block;

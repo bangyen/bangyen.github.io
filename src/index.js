@@ -10,6 +10,7 @@ import * as run from './Components/Interpreters';
 import * as page from './Components';
 
 import './index.css';
+import './misc.css';
 import './Grid.css';
 import './Button.css';
 
