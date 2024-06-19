@@ -283,7 +283,7 @@ export default class Grid extends React.Component {
             for (let j = 0; j < size; j++) {
                 pos = size * i + j;
                 table[i][j] = <td key={`${i}-${j}`}
-                        className='cell select'
+                        className='cell select pointer'
                         onClick={this.changeColor(pos)}
                         bgcolor={this.chooseColor(pos)}
                         style={{

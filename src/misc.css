@@ -10,6 +10,11 @@
     border-radius: 12px;
 }
 
+.pointer {
+    cursor: pointer;
+    color: var(--black);
+}
+
 .black {background-color: var(--black);}
 .white {background-color: var(--white);}
 .red   {background-color: var(--red);}
