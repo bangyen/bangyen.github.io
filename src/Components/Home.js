@@ -23,7 +23,7 @@ const darkTheme = createTheme({
         mode: 'dark',
     },
     typography: {
-        fontFamily: 'Segoe UI',
+        fontFamily: 'Helvetica',
     },
 });
 
@@ -150,7 +150,9 @@ export default function Home() {
                         justifyContent='center'
                         size={{xs: 4, sm: 6, md: 10}}>
                     <Typography variant='h1'>
-                        {'Hey, my name is '}
+                        <Box display={{xs: 'none', md: 'block'}}>
+                            {'Hey, my name is '}
+                        </Box>
                         <Box display='inline' fontWeight='bold'>
                             Bangyen
                         </Box>
