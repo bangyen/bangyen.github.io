@@ -4,6 +4,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Grid from '@mui/material/Grid2';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import GitHubIcon from '@mui/icons-material/GitHub';
 import {
     CssBaseline,
     Typography,
@@ -71,7 +72,9 @@ function dropdown(name, options) {
                         component={Link}
                         sx={{justifyContent: 'center'}}
                         to={text.toLowerCase()}>
-                    <Typography variant='body2' sx={{padding: 0.5}}>
+                    <Typography
+                        variant='body2'
+                        sx={{padding: 0.5}}>
                     {text.replace('_', ' ')}
                     </Typography>
                 </MenuItem>
@@ -159,6 +162,11 @@ export default function Home() {
                     sx={{position: 'fixed', top: 120, left: 20}}
                     onClick={() => {setNumber(number - 1)}}>
                 <RemoveIcon />
+            </IconButton>
+            <IconButton
+                    href='https://github.com/bangyen'
+                    sx={{position: 'fixed', top: 170, left: 20}}>
+                <GitHubIcon />
             </IconButton>
             <Menu
                     id='basic-menu'
