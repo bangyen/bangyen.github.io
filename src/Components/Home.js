@@ -1,12 +1,11 @@
-import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CircleIcon from '@mui/icons-material/Circle';
-import MenuIcon from '@mui/icons-material/Menu';
-import Grid from '@mui/material/Grid2';
-import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import GitHubIcon from '@mui/icons-material/GitHub';
+import MenuIcon from   '@mui/icons-material/Menu';
+import AddIcon from    '@mui/icons-material/Add';
+import Grid from       '@mui/material/Grid2';
+
 import {
-    CssBaseline,
     Typography,
     IconButton,
     Divider,
@@ -20,16 +19,6 @@ import React from 'react';
 
 import { names } from './Interpreters';
 import { pages } from './';
-
-const darkTheme = createTheme({
-    palette: {
-        mode: 'dark',
-    },
-    typography: {
-        fontFamily: 'Helvetica',
-    },
-});
-
 
 function getSize() {
     const {
@@ -141,8 +130,7 @@ export default function Home() {
     };
 
     return (
-        <ThemeProvider theme={darkTheme}>
-            <CssBaseline />
+        <div>
             {getCircles(number, size)}
             <IconButton
                     id='basic-button'
@@ -202,7 +190,7 @@ export default function Home() {
                     </Typography>
                 </Grid>
             </Grid>
-        </ThemeProvider>
+        </div>
     );
 }
 

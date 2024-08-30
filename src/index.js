@@ -6,6 +6,9 @@ import {
     Route
 } from "react-router-dom";
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+
 import * as run from './Components/Interpreters';
 import * as page from './Components';
 
@@ -14,12 +17,23 @@ import './misc.css';
 import './Grid.css';
 import './Button.css';
 
+const darkTheme = createTheme({
+    palette: {
+        mode: 'dark',
+    },
+    typography: {
+        fontFamily: 'Helvetica',
+    },
+});
+
+
 function getRoute(Elem, url) {
     return <Route
         exact path={url}
         component={Elem}
         key={Elem.name} />;
 }
+
 
 function App() {
     return <Router basename='/'>
@@ -46,9 +60,13 @@ function App() {
     </Router>;
 }
 
+
 ReactDOM.render(
     <React.StrictMode>
-        <App />
+        <ThemeProvider theme={darkTheme}>
+            <CssBaseline />
+            <App />
+        </ThemeProvider>
     </React.StrictMode>,
     document.getElementById('root')
 );
