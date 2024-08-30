@@ -151,12 +151,12 @@ export default function Home() {
                 <MenuIcon />
             </IconButton>
             <IconButton
-                    sx={{position: 'fixed', bottom: 70, left: 20}}
+                    sx={{position: 'fixed', top: 70, left: 20}}
                     onClick={() => {setNumber(number + 1)}}>
                 <AddIcon />
             </IconButton>
             <IconButton
-                    sx={{position: 'fixed', bottom: 20, left: 20}}
+                    sx={{position: 'fixed', top: 120, left: 20}}
                     onClick={() => {setNumber(number - 1)}}>
                 <RemoveIcon />
             </IconButton>
