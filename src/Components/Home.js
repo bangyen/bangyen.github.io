@@ -2,6 +2,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CircleIcon from '@mui/icons-material/Circle';
 import MenuIcon from '@mui/icons-material/Menu';
 import Grid from '@mui/material/Grid2';
+import AddIcon from '@mui/icons-material/Add';
+import RemoveIcon from '@mui/icons-material/Remove';
 import {
     CssBaseline,
     Typography,
@@ -79,12 +81,50 @@ function dropdown(name, options) {
 }
 
 
+function getCircles(num, size) {
+    const left   = size / 3;
+    const right  = left * 2;
+    const height = size / 5;
+    const speed  = size / 400;
+    const offset = height / 2;
+
+    return (
+        <Box sx={{overflow: 'hidden'}}>
+            {[...Array(num).keys()].map(n =>
+                <CircleIcon sx={{
+                    offsetPath: `path("      \
+                        M0,        0         \
+                        C${left},  ${height} \
+                        ${right}, -${height} \
+                        ${size},   0         \
+                    ")`,
+                    animation: `
+                        ${speed}s
+                        linear
+                        ${n / 10}s
+                        infinite
+                        alternate
+                        ball
+                    `,
+                    position:  'fixed',
+                    bottom:    offset,
+                    left:      -50,
+                    '@keyframes ball': {
+                        '0%':   {offsetDistance:   '0%'},
+                        '100%': {offsetDistance: '100%'}
+                    },
+                }}/>
+            )}
+        </Box>
+    );
+}
+
+
 export default function Home() {
     const [anchor, setAnchor] = React.useState(null);
+    const [number, setNumber] = React.useState(5);
     const { width } = useSize();
     const size  = width + 100;
-    const left  = size / 3;
-    const right = left * 2;
 
     document.title = 'Home | Bangyen';
     const open = Boolean(anchor);
@@ -100,21 +140,7 @@ export default function Home() {
     return (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
-            <Box sx={{overflow: 'hidden'}}>
-                <CircleIcon sx={{
-                    offsetPath: `path("M0,0 C${left},300 ${right},-300 ${size},0")`,
-                    animation: '3s linear 0s infinite alternate ball',
-                    position:  'fixed',
-                    bottom:    100,
-                    left:      -50,
-                    '@keyframes ball': {
-                        '0%':   {offsetDistance:   '0%'},
-                        '100%': {offsetDistance: '100%'},
-                        // '0%':   {transform: 'translateX(-2vw)'},
-                        // '100%': {transform: 'translateX(102vw)'}
-                    },
-                }}/>
-            </Box>
+            {getCircles(number, size)}
             <IconButton
                     id='basic-button'
                     sx={{position: 'fixed', top: 20, left: 20}}
@@ -123,6 +149,16 @@ export default function Home() {
                     aria-haspopup='true'
                     onClick={handleClick}>
                 <MenuIcon />
+            </IconButton>
+            <IconButton
+                    sx={{position: 'fixed', bottom: 70, left: 20}}
+                    onClick={() => {setNumber(number + 1)}}>
+                <AddIcon />
+            </IconButton>
+            <IconButton
+                    sx={{position: 'fixed', bottom: 20, left: 20}}
+                    onClick={() => {setNumber(number - 1)}}>
+                <RemoveIcon />
             </IconButton>
             <Menu
                     id='basic-menu'
@@ -149,10 +185,8 @@ export default function Home() {
                         alignItems='center'
                         justifyContent='center'
                         size={{xs: 4, sm: 6, md: 10}}>
-                    <Typography variant='h1'>
-                        <Box display={{xs: 'none', md: 'block'}}>
-                            {'Hey, my name is '}
-                        </Box>
+                    <Typography variant='h2'>
+                        {'Hey, my name is '}
                         <Box display='inline' fontWeight='bold'>
                             Bangyen
                         </Box>

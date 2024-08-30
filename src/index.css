@@ -8,13 +8,6 @@
     --red: #dc2626;
 }
 
-@font-face {
-    font-family: 'AloeVera';
-    src: local('AloeVera'),
-        url(./fonts/aloevera.ttf)
-        format('truetype');
-}
-
 body {
     margin: 0;
     font-family: Helvetica, sans-serif;
