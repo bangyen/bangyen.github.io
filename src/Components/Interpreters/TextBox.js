@@ -9,16 +9,34 @@ import {
     BsSkipBackward,
     BsSkipForward
 } from 'react-icons/bs';
+import { Link } from 'react-router-dom';
 
-export default class Grid extends React.Component {
+import { TextField, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid2';
+import IconButton from '@mui/material/IconButton';
+import Box from '@mui/material/Box';
+
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
+import StopRoundedIcon from '@mui/icons-material/StopRounded';
+import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
+import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
+import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
+import LastPageRoundedIcon from '@mui/icons-material/LastPageRounded';
+import DataArrayRoundedIcon from '@mui/icons-material/DataArrayRounded';
+import CodeRoundedIcon from '@mui/icons-material/CodeRounded';
+import PlusOneRoundedIcon from '@mui/icons-material/PlusOneRounded';
+import TextFieldsRoundedIcon from '@mui/icons-material/TextFieldsRounded';
+
+export default class TextBox extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
             ...this.props.start,
-            value: '',
             code: '',
             end: true,
+            anchor: null,
             stack: getDim()
         };
 
@@ -26,8 +44,7 @@ export default class Grid extends React.Component {
         this.change = true;
 
         this.func = () => this.state;
-        this.handleChange
-            = this.handleChange.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.stack = () => {
             const stack = getDim();
             this.setState({stack});
@@ -112,21 +129,35 @@ export default class Grid extends React.Component {
         const code = this.state.code;
         const prog = [...code].map((val, ind) => {
             const color = this.state.ind === ind
-                ? 'red' : 'white';
-            return <code key={'prog' + ind}
-                         style={{color}}>
+                ? 'info' : 'inherit';
+            return (
+                <Typography
+                        variant='h4'
+                        key={'prog' + ind}
+                        color={color}
+                        sx={{fontFamily: 'monospace'}}>
                     {val}
-                </code>;});
-        let text = 'Program:';
+                </Typography>
+            );
+        });
 
-        if (prog.length)
-            text += ' ';
-
-        return <div className='output'>
-                <code>
-                    {text}{prog}
-                </code>
-            </div>;
+        return (
+            <Grid container
+                  direction="row"
+                  alignItems="center"
+                  spacing={4}
+                  sx={{
+                      width: '100%',
+                      overflow: 'auto',
+                      flexWrap: 'nowrap'
+                  }}>
+                <CodeRoundedIcon />
+                {prog}
+                <Typography variant='h4'>
+                    &nbsp;
+                </Typography>
+            </Grid>
+        );
     }
 
     getTape() {
@@ -136,158 +167,211 @@ export default class Grid extends React.Component {
         const tape = this.state.tape;
         const text = tape.map((val, ind) => {
             const color = this.state.ptr === ind
-                ? 'red' : 'white';
-            return <code key={'tape' + ind}
-                         style={{color}}>
-                    &nbsp;{val}
-                </code>;});
+                ? 'info' : 'inherit';
+            return (
+                <Typography
+                        key={'tape' + ind}
+                        color={color}
+                        fontFamily='monospace'
+                        variant="h4">
+                    {val}
+                </Typography>
+            );
+        });
 
-        return <div className='output'>
-                <code>
-                    Tape:{text}
-                </code>
-            </div>;
+        return (
+                <Grid container
+                  direction="row"
+                  alignItems="center"
+                  justifyContent="flex-start"
+                  spacing={4}
+                  sx={{
+                        width: '100%',
+                        overflowX: 'auto',
+                        flexWrap: 'nowrap'
+                    }}>
+                    <DataArrayRoundedIcon />
+                    {text}
+                </Grid>
+        );
     }
 
     getOutput() {
-        if (this.props.out)
-            return <div className='output'>
-                    <code>
-                        Output:
-                        {this.state.out === ''
-                            ? '' : ' '}
-                        {this.state.out}
-                    </code>
-                </div>;
+        if (!this.props.out)
+            return (null);
 
-        return (null);
+        return (
+                <Grid container
+                      direction="row"
+                      alignItems="center"
+                      spacing={4}
+                      sx={{
+                          width: '100%',
+                          overflow: 'auto',
+                          flexWrap: 'nowrap'
+                      }}>
+                    <TextFieldsRoundedIcon />
+                    <Typography sx={{fontFamily: 'monospace'}} variant="h4">
+                        {this.state.out}
+                    </Typography>
+                    <Typography variant='h4'>
+                        &nbsp;
+                    </Typography>
+                </Grid>
+        );
     }
 
     getRegister() {
-        if (this.props.reg)
-            return <div className='output'>
-                    <code>
-                        Register: {this.state.acc}
-                    </code>
-                </div>;
+        if (!this.props.reg)
+            return (null);
 
-        return (null);
+        return (
+                <Grid container
+                      direction="row"
+                      alignItems="center"
+                      spacing={4}
+                      sx={{
+                          width: '100%',
+                          overflow: 'auto',
+                          flexWrap: 'nowrap'
+                      }}>
+                    <PlusOneRoundedIcon />
+                    <Typography sx={{fontFamily: 'monospace'}} variant="h4">
+                        {this.state.acc}
+                    </Typography>
+                </Grid>
+        );
     }
 
-    getLeft(css) {
-        const {value} = this.state;
+    getButtons() {
         let {name, link} = this.props;
         link = 'https://esolangs.org/wiki/'
             + (link ? link : name);
 
-        const row = value.split('\n')
-                         .length;
+        const CustomButton = (props) => {
+            return (
+                <IconButton
+                        {...props}
+                        size='large'>
+                    <props.icon fontSize='inherit' />
+                </IconButton>
+            );
+        }
+
+        const handleStop = () => {
+            clearInterval(this.timerID);
+            this.getFunc();
+        }
+
+        const handleLast = () => {
+            if (this.change)
+                this.getFunc();
+
+            clearInterval(this.timerID);
+            let temp;
+
+            do {
+                temp = this.func();
+            } while (!temp.end);
+
+            this.setState(temp);
+        }
 
         return (
-            <div style={{
-                    fontSize:
-                        `calc(${css} / 12)`
-                }}>
-                <code>
-                    {name}
-                </code>
-                <ul style={{
-                        fontSize: '75%',
-                        margin: 'auto',
-                        padding: '3vh',
-                        textAlign: 'left'
-                    }}>
-                    <code>
-                        <li>Hover over buttons for usage</li>
-                        <li>
-                            Commands located&nbsp;
-                            <a href={link}>here</a>
-                        </li>
-                    </code>
-                </ul>
-                <form>
-                    <label>
-                        <textarea
-                            value={value}
-                            onChange={this.handleChange}
-                            onPaste={this.handleChange}
-                            rows={row}
-                            style={{
-                                width: css,
-                                minHeight: `calc(${css} / 3)`,
-                                maxHeight: '50vh'
-                            }}
-                        />
-                    </label>
-                </form>
-                <div style={{paddingTop: '1vh'}}>
-                    {button(BsCaretRight, 'Run', this.runCode('run'))}
-                    {button(BsArrowLeft, 'Previous', this.runCode('prev'))}
-                    {button(BsArrowRight, 'Next', this.runCode('next'))}
-                    {button(BsStop, 'Stop', () => {
-                        clearInterval(this.timerID);
-                        this.getFunc();
-                    })}
-                    <br />
-                    {button(BsSkipEnd, 'Fast Forward', () => {
-                        if (this.change)
-                            this.getFunc();
+            <Box>
+                <CustomButton
+                    onClick={this.runCode('run')}
+                    icon={PlayArrowRoundedIcon} />
+                <CustomButton
+                    onClick={handleStop}
+                    icon={StopRoundedIcon} />
+                <CustomButton
+                    onClick={this.runCode('prev')}
+                    icon={NavigateBeforeRoundedIcon} />
+                <CustomButton
+                    onClick={this.runCode('next')}
+                    icon={NavigateNextRoundedIcon} />
+                <CustomButton
+                    onClick={handleLast}
+                    icon={LastPageRoundedIcon} />
+                <CustomButton
+                    href={link}
+                    icon={InfoRoundedIcon} />
+                <CustomButton
+                    to="/"
+                    component={Link}
+                    icon={HomeRoundedIcon} />
+            </Box>
+        );
+    }
 
-                        clearInterval(this.timerID);
-                        let temp;
-
-                        do {
-                            temp = this.func();
-                        } while (!temp.end);
-
-                        this.setState(temp);
-                    })}
-                    {button(BsSkipBackward, 'Decelerate',
-                        () => this.setTimer(1.5))}
-                    {button(BsSkipForward, 'Accelerate',
-                        () => this.setTimer(1 / 1.5))}
-                    {home()}
-                </div>
-            </div>
+    getTextField() {
+        return (
+            <TextField
+                variant="outlined"
+                label="Program code"
+                defaultValue="Hello, World!"
+                slotProps={{
+                    inputLabel: {shrink: true}
+                }}
+                fullWidth
+                multiline
+                value={this.state.value}
+                onChange={this.handleChange}
+                sx={{
+                    height: '100%',
+                    '& .MuiInputBase-root': {
+                        height: '100%',
+                        alignItems: 'flex-start',
+                    },
+                    '& .MuiInputBase-input': {
+                        fontFamily: 'monospace'
+                    }
+            }}/>
         );
     }
 
     render() {
-        const {stack} = this.state;
-        const val = stack
-            ? 'var(--stack)'
-            : 'var(--table-size)';
-
-        const right = <div style={{
-                fontSize: `calc(${val} / 12)`}}>
-            {this.getProgram()}
-            {this.getTape()}
-            {this.getOutput()}
-            {this.getRegister()}
-        </div>;
-
-        if (stack)
-            return <header className='app'>
-                <div className='centered'>
-                    {this.getLeft(val)}
-                    <br />
-                    {right}
-                </div>
-            </header>;
-
         return (
-            <header className='app'>
-                <div className='split left'>
-                    <div className='centered'>
-                        {this.getLeft(val)}
-                    </div>
-                </div>
-                <div className='split right'>
-                    <div className='centered'>
-                        {right}
-                    </div>
-                </div>
-            </header>
+            <Grid container
+                    height="100%"
+                    spacing={4}
+                    paddingTop="5vh"
+                    paddingBottom="5vh"
+                    paddingLeft="5vw"
+                    paddingRight="5vw">
+                <Grid container
+                        item
+                        size={12}
+                        justifyContent="space-between">
+                    <Grid item size="grow">
+                        <Typography sx={{fontFamily: 'monospace'}} variant="h2">
+                            {this.props.name}
+                        </Typography>
+                    </Grid>
+                    <Grid item size="auto">
+                        {this.getButtons()}
+                    </Grid>
+                </Grid>
+                <Grid container
+                        item
+                        size={12}
+                        height={{
+                            xs: '60vh',
+                            md: '70vh',
+                            xl: '80vh'
+                        }}>
+                    <Grid item size="grow">
+                        {this.getTextField()}
+                    </Grid>
+                    <Grid item width="max(30vw, 20rem)">
+                        {this.getProgram()}
+                        {this.getOutput()}
+                        {this.getTape()}
+                        {this.getRegister()}
+                    </Grid>
+                </Grid>
+            </Grid>
         );
     }
 }
