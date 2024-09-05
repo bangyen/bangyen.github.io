@@ -22,7 +22,7 @@ const darkTheme = createTheme({
         mode: 'dark',
     },
     typography: {
-        fontFamily: 'Helvetica',
+        fontFamily: 'monospace',
     },
 });
 

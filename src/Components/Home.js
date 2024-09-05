@@ -181,7 +181,7 @@ export default function Home() {
                         alignItems='center'
                         justifyContent='center'
                         size={{xs: 4, sm: 6, md: 10}}>
-                    <Typography sx={{fontFamily: 'monospace'}} variant='h2'>
+                    <Typography variant='h2'>
                         {'Hey, my name is '}
                         <Box display='inline' fontWeight='bold'>
                             Bangyen
