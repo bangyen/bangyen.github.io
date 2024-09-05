@@ -8,6 +8,7 @@ import {
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
+import { grey, blueGrey } from '@mui/material/colors';
 
 import * as run from './Components/Interpreters';
 import * as page from './Components';
@@ -19,6 +20,8 @@ import './Button.css';
 
 const darkTheme = createTheme({
     palette: {
+        primary: blueGrey,
+        secondary: grey,
         mode: 'dark',
     },
     typography: {
