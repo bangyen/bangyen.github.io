@@ -1,8 +1,8 @@
-import CircleIcon from '@mui/icons-material/Circle';
-import RemoveIcon from '@mui/icons-material/Remove';
+import CircleRoundedIcon from '@mui/icons-material/CircleRounded';
+import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import MenuIcon from   '@mui/icons-material/Menu';
-import AddIcon from    '@mui/icons-material/Add';
+import MenuRoundedIcon from   '@mui/icons-material/MenuRounded';
+import AddRoundedIcon from    '@mui/icons-material/AddRounded';
 import Grid from       '@mui/material/Grid2';
 
 import {
@@ -83,7 +83,7 @@ function getCircles(num, size) {
     return (
         <Box sx={{overflow: 'hidden'}}>
             {[...Array(num).keys()].map(n =>
-                <CircleIcon sx={{
+                <CircleRoundedIcon sx={{
                     offsetPath: `path("      \
                         M0,        0         \
                         C${left},  ${height} \
@@ -139,17 +139,17 @@ export default function Home() {
                     aria-expanded={open ? 'true' : undefined}
                     aria-haspopup='true'
                     onClick={handleClick}>
-                <MenuIcon />
+                <MenuRoundedIcon />
             </IconButton>
             <IconButton
                     sx={{position: 'fixed', top: 70, left: 20}}
                     onClick={() => {setNumber(number + 1)}}>
-                <AddIcon />
+                <AddRoundedIcon />
             </IconButton>
             <IconButton
                     sx={{position: 'fixed', top: 120, left: 20}}
                     onClick={() => {setNumber(number - 1)}}>
-                <RemoveIcon />
+                <RemoveRoundedIcon />
             </IconButton>
             <IconButton
                     href='https://github.com/bangyen'
@@ -181,7 +181,7 @@ export default function Home() {
                         alignItems='center'
                         justifyContent='center'
                         size={{xs: 4, sm: 6, md: 10}}>
-                    <Typography variant='h2'>
+                    <Typography sx={{fontFamily: 'monospace'}} variant='h2'>
                         {'Hey, my name is '}
                         <Box display='inline' fontWeight='bold'>
                             Bangyen
