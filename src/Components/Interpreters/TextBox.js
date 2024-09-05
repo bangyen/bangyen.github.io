@@ -1,32 +1,18 @@
-import Grid       from '@mui/material/Grid2';
 import { Link }   from 'react-router-dom';
 import { getDim } from '../helper';
 import React      from 'react';
 
-import {
-    CustomButton,
-    Monospace,
-    Scrollable,
-    TextEditor
-} from './Editor';
-
+import Editor, {CustomButton} from './Editor';
 
 import {
-    Typography,
-    Tooltip
-} from '@mui/material';
-
-import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
-import NavigateNextRoundedIcon   from '@mui/icons-material/NavigateNextRounded';
-import TextFieldsRoundedIcon     from '@mui/icons-material/TextFieldsRounded';
-import PlayArrowRoundedIcon      from '@mui/icons-material/PlayArrowRounded';
-import DataArrayRoundedIcon      from '@mui/icons-material/DataArrayRounded';
-import LastPageRoundedIcon       from '@mui/icons-material/LastPageRounded';
-import PlusOneRoundedIcon        from '@mui/icons-material/PlusOneRounded';
-import HomeRoundedIcon           from '@mui/icons-material/HomeRounded';
-import StopRoundedIcon           from '@mui/icons-material/StopRounded';
-import InfoRoundedIcon           from '@mui/icons-material/InfoRounded';
-import CodeRoundedIcon           from '@mui/icons-material/CodeRounded';
+    NavigateBeforeRounded,
+    NavigateNextRounded,
+    PlayArrowRounded,
+    LastPageRounded,
+    HomeRounded,
+    StopRounded,
+    InfoRounded,
+} from '@mui/icons-material';
 
 export default class TextBox extends React.Component {
     constructor(props) {
@@ -45,6 +31,7 @@ export default class TextBox extends React.Component {
 
         this.func = () => this.state;
         this.handleChange = this.handleChange.bind(this);
+        this.getButtons = this.getButtons.bind(this);
         this.stack = () => {
             const stack = getDim();
             this.setState({stack});
@@ -125,86 +112,6 @@ export default class TextBox extends React.Component {
         }
     }
 
-    getProgram() {
-        const code = this.state.code;
-        const prog = [...code].map((val, ind) => {
-            const color = this.state.ind === ind
-                ? 'info' : 'inherit';
-            return (
-                <Monospace
-                    text={val}
-                    key={'prog' + ind}
-                    color={color} />
-            );
-        });
-
-        return (
-            <Scrollable>
-                <Tooltip title="Program">
-                    <CodeRoundedIcon />
-                </Tooltip>
-                {prog}
-                <Monospace text={"\xA0"} />
-            </Scrollable>
-        );
-    }
-
-    getTape() {
-        if (!this.props.tape)
-            return (null);
-
-        const tape = this.state.tape;
-        const text = tape.map((val, ind) => {
-            const color = this.state.ptr === ind
-                ? 'info' : 'inherit';
-            return (
-                <Monospace
-                    text={val}
-                    key={'prog' + ind}
-                    color={color} />
-            );
-        });
-
-        return (
-            <Scrollable>
-                <Tooltip title="Tape">
-                    <DataArrayRoundedIcon />
-                </Tooltip>
-                {text}
-            </Scrollable>
-        );
-    }
-
-    getOutput() {
-        if (!this.props.out)
-            return (null);
-
-        return (
-            <Scrollable>
-                <Tooltip title="Output">
-                    <TextFieldsRoundedIcon />
-                </Tooltip>
-                <Monospace
-                    text={this.state.out + '\xA0'} />
-            </Scrollable>
-        );
-    }
-
-    getRegister() {
-        if (!this.props.reg)
-            return (null);
-
-        return (
-            <Scrollable>
-                <Tooltip title="Register">
-                    <PlusOneRoundedIcon />
-                </Tooltip>
-                <Monospace
-                    text={this.state.acc} />
-            </Scrollable>
-        );
-    }
-
     getButtons() {
         let {name, link} = this.props;
         link = 'https://esolangs.org/wiki/'
@@ -234,77 +141,46 @@ export default class TextBox extends React.Component {
                     key='Run'
                     title='Run'
                     onClick={this.runCode('run')}
-                    Icon={PlayArrowRoundedIcon} />,
+                    Icon={PlayArrowRounded} />,
                 <CustomButton
                     key='Stop'
                     title='Stop'
                     onClick={handleStop}
-                    Icon={StopRoundedIcon} />,
+                    Icon={StopRounded} />,
                 <CustomButton
                     key='Previous'
                     title='Previous'
                     onClick={this.runCode('prev')}
-                    Icon={NavigateBeforeRoundedIcon} />,
+                    Icon={NavigateBeforeRounded} />,
                 <CustomButton
                     key='Next'
                     title='Next'
                     onClick={this.runCode('next')}
-                    Icon={NavigateNextRoundedIcon} />,
+                    Icon={NavigateNextRounded} />,
                 <CustomButton
                     key='Fast Forward'
                     title='Fast Forward'
                     onClick={handleFastForward}
-                    Icon={LastPageRoundedIcon} />,
+                    Icon={LastPageRounded} />,
                 <CustomButton
                     key='Info'
                     href={link}
                     title='Info'
-                    Icon={InfoRoundedIcon} />,
+                    Icon={InfoRounded} />,
                 <CustomButton
                     to="/"
                     key='Home'
                     title='Home'
                     component={Link}
-                    Icon={HomeRoundedIcon} />
+                    Icon={HomeRounded} />
         ];
     }
 
     render() {
-        const {value} = this.state;
-
-        return (
-            <Grid container
-                    height="100vh"
-                    display="flex"
-                    flexDirection="column"
-                    spacing={2}
-                    paddingTop="5vh"
-                    paddingBottom="5vh"
-                    paddingLeft="5vw"
-                    paddingRight="5vw">
-                <Grid container
-                        justifyContent="space-between"
-                        alignItems="center">
-                    <Grid size="grow" sx={{display: {xs: 'none', md: 'block'}}}>
-                        <Typography
-                            variant="h2">
-                            {this.props.name}
-                        </Typography>
-                    </Grid>
-                    {this.getButtons()}
-                </Grid>
-                <Grid flex={1}
-                        paddingTop="2vh"
-                        paddingBottom="2vh">
-                    <TextEditor
-                        value={value}
-                        handleChange={this.handleChange} />
-                </Grid>
-                {this.getProgram()}
-                {this.getOutput()}
-                {this.getTape()}
-                {this.getRegister()}
-            </Grid>
-        );
+        return <Editor
+            state={this.state}
+            props={this.props}
+            getButtons={this.getButtons}
+            handleChange={this.handleChange} />;
     }
 }
