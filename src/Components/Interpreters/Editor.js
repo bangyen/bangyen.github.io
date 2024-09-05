@@ -4,21 +4,23 @@ import Grid    from '@mui/material/Grid2';
 import {
     Typography,
     IconButton,
-    TextField
+    TextField,
+    Box
 } from '@mui/material';
 
 import {
     CodeRounded,
     DataArrayRounded,
     PlusOneRounded,
-    TextFieldsRounded
+    TextFieldsRounded,
+    // SquareRounded
 } from '@mui/icons-material';
 
 export default function Editor({
         state,
         props,
         getButtons,
-        handleChange
+        children
     }) {
     const {name}  = props;
 
@@ -50,10 +52,11 @@ export default function Editor({
                 {getButtons()}
             </Grid>
             <Grid flex={1}
+                    display="flex"
                     paddingTop="2vh"
-                    paddingBottom="2vh">
-                <TextEditor
-                    handleChange={handleChange} />
+                    paddingBottom="2vh"
+                    alignItems="center">
+                {children}
             </Grid>
             <Program
                 state={state} />
@@ -77,14 +80,14 @@ export function Program({state}) {
         return (null);
 
     return (
-        <Array
+        <Values
             Icon={CodeRounded}
             title="Program"
             arr={[...code]}
             ptr={ind}>
             <Monospace
                 text={"\xA0"} />
-        </Array>
+        </Values>
     );
     }
 
@@ -96,7 +99,7 @@ export function Tape({state, props}) {
         return (null);
 
     return (
-        <Array
+        <Values
             Icon={DataArrayRounded}
             title="Tape"
             arr={tape}
@@ -112,13 +115,13 @@ export function Output({state, props}) {
         return (null);
 
     return (
-        <Array
+        <Values
             Icon={TextFieldsRounded}
             title="Output"
             arr={[...out]}>
             <Monospace
                 text={'\xA0'} />
-        </Array>
+        </Values>
     );
 }
 
@@ -130,14 +133,14 @@ export function Register({state, props}) {
         return (null);
 
     return (
-        <Array
+        <Values
             Icon={PlusOneRounded}
             title="Register"
             arr={[acc]} />
     );
 }
 
-export function Array(props) {
+export function Values(props) {
     const {
         Icon,
         title,
@@ -205,7 +208,74 @@ export function Scrollable(props) {
     );
 }
 
-export function TextEditor({value, handleChange}) {
+export function GridEditor({
+        handleChange,
+        chooseColor,
+        value,
+        size
+    }) {
+    const Cell = ({pos, value}) => {
+        const color  = chooseColor(pos);
+        const select = `${color}.light`;
+        const hover  = `${color}.main`;
+        const text   = `${color}.contrastText`;
+
+        return (
+            <Box
+                onClick={handleChange(pos)}
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                height="10vmin"
+                width="10vmin"
+                borderRadius="1vmin"
+                color={text}
+                backgroundColor={select}
+                sx={{
+                    cursor: 'pointer',
+                    '&:hover': {
+                        backgroundColor: hover
+                    }
+                }}>
+                <Typography
+                    variant="h4">
+                    {value}
+                </Typography>
+            </Box>
+        );
+    };
+
+    const Row = (props) => (
+        <Grid container
+                size={12}
+                spacing={1}
+                justifyContent="center">
+            {props.children}
+        </Grid>
+    );
+    
+    return (
+        <Grid container
+                size={12}
+                spacing={1}
+                alignItems="center">
+            {[...Array(size)]
+                .map((_, i) => (
+                    <Row key={`row_${i}`}>
+                        {[...Array(size)]
+                            .map((_, j) => (
+                                <Cell
+                                    key={`${i}_${j}`}
+                                    pos={size * i + j}
+                                    value={value[size * i + j]} />
+                            ))}
+                    </Row>
+                ))}
+        </Grid>
+    );
+}
+
+export function TextEditor({handleChange}) {
     return (
         <TextField
             variant="outlined"
@@ -216,7 +286,6 @@ export function TextEditor({value, handleChange}) {
             }}
             fullWidth
             multiline
-            value={value}
             onChange={handleChange}
             sx={{
                 height: '100%',

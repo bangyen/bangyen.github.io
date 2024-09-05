@@ -2,7 +2,7 @@ import { Link }   from 'react-router-dom';
 import { getDim } from '../helper';
 import React      from 'react';
 
-import Editor, {CustomButton} from './Editor';
+import Editor, {TextEditor, CustomButton} from './Editor';
 
 import {
     NavigateBeforeRounded,
@@ -177,10 +177,14 @@ export default class TextBox extends React.Component {
     }
 
     render() {
-        return <Editor
-            state={this.state}
-            props={this.props}
-            getButtons={this.getButtons}
-            handleChange={this.handleChange} />;
+        return (
+            <Editor
+                state={this.state}
+                props={this.props}
+                getButtons={this.getButtons}>
+                <TextEditor
+                    handleChange={this.handleChange} />
+            </Editor>
+        );
     }
 }

@@ -1,17 +1,19 @@
 import {
-    button, home,
     getDim, move
 } from '../helper';
 import React from 'react';
+import {Link} from 'react-router-dom';
 import {
-    BsCaretRight,
-    BsArrowLeft,
-    BsArrowRight,
-    BsStop,
-    BsArrowsAngleContract,
-    BsArrowsAngleExpand,
-    BsPencilSquare
-} from 'react-icons/bs';
+    NavigateBeforeRounded,
+    NavigateNextRounded,
+    PlayArrowRounded,
+    LastPageRounded,
+    HomeRounded,
+    StopRounded,
+    InfoRounded,
+} from '@mui/icons-material';
+
+import Editor, {CustomButton, GridEditor} from './Editor';
 
 export default class Grid extends React.Component {
     constructor(props) {
@@ -20,12 +22,14 @@ export default class Grid extends React.Component {
         this.changeColor = this.changeColor.bind(this);
         this.changeText = this.changeText.bind(this);
         this.changeSize = this.changeSize.bind(this);
+        this.getButtons = this.getButtons.bind(this);
+        this.chooseColor = this.chooseColor.bind(this);
         this.stack = () => {
             const stack = getDim();
             this.setState({stack});
         };
 
-        const size = 4;
+        const size = 5;
 
         this.state = {
             ...this.props.start,
@@ -173,13 +177,13 @@ export default class Grid extends React.Component {
             = this.state;
 
         if (cell === select)
-            return 'grey';
+            return 'primary';
         else if (cell === pos)
-            return 'red';
+            return 'info';
         else if (breaks.includes(cell))
-            return 'yellow';
+            return 'warning';
 
-        return 'white';
+        return 'secondary';
     }
 
     clean() {
@@ -382,93 +386,87 @@ export default class Grid extends React.Component {
         }.bind(this);
     }
 
-    getButtons(css) {
-        const {size, text, edit} = this.state;
+    getButtons() {
+        let {name, link} = this.props;
+        link = 'https://esolangs.org/wiki/'
+            + (link ? link : name);
 
-        return (<div>
-                {button(BsCaretRight,
-                    'Run', this.runCode('run'))}
-                {button(BsArrowLeft,
-                    'Previous', this.runCode('prev'))}
-                {button(BsArrowRight,
-                    'Next', this.runCode('next'))}
-                {button(BsStop, 'Stop', () => {
-                    if (this.state.text)
-                        return;
+        const handleStop = () => {
+            clearInterval(this.timerID);
+            this.getFunc();
+        }
 
-                    clearInterval(this.timerID);
-                    this.setState({
-                        ...this.props.start,
-                        pos: null
-                    });
-                })}
-                <br />
-                {button(BsArrowsAngleExpand,
-                    'Expand', this.changeSize(size + 1))}
-                {button(BsArrowsAngleContract,
-                    'Contract', this.changeSize(size - 1))}
-                {button(BsPencilSquare, 'Copy/Paste',
-                    () => {
-                        clearInterval(this.timerID);
+        const handleFastForward = () => {
+            if (this.change)
+                this.getFunc();
 
-                        if (edit)
-                            this.clean();
-                        else
-                            this.setState({
-                                select: null,
-                                text: !text
-                    })})}
-                {home()}
-            </div>);
-    }
+            clearInterval(this.timerID);
+            let temp;
 
-    getTape() {
-        if (!this.props.tape)
-            return (null);
+            do {
+                temp = this.func();
+            } while (!temp.end);
 
-        const tape = this.state.tape;
-        const text = tape.map((val, ind) => {
-            const color = this.state.cell === ind
-                ? 'red' : 'white';
-            return <code key={'tape' + ind}
-                         style={{color}}>
-                    &nbsp;{val}
-                </code>;
-        });
+            this.setState(temp);
+        }
 
-        return <div className='output'>
-                <code>
-                    Tape:{text}
-                </code>
-            </div>;
-    }
-
-    getOutput() {
-        if (this.props.out)
-            return <div className='output'>
-                    <code>
-                        Output:
-                        {this.state.out === ''
-                            ? '' : ' '}
-                        {this.state.out}
-                    </code>
-                </div>;
-
-        return (null);
-    }
-
-    getRegister() {
-        if (this.props.reg)
-            return <div className='output'>
-                    <code>
-                        Register: {this.state.acc}
-                    </code>
-                </div>;
-
-        return (null);
+        return [
+                <CustomButton
+                    key='Run'
+                    title='Run'
+                    onClick={this.runCode('run')}
+                    Icon={PlayArrowRounded} />,
+                <CustomButton
+                    key='Stop'
+                    title='Stop'
+                    onClick={handleStop}
+                    Icon={StopRounded} />,
+                <CustomButton
+                    key='Previous'
+                    title='Previous'
+                    onClick={this.runCode('prev')}
+                    Icon={NavigateBeforeRounded} />,
+                <CustomButton
+                    key='Next'
+                    title='Next'
+                    onClick={this.runCode('next')}
+                    Icon={NavigateNextRounded} />,
+                <CustomButton
+                    key='Fast Forward'
+                    title='Fast Forward'
+                    onClick={handleFastForward}
+                    Icon={LastPageRounded} />,
+                <CustomButton
+                    key='Info'
+                    href={link}
+                    title='Info'
+                    Icon={InfoRounded} />,
+                <CustomButton
+                    to="/"
+                    key='Home'
+                    title='Home'
+                    component={Link}
+                    Icon={HomeRounded} />
+        ];
     }
 
     render() {
+        return (
+            <Editor
+                state={this.state}
+                props={this.props}
+                getButtons={this.getButtons}
+                handleChange={() => {}}>
+                <GridEditor
+                    value={this.state.grid}
+                    size={this.state.size}
+                    handleChange={this.changeColor}
+                    chooseColor={this.chooseColor} />
+            </Editor>
+        );
+    }
+
+    old() {
         const {size, text, stack} = this.state;
         const val = stack
             ? 'var(--stack)'
