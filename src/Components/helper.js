@@ -9,6 +9,48 @@ import {
     BsArrowsAngleContract
 } from 'react-icons/bs';
 
+import Tooltip from '@mui/material/Tooltip';
+import Grid    from '@mui/material/Grid2';
+import {
+    Typography,
+    IconButton
+} from '@mui/material';
+
+export function CustomButton(props) {
+    return (
+        <Tooltip title={props.title}>
+            <IconButton
+                    {...props}
+                size='large'>
+                <props.icon fontSize='inherit' />
+            </IconButton>
+        </Tooltip>
+    );
+}
+
+export function Monospace(props) {
+    return (
+        <Typography
+                {...props}
+                variant='h4'
+                fontFamily='monospace'>
+            {props.text}
+        </Typography>
+    );
+}
+
+export function Scrollable(props) {
+    return (
+        <Grid container
+                spacing={4}
+                overflow="auto"
+                flexWrap="nowrap"
+                alignItems="center">
+            {props.children}
+        </Grid>
+    );
+}
+
 export function getDim() {
     const width  = window.innerWidth;
     const height = window.innerHeight;

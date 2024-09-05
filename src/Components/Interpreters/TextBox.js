@@ -1,32 +1,31 @@
-import {getDim, button, home} from '../helper';
-import React from 'react';
-import {
-    BsCaretRight,
-    BsArrowLeft,
-    BsArrowRight,
-    BsSkipEnd,
-    BsStop,
-    BsSkipBackward,
-    BsSkipForward
-} from 'react-icons/bs';
+import Grid     from '@mui/material/Grid2';
 import { Link } from 'react-router-dom';
+import React    from 'react';
+import Tooltip  from '@mui/material/Tooltip';
 
-import { TextField, Typography } from '@mui/material';
-import Grid from '@mui/material/Grid2';
-import IconButton from '@mui/material/IconButton';
-import Box from '@mui/material/Box';
+import {
+    CustomButton,
+    Monospace,
+    Scrollable,
+    getDim
+} from '../helper';
 
-import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
-import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded';
-import StopRoundedIcon from '@mui/icons-material/StopRounded';
-import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
+import {
+    Typography,
+    TextField
+} from '@mui/material';
+
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import LastPageRoundedIcon from '@mui/icons-material/LastPageRounded';
-import DataArrayRoundedIcon from '@mui/icons-material/DataArrayRounded';
-import CodeRoundedIcon from '@mui/icons-material/CodeRounded';
-import PlusOneRoundedIcon from '@mui/icons-material/PlusOneRounded';
-import TextFieldsRoundedIcon from '@mui/icons-material/TextFieldsRounded';
+import NavigateNextRoundedIcon   from '@mui/icons-material/NavigateNextRounded';
+import TextFieldsRoundedIcon     from '@mui/icons-material/TextFieldsRounded';
+import PlayArrowRoundedIcon      from '@mui/icons-material/PlayArrowRounded';
+import DataArrayRoundedIcon      from '@mui/icons-material/DataArrayRounded';
+import LastPageRoundedIcon       from '@mui/icons-material/LastPageRounded';
+import PlusOneRoundedIcon        from '@mui/icons-material/PlusOneRounded';
+import HomeRoundedIcon           from '@mui/icons-material/HomeRounded';
+import StopRoundedIcon           from '@mui/icons-material/StopRounded';
+import InfoRoundedIcon           from '@mui/icons-material/InfoRounded';
+import CodeRoundedIcon           from '@mui/icons-material/CodeRounded';
 
 export default class TextBox extends React.Component {
     constructor(props) {
@@ -131,32 +130,21 @@ export default class TextBox extends React.Component {
             const color = this.state.ind === ind
                 ? 'info' : 'inherit';
             return (
-                <Typography
-                        variant='h4'
-                        key={'prog' + ind}
-                        color={color}
-                        sx={{fontFamily: 'monospace'}}>
-                    {val}
-                </Typography>
+                <Monospace
+                    text={val}
+                    key={'prog' + ind}
+                    color={color} />
             );
         });
 
         return (
-            <Grid container
-                  direction="row"
-                  alignItems="center"
-                  spacing={4}
-                  sx={{
-                      width: '100%',
-                      overflow: 'auto',
-                      flexWrap: 'nowrap'
-                  }}>
-                <CodeRoundedIcon />
+            <Scrollable>
+                <Tooltip title="Program">
+                    <CodeRoundedIcon />
+                </Tooltip>
                 {prog}
-                <Typography variant='h4'>
-                    &nbsp;
-                </Typography>
-            </Grid>
+                <Monospace text={"\xA0"} />
+            </Scrollable>
         );
     }
 
@@ -169,30 +157,20 @@ export default class TextBox extends React.Component {
             const color = this.state.ptr === ind
                 ? 'info' : 'inherit';
             return (
-                <Typography
-                        key={'tape' + ind}
-                        color={color}
-                        fontFamily='monospace'
-                        variant="h4">
-                    {val}
-                </Typography>
+                <Monospace
+                    text={val}
+                    key={'prog' + ind}
+                    color={color} />
             );
         });
 
         return (
-                <Grid container
-                  direction="row"
-                  alignItems="center"
-                  justifyContent="flex-start"
-                  spacing={4}
-                  sx={{
-                        width: '100%',
-                        overflowX: 'auto',
-                        flexWrap: 'nowrap'
-                    }}>
+            <Scrollable>
+                <Tooltip title="Tape">
                     <DataArrayRoundedIcon />
-                    {text}
-                </Grid>
+                </Tooltip>
+                {text}
+            </Scrollable>
         );
     }
 
@@ -201,23 +179,13 @@ export default class TextBox extends React.Component {
             return (null);
 
         return (
-                <Grid container
-                      direction="row"
-                      alignItems="center"
-                      spacing={4}
-                      sx={{
-                          width: '100%',
-                          overflow: 'auto',
-                          flexWrap: 'nowrap'
-                      }}>
+            <Scrollable>
+                <Tooltip title="Output">
                     <TextFieldsRoundedIcon />
-                    <Typography sx={{fontFamily: 'monospace'}} variant="h4">
-                        {this.state.out}
-                    </Typography>
-                    <Typography variant='h4'>
-                        &nbsp;
-                    </Typography>
-                </Grid>
+                </Tooltip>
+                <Monospace
+                    text={this.state.out + '\xA0'} />
+            </Scrollable>
         );
     }
 
@@ -226,20 +194,13 @@ export default class TextBox extends React.Component {
             return (null);
 
         return (
-                <Grid container
-                      direction="row"
-                      alignItems="center"
-                      spacing={4}
-                      sx={{
-                          width: '100%',
-                          overflow: 'auto',
-                          flexWrap: 'nowrap'
-                      }}>
+            <Scrollable>
+                <Tooltip title="Register">
                     <PlusOneRoundedIcon />
-                    <Typography sx={{fontFamily: 'monospace'}} variant="h4">
-                        {this.state.acc}
-                    </Typography>
-                </Grid>
+                </Tooltip>
+                <Monospace
+                    text={this.state.acc} />
+            </Scrollable>
         );
     }
 
@@ -248,22 +209,12 @@ export default class TextBox extends React.Component {
         link = 'https://esolangs.org/wiki/'
             + (link ? link : name);
 
-        const CustomButton = (props) => {
-            return (
-                <IconButton
-                        {...props}
-                        size='large'>
-                    <props.icon fontSize='inherit' />
-                </IconButton>
-            );
-        }
-
         const handleStop = () => {
             clearInterval(this.timerID);
             this.getFunc();
         }
 
-        const handleLast = () => {
+        const handleFastForward = () => {
             if (this.change)
                 this.getFunc();
 
@@ -278,30 +229,37 @@ export default class TextBox extends React.Component {
         }
 
         return (
-            <Box>
+            <Grid>
                 <CustomButton
+                    title='Run'
                     onClick={this.runCode('run')}
                     icon={PlayArrowRoundedIcon} />
                 <CustomButton
+                    title='Stop'
                     onClick={handleStop}
                     icon={StopRoundedIcon} />
                 <CustomButton
+                    title='Previous'
                     onClick={this.runCode('prev')}
                     icon={NavigateBeforeRoundedIcon} />
                 <CustomButton
+                    title='Next'
                     onClick={this.runCode('next')}
                     icon={NavigateNextRoundedIcon} />
                 <CustomButton
-                    onClick={handleLast}
+                    title='Fast Forward'
+                    onClick={handleFastForward}
                     icon={LastPageRoundedIcon} />
                 <CustomButton
+                    title='Info'
                     href={link}
                     icon={InfoRoundedIcon} />
                 <CustomButton
                     to="/"
+                    title='Home'
                     component={Link}
                     icon={HomeRoundedIcon} />
-            </Box>
+            </Grid>
         );
     }
 
@@ -334,43 +292,32 @@ export default class TextBox extends React.Component {
     render() {
         return (
             <Grid container
-                    height="100%"
-                    spacing={4}
+                    height="100vh"
+                    display="flex"
+                    flexDirection="column"
+                    spacing={2}
                     paddingTop="5vh"
                     paddingBottom="5vh"
                     paddingLeft="5vw"
                     paddingRight="5vw">
                 <Grid container
-                        item
-                        size={12}
                         justifyContent="space-between">
-                    <Grid item size="grow">
-                        <Typography sx={{fontFamily: 'monospace'}} variant="h2">
-                            {this.props.name}
-                        </Typography>
-                    </Grid>
-                    <Grid item size="auto">
-                        {this.getButtons()}
-                    </Grid>
+                    <Typography
+                            fontFamily='monospace'
+                            variant="h2">
+                        {this.props.name}
+                    </Typography>
+                    {this.getButtons()}
                 </Grid>
-                <Grid container
-                        item
-                        size={12}
-                        height={{
-                            xs: '60vh',
-                            md: '70vh',
-                            xl: '80vh'
-                        }}>
-                    <Grid item size="grow">
-                        {this.getTextField()}
-                    </Grid>
-                    <Grid item width="max(30vw, 20rem)">
-                        {this.getProgram()}
-                        {this.getOutput()}
-                        {this.getTape()}
-                        {this.getRegister()}
-                    </Grid>
+                <Grid flex={1}
+                        paddingTop="2vh"
+                        paddingBottom="2vh">
+                    {this.getTextField()}
                 </Grid>
+                {this.getProgram()}
+                {this.getOutput()}
+                {this.getTape()}
+                {this.getRegister()}
             </Grid>
         );
     }
