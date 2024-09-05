@@ -1,18 +1,19 @@
-import Grid     from '@mui/material/Grid2';
-import { Link } from 'react-router-dom';
-import React    from 'react';
-import Tooltip  from '@mui/material/Tooltip';
+import Grid       from '@mui/material/Grid2';
+import { Link }   from 'react-router-dom';
+import { getDim } from '../helper';
+import React      from 'react';
 
 import {
     CustomButton,
     Monospace,
     Scrollable,
-    getDim
-} from '../helper';
+    TextEditor
+} from './Editor';
+
 
 import {
     Typography,
-    TextField
+    Tooltip
 } from '@mui/material';
 
 import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded';
@@ -228,68 +229,49 @@ export default class TextBox extends React.Component {
             this.setState(temp);
         }
 
-        return (
-            <Grid>
+        return [
                 <CustomButton
+                    key='Run'
                     title='Run'
                     onClick={this.runCode('run')}
-                    icon={PlayArrowRoundedIcon} />
+                    Icon={PlayArrowRoundedIcon} />,
                 <CustomButton
+                    key='Stop'
                     title='Stop'
                     onClick={handleStop}
-                    icon={StopRoundedIcon} />
+                    Icon={StopRoundedIcon} />,
                 <CustomButton
+                    key='Previous'
                     title='Previous'
                     onClick={this.runCode('prev')}
-                    icon={NavigateBeforeRoundedIcon} />
+                    Icon={NavigateBeforeRoundedIcon} />,
                 <CustomButton
+                    key='Next'
                     title='Next'
                     onClick={this.runCode('next')}
-                    icon={NavigateNextRoundedIcon} />
+                    Icon={NavigateNextRoundedIcon} />,
                 <CustomButton
+                    key='Fast Forward'
                     title='Fast Forward'
                     onClick={handleFastForward}
-                    icon={LastPageRoundedIcon} />
+                    Icon={LastPageRoundedIcon} />,
                 <CustomButton
-                    title='Info'
+                    key='Info'
                     href={link}
-                    icon={InfoRoundedIcon} />
+                    title='Info'
+                    Icon={InfoRoundedIcon} />,
                 <CustomButton
                     to="/"
+                    key='Home'
                     title='Home'
                     component={Link}
-                    icon={HomeRoundedIcon} />
-            </Grid>
-        );
-    }
-
-    getTextField() {
-        return (
-            <TextField
-                variant="outlined"
-                label="Program code"
-                defaultValue="Hello, World!"
-                slotProps={{
-                    inputLabel: {shrink: true}
-                }}
-                fullWidth
-                multiline
-                value={this.state.value}
-                onChange={this.handleChange}
-                sx={{
-                    height: '100%',
-                    '& .MuiInputBase-root': {
-                        height: '100%',
-                        alignItems: 'flex-start',
-                    },
-                    '& .MuiInputBase-input': {
-                        fontFamily: 'monospace'
-                    }
-            }}/>
-        );
+                    Icon={HomeRoundedIcon} />
+        ];
     }
 
     render() {
+        const {value} = this.state;
+
         return (
             <Grid container
                     height="100vh"
@@ -301,18 +283,22 @@ export default class TextBox extends React.Component {
                     paddingLeft="5vw"
                     paddingRight="5vw">
                 <Grid container
-                        justifyContent="space-between">
-                    <Typography
-                            fontFamily='monospace'
+                        justifyContent="space-between"
+                        alignItems="center">
+                    <Grid size="grow" sx={{display: {xs: 'none', md: 'block'}}}>
+                        <Typography
                             variant="h2">
-                        {this.props.name}
-                    </Typography>
+                            {this.props.name}
+                        </Typography>
+                    </Grid>
                     {this.getButtons()}
                 </Grid>
                 <Grid flex={1}
                         paddingTop="2vh"
                         paddingBottom="2vh">
-                    {this.getTextField()}
+                    <TextEditor
+                        value={value}
+                        handleChange={this.handleChange} />
                 </Grid>
                 {this.getProgram()}
                 {this.getOutput()}
