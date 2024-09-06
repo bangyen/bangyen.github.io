@@ -21,39 +21,29 @@ export default class TextBox extends React.Component {
         this.state = {
             ...this.props.start,
             code: '',
-            end: true,
-            anchor: null,
-            stack: getDim()
+            end: true
         };
 
         this.speed = 200;
         this.change = true;
 
-        this.func = () => this.state;
+        this.getState = () => this.state;
         this.handleChange = this.handleChange.bind(this);
-        this.getButtons = this.getButtons.bind(this);
-        this.stack = () => {
-            const stack = getDim();
-            this.setState({stack});
-        };
+        this.getButtons   = this.getButtons.bind(this);
     }
 
     componentDidMount() {
         document.title = this.props.name
             + ' Interpreter | Bangyen';
-        window.addEventListener(
-            'resize', this.stack);
     }
 
     componentWillUnmount() {
         clearInterval(this.timerID);
-        window.removeEventListener(
-            'resize', this.stack);
     }
 
     setTimer(mult = 1) {
         const move = () => {
-            this.setState(this.func());
+            this.setState(this.getState());
 
             if (this.state.end)
                 clearInterval(this.timerID);
@@ -68,7 +58,7 @@ export default class TextBox extends React.Component {
         const {value} = this.state;
         const {start, run} = this.props;
 
-        this.func = run(value);
+        this.getState = run(value);
         this.setState(start);
         this.change = false;
     }
@@ -130,7 +120,7 @@ export default class TextBox extends React.Component {
             let temp;
 
             do {
-                temp = this.func();
+                temp = this.getState();
             } while (!temp.end);
 
             this.setState(temp);

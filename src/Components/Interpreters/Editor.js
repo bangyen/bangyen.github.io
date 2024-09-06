@@ -52,6 +52,9 @@ export default function Editor({
                 {getButtons()}
             </Grid>
             <Grid flex={1}
+                    sx={{
+                        overflowY: 'auto',
+                    }}
                     display="flex"
                     paddingTop="2vh"
                     paddingBottom="2vh"
@@ -85,7 +88,7 @@ export function Program({state}) {
             title="Program"
             arr={[...code]}
             ptr={ind}>
-            <Monospace
+            <Text
                 text={"\xA0"} />
         </Values>
     );
@@ -118,8 +121,8 @@ export function Output({state, props}) {
         <Values
             Icon={TextFieldsRounded}
             title="Output"
-            arr={[...out]}>
-            <Monospace
+            arr={[out]}>
+            <Text
                 text={'\xA0'} />
         </Values>
     );
@@ -154,7 +157,7 @@ export function Values(props) {
             ? 'info' : 'inherit';
 
         return (
-            <Monospace
+            <Text
                 key={title + ind}
                 color={color}
                 text={val} />
@@ -186,7 +189,7 @@ export function CustomButton(props) {
     );
 }
 
-export function Monospace(props) {
+export function Text(props) {
     return (
         <Typography
                 {...props}
@@ -198,13 +201,20 @@ export function Monospace(props) {
 
 export function Scrollable(props) {
     return (
-        <Grid container
-                spacing={4}
-                overflow="auto"
-                flexWrap="nowrap"
-                alignItems="center">
-            {props.children}
-        </Grid>
+        <Box sx={{
+            overflowX: 'auto',
+            width: '100%'
+        }}>
+            <Grid container
+                    spacing={4}
+                    sx={{
+                        marginBottom: 2,
+                        alignItems: 'center',
+                        minWidth: 'max-content'
+                    }}>
+                {props.children}
+            </Grid>
+        </Box>
     );
 }
 
@@ -253,7 +263,7 @@ export function GridEditor({
             {props.children}
         </Grid>
     );
-    
+
     return (
         <Grid container
                 size={12}
