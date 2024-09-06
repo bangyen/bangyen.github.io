@@ -102,7 +102,7 @@ export default function Editor({
     );
 }
 
-function Toolbar({name, url, functions}) {
+function Toolbar({name, functions}) {
     const {
         getRunner,
         handleStop,

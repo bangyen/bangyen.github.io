@@ -89,7 +89,7 @@ function runSetter(
 }
 
 function timerSetter(
-        speed, timerID, end,
+        speed, timerID,
         setValues, getState) {
     return (mult = 1) => {
         const move = () => {
@@ -116,7 +116,7 @@ export default function TextBox(props) {
         clean, tape,
         name,  link,
         start, run,
-        out,   acc,
+        out,   reg,
     } = props;
 
     const [values, setValues]
@@ -132,7 +132,7 @@ export default function TextBox(props) {
     const setState = objectSetter(
         values, setValues);
     const setTimer = timerSetter(
-        speed, timerID, values.end,
+        speed, timerID,
         setValues, getState);
     const reset    = runSetter(
         code, start,
@@ -173,7 +173,7 @@ export default function TextBox(props) {
                 link: link,
                 tape: tape,
                 out:  out,
-                acc:  acc
+                acc:  reg
             }}
             functions={{
                 getRunner,
