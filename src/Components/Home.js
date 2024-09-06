@@ -1,9 +1,11 @@
-import CircleRoundedIcon from '@mui/icons-material/CircleRounded';
-import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import MenuRoundedIcon from   '@mui/icons-material/MenuRounded';
-import AddRoundedIcon from    '@mui/icons-material/AddRounded';
 import Grid from       '@mui/material/Grid2';
+
+import {
+    CircleRounded,
+    MenuRounded,
+    HomeRounded,
+    GitHub
+} from '@mui/icons-material';
 
 import {
     Typography,
@@ -15,10 +17,11 @@ import {
 } from '@mui/material';
 
 import { Link } from 'react-router-dom';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { names } from './Interpreters';
 import { useSize } from './helpers2';
+import { CustomButton } from './Interpreters/Editor';
 import { pages } from './';
 
 function dropdown(name, options) {
@@ -52,7 +55,7 @@ function getCircles(num, size) {
     return (
         <Box sx={{overflow: 'hidden'}}>
             {[...Array(num).keys()].map(n =>
-                <CircleRoundedIcon sx={{
+                <CircleRounded sx={{
                     offsetPath: `path("      \
                         M0,        0         \
                         C${left},  ${height} \
@@ -80,86 +83,113 @@ function getCircles(num, size) {
     );
 }
 
-
-export default function Home() {
-    const [anchor, setAnchor] = React.useState(null);
-    const [number, setNumber] = React.useState(5);
-    const { width } = useSize();
-    const size  = width + 100;
-
-    document.title = 'Home | Bangyen';
-    const open = Boolean(anchor);
-
-    const handleClick = event => {
+function clickHandler(setAnchor) {
+    return event => {
         setAnchor(event.currentTarget);
     };
+}
 
-    const handleClose = () => {
+function closeHandler(setAnchor) {
+    return () => {
         setAnchor(null);
+    };
+}
+
+function MenuButton({
+        open,
+        anchor,
+        handleClick,
+        handleClose,
+        children
+    }) {
+    const define = (value) => {
+        return open ? value : undefined;
     };
 
     return (
-        <div>
-            {getCircles(number, size)}
-            <IconButton
-                    id='basic-button'
-                    sx={{position: 'fixed', top: 20, left: 20}}
-                    aria-controls={open ? 'basic-menu' : undefined}
-                    aria-expanded={open ? 'true' : undefined}
-                    aria-haspopup='true'
-                    onClick={handleClick}>
-                <MenuRoundedIcon />
-            </IconButton>
-            <IconButton
-                    sx={{position: 'fixed', top: 70, left: 20}}
-                    onClick={() => {setNumber(number + 1)}}>
-                <AddRoundedIcon />
-            </IconButton>
-            <IconButton
-                    sx={{position: 'fixed', top: 120, left: 20}}
-                    onClick={() => {setNumber(number - 1)}}>
-                <RemoveRoundedIcon />
-            </IconButton>
-            <IconButton
-                    href='https://github.com/bangyen'
-                    sx={{position: 'fixed', top: 170, left: 20}}>
-                <GitHubIcon />
-            </IconButton>
+        <Box>
+            <CustomButton
+                title='Menu'
+                id='basic-button'
+                Icon={MenuRounded}
+                aria-controls={define('basic-menu')}
+                aria-expanded={define('true')}
+                aria-haspopup='true'
+                onClick={handleClick} />
             <Menu
-                    id='basic-menu'
-                    open={open}
-                    anchorEl={anchor}
-                    onClose={handleClose}
-                    MenuListProps={{
-                        sx: {width: 140},
-                        'aria-labelledby': 'basic-button',
-                    }}>
-                {dropdown('Interpreters', names)}
-                <Divider variant='middle' />
-                {dropdown('Miscellaneous', pages)}
+                id='basic-menu'
+                open={open}
+                anchorEl={anchor}
+                onClose={handleClose}
+                MenuListProps={{
+                    sx: {width: 140},
+                    'aria-labelledby': 'basic-button'
+                }}>
+                {children}
             </Menu>
-            <Grid   container
-                    spacing={2}
-                    direction='column'
-                    alignItems='center'
-                    justifyContent='center'
-                    sx={{minHeight: '100vh'}}>
-                <Grid
-                        display='flex'
-                        direction='row'
-                        alignItems='center'
-                        justifyContent='center'
-                        size={{xs: 4, sm: 6, md: 10}}>
-                    <Typography variant='h2'>
-                        {'Hey, my name is '}
-                        <Box display='inline' fontWeight='bold'>
-                            Bangyen
-                        </Box>
-                        .
-                    </Typography>
-                </Grid>
+        </Box>
+    );
+}
+
+export default function Home() {
+    const [anchor, setAnchor] = useState(null);
+    const handleClick = clickHandler(setAnchor);
+    const handleClose = closeHandler(setAnchor);
+    const open        = Boolean(anchor);
+
+    const { width } = useSize();
+    const size      = width + 100;
+    const number    = 5;
+
+    useEffect(() => {
+        document.title
+            = 'Home | Bangyen';
+    }, []);
+
+    return (
+        <Grid container
+            height="100vh">
+            <Grid container
+                direction="column"
+                margin={2}
+                spacing={2}>
+                <MenuButton
+                    open={open}
+                    anchor={anchor}
+                    handleClick={handleClick}
+                    handleClose={handleClose}>
+                    {dropdown('Interpreters', names)}
+                    <Divider variant='middle' />
+                    {dropdown('Miscellaneous', pages)}
+                </MenuButton>
+                <CustomButton
+                    href='https://github.com/bangyen'
+                    title='GitHub'
+                    Icon={GitHub} />
             </Grid>
-        </div>
+            <Grid
+                size="grow"
+                display='flex'
+                marginRight={8}
+                justifyContent='center'
+                alignItems='center'>
+                <Typography sx={{
+                        typography: {
+                            xs: 'h5',
+                            sm: 'h4',
+                            md: 'h3'
+                        }
+                    }}>
+                    {'Hey, my name is '}
+                    <Box display='inline'
+                        fontWeight='bold'>
+                        Bangyen
+                    </Box>
+                    .
+                </Typography>
+                {getCircles(number, size)}
+            </Grid>
+        </Grid>
     );
 }
 
