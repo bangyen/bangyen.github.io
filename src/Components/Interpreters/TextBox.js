@@ -29,10 +29,10 @@ function fastForwardHandler(
     };
 }
 
-function stopHandler(timerID, getState) {
+function stopHandler(timerID, reset) {
     return () => {
         clearInterval(timerID.current);
-        getState.current();
+        reset();
     };
 }
 
@@ -55,11 +55,12 @@ function changeHandler(
 
 function getSwitch(
         change, speed, timerID,
-        setTimer, getState, setValues) {
+        setTimer, setValues,
+        getState, reset) {
     return (mode) => {
         return () => {
             if (change.current) {
-                getState.current();
+                reset();
             }
 
             clearInterval(timerID.current);
@@ -92,10 +93,11 @@ function timerSetter(
         setValues, getState) {
     return (mult = 1) => {
         const move = () => {
-            setValues(
-                getState.current());
+            const state
+                = getState.current();
+            setValues(state);
 
-            if (end)
+            if (state.end)
                 clearInterval(
                     timerID.current);
         };
@@ -117,12 +119,10 @@ export default function TextBox(props) {
         out,   acc,
     } = props;
 
-    document.title = name 
-        + ' Interpreter | Bangyen';
-
-    const [values, setValues] = useState(start);
-    const [code, setCode]     = useState('');
-    const [text, setText]     = useState('');
+    const [values, setValues]
+        = useState({...start, end: true});
+    const [code, setCode] = useState('');
+    const [text, setText] = useState('');
 
     const getState = useRef(() => values);
     const timerID  = useRef(null);
@@ -140,15 +140,15 @@ export default function TextBox(props) {
         getState, setState);
     const getRunner = getSwitch(
         change, speed, timerID,
-        setTimer, getState,
-        setValues);
+        setTimer, setValues,
+        getState, reset);
 
     const handleChange = changeHandler(
         text, clean,
         change, setState,
         setCode, setText);
     const handleStop = stopHandler(
-        timerID, getState);
+        timerID, reset);
     const handleFastForward
         = fastForwardHandler(
             change, timerID,
@@ -156,7 +156,6 @@ export default function TextBox(props) {
             setValues);
 
     useEffect(() => {
-        setState({end: false});
         document.title = name 
             + ' Interpreter | Bangyen';
 
