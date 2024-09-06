@@ -1,6 +1,4 @@
 import TextBox from './TextBox';
-import {useState } from 'react';
-import { getState } from '../helpers2';
 
 function clean(input) {
     let code = '';

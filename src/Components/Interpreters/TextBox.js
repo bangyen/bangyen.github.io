@@ -158,10 +158,11 @@ export default function TextBox(props) {
     useEffect(() => {
         document.title = name 
             + ' Interpreter | Bangyen';
+        const timer = timerID;
 
         return () =>
-            clearInterval(timerID.current);
-    }, []);
+            clearInterval(timer.current);
+    }, [name]);
 
     return (
         <Editor
