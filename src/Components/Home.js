@@ -18,39 +18,8 @@ import { Link } from 'react-router-dom';
 import React from 'react';
 
 import { names } from './Interpreters';
+import { useSize } from './helpers2';
 import { pages } from './';
-
-function getSize() {
-    const {
-        innerWidth:  width,
-        innerHeight: height
-    } = window;
-
-    return {width, height};
-}
-
-
-function useSize() {
-    const [size, setSize]
-        = React.useState(getSize());
-
-    React.useEffect(() => {
-        function handleResize() {
-            setSize(getSize());
-        }
-
-        window.addEventListener(
-            'resize', handleResize
-        );
-
-        return () => window.removeEventListener(
-            'resize', handleResize
-        );
-    }, []);
-
-    return size;
-}
-
 
 function dropdown(name, options) {
     return (
