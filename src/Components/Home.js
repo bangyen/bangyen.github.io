@@ -95,13 +95,12 @@ function closeHandler(setAnchor) {
     };
 }
 
-function MenuButton({
-        open,
-        anchor,
-        handleClick,
-        handleClose,
-        children
-    }) {
+function MenuButton({children}) {
+    const [anchor, setAnchor] = useState(null);
+    const handleClick = clickHandler(setAnchor);
+    const handleClose = closeHandler(setAnchor);
+    const open        = Boolean(anchor);
+
     const define = (value) => {
         return open ? value : undefined;
     };
@@ -132,11 +131,6 @@ function MenuButton({
 }
 
 export default function Home() {
-    const [anchor, setAnchor] = useState(null);
-    const handleClick = clickHandler(setAnchor);
-    const handleClose = closeHandler(setAnchor);
-    const open        = Boolean(anchor);
-
     const { width } = useSize();
     const size      = width + 100;
     const number    = 5;
@@ -153,11 +147,7 @@ export default function Home() {
                 direction="column"
                 margin={2}
                 spacing={2}>
-                <MenuButton
-                    open={open}
-                    anchor={anchor}
-                    handleClick={handleClick}
-                    handleClose={handleClose}>
+                <MenuButton>
                     {dropdown('Interpreters', names)}
                     <Divider variant='middle' />
                     {dropdown('Miscellaneous', pages)}
