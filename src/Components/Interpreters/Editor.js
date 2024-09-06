@@ -1,5 +1,6 @@
-import Tooltip from '@mui/material/Tooltip';
-import Grid    from '@mui/material/Grid2';
+import Tooltip  from '@mui/material/Tooltip';
+import Grid     from '@mui/material/Grid2';
+import { Link } from 'react-router-dom';
 
 import {
     Typography,
@@ -9,6 +10,13 @@ import {
 } from '@mui/material';
 
 import {
+    NavigateBeforeRounded,
+    NavigateNextRounded,
+    PlayArrowRounded,
+    LastPageRounded,
+    HomeRounded,
+    StopRounded,
+    InfoRounded,
     CodeRounded,
     DataArrayRounded,
     PlusOneRounded,
@@ -17,12 +25,25 @@ import {
 } from '@mui/icons-material';
 
 export default function Editor({
-        state,
-        props,
-        getButtons,
+        name,
+        code,
+        flags,
+        values,
+        functions,
         children
     }) {
-    const {name}  = props;
+    const {
+        tape,
+        ind, ptr,
+        out, acc
+    } = values;
+
+    const {
+        tape: tapeFlag,
+        out: outFlag,
+        acc: accFlag,
+        link
+    } = flags;
 
     return (
         <Grid container
@@ -49,7 +70,10 @@ export default function Editor({
                         {name}
                     </Typography>
                 </Grid>
-                {getButtons()}
+                <Toolbar
+                    name={name}
+                    link={link}
+                    functions={functions} />
             </Grid>
             <Grid flex={1}
                     sx={{
@@ -62,23 +86,73 @@ export default function Editor({
                 {children}
             </Grid>
             <Program
-                state={state} />
+                code={code}
+                ind={ind} />
             <Output
-                state={state}
-                props={props} />
+                out={out}
+                flag={outFlag} />
             <Tape
-                state={state}
-                props={props} />
+                tape={tape}
+                ptr={ptr}
+                flag={tapeFlag} />
             <Register
-                state={state}
-                props={props} />
+                acc={acc}
+                flag={accFlag} />
         </Grid>
     );
 }
 
-export function Program({state}) {
-    const {code, ind} = state;
+function Toolbar({name, url, functions}) {
+    const {
+        getRunner,
+        handleStop,
+        handleFastForward
+    } = functions;
 
+    const link = 'https://esolangs.org/wiki/'
+        + (url ? url : name);
+
+    return [
+        <CustomButton
+            key='Run'
+            title='Run'
+            onClick={getRunner('run')}
+            Icon={PlayArrowRounded} />,
+        <CustomButton
+            key='Stop'
+            title='Stop'
+            onClick={handleStop}
+            Icon={StopRounded} />,
+        <CustomButton
+            key='Previous'
+            title='Previous'
+            onClick={getRunner('prev')}
+            Icon={NavigateBeforeRounded} />,
+        <CustomButton
+            key='Next'
+            title='Next'
+            onClick={getRunner('next')}
+            Icon={NavigateNextRounded} />,
+        <CustomButton
+            key='Fast Forward'
+            title='Fast Forward'
+            onClick={handleFastForward}
+            Icon={LastPageRounded} />,
+        <CustomButton
+            key='Info'
+            href={link}
+            title='Info'
+            Icon={InfoRounded} />,
+        <CustomButton
+            to="/"
+            key='Home'
+            title='Home'
+            component={Link}
+            Icon={HomeRounded} />
+    ];
+}
+
+function Program({code, ind}) {
     if (code === undefined)
         return (null);
 
@@ -94,10 +168,8 @@ export function Program({state}) {
     );
     }
 
-export function Tape({state, props}) {
-    const {tape, ptr}  = state;
-    const {tape: flag} = props;
-
+function Tape({
+        tape, ptr, flag}) {
     if (!flag)
         return (null);
 
@@ -110,10 +182,7 @@ export function Tape({state, props}) {
     );
 }
 
-export function Output({state, props}) {
-    const {out} = state;
-    const {out: flag} = props;
-
+function Output({out, flag}) {
     if (!flag)
         return (null);
 
@@ -128,10 +197,7 @@ export function Output({state, props}) {
     );
 }
 
-export function Register({state, props}) {
-    const {reg: flag} = props;
-    const {acc} = state;
-
+function Register({acc, flag}) {
     if (!flag)
         return (null);
 
@@ -143,7 +209,7 @@ export function Register({state, props}) {
     );
 }
 
-export function Values(props) {
+function Values(props) {
     const {
         Icon,
         title,
@@ -199,7 +265,7 @@ export function Text(props) {
     );
 }
 
-export function Scrollable(props) {
+function Scrollable(props) {
     return (
         <Box sx={{
             overflowX: 'auto',

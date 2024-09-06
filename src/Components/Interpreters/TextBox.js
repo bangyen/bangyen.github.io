@@ -1,180 +1,188 @@
-import { Link }   from 'react-router-dom';
-import { getDim } from '../helper';
-import React      from 'react';
+import { useState, useEffect, useRef } from 'react';
 
-import Editor, {TextEditor, CustomButton} from './Editor';
+import Editor, {TextEditor} from './Editor';
 
-import {
-    NavigateBeforeRounded,
-    NavigateNextRounded,
-    PlayArrowRounded,
-    LastPageRounded,
-    HomeRounded,
-    StopRounded,
-    InfoRounded,
-} from '@mui/icons-material';
+function objectSetter(oldValues, setValues) {
+    return (values) => {
+        setValues({
+            ...oldValues,
+            ...values
+        });
+    };
+}
 
-export default class TextBox extends React.Component {
-    constructor(props) {
-        super(props);
+function fastForwardHandler(
+        change, timerID, reset,
+        getState, setValues) {
+    return () => {
+        if (change.current)
+            reset();
 
-        this.state = {
-            ...this.props.start,
-            code: '',
-            end: true
-        };
+        clearInterval(timerID.current);
+        let temp;
 
-        this.speed = 200;
-        this.change = true;
+        do {
+            temp = getState.current();
+        } while (!temp.end);
 
-        this.getState = () => this.state;
-        this.handleChange = this.handleChange.bind(this);
-        this.getButtons   = this.getButtons.bind(this);
-    }
+        setValues(temp);
+    };
+}
 
-    componentDidMount() {
-        document.title = this.props.name
-            + ' Interpreter | Bangyen';
-    }
+function stopHandler(timerID, getState) {
+    return () => {
+        clearInterval(timerID.current);
+        getState.current();
+    };
+}
 
-    componentWillUnmount() {
-        clearInterval(this.timerID);
-    }
+function changeHandler(
+        oldText, clean, change,
+        setState, setCode, setText) {
+    return (event) => {
+        const text = event.target.value;
 
-    setTimer(mult = 1) {
-        const move = () => {
-            this.setState(this.getState());
+        if (text !== oldText) {
+            const code = clean(text);
+            change.current = true;
 
-            if (this.state.end)
-                clearInterval(this.timerID);
-        };
+            setState({end: true});
+            setCode(code);
+            setText(text);
+        }
+    };
+}
 
-        this.speed *= mult;
-        clearInterval(this.timerID);
-        this.timerID = setInterval(move, this.speed);
-    }
-
-    getFunc() {
-        const {value} = this.state;
-        const {start, run} = this.props;
-
-        this.getState = run(value);
-        this.setState(start);
-        this.change = false;
-    }
-
-    runCode(mode) {
-        return function() {
-            if (this.change) {
-                this.getFunc();
+function getSwitch(
+        change, speed, timerID,
+        setTimer, getState, setValues) {
+    return (mode) => {
+        return () => {
+            if (change.current) {
+                getState.current();
             }
 
-            clearInterval(this.timerID);
-            let state;
+            clearInterval(timerID.current);
 
             if (mode === 'run') {
-                this.speed = 200;
-                this.setTimer();
-            } else if (mode === 'prev') {
-                state = this.func(true);
+                speed.current = 200;
+                setTimer();
             } else {
-                state = this.func();
+                const flag = mode === 'prev';
+                const state = getState.current(flag);
+                setValues(state);
             }
+        };
+    };
+}
 
-            this.setState(state);
-        }.bind(this);
-    }
+function runSetter(
+        code, start,
+        run, change,
+        getState, setValues) {
+    return () => {
+        getState.current = run(code);
+        change.current   = false;
+        setValues(start);
+    };
+}
 
-    handleChange(event) {
-        const val = event.target.value;
+function timerSetter(
+        speed, timerID, end,
+        setValues, getState) {
+    return (mult = 1) => {
+        const move = () => {
+            setValues(
+                getState.current());
 
-        if (val !== this.state.value) {
-            const code
-                = this.props.clean(val);
-            this.change = true;
+            if (end)
+                clearInterval(
+                    timerID.current);
+        };
 
-            this.setState({
-                ...this.props.start,
-                end: true,
-                value: val,
-                code
-            });
-        }
-    }
+        speed.current *= mult;
+        clearInterval(timerID.current);
 
-    getButtons() {
-        let {name, link} = this.props;
-        link = 'https://esolangs.org/wiki/'
-            + (link ? link : name);
+        timerID.current
+            = setInterval(
+                move, speed.current);
+    };
+}
 
-        const handleStop = () => {
-            clearInterval(this.timerID);
-            this.getFunc();
-        }
+export default function TextBox(props) {
+    const {
+        clean, tape,
+        name,  link,
+        start, run,
+        out,   acc,
+    } = props;
 
-        const handleFastForward = () => {
-            if (this.change)
-                this.getFunc();
+    document.title = name 
+        + ' Interpreter | Bangyen';
 
-            clearInterval(this.timerID);
-            let temp;
+    const [values, setValues] = useState(start);
+    const [code, setCode]     = useState('');
+    const [text, setText]     = useState('');
 
-            do {
-                temp = this.getState();
-            } while (!temp.end);
+    const getState = useRef(() => values);
+    const timerID  = useRef(null);
+    const change   = useRef(true);
+    const speed    = useRef(200);
 
-            this.setState(temp);
-        }
+    const setState = objectSetter(
+        values, setValues);
+    const setTimer = timerSetter(
+        speed, timerID, values.end,
+        setValues, getState);
+    const reset    = runSetter(
+        code, start,
+        run, change,
+        getState, setState);
+    const getRunner = getSwitch(
+        change, speed, timerID,
+        setTimer, getState,
+        setValues);
 
-        return [
-                <CustomButton
-                    key='Run'
-                    title='Run'
-                    onClick={this.runCode('run')}
-                    Icon={PlayArrowRounded} />,
-                <CustomButton
-                    key='Stop'
-                    title='Stop'
-                    onClick={handleStop}
-                    Icon={StopRounded} />,
-                <CustomButton
-                    key='Previous'
-                    title='Previous'
-                    onClick={this.runCode('prev')}
-                    Icon={NavigateBeforeRounded} />,
-                <CustomButton
-                    key='Next'
-                    title='Next'
-                    onClick={this.runCode('next')}
-                    Icon={NavigateNextRounded} />,
-                <CustomButton
-                    key='Fast Forward'
-                    title='Fast Forward'
-                    onClick={handleFastForward}
-                    Icon={LastPageRounded} />,
-                <CustomButton
-                    key='Info'
-                    href={link}
-                    title='Info'
-                    Icon={InfoRounded} />,
-                <CustomButton
-                    to="/"
-                    key='Home'
-                    title='Home'
-                    component={Link}
-                    Icon={HomeRounded} />
-        ];
-    }
+    const handleChange = changeHandler(
+        text, clean,
+        change, setState,
+        setCode, setText);
+    const handleStop = stopHandler(
+        timerID, getState);
+    const handleFastForward
+        = fastForwardHandler(
+            change, timerID,
+            reset, getState,
+            setValues);
 
-    render() {
-        return (
-            <Editor
-                state={this.state}
-                props={this.props}
-                getButtons={this.getButtons}>
-                <TextEditor
-                    handleChange={this.handleChange} />
-            </Editor>
-        );
-    }
+    useEffect(() => {
+        setState({end: false});
+        document.title = name 
+            + ' Interpreter | Bangyen';
+
+        return () =>
+            clearInterval(timerID.current);
+    }, []);
+
+    return (
+        <Editor
+            code={code}
+            name={name}
+            start={start}
+            values={values}
+            flags={{
+                link: link,
+                tape: tape,
+                out:  out,
+                acc:  acc
+            }}
+            functions={{
+                getRunner,
+                handleStop,
+                handleFastForward
+            }}>
+            <TextEditor
+                handleChange={handleChange} />
+        </Editor>
+    );
 }

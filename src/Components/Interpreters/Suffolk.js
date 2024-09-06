@@ -1,5 +1,6 @@
 import TextBox from './TextBox';
-import React from 'react';
+import {useState } from 'react';
+import { getState } from '../helpers2';
 
 function clean(input) {
     let code = '';
@@ -90,7 +91,7 @@ function outer(obj) {
 }
 
 export default function Suffolk() {
-    let obj = {
+    const start = {
         tape: [0],
         acc: 0,
         ind: 0,
@@ -99,10 +100,11 @@ export default function Suffolk() {
         end: false
     };
 
-    let run = outer(obj);
+    const run = outer(start);
+
     return <TextBox
         name='Suffolk'
-        start={obj}
+        start={start}
         run={run}
         clean={clean}
         tape={true}
