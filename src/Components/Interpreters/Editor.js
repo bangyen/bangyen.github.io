@@ -110,7 +110,7 @@ function Toolbar({name, url, functions}) {
     } = functions;
 
     const link = 'https://esolangs.org/wiki/'
-        + (url ? url : name);
+        + name.replace(' ', '_');
 
     return [
         <CustomButton

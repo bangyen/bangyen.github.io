@@ -78,17 +78,17 @@ function outer(obj) {
 }
 
 export default function StunStep() {
-    let obj = {
+    let start = {
         tape: [1],
         ind: 0,
         ptr: 0,
         end: false
     };
 
-    let run = outer(obj);
+    let run = outer(start);
+
     return <TextBox
         name='Stun Step'
-        link='Stun_Step'
         start={obj}
         run={run}
         clean={clean}
