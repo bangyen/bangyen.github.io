@@ -26,13 +26,13 @@ import { pages } from './';
 
 function dropdown(name, options) {
     return (
-        <div>
+        <Box>
             {Object.keys(options).map(text =>
                 <MenuItem
-                        key={text}
-                        component={Link}
-                        sx={{justifyContent: 'center'}}
-                        to={text.toLowerCase()}>
+                    key={text}
+                    component={Link}
+                    sx={{justifyContent: 'center'}}
+                    to={text.toLowerCase()}>
                     <Typography
                         variant='body2'
                         sx={{padding: 0.5}}>
@@ -40,7 +40,7 @@ function dropdown(name, options) {
                     </Typography>
                 </MenuItem>
             )}
-        </div>
+        </Box>
     );
 }
 

@@ -39,28 +39,28 @@ function getRoute(Elem, url) {
 
 
 function App() {
-    return <Router basename='/'>
-        <div>
+    return (
+        <Router basename='/'>
             <Switch>
                 {Object.keys(run).map(k => {
                     if (k === 'names')
                         return null;
 
                     const url = run.names[k];
-                    return getRoute(run[k], url);
+                return getRoute(run[k], url);
                 })}
                 {Object.keys(page).map(k => {
                     if (k === 'Error'
-                            || k === 'pages')
-                        return null;
+                        || k === 'pages')
+                    return null;
 
                     const url = page.pages[k] || '/';
                     return getRoute(page[k], url);
                 })}
                 <Route component={page.Error} />
             </Switch>
-        </div>
-    </Router>;
+        </Router>
+    );
 }
 
 
