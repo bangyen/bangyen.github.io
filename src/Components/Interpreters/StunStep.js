@@ -89,7 +89,7 @@ export default function StunStep() {
 
     return <TextBox
         name='Stun Step'
-        start={obj}
+        start={start}
         run={run}
         clean={clean}
         tape={true} />;
