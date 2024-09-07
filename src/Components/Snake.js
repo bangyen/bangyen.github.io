@@ -1,211 +1,122 @@
-import {button, home, arrows} from './helper';
-import React from 'react';
+import Grid from '@mui/material/Grid2';
+import { useState } from 'react';
 import {
-    BsArrowsMove
-} from 'react-icons/bs';
+    convertPixels,
+    GenericGrid,
+    CustomButton,
+    HomeButton
+} from './helpers';
+import { useWindow, useTimer, useKeys } from './hooks';
+import {
+    GamepadRounded,
+    CloseRounded,
+    KeyboardArrowUpRounded,
+    KeyboardArrowDownRounded,
+    KeyboardArrowLeftRounded,
+    KeyboardArrowRightRounded
+} from '@mui/icons-material';
 
-function createArr() {
-    let x = window.innerHeight;
-    let y = window.innerWidth;
+function Arrows({show, setShow}) {
+    const flip
+        = () =>
+            setShow(!show);
 
-    x = Math.floor(x / 50);
-    y = Math.floor(y / 50);
-    const arr = [...Array(x)]
-        .map(_ => Array(y).fill(0));
+    if (!show)
+        return (
+            <CustomButton
+                title='Controls'
+                Icon={GamepadRounded}
+                onClick={flip} />
+        );
 
-    const a = Math.floor(Math.random() * x);
-    const b = Math.floor(Math.random() * y);
-    arr[a][b] = -1;
-
-    return arr;
+    return (
+        <Grid>
+            <Grid
+                width='100%'
+                display='flex'
+                justifyContent='center'>
+                <CustomButton
+                    title='Up'
+                    Icon={KeyboardArrowUpRounded}
+                    onClick={flip} />
+            </Grid>
+            <Grid>
+                <CustomButton
+                    title='Left'
+                    Icon={KeyboardArrowLeftRounded}
+                    onClick={flip} />
+                <CustomButton
+                    title='Close'
+                    Icon={CloseRounded}
+                    onClick={flip} />
+                <CustomButton
+                    title='Right'
+                    Icon={KeyboardArrowRightRounded}
+                    onClick={flip} />
+            </Grid>
+            <Grid
+                width='100%'
+                display='flex'
+                justifyContent='center'>
+                <CustomButton
+                    title='Down'
+                    Icon={KeyboardArrowDownRounded}
+                    onClick={flip} />
+            </Grid>
+        </Grid>
+    );
 }
 
-export default class Snake extends React.Component {
-    constructor(props) {
-        super(props);
+export default function Snake() {
+    const [show, setShow] = useState(false);
+    const {width, height} = useWindow();
+    const {setRepeat} = useTimer(200);
 
-        this.updateDim =
-            this.updateDim
-                .bind(this);
-        this.changeDir =
-            this.changeDir
-                .bind(this);
+    const size   = 5;
+    const rWidth = 0.9;
+    const rHeight
+        = 0.85 - show * 0.05;
 
-        const arr = createArr();
-        this.state = {
-            row: arr.length,
-            col: arr[0].length,
-            len: 3,
-            pos: [0, 0],
-            vel: [0, 1],
-            move: true,
-            buff: null,
-            dir: false,
-            arr
-        }
-    }
+    const {rows, cols}
+        = convertPixels(
+            size, rHeight, rWidth,
+            height,  width);
 
-    randomPos() {
-        const arr = [...this.state.arr];
-        const row = this.state.row;
-        const col = this.state.col;
-        let x, y;
+    const Wrapper = ({Cell, row, col}) => (
+        <Cell
+            size={size}
+            backgroundColor="secondary.light" />
+    );
 
-        do {
-            x = Math.floor(Math.random() * row);
-            y = Math.floor(Math.random() * col);
-        } while (arr[x][y]);
-
-        arr[x][y] = -1;
-        this.setState({arr});
-    }
-
-    updateDim() {
-        const arr = createArr();
-
-        this.setState({
-            row: arr.length,
-            col: arr[0].length,
-            arr
-        });
-    }
-
-    changeDir(e) {
-        const old = this.state.vel;
-        let vel;
-
-        switch (e.key.toLowerCase()) {
-            case 'arrowup':
-            case 'w':
-                vel = [-1, 0];
-                break;
-            case 'arrowdown':
-            case 's':
-                vel = [1, 0];
-                break;
-            case 'arrowleft':
-            case 'a':
-                vel = [0, -1];
-                break;
-            case 'arrowright':
-            case 'd':
-                vel = [0, 1];
-                break;
-            default:
-                return;
-        }
-
-        if (old[0] + vel[0] &&
-                old[0] !== vel[0])
-            if (this.state.move)
-                this.setState({
-                    move: false,
-                    vel
-                });
-            else
-                this.setState({
-                    buff: vel
-                });
-    }
-
-    componentDidMount() {
-        this.timerID = setInterval(
-            () => this.move(), 100);
-        document.title = 'Snake | Bangyen';
-        document.addEventListener(
-            'keydown',
-            this.changeDir);
-        this.updateDim();
-        window.addEventListener(
-            'resize', this.updateDim);
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.timerID);
-        document.removeEventListener(
-            'keydown',
-            this.changeDir);
-        window.removeEventListener(
-            'resize', this.updateDim);
-    }
-
-    move() {
-        let [x, y] = this.state.pos;
-        const [a, b] = this.state.vel;
-        const {row, col} = this.state;
-        let arr = this.state.arr
-            .map(a => a.map(
-                n => n > 0 ? n - 1 : n
-            ));
-
-        x = (x + a + row) % row;
-        y = (y + b + col) % col;
-
-        if (arr[x][y] > 0) {
-            const num = arr[x][y];
-            this.setState({len: this.state.len - num});
-            arr = arr.map(a => a.map(
-                n => n > num ? n - num : -(n < 0)));
-        } else if (arr[x][y] < 0) {
-            this.setState({len: this.state.len + 1});
-            this.randomPos();
-            arr = this.state.arr.map(a => a.map(
-                n => n > 0 ? n + 1 : -(n < 0)));
-        }
-
-        arr[x][y] = this.state.len;
-        const buff = this.state.buff;
-        if (buff)
-            this.setState({
-                buff: null,
-                vel: buff});
-
-        this.setState({
-            move: !buff,
-            pos: [x, y],
-            arr
-        });
-    }
-
-    render() {
-        let buttons;
-        const arrow = (c) =>
-            () => this.changeDir({key: c});
-
-        if (this.state.dir)
-            buttons = arrows.bind(this)(arrow, 400);
-        else
-            buttons = <div>
-                {home(400)}
-                {button(BsArrowsMove, 'Controls',
-                    () => this.setState({dir: true}), 400
-                )}
-            </div>; 
-
-        return (
-            <header className='app'>
-                <table className='snake'>
-                    <tbody>
-                        {this.state.arr.map((a, row) =>
-                            (<tr key={row.toString()}>{
-                                a.map((val, col) =>
-                                <td key={`${row}-${col}`}
-                                        className={
-                                            'cell select square ' +
-                                            ( val > 0 ? 'white' :
-                                              val < 0 ? 'red'   :
-                                                        'black' )
-                                        }>
-                                    <div>&nbsp;</div>
-                                </td>)
-                            }</tr>)
-                        )}
-                    </tbody>
-                </table>
-                <div className='navigate'>
-                    {buttons}
-                </div>
-            </header>
-        );
-    }
+    return (
+        <Grid
+            container
+            height='100vh'
+            flexDirection='column'>
+            <Grid
+                flex={1}
+                display='flex'
+                justifyContent='center'
+                alignItems='center'>
+                <GenericGrid
+                    size={size}
+                    rows={rows}
+                    cols={cols}
+                    Wrapper={Wrapper} />
+            </Grid>
+            <Grid
+                container
+                spacing={2}
+                margin={4}
+                display='flex'
+                justifyContent='center'
+                alignItems='center'>
+                <HomeButton
+                    hide={show} />
+                <Arrows
+                    show={show}
+                    setShow={setShow} />
+            </Grid>
+        </Grid>
+    );
 }

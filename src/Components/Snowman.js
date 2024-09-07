@@ -1,5 +1,5 @@
-import { button, home, arrows } from './helper';
-import { move } from './helper';
+import { button, home, arrows } from './oldHelpers';
+import { move } from './oldHelpers';
 import React from 'react';
 import {
     FaMale,

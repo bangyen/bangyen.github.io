@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-
-import Editor, {TextEditor} from './Editor';
+import Editor, {TextArea} from './Editor';
+import { useTimer } from '../hooks';
 
 function objectSetter(oldValues, setValues) {
     return (values) => {
@@ -12,13 +12,14 @@ function objectSetter(oldValues, setValues) {
 }
 
 function fastForwardHandler(
-        change, timerID, reset,
-        getState, setValues) {
+        change, setRepeat,
+        reset, getState,
+        setValues) {
     return () => {
         if (change.current)
             reset();
 
-        clearInterval(timerID.current);
+        setRepeat(null);
         let temp;
 
         do {
@@ -29,9 +30,9 @@ function fastForwardHandler(
     };
 }
 
-function stopHandler(timerID, reset) {
+function stopHandler(setRepeat, reset) {
     return () => {
-        clearInterval(timerID.current);
+        setRepeat(null);
         reset();
     };
 }
@@ -54,7 +55,7 @@ function changeHandler(
 }
 
 function getSwitch(
-        change, speed, timerID,
+        change, setRepeat,
         setTimer, setValues,
         getState, reset) {
     return (mode) => {
@@ -63,12 +64,10 @@ function getSwitch(
                 reset();
             }
 
-            clearInterval(timerID.current);
-
             if (mode === 'run') {
-                speed.current = 200;
                 setTimer();
             } else {
+                setRepeat(null);
                 const flag = mode === 'prev';
                 const state = getState.current(flag);
                 setValues(state);
@@ -89,34 +88,29 @@ function runSetter(
 }
 
 function timerSetter(
-        speed, timerID,
-        setValues, getState) {
-    return (mult = 1) => {
+        setRepeat,
+        setValues,
+        getState) {
+    return () => {
         const move = () => {
             const state
                 = getState.current();
             setValues(state);
 
             if (state.end)
-                clearInterval(
-                    timerID.current);
+                setRepeat(null);
         };
 
-        speed.current *= mult;
-        clearInterval(timerID.current);
-
-        timerID.current
-            = setInterval(
-                move, speed.current);
+        setRepeat(move);
     };
 }
 
-export default function TextBox(props) {
+export default function TextEditor(props) {
     const {
-        clean, tape,
-        name,  link,
-        start, run,
-        out,   reg,
+        name, start,
+        run,  out,
+        tape, reg,
+        clean
     } = props;
 
     const [values, setValues]
@@ -124,22 +118,20 @@ export default function TextBox(props) {
     const [code, setCode] = useState('');
     const [text, setText] = useState('');
 
-    const getState = useRef(() => values);
-    const timerID  = useRef(null);
-    const change   = useRef(true);
-    const speed    = useRef(200);
+    const {setRepeat} = useTimer(200);
+    const getState    = useRef(() => values);
+    const change      = useRef(true);
 
     const setState = objectSetter(
         values, setValues);
     const setTimer = timerSetter(
-        speed, timerID,
-        setValues, getState);
+        setRepeat, setValues, getState);
     const reset    = runSetter(
         code, start,
         run, change,
         getState, setState);
     const getRunner = getSwitch(
-        change, speed, timerID,
+        change, setRepeat,
         setTimer, setValues,
         getState, reset);
 
@@ -148,20 +140,16 @@ export default function TextBox(props) {
         change, setState,
         setCode, setText);
     const handleStop = stopHandler(
-        timerID, reset);
+        setRepeat, reset);
     const handleFastForward
         = fastForwardHandler(
-            change, timerID,
+            change, setRepeat,
             reset, getState,
             setValues);
 
     useEffect(() => {
         document.title = name 
             + ' Interpreter | Bangyen';
-        const timer = timerID;
-
-        return () =>
-            clearInterval(timer.current);
     }, [name]);
 
     return (
@@ -171,7 +159,6 @@ export default function TextBox(props) {
             start={start}
             values={values}
             flags={{
-                link: link,
                 tape: tape,
                 out:  out,
                 acc:  reg
@@ -181,7 +168,7 @@ export default function TextBox(props) {
                 handleStop,
                 handleFastForward
             }}>
-            <TextEditor
+            <TextArea
                 handleChange={handleChange} />
         </Editor>
     );

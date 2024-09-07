@@ -3,13 +3,11 @@ import Grid from       '@mui/material/Grid2';
 import {
     CircleRounded,
     MenuRounded,
-    HomeRounded,
     GitHub
 } from '@mui/icons-material';
 
 import {
     Typography,
-    IconButton,
     Divider,
     Box,
     Menu,
@@ -20,8 +18,8 @@ import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 import { names } from './Interpreters';
-import { useSize } from './helpers2';
-import { CustomButton } from './Interpreters/Editor';
+import { CustomButton } from './helpers';
+import { useWindow } from './hooks';
 import { pages } from './';
 
 function dropdown(name, options) {
@@ -131,7 +129,7 @@ function MenuButton({children}) {
 }
 
 export default function Home() {
-    const { width } = useSize();
+    const { width } = useWindow();
     const size      = width + 100;
     const number    = 5;
 

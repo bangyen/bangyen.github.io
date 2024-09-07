@@ -1,21 +1,11 @@
 import {
     getDim, move
-} from '../helper';
+} from '../oldHelpers';
 import React from 'react';
-import {Link} from 'react-router-dom';
-import {
-    NavigateBeforeRounded,
-    NavigateNextRounded,
-    PlayArrowRounded,
-    LastPageRounded,
-    HomeRounded,
-    StopRounded,
-    InfoRounded,
-} from '@mui/icons-material';
 
-import Editor, {CustomButton, GridEditor} from './Editor';
+import Editor, {GridArea} from './Editor';
 
-export default class Grid extends React.Component {
+export default class GridEditor extends React.Component {
     constructor(props) {
         super(props);
 
@@ -386,70 +376,6 @@ export default class Grid extends React.Component {
         }.bind(this);
     }
 
-    getButtons() {
-        let {name, link} = this.props;
-        link = 'https://esolangs.org/wiki/'
-            + (link ? link : name);
-
-        const handleStop = () => {
-            clearInterval(this.timerID);
-            this.getFunc();
-        }
-
-        const handleFastForward = () => {
-            if (this.change)
-                this.getFunc();
-
-            clearInterval(this.timerID);
-            let temp;
-
-            do {
-                temp = this.func();
-            } while (!temp.end);
-
-            this.setState(temp);
-        }
-
-        return [
-                <CustomButton
-                    key='Run'
-                    title='Run'
-                    onClick={this.runCode('run')}
-                    Icon={PlayArrowRounded} />,
-                <CustomButton
-                    key='Stop'
-                    title='Stop'
-                    onClick={handleStop}
-                    Icon={StopRounded} />,
-                <CustomButton
-                    key='Previous'
-                    title='Previous'
-                    onClick={this.runCode('prev')}
-                    Icon={NavigateBeforeRounded} />,
-                <CustomButton
-                    key='Next'
-                    title='Next'
-                    onClick={this.runCode('next')}
-                    Icon={NavigateNextRounded} />,
-                <CustomButton
-                    key='Fast Forward'
-                    title='Fast Forward'
-                    onClick={handleFastForward}
-                    Icon={LastPageRounded} />,
-                <CustomButton
-                    key='Info'
-                    href={link}
-                    title='Info'
-                    Icon={InfoRounded} />,
-                <CustomButton
-                    to="/"
-                    key='Home'
-                    title='Home'
-                    component={Link}
-                    Icon={HomeRounded} />
-        ];
-    }
-
     render() {
         return (
             <Editor
@@ -457,7 +383,7 @@ export default class Grid extends React.Component {
                 props={this.props}
                 getButtons={this.getButtons}
                 handleChange={() => {}}>
-                <GridEditor
+                <GridArea
                     value={this.state.grid}
                     size={this.state.size}
                     handleChange={this.changeColor}

@@ -1,4 +1,4 @@
-import TextBox from './TextBox';
+import TextEditor from './TextEditor';
 
 function clean(input) {
     let code = '';
@@ -100,7 +100,7 @@ export default function Suffolk() {
 
     const run = outer(start);
 
-    return <TextBox
+    return <TextEditor
         name='Suffolk'
         start={start}
         run={run}

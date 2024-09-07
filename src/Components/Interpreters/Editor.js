@@ -1,10 +1,10 @@
 import Tooltip  from '@mui/material/Tooltip';
 import Grid     from '@mui/material/Grid2';
 import { Link } from 'react-router-dom';
+import { CustomButton, GenericGrid } from '../helpers';
 
 import {
     Typography,
-    IconButton,
     TextField,
     Box
 } from '@mui/material';
@@ -241,20 +241,6 @@ function Values(props) {
     );
 }
 
-export function CustomButton(props) {
-    const {Icon, title, ...rest} = props;
-
-    return (
-        <Tooltip title={title}>
-            <IconButton
-                    {...rest}
-                    size='large'>
-                <Icon fontSize='inherit' />
-            </IconButton>
-        </Tooltip>
-    );
-}
-
 export function Text(props) {
     return (
         <Typography
@@ -284,74 +270,46 @@ function Scrollable(props) {
     );
 }
 
-export function GridEditor({
+export function GridArea({
         handleChange,
         chooseColor,
         value,
         size
     }) {
-    const Cell = ({pos, value}) => {
+    const Wrapper = ({Cell, row, col}) => {
+        const pos    = size * row + col;
         const color  = chooseColor(pos);
+        const value  = value[pos];
+
+        const text   = `${color}.contrastText`;
         const select = `${color}.light`;
         const hover  = `${color}.main`;
-        const text   = `${color}.contrastText`;
 
         return (
-            <Box
-                onClick={handleChange(pos)}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                height="10vmin"
-                width="10vmin"
-                borderRadius="1vmin"
+            <Cell
                 color={text}
                 backgroundColor={select}
+                onClick={handleChange(pos)}
                 sx={{
                     cursor: 'pointer',
                     '&:hover': {
                         backgroundColor: hover
                     }
                 }}>
-                <Typography
-                    variant="h4">
-                    {value}
-                </Typography>
-            </Box>
+                <Text text={value} />
+            </Cell>
         );
     };
 
-    const Row = (props) => (
-        <Grid container
-                size={12}
-                spacing={1}
-                justifyContent="center">
-            {props.children}
-        </Grid>
-    );
-
     return (
-        <Grid container
-                size={12}
-                spacing={1}
-                alignItems="center">
-            {[...Array(size)]
-                .map((_, i) => (
-                    <Row key={`row_${i}`}>
-                        {[...Array(size)]
-                            .map((_, j) => (
-                                <Cell
-                                    key={`${i}_${j}`}
-                                    pos={size * i + j}
-                                    value={value[size * i + j]} />
-                            ))}
-                    </Row>
-                ))}
-        </Grid>
+        <GenericGrid
+            Cell={Wrapper}
+            rows={size}
+            cols={size} />
     );
 }
 
-export function TextEditor({handleChange}) {
+export function TextArea({handleChange}) {
     return (
         <TextField
             variant="outlined"

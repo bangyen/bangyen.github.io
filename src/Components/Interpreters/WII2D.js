@@ -1,5 +1,5 @@
-import {move} from '../helper';
-import Grid from './Grid';
+import {move} from '../oldHelpers';
+import GridEditor from './GridEditor';
 import React from 'react';
 
 function outer(obj) {
@@ -161,7 +161,7 @@ export default function WII2D() {
     };
 
     let run = outer(obj);
-    return <Grid
+    return <GridEditor
         name='WII2D'
         start={obj}
         run={run}

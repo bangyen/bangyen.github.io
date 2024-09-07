@@ -1,4 +1,4 @@
-import TextBox from './TextBox';
+import TextEditor from './TextEditor';
 import React from 'react';
 
 function clean(input) {
@@ -87,7 +87,7 @@ export default function StunStep() {
 
     let run = outer(start);
 
-    return <TextBox
+    return <TextEditor
         name='Stun Step'
         start={start}
         run={run}
