@@ -24,10 +24,46 @@ import {
 } from '@mui/icons-material';
 import { Paper } from '@mui/material';
 
-function Arrows({show, setShow}) {
-    const flip
-        = () =>
-            setShow(!show);
+function Controls({velocity}) {
+    const [show, setShow] = useState(false);
+
+    return (
+        <Paper
+            elevation={1}
+            sx={{
+                left: "50%",
+                transform: "translateX(-50%)",
+                position: "absolute",
+                borderRadius: 2,
+                padding: 1,
+                bottom: 50,
+            }}>
+            <Grid
+                container
+                spacing={2}>
+                <HomeButton
+                    hide={show} />
+                <Arrows
+                    show={show}
+                    setShow={setShow}
+                    velocity={velocity} />
+            </Grid>
+        </Paper>
+    );
+}
+
+function Arrows({show, setShow, velocity}) {
+    const flip = useCallback(
+        () => setShow(!show),
+        [show, setShow]);
+
+    const move = useCallback(
+        (value) => {
+            return () => {
+                if (velocity.current + value)
+                    velocity.current = value;
+            };
+        }, [velocity]);
 
     if (!show)
         return (
@@ -46,13 +82,13 @@ function Arrows({show, setShow}) {
                 <TooltipButton
                     title='Up'
                     Icon={KeyboardArrowUpRounded}
-                    onClick={flip} />
+                    onClick={move(-2)} />
             </Grid>
             <Grid>
                 <TooltipButton
                     title='Left'
                     Icon={KeyboardArrowLeftRounded}
-                    onClick={flip} />
+                    onClick={move(-1)} />
                 <TooltipButton
                     title='Close'
                     Icon={CloseRounded}
@@ -60,7 +96,7 @@ function Arrows({show, setShow}) {
                 <TooltipButton
                     title='Right'
                     Icon={KeyboardArrowRightRounded}
-                    onClick={flip} />
+                    onClick={move(1)} />
             </Grid>
             <Grid
                 width='100%'
@@ -69,7 +105,7 @@ function Arrows({show, setShow}) {
                 <TooltipButton
                     title='Down'
                     Icon={KeyboardArrowDownRounded}
-                    onClick={flip} />
+                    onClick={move(2)} />
             </Grid>
         </Grid>
     );
@@ -226,7 +262,6 @@ function moveHandler(position, board, direction) {
 }
 
 export default function Snake() {
-    const [show, setShow] = useState(false);
     const {width, height} = useWindow();
     const {setRepeat} = useTimer(50);
     const setHandler  = useKeys();
@@ -239,16 +274,13 @@ export default function Snake() {
     const [cells, setCells]
         = useState({});
 
-    const size    = 3;
-    const rWidth  = 1;
-    const rHeight = 1;
+    const size = 3;
 
     const {rows, cols} = useMemo(() => 
         convertPixels(
-            size,
-            rHeight, rWidth,
+            3, 1, 1,
             height, width),
-        [height, width, rHeight, rWidth]
+        [height, width]
     );
 
     const direction = useMemo(() => ({
@@ -284,7 +316,7 @@ export default function Snake() {
         setCells(addRandom(
             rows, cols, newCells));
         position.current = newHead;
-    }, [height, width, length]);
+    }, [rows, cols, length]);
 
     useLayoutEffect(() => {
         setRepeat(handleMove);
@@ -329,26 +361,8 @@ export default function Snake() {
                     cols={cols}
                     Wrapper={Wrapper} />
             </Grid>
-            <Paper
-                elevation={1}
-                sx={{
-                    position: "absolute",
-                    bottom: 50,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    borderRadius: 2,
-                    padding: 1,
-                }}>
-                <Grid
-                    container
-                    spacing={2}>
-                    <HomeButton
-                        hide={show} />
-                    <Arrows
-                        show={show}
-                        setShow={setShow} />
-                </Grid>
-            </Paper>
+            <Controls
+                velocity={velocity} />
         </Grid>
     );
 }
