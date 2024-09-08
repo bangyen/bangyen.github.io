@@ -1,7 +1,7 @@
 import Tooltip  from '@mui/material/Tooltip';
 import Grid     from '@mui/material/Grid2';
 import { Link } from 'react-router-dom';
-import { CustomButton, GenericGrid } from '../helpers';
+import { TooltipButton, CustomGrid } from '../helpers';
 
 import {
     Typography,
@@ -113,37 +113,37 @@ function Toolbar({name, functions}) {
         + name.replace(' ', '_');
 
     return [
-        <CustomButton
+        <TooltipButton
             key='Run'
             title='Run'
             onClick={getRunner('run')}
             Icon={PlayArrowRounded} />,
-        <CustomButton
+        <TooltipButton
             key='Stop'
             title='Stop'
             onClick={handleStop}
             Icon={StopRounded} />,
-        <CustomButton
+        <TooltipButton
             key='Previous'
             title='Previous'
             onClick={getRunner('prev')}
             Icon={NavigateBeforeRounded} />,
-        <CustomButton
+        <TooltipButton
             key='Next'
             title='Next'
             onClick={getRunner('next')}
             Icon={NavigateNextRounded} />,
-        <CustomButton
+        <TooltipButton
             key='Fast Forward'
             title='Fast Forward'
             onClick={handleFastForward}
             Icon={LastPageRounded} />,
-        <CustomButton
+        <TooltipButton
             key='Info'
             href={link}
             title='Info'
             Icon={InfoRounded} />,
-        <CustomButton
+        <TooltipButton
             to="/"
             key='Home'
             title='Home'
@@ -302,7 +302,7 @@ export function GridArea({
     };
 
     return (
-        <GenericGrid
+        <CustomGrid
             Cell={Wrapper}
             rows={size}
             cols={size} />

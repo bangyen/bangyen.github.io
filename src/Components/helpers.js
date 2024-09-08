@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Tooltip, IconButton, Box } from "@mui/material";
 import Grid from '@mui/material/Grid2';
 import { Link } from "react-router-dom";
@@ -19,7 +18,7 @@ export function convertPixels(
     return {rows, cols};
 }
 
-export function CustomButton(props) {
+export function TooltipButton(props) {
     const {Icon, title, ...rest} = props;
 
     return (
@@ -38,7 +37,7 @@ export function HomeButton({hide}) {
         return null;
 
     return (
-        <CustomButton
+        <TooltipButton
             to="/"
             key='Home'
             title='Home'
@@ -79,7 +78,7 @@ function Row({spacing, children}) {
     );
 }
 
-export function GenericGrid({
+export function CustomGrid({
         size,
         rows,
         cols,

@@ -18,7 +18,7 @@ import { Link } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 
 import { names } from './Interpreters';
-import { CustomButton } from './helpers';
+import { TooltipButton } from './helpers';
 import { useWindow } from './hooks';
 import { pages } from './';
 
@@ -105,7 +105,7 @@ function MenuButton({children}) {
 
     return (
         <Box>
-            <CustomButton
+            <TooltipButton
                 title='Menu'
                 id='basic-button'
                 Icon={MenuRounded}
@@ -150,7 +150,7 @@ export default function Home() {
                     <Divider variant='middle' />
                     {dropdown('Miscellaneous', pages)}
                 </MenuButton>
-                <CustomButton
+                <TooltipButton
                     href='https://github.com/bangyen'
                     title='GitHub'
                     Icon={GitHub} />
