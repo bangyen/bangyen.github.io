@@ -48,7 +48,10 @@ export function useTimer(delay) {
     return {setRepeat, setSpeed};
 }
 
-export function useKeys(handler) {
+export function useKeys() {
+    const [handler, setHandler]
+        = useState(() => {});
+
     useEffect(() => {
         document.addEventListener(
             'keydown', handler);
@@ -56,5 +59,7 @@ export function useKeys(handler) {
         return () =>
             document.removeEventListener(
                 'keydown', handler);
-    }, []);
+    }, [handler]);
+
+    return setHandler;
 }
