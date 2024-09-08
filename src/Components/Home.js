@@ -11,7 +11,8 @@ import {
     Divider,
     Box,
     Menu,
-    MenuItem
+    MenuItem,
+    Paper
 } from '@mui/material';
 
 import { Link } from 'react-router-dom';
@@ -50,32 +51,43 @@ function getCircles(num, size) {
     const speed  = size / 400;
     const offset = height / 2;
 
+    const offsetPathString
+        = `path("                \
+            M0,        0         \
+            C${left},  ${height} \
+            ${right}, -${height} \
+            ${size},   0         \
+        ")`;
+
+    const animationString
+        = (n) => `
+            ${speed}s
+            linear
+            ${n / 10}s
+            infinite
+            alternate
+            ball
+        `;
+
+    const keyframesObject = {
+        '0%':   {offsetDistance: '0%'},
+        '100%': {offsetDistance: '100%'}
+    };
+
     return (
         <Box sx={{overflow: 'hidden'}}>
             {[...Array(num).keys()].map(n =>
-                <CircleRounded sx={{
-                    offsetPath: `path("      \
-                        M0,        0         \
-                        C${left},  ${height} \
-                        ${right}, -${height} \
-                        ${size},   0         \
-                    ")`,
-                    animation: `
-                        ${speed}s
-                        linear
-                        ${n / 10}s
-                        infinite
-                        alternate
-                        ball
-                    `,
-                    position:  'fixed',
-                    bottom:    offset,
-                    left:      -50,
-                    '@keyframes ball': {
-                        '0%':   {offsetDistance:   '0%'},
-                        '100%': {offsetDistance: '100%'}
-                    },
-                }}/>
+                <CircleRounded
+                    key={n}
+                    sx={{
+                        offsetPath: offsetPathString,
+                        animation: animationString(n),
+                        position:  'fixed',
+                        bottom:    offset,
+                        left:      -50,
+                        '@keyframes ball':
+                            keyframesObject,
+                    }}/>
             )}
         </Box>
     );
@@ -168,11 +180,10 @@ export default function Home() {
                             md: 'h3'
                         }
                     }}>
-                    {'Hey, my name is '}
-                    <Box display='inline'
-                        fontWeight='bold'>
+                    Hey, my name is&nbsp;
+                    <strong>
                         Bangyen
-                    </Box>
+                    </strong>
                     .
                 </Typography>
                 {getCircles(number, size)}
