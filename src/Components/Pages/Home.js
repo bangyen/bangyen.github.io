@@ -1,4 +1,4 @@
-import Grid from       '@mui/material/Grid2';
+import Grid from '@mui/material/Grid2';
 
 import {
     CircleRounded,
@@ -11,8 +11,7 @@ import {
     Divider,
     Box,
     Menu,
-    MenuItem,
-    Paper
+    MenuItem
 } from '@mui/material';
 
 import { Link } from 'react-router-dom';

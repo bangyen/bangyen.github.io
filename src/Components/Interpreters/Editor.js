@@ -27,9 +27,9 @@ import {
 export default function Editor({
         name,
         code,
-        flags,
+        props,
         values,
-        functions,
+        dispatch,
         children
     }) {
     const {
@@ -41,9 +41,8 @@ export default function Editor({
     const {
         tape: tapeFlag,
         out: outFlag,
-        acc: accFlag,
-        link
-    } = flags;
+        reg: accFlag
+    } = props;
 
     return (
         <Grid container
@@ -72,8 +71,7 @@ export default function Editor({
                 </Grid>
                 <Toolbar
                     name={name}
-                    link={link}
-                    functions={functions} />
+                    dispatch={dispatch} />
             </Grid>
             <Grid flex={1}
                     sx={{
@@ -102,13 +100,7 @@ export default function Editor({
     );
 }
 
-function Toolbar({name, functions}) {
-    const {
-        getRunner,
-        handleStop,
-        handleFastForward
-    } = functions;
-
+function Toolbar({name, dispatch}) {
     const link = 'https://esolangs.org/wiki/'
         + name.replace(' ', '_');
 
@@ -116,27 +108,27 @@ function Toolbar({name, functions}) {
         <TooltipButton
             key='Run'
             title='Run'
-            onClick={getRunner('run')}
+            onClick={dispatch('run')}
             Icon={PlayArrowRounded} />,
         <TooltipButton
             key='Stop'
             title='Stop'
-            onClick={handleStop}
+            onClick={dispatch('stop')}
             Icon={StopRounded} />,
         <TooltipButton
             key='Previous'
             title='Previous'
-            onClick={getRunner('prev')}
+            onClick={dispatch('prev')}
             Icon={NavigateBeforeRounded} />,
         <TooltipButton
             key='Next'
             title='Next'
-            onClick={getRunner('next')}
+            onClick={dispatch('next')}
             Icon={NavigateNextRounded} />,
         <TooltipButton
             key='Fast Forward'
             title='Fast Forward'
-            onClick={handleFastForward}
+            onClick={dispatch('fastForward')}
             Icon={LastPageRounded} />,
         <TooltipButton
             key='Info'
@@ -273,13 +265,13 @@ function Scrollable(props) {
 export function GridArea({
         handleChange,
         chooseColor,
-        value,
+        options,
         size
     }) {
     const Wrapper = ({Cell, row, col}) => {
         const pos    = size * row + col;
         const color  = chooseColor(pos);
-        const value  = value[pos];
+        const value  = options[pos];
 
         const text   = `${color}.contrastText`;
         const select = `${color}.light`;

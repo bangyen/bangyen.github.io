@@ -1,175 +1,135 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Editor, {TextArea} from '../Editor';
 import { useTimer } from '../../hooks';
 
-function objectSetter(oldValues, setValues) {
-    return (values) => {
-        setValues({
-            ...oldValues,
-            ...values
-        });
+function timerHandler(state, mutators) {
+    const {setRepeat, setValues} = mutators;
+    const {getter, end}          = state;
+
+    const move = () => {
+        const state = getter(true);
+        setValues(state);
+
+        if (end || state.end)
+            setRepeat(null);
+    };
+
+    return flag => {
+        if (flag) setRepeat(move);
+        else      setRepeat(null);
     };
 }
 
-function fastForwardHandler(
-        change, setRepeat,
-        reset, getState,
-        setValues) {
-    return () => {
-        if (change.current)
-            reset();
+function getSwitch(state, setter) {
+    const {start, end, getter} = state;
 
-        setRepeat(null);
-        let temp;
+    return type => {
+        switch (type) {
+            case 'run':
+                setter(true);
+                break;
+            case 'prev':
+                return getter(false);
+            case 'next':
+                return getter(true);
+            case 'ff':
+                let state;
 
-        do {
-            temp = getState.current();
-        } while (!temp.end);
-
-        setValues(temp);
-    };
-}
-
-function stopHandler(setRepeat, reset) {
-    return () => {
-        setRepeat(null);
-        reset();
-    };
-}
-
-function changeHandler(
-        oldText, clean, change,
-        setState, setCode, setText) {
-    return (event) => {
-        const text = event.target.value;
-
-        if (text !== oldText) {
-            const code = clean(text);
-            change.current = true;
-
-            setState({end: true});
-            setCode(code);
-            setText(text);
+                do {
+                    state = getter(true);
+                } while (!(end || state.end));
+                
+                setter(false);
+                return state;
+            case 'stop':
+                setter(false);
+                break;
+            default:
+                break;
         }
-    };
-}
 
-function getSwitch(
-        change, setRepeat,
-        setTimer, setValues,
-        getState, reset) {
-    return (mode) => {
-        return () => {
-            if (change.current) {
-                reset();
-            }
-
-            if (mode === 'run') {
-                setTimer();
-            } else {
-                setRepeat(null);
-                const flag = mode === 'prev';
-                const state = getState.current(flag);
-                setValues(state);
-            }
-        };
-    };
-}
-
-function runSetter(
-        code, start,
-        run, change,
-        getState, setValues) {
-    return () => {
-        getState.current = run(code);
-        change.current   = false;
-        setValues(start);
-    };
-}
-
-function timerSetter(
-        setRepeat,
-        setValues,
-        getState) {
-    return () => {
-        const move = () => {
-            const state
-                = getState.current();
-            setValues(state);
-
-            if (state.end)
-                setRepeat(null);
-        };
-
-        setRepeat(move);
+        return start;
     };
 }
 
 export default function TextEditor(props) {
-    const {
-        name, start,
-        run,  out,
-        tape, reg,
-        clean
-    } = props;
+    const [text, setText] = useState('');
+    const {setRepeat} = useTimer(200);
+
+    const getState = useRef(() => start);
+    const dispatch = useRef(() => {});
+    const code     = useRef('');
+
+    const { name, start } = props;
+    const initial
+        = {...start, end: true};
 
     const [values, setValues]
-        = useState({...start, end: true});
-    const [code, setCode] = useState('');
-    const [text, setText] = useState('');
+        = useState(initial);
 
-    const {setRepeat} = useTimer(200);
-    const getState    = useRef(() => values);
-    const change      = useRef(true);
+    const handleChange
+        = useCallback(
+            (event) => {
+                const newText
+                    = event.target.value;
 
-    const setState = objectSetter(
-        values, setValues);
-    const setTimer = timerSetter(
-        setRepeat, setValues, getState);
-    const reset    = runSetter(
-        code, start,
-        run, change,
-        getState, setState);
-    const getRunner = getSwitch(
-        change, setRepeat,
-        setTimer, setValues,
-        getState, reset);
-
-    const handleChange = changeHandler(
-        text, clean,
-        change, setState,
-        setCode, setText);
-    const handleStop = stopHandler(
-        setRepeat, reset);
-    const handleFastForward
-        = fastForwardHandler(
-            change, setRepeat,
-            reset, getState,
-            setValues);
+                if (newText !== text)
+                    setText(newText);
+            }, [text, setText]);
 
     useEffect(() => {
         document.title = name 
             + ' Interpreter | Bangyen';
     }, [name]);
 
+
+    useEffect(() => {
+        const {run, clean, start} = props;
+    
+        code.current = clean(text);
+        let change   = true;
+        let end      = true;
+    
+        const getter   = getState.current;
+        const mutators = {setRepeat, setValues};
+        const state    = {start, end, getter};
+    
+        const setter
+            = timerHandler(
+                state, mutators);
+
+        const getNext
+            = getSwitch(
+                state, setter);
+    
+        dispatch.current = type => {
+            if (type === 'run' || change) {
+                change = false;
+    
+                getState.current
+                    = run(code.current);
+            }
+    
+            const state = getNext(type);
+            setValues(state);
+            end = state.end;
+        }
+    }, [text, props, setRepeat]);
+
+
+    const choose  = dispatch.current;
+    const newCode = code.current;
+
     return (
         <Editor
-            code={code}
             name={name}
-            start={start}
+            props={props}
+            code={newCode}
             values={values}
-            flags={{
-                tape: tape,
-                out:  out,
-                acc:  reg
-            }}
-            functions={{
-                getRunner,
-                handleStop,
-                handleFastForward
-            }}>
+            dispatch={choose}>
             <TextArea
-                handleChange={handleChange} />
+                handleChange
+                    ={handleChange} />
         </Editor>
     );
 }
