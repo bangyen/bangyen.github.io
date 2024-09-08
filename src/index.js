@@ -38,7 +38,7 @@ function getRoute(Elem, url) {
 }
 
 
-function App() {
+function Website() {
     return (
         <Router basename='/'>
             <Switch>
@@ -68,7 +68,7 @@ ReactDOM.render(
     <React.StrictMode>
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
-            <App />
+            <Website />
         </ThemeProvider>
     </React.StrictMode>,
     document.getElementById('root')
