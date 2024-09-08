@@ -10,7 +10,7 @@ function timerHandler(state, mutators) {
         const state = getter(true);
         setValues(state);
 
-        if (end || state.end)
+        if (end.current || state.end)
             setRepeat(null);
     };
 
@@ -58,6 +58,7 @@ export default function TextEditor(props) {
 
     const getState = useRef(() => start);
     const dispatch = useRef(() => {});
+    const end      = useRef(true);
     const code     = useRef('');
 
     const { name, start } = props;
@@ -87,8 +88,8 @@ export default function TextEditor(props) {
         const {run, clean, start} = props;
     
         code.current = clean(text);
+        end.current  = true;
         let change   = true;
-        let end      = true;
     
         const getter   = getState.current;
         const mutators = {setRepeat, setValues};
@@ -111,8 +112,8 @@ export default function TextEditor(props) {
             }
     
             const state = getNext(type);
+            end.current = state.end;
             setValues(state);
-            end = state.end;
         }
     }, [text, props, setRepeat]);
 
