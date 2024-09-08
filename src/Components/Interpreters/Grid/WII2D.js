@@ -1,4 +1,4 @@
-import {move} from '../oldHelpers';
+import {move} from '../../oldHelpers';
 import GridEditor from './GridEditor';
 import React from 'react';
 

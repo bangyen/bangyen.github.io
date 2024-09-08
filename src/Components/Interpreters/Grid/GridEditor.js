@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import Editor, { GridArea } from './Editor';
-import { useTimer } from '../hooks';
-import { getDim, move } from '../oldHelpers';
+import Editor, { GridArea } from '../Editor';
+import { useTimer } from '../../hooks';
+import { getDim, move } from '../../oldHelpers';
 
 function objectSetter(oldValues, setValues) {
     return (values) => {

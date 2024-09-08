@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import Editor, {TextArea} from './Editor';
-import { useTimer } from '../hooks';
+import Editor, {TextArea} from '../Editor';
+import { useTimer } from '../../hooks';
 
 function objectSetter(oldValues, setValues) {
     return (values) => {

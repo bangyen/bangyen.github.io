@@ -1,9 +1,9 @@
 import {
     getDim, move
-} from '../oldHelpers';
+} from '../../oldHelpers';
 import React from 'react';
 
-import Editor, {GridArea} from './Editor';
+import Editor, {GridArea} from '../Editor';
 
 export default class GridEditor extends React.Component {
     constructor(props) {

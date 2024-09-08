@@ -13,13 +13,13 @@ import {
     convertPixels,
     CustomGrid,
     Controls
-} from './helpers';
+} from '../helpers';
 
 import {
     useWindow,
     useTimer,
     useKeys
-} from './hooks';
+} from '../hooks';
 
 function modulo(a, b) {
     return (a + b) % b;

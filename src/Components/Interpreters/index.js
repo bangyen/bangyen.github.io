@@ -1,7 +1,7 @@
-export { default as Back } from './Back';
-export { default as Stun_Step } from './StunStep';
-export { default as Suffolk } from './Suffolk';
-export { default as WII2D } from './WII2D';
+export { default as Back } from './Grid/Back';
+export { default as Stun_Step } from './Text/StunStep';
+export { default as Suffolk } from './Text/Suffolk';
+export { default as WII2D } from './Grid/WII2D';
 
 export const names = {
     Back: '/Back',

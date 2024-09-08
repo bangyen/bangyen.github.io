@@ -1,4 +1,4 @@
-import {home} from './oldHelpers';
+import {home} from '../oldHelpers';
 import React from 'react';
 
 export default function Error() {
