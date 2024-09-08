@@ -1,4 +1,5 @@
 import Grid from '@mui/material/Grid2';
+
 import {
     useState,
     useEffect,
@@ -7,109 +8,18 @@ import {
     useMemo,
     useCallback
 } from 'react';
+
 import {
     convertPixels,
     CustomGrid,
-    TooltipButton,
-    HomeButton
+    Controls
 } from './helpers';
-import { useWindow, useTimer, useKeys } from './hooks';
+
 import {
-    GamepadRounded,
-    CloseRounded,
-    KeyboardArrowUpRounded,
-    KeyboardArrowDownRounded,
-    KeyboardArrowLeftRounded,
-    KeyboardArrowRightRounded
-} from '@mui/icons-material';
-import { Paper } from '@mui/material';
-
-function Controls({velocity}) {
-    const [show, setShow] = useState(false);
-
-    return (
-        <Paper
-            elevation={1}
-            sx={{
-                left: "50%",
-                transform: "translateX(-50%)",
-                position: "absolute",
-                borderRadius: 2,
-                padding: 1,
-                bottom: 50,
-            }}>
-            <Grid
-                container
-                spacing={2}>
-                <HomeButton
-                    hide={show} />
-                <Arrows
-                    show={show}
-                    setShow={setShow}
-                    velocity={velocity} />
-            </Grid>
-        </Paper>
-    );
-}
-
-function Arrows({show, setShow, velocity}) {
-    const flip = useCallback(
-        () => setShow(!show),
-        [show, setShow]);
-
-    const move = useCallback(
-        (value) => {
-            return () => {
-                if (velocity.current + value)
-                    velocity.current = value;
-            };
-        }, [velocity]);
-
-    if (!show)
-        return (
-            <TooltipButton
-                title='Controls'
-                Icon={GamepadRounded}
-                onClick={flip} />
-        );
-
-    return (
-        <Grid>
-            <Grid
-                width='100%'
-                display='flex'
-                justifyContent='center'>
-                <TooltipButton
-                    title='Up'
-                    Icon={KeyboardArrowUpRounded}
-                    onClick={move(-2)} />
-            </Grid>
-            <Grid>
-                <TooltipButton
-                    title='Left'
-                    Icon={KeyboardArrowLeftRounded}
-                    onClick={move(-1)} />
-                <TooltipButton
-                    title='Close'
-                    Icon={CloseRounded}
-                    onClick={flip} />
-                <TooltipButton
-                    title='Right'
-                    Icon={KeyboardArrowRightRounded}
-                    onClick={move(1)} />
-            </Grid>
-            <Grid
-                width='100%'
-                display='flex'
-                justifyContent='center'>
-                <TooltipButton
-                    title='Down'
-                    Icon={KeyboardArrowDownRounded}
-                    onClick={move(2)} />
-            </Grid>
-        </Grid>
-    );
-}
+    useWindow,
+    useTimer,
+    useKeys
+} from './hooks';
 
 function modulo(a, b) {
     return (a + b) % b;
