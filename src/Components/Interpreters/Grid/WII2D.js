@@ -74,7 +74,7 @@ function outer(obj) {
             });
         }
 
-        return function(back = false) {
+        return (back) => {
             let state = arr[arr.length - 1];
 
             if (back) {

@@ -18,7 +18,7 @@ function outer(obj) {
         let arr = [obj];
         let num = 0;
 
-        return function (back = false) {
+        return (back) => {
             let state = arr[arr.length - 1];
             let {tape, ptr, end} = state;
             let c = code[num % len];

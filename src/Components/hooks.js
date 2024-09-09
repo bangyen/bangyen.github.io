@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 function getWindow() {
     const {
@@ -31,21 +31,29 @@ export function useWindow() {
 }
 
 export function useTimer(delay) {
-    const [repeat, setRepeat] = useState(null);
-    const [speed, setSpeed]   = useState(delay);
+    const oldRepeat = useRef(() => {});
+    const oldSpeed  = useRef(delay);
+    const timer     = useRef(null);
+
+    const create  = useCallback(
+        ({repeat, speed}) => {
+            repeat ||= oldRepeat.current;
+            speed  ||= oldSpeed.current;
+
+            timer.current
+                = setInterval(
+                    repeat, speed);
+        }, []);
+
+    const destroy = useCallback(() => {
+        clearInterval(timer.current);
+    }, []);
 
     useEffect(() => {
-        let timer;
+        return () => clearInterval(timer.current);
+    }, []);
 
-        if (repeat)
-            timer = setInterval(
-                repeat, speed);
-
-        return () =>
-            clearInterval(timer);
-    }, [repeat, speed]);
-
-    return {setRepeat, setSpeed};
+    return {create, destroy};
 }
 
 export function useKeys() {

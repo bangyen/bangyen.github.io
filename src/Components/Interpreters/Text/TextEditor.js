@@ -1,42 +1,47 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import Editor, {TextArea} from '../Editor';
 import { useTimer } from '../../hooks';
 
 function timerHandler(state, mutators) {
-    const {setRepeat, setValues} = mutators;
-    const {getter, end}          = state;
+    const {setValues, create, destroy}
+        = mutators;
+    const {getState, end} = state;
 
     const move = () => {
-        const state = getter(true);
+        const get   = getState.current;
+        const state = get(false);
         setValues(state);
 
         if (end.current || state.end)
-            setRepeat(null);
+            destroy();
     };
 
     return flag => {
-        if (flag) setRepeat(move);
-        else      setRepeat(null);
+        if (flag)
+            create({repeat: move});
+        else
+            destroy();
     };
 }
 
 function getSwitch(state, setter) {
-    const {start, end, getter} = state;
-
+    const {start, end, getState} = state;
     return type => {
+        const get = getState.current;
+
         switch (type) {
             case 'run':
                 setter(true);
                 break;
             case 'prev':
-                return getter(false);
+                return get(false);
             case 'next':
-                return getter(true);
+                return get(true);
             case 'ff':
                 let state;
 
                 do {
-                    state = getter(true);
+                    state = get(true);
                 } while (!(end || state.end));
                 
                 setter(false);
@@ -53,8 +58,8 @@ function getSwitch(state, setter) {
 }
 
 export default function TextEditor(props) {
-    const [text, setText] = useState('');
-    const {setRepeat} = useTimer(200);
+    const [text, setText]   = useState('');
+    const {create, destroy} = useTimer(200);
 
     const getState = useRef(() => start);
     const dispatch = useRef(() => {});
@@ -74,26 +79,26 @@ export default function TextEditor(props) {
                 const newText
                     = event.target.value;
 
-                if (newText !== text)
-                    setText(newText);
-            }, [text, setText]);
+                setText(newText);
+            }, [setText]);
 
     useEffect(() => {
         document.title = name 
             + ' Interpreter | Bangyen';
     }, [name]);
 
+    useEffect(destroy, [text, destroy]);
 
-    useEffect(() => {
+
+    dispatch.current = useMemo(() => {
         const {run, clean, start} = props;
     
         code.current = clean(text);
         end.current  = true;
         let change   = true;
     
-        const getter   = getState.current;
-        const mutators = {setRepeat, setValues};
-        const state    = {start, end, getter};
+        const mutators = {setValues, create, destroy};
+        const state    = {start, end, getState};
     
         const setter
             = timerHandler(
@@ -103,31 +108,30 @@ export default function TextEditor(props) {
             = getSwitch(
                 state, setter);
     
-        dispatch.current = type => {
-            if (type === 'run' || change) {
-                change = false;
+        return type => {
+            return () => {
+                if (type === 'run' || change) {
+                    change = false;
     
-                getState.current
-                    = run(code.current);
-            }
+                    getState.current
+                        = run(code.current);
+                }
     
-            const state = getNext(type);
-            end.current = state.end;
-            setValues(state);
-        }
-    }, [text, props, setRepeat]);
+                const next  = getNext(type);
+                end.current = next.end;
+                setValues(next);
+            };
+        };
+    }, [text, props, create, destroy]);
 
-
-    const choose  = dispatch.current;
-    const newCode = code.current;
 
     return (
         <Editor
             name={name}
             props={props}
-            code={newCode}
             values={values}
-            dispatch={choose}>
+            code={code.current}
+            dispatch={dispatch.current}>
             <TextArea
                 handleChange
                     ={handleChange} />

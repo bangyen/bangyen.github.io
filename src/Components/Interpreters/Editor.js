@@ -128,7 +128,7 @@ function Toolbar({name, dispatch}) {
         <TooltipButton
             key='Fast Forward'
             title='Fast Forward'
-            onClick={dispatch('fastForward')}
+            onClick={dispatch('ff')}
             Icon={LastPageRounded} />,
         <TooltipButton
             key='Info'
