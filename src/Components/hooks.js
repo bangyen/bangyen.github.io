@@ -43,8 +43,11 @@ function useSize(getSize) {
 }
 
 export function useContainer(container) {
+    const wrapper = () =>
+        getContainer(container);
+
     const {size, setSize}
-        = useSize(getContainer);
+        = useSize(wrapper);
 
     useEffect(() => {
         const newSize
