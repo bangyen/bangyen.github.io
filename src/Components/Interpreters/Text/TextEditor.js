@@ -3,7 +3,7 @@ import Editor, { EditorContext, TextArea } from '../Editor';
 import { useTimer } from '../../hooks';
 
 function timerHandler(state, mutators) {
-    const {setValues, create, destroy}
+    const {setValues, create, clear}
         = mutators;
     const {getState, end} = state;
 
@@ -13,11 +13,11 @@ function timerHandler(state, mutators) {
         setValues(state);
 
         if (end.current || state.end)
-            destroy();
+            clear();
     };
 
     return flag => {
-        destroy();
+        clear();
 
         if (flag)
             create({repeat});
@@ -59,14 +59,14 @@ function getSwitch(state, setter) {
 }
 
 export default function TextEditor(props) {
-    const [text, setText]   = useState('');
-    const {create, destroy} = useTimer(200);
+    const [text, setText] = useState('');
+    const {create, clear} = useTimer(200);
 
     const container = useRef(null);
-    const getState = useRef(() => start);
-    const dispatch = useRef(() => {});
-    const end      = useRef(true);
-    const code     = useRef('');
+    const getState  = useRef(() => start);
+    const dispatch  = useRef(() => {});
+    const end       = useRef(true);
+    const code      = useRef('');
 
     const {
         name,
@@ -96,7 +96,7 @@ export default function TextEditor(props) {
             + ' Interpreter | Bangyen';
     }, [name]);
 
-    useEffect(destroy, [text, destroy]);
+    useEffect(clear, [text, clear]);
 
 
     dispatch.current = useMemo(() => {
@@ -106,7 +106,7 @@ export default function TextEditor(props) {
         end.current  = true;
         let change   = true;
     
-        const mutators = {setValues, create, destroy};
+        const mutators = {setValues, create, clear};
         const state    = {start, end, getState};
     
         const setter
@@ -131,7 +131,7 @@ export default function TextEditor(props) {
                 setValues(next);
             };
         };
-    }, [text, props, create, destroy]);
+    }, [text, props, create, clear]);
 
 
     const context = {

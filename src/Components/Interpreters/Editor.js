@@ -151,10 +151,10 @@ function Program() {
     }
 
 function Tape() {
-    const { tape, ptr, tapeflag }
+    const { tape, ptr, tapeFlag }
         = useContext(EditorContext);
 
-    if (!tapeflag)
+    if (!tapeFlag)
         return (null);
 
     return (
@@ -167,10 +167,10 @@ function Tape() {
 }
 
 function Output() {
-    const { out, outflag }
+    const { out, outFlag }
         = useContext(EditorContext);
 
-    if (!outflag)
+    if (!outFlag)
         return (null);
 
     return (
@@ -185,10 +185,10 @@ function Output() {
 }
 
 function Register() {
-    const { acc, accflag }
+    const { acc, accFlag }
         = useContext(EditorContext);
 
-    if (!accflag)
+    if (!accFlag)
         return (null);
 
     return (
