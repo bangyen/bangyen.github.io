@@ -1,177 +1,96 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import Editor, { GridArea } from '../Editor';
-import { useTimer } from '../../hooks';
-import { getDim, move } from '../../oldHelpers';
+import { useWindow, useTimer } from '../../hooks';
+import { convertPixels } from '../../helpers';
 
-function objectSetter(oldValues, setValues) {
-    return (values) => {
-        setValues({
-            ...oldValues,
-            ...values
-        });
+function timerHandler(state, mutators) {
+    const {setValues, create, destroy}
+        = mutators;
+    const {getState, end} = state;
+
+    const repeat = () => {
+        const get   = getState.current;
+        const state = get(false);
+        setValues(state);
+
+        if (end.current || state.end)
+            destroy();
+    };
+
+    return flag => {
+        destroy();
+
+        if (flag)
+            create({repeat});
     };
 }
 
-function fastForwardHandler(
-        change, setRepeat,
-        reset, getState,
-        setValues) {
-    return () => {
-        if (change.current)
-            reset();
+function getSwitch(state, setter) {
+    const {start, getState} = state;
+    return type => {
+        const get = getState.current;
 
-        setRepeat(null);
-        let temp;
+        switch (type) {
+            case 'run':
+                setter(true);
+                return start;
+            case 'prev':
+                return get(true);
+            case 'next':
+                return get(false);
+            case 'ff':
+                setter(false);
+                let state;
 
-        do {
-            temp = getState.current();
-        } while (!temp.end);
+                do {
+                    state = get(false);
+                } while (!state.end);
+                
+                return state;
+            case 'stop':
+                setter(false);
+                break;
+            default:
+                break;
+        }
 
-        setValues(temp);
-    };
-}
-
-function stopHandler(setRepeat, reset) {
-    return () => {
-        setRepeat(null);
-        reset();
-    };
-}
-
-function getSwitch(
-        change, setRepeat,
-        setTimer, setValues,
-        getState, reset) {
-    return (mode) => {
-        return () => {
-            if (change.current) {
-                reset();
-            }
-
-            if (mode === 'run') {
-                setTimer();
-            } else {
-                setRepeat(null);
-                const flag = mode === 'prev';
-                const state = getState.current(flag);
-                setValues(state);
-            }
-        };
-    };
-}
-
-function runSetter(
-        grid, size, start,
-        run, change,
-        getState, setValues) {
-    return () => {
-        getState.current = run(grid, size);
-        change.current   = false;
-        setValues(start);
-    };
-}
-
-function timerSetter(
-        setRepeat,
-        setValues,
-        getState) {
-    return () => {
-        const move = () => {
-            const state
-                = getState.current();
-            setValues(state);
-
-            if (state.end)
-                setRepeat(null);
-        };
-
-        setRepeat(move);
-    };
-}
-
-function changeColorHandler(setSelect) {
-    return (pos) => {
-        setSelect(prevSelect => prevSelect === pos ? null : pos);
-    };
-}
-
-function chooseColorHandler(select, pos, breaks) {
-    return (cell) => {
-        if (cell === select) return 'primary';
-        if (cell === pos) return 'info';
-        if (breaks.includes(cell)) return 'warning';
-        return 'secondary';
+        return prev => prev;
     };
 }
 
 export default function GridEditor(props) {
-    const {
-        clean, tape,
-        name,  link,
-        start, run,
-        out,   acc,
-    } = props;
+    const { name, start } = props;
+    const [values, setValues] = useState(start);
+    const {width, height} = useWindow();
+    const size = 5;
+    const rHeight = 0.6;
+    const rWidth  = 0.8;
 
-    const [values, setValues] = useState({...start});
-    const [size, setSize] = useState(5);
-    const [grid, setGrid] = useState(' '.repeat(size * size));
-    const [select, setSelect] = useState(null);
-    const [pos, setPos] = useState(null);
-    const [breaks, setBreaks] = useState([]);
-    const [text, setText] = useState(false);
-    const [edit, setEdit] = useState(false);
-    const [stack, setStack] = useState(getDim());
+    const {rows, cols} = useMemo(() => 
+        convertPixels(
+            size, rHeight, rWidth,
+            height, width),
+        [height, width]
+    );
 
-    const { setRepeat } = useTimer(200);
-    const getState = useRef(() => values);
-    const change = useRef(true);
 
-    const setState = objectSetter(values, setValues);
-    const setTimer = timerSetter(setRepeat, setValues, getState);
-    const reset = runSetter(grid, size, start, run, change, getState, setState);
-    const getRunner = getSwitch(change, setRepeat, setTimer, setValues, getState, reset);
+    const dispatch = useRef(() => () => {});
 
-    const handleStop = stopHandler(setRepeat, reset);
-    const handleFastForward = fastForwardHandler(change, setRepeat, reset, getState, setValues);
-    const changeColor = changeColorHandler(setSelect);
-    const chooseColor = chooseColorHandler(select, pos, breaks);
-
-    useEffect(() => {
-        document.title = name + ' Interpreter | Bangyen';
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [name]);
-
-    const handleResize = () => {
-        setStack(getDim());
-    };
-
-    // TODO: Implement changeText, clean, and changeSize functions
+    const options = ' ' * size * size;
 
     return (
         <Editor
-            code={grid}
             name={name}
-            start={start}
+            props={props}
             values={values}
-            flags={{
-                tape: tape,
-                out: out,
-                acc: acc
-            }}
-            functions={{
-                getRunner,
-                handleStop,
-                handleFastForward
-            }}>
+            dispatch={dispatch.current}>
             <GridArea
-                value={grid}
                 size={size}
-                handleChange={changeColor}
-                chooseColor={chooseColor} />
+                rows={rows}
+                cols={cols}
+                options={options}
+                handleChange={() => {}}
+                chooseColor={() => 'secondary'} />
         </Editor>
     );
 }

@@ -153,17 +153,18 @@ function outer(obj) {
 }
 
 export default function WII2D() {
-    let obj = {
+    let start = {
         pos: null,
         end: false,
         out: '',
         acc: 0
     };
 
-    let run = outer(obj);
+    const run = outer(start);
+
     return <GridEditor
         name='WII2D'
-        start={obj}
+        start={start}
         run={run}
         out={true}
         reg={true} />;

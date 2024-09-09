@@ -94,17 +94,18 @@ function outer(obj) {
 }
 
 export default function Back() {
-    let obj = {
+    let start = {
         pos: 0,
         end: false,
         tape: [0],
         cell: 0
     };
 
-    let run = outer(obj);
+    const run = outer(start);
+
     return <GridEditor
         name='Back'
-        start={obj}
+        start={start}
         run={run}
         tape={true} />;
 }

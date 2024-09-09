@@ -7,7 +7,7 @@ function timerHandler(state, mutators) {
         = mutators;
     const {getState, end} = state;
 
-    const move = () => {
+    const repeat = () => {
         const get   = getState.current;
         const state = get(false);
         setValues(state);
@@ -17,34 +17,34 @@ function timerHandler(state, mutators) {
     };
 
     return flag => {
+        destroy();
+
         if (flag)
-            create({repeat: move});
-        else
-            destroy();
+            create({repeat});
     };
 }
 
 function getSwitch(state, setter) {
-    const {start, end, getState} = state;
+    const {start, getState} = state;
     return type => {
         const get = getState.current;
 
         switch (type) {
             case 'run':
                 setter(true);
-                break;
+                return start;
             case 'prev':
-                return get(false);
-            case 'next':
                 return get(true);
+            case 'next':
+                return get(false);
             case 'ff':
+                setter(false);
                 let state;
 
                 do {
-                    state = get(true);
-                } while (!(end || state.end));
+                    state = get(false);
+                } while (!state.end);
                 
-                setter(false);
                 return state;
             case 'stop':
                 setter(false);
@@ -53,7 +53,7 @@ function getSwitch(state, setter) {
                 break;
         }
 
-        return start;
+        return prev => prev;
     };
 }
 

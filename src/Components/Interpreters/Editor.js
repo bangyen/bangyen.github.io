@@ -266,7 +266,9 @@ export function GridArea({
         handleChange,
         chooseColor,
         options,
-        size
+        size,
+        rows,
+        cols
     }) {
     const Wrapper = ({Cell, row, col}) => {
         const pos    = size * row + col;
@@ -295,9 +297,10 @@ export function GridArea({
 
     return (
         <CustomGrid
-            Cell={Wrapper}
-            rows={size}
-            cols={size} />
+            Wrapper={Wrapper}
+            size={size}
+            rows={rows}
+            cols={cols} />
     );
 }
 
