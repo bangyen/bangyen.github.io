@@ -9,21 +9,16 @@ function getWindow() {
     return {width, height};
 }
 
-function containerHandler(container) {
-    container ||= {};
-
-    return () => {
-        const {current} = container;
-
-        if (current) {
-            return {
-                width: current.offsetWidth,
-                height: current.offsetHeight
-            };
-        }
-
+function getContainer(container) {
+    if (!container || !container.current)
         return getWindow();
-    };
+
+    const {
+        offsetHeight: height,
+        offsetWidth:  width
+    } = container.current;
+
+    return {width, height};
 }
 
 function useSize(getSize) {
@@ -48,15 +43,16 @@ function useSize(getSize) {
 }
 
 export function useContainer(container) {
-    const getContainer
-        = containerHandler(container);
-
     const {size, setSize}
         = useSize(getContainer);
 
     useEffect(() => {
-        setSize(getContainer());
-    }, [getContainer, setSize]);
+        const newSize
+            = getContainer(
+                container);
+
+        setSize(newSize);
+    }, [container, setSize]);
 
     return size;
 }
