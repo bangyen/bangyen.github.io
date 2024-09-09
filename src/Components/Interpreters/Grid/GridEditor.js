@@ -60,34 +60,24 @@ function getSwitch(state, setter) {
 
 export default function GridEditor(props) {
     const { name, start } = props;
-    const [values, setValues] = useState(start);
-    const {width, height} = useWindow();
-    const size = 5;
-    const rHeight = 0.6;
-    const rWidth  = 0.8;
-
-    const {rows, cols} = useMemo(() => 
-        convertPixels(
-            size, rHeight, rWidth,
-            height, width),
-        [height, width]
-    );
-
+    const [values, setValues]
+        = useState(start);
+    const size = 6;
 
     const dispatch = useRef(() => () => {});
-
     const options = ' ' * size * size;
+    const container = useRef(null);
 
     return (
         <Editor
+            container={container}
             name={name}
             props={props}
             values={values}
             dispatch={dispatch.current}>
             <GridArea
+                container={container}
                 size={size}
-                rows={rows}
-                cols={cols}
                 options={options}
                 handleChange={() => {}}
                 chooseColor={() => 'secondary'} />

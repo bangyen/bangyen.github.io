@@ -17,12 +17,11 @@ function getSpace(size) {
 }
 
 export function convertPixels(
-        size, height, width,
-        pHeight, pWidth) {
+        size, height, width) {
     const space = getSpace(size);
     const pixel = 16 * (size + space);
-    const rows  = Math.floor(pHeight * height / pixel);
-    const cols  = Math.floor(pWidth  * width  / pixel);
+    const rows  = Math.floor(height / pixel);
+    const cols  = Math.floor(width  / pixel);
 
     return {rows, cols};
 }

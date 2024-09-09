@@ -9,13 +9,30 @@ function getWindow() {
     return {width, height};
 }
 
-export function useWindow() {
+function containerHandler(container) {
+    container ||= {};
+
+    return () => {
+        const {current} = container;
+
+        if (current) {
+            return {
+                width: current.offsetWidth,
+                height: current.offsetHeight
+            };
+        }
+
+        return getWindow();
+    };
+}
+
+function useSize(getSize) {
     const [size, setSize]
-        = useState(getWindow());
+        = useState(getSize());
 
     useEffect(() => {
         function handleResize() {
-            setSize(getWindow());
+            setSize(getSize());
         }
 
         window.addEventListener(
@@ -25,7 +42,28 @@ export function useWindow() {
         return () => window.removeEventListener(
             'resize', handleResize
         );
-    }, []);
+    }, [getSize]);
+
+    return {size, setSize};
+}
+
+export function useContainer(container) {
+    const getContainer
+        = containerHandler(container);
+
+    const {size, setSize}
+        = useSize(getContainer);
+
+    useEffect(() => {
+        setSize(getContainer());
+    }, [container]);
+
+    return size;
+}
+
+export function useWindow() {
+    const {size}
+        = useSize(getWindow);
 
     return size;
 }

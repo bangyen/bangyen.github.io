@@ -1,7 +1,8 @@
 import Tooltip  from '@mui/material/Tooltip';
 import Grid     from '@mui/material/Grid2';
 import { Link } from 'react-router-dom';
-import { TooltipButton, CustomGrid } from '../helpers';
+import { convertPixels, TooltipButton, CustomGrid } from '../helpers';
+import { useContainer } from '../hooks';
 
 import {
     Typography,
@@ -24,13 +25,28 @@ import {
     // SquareRounded
 } from '@mui/icons-material';
 
+import React, {
+    useLayoutEffect,
+    useEffect,
+    useMemo,
+    forwardRef,
+    useRef,
+    useCallback,
+    useState,
+    createContext,
+    useContext
+} from 'react';
+
+export const ContainerContext = createContext(null);
+
 export default function Editor({
         name,
         code,
         props,
         values,
         dispatch,
-        children
+        children,
+        container
     }) {
     const {
         tape,
@@ -73,16 +89,20 @@ export default function Editor({
                     name={name}
                     dispatch={dispatch} />
             </Grid>
-            <Grid flex={1}
-                    sx={{
-                        overflowY: 'auto',
-                    }}
-                    display="flex"
-                    paddingTop="2vh"
-                    paddingBottom="2vh"
-                    alignItems="center">
-                {children}
-            </Grid>
+    <Grid
+        flex={1}
+        ref={container}
+        sx={{
+            overflowY: 'auto',
+        }}
+        display="flex"
+        paddingTop="2vh"
+        paddingBottom="2vh"
+        alignItems="center"
+        {...props}
+    >
+        {children}
+    </Grid>
             <Program
                 code={code}
                 ind={ind} />
@@ -267,11 +287,21 @@ export function GridArea({
         chooseColor,
         options,
         size,
-        rows,
-        cols
+        container
     }) {
+    const {height, width}
+        = useContainer(container);
+
+    const a = height * 0.8;
+    const b = width * 0.9;
+    const {rows, cols} = useMemo(() => 
+        convertPixels(
+            size, a, b),
+        [a, b]
+    );
+
     const Wrapper = ({Cell, row, col}) => {
-        const pos    = size * row + col;
+        const pos    = cols * row + col;
         const color  = chooseColor(pos);
         const value  = options[pos];
 
