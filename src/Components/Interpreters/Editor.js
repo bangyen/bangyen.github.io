@@ -268,15 +268,16 @@ export function GridArea({
     const { size, container }
         = useContext(EditorContext);
 
-    const {height, width}
+    let {height, width}
         = useContainer(container);
 
-    const a = height * 0.8;
-    const b = width * 0.9;
+    height *= 0.8;
+    width  *= 0.9;
+
     const {rows, cols} = useMemo(() => 
         convertPixels(
-            size, a, b),
-        [a, b]
+            size, height, width),
+        [size, height, width]
     );
 
     const Wrapper = ({Cell, row, col}) => {

@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import Editor, { EditorContext, TextArea } from '../Editor';
 import { useTimer } from '../../hooks';
 
@@ -26,6 +26,7 @@ function timerHandler(state, mutators) {
 
 function getSwitch(state, setter) {
     const {start, getState} = state;
+
     return type => {
         const get = getState.current;
 
@@ -136,6 +137,7 @@ export default function TextEditor(props) {
     const context = {
         name,
         ...values,
+        handleChange,
         dispatch: dispatch.current,
         code:     code.current,
         tapeFlag: tape,

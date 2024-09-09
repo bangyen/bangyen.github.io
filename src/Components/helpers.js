@@ -123,7 +123,7 @@ export function CustomGrid({
     );
 }
 
-export function Controls({velocity}) {
+export function Controls({handler}) {
     const [show, setShow] = useState(false);
 
     return (
@@ -145,24 +145,16 @@ export function Controls({velocity}) {
                 <Arrows
                     show={show}
                     setShow={setShow}
-                    velocity={velocity} />
+                    handler={handler} />
             </Grid>
         </Paper>
     );
 }
 
-function Arrows({show, setShow, velocity}) {
+function Arrows({show, setShow, handler}) {
     const flip = useCallback(
         () => setShow(!show),
         [show, setShow]);
-
-    const move = useCallback(
-        (value) => {
-            return () => {
-                if (velocity.current + value)
-                    velocity.current = value;
-            };
-        }, [velocity]);
 
     if (!show)
         return (
@@ -181,13 +173,13 @@ function Arrows({show, setShow, velocity}) {
                 <TooltipButton
                     title='Up'
                     Icon={KeyboardArrowUpRounded}
-                    onClick={move(-2)} />
+                    onClick={handler('up')} />
             </Grid>
             <Grid>
                 <TooltipButton
                     title='Left'
                     Icon={KeyboardArrowLeftRounded}
-                    onClick={move(-1)} />
+                    onClick={handler('left')} />
                 <TooltipButton
                     title='Close'
                     Icon={CloseRounded}
@@ -195,7 +187,7 @@ function Arrows({show, setShow, velocity}) {
                 <TooltipButton
                     title='Right'
                     Icon={KeyboardArrowRightRounded}
-                    onClick={move(1)} />
+                    onClick={handler('right')} />
             </Grid>
             <Grid
                 width='100%'
@@ -204,7 +196,7 @@ function Arrows({show, setShow, velocity}) {
                 <TooltipButton
                     title='Down'
                     Icon={KeyboardArrowDownRounded}
-                    onClick={move(2)} />
+                    onClick={handler('down')} />
             </Grid>
         </Grid>
     );

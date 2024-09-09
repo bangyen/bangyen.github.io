@@ -1,258 +1,265 @@
 import Grid from '@mui/material/Grid2';
 
-import {
-    useState,
-    useEffect,
-    useLayoutEffect,
-    useRef,
-    useMemo,
-    useCallback
-} from 'react';
-
-import {
-    convertPixels,
-    CustomGrid,
-    Controls
-} from '../helpers';
-
-import {
-    useWindow,
-    useTimer,
-    useKeys
-} from '../hooks';
-
-function modulo(a, b) {
-    return (a + b) % b;
-}
+import { useWindow, useTimer, useKeys } from '../hooks';
+import { useMemo, useCallback, useRef, useReducer, useEffect } from 'react';
+import { CustomGrid, Controls, convertPixels } from '../helpers';
 
 function getRandom(max) {
     return Math.floor(
         Math.random() * max);
 }
 
-function addRandom(
-        rows, cols, exclude) {
-    const max = rows * cols;
+function addNext(max, exclude) {
     let pos = getRandom(max);
 
     while (pos in exclude)
         if (++pos >= max)
             pos = 0;
 
-    return {...exclude, [pos]: -1};
+    return {
+        ...exclude,
+        [pos]: -1
+    };
 }
 
-function changeAll(cells, change) {
-    const newCells = {};
+function mapBoard(board, change) {
+    const newBoard = {};
 
-    for (const cell in cells) {
-        const value = cells[cell];
+    for (const cell in board) {
+        const value = board[cell];
 
         if (value + change > 0)
-            newCells[cell]
-                = value + change;
+            newBoard[cell] = value + change;
         else if (value < 0)
-            newCells[cell] = value;
+            newBoard[cell] = value;
     }
 
-    return newCells;
+    return newBoard;
 }
 
-function velocityHandler(direction) {
-    const {
-        velocity,
-        buffer,
-        move
-    } = direction;
+function handleResize(state, rows, cols) {
+    const max  = rows * cols;
+    const head = getRandom(max);
+    let   next = getRandom(max);
 
-    return (event) => {
-        let change;
+    if (head === next)
+        next = ++next % max;
 
-        if (!event)
-            return;
-
-        switch (event.key.toLowerCase()) {
-            case 'arrowup':
-            case 'w':
-                change = -2;
-                break;
-            case 'arrowdown':
-            case 's':
-                change = 2;
-                break;
-            case 'arrowleft':
-            case 'a':
-                change = -1;
-                break;
-            case 'arrowright':
-            case 'd':
-                change = 1;
-                break;
-            default:
-                return;
-        }
-
-        if (velocity.current + change) {
-            if (move.current) {
-                velocity.current = change;
-                move.current     = false;
-            } else {
-                buffer.current = change;
-            }
+    return {
+        ...state,
+        rows,
+        cols,
+        head,
+        board: {
+            [head]: state.length,
+            [next]: -1
         }
     };
 }
 
-function moveHandler(position, board, direction) {
-    const {
-        rows,   cols,
-        length, cells,
-        setCells
-    } = board;
-    const {velocity, buffer, move} = direction;
+function reduceBoard(state, velocity) {
+    let {
+        board, length,
+        head, rows, cols
+    } = state;
 
-    return () => {
-        let newCells = changeAll(cells, -1);
-        let head     = position.current;
-        let change   = velocity.current;
+    const jump = cols - 1;
+    const max  = rows * cols;
 
-        const max  = rows * cols;
-        const size = length.current;
-        const next = buffer.current;
+    switch (velocity) {
+        case 2:
+            head += cols;
+            break;
+        case -2:
+            head -= cols;
+            break;
+        case 1:
+            if (head % cols === jump)
+                head -= jump;
+            else
+                head += 1;
+            break;
+        case -1:
+            if (head % cols === 0)
+                head += jump;
+            else
+                head -= 1;
+            break;
+        default:
+            break;
+    }
 
-        if (change % 2 === 0) {
-            const sign
-                = change > 0 ? 1 : -1;
-            change = sign * cols;
-        }
+    board = mapBoard(board, -1);
+    head  = (head + max) % max;
 
-        if (change % cols) {
-            const mod = head % cols;
-            const col = mod + change;
-            const sum = modulo(col, cols)
-                + head - mod;
+    if (head in board) {
+        const value = board[head];
+        board[head] = length;
 
-            head = sum;
+        if (value > 0) {
+            board = mapBoard(board, -value);
         } else {
-            const sum = head + change;
-            head = modulo(sum, max);
+            board = mapBoard(board, 1);
+            board = addNext(max, board);
+            console.log(board);
         }
 
-        if (head in newCells) {
-            if (newCells[head] > 0) {
-                const value = newCells[head];
-                newCells[head] = size;
+        length = board[head];
+    } else {
+        board[head] = length;
+    }
 
-                newCells
-                    = changeAll(
-                        newCells, -value);
-            } else {
-                newCells[head] = size;
-                newCells = changeAll(newCells, 1);
+    return {
+        ...state,
+        length,
+        board,
+        head
+    };
+}
 
-                newCells
-                    = addRandom(
-                        rows, cols, newCells);
-            }
+function handleAction(state, action) {
+    const { type, payload } = action;
 
-            length.current = newCells[head];
+    if (action.type === 'resize') {
+        const { rows, cols } = payload;
+        return handleResize(
+            state, rows, cols);
+    }
+
+    if (type !== 'move')
+        return state;
+
+    let { velocity, buffer }
+        = payload.current;
+
+    if (buffer) {
+        velocity = buffer;
+        buffer   = null;
+    }
+
+    payload.current = {
+        move: !buffer,
+        velocity,
+        buffer
+    };
+
+    return reduceBoard(
+        state, velocity);
+}
+
+function handleDirection(action, event) {
+    let { velocity, buffer, move }
+        = action.current;
+
+    let change;
+
+    switch (event.toLowerCase()) {
+        case 'arrowup':
+        case 'w':
+            change = -2;
+            break;
+        case 'arrowdown':
+        case 's':
+            change = 2;
+            break;
+        case 'arrowleft':
+        case 'a':
+            change = -1;
+            break;
+        case 'arrowright':
+        case 'd':
+            change = 1;
+            break;
+        default:
+            return;
+    }
+
+    if (velocity + change) {
+        if (move) {
+            velocity = change;
+            move     = false;
         } else {
-            newCells[head] = size;
+            buffer   = change;
         }
+    }
 
-        if (next) {
-            velocity.current = next;
-            buffer.current   = null;
-        }
-
-        position.current = head;
-        move.current     = !next;
-        setCells(newCells);
+    action.current = {
+        velocity,
+        buffer,
+        move
     };
 }
 
 export default function Snake() {
-    const { width, height } = useWindow();
-    const { create } = useTimer(50);
-    const setHandler = useKeys();
+    const action = useRef({
+        velocity: 1,
+        buffer: null,
+        move: true
+    });
 
-    const length   = useRef(3);
-    const move     = useRef(true);
-    const buffer   = useRef(null);
-    const position = useRef(0);
-    const velocity = useRef(1);
-    const [cells, setCells]
-        = useState({});
+    const { create: createTimer } = useTimer(100);
+    const { create: createKeys  } = useKeys();
 
-    const size = 3;
+    const { height, width }
+        = useWindow();
+    const length = 3;
+    const size   = 3;
 
-    const {rows, cols} = useMemo(() => 
-        convertPixels(
-            3, 1, 1,
-            height, width),
-        [height, width]
-    );
+    const { rows, cols } = useMemo(
+        () => convertPixels(
+            size, height, width),
+        [size, height, width]);
 
-    const direction = useMemo(() => ({
-        velocity, buffer, move
-    }), []);
-    const board = useMemo(() => ({
-        rows,   cols,
-        length, cells,
-        setCells
-    }), [rows, cols, length, cells]);
+    const [state, dispatch]
+        = useReducer(
+            handleAction,
+            handleResize(
+                {length},
+                rows, cols));
 
-    const handleVelocity = useCallback(
-        () => velocityHandler(direction),
-        [direction]
-    );
-    const handleMove = useCallback(
-        () => moveHandler(
-            position, board, direction),
-        [position, board, direction]
-    );
+    const controlHandler
+        = useCallback(
+            event => {
+                const key = 'arrow' + event;
+                handleDirection(action, key);
+            }, [action]);
 
-    useEffect(() => {
-        document.title = 'Snake | Bangyen';
-    }, []);
+    const Wrapper = useCallback(
+        ({Cell, row, col}) => {
+            const index = row * cols + col;
+            const board = state.board;
+            let color   = 'inherit';
 
-    useEffect(() => {
-        const total   = rows * cols;
-        const newHead = getRandom(total);
-        const newCells
-            = {[newHead]:
-                length.current};
+            if (index in board) {
+                if (board[index] > 0)
+                    color = 'secondary.light';
+                else
+                    color = 'primary.light';
+            }
 
-        setCells(addRandom(
-            rows, cols, newCells));
-        position.current = newHead;
-    }, [rows, cols, length]);
-
-    useLayoutEffect(() => {
-        create(handleMove);
-    }, [create, handleMove]);
+            return <Cell backgroundColor={color} />;
+        }, [state, cols]);
 
     useEffect(() => {
-        setHandler(handleVelocity);
-    }, [setHandler, handleVelocity]);
+        const wrapDispatch
+            = () => dispatch({
+                type: 'move',
+                payload: action});
 
-    const Wrapper = ({Cell, row, col}) => {
-        const index = row * cols + col;
-        let color = 'inherit';
+        const wrapDirection
+            = event =>
+                handleDirection(
+                    action, event.key);
 
-        if (index in cells) {
-            if (cells[index] > 0)
-                color = 'secondary.light';
-            else
-                color = 'primary.light';
-        }
+        createTimer({repeat: wrapDispatch});
+        createKeys(wrapDirection);
+    }, [createTimer, createKeys]);
 
-        return (
-            <Cell
-                size={size}
-                backgroundColor={color} />
-        );
-    };
+    useEffect(() => {
+        dispatch({
+            type: 'resize',
+            payload: {rows, cols}});
+    }, [rows, cols]);
 
     return (
         <Grid
@@ -272,7 +279,7 @@ export default function Snake() {
                     Wrapper={Wrapper} />
             </Grid>
             <Controls
-                velocity={velocity} />
+                handler={controlHandler} />
         </Grid>
     );
 }

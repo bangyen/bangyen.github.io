@@ -56,7 +56,7 @@ export function useContainer(container) {
 
     useEffect(() => {
         setSize(getContainer());
-    }, [container]);
+    }, [getContainer, setSize]);
 
     return size;
 }
@@ -69,43 +69,58 @@ export function useWindow() {
 }
 
 export function useTimer(delay) {
-    const oldRepeat = useRef(() => {});
-    const oldSpeed  = useRef(delay);
-    const timer     = useRef(null);
+    const repeat = useRef(null);
+    const timer  = useRef(null);
+    const speed  = useRef(delay);
 
-    const create  = useCallback(
-        ({repeat, speed}) => {
-            repeat ||= oldRepeat.current;
-            speed  ||= oldSpeed.current;
+    const create = useCallback(
+        ({repeat: newRepeat, speed: newSpeed}) => {
+            repeat.current = newRepeat || repeat.current;
+            speed.current  = newSpeed  || speed.current;
 
             timer.current
                 = setInterval(
-                    repeat, speed);
+                    repeat.current,
+                    speed.current);
         }, []);
 
-    const destroy = useCallback(() => {
+    const clear  = useCallback(() => {
         clearInterval(timer.current);
     }, []);
 
     useEffect(() => {
-        return () => clearInterval(timer.current);
+        return () =>
+            clearInterval(
+                timer.current);
     }, []);
 
-    return {create, destroy};
+    return {create, clear};
 }
 
 export function useKeys() {
-    const [handler, setHandler]
-        = useState(() => {});
+    const oldHandler = useRef(null);
 
-    useEffect(() => {
-        document.addEventListener(
-            'keydown', handler);
+    const create = useCallback(
+        handler => {
+            oldHandler.current = handler;
 
-        return () =>
+            document.addEventListener(
+                'keydown', handler);
+        }, []);
+
+    const clear  = useCallback(
+        handler => {
+            handler ||= oldHandler.current;
+
             document.removeEventListener(
                 'keydown', handler);
-    }, [handler]);
+        }, []);
 
-    return setHandler;
+    useEffect(() => {
+        return () =>
+            document.removeEventListener(
+                'keydown', oldHandler.current);
+    }, []);
+
+    return {create, clear};
 }

@@ -79,7 +79,8 @@ export default function GridEditor(props) {
     };
 
     return (
-        <EditorContext.Provider value={context}>
+        <EditorContext.Provider
+                value={context}>
             <Editor>
                 <GridArea
                     options={options}
