@@ -1,7 +1,5 @@
-import { useState, useRef, useMemo } from 'react';
-import Editor, { GridArea } from '../Editor';
-import { useWindow, useTimer } from '../../hooks';
-import { convertPixels } from '../../helpers';
+import { useState, useRef } from 'react';
+import Editor, { EditorContext, GridArea } from '../Editor';
 
 function timerHandler(state, mutators) {
     const {setValues, create, destroy}
@@ -59,7 +57,7 @@ function getSwitch(state, setter) {
 }
 
 export default function GridEditor(props) {
-    const { name, start } = props;
+    const { name, start, tape, out, reg } = props;
     const [values, setValues]
         = useState(start);
     const size = 6;
@@ -68,19 +66,26 @@ export default function GridEditor(props) {
     const options = ' ' * size * size;
     const container = useRef(null);
 
+    const context = {
+        name,
+        size,
+        ...values,
+        dispatch:
+            dispatch.current,
+        tapeFlag: tape,
+        outFlag:  out,
+        accFlag:  reg,
+        container
+    };
+
     return (
-        <Editor
-            container={container}
-            name={name}
-            props={props}
-            values={values}
-            dispatch={dispatch.current}>
-            <GridArea
-                container={container}
-                size={size}
-                options={options}
-                handleChange={() => {}}
-                chooseColor={() => 'secondary'} />
-        </Editor>
+        <EditorContext.Provider value={context}>
+            <Editor>
+                <GridArea
+                    options={options}
+                    handleChange={() => {}}
+                    chooseColor={() => 'secondary'} />
+            </Editor>
+        </EditorContext.Provider>
     );
 }

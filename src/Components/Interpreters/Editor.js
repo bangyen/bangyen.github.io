@@ -26,39 +26,16 @@ import {
 } from '@mui/icons-material';
 
 import React, {
-    useLayoutEffect,
-    useEffect,
     useMemo,
-    forwardRef,
-    useRef,
-    useCallback,
-    useState,
     createContext,
     useContext
 } from 'react';
 
-export const ContainerContext = createContext(null);
+export const EditorContext = createContext();
 
-export default function Editor({
-        name,
-        code,
-        props,
-        values,
-        dispatch,
-        children,
-        container
-    }) {
-    const {
-        tape,
-        ind, ptr,
-        out, acc
-    } = values;
-
-    const {
-        tape: tapeFlag,
-        out: outFlag,
-        reg: accFlag
-    } = props;
+export default function Editor({children}) {
+    const { name, container }
+        = useContext(EditorContext);
 
     return (
         <Grid container
@@ -85,42 +62,32 @@ export default function Editor({
                         {name}
                     </Typography>
                 </Grid>
-                <Toolbar
-                    name={name}
-                    dispatch={dispatch} />
+                <Toolbar />
             </Grid>
-    <Grid
-        flex={1}
-        ref={container}
-        sx={{
-            overflowY: 'auto',
-        }}
-        display="flex"
-        paddingTop="2vh"
-        paddingBottom="2vh"
-        alignItems="center"
-        {...props}
-    >
-        {children}
-    </Grid>
-            <Program
-                code={code}
-                ind={ind} />
-            <Output
-                out={out}
-                flag={outFlag} />
-            <Tape
-                tape={tape}
-                ptr={ptr}
-                flag={tapeFlag} />
-            <Register
-                acc={acc}
-                flag={accFlag} />
+            <Grid
+                flex={1}
+                ref={container}
+                sx={{
+                    overflowY: 'auto',
+                }}
+                display="flex"
+                paddingTop="2vh"
+                paddingBottom="2vh"
+                alignItems="center">
+                {children}
+            </Grid>
+            <Program  />
+            <Output   />
+            <Tape     />
+            <Register />
         </Grid>
     );
 }
 
-function Toolbar({name, dispatch}) {
+function Toolbar() {
+    const { name, dispatch }
+        = useContext(EditorContext);
+
     const link = 'https://esolangs.org/wiki/'
         + name.replace(' ', '_');
 
@@ -164,7 +131,10 @@ function Toolbar({name, dispatch}) {
     ];
 }
 
-function Program({code, ind}) {
+function Program() {
+    const { code, ind }
+        = useContext(EditorContext);
+
     if (code === undefined)
         return (null);
 
@@ -180,9 +150,11 @@ function Program({code, ind}) {
     );
     }
 
-function Tape({
-        tape, ptr, flag}) {
-    if (!flag)
+function Tape() {
+    const { tape, ptr, tapeflag }
+        = useContext(EditorContext);
+
+    if (!tapeflag)
         return (null);
 
     return (
@@ -194,8 +166,11 @@ function Tape({
     );
 }
 
-function Output({out, flag}) {
-    if (!flag)
+function Output() {
+    const { out, outflag }
+        = useContext(EditorContext);
+
+    if (!outflag)
         return (null);
 
     return (
@@ -209,8 +184,11 @@ function Output({out, flag}) {
     );
 }
 
-function Register({acc, flag}) {
-    if (!flag)
+function Register() {
+    const { acc, accflag }
+        = useContext(EditorContext);
+
+    if (!accflag)
         return (null);
 
     return (
@@ -285,10 +263,11 @@ function Scrollable(props) {
 export function GridArea({
         handleChange,
         chooseColor,
-        options,
-        size,
-        container
+        options
     }) {
+    const { size, container }
+        = useContext(EditorContext);
+
     const {height, width}
         = useContainer(container);
 
@@ -334,7 +313,10 @@ export function GridArea({
     );
 }
 
-export function TextArea({handleChange}) {
+export function TextArea() {
+    const { handleChange }
+        = useContext(EditorContext);
+
     return (
         <TextField
             variant="outlined"

@@ -172,9 +172,9 @@ function moveHandler(position, board, direction) {
 }
 
 export default function Snake() {
-    const {width, height} = useWindow();
-    const {setRepeat} = useTimer(50);
-    const setHandler  = useKeys();
+    const { width, height } = useWindow();
+    const { create } = useTimer(50);
+    const setHandler = useKeys();
 
     const length   = useRef(3);
     const move     = useRef(true);
@@ -229,8 +229,8 @@ export default function Snake() {
     }, [rows, cols, length]);
 
     useLayoutEffect(() => {
-        setRepeat(handleMove);
-    }, [setRepeat, handleMove]);
+        create(handleMove);
+    }, [create, handleMove]);
 
     useEffect(() => {
         setHandler(handleVelocity);

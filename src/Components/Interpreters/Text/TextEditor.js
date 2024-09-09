@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import Editor, {TextArea} from '../Editor';
+import { useContext, useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import Editor, { EditorContext, TextArea } from '../Editor';
 import { useTimer } from '../../hooks';
 
 function timerHandler(state, mutators) {
@@ -61,12 +61,20 @@ export default function TextEditor(props) {
     const [text, setText]   = useState('');
     const {create, destroy} = useTimer(200);
 
+    const container = useRef(null);
     const getState = useRef(() => start);
     const dispatch = useRef(() => {});
     const end      = useRef(true);
     const code     = useRef('');
 
-    const { name, start } = props;
+    const {
+        name,
+        start,
+        tape,
+        out,
+        reg
+    } = props;
+
     const initial
         = {...start, end: true};
 
@@ -125,16 +133,23 @@ export default function TextEditor(props) {
     }, [text, props, create, destroy]);
 
 
+    const context = {
+        name,
+        ...values,
+        dispatch: dispatch.current,
+        code:     code.current,
+        tapeFlag: tape,
+        outFlag:  out,
+        accFlag:  reg,
+        container
+    };
+
     return (
-        <Editor
-            name={name}
-            props={props}
-            values={values}
-            code={code.current}
-            dispatch={dispatch.current}>
-            <TextArea
-                handleChange
-                    ={handleChange} />
-        </Editor>
+        <EditorContext.Provider
+                value={context}>
+            <Editor>
+                <TextArea />
+            </Editor>
+        </EditorContext.Provider>
     );
 }
