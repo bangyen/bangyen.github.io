@@ -135,7 +135,7 @@ export function Text(props) {
 }
 
 export function GridArea({
-        handleChange,
+        handleClick,
         chooseColor,
         options,
         rows,
@@ -157,7 +157,7 @@ export function GridArea({
             <Cell
                 color={text}
                 backgroundColor={select}
-                onClick={handleChange(pos)}
+                onClick={handleClick(pos)}
                 sx={{
                     cursor: 'pointer',
                     '&:hover': {
