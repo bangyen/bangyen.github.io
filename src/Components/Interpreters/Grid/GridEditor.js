@@ -4,22 +4,19 @@ import Editor, { EditorContext, GridArea } from '../Editor';
 import { useContainer, useTimer, useKeys } from '../../hooks';
 
 function handleKeys(state, payload) {
-    const { key } = payload;
+    let { grid, select } = state;
     let newState = null;
     let value;
 
-    let {
-        select,
-        breaks,
-        grid,
-        rows,
-        cols
-    } = state;
+    const { key }
+        = payload;
 
     if (select === null)
         return {};
 
     if (key.toLowerCase() === 'b') {
+        const { breaks } = state;
+
         if (breaks.has(select))
             breaks.delete(select);
         else
@@ -28,6 +25,7 @@ function handleKeys(state, payload) {
         newState = {breaks};
     } else if (key.includes('Arrow')) {
         const arrow = getDirection(key);
+        const { rows, cols } = state;
 
         select = gridMove(
             select, arrow, rows, cols);
@@ -48,7 +46,7 @@ function handleKeys(state, payload) {
     const after  = grid.slice(select + 1);
     grid = before + value + after;
 
-    return {grid, select};
+    return {grid};
 }
 
 function handleResize(state, payload) {
