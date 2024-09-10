@@ -45,7 +45,7 @@ function getSwitch(state, setter) {
                 do {
                     state = get(false);
                 } while (!state.end);
-                
+
                 return state;
             case 'stop':
                 setter(false);
@@ -84,7 +84,7 @@ export default function TextEditor(props) {
 
     const handleChange
         = useCallback(
-            (event) => {
+            event => {
                 const newText
                     = event.target.value;
 
@@ -100,15 +100,15 @@ export default function TextEditor(props) {
 
 
     dispatch.current = useMemo(() => {
-        const {run, clean, start} = props;
-    
+        const { run, clean, start } = props;
+
         code.current = clean(text);
         end.current  = true;
         let change   = true;
-    
+
         const mutators = {setValues, create, clear};
         const state    = {start, end, getState};
-    
+
         const setter
             = timerHandler(
                 state, mutators);
@@ -116,16 +116,16 @@ export default function TextEditor(props) {
         const getNext
             = getSwitch(
                 state, setter);
-    
+
         return type => {
             return () => {
                 if (type === 'run' || change) {
                     change = false;
-    
+
                     getState.current
                         = run(code.current);
                 }
-    
+
                 const next  = getNext(type);
                 end.current = next.end;
                 setValues(next);

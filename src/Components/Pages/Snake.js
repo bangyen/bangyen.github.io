@@ -2,7 +2,8 @@ import Grid from '@mui/material/Grid2';
 
 import { useWindow, useTimer, useKeys } from '../hooks';
 import { useMemo, useCallback, useRef, useReducer, useEffect } from 'react';
-import { CustomGrid, Controls, convertPixels } from '../helpers';
+import { CustomGrid, Controls } from '../helpers';
+import { convertPixels, gridMove, getDirection } from '../calculate';
 
 function getRandom(max) {
     return Math.floor(
@@ -63,34 +64,12 @@ function reduceBoard(state, velocity) {
         head, rows, cols
     } = state;
 
-    const jump = cols - 1;
-    const max  = rows * cols;
-
-    switch (velocity) {
-        case 2:
-            head += cols;
-            break;
-        case -2:
-            head -= cols;
-            break;
-        case 1:
-            if (head % cols === jump)
-                head -= jump;
-            else
-                head += 1;
-            break;
-        case -1:
-            if (head % cols === 0)
-                head += jump;
-            else
-                head -= 1;
-            break;
-        default:
-            break;
-    }
+    const max = rows * cols;
 
     board = mapBoard(board, -1);
-    head  = (head + max) % max;
+    head  = gridMove(
+        head, velocity,
+        rows, cols);
 
     if (head in board) {
         const value = board[head];
@@ -148,31 +127,9 @@ function handleAction(state, action) {
 }
 
 function handleDirection(action, event) {
+    const change = getDirection(event);
     let { velocity, buffer, move }
         = action.current;
-
-    let change;
-
-    switch (event.toLowerCase()) {
-        case 'arrowup':
-        case 'w':
-            change = -2;
-            break;
-        case 'arrowdown':
-        case 's':
-            change = 2;
-            break;
-        case 'arrowleft':
-        case 'a':
-            change = -1;
-            break;
-        case 'arrowright':
-        case 'd':
-            change = 1;
-            break;
-        default:
-            return;
-    }
 
     if (velocity + change) {
         if (move) {
@@ -260,6 +217,11 @@ export default function Snake() {
             type: 'resize',
             payload: {rows, cols}});
     }, [rows, cols]);
+
+    useEffect(() => {
+        document.title
+            = 'Snake | Bangyen';
+    }, []);
 
     return (
         <Grid

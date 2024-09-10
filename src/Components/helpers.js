@@ -2,6 +2,7 @@ import { Tooltip, IconButton, Paper, Box } from "@mui/material";
 import { useState, useCallback } from "react";
 import Grid from '@mui/material/Grid2';
 import { Link } from "react-router-dom";
+import { getSpace } from "./calculate";
 import {
     HomeRounded,
     CloseRounded,
@@ -11,20 +12,6 @@ import {
     KeyboardArrowLeftRounded,
     KeyboardArrowRightRounded
 } from '@mui/icons-material';
-
-function getSpace(size) {
-    return size / 20;
-}
-
-export function convertPixels(
-        size, height, width) {
-    const space = getSpace(size);
-    const pixel = 16 * (size + space);
-    const rows  = Math.floor(height / pixel);
-    const cols  = Math.floor(width  / pixel);
-
-    return {rows, cols};
-}
 
 export function TooltipButton(props) {
     const {Icon, title, ...rest} = props;
