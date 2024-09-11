@@ -1,7 +1,7 @@
 import Grid     from '@mui/material/Grid2';
 import { Link } from 'react-router-dom';
 
-import { Program, Output, Tape, Register } from './Values';
+import { Program, Output, Tape, Register } from './Display';
 import { TooltipButton, CustomGrid } from '../helpers';
 
 import {

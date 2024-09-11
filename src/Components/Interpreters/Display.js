@@ -19,14 +19,14 @@ export function Program() {
         return (null);
 
     return (
-        <Values
+        <Display
             Icon={CodeRounded}
             title="Program"
             arr={[...code]}
             ptr={ind}>
             <Text
                 text={"\xA0"} />
-        </Values>
+        </Display>
     );
     }
 
@@ -38,7 +38,7 @@ export function Tape() {
         return (null);
 
     return (
-        <Values
+        <Display
             Icon={DataArrayRounded}
             title="Tape"
             arr={tape}
@@ -54,13 +54,13 @@ export function Output() {
         return (null);
 
     return (
-        <Values
+        <Display
             Icon={TextFieldsRounded}
             title="Output"
             arr={[out]}>
             <Text
                 text={'\xA0'} />
-        </Values>
+        </Display>
     );
 }
 
@@ -72,14 +72,14 @@ export function Register() {
         return (null);
 
     return (
-        <Values
+        <Display
             Icon={PlusOneRounded}
             title="Register"
             arr={[acc]} />
     );
 }
 
-function Values(props) {
+function Display(props) {
     const {
         Icon,
         title,
