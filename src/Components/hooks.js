@@ -1,4 +1,10 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import {
+    useState,
+    useEffect,
+    useRef,
+    useCallback,
+    useReducer
+} from 'react';
 
 function getWindow() {
     const {
@@ -122,4 +128,38 @@ export function useKeys() {
     }, []);
 
     return {create, clear};
+}
+
+export function useCache(getState, initial) {
+    const cache = useRef([]);
+    const index = useRef(0);
+
+    const [state, dispatch] = useReducer(
+        (state, action) => {
+            const { type, payload } = action;
+            const states = cache.current;
+
+            switch (type) {
+                case 'next':
+                    const next
+                        = index.current++;
+
+                    if (next === states.length)
+                        states.push(
+                            getState(
+                                payload));
+
+                    return states[next];
+                case 'prev':
+                    if (index.current)
+                        index.current--;
+
+                    return states
+                        [index.current];
+                default:
+                    return state;
+            }
+        }, initial);
+
+    return { state, dispatch };
 }
