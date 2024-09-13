@@ -2,8 +2,7 @@ import {
     useState,
     useEffect,
     useRef,
-    useCallback,
-    useReducer
+    useCallback
 } from 'react';
 
 function getWindow() {
@@ -130,36 +129,47 @@ export function useKeys() {
     return {create, clear};
 }
 
-export function useCache(getState, initial) {
+export function useCache(getState) {
     const cache = useRef([]);
     const index = useRef(0);
 
-    const [state, dispatch] = useReducer(
-        (state, action) => {
-            const { type, payload } = action;
-            const states = cache.current;
+    return useCallback((payload, type) => {
+        const states = cache.current;
 
-            switch (type) {
-                case 'next':
-                    const next
-                        = index.current++;
+        switch (type) {
+            case 'next':
+                const next
+                    = index.current;
+                index.current++;
 
-                    if (next === states.length)
-                        states.push(
-                            getState(
-                                payload));
-
-                    return states[next];
-                case 'prev':
-                    if (index.current)
+                if (next + 1 === states.length) {
+                    if (states[next].end) {
                         index.current--;
+                    } else {
+                        const newState
+                            = getState(
+                                payload);
 
-                    return states
-                        [index.current];
-                default:
-                    return state;
-            }
-        }, initial);
+                        states.push(newState);
+                    }
+                }
 
-    return { state, dispatch };
+                return states[index.current];
+            case 'prev':
+                if (index.current)
+                    index.current--;
+
+                return states
+                    [index.current];
+            case 'clear':
+                cache.current = [payload];
+                index.current = 0;
+
+                break;
+            default:
+                break;
+        }
+
+        return payload;
+    }, [getState]);
 }

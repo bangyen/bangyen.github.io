@@ -1,111 +1,98 @@
-import {move} from '../../oldHelpers';
+import { gridMove } from '../../calculate';
 import GridEditor from './GridEditor';
-import React from 'react';
 
-function outer(obj) {
-    function run(code, size) {
-        if (!code.includes('*'))
-            alert('No halt instruction detected!');
+function getState(state) {
+    let {
+        velocity,
+        gridptr,
+        tapeptr,
+        grid,
+        tape,
+        rows,
+        cols,
+        end
+    } = state;
 
-        let vel = [0, 1];
-        let arr = [obj];
-        let ind = 0;
+    const sum  = velocity > 0 ? 3 : -3;
+    const char = grid[gridptr];
+    tape = [...tape];
 
-        function wrap(pos) {
-            return move({
-                pos,
-                vel,
-                old: size
-            });
-        }
+    switch (char) {
+        case '\\':
+            velocity
+                = sum - velocity;
+            break;
+        case '/':
+            velocity -= sum;
+            break;
+        case '<':
+            if (tapeptr)
+                tapeptr--;
+            break;
+        case '>':
+            if (++tapeptr
+                    === tape.length)
+                tape.push(0);
+            break;
+        case '-':
+            tape[tapeptr]
+                ^= 1;
+            break;
+        case '+':
+            let next;
 
-        return (back) => {
-            let state = arr[arr.length - 1];
+            if (!tape[tapeptr])
+                do {
+                    gridptr = gridMove(
+                        gridptr,
+                        velocity,
+                        rows,
+                        cols);
 
-            if (back) {
-                if (ind)
-                    ind--;
-            } else {
-                if (state.end)
-                    arr = [obj];
-                else
-                    ind++;
-            }
-
-            if (ind < arr.length)
-                return arr[ind];
-
-            let {tape, cell, end, pos} = state;
-            let c = code[pos];
-            let [a, b] = vel;
-            tape = [...tape];
-
-            switch (c) {
-                case '\\':
-                    vel = [b, a];
-                    break;
-                case '/':
-                    vel = [-b, -a];
-                    break;
-                case '<':
-                    if (cell)
-                        cell--;
-                    break;
-                case '>':
-                    cell++;
-                    if (cell === tape.length)
-                        tape.push(0);
-                    break;
-                case '-':
-                    tape[cell] ^= 1;
-                    break;
-                case '+':
-                    if (!tape[cell])
-                        do {
-                            pos = wrap(pos);
-                            c = code[pos];
-                        } while (!'\\/<>-+*'
-                            .includes(c));
-                    break;
-                case '*':
-                    end = true;
-                    pos = null;
-                    break;
-                default:
-                    break;
-            }
-
-            if (pos !== null)
-                pos = wrap(pos);
-
-            state = {
-                pos,
-                tape,
-                cell,
-                end
-            };
-
-            arr.push(state);
-            return state;
-        };
+                    next = grid[gridptr];
+                } while (!'\\/<>-+*'
+                    .includes(next));
+            break;
+        case '*':
+            gridptr = null;
+            end = true;
+            break;
+        default:
+            break;
     }
 
-    return run;
+    if (gridptr !== null)
+        gridptr = gridMove(
+            gridptr,
+            velocity,
+            rows,
+            cols);
+
+    return {
+        velocity,
+        gridptr,
+        tapeptr,
+        grid,
+        tape,
+        rows,
+        cols,
+        end
+    };
 }
 
-export default function Back() {
+export default function Editor() {
     let start = {
-        pos: 0,
-        end: false,
+        velocity: 1,
+        tapeptr: 0,
+        gridptr: 0,
+        grid: null,
         tape: [0],
-        cell: 0
+        end: false
     };
-
-    const run = outer(start);
 
     return <GridEditor
         name='Back'
         start={start}
-        run={run}
-        tape={true} />;
+        run={getState}
+        tape />;
 }
