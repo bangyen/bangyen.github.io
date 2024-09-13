@@ -78,11 +78,19 @@ export default function Editor({children}) {
 }
 
 function Toolbar() {
-    const { name, dispatch }
+    const { name, dispatch, fastForward }
         = useContext(EditorContext);
 
     const link = 'https://esolangs.org/wiki/'
         + name.replace(' ', '_');
+
+    const ffButton = fastForward ?
+        <TooltipButton
+            key='Fast Forward'
+            title='Fast Forward'
+            onClick={dispatch('ff')}
+            Icon={LastPageRounded} />
+        : null;
 
     return [
         <TooltipButton
@@ -105,11 +113,7 @@ function Toolbar() {
             title='Next'
             onClick={dispatch('next')}
             Icon={NavigateNextRounded} />,
-        <TooltipButton
-            key='Fast Forward'
-            title='Fast Forward'
-            onClick={dispatch('ff')}
-            Icon={LastPageRounded} />,
+        ffButton,
         <TooltipButton
             key='Info'
             href={link}
