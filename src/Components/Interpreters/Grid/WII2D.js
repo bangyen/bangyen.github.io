@@ -1,171 +1,160 @@
-import {move} from '../../oldHelpers';
+import { gridMove } from '../../calculate';
 import GridEditor from './GridEditor';
 import React from 'react';
 
-function outer(obj) {
-    function error(str) {
-        alert(str + ' start '
-            + 'location detected!');
+function getDistance(x, y, cols) {
+    const xWidth = x % cols;
+    const yWidth = y % cols;
+    x -= xWidth;
+    y -= yWidth;
 
-        let res = {end: true};
-        obj.pos = null;
+    const differ = Math.abs(x - y);
+    const height = Math.floor(differ / cols);
+    const width  = Math.abs(xWidth - yWidth);
 
-        return () => res;
-    }
-
-    function dist(x, y, size) {
-        let diff = Math.abs(x - y);
-        let quo = Math.floor(diff / size);
-        let mod = diff % size;
-
-        return quo + mod;
-    }
-
-    function comp(pos, size) {
-        return (x, y) =>
-            dist(pos, x, size)
-          - dist(pos, y, size);
-    }
-
-    function close(pos, arr) {
-        let size = arr.length;
-        let warp = [];
-
-        for (let k in arr)
-            if (arr[k] === '@')
-                warp.push(k);
-
-        warp.sort(comp(pos, size));
-        return warp.length > 1
-            ? warp[1] : pos;
-    }
-
-    let str = '^v<>';
-    let dir = [
-        [-1, 0],
-        [1, 0],
-        [0, -1],
-        [0, 1]
-    ];
-
-    function run(code, size) {
-        obj.pos = null;
-        let vel = dir[0];
-        let arr = [obj];
-        let ind = 0;
-
-        if (!code.includes('!')) {
-            return error('No');
-        }
-
-        for (let k in code)
-            if (code[k] === '!') {
-                if (obj.pos !== null)
-                    return error('Additional');
-
-                obj.pos = k;
-            }
-
-        function wrap(pos) {
-            return move({
-                pos,
-                vel,
-                old: size
-            });
-        }
-
-        return (back) => {
-            let state = arr[arr.length - 1];
-
-            if (back) {
-                if (ind)
-                    ind--;
-            } else {
-                if (state.end)
-                    arr = [obj];
-                else
-                    ind++;
-            }
-
-            if (ind < arr.length)
-                return arr[ind];
-
-            let {pos, end, out, acc} = state;
-            let c = code[pos];
-
-            if (str.includes(c))
-                vel = dir[str.indexOf(c)];
-            else if (+c)
-                acc = +c;
-
-            switch (c) {
-                case '|':
-                    vel = [-vel[0], -vel[1]];
-                    break;
-                case '@':
-                    pos = close(pos, code);
-                    pos -= size;
-
-                    if (pos < 0)
-                        pos += size * size;
-                    break;
-                case '+':
-                    acc++;
-                    break;
-                case '-':
-                    acc--;
-                    break;
-                case '*':
-                    acc *= 2;
-                    break;
-                case 's':
-                    acc = acc * acc;
-                    break;
-                case '/':
-                    acc = Math.floor(acc / 2);
-                    break;
-                case '~':
-                    out += String.fromCharCode(acc);
-                    break;
-                case '?':
-                    let rnd = Math.random() * 4;
-                    vel = dir[Math.floor(rnd)];
-                    break;
-                case '.':
-                    pos = null;
-                    end = true;
-                    break;
-                default:
-                    break;
-            }
-
-            if (pos !== null && c !== '@')
-                pos = wrap(pos);
-
-            state = {pos, end, out, acc};
-            arr.push(state);
-
-            return state;
-        };
-    }
-
-    return run;
+    return height + width;
 }
 
-export default function WII2D() {
+function getComparison(
+        position, cols) {
+    return (x, y) =>
+        getDistance(position, x, cols)
+      - getDistance(position, y, cols);
+}
+
+function getClosest(position, grid, cols) {
+    let warp = [];
+
+    for (let k = 0; k < grid.length; k++)
+        if (grid[k] === '@')
+            warp.push(k);
+
+    if (warp.length === 1)
+        return position;
+
+    const compare
+        = getComparison(
+            position, cols);
+
+    warp.sort(compare);
+    return warp[1];
+}
+
+function getState(state) {
+    const arrows = '^<>v';
+
+    let {
+        position,
+        velocity,
+        grid,
+        output,
+        register,
+        end,
+        rows,
+        cols
+    } = state;
+
+    if (position === null) {
+        let index  = grid.indexOf('!');
+        let double = grid.lastIndexOf('!');
+
+        if (index === -1 || index !== double)
+            return {...state, end: true};
+
+        position = index;
+    }
+
+    const char = grid[position];
+
+    if (arrows.includes(char)) {
+        const index
+            = arrows.indexOf(char);
+        velocity = (index % 2) + 1;
+
+        if (index < 2)
+            velocity -= 3;
+    } else if (+char) {
+        register = +char;
+    }
+
+    switch (char) {
+        case '|':
+            velocity *= -1;
+            break;
+        case '@':
+            position = getClosest(
+                position, grid, cols);
+            position -= cols;
+
+            if (position < 0)
+                position += rows * cols;
+            break;
+        case '+':
+            register++;
+            break;
+        case '-':
+            register--;
+            break;
+        case '*':
+            register *= 2;
+            break;
+        case 's':
+            register *= register;
+            break;
+        case '/':
+            register = Math
+                .floor(register / 2);
+            break;
+        case '~':
+            output += String
+                .fromCharCode(register);
+            break;
+        case '?':
+            const rand  = Math.random() * 4;
+            const floor = Math.floor(rand);
+            velocity = floor - 2 + (floor > 1);
+            break;
+        case '.':
+            position = null;
+            end = true;
+            break;
+        default:
+            break;
+    }
+
+    if (position !== null && char !== '@')
+        position = gridMove(
+            position, velocity,
+            rows, cols);
+
+    return {
+        position,
+        velocity,
+        grid,
+        output,
+        register,
+        end,
+        rows,
+        cols
+    };
+}
+
+
+export default function Editor() {
     let start = {
-        pos: null,
+        position: null,
+        velocity: -2,
         end: false,
-        out: '',
-        acc: 0
+        output: '',
+        register: 0
     };
 
-    const run = outer(start);
-
-    return <GridEditor
-        name='WII2D'
-        start={start}
-        run={run}
-        out={true}
-        reg={true} />;
+    return (
+        <GridEditor
+            name='WII2D'
+            start={start}
+            runner={getState}
+            output
+            register />
+    );
 }

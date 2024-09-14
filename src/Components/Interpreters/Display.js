@@ -12,7 +12,7 @@ import {
 import Grid from '@mui/material/Grid2';
 
 export function Program() {
-    const { code, ind }
+    const { code, index }
         = useContext(EditorContext);
 
     if (code === undefined)
@@ -22,8 +22,8 @@ export function Program() {
         <Display
             Icon={CodeRounded}
             title="Program"
-            arr={[...code]}
-            ptr={ind}>
+            data={[...code]}
+            pointer={index}>
             <Text
                 text={"\xA0"} />
         </Display>
@@ -31,7 +31,7 @@ export function Program() {
     }
 
 export function Tape() {
-    const { tape, ptr, tapeFlag }
+    const { tape, pointer, tapeFlag }
         = useContext(EditorContext);
 
     if (!tapeFlag)
@@ -41,13 +41,13 @@ export function Tape() {
         <Display
             Icon={DataArrayRounded}
             title="Tape"
-            arr={tape}
-            ptr={ptr} />
+            data={tape}
+            pointer={pointer} />
     );
 }
 
 export function Output() {
-    const { out, outFlag }
+    const { output, outFlag }
         = useContext(EditorContext);
 
     if (!outFlag)
@@ -57,7 +57,7 @@ export function Output() {
         <Display
             Icon={TextFieldsRounded}
             title="Output"
-            arr={[out]}>
+            data={[output]}>
             <Text
                 text={'\xA0'} />
         </Display>
@@ -65,17 +65,17 @@ export function Output() {
 }
 
 export function Register() {
-    const { acc, accFlag }
+    const { register, regFlag }
         = useContext(EditorContext);
 
-    if (!accFlag)
+    if (!regFlag)
         return (null);
 
     return (
         <Display
             Icon={PlusOneRounded}
             title="Register"
-            arr={[acc]} />
+            data={[register]} />
     );
 }
 
@@ -83,13 +83,13 @@ function Display(props) {
     const {
         Icon,
         title,
-        arr,
-        ptr,
+        data,
+        pointer,
         children
     } = props;
 
-    const values = arr.map((val, ind) => {
-        const color = ptr === ind
+    const values = data.map((val, ind) => {
+        const color = pointer === ind
             ? 'info' : 'inherit';
 
         return (

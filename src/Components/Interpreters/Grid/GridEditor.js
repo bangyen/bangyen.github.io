@@ -166,11 +166,15 @@ export default function GridEditor(props) {
     const { create, clear } = useTimer(200);
 
     const {
-        name, start, run,
-        tape, out, reg
+        runner,
+        name,
+        start,
+        tape,
+        output,
+        register
     } = props;
 
-    const nextIter  = useCache(run);
+    const nextIter  = useCache(runner);
     const container = useRef(null);
     let { height, width }
         = useContainer(
@@ -248,12 +252,12 @@ export default function GridEditor(props) {
 
     const chooseColor = useCallback(
         square => {
-            const { gridptr, select }
+            const { position, select }
                 = state;
 
             if (square === select)
                 return 'primary';
-            if (square === gridptr)
+            if (square === position)
                 return 'info';
 
             return 'secondary';
@@ -282,9 +286,10 @@ export default function GridEditor(props) {
         ...state,
         dispatch:
             wrapDispatch,
+        pointer: state.pointer,
         tapeFlag: tape,
-        outFlag:  out,
-        accFlag:  reg,
+        outFlag:  output,
+        accFlag:  register,
         container
     };
 

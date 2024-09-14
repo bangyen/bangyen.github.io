@@ -1,86 +1,119 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useCallback, useReducer } from 'react';
 import Editor, { EditorContext, TextArea } from '../Editor';
-import { useTimer } from '../../hooks';
+import { useTimer, useCache } from '../../hooks';
 
-function timerHandler(state, mutators) {
-    const {setValues, create, clear}
-        = mutators;
-    const {getState, end} = state;
+function handleAction(state, action) {
+    const { type, payload } = action;
+    const { clear } = payload;
+    let   newState  = {};
 
-    const repeat = () => {
-        const get   = getState.current;
-        const state = get(false);
-        setValues(state);
-
-        if (end.current || state.end)
-            clear();
-    };
-
-    return flag => {
-        clear();
+    const update = (option, flag) => {
+        const { nextIter }
+            = payload;
 
         if (flag)
-            create({repeat});
+            clear();
+
+        newState = nextIter(
+            state, option);
+
+        return {
+            ...newState,
+            select: null};
     };
-}
 
-function getSwitch(state, setter) {
-    const {start, getState} = state;
+    switch (type) {
+        case 'run':
+            const {
+                start,
+                nextIter,
+                dispatch,
+                create
+            } = payload;
 
-    return type => {
-        const get = getState.current;
+            const { code, end }
+                = state;
 
-        switch (type) {
-            case 'run':
-                setter(true);
-                return start;
-            case 'prev':
-                return get(true);
-            case 'next':
-                return get(false);
-            case 'ff':
-                setter(false);
-                let state;
+            const repeat = () => {
+                dispatch({
+                    type: 'timer',
+                    payload
+                });
+            };
 
-                do {
-                    state = get(false);
-                } while (!state.end);
+            const initial = end
+                ? {...state, end: false}
+                : {...start, code};
 
-                return state;
-            case 'stop':
-                setter(false);
-                break;
-            default:
-                break;
-        }
+            clear();
+            create({repeat});
+            nextIter(initial, 'clear');
+            break;
+        case 'timer':
+            const newType = state.end
+                ? 'stop' : 'next';
 
-        return prev => prev;
+            payload.dispatch({
+                type: newType,
+                payload});
+            break;
+        case 'stop':
+            clear();
+            break;
+        case 'prev':
+            newState = update(
+                'prev', true);
+            break;
+        case 'next':
+            newState = update(
+                'next', false);
+            break;
+        case 'edit':
+            const { newText, clean }
+                = payload;
+
+            clear();
+            newState = {
+                ...state,
+                text: newText,
+                code: clean(newText)
+            };
+            break;
+        default:
+            break;
+    }
+
+    return {
+        ...state,
+        ...newState
     };
 }
 
 export default function TextEditor(props) {
-    const [text, setText] = useState('');
     const {create, clear} = useTimer(200);
 
-    const container = useRef(null);
-    const getState  = useRef(() => start);
-    const dispatch  = useRef(() => {});
-    const end       = useRef(true);
-    const code      = useRef('');
-
     const {
+        runner,
+        clean,
         name,
         start,
         tape,
-        out,
-        reg
+        output,
+        register
     } = props;
 
-    const initial
-        = {...start, end: true};
+    const nextIter  = useCache(runner);
+    const container = useRef(null);
 
-    const [values, setValues]
-        = useState(initial);
+    const initial = {
+        ...start,
+        text: '',
+        code: ''};
+
+    const [state, dispatch]
+        = useReducer(
+            handleAction,
+            initial);
 
     const handleChange
         = useCallback(
@@ -88,61 +121,42 @@ export default function TextEditor(props) {
                 const newText
                     = event.target.value;
 
-                setText(newText);
-            }, [setText]);
+                dispatch({
+                    type: 'edit',
+                    payload: {newText, clean, clear}
+                });
+            }, [dispatch, clean, clear]);
 
     useEffect(() => {
         document.title = name 
             + ' Interpreter | Bangyen';
     }, [name]);
 
-    useEffect(clear, [text, clear]);
-
-
-    dispatch.current = useMemo(() => {
-        const { run, clean, start } = props;
-
-        code.current = clean(text);
-        end.current  = true;
-        let change   = true;
-
-        const mutators = {setValues, create, clear};
-        const state    = {start, end, getState};
-
-        const setter
-            = timerHandler(
-                state, mutators);
-
-        const getNext
-            = getSwitch(
-                state, setter);
-
-        return type => {
-            return () => {
-                if (type === 'run' || change) {
-                    change = false;
-
-                    getState.current
-                        = run(code.current);
-                }
-
-                const next  = getNext(type);
-                end.current = next.end;
-                setValues(next);
+    const wrapDispatch = useCallback(
+        type => () => {
+            const payload = {
+                start,
+                nextIter,
+                dispatch,
+                create,
+                clear
             };
-        };
-    }, [text, props, create, clear]);
 
+            dispatch({type, payload});
+        }, [start,
+            nextIter,
+            create,
+            clear]);
 
     const context = {
         name,
-        ...values,
+        ...state,
         handleChange,
-        dispatch: dispatch.current,
-        code:     code.current,
+        dispatch: wrapDispatch,
+        fastForward: true,
         tapeFlag: tape,
-        outFlag:  out,
-        accFlag:  reg,
+        outFlag:  output,
+        regFlag:  register,
         container
     };
 

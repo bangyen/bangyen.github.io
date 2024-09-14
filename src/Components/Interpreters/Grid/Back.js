@@ -4,8 +4,8 @@ import GridEditor from './GridEditor';
 function getState(state) {
     let {
         velocity,
-        gridptr,
-        tapeptr,
+        position,
+        pointer,
         grid,
         tape,
         rows,
@@ -14,7 +14,7 @@ function getState(state) {
     } = state;
 
     const sum  = velocity > 0 ? 3 : -3;
-    const char = grid[gridptr];
+    const char = grid[position];
     tape = [...tape];
 
     switch (char) {
@@ -26,52 +26,52 @@ function getState(state) {
             velocity -= sum;
             break;
         case '<':
-            if (tapeptr)
-                tapeptr--;
+            if (pointer)
+                pointer--;
             break;
         case '>':
-            if (++tapeptr
+            if (++pointer
                     === tape.length)
                 tape.push(0);
             break;
         case '-':
-            tape[tapeptr]
+            tape[pointer]
                 ^= 1;
             break;
         case '+':
             let next;
 
-            if (!tape[tapeptr])
+            if (!tape[pointer])
                 do {
-                    gridptr = gridMove(
-                        gridptr,
+                    position = gridMove(
+                        position,
                         velocity,
                         rows,
                         cols);
 
-                    next = grid[gridptr];
+                    next = grid[position];
                 } while (!'\\/<>-+*'
                     .includes(next));
             break;
         case '*':
-            gridptr = null;
+            position = null;
             end = true;
             break;
         default:
             break;
     }
 
-    if (gridptr !== null)
-        gridptr = gridMove(
-            gridptr,
+    if (position !== null)
+        position = gridMove(
+            position,
             velocity,
             rows,
             cols);
 
     return {
         velocity,
-        gridptr,
-        tapeptr,
+        position,
+        pointer,
         grid,
         tape,
         rows,
@@ -83,16 +83,17 @@ function getState(state) {
 export default function Editor() {
     let start = {
         velocity: 1,
-        tapeptr: 0,
-        gridptr: 0,
-        grid: null,
+        pointer: 0,
+        position: 0,
         tape: [0],
         end: false
     };
 
-    return <GridEditor
-        name='Back'
-        start={start}
-        run={getState}
-        tape />;
+    return (
+        <GridEditor
+            name='Back'
+            start={start}
+            runner={getState}
+            tape />
+    );
 }

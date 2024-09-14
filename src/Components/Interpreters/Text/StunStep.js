@@ -1,96 +1,76 @@
 import TextEditor from './TextEditor';
-import React from 'react';
 
 function clean(input) {
     let code = '';
 
-    for (let c of input)
-        if ('+-><'.includes(c))
-            code += c;
+    for (const char of input)
+        if ('+-><'.includes(char))
+            code += char;
 
     return code;
 }
 
-function outer(obj) {
-    function run(input) {
-        const code = clean(input);
-        const len = code.length;
-        let arr = [obj];
-        let num = 0;
+function getState(state) {
+    let {
+        pointer,
+        index,
+        code,
+        tape,
+        end
+    } = state;
 
-        return (back) => {
-            let state = arr[arr.length - 1];
-            let {tape, ptr, end} = state;
-            let c = code[num % len];
-
-            if (back) {
-                if (num)
-                    num--;
-            } else {
-                num++;
-
-                if (num % len === 0) {
-                    end = true;
-                } else if (state.end) {
-                    if (tape[ptr]) {
-                        end = false;
-                    } else {
-                        arr = [obj];
-                        num = 0;
-                    }
-                }
-            }
-
-            if (num < arr.length)
-                return arr[num];
-
-            let ind = num % len;
-            tape = [...tape];
-
-            if (c === '+') {
-                tape[ptr]++;
-            } else if (tape[ptr]) {
-                if (c === '-') {
-                    tape[ptr]--;
-                } else if (c === '>') {
-                    ptr++;
-
-                    if (ptr === tape.length)
-                        tape.push(1);
-                } else if (ptr) {
-                    ptr--;
-                }
-            }
-
-            state = {
-                tape,
-                ind,
-                ptr,
-                end
-            };
-
-            arr.push(state);
-            return state;
-        };
+    if (index === code.length) {
+        if (tape[pointer])
+            end = false;
+        else
+            index = 0;
     }
 
-    return run;
+    if (++index === code.length)
+        return {
+            ...state,
+            end: true};
+
+    const char = code[index];
+    tape = [...tape];
+
+    if (char === '+') {
+        tape[pointer]++;
+    } else if (tape[pointer]) {
+        if (char === '-') {
+            tape[pointer]--;
+        } else if (char === '>') {
+            if (tape.length
+                    === ++pointer)
+                tape.push(1);
+        } else if (pointer) {
+            pointer--;
+        }
+    }
+
+    return {
+        pointer,
+        index,
+        code,
+        tape,
+        end
+    };
 }
 
-export default function StunStep() {
+export default function Editor() {
     let start = {
+        pointer: 0,
+        index: 0,
         tape: [1],
-        ind: 0,
-        ptr: 0,
         end: false
     };
 
-    let run = outer(start);
-
-    return <TextEditor
-        name='Stun Step'
-        start={start}
-        run={run}
-        clean={clean}
-        tape={true} />;
+    return (
+        <TextEditor
+            name='Stun Step'
+            runner={getState}
+            clean={clean}
+            start={start}
+            tape />
+    );
 }
