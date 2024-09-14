@@ -2,6 +2,34 @@ import { useEffect, useRef, useCallback, useReducer } from 'react';
 import Editor, { EditorContext, TextArea } from '../Editor';
 import { useTimer, useCache } from '../../hooks';
 
+function startTimer(state, payload) {
+    const {
+        start,
+        nextIter,
+        dispatch,
+        create,
+        clear
+    } = payload;
+
+    const repeat = () => {
+        dispatch({
+            type: 'timer',
+            payload
+        });
+    };
+
+    const { code, end }
+        = state;
+
+    const initial = end
+        ? {...state, end: false}
+        : {...start, code};
+
+    clear();
+    create({repeat});
+    nextIter(initial, 'clear');
+}
+
 function handleAction(state, action) {
     const { type, payload } = action;
     const { clear } = payload;
@@ -24,30 +52,8 @@ function handleAction(state, action) {
 
     switch (type) {
         case 'run':
-            const {
-                start,
-                nextIter,
-                dispatch,
-                create
-            } = payload;
-
-            const { code, end }
-                = state;
-
-            const repeat = () => {
-                dispatch({
-                    type: 'timer',
-                    payload
-                });
-            };
-
-            const initial = end
-                ? {...state, end: false}
-                : {...start, code};
-
-            clear();
-            create({repeat});
-            nextIter(initial, 'clear');
+            startTimer(
+                state, payload);
             break;
         case 'timer':
             const newType = state.end
