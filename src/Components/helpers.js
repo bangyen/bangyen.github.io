@@ -42,48 +42,83 @@ export function HomeButton({hide}) {
 }
 
 function Cell(size) {
+    const remSize = `${size}rem`;
+    const radius  = `${size / 5}rem`;
+
+    const props = {
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: radius,
+        height: remSize,
+        width: remSize
+    };
+
     return ({children, ...rest}) => {
-        const rem = `${size}rem`;
+        const combined = {
+            ...props,
+            ...rest};
 
         return (
-            <Box
-                {...rest}
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                height={rem}
-                width={rem}
-                borderRadius={
-                    `${size / 5}rem`}>
+            <Box {...combined}>
                 {children}
             </Box>
         );
     };
 }
 
-function Row({spacing, children}) {
+function Row(props) {
+    const {
+        cols,
+        size,
+        index,
+        spacing,
+        Wrapper
+    } = props;
+
+    const getCell = useCallback(
+        (_, j) => (
+            <Wrapper
+                key={`${index}_${j}`}
+                Cell={Cell(size)}
+                row={index}
+                col={j} />
+        ), [index, size]);
+ 
     return (
         <Grid
             container
             size={12}
             spacing={spacing}
             justifyContent="center">
-            {children}
+            {[...Array(cols)]
+                .map(getCell)}
         </Grid>
     );
 }
 
-export function CustomGrid({
+export function CustomGrid(props) {
+    const {
         size,
         rows,
         cols,
-        Wrapper,
-        space = true
-    }) {
-    if (space === true)
-        space = getSpace(size);
+        Wrapper
+    } = props;
 
-    const rem = `${space}rem`;
+    const auto = getSpace(size);
+    const { space = auto } = props;
+    const rem  = `${space}rem`;
+
+    const getRow = useCallback(
+        (_, i) => (
+            <Row
+                index={i}
+                cols={cols}
+                size={size}
+                spacing={rem}
+                key={`row_${i}`}
+                Wrapper={Wrapper} />
+        ), [cols, size, rem, Wrapper]);
 
     return (
         <Grid
@@ -92,20 +127,7 @@ export function CustomGrid({
             spacing={rem}
             alignItems="center">
             {[...Array(rows)]
-                .map((_, i) => (
-                    <Row
-                        key={`row_${i}`}
-                        spacing={rem}>
-                        {[...Array(cols)]
-                            .map((_, j) => (
-                                <Wrapper
-                                    key={`${i}_${j}`}
-                                    Cell={Cell(size)}
-                                    row={i}
-                                    col={j} />
-                            ))}
-                    </Row>
-                ))}
+                .map(getRow)}
         </Grid>
     );
 }

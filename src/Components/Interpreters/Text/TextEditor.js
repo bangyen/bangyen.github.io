@@ -14,8 +14,7 @@ function startTimer(state, payload) {
     const repeat = () => {
         dispatch({
             type: 'timer',
-            payload
-        });
+            payload});
     };
 
     const { code, end }
@@ -36,8 +35,7 @@ function handleAction(state, action) {
     let   newState  = {};
 
     const update = (option, flag) => {
-        const { nextIter }
-            = payload;
+        const { nextIter } = payload;
 
         if (flag)
             clear();
