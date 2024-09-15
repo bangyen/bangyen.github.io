@@ -42,7 +42,6 @@ function borderHandler(row, col, getColor) {
         const downCheck  = self === down;
         const leftCheck  = self === left;
         const rightCheck = self === right;
-        console.log(row, col, self, up, down, left, right);
 
         if (upCheck || leftCheck)
             props.borderTopLeftRadius  = 0;
@@ -75,9 +74,31 @@ function fillerHandler(row, col, getColor) {
         return color;
     }
 
+function getHex(seed) {
+    const max = 16 ** 6;
+    const hex = Math
+        .floor(seed * max)
+        .toString(16)
+        .padStart(6, '0');
+
+    return hex;
+}
+
 function useRandom(rows, cols) {
     const seed = useMemo(
         () => Math.random(), []);
+
+    const palette = useMemo(
+        () => {
+            const next = (seed * 10) % 1;
+            const primary   = getHex(seed);
+            const secondary = getHex(next);
+
+            return {
+                primary: `#${primary}`,
+                secondary: `#${secondary}`
+            };
+        }, []);
 
     const colors = useMemo(
         () => {
@@ -118,18 +139,12 @@ function useRandom(rows, cols) {
         (row, col) => fillerHandler(
             row, col, getColor);
 
-    return { getColor, getBorder, getFiller };
+    return { palette, getColor, getBorder, getFiller };
 }
 
 export default function Snowman() {
     const { height, width } = useWindow();
-    const shade = 'light';
     const size  = 5;
-
-    const palette = {
-        primary: `primary.${shade}`,
-        secondary: `secondary.${shade}`
-    };
 
     let { rows, cols } = useMemo(
         () => convertPixels(
@@ -139,7 +154,7 @@ export default function Snowman() {
     rows -= 2;
     cols -= 3;
 
-    const { getColor, getBorder, getFiller }
+    const { palette, getColor, getBorder, getFiller }
         = useRandom(rows, cols);
 
     const FrontCell
