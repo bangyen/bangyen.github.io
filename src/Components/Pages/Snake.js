@@ -80,7 +80,6 @@ function reduceBoard(state, velocity) {
         } else {
             board = mapBoard(board, 1);
             board = addNext(max, board);
-            console.log(board);
         }
 
         length = board[head];
@@ -194,7 +193,8 @@ export default function Snake() {
                     color = 'primary.light';
             }
 
-            return <Cell backgroundColor={color} />;
+            return <Cell
+                backgroundColor={color} />;
         }, [state, cols]);
 
     useEffect(() => {

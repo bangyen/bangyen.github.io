@@ -41,7 +41,8 @@ export function HomeButton({hide}) {
     );
 }
 
-function Cell(size) {
+function Cell({
+        size, children, ...rest}) {
     const remSize = `${size}rem`;
     const radius  = `${size / 5}rem`;
 
@@ -54,17 +55,15 @@ function Cell(size) {
         width: remSize
     };
 
-    return ({children, ...rest}) => {
-        const combined = {
-            ...props,
-            ...rest};
+    const combined = {
+        ...props,
+        ...rest};
 
-        return (
-            <Box {...combined}>
-                {children}
-            </Box>
-        );
-    };
+    return (
+        <Box {...combined}>
+            {children}
+        </Box>
+    );
 }
 
 function Row(props) {
@@ -76,14 +75,21 @@ function Row(props) {
         Wrapper
     } = props;
 
-    const getCell = useCallback(
-        (_, j) => (
+    const Resized = useCallback(
+        props => (
+            <Cell
+                size={size}
+                {...props} />),
+        [size]);
+
+    const WrappedCell
+        = (_, j) => (
             <Wrapper
                 key={`${index}_${j}`}
-                Cell={Cell(size)}
+                Cell={Resized}
                 row={index}
                 col={j} />
-        ), [index, size]);
+        );
  
     return (
         <Grid
@@ -91,8 +97,9 @@ function Row(props) {
             size={12}
             spacing={spacing}
             justifyContent="center">
-            {[...Array(cols)]
-                .map(getCell)}
+            {Array.from(
+                { length: cols },
+                WrappedCell)}
         </Grid>
     );
 }
@@ -126,8 +133,9 @@ export function CustomGrid(props) {
             size={12}
             spacing={rem}
             alignItems="center">
-            {[...Array(rows)]
-                .map(getRow)}
+            {Array.from(
+                { length: rows },
+                getRow)}
         </Grid>
     );
 }

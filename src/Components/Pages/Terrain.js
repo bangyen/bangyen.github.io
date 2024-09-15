@@ -98,7 +98,7 @@ function useRandom(rows, cols) {
                 primary: `#${primary}`,
                 secondary: `#${secondary}`
             };
-        }, []);
+        }, [seed]);
 
     const colors = useMemo(
         () => {
@@ -130,16 +130,20 @@ function useRandom(rows, cols) {
             return colors[row][col];
         }, [colors, rows, cols]);
 
-    const getBorder = useCallback(
+    const getBorder =
         (row, col) => borderHandler(
-            row, col, getColor),
-        [getColor]);
+            row, col, getColor);
 
     const getFiller =
         (row, col) => fillerHandler(
             row, col, getColor);
 
-    return { palette, getColor, getBorder, getFiller };
+    return {
+        palette,
+        getColor,
+        getBorder,
+        getFiller
+    };
 }
 
 export default function Snowman() {
