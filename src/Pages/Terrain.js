@@ -1,8 +1,12 @@
 import Grid from '@mui/material/Grid2';
 import { CustomGrid, Controls } from '../helpers';
-import { useWindow } from '../hooks';
-import { useMemo, useCallback } from 'react';
+import { useWindow, useKeys } from '../hooks';
+import { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { convertPixels } from '../calculate';
+import { createNoise2D, createNoise4D } from 'simplex-noise';
+import { getDirection, gridMove } from '../calculate';
+import { DirectionsWalkRounded } from '@mui/icons-material';
+import * as colors from '@mui/material/colors';
 
 function Centered({children}) {
     const style = {
@@ -19,15 +23,6 @@ function Centered({children}) {
             {children}
         </Grid>
     );
-}
-
-function getRandom(seed, row, col) {
-    const mult = 1.5;
-    seed *= (row + 1) * mult;
-    seed %= 1;
-    
-    seed *= (col + 1) * mult;
-    return seed % 1;
 }
 
 function borderHandler(row, col, getColor) {
@@ -74,31 +69,88 @@ function fillerHandler(row, col, getColor) {
         return color;
     }
 
-function getHex(seed) {
-    const max = 16 ** 6;
-    const hex = Math
-        .floor(seed * max)
-        .toString(16)
-        .padStart(6, '0');
+function getRandom(length) {
+    const random = Math.random;
+    const index  = 'A100';
 
-    return hex;
+    return Object.values(colors)
+        .map(color => color[index])
+        .sort(() => random() - 0.5)
+        .filter(Boolean)
+        .slice(0, length);
 }
 
-function useRandom(rows, cols) {
-    const seed = useMemo(
-        () => Math.random(), []);
+function handleAction(state, action) {
+    const { type, payload } = action;
+
+    const {
+        position,
+        sector,
+        rows,
+        cols
+    } = state;
+
+    if (type === 'resize') {
+        const { rows, cols }
+            = payload;
+
+        const newPosition
+            = Math.floor(
+                (rows + 1) * cols / 2);
+
+        return {
+            ...state,
+            ...payload,
+            position:
+                newPosition
+        };
+    }
+
+    const direction
+        = getDirection(
+            action.type);
+
+    const newPosition
+        = gridMove(
+            position,
+            direction,
+            rows,
+            cols);
+
+    if (newPosition > position) {
+        if (direction === -2)
+            sector[0]--;
+        else if (direction === -1)
+            sector[1]--;
+    } else if (newPosition < position) {
+        if (direction === 2)
+            sector[0]++;
+        else if (direction === 1)
+            sector[1]++;
+    }
+
+    return {
+        ...state,
+        position:
+            newPosition
+    };
+}
+
+function useRandom({ sector, rows, cols }) {
+    const twoDim  = useMemo(
+        () => createNoise2D(), []);
+    const fourDim = useMemo(
+        () => createNoise4D(), []);
+
+    const [xValue, yValue] = sector;
 
     const palette = useMemo(
         () => {
-            const next = (seed * 10) % 1;
-            const primary   = getHex(seed);
-            const secondary = getHex(next);
+            const [primary, secondary]
+                = getRandom(2);
 
-            return {
-                primary: `#${primary}`,
-                secondary: `#${secondary}`
-            };
-        }, [seed]);
+            return { primary, secondary };
+        }, [twoDim, xValue, yValue]);
 
     const colors = useMemo(
         () => {
@@ -108,17 +160,16 @@ function useRandom(rows, cols) {
                 colors.push([]);
 
                 for (let c = 0; c < cols; c++) {
-                    const random
-                        = getRandom(
-                            seed, r, c);
-
-                    colors[r].push(
-                        random > 0.5);
+                    const random = fourDim(
+                        xValue, yValue, r, c);
+                    colors[r].push(random > 0);
                 }
             }
 
             return colors;
-        }, [seed, rows, cols]);
+        }, [fourDim,
+            xValue, yValue,
+            rows, cols]);
 
     const getColor = useCallback(
         (row, col) => {
@@ -146,9 +197,10 @@ function useRandom(rows, cols) {
     };
 }
 
-export default function Snowman() {
+export default function Terrain() {
     const { height, width } = useWindow();
-    const size  = 5;
+    const { create } = useKeys();
+    const size = 5;
 
     let { rows, cols } = useMemo(
         () => convertPixels(
@@ -158,23 +210,55 @@ export default function Snowman() {
     rows -= 2;
     cols -= 3;
 
+    const [state, dispatch] = useReducer(
+        handleAction, {
+            sector: [0, 0],
+            position: 0,
+            rows,
+            cols
+        });
+
     const { palette, getColor, getBorder, getFiller }
-        = useRandom(rows, cols);
+        = useRandom(state);
+
+    useEffect(() => {
+        dispatch({
+            type: 'resize',
+            payload:
+                { rows, cols }
+        });
+    }, [rows, cols]);
+
+    useEffect(() => {
+        create(event => {
+            dispatch({
+                type: event.key});
+        });
+    }, [create]);
 
     const frontProps 
         = (row, col) => {
-            const props
-                = getBorder(row, col);
-            const value 
-                = getColor(row, col);
-            const color = value
+            const style = getBorder(row, col);
+            const value = getColor(row, col);
+
+            const backgroundColor = value
                 ? palette.primary
                 : palette.secondary;
 
+            const index = row * cols + col;
+            let children = null;
+
+            if (index === state.position)
+                children = (
+                    <DirectionsWalkRounded
+                        fontSize='large' />
+                );
+
             return {
-                style: props,
-                backgroundColor:
-                    color
+                color: 'black',
+                backgroundColor,
+                children,
+                style
             };
         };
 
@@ -212,7 +296,7 @@ export default function Snowman() {
                 </Centered>
             </Centered>
             <Controls
-                velocity={{}} />
+                handler={dir => () => dispatch({type: 'arrow' + dir})} />
         </Grid>
     );
 }
