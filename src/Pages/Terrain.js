@@ -3,9 +3,9 @@ import { CustomGrid, Controls } from '../helpers';
 import { useWindow, useKeys } from '../hooks';
 import { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { convertPixels } from '../calculate';
-import { createNoise2D, createNoise4D } from 'simplex-noise';
+import { createNoise3D, createNoise4D } from 'simplex-noise';
 import { getDirection, gridMove } from '../calculate';
-import { DirectionsWalkRounded } from '@mui/icons-material';
+import { BoyRounded, DirectionsWalkRounded } from '@mui/icons-material';
 import * as colors from '@mui/material/colors';
 
 function Centered({children}) {
@@ -69,13 +69,12 @@ function fillerHandler(row, col, getColor) {
         return color;
     }
 
-function getRandom(length) {
-    const random = Math.random;
-    const index  = 'A100';
+function getRandom(length, compare) {
+    const index = 'A100';
 
     return Object.values(colors)
         .map(color => color[index])
-        .sort(() => random() - 0.5)
+        .sort(compare)
         .filter(Boolean)
         .slice(0, length);
 }
@@ -117,6 +116,10 @@ function handleAction(state, action) {
             rows,
             cols);
 
+    let newIcon = direction % 2
+        ? DirectionsWalkRounded
+        : BoyRounded;
+
     if (newPosition > position) {
         if (direction === -2)
             sector[0]--;
@@ -131,26 +134,34 @@ function handleAction(state, action) {
 
     return {
         ...state,
-        position:
-            newPosition
+        direction,
+        Icon: newIcon,
+        position: newPosition
     };
 }
 
 function useRandom({ sector, rows, cols }) {
-    const twoDim  = useMemo(
-        () => createNoise2D(), []);
-    const fourDim = useMemo(
+    const threeDim = useMemo(
+        () => createNoise3D(), []);
+    const fourDim  = useMemo(
         () => createNoise4D(), []);
 
     const [xValue, yValue] = sector;
 
-    const palette = useMemo(
-        () => {
-            const [primary, secondary]
-                = getRandom(2);
+    const palette = useMemo(() => {
+        let count = 0;
 
-            return { primary, secondary };
-        }, [twoDim, xValue, yValue]);
+        const compare = () =>
+            threeDim(
+                xValue + 0.5,
+                yValue + 0.5,
+                count++);
+
+        const [primary, secondary]
+            = getRandom(2, compare);
+
+        return { primary, secondary };
+    }, [threeDim, xValue, yValue]);
 
     const colors = useMemo(
         () => {
@@ -212,6 +223,7 @@ export default function Terrain() {
 
     const [state, dispatch] = useReducer(
         handleAction, {
+            Icon: BoyRounded,
             sector: [0, 0],
             position: 0,
             rows,
@@ -220,6 +232,7 @@ export default function Terrain() {
 
     const { palette, getColor, getBorder, getFiller }
         = useRandom(state);
+
 
     useEffect(() => {
         dispatch({
@@ -245,14 +258,21 @@ export default function Terrain() {
                 ? palette.primary
                 : palette.secondary;
 
-            const index = row * cols + col;
-            let children = null;
+            const index   = row * cols + col;
+            let iconProps = {fontSize: 'large'};
+            let children  = null;
 
-            if (index === state.position)
+            if (index === state.position) {
+                if (state.direction === -1)
+                    iconProps.sx = {
+                        transform: 'scaleX(-1)'
+                    };
+
                 children = (
-                    <DirectionsWalkRounded
-                        fontSize='large' />
+                    <state.Icon
+                        {...iconProps} />
                 );
+            }
 
             return {
                 color: 'black',
