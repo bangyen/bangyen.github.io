@@ -19,19 +19,14 @@ function getState(state) {
         end
     } = state;
 
-    if (index === code.length) {
-        if (tape[pointer])
-            end = false;
-        else
-            index = 0;
-    }
-
-    if (++index === code.length)
+    if (index === code.length
+            || (!index && !tape[pointer]))
         return {
             ...state,
+            index: 0,
             end: true};
 
-    const char = code[index];
+    const char = code[index++];
     tape = [...tape];
 
     if (char === '+') {

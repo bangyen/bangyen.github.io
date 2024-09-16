@@ -72,23 +72,15 @@ function Row(props) {
         size,
         index,
         spacing,
-        Wrapper
+        cellProps
     } = props;
-
-    const Resized = useCallback(
-        props => (
-            <Cell
-                size={size}
-                {...props} />),
-        [size]);
 
     const WrappedCell
         = (_, j) => (
-            <Wrapper
+            <Cell
+                {...cellProps(index, j)}
                 key={`${index}_${j}`}
-                Cell={Resized}
-                row={index}
-                col={j} />
+                size={size} />
         );
  
     return (
@@ -109,7 +101,7 @@ export function CustomGrid(props) {
         size,
         rows,
         cols,
-        Wrapper
+        cellProps
     } = props;
 
     const auto = getSpace(size);
@@ -124,8 +116,8 @@ export function CustomGrid(props) {
                 size={size}
                 spacing={rem}
                 key={`row_${i}`}
-                Wrapper={Wrapper} />
-        ), [cols, size, rem, Wrapper]);
+                cellProps={cellProps} />
+        ), [cols, size, rem, cellProps]);
 
     return (
         <Grid

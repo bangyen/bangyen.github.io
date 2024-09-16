@@ -161,8 +161,8 @@ export default function Snowman() {
     const { palette, getColor, getBorder, getFiller }
         = useRandom(rows, cols);
 
-    const FrontCell
-        = ({Cell, row, col}) => {
+    const frontProps 
+        = (row, col) => {
             const props
                 = getBorder(row, col);
             const value 
@@ -171,29 +171,24 @@ export default function Snowman() {
                 ? palette.primary
                 : palette.secondary;
 
-            return (
-                <Cell
-                    size={size}
-                    style={props}
-                    backgroundColor
-                        ={color} />
-            );
+            return {
+                style: props,
+                backgroundColor:
+                    color
+            };
         };
 
-    const BackCell
-        = ({Cell, row, col}) => {
+    const backProps 
+        = (row, col) => {
             const value
                 = getFiller(row, col);
             const color = value
                 ? palette.primary
                 : palette.secondary;
 
-            return (
-                <Cell
-                    size={size}
-                    backgroundColor
-                        ={color} />
-            );
+            return {
+                backgroundColor: color
+            };
         };
 
     return (
@@ -204,14 +199,16 @@ export default function Snowman() {
                     size={size}
                     rows={rows - 1}
                     cols={cols - 1}
-                    Wrapper={BackCell} />
+                    cellProps
+                        ={backProps} />
                 <Centered>
                     <CustomGrid
                         space={0}
                         size={size}
                         rows={rows}
                         cols={cols}
-                        Wrapper={FrontCell} />
+                        cellProps
+                            ={frontProps} />
                 </Centered>
             </Centered>
             <Controls

@@ -127,6 +127,10 @@ function handleAction(state, action) {
 
 function handleDirection(action, event) {
     const change = getDirection(event);
+
+    if (!change)
+        return;
+
     let { velocity, buffer, move }
         = action.current;
 
@@ -180,8 +184,8 @@ export default function Snake() {
                 handleDirection(action, key);
             }, [action]);
 
-    const Wrapper = useCallback(
-        ({Cell, row, col}) => {
+    const chooseColor = useCallback(
+        (row, col) => {
             const index = row * cols + col;
             const board = state.board;
             let color   = 'inherit';
@@ -193,8 +197,9 @@ export default function Snake() {
                     color = 'primary.light';
             }
 
-            return <Cell
-                backgroundColor={color} />;
+            return {
+                backgroundColor: color
+            };
         }, [state, cols]);
 
     useEffect(() => {
@@ -238,7 +243,8 @@ export default function Snake() {
                     size={size}
                     rows={rows}
                     cols={cols}
-                    Wrapper={Wrapper} />
+                    cellProps 
+                        ={chooseColor} />
             </Grid>
             <Controls
                 handler={controlHandler} />

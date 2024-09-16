@@ -82,18 +82,19 @@ function handleAction(state, action) {
     const { type, payload } = action;
     let newState  = {};
 
-    const update = (option, flag) => {
+    const update = (type, flag) => {
         const { nextIter, clear }
             = payload;
 
         if (flag)
             clear();
 
-        newState = nextIter(
-            state, option);
+        const result
+            = nextIter({
+                type});
 
         return {
-            ...newState,
+            ...result,
             select: null};
     };
 
@@ -162,7 +163,10 @@ function handleAction(state, action) {
 }
 
 export default function GridEditor(props) {
-    const { create: createKeys } = useKeys();
+    const {
+        create: createKeys,
+        clear:  clearKeys
+    } = useKeys();
     const { create, clear } = useTimer(200);
 
     const {
@@ -209,13 +213,20 @@ export default function GridEditor(props) {
         = useCallback(grid => {
             clear();
 
-            return nextIter(
-                {...start, grid},
-                'clear');
+            return nextIter({
+                type: 'clear',
+                payload: {
+                    ...start,
+                    grid,
+                    rows,
+                    cols
+                }});
         }, [start,
             clear,
-            nextIter]);
-            
+            nextIter,
+            rows,
+            cols]);
+
     useEffect(() => {
         dispatch({
             type: 'resize',
@@ -240,7 +251,12 @@ export default function GridEditor(props) {
         };
 
         createKeys(wrapper);
-    }, [name, createKeys, resetState]);
+
+        return () => clearKeys();
+    }, [name,
+        createKeys,
+        resetState,
+        clearKeys]);
 
     const handleClick = useCallback(
         select => () => {
@@ -289,7 +305,7 @@ export default function GridEditor(props) {
         pointer: state.pointer,
         tapeFlag: tape,
         outFlag:  output,
-        accFlag:  register,
+        regFlag:  register,
         container
     };
 

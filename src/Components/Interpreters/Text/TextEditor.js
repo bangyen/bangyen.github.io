@@ -25,8 +25,13 @@ function startTimer(state, payload) {
         : {...start, code};
 
     clear();
+    nextIter({
+        type: 'clear',
+        payload: initial});
     create({repeat});
-    nextIter(initial, 'clear');
+    console.log(initial);
+
+    return initial;
 }
 
 function handleAction(state, action) {
@@ -34,23 +39,24 @@ function handleAction(state, action) {
     const { clear } = payload;
     let   newState  = {};
 
-    const update = (option, flag) => {
+    const update = (type, flag) => {
         const { nextIter } = payload;
 
         if (flag)
             clear();
 
-        newState = nextIter(
-            state, option);
+        const result
+            = nextIter({
+                type});
 
         return {
-            ...newState,
+            ...result,
             select: null};
     };
 
     switch (type) {
         case 'run':
-            startTimer(
+            newState = startTimer(
                 state, payload);
             break;
         case 'timer':
@@ -72,16 +78,30 @@ function handleAction(state, action) {
             newState = update(
                 'next', false);
             break;
+        case 'ff':
+            do {
+                newState = update(
+                    'next', false);
+            } while (!newState.end);
+            break;
         case 'edit':
-            const { newText, clean }
-                = payload;
+            const {
+                nextIter,
+                newText,
+                clean
+            } = payload;
 
-            clear();
             newState = {
                 ...state,
                 text: newText,
-                code: clean(newText)
+                code: clean(
+                    newText)
             };
+
+            clear();
+            nextIter({
+                type: 'clear',
+                payload: newState});
             break;
         default:
             break;
@@ -127,9 +147,16 @@ export default function TextEditor(props) {
 
                 dispatch({
                     type: 'edit',
-                    payload: {newText, clean, clear}
+                    payload: {
+                        nextIter,
+                        newText,
+                        clean,
+                        clear}
                 });
-            }, [dispatch, clean, clear]);
+            }, [nextIter,
+                dispatch,
+                clean,
+                clear]);
 
     useEffect(() => {
         document.title = name 

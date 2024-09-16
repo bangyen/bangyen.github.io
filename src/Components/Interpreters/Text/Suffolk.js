@@ -21,13 +21,13 @@ function getState(state) {
         end
     } = state;
 
-    if (++index === code.length)
+    if (index === code.length)
         return {
             ...state,
             index: 0,
             end: true};
 
-    const char = code[index];
+    const char = code[index++];
     tape = [...tape];
 
     switch (char) {

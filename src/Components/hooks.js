@@ -133,24 +133,22 @@ export function useCache(getState) {
     const cache = useRef([]);
     const index = useRef(0);
 
-    return useCallback((payload, type) => {
+    return useCallback(({type, payload}) => {
         const states = cache.current;
 
         switch (type) {
             case 'next':
-                const next
+                const curr
                     = index.current;
                 index.current++;
 
-                if (next + 1 === states.length) {
-                    if (states[next].end) {
+                if (curr + 1 === states.length) {
+                    if (states[curr].end) {
                         index.current--;
                     } else {
-                        const newState
-                            = getState(
-                                payload);
-
-                        states.push(newState);
+                        const state = states[curr];
+                        const next  = getState(state);
+                        states.push(next);
                     }
                 }
 

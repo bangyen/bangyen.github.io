@@ -148,7 +148,7 @@ export function GridArea({
     const { size }
         = useContext(EditorContext);
 
-    const Wrapper = ({Cell, row, col}) => {
+    const cellProps = (row, col) => {
         const pos    = cols * row + col;
         const color  = chooseColor(pos);
         const value  = options[pos];
@@ -157,25 +157,25 @@ export function GridArea({
         const select = `${color}.light`;
         const hover  = `${color}.main`;
 
-        return (
-            <Cell
-                color={text}
-                backgroundColor={select}
-                onClick={handleClick(pos)}
-                sx={{
-                    cursor: 'pointer',
-                    '&:hover': {
-                        backgroundColor: hover
-                    }
-                }}>
+        return {
+            color: text,
+            backgroundColor: select,
+            onClick: handleClick(pos),
+            children: (
                 <Text text={value} />
-            </Cell>
-        );
+            ),
+            sx: {
+                cursor: 'pointer',
+                '&:hover': {
+                    backgroundColor: hover
+                }
+            }
+        };
     };
 
     return (
         <CustomGrid
-            Wrapper={Wrapper}
+            cellProps={cellProps}
             size={size}
             rows={rows}
             cols={cols} />
