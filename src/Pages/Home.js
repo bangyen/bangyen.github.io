@@ -20,7 +20,7 @@ import React, { useState, useEffect } from 'react';
 import { names } from '../Interpreters';
 import { TooltipButton } from '../helpers';
 import { useWindow } from '../hooks';
-import { pages } from '..';
+import { pages } from './';
 
 function dropdown(name, options) {
     return (

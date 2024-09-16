@@ -10,13 +10,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { grey, blueGrey } from '@mui/material/colors';
 
-import * as run from './Components/Interpreters';
-import * as page from './Components';
-
-import './index.css';
-import './misc.css';
-import './Grid.css';
-import './Button.css';
+import * as run from './Interpreters';
+import * as page from './Pages';
 
 const darkTheme = createTheme({
     palette: {
