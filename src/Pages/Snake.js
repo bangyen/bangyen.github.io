@@ -127,6 +127,7 @@ function handleAction(state, action) {
 
 function handleDirection(action, event) {
     const change = getDirection(event);
+    console.log(change);
 
     if (!change)
         return;
@@ -179,7 +180,7 @@ export default function Snake() {
 
     const controlHandler
         = useCallback(
-            event => {
+            event => () => {
                 const key = 'arrow' + event;
                 handleDirection(action, key);
             }, [action]);
