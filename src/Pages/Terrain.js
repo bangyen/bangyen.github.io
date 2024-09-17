@@ -245,8 +245,8 @@ export default function Terrain() {
             size, height, width),
         [size, height, width]);
 
-    rows -= 2;
-    cols -= 3;
+    rows -= 1;
+    cols -= 1;
 
     const [state, dispatch] = useReducer(
         handleAction, {
