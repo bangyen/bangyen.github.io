@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid2';
 
 import { useWindow, useTimer, useKeys } from '../hooks';
-import { useMemo, useCallback, useRef, useReducer, useEffect } from 'react';
+import { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { CustomGrid, Controls } from '../helpers';
 import { convertPixels, gridMove, getDirection } from '../calculate';
 
@@ -58,10 +58,15 @@ function handleResize(state, rows, cols) {
     };
 }
 
-function reduceBoard(state, velocity) {
+function reduceBoard(state) {
     let {
-        board, length,
-        head, rows, cols
+        board,
+        length,
+        head,
+        rows,
+        cols,
+        velocity,
+        buffer
     } = state;
 
     const max = rows * cols;
@@ -87,84 +92,56 @@ function reduceBoard(state, velocity) {
         board[head] = length;
     }
 
+    if (buffer.length) {
+        const [first, ...rest] = buffer;
+        buffer = rest;
+
+        if (velocity + first)
+            velocity = first;
+    }
+
     return {
         ...state,
         length,
         board,
-        head
+        head,
+        velocity,
+        buffer
     };
 }
 
 function handleAction(state, action) {
     const { type, payload } = action;
 
-    if (action.type === 'resize') {
-        const { rows, cols } = payload;
-        return handleResize(
-            state, rows, cols);
+    switch (type) {
+        case 'resize':
+            const { rows, cols }
+                = payload;
+
+            return handleResize(
+                state, rows, cols);
+        case 'steer':
+            const velocity
+                = getDirection(
+                    payload.key);
+            let { buffer } = state;
+
+            if (velocity)
+                buffer = [
+                    ...buffer,
+                    velocity];
+
+            return {
+                ...state,
+                buffer};
+        case 'move':
+            return reduceBoard(state);
+        default:
+            return state;
     }
-
-    if (type !== 'move')
-        return state;
-
-    const { velocity, buffer, keepFlag }
-        = payload.current;
-
-    let newVelocity = velocity;
-    let newBuffer   = buffer;
-
-    if (!keepFlag) {
-        newVelocity
-            = buffer || velocity;
-        newBuffer = null;
-    }
-
-    payload.current = {
-        velocity: newVelocity,
-        buffer: newBuffer,
-        keepFlag: false
-    };
-
-    return reduceBoard(
-        state, velocity);
-}
-
-function handleDirection(action, event) {
-    const change = getDirection(event);
-
-    if (!change)
-        return;
-
-    let { velocity, buffer, keepFlag }
-        = action.current;
-
-    if (velocity + change) {
-        if (keepFlag) {
-            buffer = change;
-        } else if (buffer) {
-            velocity = buffer;
-            buffer   = change;
-            keepFlag = true;
-        } else {
-            velocity = change;
-            keepFlag = true;
-        }
-    }
-
-    action.current = {
-        velocity,
-        keepFlag,
-        buffer
-    };
 }
 
 export default function Snake() {
-    const action = useRef({
-        velocity: 1,
-        buffer: null,
-        keepFlag: false
-    });
-
     const { create: createTimer } = useTimer(100);
     const { create: createKeys  } = useKeys();
 
@@ -178,19 +155,29 @@ export default function Snake() {
             size, height, width),
         [size, height, width]);
 
+    const initial = useMemo(
+        () => ({
+            velocity: 1,
+            buffer: [],
+            length
+        }), []);
+
     const [state, dispatch]
         = useReducer(
             handleAction,
             handleResize(
-                {length},
-                rows, cols));
+                initial, rows, cols));
 
     const controlHandler
         = useCallback(
             event => () => {
-                const key = 'arrow' + event;
-                handleDirection(action, key);
-            }, [action]);
+                const key
+                    = 'arrow' + event;
+
+                dispatch({
+                    type: 'steer',
+                    payload: {key}});
+            }, []);
 
     const chooseColor = useCallback(
         (row, col) => {
@@ -213,13 +200,13 @@ export default function Snake() {
     useEffect(() => {
         const wrapDispatch
             = () => dispatch({
-                type: 'move',
-                payload: action});
+                type: 'move'});
 
         const wrapDirection
             = event =>
-                handleDirection(
-                    action, event.key);
+                dispatch({
+                    type: 'steer',
+                    payload: event});
 
         createTimer({repeat: wrapDispatch});
         createKeys(wrapDirection);
