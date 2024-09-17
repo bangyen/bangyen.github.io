@@ -174,9 +174,11 @@ export default function Home() {
                 alignItems='center'>
                 <Typography sx={{
                         typography: {
-                            xs: 'h5',
-                            sm: 'h4',
-                            md: 'h3'
+                            xs: 'h6',
+                            sm: 'h5',
+                            md: 'h4',
+                            lg: 'h3',
+                            xl: 'h2'
                         }
                     }}>
                     Hey, my name is&nbsp;

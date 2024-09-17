@@ -8,6 +8,7 @@ import { getDirection, gridMove } from '../calculate';
 import { BoyRounded, DirectionsWalkRounded } from '@mui/icons-material';
 import * as colors from '@mui/material/colors';
 import { getContrastRatio } from '@mui/material/styles';
+import { useMediaQuery } from '@mui/material';
 
 function Centered({children}) {
     const style = {
@@ -234,7 +235,10 @@ function handleAction(state, action) {
 export default function Terrain() {
     const { height, width } = useWindow();
     const { create } = useKeys();
-    const size = 5;
+
+    const mobile = useMediaQuery(
+        theme => theme.breakpoints.down('sm'));
+    const size = mobile ? 3 : 5;
 
     let { rows, cols } = useMemo(
         () => convertPixels(
@@ -253,9 +257,12 @@ export default function Terrain() {
             cols
         });
 
-    const { palette, getColor, getBorder, getFiller }
-        = useRandom(state);
-
+    const {
+        palette,
+        getColor,
+        getBorder,
+        getFiller
+    } = useRandom(state);
 
     useEffect(() => {
         dispatch({
@@ -266,6 +273,9 @@ export default function Terrain() {
     }, [rows, cols]);
 
     useEffect(() => {
+        document.title
+            = 'Terrain | Bangyen';
+
         create(event => {
             dispatch({
                 type: event.key});
@@ -281,21 +291,31 @@ export default function Terrain() {
                 ? palette.primary
                 : palette.secondary;
 
-            const index   = row * cols + col;
-            let iconProps = {fontSize: 'large'};
-            let children  = null;
+            const {
+                position,
+                direction,
+                Icon
+            } = state;
 
-            if (index === state.position) {
-                if (state.direction === -1)
-                    iconProps.sx = {
-                        transform: 'scaleX(-1)'
-                    };
+            const index
+                = row * cols + col;
 
-                children = (
-                    <state.Icon
-                        {...iconProps} />
-                );
-            }
+            const iconProps = {
+                fontSize: mobile
+                    ? 'medium'
+                    : 'large',
+                sx: {
+                    transform:
+                        direction === -1
+                            ? 'scaleX(-1)'
+                            : 'scaleX(1)'
+                }
+            };
+
+            const children
+                = index === position
+                    ? <Icon {...iconProps} />
+                    : null;
 
             return {
                 color: 'black',
