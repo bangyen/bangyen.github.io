@@ -1,7 +1,6 @@
 import Grid from '@mui/material/Grid2';
 
 import {
-    CircleRounded,
     MenuRounded,
     GitHub
 } from '@mui/icons-material';
@@ -37,56 +36,6 @@ function dropdown(name, options) {
                     {text.replace('_', ' ')}
                     </Typography>
                 </MenuItem>
-            )}
-        </Box>
-    );
-}
-
-
-function getCircles(num, size) {
-    const left   = size / 3;
-    const right  = left * 2;
-    const height = size / 5;
-    const speed  = size / 400;
-    const offset = height / 2;
-
-    const offsetPathString
-        = `path("                \
-            M0,        0         \
-            C${left},  ${height} \
-            ${right}, -${height} \
-            ${size},   0         \
-        ")`;
-
-    const animationString
-        = (n) => `
-            ${speed}s
-            linear
-            ${n / 10}s
-            infinite
-            alternate
-            ball
-        `;
-
-    const keyframesObject = {
-        '0%':   {offsetDistance: '0%'},
-        '100%': {offsetDistance: '100%'}
-    };
-
-    return (
-        <Box sx={{overflow: 'hidden'}}>
-            {[...Array(num).keys()].map(n =>
-                <CircleRounded
-                    key={n}
-                    sx={{
-                        offsetPath: offsetPathString,
-                        animation: animationString(n),
-                        position:  'fixed',
-                        bottom:    offset,
-                        left:      -50,
-                        '@keyframes ball':
-                            keyframesObject,
-                    }}/>
             )}
         </Box>
     );
@@ -139,10 +88,57 @@ function MenuButton({children}) {
     );
 }
 
+function WaveBox({
+        index,
+        count,
+        height,
+        width
+    }) {
+    const duration = 150 / count;
+    const delay    = (index % count)
+        / count * 5;
+
+    height = `${height}rem`;
+    width  = `${width}rem`;
+
+    const animation = `
+        wave
+        ${duration}s
+        ${delay}s
+        ease-in-out
+        infinite
+        alternate
+    `;
+
+    const keyframes = {
+        '0%': {transform:
+            'translateY(0)'},
+        '100%': {transform:
+            'translateY(-5rem)'}
+    };
+
+    return (
+        <Box
+            height={height}
+            width={width}
+            backgroundColor='white'
+            sx={{
+                animation,
+                '@keyframes wave':
+                    keyframes
+            }}>
+        </Box>
+    );
+}
+
 export default function Home() {
     const { width } = useWindow();
-    const size      = width + 100;
-    const number    = 5;
+    const date      = Date.now();
+    const boxHeight = 1.5;
+    const boxWidth  = 0.5;
+    
+    const count     = Math.ceil(
+        width / (16 * boxWidth));
 
     useEffect(() => {
         document.title
@@ -150,9 +146,11 @@ export default function Home() {
     }, []);
 
     return (
-        <Grid container
+        <Grid
+            container
             height="100vh">
-            <Grid container
+            <Grid
+                container
                 direction="column"
                 margin={2}
                 spacing={2}>
@@ -169,25 +167,49 @@ export default function Home() {
             <Grid
                 size="grow"
                 display='flex'
-                marginRight={8}
-                justifyContent='center'
-                alignItems='center'>
-                <Typography sx={{
-                        typography: {
-                            xs: 'body1',
+                flexDirection='column'>
+                <Grid
+                    flex={1}
+                    display='flex'
+                    marginRight={8}
+                    justifyContent='center'
+                    alignItems='center'>
+                    <Typography sx={{
+                            typography: {
+                                xs: 'body1',
                             sm: 'h5',
                             md: 'h4',
-                            lg: 'h3',
-                            xl: 'h2'
-                        }
+                                lg: 'h3',
+                                xl: 'h2'
+                            }
+                        }}>
+                        Hey, my name is&nbsp;
+                        <strong>
+                            Bangyen
+                        </strong>
+                        .
+                    </Typography>
+                </Grid>
+                <Grid
+                    left='50%'
+                    bottom='10%'
+                    width='100%'
+                    display='flex'
+                    position='absolute'
+                    sx={{
+                        transform:
+                            'translateX(-50%)'
                     }}>
-                    Hey, my name is&nbsp;
-                    <strong>
-                        Bangyen
-                    </strong>
-                    .
-                </Typography>
-                {getCircles(number, size)}
+                    {[...Array(count)]
+                        .map((_, index) => (
+                            <WaveBox
+                                index={index}
+                                count={count}
+                                key={date + index}
+                                height={boxHeight}
+                                width={boxWidth} />
+                    ))}
+                </Grid>
             </Grid>
         </Grid>
     );
