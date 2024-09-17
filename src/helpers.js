@@ -189,10 +189,12 @@ function Arrows({show, setShow, handler}) {
                     title='Left'
                     Icon={KeyboardArrowLeftRounded}
                     onClick={handler('left')} />
-                <TooltipButton
-                    title='Close'
-                    Icon={CloseRounded}
-                    onClick={flip} />
+                <IconButton
+                        size='large'
+                        onClick={flip}>
+                    <CloseRounded
+                        fontSize='inherit' />
+                </IconButton>
                 <TooltipButton
                     title='Right'
                     Icon={KeyboardArrowRightRounded}

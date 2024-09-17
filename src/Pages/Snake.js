@@ -107,18 +107,22 @@ function handleAction(state, action) {
     if (type !== 'move')
         return state;
 
-    let { velocity, buffer }
+    const { velocity, buffer, keepFlag }
         = payload.current;
 
-    if (buffer) {
-        velocity = buffer;
-        buffer   = null;
+    let newVelocity = velocity;
+    let newBuffer   = buffer;
+
+    if (!keepFlag) {
+        newVelocity
+            = buffer || velocity;
+        newBuffer = null;
     }
 
     payload.current = {
-        move: !buffer,
-        velocity,
-        buffer
+        velocity: newVelocity,
+        buffer: newBuffer,
+        keepFlag: false
     };
 
     return reduceBoard(
@@ -127,27 +131,30 @@ function handleAction(state, action) {
 
 function handleDirection(action, event) {
     const change = getDirection(event);
-    console.log(change);
 
     if (!change)
         return;
 
-    let { velocity, buffer, move }
+    let { velocity, buffer, keepFlag }
         = action.current;
 
     if (velocity + change) {
-        if (move) {
-            velocity = change;
-            move     = false;
-        } else {
+        if (keepFlag) {
+            buffer = change;
+        } else if (buffer) {
+            velocity = buffer;
             buffer   = change;
+            keepFlag = true;
+        } else {
+            velocity = change;
+            keepFlag = true;
         }
     }
 
     action.current = {
         velocity,
-        buffer,
-        move
+        keepFlag,
+        buffer
     };
 }
 
@@ -155,7 +162,7 @@ export default function Snake() {
     const action = useRef({
         velocity: 1,
         buffer: null,
-        move: true
+        keepFlag: false
     });
 
     const { create: createTimer } = useTimer(100);
