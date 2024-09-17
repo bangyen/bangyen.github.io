@@ -7,6 +7,7 @@ import { createNoise3D, createNoise4D } from 'simplex-noise';
 import { getDirection, gridMove } from '../calculate';
 import { BoyRounded, DirectionsWalkRounded } from '@mui/icons-material';
 import * as colors from '@mui/material/colors';
+import { getContrastRatio } from '@mui/material/styles';
 
 function Centered({children}) {
     const style = {
@@ -69,14 +70,104 @@ function fillerHandler(row, col, getColor) {
         return color;
     }
 
-function getRandom(length, compare) {
-    const index = 'A100';
+function getRandom(
+        length, compare, filter) {
+    const index  = 'A100';
 
-    return Object.values(colors)
+    const values = Object.values(colors)
         .map(color => color[index])
         .sort(compare)
-        .filter(Boolean)
-        .slice(0, length);
+        .filter(Boolean);
+
+    const first  = values[0];
+    const result = [first];
+
+    for (const color of values) {
+        if (result.length === length)
+            break;
+
+        if (filter(first, color))
+            result.push(color);
+    }
+
+    return result;
+}
+
+function useRandom({ sector, rows, cols }) {
+    const threeDim = useMemo(
+        () => createNoise3D(), []);
+    const fourDim  = useMemo(
+        () => createNoise4D(), []);
+
+    const [xValue, yValue] = sector;
+
+    const palette = useMemo(() => {
+        let count = 0;
+
+        const compare = () =>
+            threeDim(
+                xValue + 0.5,
+                yValue + 0.5,
+                count++);
+
+        const filter
+            = (first, second) => {
+                const ratio
+                    = getContrastRatio(
+                        first, second);
+
+                return ratio >= 1.5;
+            };
+
+        const [primary, secondary]
+            = getRandom(2, compare, filter);
+
+        return { primary, secondary };
+    }, [threeDim, xValue, yValue]);
+
+    const colors = useMemo(
+        () => {
+            const colors = [];
+
+            for (let r = 0; r < rows; r++) {
+                colors.push([]);
+
+                for (let c = 0; c < cols; c++) {
+                    const random = fourDim(
+                        xValue, yValue, r, c);
+                    colors[r].push(random > 0);
+                }
+            }
+
+            return colors;
+        }, [fourDim,
+            xValue, yValue,
+            rows, cols]);
+
+    const getColor = useCallback(
+        (row, col) => {
+            if (row < 0 || col < 0
+                    || row >= rows
+                    || col >= cols)
+                return -1;
+
+            return colors[row][col];
+        }, [colors, rows, cols]);
+
+    const getBorder =
+        (row, col) => borderHandler(
+            row, col, getColor);
+
+    const getFiller =
+        (row, col) => fillerHandler(
+            row, col, getColor);
+
+    return {
+        palette,
+        getColor,
+        getBorder,
+        getFiller
+    };
 }
 
 function handleAction(state, action) {
@@ -137,74 +228,6 @@ function handleAction(state, action) {
         direction,
         Icon: newIcon,
         position: newPosition
-    };
-}
-
-function useRandom({ sector, rows, cols }) {
-    const threeDim = useMemo(
-        () => createNoise3D(), []);
-    const fourDim  = useMemo(
-        () => createNoise4D(), []);
-
-    const [xValue, yValue] = sector;
-
-    const palette = useMemo(() => {
-        let count = 0;
-
-        const compare = () =>
-            threeDim(
-                xValue + 0.5,
-                yValue + 0.5,
-                count++);
-
-        const [primary, secondary]
-            = getRandom(2, compare);
-
-        return { primary, secondary };
-    }, [threeDim, xValue, yValue]);
-
-    const colors = useMemo(
-        () => {
-            const colors = [];
-
-            for (let r = 0; r < rows; r++) {
-                colors.push([]);
-
-                for (let c = 0; c < cols; c++) {
-                    const random = fourDim(
-                        xValue, yValue, r, c);
-                    colors[r].push(random > 0);
-                }
-            }
-
-            return colors;
-        }, [fourDim,
-            xValue, yValue,
-            rows, cols]);
-
-    const getColor = useCallback(
-        (row, col) => {
-            if (row < 0 || col < 0
-                    || row >= rows
-                    || col >= cols)
-                return -1;
-
-            return colors[row][col];
-        }, [colors, rows, cols]);
-
-    const getBorder =
-        (row, col) => borderHandler(
-            row, col, getColor);
-
-    const getFiller =
-        (row, col) => fillerHandler(
-            row, col, getColor);
-
-    return {
-        palette,
-        getColor,
-        getBorder,
-        getFiller
     };
 }
 
