@@ -13,15 +13,17 @@ import {
     NavigateBeforeRounded,
     NavigateNextRounded,
     PlayArrowRounded,
+    FirstPageRounded,
     LastPageRounded,
     HomeRounded,
-    StopRounded,
-    InfoRounded
+    InfoRounded,
+    PauseRounded
 } from '@mui/icons-material';
 
 import React, {
     createContext,
-    useContext
+    useContext,
+    useMemo
 } from 'react';
 
 export const EditorContext = createContext();
@@ -78,31 +80,43 @@ export default function Editor({children}) {
 }
 
 function Toolbar() {
-    const { name, dispatch, fastForward }
+    const { name, dispatch, fastForward, pause }
         = useContext(EditorContext);
 
     const link = 'https://esolangs.org/wiki/'
         + name.replace(' ', '_');
 
-    const ffButton = fastForward ?
+    const ForwardButton
+        = useMemo(() => fastForward ?
         <TooltipButton
             key='Fast Forward'
             title='Fast Forward'
             onClick={dispatch('ff')}
             Icon={LastPageRounded} />
-        : null;
+        : null,
+        [fastForward, dispatch]);
 
-    return [
+    const TimerButton = useMemo(
+        () => pause ?
         <TooltipButton
             key='Run'
             title='Run'
             onClick={dispatch('run')}
-            Icon={PlayArrowRounded} />,
-        <TooltipButton
-            key='Stop'
-            title='Stop'
+            Icon={PlayArrowRounded} />
+        : <TooltipButton
+            key='Pause'
+            title='Pause'
             onClick={dispatch('stop')}
-            Icon={StopRounded} />,
+            Icon={PauseRounded} />,
+        [dispatch, pause]);
+
+    return [
+        TimerButton,
+        <TooltipButton
+            key='Reset'
+            title='Reset'
+            onClick={dispatch('reset')}
+            Icon={FirstPageRounded} />,
         <TooltipButton
             key='Previous'
             title='Previous'
@@ -113,7 +127,7 @@ function Toolbar() {
             title='Next'
             onClick={dispatch('next')}
             Icon={NavigateNextRounded} />,
-        ffButton,
+        ForwardButton,
         <TooltipButton
             key='Info'
             href={link}

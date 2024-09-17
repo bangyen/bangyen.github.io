@@ -80,7 +80,7 @@ function handleResize(state, payload) {
 
 function handleAction(state, action) {
     const { type, payload } = action;
-    let newState  = {};
+    let newState = {};
 
     const update = (type, flag) => {
         const { nextIter, clear }
@@ -101,7 +101,6 @@ function handleAction(state, action) {
     switch (type) {
         case 'run':
             const {
-                resetState,
                 dispatch,
                 create
             } = payload;
@@ -113,9 +112,8 @@ function handleAction(state, action) {
                 });
             };
 
-            newState = resetState(
-                state.grid);
             create({repeat});
+            newState.pause = false;
             break;
         case 'timer':
             const newType = state.end
@@ -127,10 +125,20 @@ function handleAction(state, action) {
             break;
         case 'stop':
             payload.clear();
+            newState.pause = true;
+            break;
+        case 'reset':
+            const { resetState }
+                = payload;
+
+            newState = resetState(
+                state.grid);
+            newState.pause = true;
             break;
         case 'prev':
             newState = update(
                 'prev', true);
+            newState.pause = true;
             break;
         case 'next':
             newState = update(
@@ -139,10 +147,12 @@ function handleAction(state, action) {
         case 'edit':
             newState = handleKeys(
                 state, payload);
+            newState.pause = true;
             break;
         case 'resize':
             newState = handleResize(
                 state, payload);
+            newState.pause = true;
             break;
         case 'click':
             let { select } = payload;
@@ -167,7 +177,9 @@ export default function GridEditor(props) {
         create: createKeys,
         clear:  clearKeys
     } = useKeys();
-    const { create, clear } = useTimer(200);
+
+    const { create, clear }
+        = useTimer(200);
 
     const {
         runner,
@@ -200,6 +212,7 @@ export default function GridEditor(props) {
             ' '.repeat(
                 rows * cols),
         select: null,
+        pause: true,
         rows,
         cols
     };
@@ -220,7 +233,7 @@ export default function GridEditor(props) {
                     grid,
                     rows,
                     cols
-                }});
+            }});
         }, [start,
             clear,
             nextIter,
@@ -306,6 +319,7 @@ export default function GridEditor(props) {
         tapeFlag: tape,
         outFlag:  output,
         regFlag:  register,
+        pause:    state.pause,
         container
     };
 

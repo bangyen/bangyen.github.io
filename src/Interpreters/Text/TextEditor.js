@@ -4,11 +4,9 @@ import { useTimer, useCache } from '../../hooks';
 
 function startTimer(state, payload) {
     const {
-        start,
         nextIter,
         dispatch,
-        create,
-        clear
+        create
     } = payload;
 
     const repeat = () => {
@@ -17,26 +15,20 @@ function startTimer(state, payload) {
             payload});
     };
 
-    const { code, end }
-        = state;
+    const initial =
+        {...state, end: false}
 
-    const initial = end
-        ? {...state, end: false}
-        : {...start, code};
-
-    clear();
     nextIter({
         type: 'clear',
         payload: initial});
-    create({repeat});
-    console.log(initial);
 
-    return initial;
+    create({repeat});
+    return {pause: false};
 }
 
 function handleAction(state, action) {
-    const { type, payload } = action;
-    const { clear } = payload;
+    const { type, payload }   = action;
+    const { nextIter, clear } = payload;
     let   newState  = {};
 
     const update = (type, flag) => {
@@ -68,11 +60,27 @@ function handleAction(state, action) {
                 payload});
             break;
         case 'stop':
+            newState.pause = true;
             clear();
+            break;
+        case 'reset':
+            const {
+                start
+            } = payload;
+
+            clear();
+
+            newState = nextIter({
+                type: 'clear',
+                payload: {
+                    ...state,
+                    ...start}});
+            newState.pause = true;
             break;
         case 'prev':
             newState = update(
                 'prev', true);
+            newState.pause = true;
             break;
         case 'next':
             newState = update(
@@ -83,10 +91,10 @@ function handleAction(state, action) {
                 newState = update(
                     'next', false);
             } while (!newState.end);
+            newState.pause = true;
             break;
         case 'edit':
             const {
-                nextIter,
                 newText,
                 clean
             } = payload;
@@ -102,6 +110,7 @@ function handleAction(state, action) {
             nextIter({
                 type: 'clear',
                 payload: newState});
+            newState.pause = true;
             break;
         default:
             break;
@@ -131,6 +140,7 @@ export default function TextEditor(props) {
 
     const initial = {
         ...start,
+        pause: true,
         text: '',
         code: ''};
 
@@ -188,6 +198,7 @@ export default function TextEditor(props) {
         tapeFlag: tape,
         outFlag:  output,
         regFlag:  register,
+        pause:    state.pause,
         container
     };
 
