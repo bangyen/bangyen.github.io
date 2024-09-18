@@ -94,7 +94,7 @@ function WaveBox({
         height,
         width
     }) {
-    const duration = 150 / count;
+    const duration = 1;
     const delay    = (index % count)
         / count * 5;
 
@@ -121,6 +121,7 @@ function WaveBox({
         <Box
             height={height}
             width={width}
+            borderRadius={0.5}
             backgroundColor='white'
             sx={{
                 animation,
@@ -134,11 +135,10 @@ function WaveBox({
 export default function Home() {
     const { width } = useWindow();
     const date      = Date.now();
+
+    const count     = 125;
     const boxHeight = 1.5;
-    const boxWidth  = 0.5;
-    
-    const count     = Math.ceil(
-        width / (16 * boxWidth));
+    const boxWidth  = width / (16 * count);
 
     useEffect(() => {
         document.title
