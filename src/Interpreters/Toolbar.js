@@ -2,6 +2,7 @@ import { useContext, useMemo } from 'react';
 import { EditorContext } from './Editor';
 import { TooltipButton } from '../helpers';
 import { Link } from 'react-router-dom';
+import { useMediaQuery } from '@mui/material';
 
 import {
     PlayArrowRounded,
@@ -18,18 +19,11 @@ export function Toolbar() {
     const { name, dispatch, fastForward, pause }
         = useContext(EditorContext);
 
+    const notMobile = useMediaQuery(
+        theme => theme.breakpoints.up('sm'));
+
     const link = 'https://esolangs.org/wiki/'
         + name.replace(' ', '_');
-
-    const ForwardButton
-        = useMemo(() => fastForward ?
-        <TooltipButton
-            key='Fast Forward'
-            title='Fast Forward'
-            onClick={dispatch('ff')}
-            Icon={LastPageRounded} />
-        : null,
-        [fastForward, dispatch]);
 
     const TimerButton = useMemo(
         () => pause ?
@@ -45,36 +39,65 @@ export function Toolbar() {
             Icon={PauseRounded} />,
         [dispatch, pause]);
 
-    return [
-        TimerButton,
-        <TooltipButton
-            key='Reset'
-            title='Reset'
-            onClick={dispatch('reset')}
-            Icon={FirstPageRounded} />,
-        <TooltipButton
-            key='Previous'
-            title='Previous'
-            onClick={dispatch('prev')}
-            Icon={NavigateBeforeRounded} />,
-        <TooltipButton
-            key='Next'
-            title='Next'
-            onClick={dispatch('next')}
-            Icon={NavigateNextRounded} />,
-        ForwardButton,
-        <TooltipButton
-            key='Info'
-            href={link}
-            title='Info'
-            Icon={InfoRounded} />,
-        <TooltipButton
-            to="/"
-            key='Home'
-            title='Home'
-            component={Link}
-            Icon={HomeRounded} />
-    ];
+    const buttonData = {
+        'Reset': {
+            icon: FirstPageRounded,
+            action: 'reset',
+            flag: true
+        },
+        'Fast Forward': {
+            icon: LastPageRounded,
+            flag: fastForward,
+            action: 'ff'
+        },
+        'Previous': {
+            icon: NavigateBeforeRounded,
+            flag: notMobile,
+            action: 'prev'
+        },
+        'Next': {
+            icon: NavigateNextRounded,
+            flag: notMobile,
+            action: 'next'
+        },
+        'Info': {
+            icon: InfoRounded,
+            props: {href: link}
+        },
+        'Home': {
+            icon: HomeRounded,
+            props: {
+                component: Link,
+                to: '/'
+            }
+        }
+    };
+
+    const buttons = [TimerButton];
+
+    for (const key in buttonData) {
+        const { icon, flag, action, props }
+            = buttonData[key];
+
+        if (action && flag)
+            buttons.push(
+                <TooltipButton
+                    key={key}
+                    title={key}
+                    Icon={icon}
+                    onClick={
+                        dispatch(
+                            action)} />);
+        else if (props)
+            buttons.push(
+                <TooltipButton
+                    key={key}
+                    title={key}
+                    Icon={icon}
+                    {...props} />);
+    }
+
+    return buttons;
 }
 
 function updateHandler(payload) {

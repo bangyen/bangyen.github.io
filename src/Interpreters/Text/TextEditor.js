@@ -128,7 +128,8 @@ export default function TextEditor(props) {
         name,
         ...state,
         handleChange,
-        dispatch: wrapDispatch,
+        dispatch:
+            wrapDispatch,
         fastForward: true,
         tapeFlag: tape,
         outFlag:  output,
