@@ -1,12 +1,12 @@
 import Grid from '@mui/material/Grid2';
-import { CustomGrid, Controls } from '../helpers';
+import { Controls } from '../helpers';
 import { useWindow, useKeys } from '../hooks';
-import { useMemo, useReducer, useEffect } from 'react';
+import { useMemo, useReducer, useEffect, useCallback } from 'react';
 import { convertPixels } from '../calculate';
 import { getDirection, gridMove } from '../calculate';
 import { BoyRounded, DirectionsWalkRounded } from '@mui/icons-material';
 import { useMediaQuery } from '@mui/material';
-import { Centered, useRandom } from './Sector';
+import { Sector, useGetters } from './Sector';
 
 function handleAction(state, action) {
     const { type, payload } = action;
@@ -96,11 +96,10 @@ export default function Terrain() {
         });
 
     const {
-        palette,
         getColor,
         getBorder,
         getFiller
-    } = useRandom(state);
+    } = useGetters(state);
 
     useEffect(() => {
         dispatch({
@@ -123,11 +122,7 @@ export default function Terrain() {
     const frontProps 
         = (row, col) => {
             const style = getBorder(row, col);
-            const value = getColor(row, col);
-
-            const backgroundColor = value
-                ? palette.primary
-                : palette.secondary;
+            const color = getColor(row, col);
 
             const {
                 position,
@@ -156,8 +151,8 @@ export default function Terrain() {
                     : null;
 
             return {
+                backgroundColor: color,
                 color: 'black',
-                backgroundColor,
                 children,
                 style
             };
@@ -165,43 +160,30 @@ export default function Terrain() {
 
     const backProps 
         = (row, col) => {
-            const value
-                = getFiller(row, col);
-            const color = value
-                ? palette.primary
-                : palette.secondary;
-
             return {
-                backgroundColor: color
+                backgroundColor:
+                    getFiller(row, col)
             };
         };
 
+    const wrapDispatch
+        = useCallback(
+            dir => () => {
+                dispatch({
+                    type: 'arrow'
+                        + dir});
+            }, [dispatch]);
+
     return (
         <Grid>
-            <Centered>
-                <CustomGrid
-                    space={0}
-                    size={size}
-                    rows={rows - 1}
-                    cols={cols - 1}
-                    cellProps
-                        ={backProps} />
-                <Centered>
-                    <CustomGrid
-                        space={0}
-                        size={size}
-                        rows={rows}
-                        cols={cols}
-                        cellProps
-                            ={frontProps} />
-                </Centered>
-            </Centered>
+            <Sector
+                size={size}
+                rows={rows}
+                cols={cols}
+                frontProps={frontProps}
+                backProps={backProps} />
             <Controls
-                handler={
-                    dir => () => {
-                        dispatch({
-                            type: 'arrow' + dir});
-                    }} />
+                handler={wrapDispatch} />
         </Grid>
     );
 }

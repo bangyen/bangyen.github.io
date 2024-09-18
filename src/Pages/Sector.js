@@ -3,8 +3,40 @@ import { createNoise3D, createNoise4D } from 'simplex-noise';
 import { getContrastRatio } from '@mui/material/styles';
 import * as colors from '@mui/material/colors';
 import Grid from '@mui/material/Grid2';
+import { CustomGrid } from '../helpers';
 
-export function Centered({children}) {
+export function Sector(props) {
+    const {
+        frontProps,
+        backProps,
+        size,
+        rows,
+        cols
+    } = props;
+
+    return (
+        <Centered>
+            <CustomGrid
+                space={0}
+                size={size}
+                rows={rows - 1}
+                cols={cols - 1}
+                cellProps
+                    ={backProps} />
+            <Centered>
+                <CustomGrid
+                    space={0}
+                    size={size}
+                    rows={rows}
+                    cols={cols}
+                    cellProps
+                        ={frontProps} />
+            </Centered>
+        </Centered>
+    );
+}
+
+function Centered({children}) {
     const style = {
         transform:
             'translate(-50%, -50%)'};
@@ -22,48 +54,48 @@ export function Centered({children}) {
 }
 
 function borderHandler(row, col, getColor) {
-        const self  = getColor(row, col);
-        const up    = getColor(row - 1, col);
-        const down  = getColor(row + 1, col);
-        const left  = getColor(row, col - 1);
-        const right = getColor(row, col + 1);
-        const props = {};
+    const self  = getColor(row, col);
+    const up    = getColor(row - 1, col);
+    const down  = getColor(row + 1, col);
+    const left  = getColor(row, col - 1);
+    const right = getColor(row, col + 1);
+    const props = {};
 
-        const upCheck    = self === up;
-        const downCheck  = self === down;
-        const leftCheck  = self === left;
-        const rightCheck = self === right;
+    const upCheck    = self === up;
+    const downCheck  = self === down;
+    const leftCheck  = self === left;
+    const rightCheck = self === right;
 
-        if (upCheck || leftCheck)
-            props.borderTopLeftRadius  = 0;
-        if (upCheck || rightCheck)
-            props.borderTopRightRadius = 0;
-        if (downCheck || leftCheck)
-            props.borderBottomLeftRadius  = 0;
-        if (downCheck || rightCheck)
-            props.borderBottomRightRadius = 0;
+    if (upCheck || leftCheck)
+        props.borderTopLeftRadius  = 0;
+    if (upCheck || rightCheck)
+        props.borderTopRightRadius = 0;
+    if (downCheck || leftCheck)
+        props.borderBottomLeftRadius  = 0;
+    if (downCheck || rightCheck)
+        props.borderBottomRightRadius = 0;
 
-        return props;
-    }
+    return props;
+}
 
 function fillerHandler(row, col, getColor) {
-        const topLeft  = getColor(row, col);
-        const topRight = getColor(row, col + 1);
-        const botLeft  = getColor(row + 1, col);
-        const botRight = getColor(row + 1, col + 1);
-        let color = true;
-        
-        const total = topLeft
-            + topRight
-            + botLeft
-            + botRight;
+    const topLeft  = getColor(row, col);
+    const topRight = getColor(row, col + 1);
+    const botLeft  = getColor(row + 1, col);
+    const botRight = getColor(row + 1, col + 1);
+    let color = true;
+    
+    const total = topLeft
+        + topRight
+        + botLeft
+        + botRight;
 
-        if ((!topLeft || !botRight)
-                && total < 3)
-            color = false;
+    if ((!topLeft || !botRight)
+            && total < 3)
+        color = false;
 
-        return color;
-    }
+    return color;
+}
 
 function getRandom(
         length, compare, filter) {
@@ -88,13 +120,9 @@ function getRandom(
     return result;
 }
 
-export function useRandom({ sector, rows, cols }) {
+function usePalette(xValue, yValue) {
     const threeDim = useMemo(
         () => createNoise3D(), []);
-    const fourDim  = useMemo(
-        () => createNoise4D(), []);
-
-    const [xValue, yValue] = sector;
 
     const palette = useMemo(() => {
         let count = 0;
@@ -120,6 +148,14 @@ export function useRandom({ sector, rows, cols }) {
         return { primary, secondary };
     }, [threeDim, xValue, yValue]);
 
+    return palette;
+}
+
+function useColors({ sector, rows, cols }) {
+    const fourDim  = useMemo(
+        () => createNoise4D(), []);
+    const [xValue, yValue] = sector;
+
     const colors = useMemo(
         () => {
             const colors = [];
@@ -139,7 +175,7 @@ export function useRandom({ sector, rows, cols }) {
             xValue, yValue,
             rows, cols]);
 
-    const getColor = useCallback(
+    const colorHandler = useCallback(
         (row, col) => {
             if (row < 0 || col < 0
                     || row >= rows
@@ -149,16 +185,41 @@ export function useRandom({ sector, rows, cols }) {
             return colors[row][col];
         }, [colors, rows, cols]);
 
-    const getBorder =
-        (row, col) => borderHandler(
-            row, col, getColor);
+    return colorHandler;
+}
 
-    const getFiller =
-        (row, col) => fillerHandler(
-            row, col, getColor);
+export function useGetters({ sector, rows, cols }) {
+    const palette = usePalette(...sector);
+    const colorHandler = useColors({
+        sector, rows, cols});
+
+    const getColor = useCallback(
+        (row, col) => {
+            const value
+                = colorHandler(row, col);
+
+            return value
+                ? palette.primary
+                : palette.secondary;
+        }, [colorHandler, palette]);
+
+    const getBorder = useCallback(
+        (row, col) => {
+            return borderHandler(
+                row, col, colorHandler);
+        }, [colorHandler]);
+
+    const getFiller = useCallback(
+        (row, col) => {
+            const value = fillerHandler(
+                row, col, colorHandler);
+
+            return value
+                ? palette.primary
+                : palette.secondary;
+        }, [colorHandler, palette]);
 
     return {
-        palette,
         getColor,
         getBorder,
         getFiller
