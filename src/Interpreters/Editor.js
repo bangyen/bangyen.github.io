@@ -1,8 +1,8 @@
 
 import { Program, Output, Tape, Register } from './Display';
-import { Toolbar } from './Toolbar';
 import { CustomGrid } from '../helpers';
 import Grid from '@mui/material/Grid2';
+import { Toolbar } from './Toolbar';
 
 import {
     Typography,

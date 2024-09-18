@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import Grid from '@mui/material/Grid2';
 import { Link } from "react-router-dom";
 import { getSpace } from "./calculate";
+
 import {
     HomeRounded,
     CloseRounded,

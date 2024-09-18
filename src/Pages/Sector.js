@@ -1,8 +1,9 @@
-import { useMemo, useCallback } from 'react';
-import { createNoise3D, createNoise4D } from 'simplex-noise';
 import { getContrastRatio } from '@mui/material/styles';
 import * as colors from '@mui/material/colors';
 import Grid from '@mui/material/Grid2';
+
+import { createNoise3D, createNoise4D } from 'simplex-noise';
+import { useMemo, useCallback } from 'react';
 import { CustomGrid } from '../helpers';
 
 export function Sector(props) {

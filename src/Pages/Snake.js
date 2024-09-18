@@ -1,9 +1,9 @@
+import { useMemo, useCallback, useReducer, useEffect } from 'react';
 import Grid from '@mui/material/Grid2';
 
-import { useWindow, useTimer, useKeys } from '../hooks';
-import { useMemo, useCallback, useReducer, useEffect } from 'react';
-import { CustomGrid, Controls } from '../helpers';
 import { convertPixels, gridMove, getDirection } from '../calculate';
+import { useWindow, useTimer, useKeys } from '../hooks';
+import { CustomGrid, Controls } from '../helpers';
 
 function getRandom(max) {
     return Math.floor(

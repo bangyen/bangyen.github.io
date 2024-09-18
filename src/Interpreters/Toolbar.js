@@ -1,8 +1,9 @@
-import { useContext, useMemo } from 'react';
-import { EditorContext } from './Editor';
-import { TooltipButton } from '../helpers';
-import { Link } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
+import { useContext, useMemo } from 'react';
+import { Link } from 'react-router-dom';
+
+import { TooltipButton } from '../helpers';
+import { EditorContext } from './Editor';
 
 import {
     PlayArrowRounded,

@@ -1,12 +1,12 @@
-import Grid from '@mui/material/Grid2';
-import { Controls } from '../helpers';
-import { useWindow, useKeys } from '../hooks';
-import { useMemo, useReducer, useEffect, useCallback } from 'react';
-import { convertPixels } from '../calculate';
-import { getDirection, gridMove } from '../calculate';
 import { BoyRounded, DirectionsWalkRounded } from '@mui/icons-material';
+import { useMemo, useReducer, useEffect, useCallback } from 'react';
 import { useMediaQuery } from '@mui/material';
+import Grid from '@mui/material/Grid2';
+
+import { convertPixels, getDirection, gridMove } from '../calculate';
 import { Sector, useGetters } from './Sector';
+import { useWindow, useKeys } from '../hooks';
+import { Controls } from '../helpers';
 
 function handleAction(state, action) {
     const { type, payload } = action;

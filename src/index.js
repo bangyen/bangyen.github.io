@@ -1,14 +1,15 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
+
 import {
-    HashRouter as Router,
+    HashRouter,
     Switch,
     Route
 } from "react-router-dom";
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
 import { grey, blueGrey } from '@mui/material/colors';
+import { CssBaseline } from '@mui/material';
 
 import * as run from './Interpreters';
 import * as page from './Pages';
@@ -35,7 +36,7 @@ function getRoute(Elem, url) {
 
 function Website() {
     return (
-        <Router basename='/'>
+        <HashRouter basename='/'>
             <Switch>
                 {Object.keys(run).map(k => {
                     if (k === 'names')
@@ -54,7 +55,7 @@ function Website() {
                 })}
                 <Route component={page.Error} />
             </Switch>
-        </Router>
+        </HashRouter>
     );
 }
 
