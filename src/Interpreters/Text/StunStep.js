@@ -19,8 +19,13 @@ function getState(state) {
         end
     } = state;
 
-    if (index === code.length
-            || (!index && !tape[pointer]))
+    if (end)
+        if (!tape[pointer])
+            return state;
+        else
+            end = false;
+
+    if (index === code.length)
         return {
             ...state,
             index: 0,

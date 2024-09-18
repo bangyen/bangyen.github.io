@@ -21,6 +21,9 @@ function getState(state) {
         end
     } = state;
 
+    if (end)
+        end = false;
+
     if (index === code.length)
         return {
             ...state,

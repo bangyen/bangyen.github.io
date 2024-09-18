@@ -1,4 +1,6 @@
-import { EditorContext, Text } from './Editor';
+import { EditorContext } from './Editor';
+import { Text } from './Editor';
+
 import { Tooltip, Box } from '@mui/material';
 import { useContext } from 'react';
 
@@ -28,7 +30,7 @@ export function Program() {
                 text={"\xA0"} />
         </Display>
     );
-    }
+}
 
 export function Tape() {
     const { tape, pointer, tapeFlag }

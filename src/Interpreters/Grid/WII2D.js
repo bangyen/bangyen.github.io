@@ -54,6 +54,9 @@ function getState(state) {
         cols
     } = state;
 
+    if (end)
+        return state;
+
     if (position === null) {
         let index  = grid.indexOf('!');
         let double = grid.lastIndexOf('!');

@@ -1,97 +1,30 @@
 import { useEffect, useRef, useCallback, useReducer } from 'react';
 import Editor, { EditorContext, TextArea } from '../Editor';
 import { useTimer, useCache } from '../../hooks';
-
-function startTimer(state, payload) {
-    const {
-        nextIter,
-        dispatch,
-        create
-    } = payload;
-
-    const repeat = () => {
-        dispatch({
-            type: 'timer',
-            payload});
-    };
-
-    const initial =
-        {...state, end: false}
-
-    nextIter({
-        type: 'clear',
-        payload: initial});
-
-    create({repeat});
-    return {pause: false};
-}
+import { handleToolbar } from '../Toolbar';
 
 function handleAction(state, action) {
     const { type, payload }   = action;
     const { nextIter, clear } = payload;
-    let   newState  = {};
-
-    const update = (type, flag) => {
-        const { nextIter } = payload;
-
-        if (flag)
-            clear();
-
-        const result
-            = nextIter({
-                type});
-
-        return {
-            ...result,
-            select: null};
-    };
+    let newState = {};
 
     switch (type) {
-        case 'run':
-            newState = startTimer(
-                state, payload);
-            break;
-        case 'timer':
-            const newType = state.end
-                ? 'stop' : 'next';
-
-            payload.dispatch({
-                type: newType,
-                payload});
-            break;
-        case 'stop':
-            newState.pause = true;
-            clear();
-            break;
-        case 'reset':
-            const {
-                start
-            } = payload;
-
-            clear();
-
-            newState = nextIter({
-                type: 'clear',
-                payload: {
-                    ...state,
-                    ...start}});
-            newState.pause = true;
-            break;
-        case 'prev':
-            newState = update(
-                'prev', true);
-            newState.pause = true;
-            break;
-        case 'next':
-            newState = update(
-                'next', false);
-            break;
         case 'ff':
+            action.type = 'next';
+            newState = {
+                ...state,
+                pause: true
+            };
+
             do {
-                newState = update(
-                    'next', false);
+                const change
+                    = handleToolbar(
+                        newState, action);
+
+                newState = {
+                    ...newState,
+                    ...change};
             } while (!newState.end);
-            newState.pause = true;
             break;
         case 'edit':
             const {
@@ -113,6 +46,8 @@ function handleAction(state, action) {
             newState.pause = true;
             break;
         default:
+            newState = handleToolbar(
+                state, action);
             break;
     }
 

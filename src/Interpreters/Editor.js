@@ -1,29 +1,17 @@
-import Grid     from '@mui/material/Grid2';
-import { Link } from 'react-router-dom';
 
 import { Program, Output, Tape, Register } from './Display';
-import { TooltipButton, CustomGrid } from '../helpers';
+import { Toolbar } from './Toolbar';
+import { CustomGrid } from '../helpers';
+import Grid from '@mui/material/Grid2';
 
 import {
     Typography,
     TextField
 } from '@mui/material';
 
-import {
-    NavigateBeforeRounded,
-    NavigateNextRounded,
-    PlayArrowRounded,
-    FirstPageRounded,
-    LastPageRounded,
-    HomeRounded,
-    InfoRounded,
-    PauseRounded
-} from '@mui/icons-material';
-
 import React, {
     createContext,
-    useContext,
-    useMemo
+    useContext
 } from 'react';
 
 export const EditorContext = createContext();
@@ -76,79 +64,6 @@ export default function Editor({children}) {
             <Tape     />
             <Register />
         </Grid>
-    );
-}
-
-function Toolbar() {
-    const { name, dispatch, fastForward, pause }
-        = useContext(EditorContext);
-
-    const link = 'https://esolangs.org/wiki/'
-        + name.replace(' ', '_');
-
-    const ForwardButton
-        = useMemo(() => fastForward ?
-        <TooltipButton
-            key='Fast Forward'
-            title='Fast Forward'
-            onClick={dispatch('ff')}
-            Icon={LastPageRounded} />
-        : null,
-        [fastForward, dispatch]);
-
-    const TimerButton = useMemo(
-        () => pause ?
-        <TooltipButton
-            key='Run'
-            title='Run'
-            onClick={dispatch('run')}
-            Icon={PlayArrowRounded} />
-        : <TooltipButton
-            key='Pause'
-            title='Pause'
-            onClick={dispatch('stop')}
-            Icon={PauseRounded} />,
-        [dispatch, pause]);
-
-    return [
-        TimerButton,
-        <TooltipButton
-            key='Reset'
-            title='Reset'
-            onClick={dispatch('reset')}
-            Icon={FirstPageRounded} />,
-        <TooltipButton
-            key='Previous'
-            title='Previous'
-            onClick={dispatch('prev')}
-            Icon={NavigateBeforeRounded} />,
-        <TooltipButton
-            key='Next'
-            title='Next'
-            onClick={dispatch('next')}
-            Icon={NavigateNextRounded} />,
-        ForwardButton,
-        <TooltipButton
-            key='Info'
-            href={link}
-            title='Info'
-            Icon={InfoRounded} />,
-        <TooltipButton
-            to="/"
-            key='Home'
-            title='Home'
-            component={Link}
-            Icon={HomeRounded} />
-    ];
-}
-
-export function Text(props) {
-    return (
-        <Typography
-                {...props}
-                variant='h4'>
-            {props.text}
-        </Typography>
     );
 }
 
@@ -221,5 +136,16 @@ export function TextArea() {
                     fontFamily: 'monospace'
                 }
         }}/>
+    );
+}
+
+export function Text({
+        text, ...props}) {
+    return (
+        <Typography
+                {...props}
+                variant='h4'>
+            {text}
+        </Typography>
     );
 }

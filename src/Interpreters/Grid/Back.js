@@ -13,6 +13,9 @@ function getState(state) {
         end
     } = state;
 
+    if (end)
+        return state;
+
     const sum  = velocity > 0 ? 3 : -3;
     const char = grid[position];
     tape = [...tape];

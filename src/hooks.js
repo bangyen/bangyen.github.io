@@ -143,16 +143,16 @@ export function useCache(getState) {
                 index.current++;
 
                 if (curr + 1 === states.length) {
-                    if (states[curr].end) {
+                    const state = states[curr];
+                    const next  = getState(state);
+
+                    if (next === state)
                         index.current--;
-                    } else {
-                        const state = states[curr];
-                        const next  = getState(state);
+                    else
                         states.push(next);
-                    }
                 }
 
-                return states[index.current];
+                return {...states[index.current]};
             case 'prev':
                 if (index.current)
                     index.current--;
@@ -160,7 +160,8 @@ export function useCache(getState) {
                 return states
                     [index.current];
             case 'clear':
-                cache.current = [payload];
+                cache.current
+                    = [{...payload}];
                 index.current = 0;
 
                 break;
