@@ -1,11 +1,10 @@
 import { RefreshRounded, InfoRounded, CircleRounded } from '@mui/icons-material';
-import { useMemo, useEffect, useCallback, useReducer, useState } from 'react';
+import { useMemo, useEffect, useReducer } from 'react';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
-
 import { Navigation, HomeButton, TooltipButton } from '../helpers';
-import { Sector, useGetters, usePalette } from './Sector';
+import { Board, useHandler, usePalette } from './Board';
 import { convertPixels } from '../calculate';
 import { useWindow } from '../hooks';
 import Info from './Info';
@@ -26,13 +25,11 @@ function flipAdj(row, col, grid) {
 
     if (row > 0)
         grid[row - 1][col] ^= 1;
-
     if (row < rows - 1)
         grid[row + 1][col] ^= 1;
 
     if (col > 0)
         grid[row][col - 1] ^= 1;
-
     if (col < cols - 1)
         grid[row][col + 1] ^= 1;
 
@@ -70,9 +67,12 @@ function handleAction(state, action) {
             grid = flipAdj(
                 row, col, grid);
 
-            const done = !grid
-                .flatMap(r => r)
-                .includes(1);
+            const flat = grid
+                .flatMap(r => r);
+
+            const done =
+                !flat.includes(1) ||
+                !flat.includes(0);
 
             if (done) {
                 grid = randomize(
@@ -110,12 +110,51 @@ function handleAction(state, action) {
     };
 }
 
-export default function LightsOut() {
-    const { height, width } = useWindow();
+function getFrontProps(getters, dispatch) {
+    const {
+        getColor,
+        getBorder
+    } = getters;
 
+    const flipAdj
+        = (row, col) => {
+            dispatch({
+                type: 'adjacent',
+                row, col
+            });
+        };
+
+    return (row, col) => {
+        const style = getBorder(row, col);
+        const { front, back }
+            = getColor(row, col);
+
+        return {
+            onClick: () =>
+                flipAdj(row, col),
+            children: <CircleRounded />,
+            backgroundColor: front,
+            color: front,
+            style,
+            sx: {
+                '&:hover': {
+                    cursor: 'pointer',
+                    color: back
+                }
+            }
+        };
+    };
+}
+
+export default function LightsOut() {
     const mobile = useMediaQuery(
-        theme => theme.breakpoints.down('sm'));
-    const size = mobile ? 3 : 5;
+        theme => theme
+            .breakpoints
+            .down('sm'));
+
+    const { height, width } = useWindow();
+    const size    = mobile ? 3 : 5;
+    const palette = usePalette();
 
     let { rows, cols } = useMemo(
         () => convertPixels(
@@ -138,34 +177,10 @@ export default function LightsOut() {
             handleAction,
             initial);
 
-    const flipAdj = useCallback(
-        (row, col) => {
-            dispatch({
-                type: 'adjacent',
-                row, col
-            });
-        },
-        [dispatch]);
-
-    const getTile = useCallback(
-        (row, col) => {
-            if (row < 0 || col < 0
-                    || row >= state.rows
-                    || col >= state.cols)
-                return -1;
-
-            return state.grid[row][col];
-        },
-        [state]);
-
-    const palette = usePalette();
-
-    const {
-        getColor,
-        getBorder,
-        getFiller
-    } = useGetters(
-        getTile, palette);
+    const [open, toggleOpen]
+        = useReducer(
+            (open) => !open,
+            false);
 
     useEffect(() => {
         document.title
@@ -180,49 +195,43 @@ export default function LightsOut() {
         });
     }, [rows, cols]);
 
-    const frontProps 
-        = (row, col) => {
-            const style = getBorder(row, col);
-            const { front, back }
-                = getColor(row, col);
+    const getters = useHandler(
+        state, palette);
 
-            return {
-                onClick: () =>
-                    flipAdj(row, col),
-                backgroundColor: front,
-                sx: {
-                    '&:hover': {
-                        cursor: 'pointer',
-                        color: back
-                    }
-                },
-                color: front,
-                children: <CircleRounded />,
-                style
-            };
-        };
+    const frontProps = getFrontProps(
+        getters, dispatch);
 
     const backProps 
         = (row, col) => {
             return {
                 backgroundColor:
-                    getFiller(row, col)
+                    getters.getFiller(
+                        row, col)
             };
         };
 
-    const [open, setOpen] = useState(false);
-    const toggleOpen = () => setOpen(!open);
+    const infoButton = useMemo(() => {
+        if (mobile)
+            return null;
+
+        return (
+            <TooltipButton
+                Icon={InfoRounded}
+                title='Info'
+                onClick={toggleOpen} />
+        );
+    }, [toggleOpen, mobile]);
 
     return (
         <Grid>
-            <Sector
+            <Board
                 size={size}
                 rows={rows}
                 cols={cols}
                 frontProps={frontProps}
                 backProps={backProps} />
             <Navigation>
-                <HomeButton />
+                <HomeButton size='inherit'/>
                 <TooltipButton
                     Icon={RefreshRounded}
                     title='Randomize'
@@ -230,10 +239,7 @@ export default function LightsOut() {
                         dispatch({
                             type: 'random'
                         })} />
-                <TooltipButton
-                    Icon={InfoRounded}
-                    title='Info'
-                    onClick={toggleOpen} />
+                {infoButton}
             </Navigation>
             <Info
                 rows={rows}

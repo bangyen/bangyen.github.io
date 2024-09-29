@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid2';
 import { useMemo, useCallback } from 'react';
 import { CustomGrid } from '../helpers';
 
-export function Sector(props) {
+export function Board(props) {
     const {
         frontProps,
         backProps,
@@ -181,4 +181,22 @@ export function useGetters(getTile, palette) {
         getBorder,
         getFiller
     };
+}
+
+export function useHandler(state, palette) {
+    const { grid, rows, cols } = state;
+
+    const getTile = useCallback(
+        (row, col) => {
+            if (row < 0 || col < 0
+                    || row >= rows
+                    || col >= cols)
+                return -1;
+
+            return grid[row][col];
+        },
+        [grid, rows, cols]);
+
+    return useGetters(
+        getTile, palette);
 }

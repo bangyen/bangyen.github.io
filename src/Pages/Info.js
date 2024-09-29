@@ -1,184 +1,14 @@
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { Backdrop, Typography } from '@mui/material';
 import { CircleRounded } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
-import { useState } from 'react';
 
+import { getInverse } from './matrices';
 import { CustomGrid } from '../helpers';
-import { useGetters } from './Sector';
+import { useGetters } from './Board';
 
-function getMatrix(r, c) {
-    const first = 7 << (c - 2);
-    const matrix = [first];
-
-    for (let k = 1; k < c; k++) {
-        const prev = matrix[k - 1];
-        const next = prev >> 1;
-        matrix.push(next);
-    }
-
-    for (let k = c; k < r; k++)
-        matrix.pop();
-
-    matrix[0] -= 2 ** c;
-    return matrix;
-}
-
-function countBits(n) {
-    let count = 0;
-
-    while (n) {
-        n &= n - 1;
-        count++;
-    }
-
-    return count;
-}
-
-function multiplySym(matrixA, matrixB) {
-    const size = matrixA.length;
-    const output = [];
-
-    for (let r = 0; r < size; r++) {
-        const rowA = matrixA[r];
-        let outputRow = 0;
-
-        for (let c = 0; c < size; c++) {
-            const colB = matrixB[c];
-            const value = rowA & colB;
-            const count = countBits(value);
-
-            outputRow <<= 1;
-            outputRow += count & 1;
-        }
-
-        output.push(outputRow);
-    }
-
-    return output;
-}
-
-function getIdentity(size) {
-    const output = Array(size).fill(1);
-
-    for (let r = 0; r < size; r++)
-        output[r] <<= (size - r - 1);
-
-    return output;
-}
-
-function symmetricPow(matrix, n) {
-    const size = matrix.length;
-    let output = getIdentity(size);
-
-    for (let k = 0; k < n; k++)
-        output = multiplySym(
-            output, matrix);
-
-    return output;
-}
-
-function addSym(matrixA, matrixB) {
-    const size = matrixA.length;
-    const output = [];
-
-    for (let r = 0; r < size; r++) {
-        const rowA = matrixA[r];
-        const rowB = matrixB[r];
-        const outputRow = rowA ^ rowB;
-        output.push(outputRow);
-    }
-
-    return output;
-}
-
-function getPolynomial(n) {
-    const output = [0, 1];
-
-    for (let k = 1; k < n; k++) {
-        const curr = output[k];
-        const prev = output[k - 1];
-        const double = curr << 1;
-        output.push(double ^ prev);
-    }
-
-    return output[n];
-}
-
-function evalPolynomial(matrix, poly) {
-    const size = matrix.length;
-    let output = Array(size).fill(0);
-    let degree = 0;
-
-    while (poly) {
-        if (poly & 1) {
-            const power = symmetricPow(
-                matrix, degree);
-            output = addSym(
-                output, power);
-        }
-
-        poly >>= 1;
-        degree++;
-    }
-
-    return output;
-}
-
-function sortMatrices(matrix, identity) {
-    const size = matrix.length;
-    const sorted = [...Array(size).keys()]
-        .sort((a, b) => matrix[b] - matrix[a]);
-
-    const original = sorted.map(row => matrix[row]);
-    const inverted = sorted.map(row => identity[row]);
-
-    return [original, inverted];
-}
-
-function invertMatrix(matrix) {
-    const size = matrix.length;
-    const identity = getIdentity(size);
-
-    let original = matrix;
-    let inverted = identity;
-
-    for (let c = 0; c < size; c++) {
-        const pow = 1 << (size - c - 1);
-
-        [original, inverted] = sortMatrices(
-            original, inverted);
-
-        for (let r = 0; r < size; r++) {
-            const alt = original[r];
-
-            if (r === c)
-                continue;
-
-            if (alt & pow) {
-                original[r] ^= original[c];
-                inverted[r] ^= inverted[c];
-            }
-        }
-    }
-
-    return inverted;
-}
-
-function tileHandler(row, size) {
-    return (r, c) => {
-        if (r !== 0
-                || c < 0
-                || c >= size)
-            return -1;
-
-        return row[c];
-    };
-}
-
-function useInput(row, size, toggleTile, palette) {
-    const getTile = tileHandler(row, size);
-    const { getColor, getBorder }
-        = useGetters(getTile, palette);
+function getInput(getters, toggleTile) {
+    const { getColor, getBorder } = getters;
 
     return (r, c) => {
         const { front, back }
@@ -200,10 +30,8 @@ function useInput(row, size, toggleTile, palette) {
     };
 }
 
-function useOutput(row, size, palette) {
-    const getTile = tileHandler(row, size);
-    const { getColor, getBorder }
-        = useGetters(getTile, palette);
+function getOutput({
+    getColor, getBorder}) {
 
     return (r, c) => {
         const { front }
@@ -214,6 +42,21 @@ function useOutput(row, size, palette) {
             style: getBorder(r, c),
         };
     };
+}
+
+function useHandler(row, size, palette) {
+    const getTile = useCallback(
+        (r, c) => {
+            if (r !== 0
+                    || c < 0
+                    || c >= size)
+                return -1;
+
+            return row[c];
+        }, [row, size]);
+
+    return useGetters(
+        getTile, palette);
 }
 
 function TextBox({ children }) {
@@ -253,18 +96,18 @@ export default function Info(props) {
     const [row, setRow] = useState(
         Array(cols).fill(0));
 
-    const matrix     = getMatrix(rows, cols);
-    const polynomial = getPolynomial(rows + 1);
-    const product    = evalPolynomial(
-        matrix, polynomial);
-    const inverted   = invertMatrix(product);
-    const binary     = parseInt(row.join(''), 2);
-    const result     = inverted.map(
-        row => {
-            const value = row & binary;
-            const count = countBits(value);
-            return count & 1;
-        });
+    useEffect(() => {
+        const newRow
+            = Array(cols)
+                .fill(0);
+
+        setRow(newRow);
+    }, [cols]);
+
+    const res = useMemo(
+        () => getInverse(
+            row, rows, cols),
+        [row, rows, cols]);
 
     const toggleTile = col =>
         event => {
@@ -275,8 +118,10 @@ export default function Info(props) {
             setRow(newRow);
         };
 
-    const inputProps  = useInput(row, cols, toggleTile, palette);
-    const outputProps = useOutput(result, cols, palette);
+    const inputGetters  = useHandler(row, cols, palette);
+    const outputGetters = useHandler(res, cols, palette);
+    const inputProps  = getInput(inputGetters, toggleTile);
+    const outputProps = getOutput(outputGetters);
 
     return (
         <Backdrop

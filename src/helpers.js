@@ -20,15 +20,15 @@ export function TooltipButton(props) {
     return (
         <Tooltip title={title}>
             <IconButton
-                    {...rest}
-                    size='large'>
+                    size='large'
+                    {...rest}>
                 <Icon fontSize='inherit' />
             </IconButton>
         </Tooltip>
     );
 }
 
-export function HomeButton({hide}) {
+export function HomeButton({ hide }) {
     if (hide)
         return null;
 
