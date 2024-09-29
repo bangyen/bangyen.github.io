@@ -133,31 +133,42 @@ export function CustomGrid(props) {
     );
 }
 
-export function Controls({handler}) {
-    const [show, setShow] = useState(false);
-
+export function Navigation({ children, ...rest }) {
     return (
         <Paper
             elevation={1}
             sx={{
-                left: "50%",
                 transform: "translateX(-50%)",
                 position: "absolute",
                 borderRadius: 2,
                 padding: 1,
                 bottom: 50,
+                left: "50%",
+                ...rest
             }}>
             <Grid
                 container
                 spacing={2}>
-                <HomeButton
-                    hide={show} />
-                <Arrows
-                    show={show}
-                    setShow={setShow}
-                    handler={handler} />
+                {children}
             </Grid>
         </Paper>
+    );    
+}
+
+export function Controls({handler}) {
+    const [show, setShow] = useState(false);
+    const opacity = show ? 0.8 : 1;
+
+    return (
+        <Navigation
+            opacity={opacity}>
+            <HomeButton
+                hide={show} />
+            <Arrows
+                show={show}
+                setShow={setShow}
+                handler={handler} />
+        </Navigation>
     );
 }
 

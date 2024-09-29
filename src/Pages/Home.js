@@ -95,8 +95,7 @@ function WaveBox({
         width
     }) {
     const duration = 1;
-    const delay    = (index % count)
-        / count * 5;
+    const delay    = 5 * index / count;
 
     height = `${height}rem`;
     width  = `${width}rem`;
