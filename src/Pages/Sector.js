@@ -2,7 +2,6 @@ import { getContrastRatio } from '@mui/material/styles';
 import * as colors from '@mui/material/colors';
 import Grid from '@mui/material/Grid2';
 
-import { createNoise3D, createNoise4D } from 'simplex-noise';
 import { useMemo, useCallback } from 'react';
 import { CustomGrid } from '../helpers';
 
@@ -121,18 +120,10 @@ function getRandom(
     return result;
 }
 
-function usePalette(xValue, yValue) {
-    const threeDim = useMemo(
-        () => createNoise3D(), []);
-
+export function usePalette() {
     const palette = useMemo(() => {
-        let count = 0;
-
         const compare = () =>
-            threeDim(
-                xValue + 0.5,
-                yValue + 0.5,
-                count++);
+            2 * Math.random() - 1;
 
         const filter
             = (first, second) => {
@@ -147,78 +138,43 @@ function usePalette(xValue, yValue) {
             = getRandom(2, compare, filter);
 
         return { primary, secondary };
-    }, [threeDim, xValue, yValue]);
+    }, []);
 
     return palette;
 }
 
-function useColors({ sector, rows, cols }) {
-    const fourDim  = useMemo(
-        () => createNoise4D(), []);
-    const [xValue, yValue] = sector;
-
-    const colors = useMemo(
-        () => {
-            const colors = [];
-
-            for (let r = 0; r < rows; r++) {
-                colors.push([]);
-
-                for (let c = 0; c < cols; c++) {
-                    const random = fourDim(
-                        xValue, yValue, r, c);
-                    colors[r].push(random > 0);
-                }
-            }
-
-            return colors;
-        }, [fourDim,
-            xValue, yValue,
-            rows, cols]);
-
-    const colorHandler = useCallback(
-        (row, col) => {
-            if (row < 0 || col < 0
-                    || row >= rows
-                    || col >= cols)
-                return -1;
-
-            return colors[row][col];
-        }, [colors, rows, cols]);
-
-    return colorHandler;
-}
-
-export function useGetters({ sector, rows, cols }) {
-    const palette = usePalette(...sector);
-    const colorHandler = useColors({
-        sector, rows, cols});
-
+export function useGetters(getTile, palette) {
     const getColor = useCallback(
         (row, col) => {
             const value
-                = colorHandler(row, col);
+                = getTile(row, col);
 
-            return value
+            const front = value
                 ? palette.primary
                 : palette.secondary;
-        }, [colorHandler, palette]);
+
+            const back = value
+                ? palette.secondary
+                : palette.primary;
+
+            return { front, back };
+        }, [getTile, palette]);
 
     const getBorder = useCallback(
         (row, col) => {
             return borderHandler(
-                row, col, colorHandler);
-        }, [colorHandler]);
+                row, col, getTile);
+        }, [getTile]);
 
     const getFiller = useCallback(
         (row, col) => {
             const value = fillerHandler(
-                row, col, colorHandler);
+                row, col, getTile);
 
             return value
                 ? palette.primary
                 : palette.secondary;
-        }, [colorHandler, palette]);
+        }, [getTile, palette]);
 
     return {
         getColor,
