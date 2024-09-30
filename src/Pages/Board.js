@@ -1,5 +1,6 @@
 import { getContrastRatio } from '@mui/material/styles';
 import * as colors from '@mui/material/colors';
+import { createNoise2D } from 'simplex-noise';
 import Grid from '@mui/material/Grid2';
 
 import { useMemo, useCallback } from 'react';
@@ -120,10 +121,16 @@ function getRandom(
     return result;
 }
 
-export function usePalette() {
+export function usePalette(score) {
+    const createNoise = useMemo(
+        () => createNoise2D(), []);
+
     const palette = useMemo(() => {
+        let count = 0;
+
         const compare = () =>
-            2 * Math.random() - 1;
+            createNoise(
+                score, count++);
 
         const filter
             = (first, second) => {
@@ -138,7 +145,7 @@ export function usePalette() {
             = getRandom(2, compare, filter);
 
         return { primary, secondary };
-    }, []);
+    }, [score, createNoise]);
 
     return palette;
 }

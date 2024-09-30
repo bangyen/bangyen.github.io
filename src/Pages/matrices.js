@@ -1,5 +1,5 @@
 function getMatrix(cols) {
-    const first = 7 << (cols - 2);
+    const first  = 7 << (cols - 2);
     const matrix = [first];
 
     for (let k = 1; k < cols; k++) {
@@ -24,7 +24,7 @@ function countBits(num) {
 }
 
 function multiplySym(matrixA, matrixB) {
-    const size = matrixA.length;
+    const size   = matrixA.length;
     const output = [];
 
     for (let r = 0; r < size; r++) {
@@ -32,7 +32,7 @@ function multiplySym(matrixA, matrixB) {
         let outputRow = 0;
 
         for (let c = 0; c < size; c++) {
-            const colB = matrixB[c];
+            const colB  = matrixB[c];
             const value = rowA & colB;
             const count = countBits(value);
 
@@ -67,7 +67,7 @@ function symmetricPow(matrix, power) {
 }
 
 function addSym(matrixA, matrixB) {
-    const size = matrixA.length;
+    const size   = matrixA.length;
     const output = [];
 
     for (let r = 0; r < size; r++) {
@@ -84,9 +84,10 @@ function getPolynomial(index) {
     const output = [0, 1];
 
     for (let k = 1; k < index; k++) {
-        const curr = output[k];
-        const prev = output[k - 1];
+        const curr   = output[k];
+        const prev   = output[k - 1];
         const double = curr << 1;
+
         output.push(double ^ prev);
     }
 
@@ -100,8 +101,10 @@ function evalPolynomial(matrix, poly) {
 
     while (poly) {
         if (poly & 1) {
-            const power = symmetricPow(
-                matrix, degree);
+            const power
+                = symmetricPow(
+                    matrix, degree);
+
             output = addSym(
                 output, power);
         }
@@ -114,7 +117,7 @@ function evalPolynomial(matrix, poly) {
 }
 
 function sortMatrices(matrix, identity) {
-    const size = matrix.length;
+    const size   = matrix.length;
     const sorted = [...Array(size).keys()]
         .sort((a, b) => matrix[b] - matrix[a]);
 
@@ -125,7 +128,7 @@ function sortMatrices(matrix, identity) {
 }
 
 function invertMatrix(matrix) {
-    const size = matrix.length;
+    const size     = matrix.length;
     const identity = getIdentity(size);
 
     let original = matrix;
@@ -153,13 +156,20 @@ function invertMatrix(matrix) {
     return inverted;
 }
 
-export function getInverse(input, rows, cols) {
+/*
+    https://math.stackexchange.com/questions/2237467
+    https://en.wikipedia.org/wiki/Fibonacci_polynomials
+    https://graphics.stanford.edu/~seander/bithacks.html#:~:text=Brian%20Kernighan
+*/
+export function getProduct(input, rows, cols) {
     const matrix  = getMatrix(cols);
     const weights = getPolynomial(rows + 1);
     const product = evalPolynomial(matrix, weights);
-
     const inverse = invertMatrix(product);
-    const binary  = parseInt(input.join(''), 2);
+
+    const binary
+        = parseInt(
+            input.join(''), 2);
 
     const getParity = row => {
         const value = row & binary;

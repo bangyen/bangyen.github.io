@@ -1,11 +1,12 @@
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Backdrop, Typography } from '@mui/material';
 import { CircleRounded } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
 
-import { getInverse } from './matrices';
+import { getProduct } from './matrices';
 import { CustomGrid } from '../helpers';
 import { useGetters } from './Board';
+import Example from './Example';
 
 function getInput(getters, toggleTile) {
     const { getColor, getBorder } = getters;
@@ -59,29 +60,6 @@ function useHandler(row, size, palette) {
         getTile, palette);
 }
 
-function TextBox({ children }) {
-    return (
-        <Grid
-            size={12}
-            display="flex"
-            justifyContent="center">
-            {children}
-        </Grid>
-    );
-}
-
-function Text({ children }) {
-    return (
-        <Typography
-            variant="h4"
-            width="75%"
-            margin="auto"
-            textAlign="center">
-            {children}
-        </Typography>
-    );
-}
-
 export default function Info(props) {
     const {
         rows,
@@ -104,10 +82,8 @@ export default function Info(props) {
         setRow(newRow);
     }, [cols]);
 
-    const res = useMemo(
-        () => getInverse(
-            row, rows, cols),
-        [row, rows, cols]);
+    const res = getProduct(
+        row, rows, cols);
 
     const toggleTile = col =>
         event => {
@@ -129,29 +105,11 @@ export default function Info(props) {
             onClick={toggleOpen}>
             <Grid container
                 spacing={4}>
-                <TextBox>
-                    <Grid size={12}>
-                        <Text>
-                            Make the entire grid&nbsp;
-                            <span style={{ color: palette.secondary }}>
-                                this
-                            </span>
-                            &nbsp;color. If you're stuck
-                            on the last row, input the last row
-                            into the calculator below and press the top row cells
-                            corresponding to the output cells of&nbsp;
-                            <span style={{ color: palette.primary }}>
-                                this
-                            </span>
-                            &nbsp;color.
-                        </Text>
-                    </Grid>
-                    <Grid size={0}>
-                        <Text>
-                            hello
-                        </Text>
-                    </Grid>
-                </TextBox>
+                <Example
+                    dims={3}
+                    size={size}
+                    start={[1, 3, 8]}
+                    palette={palette} />
                 <Grid size={12}>
                     <CustomGrid
                         space={0}
@@ -168,12 +126,19 @@ export default function Info(props) {
                         cols={cols}
                         cellProps={outputProps} />
                 </Grid>
-                <TextBox>
-                    <Text>
+                <Grid
+                    size={12}
+                    display="flex"
+                    justifyContent="center">
+                    <Typography
+                        variant="h4"
+                        width="75%"
+                        margin="auto"
+                        textAlign="center">
                         Boards Solved:
                         &nbsp;{score}
-                    </Text>
-                </TextBox>
+                    </Typography>
+                </Grid>
             </Grid>
         </Backdrop>
     );
