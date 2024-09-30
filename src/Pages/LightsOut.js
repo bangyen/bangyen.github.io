@@ -115,18 +115,6 @@ export default function LightsOut() {
             };
         };
 
-    const infoButton = useMemo(() => {
-        if (mobile)
-            return null;
-
-        return (
-            <TooltipButton
-                Icon={InfoRounded}
-                title='Info'
-                onClick={toggleOpen} />
-        );
-    }, [toggleOpen, mobile]);
-
     return (
         <Grid>
             <Board
@@ -136,15 +124,21 @@ export default function LightsOut() {
                 frontProps={frontProps}
                 backProps={backProps} />
             <Navigation>
-                <HomeButton size='inherit'/>
+                <HomeButton
+                    size='inherit' />
                 <TooltipButton
                     Icon={RefreshRounded}
                     title='Randomize'
+                    size='inherit'
                     onClick={() =>
                         dispatch({
                             type: 'random'
                         })} />
-                {infoButton}
+                <TooltipButton
+                    title='Info'
+                    size='inherit'
+                    Icon={InfoRounded}
+                    onClick={toggleOpen} />
             </Navigation>
             <Info
                 rows={rows}

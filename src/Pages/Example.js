@@ -1,3 +1,4 @@
+import { Typography, useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 import { getStates } from './chaseHandlers';
@@ -32,15 +33,13 @@ function getFrames(states, palette) {
     return frames;
 }
 
-function propHandler(states, getter, palette, name) {
+function propHandler(states, getter, palette, id) {
     return (row, col) => {
         const state  = getter(states, row, col);
+        const frames = getFrames(state, palette);
         const length = states.length;
 
-        const frames = getFrames(
-            state, palette);
-
-        name = `${name}-${row}-${col}`;
+        const name  = `${id}-${row}-${col}`;
         const index = `@keyframes ${name}`;
 
         const animation = `
@@ -67,42 +66,66 @@ function getRange(dims) {
     return [...keys];
 }
 
-function gridHandler(states, dims, palette, name) {
+function gridTiles(states, dims) {
     const length = states.length;
     const dRange = getRange(dims);
     const lRange = getRange(length);
 
-    const tiles
-        = dRange.map(
-            r => dRange.map(
-                c => lRange.map(
-                    k => states[k][r][c])));
-
-    return propHandler(
-        tiles,
-        (s, r, c) => s[r][c],
-        palette, name);
+    return dRange.map(
+        r => dRange.map(
+            c => lRange.map(
+                k => states[k][r][c])));
 }
 
-function rowHandler(states, dims, palette, name) {
+function rowTiles(states, dims) {
     const length = states.length;
     const dRange = getRange(dims);
     const lRange = getRange(length);
 
-    const tiles
-        = dRange.map(
-            r => lRange.map(
-                k => states[k][r]));
+    return dRange.map(
+        r => lRange.map(
+            k => states[k][r]));
+}
 
-    return propHandler(
-        tiles,
-        (s, r, c) => s[c],
-        palette, name);
+function Bifold({ children }) {
+    return (
+        <Grid
+            size={6}>
+            {children}
+        </Grid>
+    );
+}
+
+function Title({ children }) {
+    return (
+        <Bifold>
+            <Typography
+                sx={{
+                    typography: {
+                        xs: 'h6',
+                        sm: 'h5',
+                        md: 'h4'
+                    }
+                }}
+                justifyContent='center'
+                alignItems='center'
+                display='flex'
+                variant='h4'>
+                {children}
+            </Typography>
+        </Bifold>
+    );
 }
 
 export default function Example({
     start, dims, size, palette}) {
+    const small = useMediaQuery(
+        theme => theme
+            .breakpoints
+            .down('md'));
+
     const states = getStates(start, dims);
+    const width  = small ? size / 2 : size;
 
     const {
         boardStates,
@@ -110,35 +133,57 @@ export default function Example({
         outputStates
     } = states;
 
-    const getBoard  = gridHandler(
-        boardStates,  dims, palette, 'board');
-    const getInput  = rowHandler(
-        inputStates,  dims, palette, 'input');
-    const getOutput = rowHandler(
-        outputStates, dims, palette, 'output');
+    const boardTiles  = gridTiles(boardStates, dims);
+    const inputTiles  = rowTiles(inputStates, dims);
+    const outputTiles = rowTiles(outputStates, dims);
+
+    const getGrid = (s, r, c) => s[r][c];
+    const getRow  = (s, r, c) => s[c];
+
+    const getBoard  = propHandler(
+        boardTiles, getGrid, palette, 'board');
+    const getInput  = propHandler(
+        inputTiles, getRow, palette, 'input');
+    const getOutput = propHandler(
+        outputTiles, getRow, palette, 'output');
 
     return (
-        <Grid container
-            size={12}>
-            <Grid width='50%'>
-                <CustomGrid
-                    size={size}
-                    rows={dims}
-                    cols={dims}
-                    cellProps={getBoard} />
+        <Grid
+            container
+            size={12}
+            spacing={4}>
+            <Grid
+                container
+                size={12}>
+                <Bifold>
+                    <CustomGrid
+                        size={width}
+                        rows={dims}
+                        cols={dims}
+                        cellProps={getBoard} />
+                </Bifold>
+                <Grid container size={6}>
+                    <CustomGrid
+                        rows={1}
+                        cols={dims}
+                        size={width}
+                        cellProps={getInput} />
+                    <CustomGrid
+                        rows={1}
+                        cols={dims}
+                        size={width}
+                        cellProps={getOutput} />
+                </Grid>
             </Grid>
-            <Grid container
-                width='50%'>
-                <CustomGrid
-                    rows={1}
-                    cols={dims}
-                    size={size}
-                    cellProps={getInput} />
-                <CustomGrid
-                    rows={1}
-                    cols={dims}
-                    size={size}
-                    cellProps={getOutput} />
+            <Grid
+                container
+                size={12}>
+                <Title>
+                    Example Board
+                </Title>
+                <Title>
+                    Example Input
+                </Title>
             </Grid>
         </Grid>
     );

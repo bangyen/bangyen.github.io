@@ -114,16 +114,16 @@ export default function Info(props) {
                     <CustomGrid
                         space={0}
                         rows={1}
-                        size={size}
                         cols={cols}
+                        size={size * 0.9}
                         cellProps={inputProps} />
                 </Grid>
                 <Grid size={12}>
                     <CustomGrid
                         space={0}
                         rows={1}
-                        size={size}
                         cols={cols}
+                        size={size * 0.9}
                         cellProps={outputProps} />
                 </Grid>
                 <Grid

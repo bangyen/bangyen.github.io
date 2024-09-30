@@ -28,7 +28,7 @@ export function TooltipButton(props) {
     );
 }
 
-export function HomeButton({ hide }) {
+export function HomeButton({ hide, ...rest }) {
     if (hide)
         return null;
 
@@ -38,7 +38,8 @@ export function HomeButton({ hide }) {
             key='Home'
             title='Home'
             component={Link}
-            Icon={HomeRounded} />
+            Icon={HomeRounded}
+            {...rest} />
     );
 }
 

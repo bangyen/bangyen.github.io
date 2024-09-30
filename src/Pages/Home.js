@@ -176,8 +176,8 @@ export default function Home() {
                     <Typography sx={{
                             typography: {
                                 xs: 'body1',
-                            sm: 'h5',
-                            md: 'h4',
+                                sm: 'h5',
+                                md: 'h4',
                                 lg: 'h3',
                                 xl: 'h2'
                             }
