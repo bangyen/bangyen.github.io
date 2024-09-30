@@ -104,6 +104,7 @@ export default function Info(props) {
             open={open}
             onClick={toggleOpen}>
             <Grid container
+                padding={2}
                 spacing={4}>
                 <Example
                     dims={3}
