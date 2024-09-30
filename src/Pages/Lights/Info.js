@@ -80,7 +80,7 @@ export default function Info(props) {
                 .fill(0);
 
         setRow(newRow);
-    }, [cols]);
+    }, [cols, palette]);
 
     const res = getProduct(
         row, rows, cols);
