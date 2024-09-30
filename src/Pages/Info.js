@@ -131,7 +131,13 @@ export default function Info(props) {
                     display="flex"
                     justifyContent="center">
                     <Typography
-                        variant="h4"
+                        sx={{
+                            typography: {
+                                xs: 'h6',
+                                sm: 'h5',
+                                md: 'h4'
+                            }
+                        }}
                         width="75%"
                         margin="auto"
                         textAlign="center">
