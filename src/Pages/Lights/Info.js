@@ -4,8 +4,8 @@ import { CircleRounded } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
 
 import { getProduct } from './matrices';
-import { CustomGrid } from '../helpers';
-import { useGetters } from './Board';
+import { CustomGrid } from '../../helpers';
+import { useGetters } from '../Board';
 import Example from './Example';
 
 function getInput(getters, toggleTile) {

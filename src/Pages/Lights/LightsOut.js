@@ -3,11 +3,11 @@ import { useMemo, useEffect, useReducer } from 'react';
 import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
-import { Navigation, HomeButton, TooltipButton } from '../helpers';
-import { Board, useHandler, usePalette } from './Board';
+import { Navigation, HomeButton, TooltipButton } from '../../helpers';
+import { Board, useHandler, usePalette } from '../Board';
 import { getGrid, handleBoard } from './boardHandlers';
-import { convertPixels } from '../calculate';
-import { useWindow } from '../hooks';
+import { convertPixels } from '../../calculate';
+import { useWindow } from '../../hooks';
 import Info from './Info';
 
 function getFrontProps(getters, dispatch) {

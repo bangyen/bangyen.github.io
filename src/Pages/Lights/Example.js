@@ -2,7 +2,7 @@ import { Typography, useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 import { getStates } from './chaseHandlers';
-import { CustomGrid } from '../helpers';
+import { CustomGrid } from '../../helpers';
 
 function getFrames(states, palette) {
     const newStates = [-1, ...states, -1];

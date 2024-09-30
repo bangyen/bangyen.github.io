@@ -1,4 +1,4 @@
-import { getGrid, flipAdj } from './boardHandlers';
+import { getGrid, flipAdj } from './Lights/boardHandlers';
 import { getProduct } from './matrices';
 
 function chaseLights(states, dims) {
