@@ -32,7 +32,7 @@ function getInput(getters, toggleTile) {
 }
 
 function getOutput({
-    getColor, getBorder}) {
+        getColor, getBorder}) {
 
     return (r, c) => {
         const { front }
