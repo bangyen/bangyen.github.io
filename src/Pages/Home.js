@@ -1,4 +1,11 @@
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
+
+import { TooltipButton } from '../helpers';
+import { names } from '../Interpreters';
+import { useWindow } from '../hooks';
+import { pages } from './';
 
 import {
     MenuRounded,
@@ -13,26 +20,25 @@ import {
     MenuItem
 } from '@mui/material';
 
-import { Link } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
-
-import { names } from '../Interpreters';
-import { TooltipButton } from '../helpers';
-import { useWindow } from '../hooks';
-import { pages } from './';
-
 function dropdown(name, options) {
+    const padHeight = '1.5vh';
+    const padWidth  = '3.5vh';
+
     return (
         <Box>
             {Object.keys(options).map(text =>
                 <MenuItem
+                    sx={{
+                        paddingBottom: padHeight,
+                        paddingTop:    padHeight,
+                        paddingLeft:   padWidth,
+                        paddingRight:  padWidth
+                    }}
                     key={text}
                     component={Link}
-                    sx={{justifyContent: 'center'}}
                     to={text.toLowerCase()}>
                     <Typography
-                        variant='body2'
-                        sx={{padding: 0.5}}>
+                        variant='body2'>
                     {text.replace('_', ' ')}
                     </Typography>
                 </MenuItem>
@@ -77,10 +83,14 @@ function MenuButton({children}) {
                 id='basic-menu'
                 open={open}
                 anchorEl={anchor}
+                sx={{
+                    marginLeft: 1,
+                    marginTop: 1
+                }}
                 onClose={handleClose}
                 MenuListProps={{
-                    sx: {width: 140},
-                    'aria-labelledby': 'basic-button'
+                    'aria-labelledby':
+                        'basic-button'
                 }}>
                 {children}
             </Menu>
@@ -95,7 +105,8 @@ function WaveBox({
         width
     }) {
     const duration = 1;
-    const delay    = 5 * index / count;
+    const delay
+        = 5 * index / count;
 
     height = `${height}rem`;
     width  = `${width}rem`;
@@ -147,16 +158,17 @@ export default function Home() {
     return (
         <Grid
             container
-            height="100vh">
+            height="100vh"
+            flexDirection='column'>
             <Grid
                 container
-                direction="column"
+                direction="row"
                 margin={2}
                 spacing={2}>
                 <MenuButton>
-                    {dropdown('Interpreters', names)}
-                    <Divider variant='middle' />
                     {dropdown('Miscellaneous', pages)}
+                    <Divider variant='middle' />
+                    {dropdown('Interpreters', names)}
                 </MenuButton>
                 <TooltipButton
                     href='https://github.com/bangyen'
@@ -164,51 +176,45 @@ export default function Home() {
                     Icon={GitHub} />
             </Grid>
             <Grid
-                size="grow"
+                flex={1}
                 display='flex'
-                flexDirection='column'>
-                <Grid
-                    flex={1}
-                    display='flex'
-                    marginRight={8}
-                    justifyContent='center'
-                    alignItems='center'>
-                    <Typography sx={{
-                            typography: {
-                                xs: 'body1',
-                                sm: 'h5',
-                                md: 'h4',
-                                lg: 'h3',
-                                xl: 'h2'
-                            }
-                        }}>
-                        Hey, my name is&nbsp;
-                        <strong>
-                            Bangyen
-                        </strong>
-                        .
-                    </Typography>
-                </Grid>
-                <Grid
-                    left='50%'
-                    bottom='10%'
-                    width='100%'
-                    display='flex'
-                    position='absolute'
-                    sx={{
-                        transform:
-                            'translateX(-50%)'
+                justifyContent='center'
+                alignItems='center'>
+                <Typography sx={{
+                        typography: {
+                            xs: 'body1',
+                            sm: 'h5',
+                            md: 'h4',
+                            lg: 'h3',
+                            xl: 'h2'
+                        }
                     }}>
-                    {[...Array(count)]
-                        .map((_, index) => (
-                            <WaveBox
-                                index={index}
-                                count={count}
-                                key={date + index}
-                                height={boxHeight}
-                                width={boxWidth} />
-                    ))}
-                </Grid>
+                    Hey, my name is&nbsp;
+                    <strong>
+                        Bangyen
+                    </strong>
+                    .
+                </Typography>
+            </Grid>
+            <Grid
+                left='50%'
+                bottom='10%'
+                width='100%'
+                display='flex'
+                position='absolute'
+                sx={{
+                    transform:
+                        'translateX(-50%)'
+                }}>
+                {[...Array(count)]
+                    .map((_, index) => (
+                        <WaveBox
+                            index={index}
+                            count={count}
+                            key={date + index}
+                            height={boxHeight}
+                            width={boxWidth} />
+                ))}
             </Grid>
         </Grid>
     );
