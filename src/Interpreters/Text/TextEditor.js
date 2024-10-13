@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback, useReducer } from 'react';
 import Editor, { EditorContext, TextArea } from '../Editor';
-import { useTimer, useCache } from '../../hooks';
+import { useTimer, useCache, useContainer } from '../../hooks';
 import { handleToolbar } from '../Toolbar';
 
 function handleAction(state, action) {
@@ -58,7 +58,7 @@ function handleAction(state, action) {
 }
 
 export default function TextEditor(props) {
-    const {create, clear} = useTimer(200);
+    const { create, clear } = useTimer(200);
 
     const {
         runner,
@@ -73,11 +73,15 @@ export default function TextEditor(props) {
     const nextIter  = useCache(runner);
     const container = useRef(null);
 
+    const { height }
+        = useContainer(container);
+
     const initial = {
         ...start,
         pause: true,
         text: '',
-        code: ''};
+        code: ''
+    };
 
     const [state, dispatch]
         = useReducer(
@@ -127,22 +131,32 @@ export default function TextEditor(props) {
     const context = {
         name,
         ...state,
-        handleChange,
         dispatch:
             wrapDispatch,
         fastForward: true,
         tapeFlag: tape,
         outFlag:  output,
         regFlag:  register,
-        pause:    state.pause,
-        container
+        readOnly: true,
+        height
+    };
+
+    const sideProps = {
+        readOnly: true,
+        infoLabel: 'RISC-V Equivalent',
+        fillValue: 'addi x0, x0, 0',
+        value: state.code || null
     };
 
     return (
         <EditorContext.Provider
                 value={context}>
-            <Editor>
-                <TextArea />
+            <Editor
+                container={container}
+                sideProps={sideProps}>
+                <TextArea
+                    handleChange
+                        ={handleChange} />
             </Editor>
         </EditorContext.Provider>
     );

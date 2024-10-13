@@ -1,8 +1,22 @@
-import { useRef, useEffect, useReducer, useCallback, useMemo } from 'react';
-import { useContainer, useTimer, useKeys, useCache } from '../../hooks';
 import Editor, { EditorContext, GridArea } from '../Editor';
 import { convertPixels } from '../../calculate';
 import { handleAction } from './eventHandlers';
+
+import {
+    useContainer,
+    useTimer,
+    useKeys,
+    useCache,
+    useMobile
+} from '../../hooks';
+
+import {
+    useRef,
+    useEffect,
+    useReducer,
+    useCallback,
+    useMemo
+} from 'react';
 
 function useWrappers(
         state, props, dispatch) {
@@ -97,9 +111,19 @@ export default function GridEditor(props) {
     let { height, width }
         = useContainer(container);
 
-    const size = 6;
+    const mobile = useMobile('sm');
+    const size   = mobile ? 4 : 6;
+    const hide   = false;
+
     height *= 0.8;
-    width  *= 0.9;
+    width  *= 0.95;
+
+    if (!hide) {
+        if (mobile)
+            width /= 2;
+        else
+            width /= 1.5;
+    }
 
     const { rows, cols }
         = useMemo(() => 
@@ -168,18 +192,19 @@ export default function GridEditor(props) {
         ...state,
         dispatch:
             wrapDispatch,
-        pointer: state.pointer,
         tapeFlag: tape,
         outFlag:  output,
         regFlag:  register,
-        pause:    state.pause,
-        container
+        height: height / 0.8
     };
 
     return (
         <EditorContext.Provider
                 value={context}>
-            <Editor>
+            <Editor
+                hide={hide}
+                container
+                    ={container}>
                 <GridArea
                     rows={rows}
                     cols={cols}

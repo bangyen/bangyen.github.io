@@ -16,30 +16,53 @@ import React, {
 
 export const EditorContext = createContext();
 
-export default function Editor({children}) {
-    const { name, container }
-        = useContext(EditorContext);
+export default function Editor({
+        container, sideProps, hide, children }) {
+    const { name } = useContext(EditorContext);
+
+    const rightProps = {xs: 6, sm: 4};
+    let display, leftProps;
+
+    if (hide) {
+        display   = 'none';
+        leftProps = 12;
+    } else {
+        leftProps = {xs: 6, sm: 8};
+        display   = 'flex';
+    }
+
+    const titleProps = {
+        size: 'grow',
+        sx: {
+            display: {
+                xs: 'none',
+                md: 'block'
+            }
+        }
+    };
+
+    const contentProps = {
+        flex: 1,
+        spacing: 2,
+        ref: container,
+        container:  true,
+        display:    'flex',
+        alignItems: 'center',
+        sx: {overflowY: 'auto'}
+    };
 
     return (
         <Grid container
+                spacing={2}
                 height="100vh"
                 display="flex"
                 flexDirection="column"
-                spacing={2}
-                paddingTop="5vh"
-                paddingBottom="5vh"
-                paddingLeft="5vw"
-                paddingRight="5vw">
+                padding="5vh 5vw 5vh 5vw">
             <Grid container
-                    justifyContent="space-between"
-                    alignItems="center">
-                <Grid size="grow"
-                        sx={{
-                            display: {
-                                xs: 'none',
-                                md: 'block'
-                            }
-                        }}>
+                    alignItems="center"
+                    justifyContent
+                        ="space-between">
+                <Grid {...titleProps}>
                     <Typography
                         variant="h2">
                         {name}
@@ -47,17 +70,16 @@ export default function Editor({children}) {
                 </Grid>
                 <Toolbar />
             </Grid>
-            <Grid
-                flex={1}
-                ref={container}
-                sx={{
-                    overflowY: 'auto',
-                }}
-                display="flex"
-                paddingTop="2vh"
-                paddingBottom="2vh"
-                alignItems="center">
-                {children}
+            <Grid {...contentProps}>
+                <Grid size={leftProps}>
+                    {children}
+                </Grid>
+                <Grid
+                    display={display}
+                    size={rightProps}>
+                    <TextArea
+                        {...sideProps} />
+                </Grid>
             </Grid>
             <Program  />
             <Output   />
@@ -111,25 +133,38 @@ export function GridArea({
     );
 }
 
-export function TextArea() {
-    const { handleChange }
-        = useContext(EditorContext);
+export function TextArea({
+        value,
+        readOnly,
+        infoLabel,
+        fillValue,
+        handleChange
+    }) {
+    const { height } = useContext(EditorContext);
+    const rows       = Math.floor(height / 32);
+
+    fillValue = fillValue || 'Hello, World!';
+    infoLabel = infoLabel || 'Program code';
+    readOnly  = readOnly  || false;
 
     return (
         <TextField
             variant="outlined"
-            label="Program code"
-            defaultValue="Hello, World!"
+            label={infoLabel}
+            defaultValue
+                ={fillValue}
             slotProps={{
-                inputLabel: {shrink: true}
+                inputLabel: { shrink: true },
+                htmlInput:  { readOnly }
             }}
             fullWidth
             multiline
-            onChange={handleChange}
+            rows={rows}
+            value={value}
+            onChange
+                ={handleChange}
             sx={{
-                height: '100%',
                 '& .MuiInputBase-root': {
-                    height: '100%',
                     alignItems: 'flex-start',
                 },
                 '& .MuiInputBase-input': {
@@ -140,7 +175,7 @@ export function TextArea() {
 }
 
 export function Text({
-        text, ...props}) {
+        text, ...props }) {
     return (
         <Typography
                 {...props}
