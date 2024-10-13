@@ -1,3 +1,5 @@
+import { useMediaQuery } from '@mui/material';
+
 import {
     useState,
     useEffect,
@@ -30,19 +32,31 @@ function useSize(getSize) {
     const [size, setSize]
         = useState(getSize());
 
+    const {
+        addEventListener:
+            addEvent,
+        removeEventListener:
+            removeEvent
+    } = window;
+
     useEffect(() => {
         function handleResize() {
             setSize(getSize());
         }
 
-        window.addEventListener(
-            'resize', handleResize
+        addEvent(
+            'resize',
+            handleResize
         );
 
-        return () => window.removeEventListener(
-            'resize', handleResize
-        );
-    }, [getSize]);
+        return () =>
+            removeEvent(
+                'resize',
+                handleResize
+            );
+    }, [getSize,
+        addEvent,
+        removeEvent]);
 
     return {size, setSize};
 }
@@ -70,6 +84,13 @@ export function useWindow() {
         = useSize(getWindow);
 
     return size;
+}
+
+export function useMobile(size) {
+    return useMediaQuery(
+        theme => theme
+            .breakpoints
+            .down(size));
 }
 
 export function useTimer(delay) {

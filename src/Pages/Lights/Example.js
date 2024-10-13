@@ -1,8 +1,9 @@
-import { Typography, useMediaQuery } from '@mui/material';
+import { Typography } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 import { getStates } from './chaseHandlers';
 import { CustomGrid } from '../../helpers';
+import { useMobile } from '../../hooks';
 
 function getFrames(states, palette) {
     const newStates = [-1, ...states, -1];
@@ -119,11 +120,7 @@ function Title({ children }) {
 
 export default function Example({
     start, dims, size, palette}) {
-    const small = useMediaQuery(
-        theme => theme
-            .breakpoints
-            .down('md'));
-
+    const small  = useMobile('md');
     const states = getStates(start, dims);
     const width  = small ? size / 2 : size;
 

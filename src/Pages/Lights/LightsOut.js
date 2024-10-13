@@ -1,13 +1,12 @@
 import { RefreshRounded, InfoRounded, CircleRounded } from '@mui/icons-material';
 import { useMemo, useEffect, useReducer } from 'react';
-import { useMediaQuery } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 import { Navigation, HomeButton, TooltipButton } from '../../helpers';
 import { Board, useHandler, usePalette } from '../Board';
 import { getGrid, handleBoard } from './boardHandlers';
+import { useWindow, useMobile } from '../../hooks';
 import { convertPixels } from '../../calculate';
-import { useWindow } from '../../hooks';
 import Info from './Info';
 
 function getFrontProps(getters, dispatch) {
@@ -47,13 +46,9 @@ function getFrontProps(getters, dispatch) {
 }
 
 export default function LightsOut() {
-    const mobile = useMediaQuery(
-        theme => theme
-            .breakpoints
-            .down('sm'));
-
     const { height, width } = useWindow();
-    const size = mobile ? 3 : 5;
+    const mobile = useMobile('sm');
+    const size   = mobile ? 3 : 5;
 
     let { rows, cols } = useMemo(
         () => convertPixels(

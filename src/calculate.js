@@ -9,7 +9,7 @@ export function convertPixels(
     const rows  = Math.floor(height / pixel);
     const cols  = Math.floor(width  / pixel);
 
-    return {rows, cols};
+    return { rows, cols };
 }
 
 export function getDirection(arrow) {

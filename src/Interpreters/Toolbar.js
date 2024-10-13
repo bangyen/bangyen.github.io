@@ -1,17 +1,17 @@
-import { useMediaQuery } from '@mui/material';
 import { useContext, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { TooltipButton } from '../helpers';
 import { EditorContext } from './Editor';
+import { useMobile } from '../hooks';
 
 import {
-    PlayArrowRounded,
-    PauseRounded,
-    FirstPageRounded,
     NavigateBeforeRounded,
     NavigateNextRounded,
+    PlayArrowRounded,
+    FirstPageRounded,
     LastPageRounded,
+    PauseRounded,
     InfoRounded,
     HomeRounded
 } from '@mui/icons-material';
@@ -20,8 +20,7 @@ export function Toolbar() {
     const { name, dispatch, fastForward, pause }
         = useContext(EditorContext);
 
-    const notMobile = useMediaQuery(
-        theme => theme.breakpoints.up('sm'));
+    const notMobile = !useMobile('sm');
 
     const link = 'https://esolangs.org/wiki/'
         + name.replace(' ', '_');
