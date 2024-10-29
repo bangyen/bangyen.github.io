@@ -113,7 +113,7 @@ export default function GridEditor(props) {
 
     const mobile = useMobile('sm');
     const size   = mobile ? 4 : 6;
-    const hide   = false;
+    const hide   = true;
 
     height *= 0.8;
     width  *= 0.95;
