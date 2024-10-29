@@ -1,6 +1,6 @@
 import TextEditor from './TextEditor';
 
-function clean(input) {
+function cleanInput(input) {
     let code = '';
 
     for (const char of input)
@@ -8,6 +8,34 @@ function clean(input) {
             code += char;
 
     return code;
+}
+
+function countRepeats(code) {
+    const counts = [];
+    let current  = '';
+    let number   = 0;
+    let highest  = 0;
+    code += ' ';
+
+    for (const char of code) {
+        if (char === current)
+            number++;
+        else {
+            if (number > highest
+                    && current === '>')
+                highest = number;
+
+            counts.push(number);
+            current = char;
+            number  = 1;
+        }
+    }
+
+    const memory
+        = highest > 30
+            && current !== '>';
+
+    return { counts, memory };
 }
 
 function getState(state) {
@@ -100,7 +128,7 @@ export default function Editor() {
             name='Suffolk'
             start={start}
             runner={getState}
-            clean={clean}
+            clean={cleanInput}
             tape
             output
             register />

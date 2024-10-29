@@ -145,13 +145,13 @@ export default function TextEditor(props) {
         readOnly: true,
         infoLabel: 'RISC-V Equivalent',
         fillValue: 'addi x0, x0, 0',
-        value: state.code || null
+        value: null
     };
 
     return (
         <EditorContext.Provider
                 value={context}>
-            <Editor
+            <Editor hide
                 container={container}
                 sideProps={sideProps}>
                 <TextArea
