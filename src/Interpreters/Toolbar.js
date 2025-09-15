@@ -13,71 +13,74 @@ import {
     LastPageRounded,
     PauseRounded,
     InfoRounded,
-    HomeRounded
+    HomeRounded,
 } from '@mui/icons-material';
 
 export function Toolbar() {
-    const { name, dispatch, fastForward, pause }
-        = useContext(EditorContext);
+    const { name, dispatch, fastForward, pause } = useContext(EditorContext);
 
     const notMobile = !useMobile('sm');
 
-    const link = 'https://esolangs.org/wiki/'
-        + name.replace(' ', '_');
+    const link = 'https://esolangs.org/wiki/' + name.replace(' ', '_');
 
     const TimerButton = useMemo(
-        () => pause ?
-        <TooltipButton
-            key='Run'
-            title='Run'
-            onClick={dispatch('run')}
-            Icon={PlayArrowRounded} />
-        : <TooltipButton
-            key='Pause'
-            title='Pause'
-            onClick={dispatch('stop')}
-            Icon={PauseRounded} />,
-        [dispatch, pause]);
+        () =>
+            pause ? (
+                <TooltipButton
+                    key="Run"
+                    title="Run"
+                    onClick={dispatch('run')}
+                    Icon={PlayArrowRounded}
+                />
+            ) : (
+                <TooltipButton
+                    key="Pause"
+                    title="Pause"
+                    onClick={dispatch('stop')}
+                    Icon={PauseRounded}
+                />
+            ),
+        [dispatch, pause]
+    );
 
     const buttonData = {
-        'Reset': {
+        Reset: {
             icon: FirstPageRounded,
             action: 'reset',
-            flag: true
+            flag: true,
         },
         'Fast Forward': {
             icon: LastPageRounded,
             flag: fastForward,
-            action: 'ff'
+            action: 'ff',
         },
-        'Previous': {
+        Previous: {
             icon: NavigateBeforeRounded,
             flag: notMobile,
-            action: 'prev'
+            action: 'prev',
         },
-        'Next': {
+        Next: {
             icon: NavigateNextRounded,
             flag: notMobile,
-            action: 'next'
+            action: 'next',
         },
-        'Info': {
+        Info: {
             icon: InfoRounded,
-            props: {href: link}
+            props: { href: link },
         },
-        'Home': {
+        Home: {
             icon: HomeRounded,
             props: {
                 component: Link,
-                to: '/'
-            }
-        }
+                to: '/',
+            },
+        },
     };
 
     const buttons = [TimerButton];
 
     for (const key in buttonData) {
-        const { icon, flag, action, props }
-            = buttonData[key];
+        const { icon, flag, action, props } = buttonData[key];
 
         if (action && flag)
             buttons.push(
@@ -85,16 +88,13 @@ export function Toolbar() {
                     key={key}
                     title={key}
                     Icon={icon}
-                    onClick={
-                        dispatch(
-                            action)} />);
+                    onClick={dispatch(action)}
+                />
+            );
         else if (props)
             buttons.push(
-                <TooltipButton
-                    key={key}
-                    title={key}
-                    Icon={icon}
-                    {...props} />);
+                <TooltipButton key={key} title={key} Icon={icon} {...props} />
+            );
     }
 
     return buttons;
@@ -102,18 +102,16 @@ export function Toolbar() {
 
 function updateHandler(payload) {
     return (type, flag) => {
-        const { nextIter, clear }
-            = payload;
+        const { nextIter, clear } = payload;
 
-        if (flag)
-            clear();
+        if (flag) clear();
 
-        const result
-            = nextIter({type});
+        const result = nextIter({ type });
 
         return {
             ...result,
-            select: null};
+            select: null,
+        };
     };
 }
 
@@ -121,36 +119,28 @@ export function handleToolbar(state, action) {
     const { type, payload } = action;
     let newState = {};
 
-    const {
-        dispatch,
-        nextIter,
-        create,
-        clear,
-        start
-    } = payload;
+    const { dispatch, nextIter, create, clear, start } = payload;
 
-    const update
-        = updateHandler(
-            payload);
+    const update = updateHandler(payload);
 
     const repeat = () => {
         dispatch({
             type: 'timer',
-            payload
+            payload,
         });
     };
 
     switch (type) {
         case 'run':
-            create({repeat});
+            create({ repeat });
             break;
         case 'timer':
-            const newType = state.end
-                ? 'stop' : 'next';
+            const newType = state.end ? 'stop' : 'next';
 
             dispatch({
                 type: newType,
-                payload});
+                payload,
+            });
             break;
         case 'stop':
             clear();
@@ -162,15 +152,15 @@ export function handleToolbar(state, action) {
                 type: 'clear',
                 payload: {
                     ...state,
-                    ...start}});
+                    ...start,
+                },
+            });
             break;
         case 'prev':
-            newState = update(
-                'prev', true);
+            newState = update('prev', true);
             break;
         case 'next':
-            newState = update(
-                'next', false);
+            newState = update('next', false);
             break;
         default:
             break;
@@ -178,14 +168,12 @@ export function handleToolbar(state, action) {
 
     switch (type) {
         case 'run':
-            newState.pause
-                = false;
+            newState.pause = false;
             break;
         case 'stop':
         case 'reset':
         case 'prev':
-            newState.pause
-                = true;
+            newState.pause = true;
             break;
         default:
             break;

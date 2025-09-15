@@ -3,33 +3,25 @@ import TextEditor from './TextEditor';
 function clean(input) {
     let code = '';
 
-    for (const char of input)
-        if ('+-><'.includes(char))
-            code += char;
+    for (const char of input) if ('+-><'.includes(char)) code += char;
 
     return code;
 }
 
 function getState(state) {
-    let {
-        pointer,
-        index,
-        code,
-        tape,
-        end
-    } = state;
+    let { pointer, index, tape, end } = state;
+    const { code } = state;
 
     if (end)
-        if (!tape[pointer])
-            return state;
-        else
-            end = false;
+        if (!tape[pointer]) return state;
+        else end = false;
 
     if (index === code.length)
         return {
             ...state,
             index: 0,
-            end: true};
+            end: true,
+        };
 
     const char = code[index++];
     tape = [...tape];
@@ -40,9 +32,7 @@ function getState(state) {
         if (char === '-') {
             tape[pointer]--;
         } else if (char === '>') {
-            if (tape.length
-                    === ++pointer)
-                tape.push(1);
+            if (tape.length === ++pointer) tape.push(1);
         } else if (pointer) {
             pointer--;
         }
@@ -53,24 +43,25 @@ function getState(state) {
         index,
         code,
         tape,
-        end
+        end,
     };
 }
 
 export default function Editor() {
-    let start = {
+    const start = {
         pointer: 0,
         index: 0,
         tape: [1],
-        end: false
+        end: false,
     };
 
     return (
         <TextEditor
-            name='Stun Step'
+            name="Stun Step"
             runner={getState}
             clean={clean}
             start={start}
-            tape />
+            tape
+        />
     );
 }

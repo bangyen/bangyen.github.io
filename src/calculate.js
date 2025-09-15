@@ -2,12 +2,11 @@ export function getSpace(size) {
     return size / 20;
 }
 
-export function convertPixels(
-        size, height, width) {
+export function convertPixels(size, height, width) {
     const space = getSpace(size);
     const pixel = 16 * (size + space);
-    const rows  = Math.floor(height / pixel);
-    const cols  = Math.floor(width  / pixel);
+    const rows = Math.floor(height / pixel);
+    const cols = Math.floor(width / pixel);
 
     return { rows, cols };
 }
@@ -31,13 +30,9 @@ export function getDirection(arrow) {
     }
 }
 
-export function gridMove(
-        start,
-        arrow,
-        rows,
-        cols) {
+export function gridMove(start, arrow, rows, cols) {
     const jump = cols - 1;
-    const max  = rows * cols;
+    const max = rows * cols;
 
     switch (arrow) {
         case 2:
@@ -47,16 +42,12 @@ export function gridMove(
             start -= cols;
             break;
         case 1:
-            if (start % cols === jump)
-                start -= jump;
-            else
-                start += 1;
+            if (start % cols === jump) start -= jump;
+            else start += 1;
             break;
         case -1:
-            if (start % cols === 0)
-                start += jump;
-            else
-                start -= 1;
+            if (start % cols === 0) start += jump;
+            else start -= 1;
             break;
         default:
             break;

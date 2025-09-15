@@ -1,8 +1,8 @@
-import { Tooltip, IconButton, Paper, Box } from "@mui/material";
-import { useState, useCallback } from "react";
+import { Tooltip, IconButton, Paper, Box } from '@mui/material';
+import { useState, useCallback } from 'react';
 import Grid from '@mui/material/Grid2';
-import { Link } from "react-router-dom";
-import { getSpace } from "./calculate";
+import { Link } from 'react-router-dom';
+import { getSpace } from './calculate';
 
 import {
     HomeRounded,
@@ -11,104 +11,77 @@ import {
     KeyboardArrowUpRounded,
     KeyboardArrowDownRounded,
     KeyboardArrowLeftRounded,
-    KeyboardArrowRightRounded
+    KeyboardArrowRightRounded,
 } from '@mui/icons-material';
 
 export function TooltipButton(props) {
-    const {Icon, title, ...rest} = props;
+    const { Icon, title, ...rest } = props;
 
     return (
         <Tooltip title={title}>
-            <IconButton
-                    size='large'
-                    {...rest}>
-                <Icon fontSize='inherit' />
+            <IconButton size="large" {...rest}>
+                <Icon fontSize="inherit" />
             </IconButton>
         </Tooltip>
     );
 }
 
 export function HomeButton({ hide, ...rest }) {
-    if (hide)
-        return null;
+    if (hide) return null;
 
     return (
         <TooltipButton
             to="/"
-            key='Home'
-            title='Home'
+            key="Home"
+            title="Home"
             component={Link}
             Icon={HomeRounded}
-            {...rest} />
+            {...rest}
+        />
     );
 }
 
-function Cell({
-        size, children, ...rest}) {
+function Cell({ size, children, ...rest }) {
     const remSize = `${size}rem`;
-    const radius  = `${size / 5}rem`;
+    const radius = `${size / 5}rem`;
 
     const props = {
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         borderRadius: radius,
         height: remSize,
-        width: remSize
+        width: remSize,
     };
 
     const combined = {
         ...props,
-        ...rest};
+        ...rest,
+    };
 
-    return (
-        <Box {...combined}>
-            {children}
-        </Box>
-    );
+    return <Box {...combined}>{children}</Box>;
 }
 
 function Row(props) {
-    const {
-        cols,
-        size,
-        index,
-        spacing,
-        cellProps
-    } = props;
+    const { cols, size, index, spacing, cellProps } = props;
 
-    const WrappedCell
-        = (_, j) => (
-            <Cell
-                {...cellProps(index, j)}
-                key={`${index}_${j}`}
-                size={size} />
-        );
- 
+    const WrappedCell = (_, j) => (
+        <Cell {...cellProps(index, j)} key={`${index}_${j}`} size={size} />
+    );
+
     return (
-        <Grid
-            container
-            size={12}
-            spacing={spacing}
-            justifyContent="center">
-            {Array.from(
-                { length: cols },
-                WrappedCell)}
+        <Grid container size={12} spacing={spacing} justifyContent="center">
+            {Array.from({ length: cols }, WrappedCell)}
         </Grid>
     );
 }
 
 export function CustomGrid(props) {
-    const {
-        size,
-        rows,
-        cols,
-        cellProps
-    } = props;
+    const { size, rows, cols, cellProps } = props;
 
     const auto = getSpace(size);
     const { space = auto } = props;
-    const rem  = `${space}rem`;
+    const rem = `${space}rem`;
 
     const getRow = useCallback(
         (_, i) => (
@@ -118,18 +91,15 @@ export function CustomGrid(props) {
                 size={size}
                 spacing={rem}
                 key={`row_${i}`}
-                cellProps={cellProps} />
-        ), [cols, size, rem, cellProps]);
+                cellProps={cellProps}
+            />
+        ),
+        [cols, size, rem, cellProps]
+    );
 
     return (
-        <Grid
-            container
-            size={12}
-            spacing={rem}
-            alignItems="center">
-            {Array.from(
-                { length: rows },
-                getRow)}
+        <Grid container size={12} spacing={rem} alignItems="center">
+            {Array.from({ length: rows }, getRow)}
         </Grid>
     );
 }
@@ -139,88 +109,76 @@ export function Navigation({ children, ...rest }) {
         <Paper
             elevation={1}
             sx={{
-                transform: "translateX(-50%)",
-                position: "absolute",
+                transform: 'translateX(-50%)',
+                position: 'absolute',
                 borderRadius: 2,
                 padding: 1,
                 bottom: 50,
-                left: "50%",
-                ...rest
-            }}>
-            <Grid
-                container
-                spacing={2}>
+                left: '50%',
+                ...rest,
+            }}
+        >
+            <Grid container spacing={2}>
                 {children}
             </Grid>
         </Paper>
-    );    
+    );
 }
 
-export function Controls({handler}) {
+export function Controls({ handler }) {
     const [show, setShow] = useState(false);
     const opacity = show ? 0.8 : 1;
 
     return (
-        <Navigation
-            opacity={opacity}>
-            <HomeButton
-                hide={show} />
-            <Arrows
-                show={show}
-                setShow={setShow}
-                handler={handler} />
+        <Navigation opacity={opacity}>
+            <HomeButton hide={show} />
+            <Arrows show={show} setShow={setShow} handler={handler} />
         </Navigation>
     );
 }
 
-function Arrows({show, setShow, handler}) {
-    const flip = useCallback(
-        () => setShow(!show),
-        [show, setShow]);
+function Arrows({ show, setShow, handler }) {
+    const flip = useCallback(() => setShow(!show), [show, setShow]);
 
     if (!show)
         return (
             <TooltipButton
-                title='Controls'
+                title="Controls"
                 Icon={GamepadRounded}
-                onClick={flip} />
+                onClick={flip}
+            />
         );
 
     return (
         <Grid>
-            <Grid
-                width='100%'
-                display='flex'
-                justifyContent='center'>
+            <Grid width="100%" display="flex" justifyContent="center">
                 <TooltipButton
-                    title='Up'
+                    title="Up"
                     Icon={KeyboardArrowUpRounded}
-                    onClick={handler('up')} />
+                    onClick={handler('up')}
+                />
             </Grid>
             <Grid>
                 <TooltipButton
-                    title='Left'
+                    title="Left"
                     Icon={KeyboardArrowLeftRounded}
-                    onClick={handler('left')} />
-                <IconButton
-                        size='large'
-                        onClick={flip}>
-                    <CloseRounded
-                        fontSize='inherit' />
+                    onClick={handler('left')}
+                />
+                <IconButton size="large" onClick={flip}>
+                    <CloseRounded fontSize="inherit" />
                 </IconButton>
                 <TooltipButton
-                    title='Right'
+                    title="Right"
                     Icon={KeyboardArrowRightRounded}
-                    onClick={handler('right')} />
+                    onClick={handler('right')}
+                />
             </Grid>
-            <Grid
-                width='100%'
-                display='flex'
-                justifyContent='center'>
+            <Grid width="100%" display="flex" justifyContent="center">
                 <TooltipButton
-                    title='Down'
+                    title="Down"
                     Icon={KeyboardArrowDownRounded}
-                    onClick={handler('down')} />
+                    onClick={handler('down')}
+                />
             </Grid>
         </Grid>
     );

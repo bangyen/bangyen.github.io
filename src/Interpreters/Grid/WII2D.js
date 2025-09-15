@@ -10,31 +10,24 @@ function getDistance(x, y, cols) {
 
     const differ = Math.abs(x - y);
     const height = Math.floor(differ / cols);
-    const width  = Math.abs(xWidth - yWidth);
+    const width = Math.abs(xWidth - yWidth);
 
     return height + width;
 }
 
-function getComparison(
-        position, cols) {
+function getComparison(position, cols) {
     return (x, y) =>
-        getDistance(position, x, cols)
-      - getDistance(position, y, cols);
+        getDistance(position, x, cols) - getDistance(position, y, cols);
 }
 
 function getClosest(position, grid, cols) {
-    let warp = [];
+    const warp = [];
 
-    for (let k = 0; k < grid.length; k++)
-        if (grid[k] === '@')
-            warp.push(k);
+    for (let k = 0; k < grid.length; k++) if (grid[k] === '@') warp.push(k);
 
-    if (warp.length === 1)
-        return position;
+    if (warp.length === 1) return position;
 
-    const compare
-        = getComparison(
-            position, cols);
+    const compare = getComparison(position, cols);
 
     warp.sort(compare);
     return warp[1];
@@ -43,26 +36,16 @@ function getClosest(position, grid, cols) {
 function getState(state) {
     const arrows = '^<>v';
 
-    let {
-        position,
-        velocity,
-        grid,
-        output,
-        register,
-        end,
-        rows,
-        cols
-    } = state;
+    let { position, velocity, output, register, end } = state;
+    const { grid, rows, cols } = state;
 
-    if (end)
-        return state;
+    if (end) return state;
 
     if (position === null) {
-        let index  = grid.indexOf('!');
-        let double = grid.lastIndexOf('!');
+        const index = grid.indexOf('!');
+        const double = grid.lastIndexOf('!');
 
-        if (index === -1 || index !== double)
-            return {...state, end: true};
+        if (index === -1 || index !== double) return { ...state, end: true };
 
         position = index;
     }
@@ -70,12 +53,10 @@ function getState(state) {
     const char = grid[position];
 
     if (arrows.includes(char)) {
-        const index
-            = arrows.indexOf(char);
+        const index = arrows.indexOf(char);
         velocity = (index % 2) + 1;
 
-        if (index < 2)
-            velocity -= 3;
+        if (index < 2) velocity -= 3;
     } else if (+char) {
         register = +char;
     }
@@ -85,12 +66,10 @@ function getState(state) {
             velocity *= -1;
             break;
         case '@':
-            position = getClosest(
-                position, grid, cols);
+            position = getClosest(position, grid, cols);
             position -= cols;
 
-            if (position < 0)
-                position += rows * cols;
+            if (position < 0) position += rows * cols;
             break;
         case '+':
             register++;
@@ -105,15 +84,13 @@ function getState(state) {
             register *= register;
             break;
         case '/':
-            register = Math
-                .floor(register / 2);
+            register = Math.floor(register / 2);
             break;
         case '~':
-            output += String
-                .fromCharCode(register);
+            output += String.fromCharCode(register);
             break;
         case '?':
-            const rand  = Math.random() * 4;
+            const rand = Math.random() * 4;
             const floor = Math.floor(rand);
             velocity = floor - 2 + (floor > 1);
             break;
@@ -126,9 +103,7 @@ function getState(state) {
     }
 
     if (position !== null && char !== '@')
-        position = gridMove(
-            position, velocity,
-            rows, cols);
+        position = gridMove(position, velocity, rows, cols);
 
     return {
         position,
@@ -138,26 +113,26 @@ function getState(state) {
         register,
         end,
         rows,
-        cols
+        cols,
     };
 }
 
-
 export default function Editor() {
-    let start = {
+    const start = {
         position: null,
         velocity: -2,
         end: false,
         output: '',
-        register: 0
+        register: 0,
     };
 
     return (
         <GridEditor
-            name='WII2D'
+            name="WII2D"
             start={start}
             runner={getState}
             output
-            register />
+            register
+        />
     );
 }

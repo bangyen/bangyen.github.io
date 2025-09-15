@@ -24,12 +24,35 @@
     "deploy": "gh-pages -b gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src/ --ext .js,.jsx --config config/eslint.config.js",
+    "lint:fix": "eslint src/ --ext .js,.jsx --fix --config config/eslint.config.js",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/",
+    "stylelint": "stylelint src/**/*.{css,scss} --config config/stylelint.config.js",
+    "stylelint:fix": "stylelint src/**/*.{css,scss} --fix --config config/stylelint.config.js",
+    "lint:all": "npm run lint && npm run format:check && npm run stylelint",
+    "prepare": "husky install"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 80,
+    "tabWidth": 4,
+    "useTabs": false,
+    "bracketSpacing": true,
+    "arrowParens": "avoid",
+    "endOfLine": "lf"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx}": [
+      "eslint --fix --config config/eslint.config.js",
+      "prettier --write"
+    ],
+    "src/**/*.{css,scss}": [
+      "stylelint --fix --config config/stylelint.config.js",
+      "prettier --write"
     ]
   },
   "browserslist": {
@@ -43,5 +66,16 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "prettier": "^3.6.2",
+    "stylelint": "^16.24.0",
+    "stylelint-config-standard": "^39.0.0"
   }
 }

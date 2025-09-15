@@ -1,4 +1,8 @@
-import { RefreshRounded, InfoRounded, CircleRounded } from '@mui/icons-material';
+import {
+    RefreshRounded,
+    InfoRounded,
+    CircleRounded,
+} from '@mui/icons-material';
 import { useMemo, useEffect, useReducer } from 'react';
 import Grid from '@mui/material/Grid2';
 
@@ -10,27 +14,22 @@ import { convertPixels } from '../../calculate';
 import Info from './Info';
 
 function getFrontProps(getters, dispatch) {
-    const {
-        getColor,
-        getBorder
-    } = getters;
+    const { getColor, getBorder } = getters;
 
-    const flipAdj
-        = (row, col) => {
-            dispatch({
-                type: 'adjacent',
-                row, col
-            });
-        };
+    const flipAdj = (row, col) => {
+        dispatch({
+            type: 'adjacent',
+            row,
+            col,
+        });
+    };
 
     return (row, col) => {
         const style = getBorder(row, col);
-        const { front, back }
-            = getColor(row, col);
+        const { front, back } = getColor(row, col);
 
         return {
-            onClick: () =>
-                flipAdj(row, col),
+            onClick: () => flipAdj(row, col),
             children: <CircleRounded />,
             backgroundColor: front,
             color: front,
@@ -38,9 +37,9 @@ function getFrontProps(getters, dispatch) {
             sx: {
                 '&:hover': {
                     cursor: 'pointer',
-                    color: back
-                }
-            }
+                    color: back,
+                },
+            },
         };
     };
 }
@@ -48,67 +47,52 @@ function getFrontProps(getters, dispatch) {
 export default function LightsOut() {
     const { height, width } = useWindow();
     const mobile = useMobile('sm');
-    const size   = mobile ? 3 : 5;
+    const size = mobile ? 3 : 5;
 
     let { rows, cols } = useMemo(
-        () => convertPixels(
-            size, height, width),
-        [size, height, width]);
+        () => convertPixels(size, height, width),
+        [size, height, width]
+    );
 
     rows -= 1;
     cols -= 1;
 
-    if (mobile)
-        rows -= 2;
+    if (mobile) rows -= 2;
 
     const initial = {
-        grid: getGrid(
-            rows, cols),
+        grid: getGrid(rows, cols),
         score: 0,
         rows,
-        cols
+        cols,
     };
 
-    const [state, dispatch]
-        = useReducer(
-            handleBoard,
-            initial);
+    const [state, dispatch] = useReducer(handleBoard, initial);
 
-    const [open, toggleOpen]
-        = useReducer(
-            (open) => !open,
-            false);
+    const [open, toggleOpen] = useReducer(open => !open, false);
 
-    const palette = usePalette(
-        state.score);
+    const palette = usePalette(state.score);
 
     useEffect(() => {
-        document.title
-            = 'Lights Out | Bangyen';
+        document.title = 'Lights Out | Bangyen';
     }, []);
 
     useEffect(() => {
         dispatch({
             type: 'resize',
             newRows: rows,
-            newCols: cols
+            newCols: cols,
         });
     }, [rows, cols]);
 
-    const getters = useHandler(
-        state, palette);
+    const getters = useHandler(state, palette);
 
-    const frontProps = getFrontProps(
-        getters, dispatch);
+    const frontProps = getFrontProps(getters, dispatch);
 
-    const backProps 
-        = (row, col) => {
-            return {
-                backgroundColor:
-                    getters.getFiller(
-                        row, col)
-            };
+    const backProps = (row, col) => {
+        return {
+            backgroundColor: getters.getFiller(row, col),
         };
+    };
 
     return (
         <Grid>
@@ -117,23 +101,26 @@ export default function LightsOut() {
                 rows={rows}
                 cols={cols}
                 frontProps={frontProps}
-                backProps={backProps} />
+                backProps={backProps}
+            />
             <Navigation>
-                <HomeButton
-                    size='inherit' />
+                <HomeButton size="inherit" />
                 <TooltipButton
                     Icon={RefreshRounded}
-                    title='Randomize'
-                    size='inherit'
+                    title="Randomize"
+                    size="inherit"
                     onClick={() =>
                         dispatch({
-                            type: 'random'
-                        })} />
+                            type: 'random',
+                        })
+                    }
+                />
                 <TooltipButton
-                    title='Info'
-                    size='inherit'
+                    title="Info"
+                    size="inherit"
                     Icon={InfoRounded}
-                    onClick={toggleOpen} />
+                    onClick={toggleOpen}
+                />
             </Navigation>
             <Info
                 rows={rows}
@@ -142,7 +129,8 @@ export default function LightsOut() {
                 open={open}
                 palette={palette}
                 score={state.score}
-                toggleOpen={toggleOpen} />
+                toggleOpen={toggleOpen}
+            />
         </Grid>
     );
 }

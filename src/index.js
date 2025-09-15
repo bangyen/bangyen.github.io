@@ -1,11 +1,7 @@
 import ReactDOM from 'react-dom';
 import React from 'react';
 
-import {
-    HashRouter,
-    Switch,
-    Route
-} from "react-router-dom";
+import { HashRouter, Switch, Route } from 'react-router-dom';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { grey, blueGrey } from '@mui/material/colors';
@@ -25,40 +21,31 @@ const darkTheme = createTheme({
     },
 });
 
-
 function getRoute(Elem, url) {
-    return <Route
-        exact path={url}
-        component={Elem}
-        key={Elem.name} />;
+    return <Route exact path={url} component={Elem} key={Elem.name} />;
 }
-
 
 function Website() {
     return (
-        <HashRouter basename='/'>
+        <HashRouter basename="/">
             <Switch>
                 {Object.keys(run).map(k => {
-                    if (k === 'names')
-                        return null;
+                    if (k === 'names') return null;
 
-                    const url = run.names[k];
-                return getRoute(run[k], url);
+                    const url = run.names[k]; // eslint-disable-line import/namespace
+                    return getRoute(run[k], url); // eslint-disable-line import/namespace
                 })}
                 {Object.keys(page).map(k => {
-                    if (k === 'Error'
-                        || k === 'pages')
-                    return null;
+                    if (k === 'Error' || k === 'pages') return null;
 
-                    const url = page.pages[k] || '/';
-                    return getRoute(page[k], url);
+                    const url = page.pages[k] || '/'; // eslint-disable-line import/namespace
+                    return getRoute(page[k], url); // eslint-disable-line import/namespace
                 })}
                 <Route component={page.Error} />
             </Switch>
         </HashRouter>
     );
 }
-
 
 ReactDOM.render(
     <React.StrictMode>

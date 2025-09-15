@@ -7,5 +7,5 @@ export const names = {
     Stun_Step: '/Stun_Step',
     Suffolk: '/Suffolk',
     WII2D: '/WII2D',
-    Back: '/Back'
+    Back: '/Back',
 };

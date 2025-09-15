@@ -5,48 +5,42 @@ function handleKeys(state, payload) {
     let { grid, select } = state;
     let value;
 
-    const { key, resetState }
-        = payload;
+    const { key, resetState } = payload;
 
-    if (select === null)
-        return {};
+    if (select === null) return {};
 
     if (key.includes('Arrow')) {
         const arrow = getDirection(key);
         const { rows, cols } = state;
 
-        select = gridMove(
-            select, arrow, rows, cols);
-        return {select};
+        select = gridMove(select, arrow, rows, cols);
+        return { select };
     }
 
     if (key.length === 1) {
         value = key;
-    } else if (key === 'Backspace'
-            || key === 'Delete') {
+    } else if (key === 'Backspace' || key === 'Delete') {
         value = ' ';
     } else {
         return {};
     }
 
     const before = grid.slice(0, select);
-    const after  = grid.slice(select + 1);
+    const after = grid.slice(select + 1);
 
     grid = before + value + after;
     resetState(grid);
 
-    return {grid, pause: true};
+    return { grid, pause: true };
 }
 
 function handleResize(state, payload) {
     const { resetState, ...rest } = payload;
-    let { grid, rows, cols } = state;
+    let { grid } = state;
+    const { rows, cols } = state;
     let resize = '';
 
-    const {
-        rows: newRows,
-        cols: newCols
-    } = rest;
+    const { rows: newRows, cols: newCols } = rest;
 
     if (newRows > rows) {
         const diff = newRows - rows;
@@ -59,14 +53,10 @@ function handleResize(state, payload) {
         const start = k * cols;
         let end = start;
 
-        if (newCols > cols)
-            end += cols;
-        else
-            end += newCols;
+        if (newCols > cols) end += cols;
+        else end += newCols;
 
-        resize += grid
-            .substring(start, end)
-            .padEnd(newCols, ' ');
+        resize += grid.substring(start, end).padEnd(newCols, ' ');
     }
 
     resetState(resize);
@@ -74,7 +64,7 @@ function handleResize(state, payload) {
     return {
         ...rest,
         grid: resize,
-        pause: true
+        pause: true,
     };
 }
 
@@ -84,29 +74,25 @@ export function handleAction(state, action) {
 
     switch (type) {
         case 'edit':
-            newState = handleKeys(
-                state, payload);
+            newState = handleKeys(state, payload);
             break;
         case 'resize':
-            newState = handleResize(
-                state, payload);
+            newState = handleResize(state, payload);
             break;
         case 'click':
             let { select } = payload;
 
-            if (select === state.select)
-                select = null;
+            if (select === state.select) select = null;
 
-            newState = {select};
+            newState = { select };
             break;
         default:
-            newState = handleToolbar(
-                state, action);
+            newState = handleToolbar(state, action);
             break;
     }
 
     return {
         ...state,
-        ...newState
+        ...newState,
     };
 }
