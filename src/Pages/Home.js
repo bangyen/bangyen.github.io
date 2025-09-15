@@ -16,6 +16,7 @@ import {
     Email,
     Phone,
     LocationOn,
+    OpenInNew,
 } from '@mui/icons-material';
 
 import {
@@ -419,12 +420,24 @@ export default function Home() {
                                 }}
                             >
                                 <Box
+                                    component="a"
+                                    href="https://ieeexplore.ieee.org/document/10319968"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     sx={{
                                         padding: 2,
                                         backgroundColor:
                                             'rgba(128, 128, 128, 0.05)',
                                         borderRadius: 2,
                                         border: '1px solid rgba(128, 128, 128, 0.2)',
+                                        textDecoration: 'none',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor:
+                                                'rgba(128, 128, 128, 0.1)',
+                                            transform: 'translateY(-2px)',
+                                        },
                                     }}
                                 >
                                     <Typography
@@ -433,26 +446,45 @@ export default function Home() {
                                             color: 'secondary.light',
                                             fontWeight: 600,
                                             marginBottom: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 1,
                                         }}
                                     >
                                         Generalized Collective Algorithms for
                                         the Exascale Era
+                                        <OpenInNew fontSize="small" />
                                     </Typography>
                                     <Typography
                                         variant="body2"
                                         sx={{ color: 'text.secondary' }}
                                     >
-                                        CLUSTER 2023
+                                        Introduced novel framework for exascale
+                                        collective algorithms, reducing
+                                        communication overhead by 30% and
+                                        latency by 20%
                                     </Typography>
                                 </Box>
 
                                 <Box
+                                    component="a"
+                                    href="https://ieeexplore.ieee.org/document/10793131"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     sx={{
                                         padding: 2,
                                         backgroundColor:
                                             'rgba(128, 128, 128, 0.05)',
                                         borderRadius: 2,
                                         border: '1px solid rgba(128, 128, 128, 0.2)',
+                                        textDecoration: 'none',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor:
+                                                'rgba(128, 128, 128, 0.1)',
+                                            transform: 'translateY(-2px)',
+                                        },
                                     }}
                                 >
                                     <Typography
@@ -461,16 +493,23 @@ export default function Home() {
                                             color: 'secondary.light',
                                             fontWeight: 600,
                                             marginBottom: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 1,
                                         }}
                                     >
                                         Revisiting Computation for Research:
                                         Practices and Trends
+                                        <OpenInNew fontSize="small" />
                                     </Typography>
                                     <Typography
                                         variant="body2"
                                         sx={{ color: 'text.secondary' }}
                                     >
-                                        SC 2024
+                                        Interviewed 138 researchers across
+                                        multiple institutions using thematic
+                                        analysis to uncover evolving
+                                        computational research practices
                                     </Typography>
                                 </Box>
                             </Box>
@@ -507,12 +546,24 @@ export default function Home() {
                                 }}
                             >
                                 <Box
+                                    component="a"
+                                    href="https://github.com/bangyen/zsharp"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     sx={{
                                         padding: 2,
                                         backgroundColor:
                                             'rgba(128, 128, 128, 0.05)',
                                         borderRadius: 2,
                                         border: '1px solid rgba(128, 128, 128, 0.2)',
+                                        textDecoration: 'none',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor:
+                                                'rgba(128, 128, 128, 0.1)',
+                                            transform: 'translateY(-2px)',
+                                        },
                                     }}
                                 >
                                     <Typography
@@ -521,28 +572,44 @@ export default function Home() {
                                             color: 'secondary.light',
                                             fontWeight: 600,
                                             marginBottom: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 1,
                                         }}
                                     >
                                         ZSharp — Sharpness-Aware Minimization
+                                        <GitHub fontSize="small" />
                                     </Typography>
                                     <Typography
                                         variant="body2"
                                         sx={{ color: 'text.secondary' }}
                                     >
-                                        PyTorch implementation with Apple
-                                        Silicon optimization, delivering +5.2%
-                                        accuracy over SGD and 4.4× training
-                                        speedup
+                                        Developed PyTorch implementation with
+                                        Apple Silicon optimization, delivering
+                                        +5.2% accuracy over SGD and 4.4×
+                                        training speedup
                                     </Typography>
                                 </Box>
 
                                 <Box
+                                    component="a"
+                                    href="https://github.com/bangyen/muon"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     sx={{
                                         padding: 2,
                                         backgroundColor:
                                             'rgba(128, 128, 128, 0.05)',
                                         borderRadius: 2,
                                         border: '1px solid rgba(128, 128, 128, 0.2)',
+                                        textDecoration: 'none',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.2s ease-in-out',
+                                        '&:hover': {
+                                            backgroundColor:
+                                                'rgba(128, 128, 128, 0.1)',
+                                            transform: 'translateY(-2px)',
+                                        },
                                     }}
                                 >
                                     <Typography
@@ -551,9 +618,13 @@ export default function Home() {
                                             color: 'secondary.light',
                                             fontWeight: 600,
                                             marginBottom: 1,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 1,
                                         }}
                                     >
                                         Muon Optimizer — Accelerating Grokking
+                                        <GitHub fontSize="small" />
                                     </Typography>
                                     <Typography
                                         variant="body2"
