@@ -1,70 +1,136 @@
-# Getting Started with Create React App
+# Bangyen's Personal Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A personal website and portfolio showcasing interactive programming interpreters, games, and web development projects. Built with React and deployed on GitHub Pages.
 
-## Available Scripts
+🌐 **Live Site**: [https://bangyen.github.io](https://bangyen.github.io)
 
-In the project directory, you can run:
+## 🎮 Features
 
-### `npm start`
+### Programming Language Interpreters
+- **Stun Step**: A Brainfuck-like esoteric programming language interpreter
+- **Suffolk**: A minimal programming language interpreter with RISC-V equivalent display
+- **WII2D**: A 2D grid-based programming language interpreter
+- **Back**: A grid-based programming language interpreter
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Interactive Games
+- **Snake**: Classic snake game with responsive controls
+- **Lights Out**: Puzzle game where you turn off all lights on a grid
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Technical Features
+- Responsive design with Material-UI components
+- Real-time code execution and visualization
+- Interactive grid-based programming environments
+- Step-by-step program execution with debugging tools
+- Tape, register, and output displays for interpreters
 
-### `npm test`
+## 🛠️ Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Frontend**: React 17, Material-UI (MUI)
+- **Routing**: React Router DOM
+- **Styling**: Emotion (styled components)
+- **Icons**: Material-UI Icons, React Icons
+- **Build Tool**: Create React App
+- **Deployment**: GitHub Pages
 
-### `npm run build`
+## 🚀 Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Installation
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Clone the repository:
+```bash
+git clone https://github.com/bangyen/bangyen.github.io.git
+cd bangyen.github.io
+```
 
-### `npm run eject`
+2. Install dependencies:
+```bash
+npm install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+3. Start the development server:
+```bash
+npm start
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## 📜 Available Scripts
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+### Development
+- `npm start` - Runs the app in development mode
+- `npm test` - Launches the test runner in interactive watch mode
+- `npm run build` - Builds the app for production
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Code Quality
+- `npm run lint` - Runs ESLint on source files
+- `npm run lint:fix` - Fixes ESLint issues automatically
+- `npm run format` - Formats code with Prettier
+- `npm run format:check` - Checks code formatting
+- `npm run stylelint` - Runs Stylelint on CSS/SCSS files
+- `npm run stylelint:fix` - Fixes Stylelint issues automatically
+- `npm run lint:all` - Runs all linting checks
 
 ### Deployment
+- `npm run predeploy` - Builds the app for production
+- `npm run deploy` - Deploys to GitHub Pages
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## 🏗️ Project Structure
 
-### `npm run build` fails to minify
+```
+src/
+├── Interpreters/          # Programming language interpreters
+│   ├── Text/             # Text-based interpreters (StunStep, Suffolk)
+│   ├── Grid/             # Grid-based interpreters (WII2D, Back)
+│   ├── Editor.js         # Main editor component
+│   ├── Toolbar.js        # Editor toolbar with controls
+│   └── Display.js        # Program execution displays
+├── Pages/                # Main application pages
+│   ├── Home.js           # Landing page
+│   ├── Snake.js          # Snake game
+│   └── Lights/           # Lights Out game
+├── helpers.js            # Utility functions
+├── hooks.js              # Custom React hooks
+└── index.js              # Main application entry point
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🎯 How to Use
+
+### Interpreters
+1. Navigate to any interpreter from the home page menu
+2. Write code in the left panel using the language's syntax
+3. Use the toolbar to run, pause, step through, or reset your program
+4. View program execution details in the displays below:
+   - **Program**: Shows current instruction
+   - **Output**: Displays program output
+   - **Tape**: Shows memory state (for applicable languages)
+   - **Register**: Shows register values (for applicable languages)
+
+### Games
+- **Snake**: Use arrow keys to control the snake
+- **Lights Out**: Click lights to toggle them and solve the puzzle
+
+## 🔧 Development
+
+This project uses several development tools for code quality:
+
+- **ESLint**: JavaScript/React linting
+- **Prettier**: Code formatting
+- **Stylelint**: CSS/SCSS linting
+- **Husky**: Git hooks for pre-commit checks
+- **lint-staged**: Run linters on staged files
+
+## 📄 License
+
+This project is private and personal. All rights reserved.
+
+## 🤝 Contributing
+
+This is a personal portfolio website. Contributions are not expected, but feel free to explore the code and learn from the implementations.
+
+---
+
+Built with ❤️ by Bangyen
