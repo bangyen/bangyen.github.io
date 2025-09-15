@@ -16,7 +16,8 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    node: true
+    node: true,
+    jest: true
   },
   rules: {
     'react/prop-types': 'off', // Since you're not using PropTypes
@@ -30,6 +31,14 @@ module.exports = {
     'no-var': 'error', // Disallow var declarations
     'no-const-assign': 'off' // Allow reassigning const variables in state management functions
   },
+  overrides: [
+    {
+      files: ['**/*.test.js', '**/*.test.jsx', '**/setupTests.js'],
+      rules: {
+        'no-console': 'off' // Allow console statements in test files
+      }
+    }
+  ],
   settings: {
     react: {
       version: 'detect'

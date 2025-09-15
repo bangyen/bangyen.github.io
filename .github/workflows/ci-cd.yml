@@ -76,13 +76,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     
     permissions:
-      contents: read
-      pages: write
-      id-token: write
-    
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      contents: write
     
     steps:
     - name: Checkout code
@@ -100,14 +94,14 @@ jobs:
     - name: Build application
       run: npm run build
       
-    - name: Setup Pages
-      uses: actions/configure-pages@v4
+    - name: Configure Git
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
+        git config --global credential.helper store
+        echo "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com" > ~/.git-credentials
       
-    - name: Upload to Pages
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: build/
-        
     - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+      run: npm run deploy
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

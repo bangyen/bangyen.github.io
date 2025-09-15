@@ -1,6 +1,4 @@
-import { getContrastRatio } from '@mui/material/styles';
 import * as colors from '@mui/material/colors';
-import { createNoise2D } from 'simplex-noise';
 import Grid from '@mui/material/Grid2';
 
 import { useMemo, useCallback } from 'react';
@@ -84,44 +82,15 @@ function fillerHandler(row, col, getColor) {
     return color;
 }
 
-function getRandom(length, compare, filter) {
-    const index = 'A100';
-
-    const values = Object.values(colors)
-        .map(color => color[index])
-        .sort(compare)
-        .filter(Boolean);
-
-    const first = values[0];
-    const result = [first];
-
-    for (const color of values) {
-        if (result.length === length) break;
-
-        if (filter(first, color)) result.push(color);
-    }
-
-    return result;
-}
-
 export function usePalette(score) {
-    const createNoise = useMemo(() => createNoise2D(), []);
-
+    // Fixed color scheme - two shades of dark blue
     const palette = useMemo(() => {
-        let count = 0;
-
-        const compare = () => createNoise(score, count++);
-
-        const filter = (first, second) => {
-            const ratio = getContrastRatio(first, second);
-
-            return ratio >= 1.5;
-        };
-
-        const [primary, secondary] = getRandom(2, compare, filter);
+        // Using two shades of dark blue for a cohesive look
+        const primary = colors.blue[700]; // Darker blue for "on" state (#1976d2)
+        const secondary = colors.blue[900]; // Very dark blue for "off" state (#0d47a1)
 
         return { primary, secondary };
-    }, [score, createNoise]);
+    }, []); // Removed score dependency since we're using fixed colors
 
     return palette;
 }

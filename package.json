@@ -30,8 +30,8 @@
     "lint:fix": "eslint src/ --ext .js,.jsx --fix --config config/eslint.config.js",
     "format": "prettier --write src/",
     "format:check": "prettier --check src/",
-    "stylelint": "stylelint src/**/*.{css,scss} --config config/stylelint.config.js",
-    "stylelint:fix": "stylelint src/**/*.{css,scss} --fix --config config/stylelint.config.js",
+    "stylelint": "stylelint \"src/**/*.{css,scss}\" --config config/stylelint.config.js --allow-empty-input",
+    "stylelint:fix": "stylelint \"src/**/*.{css,scss}\" --fix --config config/stylelint.config.js --allow-empty-input",
     "lint:all": "npm run lint && npm run format:check && npm run stylelint",
     "prepare": "husky install"
   },
@@ -52,7 +52,7 @@
       "prettier --write"
     ],
     "src/**/*.{css,scss}": [
-      "stylelint --fix --config config/stylelint.config.js",
+      "stylelint --fix --config config/stylelint.config.js --allow-empty-input",
       "prettier --write"
     ]
   },
