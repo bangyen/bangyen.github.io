@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom';
-import React from 'react';
+import React, { useMemo, useState } from 'react';
 
 import {
     HashRouter,
@@ -10,21 +10,10 @@ import {
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { grey, blueGrey } from '@mui/material/colors';
 import { CssBaseline } from '@mui/material';
+import { ColorModeContext } from './ThemeContext';
 
 import * as run from './Interpreters';
 import * as page from './Pages';
-
-const darkTheme = createTheme({
-    palette: {
-        primary: blueGrey,
-        secondary: grey,
-        mode: 'dark',
-    },
-    typography: {
-        fontFamily: 'monospace',
-    },
-});
-
 
 function getRoute(Elem, url) {
     return <Route
@@ -60,12 +49,38 @@ function Website() {
 }
 
 
+function App() {
+    const [mode, setMode] = useState('dark');
+    const colorMode = useMemo(() => ({
+        toggleColorMode: () => {
+            setMode(prev => prev === 'light' ? 'dark' : 'light');
+        },
+    }), []);
+
+    const theme = useMemo(() => createTheme({
+        palette: {
+            primary: blueGrey,
+            secondary: grey,
+            mode,
+        },
+        typography: {
+            fontFamily: 'Inter, sans-serif',
+        },
+    }), [mode]);
+
+    return (
+        <ColorModeContext.Provider value={colorMode}>
+            <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <Website />
+            </ThemeProvider>
+        </ColorModeContext.Provider>
+    );
+}
+
 ReactDOM.render(
     <React.StrictMode>
-        <ThemeProvider theme={darkTheme}>
-            <CssBaseline />
-            <Website />
-        </ThemeProvider>
+        <App />
     </React.StrictMode>,
     document.getElementById('root')
 );
