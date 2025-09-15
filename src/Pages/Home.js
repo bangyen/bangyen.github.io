@@ -129,9 +129,13 @@ export default function Home() {
     return (
         <Grid
             container
-            height="100vh"
+            minHeight="100vh"
             flexDirection="column"
-            sx={{ position: 'relative', overflow: 'hidden' }}
+            sx={{
+                position: 'relative',
+                padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+                boxSizing: 'border-box',
+            }}
         >
             {/* Background Elements */}
             <Box
@@ -151,9 +155,11 @@ export default function Home() {
             <Grid
                 container
                 direction="row"
-                margin={3}
                 spacing={2}
-                sx={{ zIndex: 1 }}
+                sx={{
+                    zIndex: 1,
+                    marginBottom: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+                }}
             >
                 <MenuButton>
                     {dropdown('Miscellaneous', pages)}
@@ -180,14 +186,24 @@ export default function Home() {
                 justifyContent="center"
                 alignItems="center"
                 flexDirection="column"
-                sx={{ zIndex: 1 }}
+                sx={{
+                    zIndex: 1,
+                    padding: { xs: '1rem 0', sm: '1.5rem 0', md: '2rem 0' },
+                    minHeight: 0, // Prevents flex item from overflowing
+                }}
             >
                 <Fade in timeout={1000}>
                     <Box
                         sx={{
                             textAlign: 'center',
                             maxWidth: '800px',
-                            padding: '0 2rem',
+                            width: '100%',
+                            padding: {
+                                xs: '0 1rem',
+                                sm: '0 1.5rem',
+                                md: '0 2rem',
+                            },
+                            boxSizing: 'border-box',
                         }}
                     >
                         <Typography
@@ -248,11 +264,14 @@ export default function Home() {
                                     sm: 'repeat(2, 1fr)',
                                     md: 'repeat(3, 1fr)',
                                 },
-                                gap: 2,
+                                gap: { xs: 1.5, sm: 2 },
                                 justifyContent: 'center',
-                                marginBottom: 4,
+                                marginBottom: { xs: 3, sm: 4 },
                                 maxWidth: '600px',
-                                margin: '0 auto 2rem auto',
+                                margin: {
+                                    xs: '0 auto 1.5rem auto',
+                                    sm: '0 auto 2rem auto',
+                                },
                             }}
                         >
                             <Chip
@@ -263,16 +282,19 @@ export default function Home() {
                                 sx={{
                                     borderColor: 'rgba(255, 255, 255, 0.3)',
                                     color: 'primary.light',
-                                    padding: '12px 16px',
-                                    height: '48px',
-                                    fontSize: '1rem',
+                                    padding: {
+                                        xs: '8px 12px',
+                                        sm: '12px 16px',
+                                    },
+                                    height: { xs: '40px', sm: '48px' },
+                                    fontSize: { xs: '0.9rem', sm: '1rem' },
                                     '&:hover': {
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.1)',
                                     },
                                     '& .MuiChip-icon': {
-                                        marginLeft: '12px',
-                                        marginRight: '8px',
+                                        marginLeft: { xs: '8px', sm: '12px' },
+                                        marginRight: { xs: '6px', sm: '8px' },
                                     },
                                 }}
                             />
@@ -284,16 +306,19 @@ export default function Home() {
                                 sx={{
                                     borderColor: 'rgba(255, 255, 255, 0.3)',
                                     color: 'primary.light',
-                                    padding: '12px 16px',
-                                    height: '48px',
-                                    fontSize: '1rem',
+                                    padding: {
+                                        xs: '8px 12px',
+                                        sm: '12px 16px',
+                                    },
+                                    height: { xs: '40px', sm: '48px' },
+                                    fontSize: { xs: '0.9rem', sm: '1rem' },
                                     '&:hover': {
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.1)',
                                     },
                                     '& .MuiChip-icon': {
-                                        marginLeft: '12px',
-                                        marginRight: '8px',
+                                        marginLeft: { xs: '8px', sm: '12px' },
+                                        marginRight: { xs: '6px', sm: '8px' },
                                     },
                                 }}
                             />
@@ -305,16 +330,19 @@ export default function Home() {
                                 sx={{
                                     borderColor: 'rgba(255, 255, 255, 0.3)',
                                     color: 'primary.light',
-                                    padding: '12px 16px',
-                                    height: '48px',
-                                    fontSize: '1rem',
+                                    padding: {
+                                        xs: '8px 12px',
+                                        sm: '12px 16px',
+                                    },
+                                    height: { xs: '40px', sm: '48px' },
+                                    fontSize: { xs: '0.9rem', sm: '1rem' },
                                     '&:hover': {
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.1)',
                                     },
                                     '& .MuiChip-icon': {
-                                        marginLeft: '12px',
-                                        marginRight: '8px',
+                                        marginLeft: { xs: '8px', sm: '12px' },
+                                        marginRight: { xs: '6px', sm: '8px' },
                                     },
                                 }}
                             />
@@ -326,16 +354,19 @@ export default function Home() {
                                 sx={{
                                     borderColor: 'rgba(255, 255, 255, 0.3)',
                                     color: 'primary.light',
-                                    padding: '12px 16px',
-                                    height: '48px',
-                                    fontSize: '1rem',
+                                    padding: {
+                                        xs: '8px 12px',
+                                        sm: '12px 16px',
+                                    },
+                                    height: { xs: '40px', sm: '48px' },
+                                    fontSize: { xs: '0.9rem', sm: '1rem' },
                                     '&:hover': {
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.1)',
                                     },
                                     '& .MuiChip-icon': {
-                                        marginLeft: '12px',
-                                        marginRight: '8px',
+                                        marginLeft: { xs: '8px', sm: '12px' },
+                                        marginRight: { xs: '6px', sm: '8px' },
                                     },
                                 }}
                             />
@@ -347,16 +378,19 @@ export default function Home() {
                                 sx={{
                                     borderColor: 'rgba(255, 255, 255, 0.3)',
                                     color: 'primary.light',
-                                    padding: '12px 16px',
-                                    height: '48px',
-                                    fontSize: '1rem',
+                                    padding: {
+                                        xs: '8px 12px',
+                                        sm: '12px 16px',
+                                    },
+                                    height: { xs: '40px', sm: '48px' },
+                                    fontSize: { xs: '0.9rem', sm: '1rem' },
                                     '&:hover': {
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.1)',
                                     },
                                     '& .MuiChip-icon': {
-                                        marginLeft: '12px',
-                                        marginRight: '8px',
+                                        marginLeft: { xs: '8px', sm: '12px' },
+                                        marginRight: { xs: '6px', sm: '8px' },
                                     },
                                 }}
                             />
@@ -368,16 +402,19 @@ export default function Home() {
                                 sx={{
                                     borderColor: 'rgba(255, 255, 255, 0.3)',
                                     color: 'primary.light',
-                                    padding: '12px 16px',
-                                    height: '48px',
-                                    fontSize: '1rem',
+                                    padding: {
+                                        xs: '8px 12px',
+                                        sm: '12px 16px',
+                                    },
+                                    height: { xs: '40px', sm: '48px' },
+                                    fontSize: { xs: '0.9rem', sm: '1rem' },
                                     '&:hover': {
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.1)',
                                     },
                                     '& .MuiChip-icon': {
-                                        marginLeft: '12px',
-                                        marginRight: '8px',
+                                        marginLeft: { xs: '8px', sm: '12px' },
+                                        marginRight: { xs: '6px', sm: '8px' },
                                     },
                                 }}
                             />
@@ -386,9 +423,10 @@ export default function Home() {
                         {/* Professional Highlights */}
                         <Box
                             sx={{
-                                marginTop: 6,
+                                marginTop: { xs: 4, sm: 5, md: 6 },
                                 maxWidth: '900px',
                                 textAlign: 'left',
+                                width: '100%',
                             }}
                         >
                             <Typography
@@ -410,7 +448,7 @@ export default function Home() {
                                         xs: '1fr',
                                         md: '1fr 1fr',
                                     },
-                                    gap: 3,
+                                    gap: { xs: 2, sm: 3 },
                                 }}
                             >
                                 <Box
@@ -512,9 +550,10 @@ export default function Home() {
                         {/* Projects Section */}
                         <Box
                             sx={{
-                                marginTop: 6,
+                                marginTop: { xs: 4, sm: 5, md: 6 },
                                 maxWidth: '900px',
                                 textAlign: 'left',
+                                width: '100%',
                             }}
                         >
                             <Typography
@@ -536,7 +575,7 @@ export default function Home() {
                                         xs: '1fr',
                                         md: '1fr 1fr',
                                     },
-                                    gap: 3,
+                                    gap: { xs: 2, sm: 3 },
                                 }}
                             >
                                 <Box
