@@ -13,8 +13,6 @@ import {
     Cloud,
     Psychology,
     Work,
-    Email,
-    Phone,
     LocationOn,
     OpenInNew,
 } from '@mui/icons-material';
@@ -121,10 +119,6 @@ function MenuButton({ children }) {
             </Menu>
         </Box>
     );
-}
-
-{
-    /* Clean background without animation */
 }
 
 export default function Home() {

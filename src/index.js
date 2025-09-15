@@ -1,7 +1,7 @@
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import React from 'react';
 
-import { HashRouter, Switch, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { grey, blueGrey } from '@mui/material/colors';
@@ -22,13 +22,13 @@ const darkTheme = createTheme({
 });
 
 function getRoute(Elem, url) {
-    return <Route exact path={url} component={Elem} key={Elem.name} />;
+    return <Route path={url} element={<Elem />} key={Elem.name} />;
 }
 
 function Website() {
     return (
         <HashRouter basename="/">
-            <Switch>
+            <Routes>
                 {Object.keys(run).map(k => {
                     if (k === 'names') return null;
 
@@ -41,18 +41,20 @@ function Website() {
                     const url = page.pages[k] || '/'; // eslint-disable-line import/namespace
                     return getRoute(page[k], url); // eslint-disable-line import/namespace
                 })}
-                <Route component={page.Error} />
-            </Switch>
+                <Route path="*" element={<page.Error />} />
+            </Routes>
         </HashRouter>
     );
 }
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container);
+
+root.render(
     <React.StrictMode>
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
             <Website />
         </ThemeProvider>
-    </React.StrictMode>,
-    document.getElementById('root')
+    </React.StrictMode>
 );

@@ -14,18 +14,26 @@ import {
     KeyboardArrowRightRounded,
 } from '@mui/icons-material';
 
+/**
+ * TooltipButton component provides accessible icon buttons with tooltips
+ * for improved user experience and screen reader support.
+ */
 export function TooltipButton(props) {
     const { Icon, title, ...rest } = props;
 
     return (
         <Tooltip title={title}>
-            <IconButton size="large" {...rest}>
-                <Icon fontSize="inherit" />
+            <IconButton size="large" aria-label={title} {...rest}>
+                <Icon fontSize="inherit" aria-hidden="true" />
             </IconButton>
         </Tooltip>
     );
 }
 
+/**
+ * HomeButton component provides accessible navigation to home page
+ * with proper ARIA labels and keyboard navigation support.
+ */
 export function HomeButton({ hide, ...rest }) {
     if (hide) return null;
 
@@ -33,9 +41,10 @@ export function HomeButton({ hide, ...rest }) {
         <TooltipButton
             to="/"
             key="Home"
-            title="Home"
+            title="Navigate to Home"
             component={Link}
             Icon={HomeRounded}
+            aria-label="Navigate to Home page"
             {...rest}
         />
     );
@@ -77,8 +86,12 @@ function Row(props) {
     );
 }
 
+/**
+ * CustomGrid component provides accessible grid layout with proper
+ * ARIA roles and semantic structure for screen readers.
+ */
 export function CustomGrid(props) {
-    const { size, rows, cols, cellProps } = props;
+    const { size, rows, cols, cellProps, ...rest } = props;
 
     const auto = getSpace(size);
     const { space = auto } = props;
@@ -99,16 +112,31 @@ export function CustomGrid(props) {
     );
 
     return (
-        <Grid container size={12} spacing={rem} alignItems="center">
+        <Grid
+            container
+            size={12}
+            spacing={rem}
+            alignItems="center"
+            role="grid"
+            aria-label={`Grid with ${rows} rows and ${cols} columns`}
+            {...rest}
+        >
             {Array.from({ length: rows }, getRow)}
         </Grid>
     );
 }
 
+/**
+ * Navigation component provides accessible navigation controls
+ * with proper ARIA landmarks and keyboard navigation support.
+ */
 export function Navigation({ children, ...rest }) {
     return (
         <Paper
             elevation={0}
+            component="nav"
+            role="navigation"
+            aria-label="Game controls navigation"
             sx={{
                 transform: 'translateX(-50%)',
                 position: 'absolute',
@@ -131,6 +159,10 @@ export function Navigation({ children, ...rest }) {
     );
 }
 
+/**
+ * Controls component provides accessible game controls with proper
+ * keyboard navigation and screen reader announcements.
+ */
 export function Controls({ handler }) {
     const [show, setShow] = useState(false);
     const opacity = show ? 0.8 : 1;
@@ -143,47 +175,60 @@ export function Controls({ handler }) {
     );
 }
 
+/**
+ * Arrows component provides accessible directional controls with
+ * proper ARIA labels and keyboard navigation support.
+ */
 function Arrows({ show, setShow, handler }) {
     const flip = useCallback(() => setShow(!show), [show, setShow]);
 
     if (!show)
         return (
             <TooltipButton
-                title="Controls"
+                title="Show Game Controls"
                 Icon={GamepadRounded}
                 onClick={flip}
+                aria-label="Show game controls"
             />
         );
 
     return (
-        <Grid>
+        <Grid role="group" aria-label="Directional controls">
             <Grid width="100%" display="flex" justifyContent="center">
                 <TooltipButton
-                    title="Up"
+                    title="Move Up"
                     Icon={KeyboardArrowUpRounded}
                     onClick={handler('up')}
+                    aria-label="Move up"
                 />
             </Grid>
             <Grid>
                 <TooltipButton
-                    title="Left"
+                    title="Move Left"
                     Icon={KeyboardArrowLeftRounded}
                     onClick={handler('left')}
+                    aria-label="Move left"
                 />
-                <IconButton size="large" onClick={flip}>
-                    <CloseRounded fontSize="inherit" />
+                <IconButton
+                    size="large"
+                    onClick={flip}
+                    aria-label="Hide controls"
+                >
+                    <CloseRounded fontSize="inherit" aria-hidden="true" />
                 </IconButton>
                 <TooltipButton
-                    title="Right"
+                    title="Move Right"
                     Icon={KeyboardArrowRightRounded}
                     onClick={handler('right')}
+                    aria-label="Move right"
                 />
             </Grid>
             <Grid width="100%" display="flex" justifyContent="center">
                 <TooltipButton
-                    title="Down"
+                    title="Move Down"
                     Icon={KeyboardArrowDownRounded}
                     onClick={handler('down')}
+                    aria-label="Move down"
                 />
             </Grid>
         </Grid>
