@@ -6,20 +6,17 @@ import { useWindow, useTimer, useKeys } from '../hooks';
 import { CustomGrid, Controls } from '../helpers';
 
 function getRandom(max) {
-    return Math.floor(
-        Math.random() * max);
+    return Math.floor(Math.random() * max);
 }
 
 function addNext(max, exclude) {
     let pos = getRandom(max);
 
-    while (pos in exclude)
-        if (++pos >= max)
-            pos = 0;
+    while (pos in exclude) if (++pos >= max) pos = 0;
 
     return {
         ...exclude,
-        [pos]: -1
+        [pos]: -1,
     };
 }
 
@@ -29,22 +26,19 @@ function mapBoard(board, change) {
     for (const cell in board) {
         const value = board[cell];
 
-        if (value + change > 0)
-            newBoard[cell] = value + change;
-        else if (value < 0)
-            newBoard[cell] = value;
+        if (value + change > 0) newBoard[cell] = value + change;
+        else if (value < 0) newBoard[cell] = value;
     }
 
     return newBoard;
 }
 
 function handleResize(state, rows, cols) {
-    const max  = rows * cols;
+    const max = rows * cols;
     const head = getRandom(max);
-    let   next = getRandom(max);
+    let next = getRandom(max);
 
-    if (head === next)
-        next = ++next % max;
+    if (head === next) next = ++next % max;
 
     return {
         ...state,
@@ -53,28 +47,19 @@ function handleResize(state, rows, cols) {
         head,
         board: {
             [head]: state.length,
-            [next]: -1
-        }
+            [next]: -1,
+        },
     };
 }
 
 function reduceBoard(state) {
-    let {
-        board,
-        length,
-        head,
-        rows,
-        cols,
-        velocity,
-        buffer
-    } = state;
+    let { board, length, head, velocity, buffer } = state;
+    const { rows, cols } = state;
 
     const max = rows * cols;
 
     board = mapBoard(board, -1);
-    head  = gridMove(
-        head, velocity,
-        rows, cols);
+    head = gridMove(head, velocity, rows, cols);
 
     if (head in board) {
         const value = board[head];
@@ -96,8 +81,7 @@ function reduceBoard(state) {
         const [first, ...rest] = buffer;
         buffer = rest;
 
-        if (velocity + first)
-            velocity = first;
+        if (velocity + first) velocity = first;
     }
 
     return {
@@ -106,7 +90,7 @@ function reduceBoard(state) {
         board,
         head,
         velocity,
-        buffer
+        buffer,
     };
 }
 
@@ -115,25 +99,19 @@ function handleAction(state, action) {
 
     switch (type) {
         case 'resize':
-            const { rows, cols }
-                = payload;
+            const { rows, cols } = payload;
 
-            return handleResize(
-                state, rows, cols);
+            return handleResize(state, rows, cols);
         case 'steer':
-            const velocity
-                = getDirection(
-                    payload.key);
+            const velocity = getDirection(payload.key);
             let { buffer } = state;
 
-            if (velocity)
-                buffer = [
-                    ...buffer,
-                    velocity];
+            if (velocity) buffer = [...buffer, velocity];
 
             return {
                 ...state,
-                buffer};
+                buffer,
+            };
         case 'move':
             return reduceBoard(state);
         default:
@@ -143,106 +121,117 @@ function handleAction(state, action) {
 
 export default function Snake() {
     const { create: createTimer } = useTimer(100);
-    const { create: createKeys  } = useKeys();
+    const { create: createKeys } = useKeys();
 
-    const { height, width }
-        = useWindow();
+    const { height, width } = useWindow();
     const length = 3;
-    const size   = 3;
+    const size = 3;
 
     const { rows, cols } = useMemo(
-        () => convertPixels(
-            size, height, width),
-        [size, height, width]);
+        () => convertPixels(size, height, width),
+        [size, height, width]
+    );
 
     const initial = useMemo(
         () => ({
             velocity: 1,
             buffer: [],
-            length
-        }), []);
+            length,
+        }),
+        []
+    );
 
-    const [state, dispatch]
-        = useReducer(
-            handleAction,
-            handleResize(
-                initial, rows, cols));
+    const [state, dispatch] = useReducer(
+        handleAction,
+        handleResize(initial, rows, cols)
+    );
 
-    const controlHandler
-        = useCallback(
-            event => () => {
-                const key
-                    = 'arrow' + event;
+    const controlHandler = useCallback(
+        event => () => {
+            const key = 'arrow' + event;
 
-                dispatch({
-                    type: 'steer',
-                    payload: {key}});
-            }, []);
+            dispatch({
+                type: 'steer',
+                payload: { key },
+            });
+        },
+        []
+    );
 
     const chooseColor = useCallback(
         (row, col) => {
             const index = row * cols + col;
             const board = state.board;
-            let color   = 'inherit';
+            let color = 'inherit';
 
             if (index in board) {
-                if (board[index] > 0)
-                    color = 'secondary.light';
-                else
-                    color = 'primary.light';
+                if (board[index] > 0) color = 'primary.main';
+                else color = 'secondary.main';
             }
 
             return {
-                backgroundColor: color
+                backgroundColor: color,
+                boxShadow: color !== 'inherit' ? `0 0 20px ${color}40` : 'none',
+                border: color !== 'inherit' ? `1px solid ${color}` : 'none',
             };
-        }, [state, cols]);
+        },
+        [state, cols]
+    );
 
     useEffect(() => {
-        const wrapDispatch
-            = () => dispatch({
-                type: 'move'});
+        const wrapDispatch = () =>
+            dispatch({
+                type: 'move',
+            });
 
-        const wrapDirection
-            = event =>
-                dispatch({
-                    type: 'steer',
-                    payload: event});
+        const wrapDirection = event =>
+            dispatch({
+                type: 'steer',
+                payload: event,
+            });
 
-        createTimer({repeat: wrapDispatch});
+        createTimer({ repeat: wrapDispatch });
         createKeys(wrapDirection);
     }, [createTimer, createKeys]);
 
     useEffect(() => {
         dispatch({
             type: 'resize',
-            payload: {rows, cols}});
+            payload: { rows, cols },
+        });
     }, [rows, cols]);
 
     useEffect(() => {
-        document.title
-            = 'Snake | Bangyen';
+        document.title = 'Snake | Bangyen';
     }, []);
 
     return (
         <Grid
             container
-            height='100vh'
-            flexDirection='column'
-            position="relative">
+            height="100vh"
+            flexDirection="column"
+            position="relative"
+            sx={{
+                background:
+                    'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+                overflow: 'hidden',
+            }}
+        >
             <Grid
                 flex={1}
-                display='flex'
-                justifyContent='center'
-                alignItems='center'>
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                sx={{ zIndex: 1 }}
+            >
                 <CustomGrid
                     size={size}
                     rows={rows}
                     cols={cols}
-                    cellProps 
-                        ={chooseColor} />
+                    cellProps={chooseColor}
+                />
             </Grid>
-            <Controls
-                handler={controlHandler} />
+            <Controls handler={controlHandler} />
         </Grid>
     );
 }

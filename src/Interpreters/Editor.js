@@ -51,6 +51,10 @@ export default function Editor({ container, sideProps, hide, children }) {
             display="flex"
             flexDirection="column"
             padding="5vh 5vw 5vh 5vw"
+            sx={{
+                background:
+                    'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+            }}
         >
             <Grid container alignItems="center" justifyContent="space-between">
                 <Grid {...titleProps}>
@@ -134,9 +138,23 @@ export function TextArea({
             sx={{
                 '& .MuiInputBase-root': {
                     alignItems: 'flex-start',
+                    backgroundColor: 'rgba(26, 26, 26, 0.8)',
+                    backdropFilter: 'blur(20px)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: 2,
                 },
                 '& .MuiInputBase-input': {
                     fontFamily: 'monospace',
+                    color: 'text.primary',
+                },
+                '& .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.1)',
+                },
+                '&:hover .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'rgba(255, 255, 255, 0.3)',
+                },
+                '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'primary.main',
                 },
             }}
         />

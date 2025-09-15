@@ -43,7 +43,7 @@ export function HomeButton({ hide, ...rest }) {
 
 function Cell({ size, children, ...rest }) {
     const remSize = `${size}rem`;
-    const radius = `${size / 5}rem`;
+    const radius = `${size / 4}rem`;
 
     const props = {
         display: 'flex',
@@ -52,6 +52,7 @@ function Cell({ size, children, ...rest }) {
         borderRadius: radius,
         height: remSize,
         width: remSize,
+        transition: 'all 0.2s ease-in-out',
     };
 
     const combined = {
@@ -107,14 +108,19 @@ export function CustomGrid(props) {
 export function Navigation({ children, ...rest }) {
     return (
         <Paper
-            elevation={1}
+            elevation={0}
             sx={{
                 transform: 'translateX(-50%)',
                 position: 'absolute',
-                borderRadius: 2,
-                padding: 1,
+                borderRadius: 3,
+                padding: 2,
                 bottom: 50,
                 left: '50%',
+                backdropFilter: 'blur(20px)',
+                backgroundColor: 'rgba(26, 26, 26, 0.8)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                zIndex: 10,
                 ...rest,
             }}
         >
