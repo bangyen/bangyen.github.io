@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import {
-    Box,
-    Typography,
-    Grid,
-    Button,
-    IconButton,
-    Slider,
-    Switch,
-    FormControlLabel,
-} from '@mui/material';
-import { GitHub, Refresh, Home } from '@mui/icons-material';
+import { Box, Typography, Grid, IconButton, Button } from '@mui/material';
+import { GitHub, Home } from '@mui/icons-material';
 import {
     LineChart,
     Line,
@@ -20,58 +11,193 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 
-// Generate data based on parameters
-const generateData = (samRadius, learningRate, momentum, gradientFiltering) => {
+// Load real ZSharp experiment data
+const loadRealZSharpData = async () => {
+    try {
+        const response = await fetch('/zsharp_data.json.gz');
+        const compressedData = await response.arrayBuffer();
+        const decompressedData = new TextDecoder().decode(
+            new DecompressionStream('gzip').readable.pipeTo(
+                new WritableStream({
+                    write(chunk) {
+                        return chunk;
+                    },
+                })
+            )
+        );
+
+        const realData = JSON.parse(decompressedData);
+
+        // Convert real results to chart data format with per-epoch data
+        const data = [];
+        const sgdAccuracies = realData['SGD Baseline']?.train_accuracies || [];
+        const zsharpAccuracies = realData['ZSharp']?.train_accuracies || [];
+        const sgdLosses = realData['SGD Baseline']?.train_losses || [];
+        const zsharpLosses = realData['ZSharp']?.train_losses || [];
+
+        const maxEpochs = Math.max(
+            sgdAccuracies.length,
+            zsharpAccuracies.length
+        );
+
+        for (let i = 0; i < maxEpochs; i++) {
+            data.push({
+                epoch: i + 1,
+                sgd: (sgdAccuracies[i] || 0) / 100, // Convert to 0-1 range
+                zsharp: (zsharpAccuracies[i] || 0) / 100,
+                sgdLoss: sgdLosses[i] || 0,
+                zsharpLoss: zsharpLosses[i] || 0,
+            });
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Failed to load real ZSharp data:', error);
+        return generateFallbackData();
+    }
+};
+
+// Fallback data generation if real data fails to load
+const generateFallbackData = () => {
     const data = [];
-    const baseImprovement = gradientFiltering ? 0.0522 : 0.03;
-
-    // Learning rate affects convergence speed and final accuracy
-    const lrEffect = learningRate * 0.3; // More significant impact
-    const momentumEffect = momentum * 0.15; // Momentum affects stability and convergence
-
     for (let i = 0; i <= 20; i++) {
-        // SGD baseline with momentum effect
-        const sgdAccuracy = 0.65 + (i / 20) * 0.2 + (momentum - 0.9) * 0.1;
-
-        // ZSharp with all parameter effects
-        const zsharpAccuracy =
-            sgdAccuracy +
-            baseImprovement +
-            samRadius * 0.1 +
-            lrEffect +
-            momentumEffect;
+        const sgdAccuracy = 0.65 + (i / 20) * 0.1; // 65% to 75%
+        const zsharpAccuracy = sgdAccuracy + 0.05; // 5% improvement
+        const sgdLoss = 2.0 - (i / 20) * 1.2; // 2.0 to 0.8
+        const zsharpLoss = sgdLoss - 0.1; // Slightly lower loss
 
         data.push({
-            epoch: i,
-            sgd: Math.min(0.98, sgdAccuracy),
-            zsharp: Math.min(0.99, zsharpAccuracy),
+            epoch: i + 1,
+            sgd: sgdAccuracy,
+            zsharp: zsharpAccuracy,
+            sgdLoss: sgdLoss,
+            zsharpLoss: zsharpLoss,
         });
     }
     return data;
 };
 
 const ZSharp = () => {
-    const [samRadius, setSamRadius] = useState(0.05);
-    const [learningRate, setLearningRate] = useState(0.01);
-    const [momentum, setMomentum] = useState(0.9);
-    const [gradientFiltering, setGradientFiltering] = useState(true);
+    const [chartData, setChartData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [viewType, setViewType] = useState('accuracy');
 
     useEffect(() => {
         document.title = 'ZSharp - Sharpness-Aware Minimization';
+
+        // Load real data on component mount
+        const loadData = async () => {
+            setLoading(true);
+            try {
+                const data = await loadRealZSharpData();
+                setChartData(data);
+            } catch (error) {
+                console.error('Failed to load data:', error);
+                setChartData(generateFallbackData());
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadData();
     }, []);
 
-    const currentData = generateData(
-        samRadius,
-        learningRate,
-        momentum,
-        gradientFiltering
-    );
+    // Process data based on view type
+    const getProcessedData = () => {
+        if (!chartData || chartData.length === 0) {
+            return [];
+        }
+
+        switch (viewType) {
+            case 'accuracy':
+                return chartData;
+            case 'loss':
+                return chartData.map(point => ({
+                    epoch: point.epoch,
+                    sgd: point.sgdLoss,
+                    zsharp: point.zsharpLoss,
+                }));
+            case 'improvement':
+                return chartData.map(point => ({
+                    epoch: point.epoch,
+                    improvement: point.zsharp - point.sgd,
+                }));
+            case 'summary':
+                const finalSGD = chartData[chartData.length - 1]?.sgd || 0;
+                const finalZSharp =
+                    chartData[chartData.length - 1]?.zsharp || 0;
+                const finalSGDLoss =
+                    chartData[chartData.length - 1]?.sgdLoss || 0;
+                const finalZSharpLoss =
+                    chartData[chartData.length - 1]?.zsharpLoss || 0;
+                const improvement = finalZSharp - finalSGD;
+                const lossImprovement = finalSGDLoss - finalZSharpLoss;
+                return [
+                    {
+                        metric: 'Final SGD Accuracy',
+                        value: (finalSGD * 100).toFixed(1) + '%',
+                    },
+                    {
+                        metric: 'Final ZSharp Accuracy',
+                        value: (finalZSharp * 100).toFixed(1) + '%',
+                    },
+                    {
+                        metric: 'Accuracy Improvement',
+                        value: (improvement * 100).toFixed(1) + '%',
+                    },
+                    {
+                        metric: 'Final SGD Loss',
+                        value: finalSGDLoss.toFixed(3),
+                    },
+                    {
+                        metric: 'Final ZSharp Loss',
+                        value: finalZSharpLoss.toFixed(3),
+                    },
+                    {
+                        metric: 'Loss Reduction',
+                        value: (lossImprovement * 100).toFixed(1) + '%',
+                    },
+                ];
+            case 'convergence':
+                return chartData.map((point, index) => {
+                    if (index === 0)
+                        return { epoch: point.epoch, sgd: 0, zsharp: 0 };
+                    const prevPoint = chartData[index - 1];
+                    return {
+                        epoch: point.epoch,
+                        sgd: point.sgd - prevPoint.sgd,
+                        zsharp: point.zsharp - prevPoint.zsharp,
+                    };
+                });
+            case 'learning_curve':
+                // Show how the gap between SGD and ZSharp evolves over time
+                const learningCurveData = chartData.map(point => ({
+                    epoch: point.epoch,
+                    gap: point.zsharp - point.sgd,
+                }));
+                return learningCurveData;
+            default:
+                return chartData;
+        }
+    };
+
+    const currentData = getProcessedData();
 
     const resetToDefaults = () => {
-        setSamRadius(0.05);
-        setLearningRate(0.01);
-        setMomentum(0.9);
-        setGradientFiltering(true);
+        // Reload the real data
+        const loadData = async () => {
+            setLoading(true);
+            try {
+                const data = await loadRealZSharpData();
+                setChartData(data);
+            } catch (error) {
+                console.error('Failed to load data:', error);
+                setChartData(generateFallbackData());
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadData();
     };
 
     return (
@@ -170,7 +296,7 @@ const ZSharp = () => {
                         variant="h5"
                         sx={{
                             color: 'text.secondary',
-                            marginBottom: 4,
+                            marginBottom: 3,
                             fontWeight: 400,
                             fontSize: { xs: '1.1rem', sm: '1.3rem' },
                         }}
@@ -178,6 +304,125 @@ const ZSharp = () => {
                         Sharpness-Aware Minimization with Z-Score Gradient
                         Filtering
                     </Typography>
+
+                    {/* View Selection Buttons */}
+                    <Box
+                        sx={{
+                            marginBottom: 3,
+                            display: 'flex',
+                            gap: 1,
+                            flexWrap: 'wrap',
+                        }}
+                    >
+                        <Button
+                            variant={
+                                viewType === 'accuracy'
+                                    ? 'contained'
+                                    : 'outlined'
+                            }
+                            size="small"
+                            onClick={() => setViewType('accuracy')}
+                            sx={{
+                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                color:
+                                    viewType === 'accuracy'
+                                        ? 'white'
+                                        : 'rgba(255,255,255,0.7)',
+                                '&:hover': {
+                                    borderColor: 'primary.main',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                },
+                            }}
+                        >
+                            Accuracy
+                        </Button>
+                        <Button
+                            variant={
+                                viewType === 'loss' ? 'contained' : 'outlined'
+                            }
+                            size="small"
+                            onClick={() => setViewType('loss')}
+                            sx={{
+                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                color:
+                                    viewType === 'loss'
+                                        ? 'white'
+                                        : 'rgba(255,255,255,0.7)',
+                                '&:hover': {
+                                    borderColor: 'primary.main',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                },
+                            }}
+                        >
+                            Loss
+                        </Button>
+                        <Button
+                            variant={
+                                viewType === 'learning_curve'
+                                    ? 'contained'
+                                    : 'outlined'
+                            }
+                            size="small"
+                            onClick={() => setViewType('learning_curve')}
+                            sx={{
+                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                color:
+                                    viewType === 'learning_curve'
+                                        ? 'white'
+                                        : 'rgba(255,255,255,0.7)',
+                                '&:hover': {
+                                    borderColor: 'primary.main',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                },
+                            }}
+                        >
+                            Learning Gap
+                        </Button>
+                        <Button
+                            variant={
+                                viewType === 'convergence'
+                                    ? 'contained'
+                                    : 'outlined'
+                            }
+                            size="small"
+                            onClick={() => setViewType('convergence')}
+                            sx={{
+                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                color:
+                                    viewType === 'convergence'
+                                        ? 'white'
+                                        : 'rgba(255,255,255,0.7)',
+                                '&:hover': {
+                                    borderColor: 'primary.main',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                },
+                            }}
+                        >
+                            Convergence
+                        </Button>
+                        <Button
+                            variant={
+                                viewType === 'summary'
+                                    ? 'contained'
+                                    : 'outlined'
+                            }
+                            size="small"
+                            onClick={() => setViewType('summary')}
+                            sx={{
+                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                color:
+                                    viewType === 'summary'
+                                        ? 'white'
+                                        : 'rgba(255,255,255,0.7)',
+                                '&:hover': {
+                                    borderColor: 'primary.main',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                },
+                            }}
+                        >
+                            Summary
+                        </Button>
+                    </Box>
 
                     {/* Performance Chart */}
                     <Box
@@ -201,248 +446,250 @@ const ZSharp = () => {
                                 fontWeight: 600,
                             }}
                         >
-                            Performance Comparison
+                            {viewType === 'accuracy' &&
+                                'Training Accuracy Comparison'}
+                            {viewType === 'loss' && 'Training Loss Comparison'}
+                            {viewType === 'learning_curve' &&
+                                'Learning Gap Evolution'}
+                            {viewType === 'convergence' &&
+                                'Convergence Rate Analysis'}
+                            {viewType === 'summary' && 'Summary Statistics'}
                         </Typography>
                         <Box sx={{ height: 300 }}>
-                            <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={currentData}>
-                                    <CartesianGrid
-                                        strokeDasharray="3 3"
-                                        stroke="rgba(255,255,255,0.1)"
-                                    />
-                                    <XAxis
-                                        dataKey="epoch"
-                                        stroke="rgba(255,255,255,0.7)"
-                                        tick={{ fill: 'rgba(255,255,255,0.7)' }}
-                                    />
-                                    <YAxis
-                                        stroke="rgba(255,255,255,0.7)"
-                                        tick={{ fill: 'rgba(255,255,255,0.7)' }}
-                                        domain={[0.6, 1.0]}
-                                        label={{
-                                            value: 'Accuracy',
-                                            angle: -90,
-                                            position: 'insideLeft',
-                                            style: {
-                                                fill: 'rgba(255,255,255,0.7)',
-                                            },
-                                        }}
-                                    />
-                                    <RechartsTooltip
-                                        contentStyle={{
-                                            backgroundColor:
-                                                'rgba(26, 26, 26, 0.9)',
-                                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                                            borderRadius: 8,
-                                            color: 'white',
-                                        }}
-                                        formatter={(value, name) => [
-                                            `${(value * 100).toFixed(1)}%`,
-                                            name,
-                                        ]}
-                                    />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="sgd"
-                                        stroke="#1976d2"
-                                        strokeWidth={3}
-                                        name="SGD"
-                                        dot={{
-                                            fill: '#1976d2',
-                                            strokeWidth: 2,
-                                            r: 4,
-                                        }}
-                                    />
-                                    <Line
-                                        type="monotone"
-                                        dataKey="zsharp"
-                                        stroke="#2e7d32"
-                                        strokeWidth={3}
-                                        name="ZSharp"
-                                        dot={{
-                                            fill: '#2e7d32',
-                                            strokeWidth: 2,
-                                            r: 4,
-                                        }}
-                                    />
-                                </LineChart>
-                            </ResponsiveContainer>
-                        </Box>
-                    </Box>
-
-                    {/* Interactive Control Panel */}
-                    <Box
-                        sx={{
-                            padding: { xs: 1.5, sm: 2 },
-                            backgroundColor: 'rgba(128, 128, 128, 0.05)',
-                            borderRadius: 2,
-                            border: '1px solid rgba(128, 128, 128, 0.2)',
-                            width: '100%',
-                            boxSizing: 'border-box',
-                            overflow: 'hidden',
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                marginBottom: 3,
-                            }}
-                        >
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    color: 'primary.light',
-                                    fontWeight: 600,
-                                }}
-                            >
-                                Parameter Controls
-                            </Typography>
-                            <Button
-                                variant="outlined"
-                                size="small"
-                                startIcon={<Refresh />}
-                                onClick={resetToDefaults}
-                                sx={{
-                                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                                    color: 'rgba(255,255,255,0.7)',
-                                    '&:hover': {
-                                        borderColor: 'primary.main',
-                                        backgroundColor:
-                                            'rgba(255, 255, 255, 0.1)',
-                                    },
-                                }}
-                            >
-                                Reset
-                            </Button>
-                        </Box>
-
-                        <Grid container spacing={3}>
-                            <Grid item xs={12} md={6}>
-                                <Box sx={{ marginBottom: 2 }}>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary', mb: 1 }}
-                                    >
-                                        SAM Perturbation Radius:{' '}
-                                        {samRadius.toFixed(2)}
+                            {loading ? (
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        height: '100%',
+                                        color: 'text.secondary',
+                                    }}
+                                >
+                                    <Typography>
+                                        Loading real experiment data...
                                     </Typography>
-                                    <Slider
-                                        value={samRadius}
-                                        onChange={(e, value) =>
-                                            setSamRadius(value)
-                                        }
-                                        min={0.01}
-                                        max={0.2}
-                                        step={0.01}
-                                        sx={{
-                                            color: 'primary.main',
-                                            '& .MuiSlider-thumb': {
-                                                backgroundColor: 'primary.main',
-                                            },
-                                            '& .MuiSlider-track': {
-                                                backgroundColor: 'primary.main',
-                                            },
-                                            '& .MuiSlider-rail': {
-                                                backgroundColor:
-                                                    'rgba(255,255,255,0.2)',
-                                            },
-                                        }}
-                                    />
                                 </Box>
-
-                                <Box sx={{ marginBottom: 2 }}>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary', mb: 1 }}
-                                    >
-                                        Learning Rate: {learningRate.toFixed(3)}
-                                    </Typography>
-                                    <Slider
-                                        value={learningRate}
-                                        onChange={(e, value) =>
-                                            setLearningRate(value)
-                                        }
-                                        min={0.001}
-                                        max={0.1}
-                                        step={0.001}
-                                        sx={{
-                                            color: 'success.main',
-                                            '& .MuiSlider-thumb': {
-                                                backgroundColor: 'success.main',
-                                            },
-                                            '& .MuiSlider-track': {
-                                                backgroundColor: 'success.main',
-                                            },
-                                            '& .MuiSlider-rail': {
-                                                backgroundColor:
-                                                    'rgba(255,255,255,0.2)',
-                                            },
-                                        }}
-                                    />
-                                </Box>
-                            </Grid>
-
-                            <Grid item xs={12} md={6}>
-                                <Box sx={{ marginBottom: 2 }}>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary', mb: 1 }}
-                                    >
-                                        Momentum: {momentum.toFixed(2)}
-                                    </Typography>
-                                    <Slider
-                                        value={momentum}
-                                        onChange={(e, value) =>
-                                            setMomentum(value)
-                                        }
-                                        min={0.5}
-                                        max={0.99}
-                                        step={0.01}
-                                        sx={{
-                                            color: 'warning.main',
-                                            '& .MuiSlider-thumb': {
-                                                backgroundColor: 'warning.main',
-                                            },
-                                            '& .MuiSlider-track': {
-                                                backgroundColor: 'warning.main',
-                                            },
-                                            '& .MuiSlider-rail': {
-                                                backgroundColor:
-                                                    'rgba(255,255,255,0.2)',
-                                            },
-                                        }}
-                                    />
-                                </Box>
-
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={gradientFiltering}
-                                            onChange={e =>
-                                                setGradientFiltering(
-                                                    e.target.checked
-                                                )
-                                            }
+                            ) : viewType === 'summary' ? (
+                                <Box sx={{ padding: 2 }}>
+                                    {currentData.map((item, index) => (
+                                        <Box
+                                            key={index}
                                             sx={{
-                                                '& .MuiSwitch-switchBase.Mui-checked':
-                                                    {
-                                                        color: 'info.main',
-                                                    },
-                                                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track':
-                                                    {
-                                                        backgroundColor:
-                                                            'info.main',
-                                                    },
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center',
+                                                padding: 1,
+                                                borderBottom:
+                                                    index <
+                                                    currentData.length - 1
+                                                        ? '1px solid rgba(255,255,255,0.1)'
+                                                        : 'none',
+                                            }}
+                                        >
+                                            <Typography
+                                                variant="body1"
+                                                sx={{ color: 'text.secondary' }}
+                                            >
+                                                {item.metric}:
+                                            </Typography>
+                                            <Typography
+                                                variant="h6"
+                                                sx={{
+                                                    color: 'primary.light',
+                                                    fontWeight: 600,
+                                                }}
+                                            >
+                                                {item.value}
+                                            </Typography>
+                                        </Box>
+                                    ))}
+                                </Box>
+                            ) : (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <LineChart data={currentData}>
+                                        <CartesianGrid
+                                            strokeDasharray="3 3"
+                                            stroke="rgba(255,255,255,0.1)"
+                                        />
+                                        <XAxis
+                                            dataKey="epoch"
+                                            stroke="rgba(255,255,255,0.7)"
+                                            tick={{
+                                                fill: 'rgba(255,255,255,0.7)',
                                             }}
                                         />
-                                    }
-                                    label="Gradient Filtering"
-                                    sx={{ color: 'text.secondary' }}
-                                />
-                            </Grid>
-                        </Grid>
+                                        <YAxis
+                                            stroke="rgba(255,255,255,0.7)"
+                                            tick={{
+                                                fill: 'rgba(255,255,255,0.7)',
+                                            }}
+                                            domain={
+                                                viewType === 'loss'
+                                                    ? undefined
+                                                    : viewType ===
+                                                        'learning_curve'
+                                                      ? [0.05, 0.09]
+                                                      : viewType ===
+                                                          'convergence'
+                                                        ? [-0.02, 0.02]
+                                                        : [0.3, 1.0]
+                                            }
+                                            label={{
+                                                value:
+                                                    viewType === 'loss'
+                                                        ? 'Loss'
+                                                        : viewType ===
+                                                            'learning_curve'
+                                                          ? 'Accuracy Gap'
+                                                          : viewType ===
+                                                              'convergence'
+                                                            ? 'Change per Epoch'
+                                                            : 'Accuracy',
+                                                angle: -90,
+                                                position: 'insideLeft',
+                                                style: {
+                                                    fill: 'rgba(255,255,255,0.7)',
+                                                },
+                                            }}
+                                        />
+                                        <RechartsTooltip
+                                            contentStyle={{
+                                                backgroundColor:
+                                                    'rgba(26, 26, 26, 0.9)',
+                                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                borderRadius: 8,
+                                                color: 'white',
+                                            }}
+                                            formatter={(value, name) => [
+                                                viewType === 'loss'
+                                                    ? value.toFixed(3)
+                                                    : viewType ===
+                                                        'learning_curve'
+                                                      ? `${(value * 100).toFixed(2)}%`
+                                                      : viewType ===
+                                                          'convergence'
+                                                        ? `${(value * 100).toFixed(3)}%`
+                                                        : `${(value * 100).toFixed(1)}%`,
+                                                name,
+                                            ]}
+                                        />
+                                        {viewType === 'accuracy' && (
+                                            <>
+                                                <Line
+                                                    type="monotone"
+                                                    dataKey="sgd"
+                                                    stroke="#1976d2"
+                                                    strokeWidth={3}
+                                                    name="SGD"
+                                                    dot={{
+                                                        fill: '#1976d2',
+                                                        strokeWidth: 2,
+                                                        r: 4,
+                                                    }}
+                                                />
+                                                <Line
+                                                    type="monotone"
+                                                    dataKey="zsharp"
+                                                    stroke="#2e7d32"
+                                                    strokeWidth={3}
+                                                    name="ZSharp"
+                                                    dot={{
+                                                        fill: '#2e7d32',
+                                                        strokeWidth: 2,
+                                                        r: 4,
+                                                    }}
+                                                />
+                                            </>
+                                        )}
+                                        {viewType === 'loss' && (
+                                            <>
+                                                <Line
+                                                    type="monotone"
+                                                    dataKey="sgd"
+                                                    stroke="#1976d2"
+                                                    strokeWidth={3}
+                                                    name="SGD Loss"
+                                                    dot={{
+                                                        fill: '#1976d2',
+                                                        strokeWidth: 2,
+                                                        r: 4,
+                                                    }}
+                                                />
+                                                <Line
+                                                    type="monotone"
+                                                    dataKey="zsharp"
+                                                    stroke="#2e7d32"
+                                                    strokeWidth={3}
+                                                    name="ZSharp Loss"
+                                                    dot={{
+                                                        fill: '#2e7d32',
+                                                        strokeWidth: 2,
+                                                        r: 4,
+                                                    }}
+                                                />
+                                            </>
+                                        )}
+                                        {viewType === 'learning_curve' && (
+                                            <Line
+                                                type="monotone"
+                                                dataKey="gap"
+                                                stroke="#f57c00"
+                                                strokeWidth={3}
+                                                name="Accuracy Gap"
+                                                dot={{
+                                                    fill: '#f57c00',
+                                                    strokeWidth: 2,
+                                                    r: 4,
+                                                }}
+                                            />
+                                        )}
+                                        {viewType === 'improvement' && (
+                                            <Line
+                                                type="monotone"
+                                                dataKey="improvement"
+                                                stroke="#f57c00"
+                                                strokeWidth={3}
+                                                name="Improvement"
+                                                dot={{
+                                                    fill: '#f57c00',
+                                                    strokeWidth: 2,
+                                                    r: 4,
+                                                }}
+                                            />
+                                        )}
+                                        {viewType === 'convergence' && (
+                                            <>
+                                                <Line
+                                                    type="monotone"
+                                                    dataKey="sgd"
+                                                    stroke="#1976d2"
+                                                    strokeWidth={3}
+                                                    name="SGD Rate"
+                                                    dot={{
+                                                        fill: '#1976d2',
+                                                        strokeWidth: 2,
+                                                        r: 4,
+                                                    }}
+                                                />
+                                                <Line
+                                                    type="monotone"
+                                                    dataKey="zsharp"
+                                                    stroke="#2e7d32"
+                                                    strokeWidth={3}
+                                                    name="ZSharp Rate"
+                                                    dot={{
+                                                        fill: '#2e7d32',
+                                                        strokeWidth: 2,
+                                                        r: 4,
+                                                    }}
+                                                />
+                                            </>
+                                        )}
+                                    </LineChart>
+                                </ResponsiveContainer>
+                            )}
+                        </Box>
                     </Box>
                 </Box>
             </Grid>

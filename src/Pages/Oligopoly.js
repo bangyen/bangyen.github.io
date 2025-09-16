@@ -5,13 +5,8 @@ import {
     Grid,
     Button,
     IconButton,
-    Slider,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    Switch,
-    FormControlLabel,
+    ToggleButton,
+    ToggleButtonGroup,
 } from '@mui/material';
 import { GitHub, Refresh, Home } from '@mui/icons-material';
 import {
@@ -24,32 +19,69 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 
-// Generate market data based on parameters
-const generateMarketData = (
+// Load real simulation matrix data
+const loadRealSimulationMatrix = async () => {
+    try {
+        // Use uncompressed version for now to avoid DecompressionStream issues
+        const response = await fetch('/oligopoly_real_matrix.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const matrixData = await response.json();
+        return matrixData;
+    } catch (error) {
+        console.error('Failed to load real simulation matrix:', error);
+        return [];
+    }
+};
+
+// Filter matrix data based on current parameters
+const filterMatrixData = (
+    matrixData,
     numFirms,
     modelType,
     demandElasticity,
     basePrice,
     collusionEnabled
 ) => {
+    if (!matrixData || matrixData.length === 0) {
+        return generateFallbackOligopolyData();
+    }
+
+    // Find exact matching parameters
+    const filtered = matrixData.filter(
+        item =>
+            item.num_firms === numFirms &&
+            item.model_type === modelType &&
+            item.demand_elasticity === demandElasticity &&
+            item.base_price === basePrice &&
+            item.collusion_enabled === collusionEnabled
+    );
+
+    if (filtered.length === 0) {
+        // Fallback to closest match by num_firms and model_type
+        const closest = matrixData.filter(
+            item => item.num_firms === numFirms && item.model_type === modelType
+        );
+        // Sort by round to ensure proper order
+        const sorted = closest.sort((a, b) => a.round - b.round);
+        return sorted.slice(0, 15);
+    }
+
+    // Sort by round to ensure proper order
+    const sorted = filtered.sort((a, b) => a.round - b.round);
+    return sorted.slice(0, 15);
+};
+
+// Fallback data generation if real data fails to load
+const generateFallbackOligopolyData = () => {
     const data = [];
-    const baseHHI = 0.25 + (numFirms - 2) * 0.05;
-    const priceMultiplier = modelType === 'cournot' ? 1.0 : 0.8;
-    const collusionThreshold = collusionEnabled ? 0.4 : 1.0;
-
     for (let i = 1; i <= 15; i++) {
-        const basePriceValue = basePrice * priceMultiplier;
-        const priceVariation = Math.sin(i * 0.3) * 5 + Math.random() * 3;
-        const hhiVariation = Math.sin(i * 0.1) * 0.2 + Math.random() * 0.1;
-
-        const currentHHI = baseHHI + hhiVariation;
-        const isColluding = currentHHI > collusionThreshold && i > 5 && i < 11;
-
         data.push({
             round: i,
-            price: basePriceValue + priceVariation + (isColluding ? 15 : 0),
-            hhi: Math.max(0.1, Math.min(0.8, currentHHI)),
-            collusion: isColluding,
+            price: 20 + Math.sin(i * 0.3) * 5,
+            hhi: 0.3 + Math.sin(i * 0.1) * 0.1,
+            collusion: i > 5 && i < 11,
         });
     }
     return data;
@@ -57,36 +89,65 @@ const generateMarketData = (
 
 const Oligopoly = () => {
     const [numFirms, setNumFirms] = useState(3);
-    const [modelType, setModelType] = useState('cournot');
     const [demandElasticity, setDemandElasticity] = useState(2.0);
-    const [basePrice, setBasePrice] = useState(45);
-    const [collusionEnabled, setCollusionEnabled] = useState(true);
-    const [marketData, setMarketData] = useState(
-        generateMarketData(3, 'cournot', 2.0, 45, true)
-    );
+    const [basePrice, setBasePrice] = useState(40);
+    const [marketData, setMarketData] = useState([]);
+    const [matrixData, setMatrixData] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Fixed parameters - Cournot model with no collusion
+    const modelType = 'cournot';
+    const collusionEnabled = false;
 
     useEffect(() => {
-        document.title = 'Oligopoly - Economic Simulation';
+        document.title = 'Oligopoly - Cournot Competition';
+
+        // Load real simulation matrix on component mount
+        const loadData = async () => {
+            setLoading(true);
+            try {
+                const data = await loadRealSimulationMatrix();
+                setMatrixData(data);
+                // Set initial data
+                const initialData = filterMatrixData(
+                    data,
+                    numFirms,
+                    modelType,
+                    demandElasticity,
+                    basePrice,
+                    collusionEnabled
+                );
+                setMarketData(initialData);
+            } catch (error) {
+                console.error('Failed to load data:', error);
+                setMarketData(generateFallbackOligopolyData());
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadData();
     }, []);
 
+    // Update data when parameters change
     useEffect(() => {
-        setMarketData(
-            generateMarketData(
+        if (matrixData.length > 0) {
+            const filteredData = filterMatrixData(
+                matrixData,
                 numFirms,
                 modelType,
                 demandElasticity,
                 basePrice,
                 collusionEnabled
-            )
-        );
-    }, [numFirms, modelType, demandElasticity, basePrice, collusionEnabled]);
+            );
+            setMarketData(filteredData);
+        }
+    }, [numFirms, demandElasticity, basePrice, matrixData]);
 
     const resetToDefaults = () => {
         setNumFirms(3);
-        setModelType('cournot');
         setDemandElasticity(2.0);
-        setBasePrice(45);
-        setCollusionEnabled(true);
+        setBasePrice(40);
     };
 
     return (
@@ -190,7 +251,7 @@ const Oligopoly = () => {
                             fontSize: { xs: '1.1rem', sm: '1.3rem' },
                         }}
                     >
-                        Agent-Based Economic Modeling & Collusion Detection
+                        Cournot Competition Simulation
                     </Typography>
 
                     {/* Market Dynamics Chart */}
@@ -215,78 +276,100 @@ const Oligopoly = () => {
                                 fontWeight: 600,
                             }}
                         >
-                            Market Dynamics & Collusion Detection
+                            Cournot Market Dynamics
                         </Typography>
                         <Box sx={{ height: 300 }}>
-                            <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={marketData}>
-                                    <CartesianGrid
-                                        strokeDasharray="3 3"
-                                        stroke="rgba(255,255,255,0.1)"
-                                    />
-                                    <XAxis
-                                        dataKey="round"
-                                        stroke="rgba(255,255,255,0.7)"
-                                        tick={{ fill: 'rgba(255,255,255,0.7)' }}
-                                    />
-                                    <YAxis
-                                        yAxisId="left"
-                                        stroke="rgba(255,255,255,0.7)"
-                                        tick={{ fill: 'rgba(255,255,255,0.7)' }}
-                                        label={{
-                                            value: 'Price ($)',
-                                            angle: -90,
-                                            position: 'insideLeft',
-                                        }}
-                                    />
-                                    <YAxis
-                                        yAxisId="right"
-                                        orientation="right"
-                                        stroke="rgba(255,255,255,0.7)"
-                                        tick={{ fill: 'rgba(255,255,255,0.7)' }}
-                                        label={{
-                                            value: 'HHI',
-                                            angle: 90,
-                                            position: 'insideRight',
-                                        }}
-                                    />
-                                    <RechartsTooltip
-                                        contentStyle={{
-                                            backgroundColor:
-                                                'rgba(26, 26, 26, 0.9)',
-                                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                                            borderRadius: 8,
-                                            color: 'white',
-                                        }}
-                                    />
-                                    <Line
-                                        yAxisId="left"
-                                        type="monotone"
-                                        dataKey="price"
-                                        stroke="#1976d2"
-                                        strokeWidth={3}
-                                        name="Market Price"
-                                        dot={{
-                                            fill: '#1976d2',
-                                            strokeWidth: 2,
-                                            r: 4,
-                                        }}
-                                    />
-                                    <Line
-                                        yAxisId="right"
-                                        type="monotone"
-                                        dataKey="hhi"
-                                        stroke="#f57c00"
-                                        strokeWidth={3}
-                                        name="HHI Concentration"
-                                        dot={{
-                                            fill: '#f57c00',
-                                            strokeWidth: 2,
-                                            r: 4,
-                                        }}
-                                    />
-                                </LineChart>
-                            </ResponsiveContainer>
+                            {loading ? (
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        height: '100%',
+                                        color: 'text.secondary',
+                                    }}
+                                >
+                                    <Typography>
+                                        Loading Cournot simulation data...
+                                    </Typography>
+                                </Box>
+                            ) : (
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <LineChart data={marketData}>
+                                        <CartesianGrid
+                                            strokeDasharray="3 3"
+                                            stroke="rgba(255,255,255,0.1)"
+                                        />
+                                        <XAxis
+                                            dataKey="round"
+                                            stroke="rgba(255,255,255,0.7)"
+                                            tick={{
+                                                fill: 'rgba(255,255,255,0.7)',
+                                            }}
+                                        />
+                                        <YAxis
+                                            yAxisId="left"
+                                            stroke="rgba(255,255,255,0.7)"
+                                            tick={{
+                                                fill: 'rgba(255,255,255,0.7)',
+                                            }}
+                                            label={{
+                                                value: 'Price ($)',
+                                                angle: -90,
+                                                position: 'insideLeft',
+                                            }}
+                                        />
+                                        <YAxis
+                                            yAxisId="right"
+                                            orientation="right"
+                                            stroke="rgba(255,255,255,0.7)"
+                                            tick={{
+                                                fill: 'rgba(255,255,255,0.7)',
+                                            }}
+                                            label={{
+                                                value: 'HHI',
+                                                angle: 90,
+                                                position: 'insideRight',
+                                            }}
+                                        />
+                                        <RechartsTooltip
+                                            contentStyle={{
+                                                backgroundColor:
+                                                    'rgba(26, 26, 26, 0.9)',
+                                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                borderRadius: 8,
+                                                color: 'white',
+                                            }}
+                                        />
+                                        <Line
+                                            yAxisId="left"
+                                            type="monotone"
+                                            dataKey="price"
+                                            stroke="#1976d2"
+                                            strokeWidth={3}
+                                            name="Market Price"
+                                            dot={{
+                                                fill: '#1976d2',
+                                                strokeWidth: 2,
+                                                r: 4,
+                                            }}
+                                        />
+                                        <Line
+                                            yAxisId="right"
+                                            type="monotone"
+                                            dataKey="hhi"
+                                            stroke="#f57c00"
+                                            strokeWidth={3}
+                                            name="HHI Concentration"
+                                            dot={{
+                                                fill: '#f57c00',
+                                                strokeWidth: 2,
+                                                r: 4,
+                                            }}
+                                        />
+                                    </LineChart>
+                                </ResponsiveContainer>
+                            )}
                         </Box>
                     </Box>
 
@@ -339,180 +422,165 @@ const Oligopoly = () => {
                         </Box>
 
                         <Grid container spacing={3}>
-                            <Grid item xs={12} md={6}>
-                                <Box sx={{ marginBottom: 2 }}>
-                                    <FormControl fullWidth size="small">
-                                        <InputLabel
-                                            sx={{
-                                                color: 'rgba(255,255,255,0.7)',
-                                            }}
-                                        >
-                                            Competition Model
-                                        </InputLabel>
-                                        <Select
-                                            value={modelType}
-                                            label="Competition Model"
-                                            onChange={e =>
-                                                setModelType(e.target.value)
-                                            }
-                                            sx={{
-                                                color: 'white',
-                                                '& .MuiOutlinedInput-notchedOutline':
-                                                    {
-                                                        borderColor:
-                                                            'rgba(255,255,255,0.3)',
-                                                    },
-                                                '&:hover .MuiOutlinedInput-notchedOutline':
-                                                    {
-                                                        borderColor:
-                                                            'rgba(255,255,255,0.5)',
-                                                    },
-                                                '&.Mui-focused .MuiOutlinedInput-notchedOutline':
-                                                    {
-                                                        borderColor:
-                                                            'primary.main',
-                                                    },
-                                            }}
-                                        >
-                                            <MenuItem value="cournot">
-                                                Cournot (Quantity)
-                                            </MenuItem>
-                                            <MenuItem value="bertrand">
-                                                Bertrand (Price)
-                                            </MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </Box>
-
+                            {/* Top Row - Toggle Buttons */}
+                            <Grid item xs={12} md={4}>
                                 <Box sx={{ marginBottom: 2 }}>
                                     <Typography
                                         variant="body2"
                                         sx={{ color: 'text.secondary', mb: 1 }}
                                     >
-                                        Number of Firms: {numFirms}
+                                        Number of Firms
                                     </Typography>
-                                    <Slider
+                                    <ToggleButtonGroup
                                         value={numFirms}
-                                        onChange={(e, value) =>
-                                            setNumFirms(value)
-                                        }
-                                        min={2}
-                                        max={5}
-                                        step={1}
-                                        marks
+                                        exclusive
+                                        onChange={(e, newValue) => {
+                                            if (newValue !== null) {
+                                                setNumFirms(newValue);
+                                            }
+                                        }}
+                                        size="small"
                                         sx={{
-                                            color: 'primary.main',
-                                            '& .MuiSlider-thumb': {
-                                                backgroundColor: 'primary.main',
-                                            },
-                                            '& .MuiSlider-track': {
-                                                backgroundColor: 'primary.main',
-                                            },
-                                            '& .MuiSlider-rail': {
-                                                backgroundColor:
-                                                    'rgba(255,255,255,0.2)',
-                                            },
-                                            '& .MuiSlider-mark': {
-                                                backgroundColor:
-                                                    'rgba(255,255,255,0.5)',
-                                            },
-                                            '& .MuiSlider-markLabel': {
+                                            width: '80%',
+                                            margin: '0 auto',
+                                            '& .MuiToggleButton-root': {
                                                 color: 'rgba(255,255,255,0.7)',
+                                                borderColor:
+                                                    'rgba(255,255,255,0.3)',
+                                                padding: '8px 12px',
+                                                flex: 1,
+                                                '&.Mui-selected': {
+                                                    backgroundColor:
+                                                        'primary.main',
+                                                    color: 'white',
+                                                    '&:hover': {
+                                                        backgroundColor:
+                                                            'primary.dark',
+                                                    },
+                                                },
+                                                '&:hover': {
+                                                    backgroundColor:
+                                                        'rgba(255,255,255,0.1)',
+                                                },
                                             },
                                         }}
-                                    />
+                                    >
+                                        <ToggleButton value={2}>2</ToggleButton>
+                                        <ToggleButton value={3}>3</ToggleButton>
+                                        <ToggleButton value={4}>4</ToggleButton>
+                                        <ToggleButton value={5}>5</ToggleButton>
+                                    </ToggleButtonGroup>
                                 </Box>
                             </Grid>
 
-                            <Grid item xs={12} md={6}>
+                            <Grid item xs={12} md={4}>
                                 <Box sx={{ marginBottom: 2 }}>
                                     <Typography
                                         variant="body2"
                                         sx={{ color: 'text.secondary', mb: 1 }}
                                     >
-                                        Demand Elasticity:{' '}
-                                        {demandElasticity.toFixed(1)}
+                                        Demand Elasticity
                                     </Typography>
-                                    <Slider
+                                    <ToggleButtonGroup
                                         value={demandElasticity}
-                                        onChange={(e, value) =>
-                                            setDemandElasticity(value)
-                                        }
-                                        min={0.5}
-                                        max={5.0}
-                                        step={0.1}
+                                        exclusive
+                                        onChange={(e, newValue) => {
+                                            if (newValue !== null) {
+                                                setDemandElasticity(newValue);
+                                            }
+                                        }}
+                                        size="small"
                                         sx={{
-                                            color: 'success.main',
-                                            '& .MuiSlider-thumb': {
-                                                backgroundColor: 'success.main',
-                                            },
-                                            '& .MuiSlider-track': {
-                                                backgroundColor: 'success.main',
-                                            },
-                                            '& .MuiSlider-rail': {
-                                                backgroundColor:
-                                                    'rgba(255,255,255,0.2)',
+                                            width: '80%',
+                                            margin: '0 auto',
+                                            '& .MuiToggleButton-root': {
+                                                color: 'rgba(255,255,255,0.7)',
+                                                borderColor:
+                                                    'rgba(255,255,255,0.3)',
+                                                padding: '8px 12px',
+                                                flex: 1,
+                                                '&.Mui-selected': {
+                                                    backgroundColor:
+                                                        'success.main',
+                                                    color: 'white',
+                                                    '&:hover': {
+                                                        backgroundColor:
+                                                            'success.dark',
+                                                    },
+                                                },
+                                                '&:hover': {
+                                                    backgroundColor:
+                                                        'rgba(255,255,255,0.1)',
+                                                },
                                             },
                                         }}
-                                    />
+                                    >
+                                        <ToggleButton value={1.5}>
+                                            1.5
+                                        </ToggleButton>
+                                        <ToggleButton value={2.0}>
+                                            2.0
+                                        </ToggleButton>
+                                        <ToggleButton value={2.5}>
+                                            2.5
+                                        </ToggleButton>
+                                    </ToggleButtonGroup>
                                 </Box>
+                            </Grid>
 
+                            <Grid item xs={12} md={4}>
                                 <Box sx={{ marginBottom: 2 }}>
                                     <Typography
                                         variant="body2"
                                         sx={{ color: 'text.secondary', mb: 1 }}
                                     >
-                                        Base Price: ${basePrice}
+                                        Base Price
                                     </Typography>
-                                    <Slider
+                                    <ToggleButtonGroup
                                         value={basePrice}
-                                        onChange={(e, value) =>
-                                            setBasePrice(value)
-                                        }
-                                        min={20}
-                                        max={80}
-                                        step={5}
+                                        exclusive
+                                        onChange={(e, newValue) => {
+                                            if (newValue !== null) {
+                                                setBasePrice(newValue);
+                                            }
+                                        }}
+                                        size="small"
                                         sx={{
-                                            color: 'warning.main',
-                                            '& .MuiSlider-thumb': {
-                                                backgroundColor: 'warning.main',
-                                            },
-                                            '& .MuiSlider-track': {
-                                                backgroundColor: 'warning.main',
-                                            },
-                                            '& .MuiSlider-rail': {
-                                                backgroundColor:
-                                                    'rgba(255,255,255,0.2)',
+                                            width: '80%',
+                                            margin: '0 auto',
+                                            '& .MuiToggleButton-root': {
+                                                color: 'rgba(255,255,255,0.7)',
+                                                borderColor:
+                                                    'rgba(255,255,255,0.3)',
+                                                padding: '8px 12px',
+                                                flex: 1,
+                                                '&.Mui-selected': {
+                                                    backgroundColor:
+                                                        'warning.main',
+                                                    color: 'white',
+                                                    '&:hover': {
+                                                        backgroundColor:
+                                                            'warning.dark',
+                                                    },
+                                                },
+                                                '&:hover': {
+                                                    backgroundColor:
+                                                        'rgba(255,255,255,0.1)',
+                                                },
                                             },
                                         }}
-                                    />
+                                    >
+                                        <ToggleButton value={30}>
+                                            $30
+                                        </ToggleButton>
+                                        <ToggleButton value={40}>
+                                            $40
+                                        </ToggleButton>
+                                        <ToggleButton value={50}>
+                                            $50
+                                        </ToggleButton>
+                                    </ToggleButtonGroup>
                                 </Box>
-
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={collusionEnabled}
-                                            onChange={e =>
-                                                setCollusionEnabled(
-                                                    e.target.checked
-                                                )
-                                            }
-                                            sx={{
-                                                '& .MuiSwitch-switchBase.Mui-checked':
-                                                    {
-                                                        color: 'error.main',
-                                                    },
-                                                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track':
-                                                    {
-                                                        backgroundColor:
-                                                            'error.main',
-                                                    },
-                                            }}
-                                        />
-                                    }
-                                    label="Enable Collusion"
-                                    sx={{ color: 'text.secondary' }}
-                                />
                             </Grid>
                         </Grid>
                     </Box>
