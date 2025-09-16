@@ -14,7 +14,16 @@ import {
     Back,
     names as runNames,
 } from './Interpreters';
-import { Home, Error, Snake, Lights_Out, pages as pageRoutes } from './Pages';
+import {
+    Home,
+    Error,
+    Snake,
+    Lights_Out,
+    ZSharp,
+    Oligopoly,
+    Interpreters,
+    pages as pageRoutes,
+} from './Pages';
 
 const darkTheme = createTheme({
     palette: {
@@ -43,10 +52,19 @@ function Website() {
         { Component: Home, url: '/' },
         { Component: Snake, url: pageRoutes.Snake },
         { Component: Lights_Out, url: pageRoutes.Lights_Out },
+        { Component: ZSharp, url: pageRoutes.ZSharp },
+        { Component: Oligopoly, url: pageRoutes.Oligopoly },
+        { Component: Interpreters, url: pageRoutes.Interpreters },
     ];
 
     return (
-        <HashRouter basename="/">
+        <HashRouter
+            basename="/"
+            future={{
+                v7_startTransition: true,
+                v7_relativeSplatPath: true,
+            }}
+        >
             <Routes>
                 {interpreters.map(({ Component, url }) =>
                     getRoute(Component, url)

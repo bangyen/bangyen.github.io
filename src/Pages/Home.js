@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
 
 import { TooltipButton } from '../helpers';
-import { names } from '../Interpreters';
 import { pages } from './';
 
 import {
@@ -17,15 +16,7 @@ import {
     OpenInNew,
 } from '@mui/icons-material';
 
-import {
-    Typography,
-    Divider,
-    Box,
-    Menu,
-    MenuItem,
-    Chip,
-    Fade,
-} from '@mui/material';
+import { Typography, Box, Menu, MenuItem, Chip, Fade } from '@mui/material';
 
 function dropdown(name, options) {
     const padHeight = '1rem';
@@ -135,6 +126,9 @@ export default function Home() {
                 position: 'relative',
                 padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
                 boxSizing: 'border-box',
+                width: '100%',
+                maxWidth: '100vw',
+                overflowX: 'hidden',
             }}
         >
             {/* Background Elements */}
@@ -161,17 +155,7 @@ export default function Home() {
                     marginBottom: { xs: '1rem', sm: '1.5rem', md: '2rem' },
                 }}
             >
-                <MenuButton>
-                    {dropdown('Miscellaneous', pages)}
-                    <Divider
-                        variant="middle"
-                        sx={{
-                            margin: '8px 0',
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                        }}
-                    />
-                    {dropdown('Interpreters', names)}
-                </MenuButton>
+                <MenuButton>{dropdown('Projects', pages)}</MenuButton>
                 <TooltipButton
                     href="https://github.com/bangyen"
                     title="GitHub"
@@ -199,25 +183,22 @@ export default function Home() {
                             maxWidth: '800px',
                             width: '100%',
                             padding: {
-                                xs: '0 1rem',
+                                xs: '0 0.5rem',
                                 sm: '0 1.5rem',
                                 md: '0 2rem',
                             },
                             boxSizing: 'border-box',
+                            overflow: 'hidden',
                         }}
                     >
                         <Typography
                             variant="h1"
                             sx={{
-                                background:
-                                    'linear-gradient(135deg, #ffffff, #808080)',
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
+                                color: 'text.primary',
                                 fontWeight: 700,
                                 marginBottom: 2,
                                 fontSize: {
-                                    xs: '2.5rem',
+                                    xs: '2rem',
                                     sm: '3.5rem',
                                     md: '4rem',
                                 },
@@ -232,7 +213,7 @@ export default function Home() {
                                 color: 'text.secondary',
                                 marginBottom: 2,
                                 fontWeight: 400,
-                                fontSize: { xs: '1.1rem', sm: '1.3rem' },
+                                fontSize: { xs: '0.95rem', sm: '1.3rem' },
                             }}
                         >
                             Backend Developer & AI/ML Engineer
@@ -260,11 +241,11 @@ export default function Home() {
                             sx={{
                                 display: 'grid',
                                 gridTemplateColumns: {
-                                    xs: 'repeat(3, 1fr)',
+                                    xs: 'repeat(2, 1fr)',
                                     sm: 'repeat(2, 1fr)',
                                     md: 'repeat(3, 1fr)',
                                 },
-                                gap: { xs: 1.5, sm: 2 },
+                                gap: { xs: 1, sm: 2 },
                                 justifyContent: 'center',
                                 marginBottom: { xs: 3, sm: 4 },
                                 maxWidth: '600px',
@@ -272,6 +253,8 @@ export default function Home() {
                                     xs: '0 auto 1.5rem auto',
                                     sm: '0 auto 2rem auto',
                                 },
+                                width: '100%',
+                                overflow: 'hidden',
                             }}
                         >
                             <Chip
@@ -283,18 +266,20 @@ export default function Home() {
                                     borderColor: 'rgba(255, 255, 255, 0.3)',
                                     color: 'primary.light',
                                     padding: {
-                                        xs: '8px 12px',
+                                        xs: '6px 8px',
                                         sm: '12px 16px',
                                     },
-                                    height: { xs: '40px', sm: '48px' },
-                                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                                    height: { xs: '36px', sm: '48px' },
+                                    fontSize: { xs: '0.8rem', sm: '1rem' },
+                                    maxWidth: '100%',
+                                    overflow: 'hidden',
                                     '&:hover': {
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.1)',
                                     },
                                     '& .MuiChip-icon': {
-                                        marginLeft: { xs: '8px', sm: '12px' },
-                                        marginRight: { xs: '6px', sm: '8px' },
+                                        marginLeft: { xs: '6px', sm: '12px' },
+                                        marginRight: { xs: '4px', sm: '8px' },
                                     },
                                 }}
                             />
@@ -307,18 +292,20 @@ export default function Home() {
                                     borderColor: 'rgba(255, 255, 255, 0.3)',
                                     color: 'primary.light',
                                     padding: {
-                                        xs: '8px 12px',
+                                        xs: '6px 8px',
                                         sm: '12px 16px',
                                     },
-                                    height: { xs: '40px', sm: '48px' },
-                                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                                    height: { xs: '36px', sm: '48px' },
+                                    fontSize: { xs: '0.8rem', sm: '1rem' },
+                                    maxWidth: '100%',
+                                    overflow: 'hidden',
                                     '&:hover': {
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.1)',
                                     },
                                     '& .MuiChip-icon': {
-                                        marginLeft: { xs: '8px', sm: '12px' },
-                                        marginRight: { xs: '6px', sm: '8px' },
+                                        marginLeft: { xs: '6px', sm: '12px' },
+                                        marginRight: { xs: '4px', sm: '8px' },
                                     },
                                 }}
                             />
@@ -331,18 +318,20 @@ export default function Home() {
                                     borderColor: 'rgba(255, 255, 255, 0.3)',
                                     color: 'primary.light',
                                     padding: {
-                                        xs: '8px 12px',
+                                        xs: '6px 8px',
                                         sm: '12px 16px',
                                     },
-                                    height: { xs: '40px', sm: '48px' },
-                                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                                    height: { xs: '36px', sm: '48px' },
+                                    fontSize: { xs: '0.8rem', sm: '1rem' },
+                                    maxWidth: '100%',
+                                    overflow: 'hidden',
                                     '&:hover': {
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.1)',
                                     },
                                     '& .MuiChip-icon': {
-                                        marginLeft: { xs: '8px', sm: '12px' },
-                                        marginRight: { xs: '6px', sm: '8px' },
+                                        marginLeft: { xs: '6px', sm: '12px' },
+                                        marginRight: { xs: '4px', sm: '8px' },
                                     },
                                 }}
                             />
@@ -355,18 +344,20 @@ export default function Home() {
                                     borderColor: 'rgba(255, 255, 255, 0.3)',
                                     color: 'primary.light',
                                     padding: {
-                                        xs: '8px 12px',
+                                        xs: '6px 8px',
                                         sm: '12px 16px',
                                     },
-                                    height: { xs: '40px', sm: '48px' },
-                                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                                    height: { xs: '36px', sm: '48px' },
+                                    fontSize: { xs: '0.8rem', sm: '1rem' },
+                                    maxWidth: '100%',
+                                    overflow: 'hidden',
                                     '&:hover': {
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.1)',
                                     },
                                     '& .MuiChip-icon': {
-                                        marginLeft: { xs: '8px', sm: '12px' },
-                                        marginRight: { xs: '6px', sm: '8px' },
+                                        marginLeft: { xs: '6px', sm: '12px' },
+                                        marginRight: { xs: '4px', sm: '8px' },
                                     },
                                 }}
                             />
@@ -379,18 +370,20 @@ export default function Home() {
                                     borderColor: 'rgba(255, 255, 255, 0.3)',
                                     color: 'primary.light',
                                     padding: {
-                                        xs: '8px 12px',
+                                        xs: '6px 8px',
                                         sm: '12px 16px',
                                     },
-                                    height: { xs: '40px', sm: '48px' },
-                                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                                    height: { xs: '36px', sm: '48px' },
+                                    fontSize: { xs: '0.8rem', sm: '1rem' },
+                                    maxWidth: '100%',
+                                    overflow: 'hidden',
                                     '&:hover': {
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.1)',
                                     },
                                     '& .MuiChip-icon': {
-                                        marginLeft: { xs: '8px', sm: '12px' },
-                                        marginRight: { xs: '6px', sm: '8px' },
+                                        marginLeft: { xs: '6px', sm: '12px' },
+                                        marginRight: { xs: '4px', sm: '8px' },
                                     },
                                 }}
                             />
@@ -403,18 +396,20 @@ export default function Home() {
                                     borderColor: 'rgba(255, 255, 255, 0.3)',
                                     color: 'primary.light',
                                     padding: {
-                                        xs: '8px 12px',
+                                        xs: '6px 8px',
                                         sm: '12px 16px',
                                     },
-                                    height: { xs: '40px', sm: '48px' },
-                                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                                    height: { xs: '36px', sm: '48px' },
+                                    fontSize: { xs: '0.8rem', sm: '1rem' },
+                                    maxWidth: '100%',
+                                    overflow: 'hidden',
                                     '&:hover': {
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.1)',
                                     },
                                     '& .MuiChip-icon': {
-                                        marginLeft: { xs: '8px', sm: '12px' },
-                                        marginRight: { xs: '6px', sm: '8px' },
+                                        marginLeft: { xs: '6px', sm: '12px' },
+                                        marginRight: { xs: '4px', sm: '8px' },
                                     },
                                 }}
                             />
@@ -427,6 +422,8 @@ export default function Home() {
                                 maxWidth: '900px',
                                 textAlign: 'left',
                                 width: '100%',
+                                overflow: 'hidden',
+                                boxSizing: 'border-box',
                             }}
                         >
                             <Typography
@@ -457,7 +454,7 @@ export default function Home() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     sx={{
-                                        padding: 2,
+                                        padding: { xs: 1.5, sm: 2 },
                                         backgroundColor:
                                             'rgba(128, 128, 128, 0.05)',
                                         borderRadius: 2,
@@ -465,6 +462,9 @@ export default function Home() {
                                         textDecoration: 'none',
                                         cursor: 'pointer',
                                         transition: 'all 0.2s ease-in-out',
+                                        width: '100%',
+                                        boxSizing: 'border-box',
+                                        overflow: 'hidden',
                                         '&:hover': {
                                             backgroundColor:
                                                 'rgba(128, 128, 128, 0.1)',
@@ -481,6 +481,8 @@ export default function Home() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: 1,
+                                            wordWrap: 'break-word',
+                                            overflowWrap: 'break-word',
                                         }}
                                     >
                                         Generalized Collective Algorithms for
@@ -503,7 +505,11 @@ export default function Home() {
                                     </Box>
                                     <Typography
                                         variant="body2"
-                                        sx={{ color: 'text.secondary' }}
+                                        sx={{
+                                            color: 'text.secondary',
+                                            wordWrap: 'break-word',
+                                            overflowWrap: 'break-word',
+                                        }}
                                     >
                                         Introduced novel framework for exascale
                                         collective algorithms, reducing
@@ -518,7 +524,7 @@ export default function Home() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     sx={{
-                                        padding: 2,
+                                        padding: { xs: 1.5, sm: 2 },
                                         backgroundColor:
                                             'rgba(128, 128, 128, 0.05)',
                                         borderRadius: 2,
@@ -526,6 +532,9 @@ export default function Home() {
                                         textDecoration: 'none',
                                         cursor: 'pointer',
                                         transition: 'all 0.2s ease-in-out',
+                                        width: '100%',
+                                        boxSizing: 'border-box',
+                                        overflow: 'hidden',
                                         '&:hover': {
                                             backgroundColor:
                                                 'rgba(128, 128, 128, 0.1)',
@@ -542,6 +551,8 @@ export default function Home() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: 1,
+                                            wordWrap: 'break-word',
+                                            overflowWrap: 'break-word',
                                         }}
                                     >
                                         Revisiting Computation for Research:
@@ -564,7 +575,11 @@ export default function Home() {
                                     </Box>
                                     <Typography
                                         variant="body2"
-                                        sx={{ color: 'text.secondary' }}
+                                        sx={{
+                                            color: 'text.secondary',
+                                            wordWrap: 'break-word',
+                                            overflowWrap: 'break-word',
+                                        }}
                                     >
                                         Interviewed 138 researchers across
                                         multiple institutions using thematic
@@ -582,6 +597,8 @@ export default function Home() {
                                 maxWidth: '900px',
                                 textAlign: 'left',
                                 width: '100%',
+                                overflow: 'hidden',
+                                boxSizing: 'border-box',
                             }}
                         >
                             <Typography
@@ -612,7 +629,7 @@ export default function Home() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     sx={{
-                                        padding: 2,
+                                        padding: { xs: 1.5, sm: 2 },
                                         backgroundColor:
                                             'rgba(128, 128, 128, 0.05)',
                                         borderRadius: 2,
@@ -620,6 +637,9 @@ export default function Home() {
                                         textDecoration: 'none',
                                         cursor: 'pointer',
                                         transition: 'all 0.2s ease-in-out',
+                                        width: '100%',
+                                        boxSizing: 'border-box',
+                                        overflow: 'hidden',
                                         '&:hover': {
                                             backgroundColor:
                                                 'rgba(128, 128, 128, 0.1)',
@@ -636,6 +656,8 @@ export default function Home() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: 1,
+                                            wordWrap: 'break-word',
+                                            overflowWrap: 'break-word',
                                         }}
                                     >
                                         ZSharp — Sharpness-Aware Minimization
@@ -643,7 +665,11 @@ export default function Home() {
                                     </Typography>
                                     <Typography
                                         variant="body2"
-                                        sx={{ color: 'text.secondary' }}
+                                        sx={{
+                                            color: 'text.secondary',
+                                            wordWrap: 'break-word',
+                                            overflowWrap: 'break-word',
+                                        }}
                                     >
                                         Developed PyTorch implementation with
                                         Apple Silicon optimization, delivering
@@ -658,7 +684,7 @@ export default function Home() {
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     sx={{
-                                        padding: 2,
+                                        padding: { xs: 1.5, sm: 2 },
                                         backgroundColor:
                                             'rgba(128, 128, 128, 0.05)',
                                         borderRadius: 2,
@@ -666,6 +692,9 @@ export default function Home() {
                                         textDecoration: 'none',
                                         cursor: 'pointer',
                                         transition: 'all 0.2s ease-in-out',
+                                        width: '100%',
+                                        boxSizing: 'border-box',
+                                        overflow: 'hidden',
                                         '&:hover': {
                                             backgroundColor:
                                                 'rgba(128, 128, 128, 0.1)',
@@ -682,6 +711,8 @@ export default function Home() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: 1,
+                                            wordWrap: 'break-word',
+                                            overflowWrap: 'break-word',
                                         }}
                                     >
                                         Oligopoly — Agent-Based Economic
@@ -690,7 +721,11 @@ export default function Home() {
                                     </Typography>
                                     <Typography
                                         variant="body2"
-                                        sx={{ color: 'text.secondary' }}
+                                        sx={{
+                                            color: 'text.secondary',
+                                            wordWrap: 'break-word',
+                                            overflowWrap: 'break-word',
+                                        }}
                                     >
                                         Built FastAPI and SQLAlchemy simulation
                                         platform for 2-4 firms with collusion

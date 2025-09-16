@@ -23,3 +23,9 @@ yarn-debug.log*
 yarn-error.log*
 
 /.vs
+
+# Uncompressed data files (keep only .gz versions)
+/public/*.json
+/public/*.csv
+!/public/manifest.json
+!/public/robots.txt

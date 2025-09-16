@@ -11,12 +11,13 @@
     "@mui/icons-material": "^6.0.1",
     "@mui/material": "^6.0.1",
     "depcheck": "^1.4.3",
-    "gh-pages": "^3.2.3",
+    "gh-pages": "^6.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.3.1",
     "react-router-dom": "^6.8.0",
     "react-scripts": "^5.0.1",
+    "recharts": "^3.2.1",
     "simplex-noise": "^4.0.3"
   },
   "scripts": {
@@ -25,6 +26,8 @@
     "deploy": "gh-pages -b gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:new": "jest --config jest.config.js",
+    "test:coverage": "jest --config jest.config.js --coverage",
     "eject": "react-scripts eject",
     "lint": "eslint src/ --ext .js,.jsx --config config/eslint.config.js",
     "lint:fix": "eslint src/ --ext .js,.jsx --fix --config config/eslint.config.js",
@@ -68,9 +71,17 @@
       "last 1 safari version"
     ]
   },
+  "overrides": {
+    "nth-check": "^2.1.1",
+    "postcss": "^8.4.31",
+    "webpack-dev-server": "^4.15.1",
+    "@babel/core": "^7.22.0"
+  },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.28.4",
+    "@babel/preset-react": "^7.27.1",
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
+    "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.4.3",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
