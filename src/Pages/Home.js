@@ -213,11 +213,7 @@ export default function Home() {
                         <Typography
                             variant="h1"
                             sx={{
-                                background:
-                                    'linear-gradient(135deg, #ffffff, #808080)',
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
+                                color: 'text.primary',
                                 fontWeight: 700,
                                 marginBottom: 2,
                                 fontSize: {

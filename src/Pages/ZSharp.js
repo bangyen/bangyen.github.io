@@ -140,11 +140,7 @@ const ZSharp = () => {
                             <Typography
                                 variant="h1"
                                 sx={{
-                                    background:
-                                        'linear-gradient(135deg, #ffffff, #808080)',
-                                    backgroundClip: 'text',
-                                    WebkitBackgroundClip: 'text',
-                                    WebkitTextFillColor: 'transparent',
+                                    color: 'text.primary',
                                     fontWeight: 700,
                                     fontSize: {
                                         xs: '2.5rem',
