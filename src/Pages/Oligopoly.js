@@ -167,7 +167,7 @@ const Oligopoly = () => {
                                 Oligopoly
                             </Typography>
                         </Grid>
-                        <Grid>
+                        <Grid sx={{ display: 'flex', gap: 1 }}>
                             <IconButton
                                 href="https://github.com/bangyen/Oligopoly"
                                 target="_blank"

@@ -152,7 +152,7 @@ const ZSharp = () => {
                                 ZSharp
                             </Typography>
                         </Grid>
-                        <Grid>
+                        <Grid sx={{ display: 'flex', gap: 1 }}>
                             <IconButton
                                 href="https://github.com/bangyen/ZSharp"
                                 target="_blank"
