@@ -238,7 +238,7 @@ const ZSharp = () => {
                                         }}
                                         formatter={(value, name) => [
                                             `${(value * 100).toFixed(1)}%`,
-                                            name === 'sgd' ? 'SGD' : 'ZSharp',
+                                            name,
                                         ]}
                                     />
                                     <Line
