@@ -1,5 +1,6 @@
 import { useMemo, useCallback, useReducer, useEffect } from 'react';
 import Grid from '@mui/material/Grid2';
+import * as colors from '@mui/material/colors';
 
 import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
@@ -165,8 +166,9 @@ export default function Snake() {
             let color = 'inherit';
 
             if (index in board) {
-                if (board[index] > 0) color = 'primary.main';
-                else color = 'secondary.main';
+                if (board[index] > 0)
+                    color = colors.blue[700]; // Snake body - darker blue (#1976d2)
+                else color = colors.blue[900]; // Food - very dark blue (#0d47a1)
             }
 
             return {
