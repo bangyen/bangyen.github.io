@@ -6,10 +6,6 @@ import {
     Card,
     CardContent,
     Button,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
     Slider,
     Switch,
     FormControlLabel,
@@ -57,7 +53,6 @@ const generateData = (
 };
 
 const ZSharp = () => {
-    const [chartView, setChartView] = useState('accuracy');
     const [samRadius, setSamRadius] = useState(0.05);
     const [learningRate, setLearningRate] = useState(0.01);
     const [momentum, setMomentum] = useState(0.9);
@@ -75,21 +70,12 @@ const ZSharp = () => {
         gradientFiltering,
         mpsAcceleration
     );
-    const chartTitle =
-        chartView === 'accuracy'
-            ? 'Performance Comparison'
-            : 'Training Speed Comparison';
-    const yAxisLabel = chartView === 'accuracy' ? 'Accuracy' : 'Time (hours)';
-    const tooltipFormatter =
-        chartView === 'accuracy'
-            ? (value, name) => [
-                  `${(value * 100).toFixed(1)}%`,
-                  name === 'sgd' ? 'SGD' : 'ZSharp',
-              ]
-            : (value, name) => [
-                  `${value.toFixed(1)}h`,
-                  name === 'sgd' ? 'SGD' : 'ZSharp',
-              ];
+    const chartTitle = 'Performance Comparison';
+    const yAxisLabel = 'Accuracy';
+    const tooltipFormatter = (value, name) => [
+        `${(value * 100).toFixed(1)}%`,
+        name === 'sgd' ? 'SGD' : 'ZSharp',
+    ];
 
     const resetToDefaults = () => {
         setSamRadius(0.05);
@@ -169,56 +155,16 @@ const ZSharp = () => {
                     }}
                 >
                     <CardContent>
-                        <Box
+                        <Typography
+                            variant="h5"
                             sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
+                                color: 'primary.light',
                                 marginBottom: 3,
+                                textAlign: 'center',
                             }}
                         >
-                            <Typography
-                                variant="h5"
-                                sx={{ color: 'primary.light' }}
-                            >
-                                {chartTitle}
-                            </Typography>
-                            <FormControl size="small" sx={{ minWidth: 200 }}>
-                                <InputLabel
-                                    sx={{ color: 'rgba(255,255,255,0.7)' }}
-                                >
-                                    View
-                                </InputLabel>
-                                <Select
-                                    value={chartView}
-                                    label="View"
-                                    onChange={e => setChartView(e.target.value)}
-                                    sx={{
-                                        color: 'white',
-                                        '& .MuiOutlinedInput-notchedOutline': {
-                                            borderColor:
-                                                'rgba(255,255,255,0.3)',
-                                        },
-                                        '&:hover .MuiOutlinedInput-notchedOutline':
-                                            {
-                                                borderColor:
-                                                    'rgba(255,255,255,0.5)',
-                                            },
-                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline':
-                                            {
-                                                borderColor: 'primary.main',
-                                            },
-                                    }}
-                                >
-                                    <MenuItem value="accuracy">
-                                        Accuracy Comparison
-                                    </MenuItem>
-                                    <MenuItem value="speed">
-                                        Training Speed
-                                    </MenuItem>
-                                </Select>
-                            </FormControl>
-                        </Box>
+                            {chartTitle}
+                        </Typography>
                         <Box sx={{ height: 300 }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={currentData}>
@@ -234,11 +180,7 @@ const ZSharp = () => {
                                     <YAxis
                                         stroke="rgba(255,255,255,0.7)"
                                         tick={{ fill: 'rgba(255,255,255,0.7)' }}
-                                        domain={
-                                            chartView === 'accuracy'
-                                                ? [0.6, 1.0]
-                                                : [0, 8]
-                                        }
+                                        domain={[0.6, 1.0]}
                                         label={{
                                             value: yAxisLabel,
                                             angle: -90,
