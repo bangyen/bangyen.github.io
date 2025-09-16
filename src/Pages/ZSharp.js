@@ -16,15 +16,29 @@ const loadRealZSharpData = async () => {
     try {
         const response = await fetch('/zsharp_data.json.gz');
         const compressedData = await response.arrayBuffer();
-        const decompressedData = new TextDecoder().decode(
-            new DecompressionStream('gzip').readable.pipeTo(
-                new WritableStream({
-                    write(chunk) {
-                        return chunk;
-                    },
-                })
-            )
-        );
+        const decompressedData = await new Response(
+            new ReadableStream({
+                start(controller) {
+                    const decompressionStream = new DecompressionStream('gzip');
+                    const writer = decompressionStream.writable.getWriter();
+                    const reader = decompressionStream.readable.getReader();
+
+                    writer.write(compressedData).then(() => writer.close());
+
+                    function pump() {
+                        return reader.read().then(({ done, value }) => {
+                            if (done) {
+                                controller.close();
+                                return;
+                            }
+                            controller.enqueue(value);
+                            return pump();
+                        });
+                    }
+                    return pump();
+                },
+            })
+        ).text();
         const realData = JSON.parse(decompressedData);
 
         // Convert real results to chart data format with per-epoch data
@@ -292,6 +306,7 @@ const ZSharp = () => {
                             display: 'flex',
                             gap: 1,
                             flexWrap: 'wrap',
+                            justifyContent: 'center',
                         }}
                     >
                         <Button
@@ -504,34 +519,57 @@ const ZSharp = () => {
                                             tick={{
                                                 fill: 'rgba(255,255,255,0.7)',
                                             }}
+                                            tickFormatter={value => {
+                                                if (viewType === 'loss') {
+                                                    return value.toFixed(3);
+                                                } else if (
+                                                    viewType ===
+                                                    'learning_curve'
+                                                ) {
+                                                    return (
+                                                        (value * 100).toFixed(
+                                                            1
+                                                        ) + '%'
+                                                    );
+                                                } else if (
+                                                    viewType === 'convergence'
+                                                ) {
+                                                    return (
+                                                        (value * 100).toFixed(
+                                                            1
+                                                        ) + '%'
+                                                    );
+                                                } else {
+                                                    return (
+                                                        (value * 100).toFixed(
+                                                            1
+                                                        ) + '%'
+                                                    );
+                                                }
+                                            }}
                                             domain={
                                                 viewType === 'loss'
-                                                    ? undefined
+                                                    ? [
+                                                          'dataMin - 0.1',
+                                                          'dataMax + 0.1',
+                                                      ]
                                                     : viewType ===
                                                         'learning_curve'
-                                                      ? [0.05, 0.09]
+                                                      ? [
+                                                            'dataMin - 0.005',
+                                                            'dataMax + 0.005',
+                                                        ]
                                                       : viewType ===
                                                           'convergence'
-                                                        ? [-0.02, 0.02]
-                                                        : [0.3, 1.0]
+                                                        ? [
+                                                              'dataMin - 0.005',
+                                                              'dataMax + 0.005',
+                                                          ]
+                                                        : [
+                                                              'dataMin - 0.05',
+                                                              'dataMax + 0.05',
+                                                          ]
                                             }
-                                            label={{
-                                                value:
-                                                    viewType === 'loss'
-                                                        ? 'Loss'
-                                                        : viewType ===
-                                                            'learning_curve'
-                                                          ? 'Accuracy Gap'
-                                                          : viewType ===
-                                                              'convergence'
-                                                            ? 'Change per Epoch'
-                                                            : 'Accuracy',
-                                                angle: -90,
-                                                position: 'insideLeft',
-                                                style: {
-                                                    fill: 'rgba(255,255,255,0.7)',
-                                                },
-                                            }}
                                         />
                                         <RechartsTooltip
                                             contentStyle={{
@@ -541,6 +579,9 @@ const ZSharp = () => {
                                                 borderRadius: 8,
                                                 color: 'white',
                                             }}
+                                            labelFormatter={value =>
+                                                `Epoch ${value}`
+                                            }
                                             formatter={(value, name) => [
                                                 viewType === 'loss'
                                                     ? value.toFixed(3)

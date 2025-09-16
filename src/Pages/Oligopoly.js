@@ -22,20 +22,34 @@ import {
 // Load real simulation matrix data
 const loadRealSimulationMatrix = async () => {
     try {
-        const response = await fetch('/oligopoly_real_matrix.json.gz');
+        const response = await fetch('/oligopoly_data.json.gz');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
         const compressedData = await response.arrayBuffer();
-        const decompressedData = new TextDecoder().decode(
-            new DecompressionStream('gzip').readable.pipeTo(
-                new WritableStream({
-                    write(chunk) {
-                        return chunk;
-                    },
-                })
-            )
-        );
+        const decompressedData = await new Response(
+            new ReadableStream({
+                start(controller) {
+                    const decompressionStream = new DecompressionStream('gzip');
+                    const writer = decompressionStream.writable.getWriter();
+                    const reader = decompressionStream.readable.getReader();
+
+                    writer.write(compressedData).then(() => writer.close());
+
+                    function pump() {
+                        return reader.read().then(({ done, value }) => {
+                            if (done) {
+                                controller.close();
+                                return;
+                            }
+                            controller.enqueue(value);
+                            return pump();
+                        });
+                    }
+                    return pump();
+                },
+            })
+        ).text();
         const matrixData = JSON.parse(decompressedData);
         return matrixData;
     } catch (error) {
@@ -327,11 +341,13 @@ const Oligopoly = () => {
                                             tick={{
                                                 fill: 'rgba(255,255,255,0.7)',
                                             }}
-                                            label={{
-                                                value: 'Price ($)',
-                                                angle: -90,
-                                                position: 'insideLeft',
-                                            }}
+                                            tickFormatter={value =>
+                                                `$${value.toFixed(2)}`
+                                            }
+                                            domain={[
+                                                'dataMin - 5',
+                                                'dataMax + 5',
+                                            ]}
                                         />
                                         <YAxis
                                             yAxisId="right"
@@ -340,11 +356,13 @@ const Oligopoly = () => {
                                             tick={{
                                                 fill: 'rgba(255,255,255,0.7)',
                                             }}
-                                            label={{
-                                                value: 'HHI',
-                                                angle: 90,
-                                                position: 'insideRight',
-                                            }}
+                                            tickFormatter={value =>
+                                                value.toFixed(2)
+                                            }
+                                            domain={[
+                                                'dataMin - 0.05',
+                                                'dataMax + 0.05',
+                                            ]}
                                         />
                                         <RechartsTooltip
                                             contentStyle={{
@@ -354,6 +372,9 @@ const Oligopoly = () => {
                                                 borderRadius: 8,
                                                 color: 'white',
                                             }}
+                                            labelFormatter={value =>
+                                                `Round ${value}`
+                                            }
                                         />
                                         <Line
                                             yAxisId="left"
