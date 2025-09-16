@@ -135,13 +135,20 @@ const Oligopoly = () => {
     const firmColors = getFirmColors();
 
     return (
-        <Box
+        <Grid
+            container
+            minHeight="100vh"
+            flexDirection="column"
             sx={{
-                minHeight: '100vh',
+                position: 'relative',
+                padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+                boxSizing: 'border-box',
+                width: '100%',
+                maxWidth: '100vw',
+                overflowX: 'hidden',
                 background:
                     'linear-gradient(135deg, #0a0a0a 0%, #0e0e0e 50%, #0a0a0a 100%)',
                 color: 'white',
-                padding: { xs: 2, sm: 3, md: 4 },
             }}
         >
             {/* Header */}
@@ -868,7 +875,7 @@ const Oligopoly = () => {
                     </Grid>
                 </CardContent>
             </Card>
-        </Box>
+        </Grid>
     );
 };
 
