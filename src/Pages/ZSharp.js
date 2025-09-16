@@ -126,20 +126,17 @@ const ZSharp = () => {
     );
 
     return (
-        <Grid
-            container
-            minHeight="100vh"
-            flexDirection="column"
+        <Box
             sx={{
-                position: 'relative',
-                padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
-                boxSizing: 'border-box',
-                width: '100%',
-                maxWidth: '100vw',
-                overflowX: 'hidden',
+                minHeight: '100vh',
                 background:
                     'linear-gradient(135deg, #0a0a0a 0%, #0e0e0e 50%, #0a0a0a 100%)',
                 color: 'white',
+                padding: { xs: 2, sm: 3, md: 4 },
+                maxWidth: '1400px',
+                margin: '0 auto',
+                width: '100%',
+                boxSizing: 'border-box',
             }}
         >
             {/* Header */}
@@ -720,7 +717,7 @@ const ZSharp = () => {
                     </Card>
                 </Grid>
             </Grid>
-        </Grid>
+        </Box>
     );
 };
 
