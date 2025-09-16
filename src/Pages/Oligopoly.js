@@ -4,6 +4,7 @@ import {
     Typography,
     Grid,
     Button,
+    IconButton,
     Slider,
     FormControl,
     InputLabel,
@@ -144,58 +145,61 @@ const Oligopoly = () => {
                     }}
                 >
                     {/* Header */}
-                    <Typography
-                        variant="h1"
+                    <Box
                         sx={{
-                            background:
-                                'linear-gradient(135deg, #ffffff, #808080)',
-                            backgroundClip: 'text',
-                            WebkitBackgroundClip: 'text',
-                            WebkitTextFillColor: 'transparent',
-                            fontWeight: 700,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 2,
                             marginBottom: 2,
-                            fontSize: {
-                                xs: '2.5rem',
-                                sm: '3.5rem',
-                                md: '4rem',
-                            },
                         }}
                     >
-                        Oligopoly
-                    </Typography>
+                        <Typography
+                            variant="h1"
+                            sx={{
+                                background:
+                                    'linear-gradient(135deg, #ffffff, #808080)',
+                                backgroundClip: 'text',
+                                WebkitBackgroundClip: 'text',
+                                WebkitTextFillColor: 'transparent',
+                                fontWeight: 700,
+                                fontSize: {
+                                    xs: '2.5rem',
+                                    sm: '3.5rem',
+                                    md: '4rem',
+                                },
+                            }}
+                        >
+                            Oligopoly
+                        </Typography>
+                        <IconButton
+                            href="https://github.com/bangyen/Oligopoly"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            sx={{
+                                color: 'primary.light',
+                                border: '1px solid rgba(255, 255, 255, 0.3)',
+                                '&:hover': {
+                                    borderColor: 'primary.main',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                },
+                            }}
+                        >
+                            <GitHub fontSize="large" />
+                        </IconButton>
+                    </Box>
 
                     <Typography
                         variant="h5"
                         sx={{
                             color: 'text.secondary',
-                            marginBottom: 2,
+                            marginBottom: 4,
                             fontWeight: 400,
                             fontSize: { xs: '1.1rem', sm: '1.3rem' },
                         }}
                     >
                         Agent-Based Economic Modeling & Collusion Detection
                     </Typography>
-
-                    <Button
-                        variant="outlined"
-                        startIcon={<GitHub />}
-                        href="https://github.com/bangyen/Oligopoly"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        sx={{
-                            borderColor: 'rgba(255, 255, 255, 0.3)',
-                            color: 'primary.light',
-                            marginBottom: 4,
-                            padding: { xs: '8px 16px', sm: '12px 24px' },
-                            fontSize: { xs: '0.9rem', sm: '1rem' },
-                            '&:hover': {
-                                borderColor: 'primary.main',
-                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                            },
-                        }}
-                    >
-                        View Repository
-                    </Button>
 
                     {/* Market Dynamics Chart */}
                     <Box
