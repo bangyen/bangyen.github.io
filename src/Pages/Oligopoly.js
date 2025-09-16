@@ -1,6 +1,20 @@
 import React, { useEffect } from 'react';
-import { Box, Typography, Grid, Card, CardContent, Chip } from '@mui/material';
-import { Business, Warning, Assessment, Timeline } from '@mui/icons-material';
+import {
+    Box,
+    Typography,
+    Grid,
+    Card,
+    CardContent,
+    Chip,
+    Button,
+} from '@mui/material';
+import {
+    Business,
+    Warning,
+    Assessment,
+    Timeline,
+    GitHub,
+} from '@mui/icons-material';
 import {
     LineChart,
     Line,
@@ -71,22 +85,27 @@ const Oligopoly = () => {
                     </Typography>
                     <Typography
                         variant="h6"
-                        sx={{ color: 'text.secondary', marginBottom: 1 }}
+                        sx={{ color: 'text.secondary', marginBottom: 2 }}
                     >
                         Agent-Based Economic Modeling & Collusion Detection
                     </Typography>
-                    <Typography
-                        variant="body1"
+                    <Button
+                        variant="outlined"
+                        startIcon={<GitHub />}
+                        href="https://github.com/bangyen/Oligopoly"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         sx={{
-                            color: 'text.secondary',
-                            maxWidth: '800px',
-                            margin: '0 auto',
+                            borderColor: 'primary.light',
+                            color: 'primary.light',
+                            '&:hover': {
+                                borderColor: 'primary.main',
+                                backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                            },
                         }}
                     >
-                        A sophisticated simulation platform for modeling
-                        oligopoly market competition, detecting collusion
-                        patterns, and analyzing regulatory intervention effects.
-                    </Typography>
+                        View Repository
+                    </Button>
                 </Box>
 
                 {/* Market Dynamics Chart */}
@@ -109,7 +128,7 @@ const Oligopoly = () => {
                         >
                             Market Dynamics & Collusion Detection
                         </Typography>
-                        <Box sx={{ height: 400 }}>
+                        <Box sx={{ height: 300 }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={marketData}>
                                     <CartesianGrid
@@ -184,14 +203,13 @@ const Oligopoly = () => {
                 </Card>
 
                 {/* Key Features */}
-                <Grid container spacing={3}>
+                <Grid container spacing={2}>
                     <Grid item xs={12} md={3}>
                         <Card
                             sx={{
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',
                                 border: '1px solid rgba(255, 255, 255, 0.1)',
                                 textAlign: 'center',
-                                height: '100%',
                             }}
                         >
                             <CardContent>
@@ -200,20 +218,13 @@ const Oligopoly = () => {
                                     label="Cournot & Bertrand"
                                     color="primary"
                                     variant="outlined"
-                                    sx={{ mb: 2 }}
+                                    sx={{ mb: 1 }}
                                 />
-                                <Typography
-                                    variant="h6"
-                                    sx={{ color: 'primary.light', mb: 1 }}
-                                >
-                                    Competition Models
-                                </Typography>
                                 <Typography
                                     variant="body2"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    Supports both quantity and price competition
-                                    models with realistic firm behavior.
+                                    Competition Models
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -224,29 +235,21 @@ const Oligopoly = () => {
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',
                                 border: '1px solid rgba(255, 255, 255, 0.1)',
                                 textAlign: 'center',
-                                height: '100%',
                             }}
                         >
                             <CardContent>
                                 <Chip
                                     icon={<Warning />}
-                                    label="Collusion Detection"
+                                    label="HHI Monitoring"
                                     color="warning"
                                     variant="outlined"
-                                    sx={{ mb: 2 }}
+                                    sx={{ mb: 1 }}
                                 />
-                                <Typography
-                                    variant="h6"
-                                    sx={{ color: 'warning.main', mb: 1 }}
-                                >
-                                    HHI Monitoring
-                                </Typography>
                                 <Typography
                                     variant="body2"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    Real-time monitoring of market concentration
-                                    to detect potential collusion.
+                                    Collusion Detection
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -257,29 +260,21 @@ const Oligopoly = () => {
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',
                                 border: '1px solid rgba(255, 255, 255, 0.1)',
                                 textAlign: 'center',
-                                height: '100%',
                             }}
                         >
                             <CardContent>
                                 <Chip
                                     icon={<Assessment />}
-                                    label="Market Analysis"
+                                    label="Behavioral Analysis"
                                     color="info"
                                     variant="outlined"
-                                    sx={{ mb: 2 }}
+                                    sx={{ mb: 1 }}
                                 />
-                                <Typography
-                                    variant="h6"
-                                    sx={{ color: 'info.main', mb: 1 }}
-                                >
-                                    Behavioral Insights
-                                </Typography>
                                 <Typography
                                     variant="body2"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    Analyzes firm strategies to understand
-                                    competitive dynamics and market behavior.
+                                    Market Insights
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -290,7 +285,6 @@ const Oligopoly = () => {
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',
                                 border: '1px solid rgba(255, 255, 255, 0.1)',
                                 textAlign: 'center',
-                                height: '100%',
                             }}
                         >
                             <CardContent>
@@ -299,20 +293,13 @@ const Oligopoly = () => {
                                     label="Regulatory Response"
                                     color="success"
                                     variant="outlined"
-                                    sx={{ mb: 2 }}
+                                    sx={{ mb: 1 }}
                                 />
-                                <Typography
-                                    variant="h6"
-                                    sx={{ color: 'success.main', mb: 1 }}
-                                >
-                                    Intervention System
-                                </Typography>
                                 <Typography
                                     variant="body2"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    Automatic regulatory intervention with
-                                    penalties when collusion is detected.
+                                    Intervention System
                                 </Typography>
                             </CardContent>
                         </Card>

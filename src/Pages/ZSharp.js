@@ -1,6 +1,14 @@
 import React, { useEffect } from 'react';
-import { Box, Typography, Grid, Card, CardContent, Chip } from '@mui/material';
-import { TrendingUp, Speed, Psychology } from '@mui/icons-material';
+import {
+    Box,
+    Typography,
+    Grid,
+    Card,
+    CardContent,
+    Chip,
+    Button,
+} from '@mui/material';
+import { TrendingUp, Speed, Psychology, GitHub } from '@mui/icons-material';
 import {
     LineChart,
     Line,
@@ -67,26 +75,31 @@ const ZSharp = () => {
                     </Typography>
                     <Typography
                         variant="h6"
-                        sx={{ color: 'text.secondary', marginBottom: 1 }}
+                        sx={{ color: 'text.secondary', marginBottom: 2 }}
                     >
                         Sharpness-Aware Minimization with Z-Score Gradient
                         Filtering
                     </Typography>
-                    <Typography
-                        variant="body1"
+                    <Button
+                        variant="outlined"
+                        startIcon={<GitHub />}
+                        href="https://github.com/bangyen/ZSharp"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         sx={{
-                            color: 'text.secondary',
-                            maxWidth: '800px',
-                            margin: '0 auto',
+                            borderColor: 'primary.light',
+                            color: 'primary.light',
+                            '&:hover': {
+                                borderColor: 'primary.main',
+                                backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                            },
                         }}
                     >
-                        An advanced optimization algorithm that combines SAM
-                        with intelligent gradient filtering to achieve better
-                        generalization and faster convergence in deep learning.
-                    </Typography>
+                        View Repository
+                    </Button>
                 </Box>
 
-                {/* Performance Comparison */}
+                {/* Performance Chart */}
                 <Card
                     sx={{
                         marginBottom: 4,
@@ -104,9 +117,9 @@ const ZSharp = () => {
                                 textAlign: 'center',
                             }}
                         >
-                            Training Accuracy Comparison
+                            Performance Comparison
                         </Typography>
-                        <Box sx={{ height: 400 }}>
+                        <Box sx={{ height: 300 }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={trainingData}>
                                     <CartesianGrid
@@ -167,36 +180,28 @@ const ZSharp = () => {
                 </Card>
 
                 {/* Key Metrics */}
-                <Grid container spacing={3}>
+                <Grid container spacing={2}>
                     <Grid item xs={12} md={4}>
                         <Card
                             sx={{
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',
                                 border: '1px solid rgba(255, 255, 255, 0.1)',
                                 textAlign: 'center',
-                                height: '100%',
                             }}
                         >
                             <CardContent>
                                 <Chip
                                     icon={<TrendingUp />}
-                                    label="+5.22% Accuracy"
+                                    label="+5.22%"
                                     color="success"
                                     variant="outlined"
-                                    sx={{ mb: 2 }}
+                                    sx={{ mb: 1 }}
                                 />
-                                <Typography
-                                    variant="h6"
-                                    sx={{ color: 'success.main', mb: 1 }}
-                                >
-                                    Better Generalization
-                                </Typography>
                                 <Typography
                                     variant="body2"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    ZSharp consistently outperforms standard
-                                    optimizers by finding flatter minima.
+                                    Accuracy Improvement
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -207,29 +212,21 @@ const ZSharp = () => {
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',
                                 border: '1px solid rgba(255, 255, 255, 0.1)',
                                 textAlign: 'center',
-                                height: '100%',
                             }}
                         >
                             <CardContent>
                                 <Chip
                                     icon={<Speed />}
-                                    label="4.4× Speedup"
+                                    label="4.4×"
                                     color="info"
                                     variant="outlined"
-                                    sx={{ mb: 2 }}
+                                    sx={{ mb: 1 }}
                                 />
-                                <Typography
-                                    variant="h6"
-                                    sx={{ color: 'info.main', mb: 1 }}
-                                >
-                                    Faster Training
-                                </Typography>
                                 <Typography
                                     variant="body2"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    Optimized for Apple Silicon with MPS
-                                    acceleration for significant speedup.
+                                    Training Speedup
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -240,29 +237,21 @@ const ZSharp = () => {
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',
                                 border: '1px solid rgba(255, 255, 255, 0.1)',
                                 textAlign: 'center',
-                                height: '100%',
                             }}
                         >
                             <CardContent>
                                 <Chip
                                     icon={<Psychology />}
-                                    label="Smart Filtering"
+                                    label="Smart"
                                     color="warning"
                                     variant="outlined"
-                                    sx={{ mb: 2 }}
+                                    sx={{ mb: 1 }}
                                 />
-                                <Typography
-                                    variant="h6"
-                                    sx={{ color: 'warning.main', mb: 1 }}
-                                >
-                                    Intelligent Gradients
-                                </Typography>
                                 <Typography
                                     variant="body2"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    Uses Z-score normalization to focus
-                                    optimization on critical parameters.
+                                    Gradient Filtering
                                 </Typography>
                             </CardContent>
                         </Card>
