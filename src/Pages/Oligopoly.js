@@ -172,15 +172,10 @@ const Oligopoly = () => {
                                 href="https://github.com/bangyen/Oligopoly"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                sx={{ color: 'primary.light' }}
                             >
                                 <GitHub fontSize="large" />
                             </IconButton>
-                            <IconButton
-                                component="a"
-                                href="/"
-                                sx={{ color: 'primary.light' }}
-                            >
+                            <IconButton component="a" href="/">
                                 <Home fontSize="large" />
                             </IconButton>
                         </Grid>
