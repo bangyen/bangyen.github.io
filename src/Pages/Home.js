@@ -487,6 +487,20 @@ export default function Home() {
                                         the Exascale Era
                                         <OpenInNew fontSize="small" />
                                     </Typography>
+                                    <Box sx={{ marginBottom: 1 }}>
+                                        <Chip
+                                            label="CLUSTER 2023"
+                                            size="small"
+                                            sx={{
+                                                backgroundColor:
+                                                    'rgba(25, 118, 210, 0.1)',
+                                                color: 'primary.light',
+                                                border: '1px solid rgba(25, 118, 210, 0.3)',
+                                                fontSize: '0.75rem',
+                                                height: '24px',
+                                            }}
+                                        />
+                                    </Box>
                                     <Typography
                                         variant="body2"
                                         sx={{ color: 'text.secondary' }}
@@ -534,6 +548,20 @@ export default function Home() {
                                         Practices and Trends
                                         <OpenInNew fontSize="small" />
                                     </Typography>
+                                    <Box sx={{ marginBottom: 1 }}>
+                                        <Chip
+                                            label="SC 2024"
+                                            size="small"
+                                            sx={{
+                                                backgroundColor:
+                                                    'rgba(25, 118, 210, 0.1)',
+                                                color: 'primary.light',
+                                                border: '1px solid rgba(25, 118, 210, 0.3)',
+                                                fontSize: '0.75rem',
+                                                height: '24px',
+                                            }}
+                                        />
+                                    </Box>
                                     <Typography
                                         variant="body2"
                                         sx={{ color: 'text.secondary' }}
