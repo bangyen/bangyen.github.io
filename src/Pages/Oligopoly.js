@@ -333,7 +333,7 @@ const Oligopoly = () => {
 
                 {/* Key Features */}
                 <Grid container spacing={2}>
-                    <Grid item xs={12} md={3}>
+                    <Grid item xs={12} md={6}>
                         <Card
                             sx={{
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',
@@ -358,7 +358,7 @@ const Oligopoly = () => {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} md={3}>
+                    <Grid item xs={12} md={6}>
                         <Card
                             sx={{
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',
@@ -383,7 +383,7 @@ const Oligopoly = () => {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} md={3}>
+                    <Grid item xs={12} md={6}>
                         <Card
                             sx={{
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',
@@ -408,7 +408,7 @@ const Oligopoly = () => {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} md={3}>
+                    <Grid item xs={12} md={6}>
                         <Card
                             sx={{
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',

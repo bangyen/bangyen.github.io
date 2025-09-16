@@ -267,7 +267,7 @@ const ZSharp = () => {
 
                 {/* Key Metrics */}
                 <Grid container spacing={2}>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={6}>
                         <Card
                             sx={{
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',
@@ -292,7 +292,7 @@ const ZSharp = () => {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={6}>
                         <Card
                             sx={{
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',
@@ -317,7 +317,7 @@ const ZSharp = () => {
                             </CardContent>
                         </Card>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={6}>
                         <Card
                             sx={{
                                 backgroundColor: 'rgba(26, 26, 26, 0.9)',
@@ -338,6 +338,31 @@ const ZSharp = () => {
                                     sx={{ color: 'text.secondary' }}
                                 >
                                     Gradient Filtering
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                        <Card
+                            sx={{
+                                backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <CardContent>
+                                <Chip
+                                    icon={<GitHub />}
+                                    label="Open Source"
+                                    color="secondary"
+                                    variant="outlined"
+                                    sx={{ mb: 1 }}
+                                />
+                                <Typography
+                                    variant="body2"
+                                    sx={{ color: 'text.secondary' }}
+                                >
+                                    Available on GitHub
                                 </Typography>
                             </CardContent>
                         </Card>
