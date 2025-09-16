@@ -43,8 +43,8 @@ const generateData = (samRadius, learningRate, momentum, gradientFiltering) => {
 
         data.push({
             epoch: i,
-            sgd: Math.min(0.95, sgdAccuracy),
-            zsharp: Math.min(0.95, zsharpAccuracy),
+            sgd: Math.min(0.98, sgdAccuracy),
+            zsharp: Math.min(0.99, zsharpAccuracy),
         });
     }
     return data;
