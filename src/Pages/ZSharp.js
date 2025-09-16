@@ -45,8 +45,8 @@ const ZSharp = () => {
                     padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
                     boxSizing: 'border-box',
                     width: '100%',
-                    maxWidth: '100vw',
-                    overflowX: 'hidden',
+                    maxWidth: '900px',
+                    margin: '0 auto',
                 }}
             >
                 {/* Header */}
