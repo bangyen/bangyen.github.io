@@ -299,126 +299,6 @@ const ZSharp = () => {
                         Filtering
                     </Typography>
 
-                    {/* View Selection Buttons */}
-                    <Box
-                        sx={{
-                            marginBottom: 3,
-                            display: 'flex',
-                            gap: 1,
-                            flexWrap: 'wrap',
-                            justifyContent: 'center',
-                        }}
-                    >
-                        <Button
-                            variant={
-                                viewType === 'accuracy'
-                                    ? 'contained'
-                                    : 'outlined'
-                            }
-                            size="small"
-                            onClick={() => setViewType('accuracy')}
-                            sx={{
-                                borderColor: 'rgba(255, 255, 255, 0.3)',
-                                color:
-                                    viewType === 'accuracy'
-                                        ? 'white'
-                                        : 'rgba(255,255,255,0.7)',
-                                '&:hover': {
-                                    borderColor: 'primary.main',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                },
-                            }}
-                        >
-                            Accuracy
-                        </Button>
-                        <Button
-                            variant={
-                                viewType === 'loss' ? 'contained' : 'outlined'
-                            }
-                            size="small"
-                            onClick={() => setViewType('loss')}
-                            sx={{
-                                borderColor: 'rgba(255, 255, 255, 0.3)',
-                                color:
-                                    viewType === 'loss'
-                                        ? 'white'
-                                        : 'rgba(255,255,255,0.7)',
-                                '&:hover': {
-                                    borderColor: 'primary.main',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                },
-                            }}
-                        >
-                            Loss
-                        </Button>
-                        <Button
-                            variant={
-                                viewType === 'learning_curve'
-                                    ? 'contained'
-                                    : 'outlined'
-                            }
-                            size="small"
-                            onClick={() => setViewType('learning_curve')}
-                            sx={{
-                                borderColor: 'rgba(255, 255, 255, 0.3)',
-                                color:
-                                    viewType === 'learning_curve'
-                                        ? 'white'
-                                        : 'rgba(255,255,255,0.7)',
-                                '&:hover': {
-                                    borderColor: 'primary.main',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                },
-                            }}
-                        >
-                            Learning Gap
-                        </Button>
-                        <Button
-                            variant={
-                                viewType === 'convergence'
-                                    ? 'contained'
-                                    : 'outlined'
-                            }
-                            size="small"
-                            onClick={() => setViewType('convergence')}
-                            sx={{
-                                borderColor: 'rgba(255, 255, 255, 0.3)',
-                                color:
-                                    viewType === 'convergence'
-                                        ? 'white'
-                                        : 'rgba(255,255,255,0.7)',
-                                '&:hover': {
-                                    borderColor: 'primary.main',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                },
-                            }}
-                        >
-                            Convergence
-                        </Button>
-                        <Button
-                            variant={
-                                viewType === 'summary'
-                                    ? 'contained'
-                                    : 'outlined'
-                            }
-                            size="small"
-                            onClick={() => setViewType('summary')}
-                            sx={{
-                                borderColor: 'rgba(255, 255, 255, 0.3)',
-                                color:
-                                    viewType === 'summary'
-                                        ? 'white'
-                                        : 'rgba(255,255,255,0.7)',
-                                '&:hover': {
-                                    borderColor: 'primary.main',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                },
-                            }}
-                        >
-                            Summary
-                        </Button>
-                    </Box>
-
                     {/* Performance Chart */}
                     <Box
                         sx={{
@@ -711,6 +591,126 @@ const ZSharp = () => {
                                 </ResponsiveContainer>
                             )}
                         </Box>
+                    </Box>
+
+                    {/* View Selection Buttons */}
+                    <Box
+                        sx={{
+                            marginTop: 3,
+                            display: 'flex',
+                            gap: 1,
+                            flexWrap: 'wrap',
+                            justifyContent: 'center',
+                        }}
+                    >
+                        <Button
+                            variant={
+                                viewType === 'accuracy'
+                                    ? 'contained'
+                                    : 'outlined'
+                            }
+                            size="small"
+                            onClick={() => setViewType('accuracy')}
+                            sx={{
+                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                color:
+                                    viewType === 'accuracy'
+                                        ? 'white'
+                                        : 'rgba(255,255,255,0.7)',
+                                '&:hover': {
+                                    borderColor: 'primary.main',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                },
+                            }}
+                        >
+                            Accuracy
+                        </Button>
+                        <Button
+                            variant={
+                                viewType === 'loss' ? 'contained' : 'outlined'
+                            }
+                            size="small"
+                            onClick={() => setViewType('loss')}
+                            sx={{
+                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                color:
+                                    viewType === 'loss'
+                                        ? 'white'
+                                        : 'rgba(255,255,255,0.7)',
+                                '&:hover': {
+                                    borderColor: 'primary.main',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                },
+                            }}
+                        >
+                            Loss
+                        </Button>
+                        <Button
+                            variant={
+                                viewType === 'learning_curve'
+                                    ? 'contained'
+                                    : 'outlined'
+                            }
+                            size="small"
+                            onClick={() => setViewType('learning_curve')}
+                            sx={{
+                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                color:
+                                    viewType === 'learning_curve'
+                                        ? 'white'
+                                        : 'rgba(255,255,255,0.7)',
+                                '&:hover': {
+                                    borderColor: 'primary.main',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                },
+                            }}
+                        >
+                            Learning Gap
+                        </Button>
+                        <Button
+                            variant={
+                                viewType === 'convergence'
+                                    ? 'contained'
+                                    : 'outlined'
+                            }
+                            size="small"
+                            onClick={() => setViewType('convergence')}
+                            sx={{
+                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                color:
+                                    viewType === 'convergence'
+                                        ? 'white'
+                                        : 'rgba(255,255,255,0.7)',
+                                '&:hover': {
+                                    borderColor: 'primary.main',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                },
+                            }}
+                        >
+                            Convergence
+                        </Button>
+                        <Button
+                            variant={
+                                viewType === 'summary'
+                                    ? 'contained'
+                                    : 'outlined'
+                            }
+                            size="small"
+                            onClick={() => setViewType('summary')}
+                            sx={{
+                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                color:
+                                    viewType === 'summary'
+                                        ? 'white'
+                                        : 'rgba(255,255,255,0.7)',
+                                '&:hover': {
+                                    borderColor: 'primary.main',
+                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                                },
+                            }}
+                        >
+                            Summary
+                        </Button>
                     </Box>
                 </Box>
             </Grid>
