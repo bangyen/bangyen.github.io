@@ -5,14 +5,16 @@ import {
     Grid,
     Card,
     CardContent,
-    Chip,
     Button,
     FormControl,
     InputLabel,
     Select,
     MenuItem,
+    Slider,
+    Switch,
+    FormControlLabel,
 } from '@mui/material';
-import { TrendingUp, Speed, Psychology, GitHub } from '@mui/icons-material';
+import { GitHub, Refresh } from '@mui/icons-material';
 import {
     LineChart,
     Line,
@@ -23,43 +25,56 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 
-// Static data for demonstration
-const accuracyData = [
-    { epoch: 0, sgd: 0.65, zsharp: 0.65 },
-    { epoch: 2, sgd: 0.68, zsharp: 0.71 },
-    { epoch: 4, sgd: 0.72, zsharp: 0.78 },
-    { epoch: 6, sgd: 0.75, zsharp: 0.82 },
-    { epoch: 8, sgd: 0.77, zsharp: 0.85 },
-    { epoch: 10, sgd: 0.79, zsharp: 0.87 },
-    { epoch: 12, sgd: 0.81, zsharp: 0.89 },
-    { epoch: 14, sgd: 0.82, zsharp: 0.91 },
-    { epoch: 16, sgd: 0.83, zsharp: 0.92 },
-    { epoch: 18, sgd: 0.84, zsharp: 0.93 },
-    { epoch: 20, sgd: 0.85, zsharp: 0.94 },
-];
+// Generate data based on parameters
+const generateData = (
+    samRadius,
+    learningRate,
+    momentum,
+    gradientFiltering,
+    mpsAcceleration
+) => {
+    const data = [];
+    const baseImprovement = gradientFiltering ? 0.0522 : 0.03;
+    const speedMultiplier = mpsAcceleration ? 4.4 : 1.0;
 
-const speedData = [
-    { epoch: 0, sgd: 0, zsharp: 0 },
-    { epoch: 2, sgd: 0.8, zsharp: 0.2 },
-    { epoch: 4, sgd: 1.6, zsharp: 0.4 },
-    { epoch: 6, sgd: 2.4, zsharp: 0.6 },
-    { epoch: 8, sgd: 3.2, zsharp: 0.8 },
-    { epoch: 10, sgd: 4.0, zsharp: 1.0 },
-    { epoch: 12, sgd: 4.8, zsharp: 1.2 },
-    { epoch: 14, sgd: 5.6, zsharp: 1.4 },
-    { epoch: 16, sgd: 6.4, zsharp: 1.6 },
-    { epoch: 18, sgd: 7.2, zsharp: 1.8 },
-    { epoch: 20, sgd: 8.0, zsharp: 2.0 },
-];
+    for (let i = 0; i <= 20; i++) {
+        const sgdAccuracy = 0.65 + (i / 20) * 0.2;
+        const zsharpAccuracy =
+            sgdAccuracy +
+            baseImprovement +
+            samRadius * 0.1 +
+            learningRate * 0.05;
+
+        data.push({
+            epoch: i,
+            sgd: Math.min(0.95, sgdAccuracy),
+            zsharp: Math.min(0.95, zsharpAccuracy),
+            sgdTime: i * 0.4,
+            zsharpTime: (i * 0.4) / speedMultiplier,
+        });
+    }
+    return data;
+};
 
 const ZSharp = () => {
     const [chartView, setChartView] = useState('accuracy');
+    const [samRadius, setSamRadius] = useState(0.05);
+    const [learningRate, setLearningRate] = useState(0.01);
+    const [momentum, setMomentum] = useState(0.9);
+    const [gradientFiltering, setGradientFiltering] = useState(true);
+    const [mpsAcceleration, setMpsAcceleration] = useState(true);
 
     useEffect(() => {
         document.title = 'ZSharp - Sharpness-Aware Minimization';
     }, []);
 
-    const currentData = chartView === 'accuracy' ? accuracyData : speedData;
+    const currentData = generateData(
+        samRadius,
+        learningRate,
+        momentum,
+        gradientFiltering,
+        mpsAcceleration
+    );
     const chartTitle =
         chartView === 'accuracy'
             ? 'Performance Comparison'
@@ -75,6 +90,14 @@ const ZSharp = () => {
                   `${value.toFixed(1)}h`,
                   name === 'sgd' ? 'SGD' : 'ZSharp',
               ];
+
+    const resetToDefaults = () => {
+        setSamRadius(0.05);
+        setLearningRate(0.01);
+        setMomentum(0.9);
+        setGradientFiltering(true);
+        setMpsAcceleration(true);
+    };
 
     return (
         <Box
@@ -265,109 +288,208 @@ const ZSharp = () => {
                     </CardContent>
                 </Card>
 
-                {/* Key Metrics */}
-                <Grid container spacing={2}>
-                    <Grid item xs={12} md={6}>
-                        <Card
+                {/* Interactive Control Panel */}
+                <Card
+                    sx={{
+                        backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        backdropFilter: 'blur(20px)',
+                    }}
+                >
+                    <CardContent>
+                        <Box
                             sx={{
-                                backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                textAlign: 'center',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: 3,
                             }}
                         >
-                            <CardContent>
-                                <Chip
-                                    icon={<TrendingUp />}
-                                    label="+5.22%"
-                                    color="success"
-                                    variant="outlined"
-                                    sx={{ mb: 1 }}
-                                />
-                                <Typography
-                                    variant="body2"
-                                    sx={{ color: 'text.secondary' }}
+                            <Typography
+                                variant="h6"
+                                sx={{ color: 'primary.light' }}
+                            >
+                                Parameter Controls
+                            </Typography>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                startIcon={<Refresh />}
+                                onClick={resetToDefaults}
+                                sx={{
+                                    borderColor: 'rgba(255,255,255,0.3)',
+                                    color: 'rgba(255,255,255,0.7)',
+                                    '&:hover': {
+                                        borderColor: 'primary.main',
+                                        backgroundColor:
+                                            'rgba(25, 118, 210, 0.1)',
+                                    },
+                                }}
+                            >
+                                Reset
+                            </Button>
+                        </Box>
+
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} md={6}>
+                                <Box sx={{ marginBottom: 2 }}>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ color: 'text.secondary', mb: 1 }}
+                                    >
+                                        SAM Perturbation Radius:{' '}
+                                        {samRadius.toFixed(2)}
+                                    </Typography>
+                                    <Slider
+                                        value={samRadius}
+                                        onChange={(e, value) =>
+                                            setSamRadius(value)
+                                        }
+                                        min={0.01}
+                                        max={0.2}
+                                        step={0.01}
+                                        sx={{
+                                            color: 'primary.main',
+                                            '& .MuiSlider-thumb': {
+                                                backgroundColor: 'primary.main',
+                                            },
+                                            '& .MuiSlider-track': {
+                                                backgroundColor: 'primary.main',
+                                            },
+                                            '& .MuiSlider-rail': {
+                                                backgroundColor:
+                                                    'rgba(255,255,255,0.2)',
+                                            },
+                                        }}
+                                    />
+                                </Box>
+
+                                <Box sx={{ marginBottom: 2 }}>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ color: 'text.secondary', mb: 1 }}
+                                    >
+                                        Learning Rate: {learningRate.toFixed(3)}
+                                    </Typography>
+                                    <Slider
+                                        value={learningRate}
+                                        onChange={(e, value) =>
+                                            setLearningRate(value)
+                                        }
+                                        min={0.001}
+                                        max={0.1}
+                                        step={0.001}
+                                        sx={{
+                                            color: 'success.main',
+                                            '& .MuiSlider-thumb': {
+                                                backgroundColor: 'success.main',
+                                            },
+                                            '& .MuiSlider-track': {
+                                                backgroundColor: 'success.main',
+                                            },
+                                            '& .MuiSlider-rail': {
+                                                backgroundColor:
+                                                    'rgba(255,255,255,0.2)',
+                                            },
+                                        }}
+                                    />
+                                </Box>
+                            </Grid>
+
+                            <Grid item xs={12} md={6}>
+                                <Box sx={{ marginBottom: 2 }}>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ color: 'text.secondary', mb: 1 }}
+                                    >
+                                        Momentum: {momentum.toFixed(2)}
+                                    </Typography>
+                                    <Slider
+                                        value={momentum}
+                                        onChange={(e, value) =>
+                                            setMomentum(value)
+                                        }
+                                        min={0.5}
+                                        max={0.99}
+                                        step={0.01}
+                                        sx={{
+                                            color: 'warning.main',
+                                            '& .MuiSlider-thumb': {
+                                                backgroundColor: 'warning.main',
+                                            },
+                                            '& .MuiSlider-track': {
+                                                backgroundColor: 'warning.main',
+                                            },
+                                            '& .MuiSlider-rail': {
+                                                backgroundColor:
+                                                    'rgba(255,255,255,0.2)',
+                                            },
+                                        }}
+                                    />
+                                </Box>
+
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: 1,
+                                    }}
                                 >
-                                    Accuracy Improvement
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Card
-                            sx={{
-                                backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                textAlign: 'center',
-                            }}
-                        >
-                            <CardContent>
-                                <Chip
-                                    icon={<Speed />}
-                                    label="4.4×"
-                                    color="info"
-                                    variant="outlined"
-                                    sx={{ mb: 1 }}
-                                />
-                                <Typography
-                                    variant="body2"
-                                    sx={{ color: 'text.secondary' }}
-                                >
-                                    Training Speedup
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Card
-                            sx={{
-                                backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                textAlign: 'center',
-                            }}
-                        >
-                            <CardContent>
-                                <Chip
-                                    icon={<Psychology />}
-                                    label="Smart"
-                                    color="warning"
-                                    variant="outlined"
-                                    sx={{ mb: 1 }}
-                                />
-                                <Typography
-                                    variant="body2"
-                                    sx={{ color: 'text.secondary' }}
-                                >
-                                    Gradient Filtering
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                        <Card
-                            sx={{
-                                backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                textAlign: 'center',
-                            }}
-                        >
-                            <CardContent>
-                                <Chip
-                                    icon={<GitHub />}
-                                    label="Open Source"
-                                    color="secondary"
-                                    variant="outlined"
-                                    sx={{ mb: 1 }}
-                                />
-                                <Typography
-                                    variant="body2"
-                                    sx={{ color: 'text.secondary' }}
-                                >
-                                    Available on GitHub
-                                </Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                </Grid>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={gradientFiltering}
+                                                onChange={e =>
+                                                    setGradientFiltering(
+                                                        e.target.checked
+                                                    )
+                                                }
+                                                sx={{
+                                                    '& .MuiSwitch-switchBase.Mui-checked':
+                                                        {
+                                                            color: 'info.main',
+                                                        },
+                                                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track':
+                                                        {
+                                                            backgroundColor:
+                                                                'info.main',
+                                                        },
+                                                }}
+                                            />
+                                        }
+                                        label="Gradient Filtering"
+                                        sx={{ color: 'text.secondary' }}
+                                    />
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={mpsAcceleration}
+                                                onChange={e =>
+                                                    setMpsAcceleration(
+                                                        e.target.checked
+                                                    )
+                                                }
+                                                sx={{
+                                                    '& .MuiSwitch-switchBase.Mui-checked':
+                                                        {
+                                                            color: 'secondary.main',
+                                                        },
+                                                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track':
+                                                        {
+                                                            backgroundColor:
+                                                                'secondary.main',
+                                                        },
+                                                }}
+                                            />
+                                        }
+                                        label="MPS Acceleration"
+                                        sx={{ color: 'text.secondary' }}
+                                    />
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
             </Box>
         </Box>
     );
