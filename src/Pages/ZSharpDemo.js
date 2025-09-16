@@ -33,7 +33,7 @@ import {
     Bar,
 } from 'recharts';
 
-// Mock data for demonstration
+// Mock data for simulation
 const generateTrainingData = (epochs, optimizerType, baseAccuracy = 0.6) => {
     const data = [];
     const improvement = optimizerType === 'zsharp' ? 0.0522 : 0;
@@ -148,7 +148,7 @@ const ZSharpDemo = () => {
                         WebkitTextFillColor: 'transparent',
                     }}
                 >
-                    ZSharp Demo
+                    ZSharp
                 </Typography>
                 <Typography
                     variant="h6"
@@ -164,9 +164,9 @@ const ZSharpDemo = () => {
                         margin: '0 auto',
                     }}
                 >
-                    Interactive demonstration of ZSharp optimizer showing
-                    gradient filtering, training curves, and performance
-                    improvements over standard SGD.
+                    Interactive ZSharp optimizer showing gradient filtering,
+                    training curves, and performance improvements over standard
+                    SGD.
                 </Typography>
             </Box>
 

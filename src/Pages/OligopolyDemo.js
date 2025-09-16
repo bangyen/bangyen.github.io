@@ -157,7 +157,7 @@ const OligopolyDemo = () => {
                         WebkitTextFillColor: 'transparent',
                     }}
                 >
-                    Oligopoly Demo
+                    Oligopoly
                 </Typography>
                 <Typography
                     variant="h6"
