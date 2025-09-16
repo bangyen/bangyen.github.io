@@ -3,7 +3,7 @@ import { CustomGrid } from '../helpers';
 import Grid from '@mui/material/Grid2';
 import { Toolbar } from './Toolbar';
 
-import { Typography, TextField, Box } from '@mui/material';
+import { Typography, TextField } from '@mui/material';
 
 import React, { createContext, useContext } from 'react';
 

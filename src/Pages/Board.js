@@ -90,7 +90,7 @@ export function usePalette(score) {
         const secondary = colors.blue[900]; // Very dark blue for "off" state (#0d47a1)
 
         return { primary, secondary };
-    }, [score]); // Keep score dependency for consistency but ignore it
+    }, []); // Removed score dependency since we're using fixed colors
 
     return palette;
 }
