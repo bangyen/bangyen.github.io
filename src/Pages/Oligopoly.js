@@ -140,738 +140,786 @@ const Oligopoly = () => {
                 minHeight: '100vh',
                 background:
                     'linear-gradient(135deg, #0a0a0a 0%, #0e0e0e 50%, #0a0a0a 100%)',
-                color: 'white',
-                padding: { xs: 2, sm: 3, md: 4 },
-                maxWidth: '1400px',
-                margin: '0 auto',
-                width: '100%',
-                boxSizing: 'border-box',
             }}
         >
-            {/* Header */}
-            <Box sx={{ textAlign: 'center', marginBottom: 4 }}>
-                <Typography
-                    variant="h3"
-                    sx={{
-                        fontWeight: 700,
-                        marginBottom: 2,
-                        background: 'linear-gradient(135deg, #ffffff, #808080)',
-                        backgroundClip: 'text',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
-                    }}
-                >
-                    Oligopoly
-                </Typography>
-                <Typography
-                    variant="h6"
-                    sx={{ color: 'text.secondary', marginBottom: 1 }}
-                >
-                    Agent-Based Economic Modeling & Collusion Detection
-                </Typography>
-                <Typography
-                    variant="body1"
-                    sx={{
-                        color: 'text.secondary',
-                        maxWidth: '800px',
-                        margin: '0 auto',
-                    }}
-                >
-                    Interactive simulation of oligopoly market competition with
-                    real-time firm behavior, collusion detection, and regulatory
-                    intervention analysis.
-                </Typography>
-            </Box>
-
-            {/* Control Panel */}
-            <Card
+            <Box
                 sx={{
-                    marginBottom: 4,
-                    backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    backdropFilter: 'blur(20px)',
+                    color: 'white',
+                    padding: { xs: 2, sm: 3, md: 4 },
+                    maxWidth: '1400px',
+                    margin: '0 auto',
+                    width: '100%',
+                    boxSizing: 'border-box',
                 }}
             >
-                <CardContent>
-                    <Grid container spacing={3}>
-                        {/* Simulation Controls */}
-                        <Grid item xs={12} md={6}>
-                            <Typography
-                                variant="h6"
-                                sx={{ marginBottom: 2, color: 'primary.light' }}
-                            >
-                                Simulation Controls
-                            </Typography>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    gap: 1,
-                                    marginBottom: 2,
-                                }}
-                            >
-                                <Button
-                                    variant="contained"
-                                    startIcon={<PlayArrow />}
-                                    onClick={handleStart}
-                                    disabled={isRunning}
-                                    sx={{ backgroundColor: 'success.main' }}
-                                >
-                                    Start
-                                </Button>
-                                <Button
-                                    variant="outlined"
-                                    startIcon={<Pause />}
-                                    onClick={handlePause}
-                                    disabled={!isRunning}
-                                >
-                                    Pause
-                                </Button>
-                                <Button
-                                    variant="outlined"
-                                    startIcon={<Stop />}
-                                    onClick={handleStop}
-                                >
-                                    Stop
-                                </Button>
-                                <Button
-                                    variant="outlined"
-                                    startIcon={<Refresh />}
-                                    onClick={handleReset}
-                                >
-                                    Reset
-                                </Button>
-                            </Box>
+                {/* Header */}
+                <Box sx={{ textAlign: 'center', marginBottom: 4 }}>
+                    <Typography
+                        variant="h3"
+                        sx={{
+                            fontWeight: 700,
+                            marginBottom: 2,
+                            background:
+                                'linear-gradient(135deg, #ffffff, #808080)',
+                            backgroundClip: 'text',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                        }}
+                    >
+                        Oligopoly
+                    </Typography>
+                    <Typography
+                        variant="h6"
+                        sx={{ color: 'text.secondary', marginBottom: 1 }}
+                    >
+                        Agent-Based Economic Modeling & Collusion Detection
+                    </Typography>
+                    <Typography
+                        variant="body1"
+                        sx={{
+                            color: 'text.secondary',
+                            maxWidth: '800px',
+                            margin: '0 auto',
+                        }}
+                    >
+                        Interactive simulation of oligopoly market competition
+                        with real-time firm behavior, collusion detection, and
+                        regulatory intervention analysis.
+                    </Typography>
+                </Box>
 
-                            <Box sx={{ marginBottom: 2 }}>
+                {/* Control Panel */}
+                <Card
+                    sx={{
+                        marginBottom: 4,
+                        backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        backdropFilter: 'blur(20px)',
+                    }}
+                >
+                    <CardContent>
+                        <Grid container spacing={3}>
+                            {/* Simulation Controls */}
+                            <Grid item xs={12} md={6}>
                                 <Typography
-                                    variant="body2"
-                                    sx={{ marginBottom: 1 }}
+                                    variant="h6"
+                                    sx={{
+                                        marginBottom: 2,
+                                        color: 'primary.light',
+                                    }}
                                 >
-                                    Round: {currentRound + 1} / {maxRounds}
+                                    Simulation Controls
                                 </Typography>
-                                <LinearProgress
-                                    variant="determinate"
-                                    value={
-                                        ((currentRound + 1) / maxRounds) * 100
-                                    }
-                                    sx={{ height: 8, borderRadius: 4 }}
-                                />
-                            </Box>
-                        </Grid>
-
-                        {/* Market Parameters */}
-                        <Grid item xs={12} md={6}>
-                            <Typography
-                                variant="h6"
-                                sx={{ marginBottom: 2, color: 'primary.light' }}
-                            >
-                                Market Parameters
-                            </Typography>
-
-                            <Box sx={{ marginBottom: 2 }}>
-                                <FormControl fullWidth sx={{ marginBottom: 2 }}>
-                                    <InputLabel>Model Type</InputLabel>
-                                    <Select
-                                        value={modelType}
-                                        onChange={e =>
-                                            setModelType(e.target.value)
-                                        }
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        gap: 1,
+                                        marginBottom: 2,
+                                    }}
+                                >
+                                    <Button
+                                        variant="contained"
+                                        startIcon={<PlayArrow />}
+                                        onClick={handleStart}
                                         disabled={isRunning}
+                                        sx={{ backgroundColor: 'success.main' }}
                                     >
-                                        <MenuItem value="cournot">
-                                            Cournot (Quantity Competition)
-                                        </MenuItem>
-                                        <MenuItem value="bertrand">
-                                            Bertrand (Price Competition)
-                                        </MenuItem>
-                                    </Select>
-                                </FormControl>
-                            </Box>
+                                        Start
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        startIcon={<Pause />}
+                                        onClick={handlePause}
+                                        disabled={!isRunning}
+                                    >
+                                        Pause
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        startIcon={<Stop />}
+                                        onClick={handleStop}
+                                    >
+                                        Stop
+                                    </Button>
+                                    <Button
+                                        variant="outlined"
+                                        startIcon={<Refresh />}
+                                        onClick={handleReset}
+                                    >
+                                        Reset
+                                    </Button>
+                                </Box>
 
-                            <Box sx={{ marginBottom: 2 }}>
+                                <Box sx={{ marginBottom: 2 }}>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ marginBottom: 1 }}
+                                    >
+                                        Round: {currentRound + 1} / {maxRounds}
+                                    </Typography>
+                                    <LinearProgress
+                                        variant="determinate"
+                                        value={
+                                            ((currentRound + 1) / maxRounds) *
+                                            100
+                                        }
+                                        sx={{ height: 8, borderRadius: 4 }}
+                                    />
+                                </Box>
+                            </Grid>
+
+                            {/* Market Parameters */}
+                            <Grid item xs={12} md={6}>
                                 <Typography
-                                    variant="body2"
-                                    sx={{ marginBottom: 1 }}
+                                    variant="h6"
+                                    sx={{
+                                        marginBottom: 2,
+                                        color: 'primary.light',
+                                    }}
                                 >
-                                    Number of Firms: {numFirms}
+                                    Market Parameters
                                 </Typography>
-                                <Slider
-                                    value={numFirms}
-                                    onChange={(e, value) => setNumFirms(value)}
-                                    min={2}
-                                    max={5}
-                                    step={1}
-                                    disabled={isRunning}
-                                />
-                            </Box>
 
-                            <Box sx={{ marginBottom: 2 }}>
-                                <Typography
-                                    variant="body2"
-                                    sx={{ marginBottom: 1 }}
-                                >
-                                    Demand Parameter A: {demandA}
-                                </Typography>
-                                <Slider
-                                    value={demandA}
-                                    onChange={(e, value) => setDemandA(value)}
-                                    min={50}
-                                    max={200}
-                                    step={10}
-                                    disabled={isRunning}
-                                />
-                            </Box>
-
-                            <Box sx={{ marginBottom: 2 }}>
-                                <Typography
-                                    variant="body2"
-                                    sx={{ marginBottom: 1 }}
-                                >
-                                    Demand Parameter B: {demandB}
-                                </Typography>
-                                <Slider
-                                    value={demandB}
-                                    onChange={(e, value) => setDemandB(value)}
-                                    min={0.5}
-                                    max={5}
-                                    step={0.1}
-                                    disabled={isRunning}
-                                />
-                            </Box>
-
-                            <Box sx={{ display: 'flex', gap: 2 }}>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={collusionEnabled}
+                                <Box sx={{ marginBottom: 2 }}>
+                                    <FormControl
+                                        fullWidth
+                                        sx={{ marginBottom: 2 }}
+                                    >
+                                        <InputLabel>Model Type</InputLabel>
+                                        <Select
+                                            value={modelType}
                                             onChange={e =>
-                                                setCollusionEnabled(
-                                                    e.target.checked
-                                                )
+                                                setModelType(e.target.value)
                                             }
                                             disabled={isRunning}
-                                        />
-                                    }
-                                    label="Collusion Enabled"
-                                />
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={regulatorEnabled}
-                                            onChange={e =>
-                                                setRegulatorEnabled(
-                                                    e.target.checked
-                                                )
-                                            }
-                                            disabled={isRunning}
-                                        />
-                                    }
-                                    label="Regulator Enabled"
-                                />
-                            </Box>
-                        </Grid>
-                    </Grid>
-                </CardContent>
-            </Card>
+                                        >
+                                            <MenuItem value="cournot">
+                                                Cournot (Quantity Competition)
+                                            </MenuItem>
+                                            <MenuItem value="bertrand">
+                                                Bertrand (Price Competition)
+                                            </MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Box>
 
-            {/* Market Metrics */}
-            <Grid container spacing={3} sx={{ marginBottom: 4 }}>
-                <Grid item xs={12} md={3}>
-                    <Card
-                        sx={{
-                            backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            textAlign: 'center',
-                        }}
-                    >
-                        <CardContent>
-                            <Typography
-                                variant="h4"
-                                sx={{ color: 'primary.light', fontWeight: 700 }}
-                            >
-                                ${currentPrice.toFixed(2)}
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                sx={{ color: 'text.secondary' }}
-                            >
-                                Market Price
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} md={3}>
-                    <Card
-                        sx={{
-                            backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            textAlign: 'center',
-                        }}
-                    >
-                        <CardContent>
-                            <Typography
-                                variant="h4"
-                                sx={{ color: 'success.main', fontWeight: 700 }}
-                            >
-                                {(currentHHI * 100).toFixed(1)}%
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                sx={{ color: 'text.secondary' }}
-                            >
-                                HHI Concentration
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} md={3}>
-                    <Card
-                        sx={{
-                            backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            textAlign: 'center',
-                        }}
-                    >
-                        <CardContent>
-                            <Typography
-                                variant="h4"
-                                sx={{
-                                    color: isColluding
-                                        ? 'warning.main'
-                                        : 'success.main',
-                                    fontWeight: 700,
-                                }}
-                            >
-                                {isColluding ? 'DETECTED' : 'NORMAL'}
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                sx={{ color: 'text.secondary' }}
-                            >
-                                Collusion Status
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} md={3}>
-                    <Card
-                        sx={{
-                            backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            textAlign: 'center',
-                        }}
-                    >
-                        <CardContent>
-                            <Typography
-                                variant="h4"
-                                sx={{ color: 'info.main', fontWeight: 700 }}
-                            >
-                                {numFirms}
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                                sx={{ color: 'text.secondary' }}
-                            >
-                                Active Firms
-                            </Typography>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            </Grid>
-
-            {/* Market Dynamics Charts */}
-            <Card
-                sx={{
-                    marginBottom: 4,
-                    backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                }}
-            >
-                <CardContent>
-                    <Typography
-                        variant="h6"
-                        sx={{ marginBottom: 3, color: 'primary.light' }}
-                    >
-                        Market Dynamics Over Time
-                    </Typography>
-
-                    <Box sx={{ height: 400 }}>
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart
-                                data={marketData.slice(0, currentRound + 1)}
-                            >
-                                <CartesianGrid
-                                    strokeDasharray="3 3"
-                                    stroke="rgba(255,255,255,0.1)"
-                                />
-                                <XAxis
-                                    dataKey="round"
-                                    stroke="rgba(255,255,255,0.7)"
-                                    tick={{ fill: 'rgba(255,255,255,0.7)' }}
-                                />
-                                <YAxis
-                                    stroke="rgba(255,255,255,0.7)"
-                                    tick={{ fill: 'rgba(255,255,255,0.7)' }}
-                                />
-                                <RechartsTooltip
-                                    contentStyle={{
-                                        backgroundColor:
-                                            'rgba(26, 26, 26, 0.9)',
-                                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                                        borderRadius: 8,
-                                        color: 'white',
-                                    }}
-                                />
-                                <Area
-                                    type="monotone"
-                                    dataKey="marketPrice"
-                                    stroke="#1976d2"
-                                    fill="rgba(25, 118, 210, 0.3)"
-                                    name="Market Price"
-                                />
-                                <Area
-                                    type="monotone"
-                                    dataKey="totalQuantity"
-                                    stroke="#2e7d32"
-                                    fill="rgba(46, 125, 50, 0.3)"
-                                    name="Total Quantity"
-                                />
-                            </AreaChart>
-                        </ResponsiveContainer>
-                    </Box>
-                </CardContent>
-            </Card>
-
-            {/* Firm Behavior and Collusion Detection */}
-            <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                    <Card
-                        sx={{
-                            backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                        }}
-                    >
-                        <CardContent>
-                            <Typography
-                                variant="h6"
-                                sx={{ marginBottom: 3, color: 'primary.light' }}
-                            >
-                                Firm Behavior Analysis
-                            </Typography>
-
-                            <Box sx={{ height: 300 }}>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <LineChart
-                                        data={marketData.slice(
-                                            0,
-                                            currentRound + 1
-                                        )}
+                                <Box sx={{ marginBottom: 2 }}>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ marginBottom: 1 }}
                                     >
-                                        <CartesianGrid
-                                            strokeDasharray="3 3"
-                                            stroke="rgba(255,255,255,0.1)"
-                                        />
-                                        <XAxis
-                                            dataKey="round"
-                                            stroke="rgba(255,255,255,0.7)"
-                                            tick={{
-                                                fill: 'rgba(255,255,255,0.7)',
-                                                fontSize: 10,
-                                            }}
-                                        />
-                                        <YAxis
-                                            stroke="rgba(255,255,255,0.7)"
-                                            tick={{
-                                                fill: 'rgba(255,255,255,0.7)',
-                                            }}
-                                        />
-                                        <RechartsTooltip
-                                            contentStyle={{
-                                                backgroundColor:
-                                                    'rgba(26, 26, 26, 0.9)',
-                                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                                borderRadius: 8,
-                                                color: 'white',
-                                            }}
-                                        />
-                                        {Array.from(
-                                            { length: numFirms },
-                                            (_, i) => (
-                                                <Line
-                                                    key={i}
-                                                    type="monotone"
-                                                    dataKey={`firm${i + 1}_profit`}
-                                                    stroke={firmColors[i]}
-                                                    strokeWidth={2}
-                                                    name={`Firm ${i + 1} Profit`}
-                                                    dot={false}
-                                                />
-                                            )
-                                        )}
-                                    </LineChart>
-                                </ResponsiveContainer>
-                            </Box>
+                                        Number of Firms: {numFirms}
+                                    </Typography>
+                                    <Slider
+                                        value={numFirms}
+                                        onChange={(e, value) =>
+                                            setNumFirms(value)
+                                        }
+                                        min={2}
+                                        max={5}
+                                        step={1}
+                                        disabled={isRunning}
+                                    />
+                                </Box>
 
-                            <Alert
-                                severity="info"
-                                sx={{
-                                    marginTop: 2,
-                                    backgroundColor: 'rgba(25, 118, 210, 0.1)',
-                                }}
-                            >
-                                <Typography variant="body2">
-                                    Firms compete using different strategies:
-                                    Tit-for-Tat, Static, and Random Walk. Profit
-                                    patterns reveal competitive dynamics and
-                                    potential collusion.
-                                </Typography>
-                            </Alert>
-                        </CardContent>
-                    </Card>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                    <Card
-                        sx={{
-                            backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                        }}
-                    >
-                        <CardContent>
-                            <Typography
-                                variant="h6"
-                                sx={{ marginBottom: 3, color: 'primary.light' }}
-                            >
-                                Collusion Detection & HHI
-                            </Typography>
-
-                            <Box sx={{ height: 300 }}>
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <LineChart
-                                        data={marketData.slice(
-                                            0,
-                                            currentRound + 1
-                                        )}
+                                <Box sx={{ marginBottom: 2 }}>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ marginBottom: 1 }}
                                     >
-                                        <CartesianGrid
-                                            strokeDasharray="3 3"
-                                            stroke="rgba(255,255,255,0.1)"
-                                        />
-                                        <XAxis
-                                            dataKey="round"
-                                            stroke="rgba(255,255,255,0.7)"
-                                            tick={{
-                                                fill: 'rgba(255,255,255,0.7)',
-                                                fontSize: 10,
-                                            }}
-                                        />
-                                        <YAxis
-                                            stroke="rgba(255,255,255,0.7)"
-                                            tick={{
-                                                fill: 'rgba(255,255,255,0.7)',
-                                            }}
-                                        />
-                                        <RechartsTooltip
-                                            contentStyle={{
-                                                backgroundColor:
-                                                    'rgba(26, 26, 26, 0.9)',
-                                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                                borderRadius: 8,
-                                                color: 'white',
-                                            }}
-                                        />
-                                        <Line
-                                            type="monotone"
-                                            dataKey="hhi"
-                                            stroke="#f57c00"
-                                            strokeWidth={3}
-                                            name="HHI Concentration"
-                                            dot={false}
-                                        />
-                                        <Line
-                                            type="monotone"
-                                            dataKey={data =>
-                                                data.collusionDetected
-                                                    ? 0.8
-                                                    : 0.2
-                                            }
-                                            stroke="#d32f2f"
-                                            strokeWidth={2}
-                                            name="Collusion Detected"
-                                            dot={false}
-                                        />
-                                    </LineChart>
-                                </ResponsiveContainer>
-                            </Box>
+                                        Demand Parameter A: {demandA}
+                                    </Typography>
+                                    <Slider
+                                        value={demandA}
+                                        onChange={(e, value) =>
+                                            setDemandA(value)
+                                        }
+                                        min={50}
+                                        max={200}
+                                        step={10}
+                                        disabled={isRunning}
+                                    />
+                                </Box>
 
-                            <Alert
-                                severity={isColluding ? 'warning' : 'success'}
-                                sx={{ marginTop: 2 }}
-                            >
-                                <Typography variant="body2">
-                                    {isColluding
-                                        ? `Collusion detected! HHI: ${(currentHHI * 100).toFixed(1)}% exceeds threshold.`
-                                        : `Market operating normally. HHI: ${(currentHHI * 100).toFixed(1)}% within acceptable range.`}
-                                </Typography>
-                            </Alert>
-                        </CardContent>
-                    </Card>
-                </Grid>
-            </Grid>
+                                <Box sx={{ marginBottom: 2 }}>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ marginBottom: 1 }}
+                                    >
+                                        Demand Parameter B: {demandB}
+                                    </Typography>
+                                    <Slider
+                                        value={demandB}
+                                        onChange={(e, value) =>
+                                            setDemandB(value)
+                                        }
+                                        min={0.5}
+                                        max={5}
+                                        step={0.1}
+                                        disabled={isRunning}
+                                    />
+                                </Box>
 
-            {/* Economic Model Overview */}
-            <Card
-                sx={{
-                    marginTop: 4,
-                    backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                }}
-            >
-                <CardContent>
-                    <Typography
-                        variant="h6"
-                        sx={{ marginBottom: 3, color: 'primary.light' }}
-                    >
-                        Economic Model Overview
-                    </Typography>
-
-                    <Grid container spacing={3}>
-                        <Grid item xs={12} md={4}>
-                            <Box sx={{ marginBottom: 2 }}>
-                                <Typography
-                                    variant="subtitle2"
-                                    sx={{
-                                        color: 'success.main',
-                                        marginBottom: 1,
-                                    }}
-                                >
-                                    1. Market Structure
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    sx={{
-                                        color: 'text.secondary',
-                                        marginBottom: 2,
-                                    }}
-                                >
-                                    {modelType === 'cournot'
-                                        ? 'Cournot competition: Firms simultaneously choose quantities to maximize profits.'
-                                        : 'Bertrand competition: Firms simultaneously choose prices to maximize profits.'}
-                                </Typography>
-                            </Box>
-
-                            <Box sx={{ marginBottom: 2 }}>
-                                <Typography
-                                    variant="subtitle2"
-                                    sx={{
-                                        color: 'warning.main',
-                                        marginBottom: 1,
-                                    }}
-                                >
-                                    2. Demand Function
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    sx={{
-                                        color: 'text.secondary',
-                                        marginBottom: 2,
-                                    }}
-                                >
-                                    Linear inverse demand: P(Q) = {demandA} -{' '}
-                                    {demandB} × Q
-                                </Typography>
-                            </Box>
+                                <Box sx={{ display: 'flex', gap: 2 }}>
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={collusionEnabled}
+                                                onChange={e =>
+                                                    setCollusionEnabled(
+                                                        e.target.checked
+                                                    )
+                                                }
+                                                disabled={isRunning}
+                                            />
+                                        }
+                                        label="Collusion Enabled"
+                                    />
+                                    <FormControlLabel
+                                        control={
+                                            <Switch
+                                                checked={regulatorEnabled}
+                                                onChange={e =>
+                                                    setRegulatorEnabled(
+                                                        e.target.checked
+                                                    )
+                                                }
+                                                disabled={isRunning}
+                                            />
+                                        }
+                                        label="Regulator Enabled"
+                                    />
+                                </Box>
+                            </Grid>
                         </Grid>
+                    </CardContent>
+                </Card>
 
-                        <Grid item xs={12} md={4}>
-                            <Box sx={{ marginBottom: 2 }}>
+                {/* Market Metrics */}
+                <Grid container spacing={3} sx={{ marginBottom: 4 }}>
+                    <Grid item xs={12} md={3}>
+                        <Card
+                            sx={{
+                                backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <CardContent>
                                 <Typography
-                                    variant="subtitle2"
-                                    sx={{ color: 'info.main', marginBottom: 1 }}
-                                >
-                                    3. Collusion Detection
-                                </Typography>
-                                <Typography
-                                    variant="body2"
+                                    variant="h4"
                                     sx={{
-                                        color: 'text.secondary',
-                                        marginBottom: 2,
+                                        color: 'primary.light',
+                                        fontWeight: 700,
                                     }}
                                 >
-                                    Monitors HHI concentration index and price
-                                    patterns to detect cartel behavior.
-                                </Typography>
-                            </Box>
-
-                            <Box sx={{ marginBottom: 2 }}>
-                                <Typography
-                                    variant="subtitle2"
-                                    sx={{
-                                        color: 'secondary.light',
-                                        marginBottom: 1,
-                                    }}
-                                >
-                                    4. Regulatory Intervention
+                                    ${currentPrice.toFixed(2)}
                                 </Typography>
                                 <Typography
                                     variant="body2"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    Automatic penalties and price caps when
-                                    collusion thresholds are exceeded.
+                                    Market Price
                                 </Typography>
-                            </Box>
-                        </Grid>
-
-                        <Grid item xs={12} md={4}>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    gap: 1,
-                                    flexWrap: 'wrap',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Chip
-                                    icon={<Business />}
-                                    label={`${numFirms} Firms`}
-                                    color="primary"
-                                    variant="outlined"
-                                />
-                                <Chip
-                                    icon={<Assessment />}
-                                    label={
-                                        modelType === 'cournot'
-                                            ? 'Quantity'
-                                            : 'Price'
-                                    }
-                                    color="success"
-                                    variant="outlined"
-                                />
-                                <Chip
-                                    icon={<Warning />}
-                                    label={
-                                        collusionEnabled
-                                            ? 'Collusion On'
-                                            : 'Collusion Off'
-                                    }
-                                    color="warning"
-                                    variant="outlined"
-                                />
-                                <Chip
-                                    icon={<Timeline />}
-                                    label={`${maxRounds} Rounds`}
-                                    color="info"
-                                    variant="outlined"
-                                />
-                            </Box>
-                        </Grid>
+                            </CardContent>
+                        </Card>
                     </Grid>
-                </CardContent>
-            </Card>
+
+                    <Grid item xs={12} md={3}>
+                        <Card
+                            sx={{
+                                backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <CardContent>
+                                <Typography
+                                    variant="h4"
+                                    sx={{
+                                        color: 'success.main',
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    {(currentHHI * 100).toFixed(1)}%
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    sx={{ color: 'text.secondary' }}
+                                >
+                                    HHI Concentration
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    <Grid item xs={12} md={3}>
+                        <Card
+                            sx={{
+                                backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <CardContent>
+                                <Typography
+                                    variant="h4"
+                                    sx={{
+                                        color: isColluding
+                                            ? 'warning.main'
+                                            : 'success.main',
+                                        fontWeight: 700,
+                                    }}
+                                >
+                                    {isColluding ? 'DETECTED' : 'NORMAL'}
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    sx={{ color: 'text.secondary' }}
+                                >
+                                    Collusion Status
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    <Grid item xs={12} md={3}>
+                        <Card
+                            sx={{
+                                backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <CardContent>
+                                <Typography
+                                    variant="h4"
+                                    sx={{ color: 'info.main', fontWeight: 700 }}
+                                >
+                                    {numFirms}
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    sx={{ color: 'text.secondary' }}
+                                >
+                                    Active Firms
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                </Grid>
+
+                {/* Market Dynamics Charts */}
+                <Card
+                    sx={{
+                        marginBottom: 4,
+                        backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                    }}
+                >
+                    <CardContent>
+                        <Typography
+                            variant="h6"
+                            sx={{ marginBottom: 3, color: 'primary.light' }}
+                        >
+                            Market Dynamics Over Time
+                        </Typography>
+
+                        <Box sx={{ height: 400 }}>
+                            <ResponsiveContainer width="100%" height="100%">
+                                <AreaChart
+                                    data={marketData.slice(0, currentRound + 1)}
+                                >
+                                    <CartesianGrid
+                                        strokeDasharray="3 3"
+                                        stroke="rgba(255,255,255,0.1)"
+                                    />
+                                    <XAxis
+                                        dataKey="round"
+                                        stroke="rgba(255,255,255,0.7)"
+                                        tick={{ fill: 'rgba(255,255,255,0.7)' }}
+                                    />
+                                    <YAxis
+                                        stroke="rgba(255,255,255,0.7)"
+                                        tick={{ fill: 'rgba(255,255,255,0.7)' }}
+                                    />
+                                    <RechartsTooltip
+                                        contentStyle={{
+                                            backgroundColor:
+                                                'rgba(26, 26, 26, 0.9)',
+                                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                                            borderRadius: 8,
+                                            color: 'white',
+                                        }}
+                                    />
+                                    <Area
+                                        type="monotone"
+                                        dataKey="marketPrice"
+                                        stroke="#1976d2"
+                                        fill="rgba(25, 118, 210, 0.3)"
+                                        name="Market Price"
+                                    />
+                                    <Area
+                                        type="monotone"
+                                        dataKey="totalQuantity"
+                                        stroke="#2e7d32"
+                                        fill="rgba(46, 125, 50, 0.3)"
+                                        name="Total Quantity"
+                                    />
+                                </AreaChart>
+                            </ResponsiveContainer>
+                        </Box>
+                    </CardContent>
+                </Card>
+
+                {/* Firm Behavior and Collusion Detection */}
+                <Grid container spacing={3}>
+                    <Grid item xs={12} md={6}>
+                        <Card
+                            sx={{
+                                backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                            }}
+                        >
+                            <CardContent>
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        marginBottom: 3,
+                                        color: 'primary.light',
+                                    }}
+                                >
+                                    Firm Behavior Analysis
+                                </Typography>
+
+                                <Box sx={{ height: 300 }}>
+                                    <ResponsiveContainer
+                                        width="100%"
+                                        height="100%"
+                                    >
+                                        <LineChart
+                                            data={marketData.slice(
+                                                0,
+                                                currentRound + 1
+                                            )}
+                                        >
+                                            <CartesianGrid
+                                                strokeDasharray="3 3"
+                                                stroke="rgba(255,255,255,0.1)"
+                                            />
+                                            <XAxis
+                                                dataKey="round"
+                                                stroke="rgba(255,255,255,0.7)"
+                                                tick={{
+                                                    fill: 'rgba(255,255,255,0.7)',
+                                                    fontSize: 10,
+                                                }}
+                                            />
+                                            <YAxis
+                                                stroke="rgba(255,255,255,0.7)"
+                                                tick={{
+                                                    fill: 'rgba(255,255,255,0.7)',
+                                                }}
+                                            />
+                                            <RechartsTooltip
+                                                contentStyle={{
+                                                    backgroundColor:
+                                                        'rgba(26, 26, 26, 0.9)',
+                                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                    borderRadius: 8,
+                                                    color: 'white',
+                                                }}
+                                            />
+                                            {Array.from(
+                                                { length: numFirms },
+                                                (_, i) => (
+                                                    <Line
+                                                        key={i}
+                                                        type="monotone"
+                                                        dataKey={`firm${i + 1}_profit`}
+                                                        stroke={firmColors[i]}
+                                                        strokeWidth={2}
+                                                        name={`Firm ${i + 1} Profit`}
+                                                        dot={false}
+                                                    />
+                                                )
+                                            )}
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </Box>
+
+                                <Alert
+                                    severity="info"
+                                    sx={{
+                                        marginTop: 2,
+                                        backgroundColor:
+                                            'rgba(25, 118, 210, 0.1)',
+                                    }}
+                                >
+                                    <Typography variant="body2">
+                                        Firms compete using different
+                                        strategies: Tit-for-Tat, Static, and
+                                        Random Walk. Profit patterns reveal
+                                        competitive dynamics and potential
+                                        collusion.
+                                    </Typography>
+                                </Alert>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+
+                    <Grid item xs={12} md={6}>
+                        <Card
+                            sx={{
+                                backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                            }}
+                        >
+                            <CardContent>
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        marginBottom: 3,
+                                        color: 'primary.light',
+                                    }}
+                                >
+                                    Collusion Detection & HHI
+                                </Typography>
+
+                                <Box sx={{ height: 300 }}>
+                                    <ResponsiveContainer
+                                        width="100%"
+                                        height="100%"
+                                    >
+                                        <LineChart
+                                            data={marketData.slice(
+                                                0,
+                                                currentRound + 1
+                                            )}
+                                        >
+                                            <CartesianGrid
+                                                strokeDasharray="3 3"
+                                                stroke="rgba(255,255,255,0.1)"
+                                            />
+                                            <XAxis
+                                                dataKey="round"
+                                                stroke="rgba(255,255,255,0.7)"
+                                                tick={{
+                                                    fill: 'rgba(255,255,255,0.7)',
+                                                    fontSize: 10,
+                                                }}
+                                            />
+                                            <YAxis
+                                                stroke="rgba(255,255,255,0.7)"
+                                                tick={{
+                                                    fill: 'rgba(255,255,255,0.7)',
+                                                }}
+                                            />
+                                            <RechartsTooltip
+                                                contentStyle={{
+                                                    backgroundColor:
+                                                        'rgba(26, 26, 26, 0.9)',
+                                                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                    borderRadius: 8,
+                                                    color: 'white',
+                                                }}
+                                            />
+                                            <Line
+                                                type="monotone"
+                                                dataKey="hhi"
+                                                stroke="#f57c00"
+                                                strokeWidth={3}
+                                                name="HHI Concentration"
+                                                dot={false}
+                                            />
+                                            <Line
+                                                type="monotone"
+                                                dataKey={data =>
+                                                    data.collusionDetected
+                                                        ? 0.8
+                                                        : 0.2
+                                                }
+                                                stroke="#d32f2f"
+                                                strokeWidth={2}
+                                                name="Collusion Detected"
+                                                dot={false}
+                                            />
+                                        </LineChart>
+                                    </ResponsiveContainer>
+                                </Box>
+
+                                <Alert
+                                    severity={
+                                        isColluding ? 'warning' : 'success'
+                                    }
+                                    sx={{ marginTop: 2 }}
+                                >
+                                    <Typography variant="body2">
+                                        {isColluding
+                                            ? `Collusion detected! HHI: ${(currentHHI * 100).toFixed(1)}% exceeds threshold.`
+                                            : `Market operating normally. HHI: ${(currentHHI * 100).toFixed(1)}% within acceptable range.`}
+                                    </Typography>
+                                </Alert>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                </Grid>
+
+                {/* Economic Model Overview */}
+                <Card
+                    sx={{
+                        marginTop: 4,
+                        backgroundColor: 'rgba(26, 26, 26, 0.9)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                    }}
+                >
+                    <CardContent>
+                        <Typography
+                            variant="h6"
+                            sx={{ marginBottom: 3, color: 'primary.light' }}
+                        >
+                            Economic Model Overview
+                        </Typography>
+
+                        <Grid container spacing={3}>
+                            <Grid item xs={12} md={4}>
+                                <Box sx={{ marginBottom: 2 }}>
+                                    <Typography
+                                        variant="subtitle2"
+                                        sx={{
+                                            color: 'success.main',
+                                            marginBottom: 1,
+                                        }}
+                                    >
+                                        1. Market Structure
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: 'text.secondary',
+                                            marginBottom: 2,
+                                        }}
+                                    >
+                                        {modelType === 'cournot'
+                                            ? 'Cournot competition: Firms simultaneously choose quantities to maximize profits.'
+                                            : 'Bertrand competition: Firms simultaneously choose prices to maximize profits.'}
+                                    </Typography>
+                                </Box>
+
+                                <Box sx={{ marginBottom: 2 }}>
+                                    <Typography
+                                        variant="subtitle2"
+                                        sx={{
+                                            color: 'warning.main',
+                                            marginBottom: 1,
+                                        }}
+                                    >
+                                        2. Demand Function
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: 'text.secondary',
+                                            marginBottom: 2,
+                                        }}
+                                    >
+                                        Linear inverse demand: P(Q) = {demandA}{' '}
+                                        - {demandB} × Q
+                                    </Typography>
+                                </Box>
+                            </Grid>
+
+                            <Grid item xs={12} md={4}>
+                                <Box sx={{ marginBottom: 2 }}>
+                                    <Typography
+                                        variant="subtitle2"
+                                        sx={{
+                                            color: 'info.main',
+                                            marginBottom: 1,
+                                        }}
+                                    >
+                                        3. Collusion Detection
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: 'text.secondary',
+                                            marginBottom: 2,
+                                        }}
+                                    >
+                                        Monitors HHI concentration index and
+                                        price patterns to detect cartel
+                                        behavior.
+                                    </Typography>
+                                </Box>
+
+                                <Box sx={{ marginBottom: 2 }}>
+                                    <Typography
+                                        variant="subtitle2"
+                                        sx={{
+                                            color: 'secondary.light',
+                                            marginBottom: 1,
+                                        }}
+                                    >
+                                        4. Regulatory Intervention
+                                    </Typography>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{ color: 'text.secondary' }}
+                                    >
+                                        Automatic penalties and price caps when
+                                        collusion thresholds are exceeded.
+                                    </Typography>
+                                </Box>
+                            </Grid>
+
+                            <Grid item xs={12} md={4}>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        gap: 1,
+                                        flexWrap: 'wrap',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <Chip
+                                        icon={<Business />}
+                                        label={`${numFirms} Firms`}
+                                        color="primary"
+                                        variant="outlined"
+                                    />
+                                    <Chip
+                                        icon={<Assessment />}
+                                        label={
+                                            modelType === 'cournot'
+                                                ? 'Quantity'
+                                                : 'Price'
+                                        }
+                                        color="success"
+                                        variant="outlined"
+                                    />
+                                    <Chip
+                                        icon={<Warning />}
+                                        label={
+                                            collusionEnabled
+                                                ? 'Collusion On'
+                                                : 'Collusion Off'
+                                        }
+                                        color="warning"
+                                        variant="outlined"
+                                    />
+                                    <Chip
+                                        icon={<Timeline />}
+                                        label={`${maxRounds} Rounds`}
+                                        color="info"
+                                        variant="outlined"
+                                    />
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </CardContent>
+                </Card>
+            </Box>
         </Box>
     );
 };
