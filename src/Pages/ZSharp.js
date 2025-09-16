@@ -22,31 +22,30 @@ import {
 } from 'recharts';
 
 // Generate data based on parameters
-const generateData = (
-    samRadius,
-    learningRate,
-    momentum,
-    gradientFiltering,
-    mpsAcceleration
-) => {
+const generateData = (samRadius, learningRate, momentum, gradientFiltering) => {
     const data = [];
     const baseImprovement = gradientFiltering ? 0.0522 : 0.03;
-    const speedMultiplier = mpsAcceleration ? 4.4 : 1.0;
+
+    // Learning rate affects convergence speed and final accuracy
+    const lrEffect = learningRate * 0.3; // More significant impact
+    const momentumEffect = momentum * 0.15; // Momentum affects stability and convergence
 
     for (let i = 0; i <= 20; i++) {
-        const sgdAccuracy = 0.65 + (i / 20) * 0.2;
+        // SGD baseline with momentum effect
+        const sgdAccuracy = 0.65 + (i / 20) * 0.2 + (momentum - 0.9) * 0.1;
+
+        // ZSharp with all parameter effects
         const zsharpAccuracy =
             sgdAccuracy +
             baseImprovement +
             samRadius * 0.1 +
-            learningRate * 0.05;
+            lrEffect +
+            momentumEffect;
 
         data.push({
             epoch: i,
             sgd: Math.min(0.95, sgdAccuracy),
             zsharp: Math.min(0.95, zsharpAccuracy),
-            sgdTime: i * 0.4,
-            zsharpTime: (i * 0.4) / speedMultiplier,
         });
     }
     return data;
@@ -57,7 +56,6 @@ const ZSharp = () => {
     const [learningRate, setLearningRate] = useState(0.01);
     const [momentum, setMomentum] = useState(0.9);
     const [gradientFiltering, setGradientFiltering] = useState(true);
-    const [mpsAcceleration, setMpsAcceleration] = useState(true);
 
     useEffect(() => {
         document.title = 'ZSharp - Sharpness-Aware Minimization';
@@ -67,8 +65,7 @@ const ZSharp = () => {
         samRadius,
         learningRate,
         momentum,
-        gradientFiltering,
-        mpsAcceleration
+        gradientFiltering
     );
     const chartTitle = 'Performance Comparison';
     const yAxisLabel = 'Accuracy';
@@ -82,7 +79,6 @@ const ZSharp = () => {
         setLearningRate(0.01);
         setMomentum(0.9);
         setGradientFiltering(true);
-        setMpsAcceleration(true);
     };
 
     return (
@@ -370,64 +366,31 @@ const ZSharp = () => {
                                     />
                                 </Box>
 
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        gap: 1,
-                                    }}
-                                >
-                                    <FormControlLabel
-                                        control={
-                                            <Switch
-                                                checked={gradientFiltering}
-                                                onChange={e =>
-                                                    setGradientFiltering(
-                                                        e.target.checked
-                                                    )
-                                                }
-                                                sx={{
-                                                    '& .MuiSwitch-switchBase.Mui-checked':
-                                                        {
-                                                            color: 'info.main',
-                                                        },
-                                                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track':
-                                                        {
-                                                            backgroundColor:
-                                                                'info.main',
-                                                        },
-                                                }}
-                                            />
-                                        }
-                                        label="Gradient Filtering"
-                                        sx={{ color: 'text.secondary' }}
-                                    />
-                                    <FormControlLabel
-                                        control={
-                                            <Switch
-                                                checked={mpsAcceleration}
-                                                onChange={e =>
-                                                    setMpsAcceleration(
-                                                        e.target.checked
-                                                    )
-                                                }
-                                                sx={{
-                                                    '& .MuiSwitch-switchBase.Mui-checked':
-                                                        {
-                                                            color: 'secondary.main',
-                                                        },
-                                                    '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track':
-                                                        {
-                                                            backgroundColor:
-                                                                'secondary.main',
-                                                        },
-                                                }}
-                                            />
-                                        }
-                                        label="MPS Acceleration"
-                                        sx={{ color: 'text.secondary' }}
-                                    />
-                                </Box>
+                                <FormControlLabel
+                                    control={
+                                        <Switch
+                                            checked={gradientFiltering}
+                                            onChange={e =>
+                                                setGradientFiltering(
+                                                    e.target.checked
+                                                )
+                                            }
+                                            sx={{
+                                                '& .MuiSwitch-switchBase.Mui-checked':
+                                                    {
+                                                        color: 'info.main',
+                                                    },
+                                                '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track':
+                                                    {
+                                                        backgroundColor:
+                                                            'info.main',
+                                                    },
+                                            }}
+                                        />
+                                    }
+                                    label="Gradient Filtering"
+                                    sx={{ color: 'text.secondary' }}
+                                />
                             </Grid>
                         </Grid>
                     </CardContent>
