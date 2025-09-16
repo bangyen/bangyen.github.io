@@ -14,7 +14,15 @@ import {
     Back,
     names as runNames,
 } from './Interpreters';
-import { Home, Error, Snake, Lights_Out, pages as pageRoutes } from './Pages';
+import {
+    Home,
+    Error,
+    Snake,
+    Lights_Out,
+    ZSharpDemo,
+    OligopolyDemo,
+    pages as pageRoutes,
+} from './Pages';
 
 const darkTheme = createTheme({
     palette: {
@@ -43,6 +51,8 @@ function Website() {
         { Component: Home, url: '/' },
         { Component: Snake, url: pageRoutes.Snake },
         { Component: Lights_Out, url: pageRoutes.Lights_Out },
+        { Component: ZSharpDemo, url: pageRoutes.ZSharpDemo },
+        { Component: OligopolyDemo, url: pageRoutes.OligopolyDemo },
     ];
 
     return (
