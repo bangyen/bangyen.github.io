@@ -260,7 +260,7 @@ export default function Home() {
                             sx={{
                                 display: 'grid',
                                 gridTemplateColumns: {
-                                    xs: '1fr',
+                                    xs: 'repeat(3, 1fr)',
                                     sm: 'repeat(2, 1fr)',
                                     md: 'repeat(3, 1fr)',
                                 },
@@ -323,6 +323,30 @@ export default function Home() {
                                 }}
                             />
                             <Chip
+                                icon={<Code />}
+                                label="JavaScript"
+                                variant="outlined"
+                                size="large"
+                                sx={{
+                                    borderColor: 'rgba(255, 255, 255, 0.3)',
+                                    color: 'primary.light',
+                                    padding: {
+                                        xs: '8px 12px',
+                                        sm: '12px 16px',
+                                    },
+                                    height: { xs: '40px', sm: '48px' },
+                                    fontSize: { xs: '0.9rem', sm: '1rem' },
+                                    '&:hover': {
+                                        backgroundColor:
+                                            'rgba(255, 255, 255, 0.1)',
+                                    },
+                                    '& .MuiChip-icon': {
+                                        marginLeft: { xs: '8px', sm: '12px' },
+                                        marginRight: { xs: '6px', sm: '8px' },
+                                    },
+                                }}
+                            />
+                            <Chip
                                 icon={<Cloud />}
                                 label="AWS/GCP"
                                 variant="outlined"
@@ -349,30 +373,6 @@ export default function Home() {
                             <Chip
                                 icon={<Work />}
                                 label="Docker"
-                                variant="outlined"
-                                size="large"
-                                sx={{
-                                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                                    color: 'primary.light',
-                                    padding: {
-                                        xs: '8px 12px',
-                                        sm: '12px 16px',
-                                    },
-                                    height: { xs: '40px', sm: '48px' },
-                                    fontSize: { xs: '0.9rem', sm: '1rem' },
-                                    '&:hover': {
-                                        backgroundColor:
-                                            'rgba(255, 255, 255, 0.1)',
-                                    },
-                                    '& .MuiChip-icon': {
-                                        marginLeft: { xs: '8px', sm: '12px' },
-                                        marginRight: { xs: '6px', sm: '8px' },
-                                    },
-                                }}
-                            />
-                            <Chip
-                                icon={<Code />}
-                                label="C/C++"
                                 variant="outlined"
                                 size="large"
                                 sx={{
