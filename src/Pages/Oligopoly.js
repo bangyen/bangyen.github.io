@@ -13,7 +13,7 @@ import {
     Switch,
     FormControlLabel,
 } from '@mui/material';
-import { GitHub, Refresh } from '@mui/icons-material';
+import { GitHub, Refresh, Home } from '@mui/icons-material';
 import {
     LineChart,
     Line,
@@ -145,49 +145,50 @@ const Oligopoly = () => {
                     }}
                 >
                     {/* Header */}
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: 2,
-                            marginBottom: 2,
-                        }}
+                    <Grid
+                        container
+                        alignItems="center"
+                        justifyContent="space-between"
+                        sx={{ marginBottom: 2 }}
                     >
-                        <Typography
-                            variant="h1"
-                            sx={{
-                                background:
-                                    'linear-gradient(135deg, #ffffff, #808080)',
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                fontWeight: 700,
-                                fontSize: {
-                                    xs: '2.5rem',
-                                    sm: '3.5rem',
-                                    md: '4rem',
-                                },
-                            }}
-                        >
-                            Oligopoly
-                        </Typography>
-                        <IconButton
-                            href="https://github.com/bangyen/Oligopoly"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            sx={{
-                                color: 'primary.light',
-                                border: '1px solid rgba(255, 255, 255, 0.3)',
-                                '&:hover': {
-                                    borderColor: 'primary.main',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                },
-                            }}
-                        >
-                            <GitHub fontSize="large" />
-                        </IconButton>
-                    </Box>
+                        <Grid>
+                            <Typography
+                                variant="h1"
+                                sx={{
+                                    background:
+                                        'linear-gradient(135deg, #ffffff, #808080)',
+                                    backgroundClip: 'text',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    fontWeight: 700,
+                                    fontSize: {
+                                        xs: '2.5rem',
+                                        sm: '3.5rem',
+                                        md: '4rem',
+                                    },
+                                }}
+                            >
+                                Oligopoly
+                            </Typography>
+                        </Grid>
+                        <Grid>
+                            <IconButton
+                                href="https://github.com/bangyen/Oligopoly"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                sx={{ color: 'primary.light' }}
+                            >
+                                <GitHub fontSize="large" />
+                            </IconButton>
+                            <IconButton
+                                component="a"
+                                href="/"
+                                sx={{ color: 'primary.light' }}
+                            >
+                                <Home fontSize="large" />
+                            </IconButton>
+                        </Grid>
+                    </Grid>
 
                     <Typography
                         variant="h5"
