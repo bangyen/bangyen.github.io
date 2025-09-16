@@ -24,8 +24,7 @@ export default function Error() {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background:
-                        'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+                    background: '#0a0a0a',
                     zIndex: -2,
                 }}
             />

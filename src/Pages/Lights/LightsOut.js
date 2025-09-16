@@ -95,7 +95,14 @@ export default function LightsOut() {
     };
 
     return (
-        <Grid>
+        <Grid
+            container
+            minHeight="100vh"
+            sx={{
+                background: '#0a0a0a',
+                position: 'relative',
+            }}
+        >
             <Board
                 size={size}
                 rows={rows}

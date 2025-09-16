@@ -61,6 +61,9 @@ function Cell({ size, children, ...rest }) {
         borderRadius: radius,
         height: remSize,
         width: remSize,
+        fontSize: `${size * 0.4}rem`,
+        fontWeight: 600,
+        fontFamily: 'monospace',
         transition: 'all 0.2s ease-in-out',
     };
 

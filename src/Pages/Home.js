@@ -146,7 +146,7 @@ export default function Home() {
                     right: 0,
                     bottom: 0,
                     background:
-                        'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+                        'linear-gradient(135deg, #0a0a0a 0%, #0e0e0e 50%, #0a0a0a 100%)',
                     zIndex: -2,
                 }}
             />

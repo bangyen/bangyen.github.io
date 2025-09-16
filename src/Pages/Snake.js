@@ -212,8 +212,7 @@ export default function Snake() {
             flexDirection="column"
             position="relative"
             sx={{
-                background:
-                    'linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%)',
+                background: '#0a0a0a',
                 overflow: 'hidden',
             }}
         >
