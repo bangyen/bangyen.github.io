@@ -654,7 +654,7 @@ export default function Home() {
 
                                 <Box
                                     component="a"
-                                    href="https://github.com/bangyen/muon"
+                                    href="https://github.com/bangyen/oligopoly"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     sx={{
@@ -684,16 +684,17 @@ export default function Home() {
                                             gap: 1,
                                         }}
                                     >
-                                        Muon Optimizer — Accelerating Grokking
+                                        Oligopoly — Agent-Based Economic
+                                        Modeling
                                         <GitHub fontSize="small" />
                                     </Typography>
                                     <Typography
                                         variant="body2"
                                         sx={{ color: 'text.secondary' }}
                                     >
-                                        Implemented and validated the Muon
-                                        Optimizer paper, confirming 33% faster
-                                        grokking vs AdamW on benchmark tasks
+                                        Built FastAPI and SQLAlchemy simulation
+                                        platform for 2-4 firms with collusion
+                                        detection and real-time analysis
                                     </Typography>
                                 </Box>
                             </Box>
