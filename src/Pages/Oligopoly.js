@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     Typography,
@@ -7,6 +7,7 @@ import {
     CardContent,
     Chip,
     Button,
+    Slider,
 } from '@mui/material';
 import {
     Business,
@@ -25,29 +26,116 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 
-// Static market data for demonstration
-const marketData = [
-    { round: 1, price: 45, hhi: 0.25, collusion: false },
-    { round: 2, price: 47, hhi: 0.28, collusion: false },
-    { round: 3, price: 49, hhi: 0.32, collusion: false },
-    { round: 4, price: 52, hhi: 0.35, collusion: false },
-    { round: 5, price: 55, hhi: 0.38, collusion: false },
-    { round: 6, price: 58, hhi: 0.42, collusion: true },
-    { round: 7, price: 60, hhi: 0.45, collusion: true },
-    { round: 8, price: 62, hhi: 0.48, collusion: true },
-    { round: 9, price: 65, hhi: 0.52, collusion: true },
-    { round: 10, price: 68, hhi: 0.55, collusion: true },
-    { round: 11, price: 55, hhi: 0.35, collusion: false },
-    { round: 12, price: 52, hhi: 0.32, collusion: false },
-    { round: 13, price: 49, hhi: 0.28, collusion: false },
-    { round: 14, price: 47, hhi: 0.25, collusion: false },
-    { round: 15, price: 45, hhi: 0.22, collusion: false },
-];
+// Generate market data based on number of firms
+const generateMarketData = numFirms => {
+    const basePrice = 45;
+    const baseHHI = 0.25;
+
+    return [
+        {
+            round: 1,
+            price: basePrice,
+            hhi: baseHHI + (numFirms - 2) * 0.05,
+            collusion: false,
+        },
+        {
+            round: 2,
+            price: basePrice + 2,
+            hhi: baseHHI + (numFirms - 2) * 0.05 + 0.03,
+            collusion: false,
+        },
+        {
+            round: 3,
+            price: basePrice + 4,
+            hhi: baseHHI + (numFirms - 2) * 0.05 + 0.07,
+            collusion: false,
+        },
+        {
+            round: 4,
+            price: basePrice + 7,
+            hhi: baseHHI + (numFirms - 2) * 0.05 + 0.1,
+            collusion: false,
+        },
+        {
+            round: 5,
+            price: basePrice + 10,
+            hhi: baseHHI + (numFirms - 2) * 0.05 + 0.13,
+            collusion: false,
+        },
+        {
+            round: 6,
+            price: basePrice + 13,
+            hhi: baseHHI + (numFirms - 2) * 0.05 + 0.17,
+            collusion: true,
+        },
+        {
+            round: 7,
+            price: basePrice + 15,
+            hhi: baseHHI + (numFirms - 2) * 0.05 + 0.2,
+            collusion: true,
+        },
+        {
+            round: 8,
+            price: basePrice + 17,
+            hhi: baseHHI + (numFirms - 2) * 0.05 + 0.23,
+            collusion: true,
+        },
+        {
+            round: 9,
+            price: basePrice + 20,
+            hhi: baseHHI + (numFirms - 2) * 0.05 + 0.27,
+            collusion: true,
+        },
+        {
+            round: 10,
+            price: basePrice + 23,
+            hhi: baseHHI + (numFirms - 2) * 0.05 + 0.3,
+            collusion: true,
+        },
+        {
+            round: 11,
+            price: basePrice + 10,
+            hhi: baseHHI + (numFirms - 2) * 0.05 + 0.1,
+            collusion: false,
+        },
+        {
+            round: 12,
+            price: basePrice + 7,
+            hhi: baseHHI + (numFirms - 2) * 0.05 + 0.07,
+            collusion: false,
+        },
+        {
+            round: 13,
+            price: basePrice + 4,
+            hhi: baseHHI + (numFirms - 2) * 0.05 + 0.03,
+            collusion: false,
+        },
+        {
+            round: 14,
+            price: basePrice + 2,
+            hhi: baseHHI + (numFirms - 2) * 0.05,
+            collusion: false,
+        },
+        {
+            round: 15,
+            price: basePrice,
+            hhi: baseHHI + (numFirms - 2) * 0.05 - 0.03,
+            collusion: false,
+        },
+    ];
+};
 
 const Oligopoly = () => {
+    const [numFirms, setNumFirms] = useState(3);
+    const [marketData, setMarketData] = useState(generateMarketData(3));
+
     useEffect(() => {
         document.title = 'Oligopoly - Economic Simulation';
     }, []);
+
+    useEffect(() => {
+        setMarketData(generateMarketData(numFirms));
+    }, [numFirms]);
 
     return (
         <Box
@@ -118,16 +206,57 @@ const Oligopoly = () => {
                     }}
                 >
                     <CardContent>
-                        <Typography
-                            variant="h5"
+                        <Box
                             sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
                                 marginBottom: 3,
-                                color: 'primary.light',
-                                textAlign: 'center',
                             }}
                         >
-                            Market Dynamics & Collusion Detection
-                        </Typography>
+                            <Typography
+                                variant="h5"
+                                sx={{ color: 'primary.light' }}
+                            >
+                                Market Dynamics & Collusion Detection
+                            </Typography>
+                            <Box sx={{ minWidth: 200 }}>
+                                <Typography
+                                    variant="body2"
+                                    sx={{ color: 'text.secondary', mb: 1 }}
+                                >
+                                    Number of Firms: {numFirms}
+                                </Typography>
+                                <Slider
+                                    value={numFirms}
+                                    onChange={(e, value) => setNumFirms(value)}
+                                    min={2}
+                                    max={5}
+                                    step={1}
+                                    marks
+                                    sx={{
+                                        color: 'primary.main',
+                                        '& .MuiSlider-thumb': {
+                                            backgroundColor: 'primary.main',
+                                        },
+                                        '& .MuiSlider-track': {
+                                            backgroundColor: 'primary.main',
+                                        },
+                                        '& .MuiSlider-rail': {
+                                            backgroundColor:
+                                                'rgba(255,255,255,0.2)',
+                                        },
+                                        '& .MuiSlider-mark': {
+                                            backgroundColor:
+                                                'rgba(255,255,255,0.5)',
+                                        },
+                                        '& .MuiSlider-markLabel': {
+                                            color: 'rgba(255,255,255,0.7)',
+                                        },
+                                    }}
+                                />
+                            </Box>
+                        </Box>
                         <Box sx={{ height: 300 }}>
                             <ResponsiveContainer width="100%" height="100%">
                                 <LineChart data={marketData}>

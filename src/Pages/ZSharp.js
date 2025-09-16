@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Box,
     Typography,
@@ -7,6 +7,10 @@ import {
     CardContent,
     Chip,
     Button,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
 } from '@mui/material';
 import { TrendingUp, Speed, Psychology, GitHub } from '@mui/icons-material';
 import {
@@ -20,7 +24,7 @@ import {
 } from 'recharts';
 
 // Static data for demonstration
-const trainingData = [
+const accuracyData = [
     { epoch: 0, sgd: 0.65, zsharp: 0.65 },
     { epoch: 2, sgd: 0.68, zsharp: 0.71 },
     { epoch: 4, sgd: 0.72, zsharp: 0.78 },
@@ -34,10 +38,43 @@ const trainingData = [
     { epoch: 20, sgd: 0.85, zsharp: 0.94 },
 ];
 
+const speedData = [
+    { epoch: 0, sgd: 0, zsharp: 0 },
+    { epoch: 2, sgd: 0.8, zsharp: 0.2 },
+    { epoch: 4, sgd: 1.6, zsharp: 0.4 },
+    { epoch: 6, sgd: 2.4, zsharp: 0.6 },
+    { epoch: 8, sgd: 3.2, zsharp: 0.8 },
+    { epoch: 10, sgd: 4.0, zsharp: 1.0 },
+    { epoch: 12, sgd: 4.8, zsharp: 1.2 },
+    { epoch: 14, sgd: 5.6, zsharp: 1.4 },
+    { epoch: 16, sgd: 6.4, zsharp: 1.6 },
+    { epoch: 18, sgd: 7.2, zsharp: 1.8 },
+    { epoch: 20, sgd: 8.0, zsharp: 2.0 },
+];
+
 const ZSharp = () => {
+    const [chartView, setChartView] = useState('accuracy');
+
     useEffect(() => {
         document.title = 'ZSharp - Sharpness-Aware Minimization';
     }, []);
+
+    const currentData = chartView === 'accuracy' ? accuracyData : speedData;
+    const chartTitle =
+        chartView === 'accuracy'
+            ? 'Performance Comparison'
+            : 'Training Speed Comparison';
+    const yAxisLabel = chartView === 'accuracy' ? 'Accuracy' : 'Time (hours)';
+    const tooltipFormatter =
+        chartView === 'accuracy'
+            ? (value, name) => [
+                  `${(value * 100).toFixed(1)}%`,
+                  name === 'sgd' ? 'SGD' : 'ZSharp',
+              ]
+            : (value, name) => [
+                  `${value.toFixed(1)}h`,
+                  name === 'sgd' ? 'SGD' : 'ZSharp',
+              ];
 
     return (
         <Box
@@ -109,19 +146,59 @@ const ZSharp = () => {
                     }}
                 >
                     <CardContent>
-                        <Typography
-                            variant="h5"
+                        <Box
                             sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
                                 marginBottom: 3,
-                                color: 'primary.light',
-                                textAlign: 'center',
                             }}
                         >
-                            Performance Comparison
-                        </Typography>
+                            <Typography
+                                variant="h5"
+                                sx={{ color: 'primary.light' }}
+                            >
+                                {chartTitle}
+                            </Typography>
+                            <FormControl size="small" sx={{ minWidth: 200 }}>
+                                <InputLabel
+                                    sx={{ color: 'rgba(255,255,255,0.7)' }}
+                                >
+                                    View
+                                </InputLabel>
+                                <Select
+                                    value={chartView}
+                                    label="View"
+                                    onChange={e => setChartView(e.target.value)}
+                                    sx={{
+                                        color: 'white',
+                                        '& .MuiOutlinedInput-notchedOutline': {
+                                            borderColor:
+                                                'rgba(255,255,255,0.3)',
+                                        },
+                                        '&:hover .MuiOutlinedInput-notchedOutline':
+                                            {
+                                                borderColor:
+                                                    'rgba(255,255,255,0.5)',
+                                            },
+                                        '&.Mui-focused .MuiOutlinedInput-notchedOutline':
+                                            {
+                                                borderColor: 'primary.main',
+                                            },
+                                    }}
+                                >
+                                    <MenuItem value="accuracy">
+                                        Accuracy Comparison
+                                    </MenuItem>
+                                    <MenuItem value="speed">
+                                        Training Speed
+                                    </MenuItem>
+                                </Select>
+                            </FormControl>
+                        </Box>
                         <Box sx={{ height: 300 }}>
                             <ResponsiveContainer width="100%" height="100%">
-                                <LineChart data={trainingData}>
+                                <LineChart data={currentData}>
                                     <CartesianGrid
                                         strokeDasharray="3 3"
                                         stroke="rgba(255,255,255,0.1)"
@@ -134,7 +211,19 @@ const ZSharp = () => {
                                     <YAxis
                                         stroke="rgba(255,255,255,0.7)"
                                         tick={{ fill: 'rgba(255,255,255,0.7)' }}
-                                        domain={[0.6, 1.0]}
+                                        domain={
+                                            chartView === 'accuracy'
+                                                ? [0.6, 1.0]
+                                                : [0, 8]
+                                        }
+                                        label={{
+                                            value: yAxisLabel,
+                                            angle: -90,
+                                            position: 'insideLeft',
+                                            style: {
+                                                fill: 'rgba(255,255,255,0.7)',
+                                            },
+                                        }}
                                     />
                                     <RechartsTooltip
                                         contentStyle={{
@@ -144,10 +233,7 @@ const ZSharp = () => {
                                             borderRadius: 8,
                                             color: 'white',
                                         }}
-                                        formatter={(value, name) => [
-                                            `${(value * 100).toFixed(1)}%`,
-                                            name === 'sgd' ? 'SGD' : 'ZSharp',
-                                        ]}
+                                        formatter={tooltipFormatter}
                                     />
                                     <Line
                                         type="monotone"
