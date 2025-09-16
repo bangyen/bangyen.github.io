@@ -3,8 +3,6 @@ import {
     Box,
     Typography,
     Grid,
-    Card,
-    CardContent,
     Button,
     Slider,
     FormControl,
@@ -91,45 +89,93 @@ const Oligopoly = () => {
     };
 
     return (
-        <Box
+        <Grid
+            container
+            minHeight="100vh"
+            flexDirection="column"
             sx={{
-                minHeight: '100vh',
-                background:
-                    'linear-gradient(135deg, #0a0a0a 0%, #0e0e0e 50%, #0a0a0a 100%)',
+                position: 'relative',
+                padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+                boxSizing: 'border-box',
+                width: '100%',
+                maxWidth: '100vw',
+                overflowX: 'hidden',
             }}
         >
+            {/* Background Elements */}
             <Box
                 sx={{
-                    color: 'white',
-                    padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
-                    boxSizing: 'border-box',
-                    width: '100%',
-                    maxWidth: '900px',
-                    margin: '0 auto',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    background:
+                        'linear-gradient(135deg, #0a0a0a 0%, #0e0e0e 50%, #0a0a0a 100%)',
+                    zIndex: -2,
+                }}
+            />
+
+            {/* Main Content */}
+            <Grid
+                flex={1}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                flexDirection="column"
+                sx={{
+                    zIndex: 1,
+                    padding: { xs: '1rem 0', sm: '1.5rem 0', md: '2rem 0' },
+                    minHeight: 0,
                 }}
             >
-                {/* Header */}
-                <Box sx={{ textAlign: 'center', marginBottom: 4 }}>
+                <Box
+                    sx={{
+                        textAlign: 'center',
+                        maxWidth: '900px',
+                        width: '100%',
+                        padding: {
+                            xs: '0 0.5rem',
+                            sm: '0 1.5rem',
+                            md: '0 2rem',
+                        },
+                        boxSizing: 'border-box',
+                        overflow: 'hidden',
+                    }}
+                >
+                    {/* Header */}
                     <Typography
-                        variant="h3"
+                        variant="h1"
                         sx={{
-                            fontWeight: 700,
-                            marginBottom: 2,
                             background:
                                 'linear-gradient(135deg, #ffffff, #808080)',
                             backgroundClip: 'text',
                             WebkitBackgroundClip: 'text',
                             WebkitTextFillColor: 'transparent',
+                            fontWeight: 700,
+                            marginBottom: 2,
+                            fontSize: {
+                                xs: '2.5rem',
+                                sm: '3.5rem',
+                                md: '4rem',
+                            },
                         }}
                     >
                         Oligopoly
                     </Typography>
+
                     <Typography
-                        variant="h6"
-                        sx={{ color: 'text.secondary', marginBottom: 2 }}
+                        variant="h5"
+                        sx={{
+                            color: 'text.secondary',
+                            marginBottom: 2,
+                            fontWeight: 400,
+                            fontSize: { xs: '1.1rem', sm: '1.3rem' },
+                        }}
                     >
                         Agent-Based Economic Modeling & Collusion Detection
                     </Typography>
+
                     <Button
                         variant="outlined"
                         startIcon={<GitHub />}
@@ -137,34 +183,40 @@ const Oligopoly = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                         sx={{
-                            borderColor: 'primary.light',
+                            borderColor: 'rgba(255, 255, 255, 0.3)',
                             color: 'primary.light',
+                            marginBottom: 4,
+                            padding: { xs: '8px 16px', sm: '12px 24px' },
+                            fontSize: { xs: '0.9rem', sm: '1rem' },
                             '&:hover': {
                                 borderColor: 'primary.main',
-                                backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                                backgroundColor: 'rgba(255, 255, 255, 0.1)',
                             },
                         }}
                     >
                         View Repository
                     </Button>
-                </Box>
 
-                {/* Market Dynamics Chart */}
-                <Card
-                    sx={{
-                        marginBottom: 4,
-                        backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        backdropFilter: 'blur(20px)',
-                    }}
-                >
-                    <CardContent>
+                    {/* Market Dynamics Chart */}
+                    <Box
+                        sx={{
+                            padding: { xs: 1.5, sm: 2 },
+                            backgroundColor: 'rgba(128, 128, 128, 0.05)',
+                            borderRadius: 2,
+                            border: '1px solid rgba(128, 128, 128, 0.2)',
+                            marginBottom: 4,
+                            width: '100%',
+                            boxSizing: 'border-box',
+                            overflow: 'hidden',
+                        }}
+                    >
                         <Typography
-                            variant="h5"
+                            variant="h6"
                             sx={{
-                                marginBottom: 3,
                                 color: 'primary.light',
+                                marginBottom: 3,
                                 textAlign: 'center',
+                                fontWeight: 600,
                             }}
                         >
                             Market Dynamics & Collusion Detection
@@ -240,18 +292,20 @@ const Oligopoly = () => {
                                 </LineChart>
                             </ResponsiveContainer>
                         </Box>
-                    </CardContent>
-                </Card>
+                    </Box>
 
-                {/* Interactive Control Panel */}
-                <Card
-                    sx={{
-                        backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        backdropFilter: 'blur(20px)',
-                    }}
-                >
-                    <CardContent>
+                    {/* Interactive Control Panel */}
+                    <Box
+                        sx={{
+                            padding: { xs: 1.5, sm: 2 },
+                            backgroundColor: 'rgba(128, 128, 128, 0.05)',
+                            borderRadius: 2,
+                            border: '1px solid rgba(128, 128, 128, 0.2)',
+                            width: '100%',
+                            boxSizing: 'border-box',
+                            overflow: 'hidden',
+                        }}
+                    >
                         <Box
                             sx={{
                                 display: 'flex',
@@ -262,7 +316,10 @@ const Oligopoly = () => {
                         >
                             <Typography
                                 variant="h6"
-                                sx={{ color: 'primary.light' }}
+                                sx={{
+                                    color: 'primary.light',
+                                    fontWeight: 600,
+                                }}
                             >
                                 Market Parameters
                             </Typography>
@@ -272,12 +329,12 @@ const Oligopoly = () => {
                                 startIcon={<Refresh />}
                                 onClick={resetToDefaults}
                                 sx={{
-                                    borderColor: 'rgba(255,255,255,0.3)',
+                                    borderColor: 'rgba(255, 255, 255, 0.3)',
                                     color: 'rgba(255,255,255,0.7)',
                                     '&:hover': {
                                         borderColor: 'primary.main',
                                         backgroundColor:
-                                            'rgba(25, 118, 210, 0.1)',
+                                            'rgba(255, 255, 255, 0.1)',
                                     },
                                 }}
                             >
@@ -462,10 +519,10 @@ const Oligopoly = () => {
                                 />
                             </Grid>
                         </Grid>
-                    </CardContent>
-                </Card>
-            </Box>
-        </Box>
+                    </Box>
+                </Box>
+            </Grid>
+        </Grid>
     );
 };
 
