@@ -7,8 +7,14 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { grey, blueGrey } from '@mui/material/colors';
 import { CssBaseline } from '@mui/material';
 
-import * as run from './Interpreters';
-import * as page from './Pages';
+import {
+    Stun_Step,
+    Suffolk,
+    WII2D,
+    Back,
+    names as runNames,
+} from './Interpreters';
+import { Home, Error, Snake, Lights_Out, pages as pageRoutes } from './Pages';
 
 const darkTheme = createTheme({
     palette: {
@@ -26,22 +32,27 @@ function getRoute(Elem, url) {
 }
 
 function Website() {
+    const interpreters = [
+        { Component: Stun_Step, url: runNames.Stun_Step },
+        { Component: Suffolk, url: runNames.Suffolk },
+        { Component: WII2D, url: runNames.WII2D },
+        { Component: Back, url: runNames.Back },
+    ];
+
+    const pages = [
+        { Component: Home, url: '/' },
+        { Component: Snake, url: pageRoutes.Snake },
+        { Component: Lights_Out, url: pageRoutes.Lights_Out },
+    ];
+
     return (
         <HashRouter basename="/">
             <Routes>
-                {Object.keys(run).map(k => {
-                    if (k === 'names') return null;
-
-                    const url = run.names[k]; // eslint-disable-line import/namespace
-                    return getRoute(run[k], url); // eslint-disable-line import/namespace
-                })}
-                {Object.keys(page).map(k => {
-                    if (k === 'Error' || k === 'pages') return null;
-
-                    const url = page.pages[k] || '/'; // eslint-disable-line import/namespace
-                    return getRoute(page[k], url); // eslint-disable-line import/namespace
-                })}
-                <Route path="*" element={<page.Error />} />
+                {interpreters.map(({ Component, url }) =>
+                    getRoute(Component, url)
+                )}
+                {pages.map(({ Component, url }) => getRoute(Component, url))}
+                <Route path="*" element={<Error />} />
             </Routes>
         </HashRouter>
     );

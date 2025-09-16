@@ -34,10 +34,8 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 }));
 
 // Suppress console errors in tests unless explicitly testing them
-// eslint-disable-next-line no-console
 const originalError = console.error;
 beforeAll(() => {
-    // eslint-disable-next-line no-console
     console.error = (...args) => {
         if (
             typeof args[0] === 'string' &&
@@ -45,12 +43,10 @@ beforeAll(() => {
         ) {
             return;
         }
-        // eslint-disable-next-line no-console
         originalError.call(console, ...args);
     };
 });
 
 afterAll(() => {
-    // eslint-disable-next-line no-console
     console.error = originalError;
 });
