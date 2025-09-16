@@ -70,7 +70,7 @@ const generateMarketData = (rounds, numFirms, modelType) => {
     return data;
 };
 
-const OligopolyDemo = () => {
+const Oligopoly = () => {
     const [isRunning, setIsRunning] = useState(false);
     const [currentRound, setCurrentRound] = useState(0);
     const [numFirms, setNumFirms] = useState(3);
@@ -872,4 +872,4 @@ const OligopolyDemo = () => {
     );
 };
 
-export default OligopolyDemo;
+export default Oligopoly;

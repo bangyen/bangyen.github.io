@@ -63,7 +63,7 @@ const generateGradientData = percentile => {
     return gradients;
 };
 
-const ZSharpDemo = () => {
+const ZSharp = () => {
     const [isRunning, setIsRunning] = useState(false);
     const [currentEpoch, setCurrentEpoch] = useState(0);
     const [rho, setRho] = useState(0.05);
@@ -717,4 +717,4 @@ const ZSharpDemo = () => {
     );
 };
 
-export default ZSharpDemo;
+export default ZSharp;
