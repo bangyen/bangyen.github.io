@@ -1,13 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-    Box,
-    Typography,
-    Grid,
-    Card,
-    CardContent,
-    Chip,
-    Alert,
-} from '@mui/material';
+import { Box, Typography, Grid, Card, CardContent, Chip } from '@mui/material';
 import { Business, Warning, Assessment, Timeline } from '@mui/icons-material';
 import {
     LineChart,
@@ -54,11 +46,11 @@ const Oligopoly = () => {
             <Box
                 sx={{
                     color: 'white',
-                    padding: { xs: 2, sm: 3, md: 4 },
-                    maxWidth: '1400px',
-                    margin: '0 auto',
-                    width: '100%',
+                    padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
                     boxSizing: 'border-box',
+                    width: '100%',
+                    maxWidth: '100vw',
+                    overflowX: 'hidden',
                 }}
             >
                 {/* Header */}
@@ -188,16 +180,11 @@ const Oligopoly = () => {
                                 </LineChart>
                             </ResponsiveContainer>
                         </Box>
-                        <Alert severity="warning" sx={{ mt: 2 }}>
-                            Collusion detected in rounds 6-10: Price increases
-                            to $68 and HHI rises to 0.55, triggering regulatory
-                            intervention that restores competitive pricing.
-                        </Alert>
                     </CardContent>
                 </Card>
 
                 {/* Key Features */}
-                <Grid container spacing={3} sx={{ marginBottom: 4 }}>
+                <Grid container spacing={3}>
                     <Grid item xs={12} md={3}>
                         <Card
                             sx={{
@@ -225,9 +212,8 @@ const Oligopoly = () => {
                                     variant="body2"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    Supports both quantity (Cournot) and price
-                                    (Bertrand) competition models with realistic
-                                    firm behavior patterns.
+                                    Supports both quantity and price competition
+                                    models with realistic firm behavior.
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -260,8 +246,7 @@ const Oligopoly = () => {
                                     sx={{ color: 'text.secondary' }}
                                 >
                                     Real-time monitoring of market concentration
-                                    using the Herfindahl-Hirschman Index to
-                                    detect potential collusion.
+                                    to detect potential collusion.
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -293,9 +278,8 @@ const Oligopoly = () => {
                                     variant="body2"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    Analyzes firm strategies including
-                                    Tit-for-Tat, Static, and Random Walk to
-                                    understand competitive dynamics.
+                                    Analyzes firm strategies to understand
+                                    competitive dynamics and market behavior.
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -328,129 +312,12 @@ const Oligopoly = () => {
                                     sx={{ color: 'text.secondary' }}
                                 >
                                     Automatic regulatory intervention with
-                                    penalties and price caps when collusion
-                                    thresholds are exceeded.
+                                    penalties when collusion is detected.
                                 </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
                 </Grid>
-
-                {/* Economic Model Overview */}
-                <Card
-                    sx={{
-                        backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        backdropFilter: 'blur(20px)',
-                    }}
-                >
-                    <CardContent>
-                        <Typography
-                            variant="h5"
-                            sx={{
-                                marginBottom: 3,
-                                color: 'primary.light',
-                                textAlign: 'center',
-                            }}
-                        >
-                            Economic Model Framework
-                        </Typography>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12} md={6}>
-                                <Box sx={{ marginBottom: 3 }}>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            color: 'success.main',
-                                            marginBottom: 1,
-                                        }}
-                                    >
-                                        Market Structure
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary', mb: 2 }}
-                                    >
-                                        Oligopoly markets with 2-5 firms
-                                        competing simultaneously. Each firm can
-                                        choose between quantity (Cournot) or
-                                        price (Bertrand) competition strategies
-                                        to maximize profits.
-                                    </Typography>
-                                </Box>
-                                <Box sx={{ marginBottom: 3 }}>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            color: 'warning.main',
-                                            marginBottom: 1,
-                                        }}
-                                    >
-                                        Demand Function
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary', mb: 2 }}
-                                    >
-                                        Linear inverse demand: P(Q) = A - B × Q,
-                                        where A represents the maximum price
-                                        consumers are willing to pay and B
-                                        controls price sensitivity.
-                                    </Typography>
-                                </Box>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Box sx={{ marginBottom: 3 }}>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            color: 'info.main',
-                                            marginBottom: 1,
-                                        }}
-                                    >
-                                        Collusion Detection
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary', mb: 2 }}
-                                    >
-                                        Monitors the Herfindahl-Hirschman Index
-                                        (HHI) and price patterns to identify
-                                        potential cartel behavior. HHI &gt; 0.4
-                                        typically indicates high market
-                                        concentration.
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            color: 'secondary.light',
-                                            marginBottom: 1,
-                                        }}
-                                    >
-                                        Regulatory Intervention
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary' }}
-                                    >
-                                        When collusion is detected, the system
-                                        automatically imposes penalties, price
-                                        caps, or market restructuring to restore
-                                        competitive conditions.
-                                    </Typography>
-                                </Box>
-                            </Grid>
-                        </Grid>
-                        <Alert severity="info" sx={{ mt: 3 }}>
-                            This simulation provides insights into how market
-                            structure, firm behavior, and regulatory policies
-                            interact to shape competitive outcomes in oligopoly
-                            markets.
-                        </Alert>
-                    </CardContent>
-                </Card>
             </Box>
         </Box>
     );

@@ -1,13 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-    Box,
-    Typography,
-    Grid,
-    Card,
-    CardContent,
-    Chip,
-    Alert,
-} from '@mui/material';
+import { Box, Typography, Grid, Card, CardContent, Chip } from '@mui/material';
 import { TrendingUp, Speed, Psychology } from '@mui/icons-material';
 import {
     LineChart,
@@ -50,11 +42,11 @@ const ZSharp = () => {
             <Box
                 sx={{
                     color: 'white',
-                    padding: { xs: 2, sm: 3, md: 4 },
-                    maxWidth: '1400px',
-                    margin: '0 auto',
-                    width: '100%',
+                    padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
                     boxSizing: 'border-box',
+                    width: '100%',
+                    maxWidth: '100vw',
+                    overflowX: 'hidden',
                 }}
             >
                 {/* Header */}
@@ -171,15 +163,11 @@ const ZSharp = () => {
                                 </LineChart>
                             </ResponsiveContainer>
                         </Box>
-                        <Alert severity="success" sx={{ mt: 2 }}>
-                            ZSharp achieves 94% accuracy compared to SGD&apos;s
-                            85% - a 5.22% improvement in final performance.
-                        </Alert>
                     </CardContent>
                 </Card>
 
-                {/* Key Features */}
-                <Grid container spacing={3} sx={{ marginBottom: 4 }}>
+                {/* Key Metrics */}
+                <Grid container spacing={3}>
                     <Grid item xs={12} md={4}>
                         <Card
                             sx={{
@@ -208,8 +196,7 @@ const ZSharp = () => {
                                     sx={{ color: 'text.secondary' }}
                                 >
                                     ZSharp consistently outperforms standard
-                                    optimizers by finding flatter minima that
-                                    generalize better to unseen data.
+                                    optimizers by finding flatter minima.
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -242,9 +229,7 @@ const ZSharp = () => {
                                     sx={{ color: 'text.secondary' }}
                                 >
                                     Optimized for Apple Silicon with MPS
-                                    acceleration, reducing training time
-                                    significantly compared to CPU-based
-                                    implementations.
+                                    acceleration for significant speedup.
                                 </Typography>
                             </CardContent>
                         </Card>
@@ -276,131 +261,13 @@ const ZSharp = () => {
                                     variant="body2"
                                     sx={{ color: 'text.secondary' }}
                                 >
-                                    Uses Z-score normalization and
-                                    percentile-based filtering to focus
-                                    optimization on the most important gradient
-                                    updates.
+                                    Uses Z-score normalization to focus
+                                    optimization on critical parameters.
                                 </Typography>
                             </CardContent>
                         </Card>
                     </Grid>
                 </Grid>
-
-                {/* Algorithm Overview */}
-                <Card
-                    sx={{
-                        backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        backdropFilter: 'blur(20px)',
-                    }}
-                >
-                    <CardContent>
-                        <Typography
-                            variant="h5"
-                            sx={{
-                                marginBottom: 3,
-                                color: 'primary.light',
-                                textAlign: 'center',
-                            }}
-                        >
-                            How ZSharp Works
-                        </Typography>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12} md={6}>
-                                <Box sx={{ marginBottom: 3 }}>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            color: 'success.main',
-                                            marginBottom: 1,
-                                        }}
-                                    >
-                                        1. Layer-wise Z-score Normalization
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary' }}
-                                    >
-                                        Gradients within each layer are
-                                        normalized to compute their statistical
-                                        significance. This identifies which
-                                        gradient updates are most important for
-                                        optimization.
-                                    </Typography>
-                                </Box>
-                                <Box sx={{ marginBottom: 3 }}>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            color: 'warning.main',
-                                            marginBottom: 1,
-                                        }}
-                                    >
-                                        2. Percentile-based Filtering
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary' }}
-                                    >
-                                        Only gradients with absolute Z-scores
-                                        above a configurable percentile
-                                        threshold are retained. This focuses
-                                        optimization on critical parameters.
-                                    </Typography>
-                                </Box>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
-                                <Box sx={{ marginBottom: 3 }}>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            color: 'info.main',
-                                            marginBottom: 1,
-                                        }}
-                                    >
-                                        3. SAM Perturbation
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary' }}
-                                    >
-                                        The filtered gradients are used in
-                                        Sharpness-Aware Minimization&apos;s
-                                        two-step optimization process, which
-                                        perturbs parameters to find flatter
-                                        minima.
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            color: 'secondary.light',
-                                            marginBottom: 1,
-                                        }}
-                                    >
-                                        4. Parameter Update
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary' }}
-                                    >
-                                        Model parameters are updated using the
-                                        base optimizer (SGD, Adam, etc.) with
-                                        the filtered gradients, leading to
-                                        better generalization.
-                                    </Typography>
-                                </Box>
-                            </Grid>
-                        </Grid>
-                        <Alert severity="info" sx={{ mt: 3 }}>
-                            This approach combines the benefits of gradient
-                            filtering with SAM&apos;s sharpness-aware
-                            optimization, resulting in improved model
-                            performance and faster convergence.
-                        </Alert>
-                    </CardContent>
-                </Card>
             </Box>
         </Box>
     );
