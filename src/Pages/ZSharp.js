@@ -25,7 +25,6 @@ const loadRealZSharpData = async () => {
                 })
             )
         );
-
         const realData = JSON.parse(decompressedData);
 
         // Convert real results to chart data format with per-epoch data
@@ -52,7 +51,6 @@ const loadRealZSharpData = async () => {
 
         return data;
     } catch (error) {
-        console.error('Failed to load real ZSharp data:', error);
         return generateFallbackData();
     }
 };
@@ -92,7 +90,6 @@ const ZSharp = () => {
                 const data = await loadRealZSharpData();
                 setChartData(data);
             } catch (error) {
-                console.error('Failed to load data:', error);
                 setChartData(generateFallbackData());
             } finally {
                 setLoading(false);
@@ -182,23 +179,6 @@ const ZSharp = () => {
     };
 
     const currentData = getProcessedData();
-
-    const resetToDefaults = () => {
-        // Reload the real data
-        const loadData = async () => {
-            setLoading(true);
-            try {
-                const data = await loadRealZSharpData();
-                setChartData(data);
-            } catch (error) {
-                console.error('Failed to load data:', error);
-                setChartData(generateFallbackData());
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadData();
-    };
 
     return (
         <Grid

@@ -22,15 +22,23 @@ import {
 // Load real simulation matrix data
 const loadRealSimulationMatrix = async () => {
     try {
-        // Use uncompressed version for now to avoid DecompressionStream issues
-        const response = await fetch('/oligopoly_real_matrix.json');
+        const response = await fetch('/oligopoly_real_matrix.json.gz');
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const matrixData = await response.json();
+        const compressedData = await response.arrayBuffer();
+        const decompressedData = new TextDecoder().decode(
+            new DecompressionStream('gzip').readable.pipeTo(
+                new WritableStream({
+                    write(chunk) {
+                        return chunk;
+                    },
+                })
+            )
+        );
+        const matrixData = JSON.parse(decompressedData);
         return matrixData;
     } catch (error) {
-        console.error('Failed to load real simulation matrix:', error);
         return [];
     }
 };
@@ -119,7 +127,6 @@ const Oligopoly = () => {
                 );
                 setMarketData(initialData);
             } catch (error) {
-                console.error('Failed to load data:', error);
                 setMarketData(generateFallbackOligopolyData());
             } finally {
                 setLoading(false);
@@ -127,7 +134,7 @@ const Oligopoly = () => {
         };
 
         loadData();
-    }, []);
+    }, [numFirms, demandElasticity, basePrice, collusionEnabled]);
 
     // Update data when parameters change
     useEffect(() => {
@@ -142,7 +149,14 @@ const Oligopoly = () => {
             );
             setMarketData(filteredData);
         }
-    }, [numFirms, demandElasticity, basePrice, matrixData]);
+    }, [
+        numFirms,
+        demandElasticity,
+        basePrice,
+        matrixData,
+        modelType,
+        collusionEnabled,
+    ]);
 
     const resetToDefaults = () => {
         setNumFirms(3);
