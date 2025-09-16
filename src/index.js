@@ -19,8 +19,8 @@ import {
     Error,
     Snake,
     Lights_Out,
-    ZSharpDemo,
-    OligopolyDemo,
+    ZSharp,
+    Oligopoly,
     pages as pageRoutes,
 } from './Pages';
 
@@ -51,8 +51,8 @@ function Website() {
         { Component: Home, url: '/' },
         { Component: Snake, url: pageRoutes.Snake },
         { Component: Lights_Out, url: pageRoutes.Lights_Out },
-        { Component: ZSharpDemo, url: pageRoutes.ZSharpDemo },
-        { Component: OligopolyDemo, url: pageRoutes.OligopolyDemo },
+        { Component: ZSharp, url: pageRoutes.ZSharp },
+        { Component: Oligopoly, url: pageRoutes.Oligopoly },
     ];
 
     return (
