@@ -28,7 +28,12 @@ export const createTestTheme = () =>
  * @returns {React.ReactElement} Wrapped component
  */
 export const TestWrapper = ({ children, theme = createTestTheme() }) => (
-    <BrowserRouter>
+    <BrowserRouter
+        future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+        }}
+    >
         <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </BrowserRouter>
 );

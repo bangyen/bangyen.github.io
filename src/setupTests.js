@@ -33,40 +33,4 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
     unobserve: jest.fn(),
 }));
 
-// Suppress console errors and warnings in tests unless explicitly testing them
-const originalError = console.error;
-const originalWarn = console.warn;
-beforeAll(() => {
-    console.error = (...args) => {
-        if (
-            typeof args[0] === 'string' &&
-            (args[0].includes(
-                'Warning: ReactDOM.render is no longer supported'
-            ) ||
-                args[0].includes(
-                    'Warning: `ReactDOMTestUtils.act` is deprecated'
-                ) ||
-                args[0].includes(
-                    'Warning: An update to Transition inside a test was not wrapped in act'
-                ))
-        ) {
-            return;
-        }
-        originalError.call(console, ...args);
-    };
-
-    console.warn = (...args) => {
-        if (
-            typeof args[0] === 'string' &&
-            args[0].includes('React Router Future Flag Warning')
-        ) {
-            return;
-        }
-        originalWarn.call(console, ...args);
-    };
-});
-
-afterAll(() => {
-    console.error = originalError;
-    console.warn = originalWarn;
-});
+// All warnings have been fixed at the root cause - no suppressions needed!

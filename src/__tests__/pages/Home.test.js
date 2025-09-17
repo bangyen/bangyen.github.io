@@ -19,7 +19,12 @@ const testTheme = createTheme({
 
 // Test wrapper component
 const TestWrapper = ({ children }) => (
-    <BrowserRouter>
+    <BrowserRouter
+        future={{
+            v7_startTransition: true,
+            v7_relativeSplatPath: true,
+        }}
+    >
         <ThemeProvider theme={testTheme}>{children}</ThemeProvider>
     </BrowserRouter>
 );
@@ -129,6 +134,7 @@ describe('Home Component', () => {
         );
 
         const menuButton = screen.getByRole('button');
+
         fireEvent.click(menuButton);
 
         await waitFor(() => {
@@ -149,6 +155,7 @@ describe('Home Component', () => {
         );
 
         const menuButton = screen.getByRole('button');
+
         fireEvent.click(menuButton);
 
         await waitFor(() => {
