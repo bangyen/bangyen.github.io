@@ -26,6 +26,8 @@
     "deploy": "gh-pages -b gh-pages -d build",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:new": "jest --config jest.config.js",
+    "test:coverage": "jest --config jest.config.js --coverage",
     "eject": "react-scripts eject",
     "lint": "eslint src/ --ext .js,.jsx --config config/eslint.config.js",
     "lint:fix": "eslint src/ --ext .js,.jsx --fix --config config/eslint.config.js",

@@ -3,7 +3,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { grey, blueGrey } from '@mui/material/colors';
-import Home from './Home';
+import Home from '../../Pages/Home';
 
 // Create a test theme
 const testTheme = createTheme({
@@ -38,18 +38,14 @@ jest.mock('@mui/icons-material', () => ({
     OpenInNew: () => <div data-testid="open-icon">Open</div>,
 }));
 
-// Mock the Interpreters and Pages modules
-jest.mock('../Interpreters', () => ({
-    names: {
-        'Text Editor': '/text-editor',
-        'Grid Editor': '/grid-editor',
-    },
-}));
-
-jest.mock('./', () => ({
+// Mock the Pages module
+jest.mock('../../Pages', () => ({
     pages: {
-        'Snake Game': '/snake',
-        'Lights Out': '/lights-out',
+        Oligopoly: '/Oligopoly',
+        ZSharp: '/ZSharp',
+        Snake: '/Snake',
+        Lights_Out: '/Lights_Out',
+        Interpreters: '/Interpreters',
     },
 }));
 
@@ -136,12 +132,13 @@ describe('Home Component', () => {
         fireEvent.click(menuButton);
 
         await waitFor(() => {
-            expect(screen.getByText('Snake Game')).toBeInTheDocument();
+            expect(screen.getByText('Oligopoly')).toBeInTheDocument();
         });
 
-        expect(screen.getByText('Lights Out')).toBeInTheDocument();
-        expect(screen.getByText('Text Editor')).toBeInTheDocument();
-        expect(screen.getByText('Grid Editor')).toBeInTheDocument();
+        expect(screen.getByText('ZSharp')).toBeInTheDocument();
+        expect(screen.getByText('Snake')).toBeInTheDocument();
+        expect(screen.getByText('Lights_Out')).toBeInTheDocument();
+        expect(screen.getByText('Interpreters')).toBeInTheDocument();
     });
 
     test('closes menu when clicking outside', async () => {
@@ -155,7 +152,7 @@ describe('Home Component', () => {
         fireEvent.click(menuButton);
 
         await waitFor(() => {
-            expect(screen.getByText('Snake Game')).toBeInTheDocument();
+            expect(screen.getByText('Oligopoly')).toBeInTheDocument();
         });
 
         // Click outside the menu
@@ -165,7 +162,7 @@ describe('Home Component', () => {
         await new Promise(resolve => setTimeout(resolve, 100));
 
         // Menu should still be visible as clicking outside doesn't close it in this implementation
-        expect(screen.getByText('Snake Game')).toBeInTheDocument();
+        expect(screen.getByText('Oligopoly')).toBeInTheDocument();
     });
 
     test('renders contact information', () => {

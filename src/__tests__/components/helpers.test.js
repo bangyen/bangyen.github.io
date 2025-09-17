@@ -9,7 +9,7 @@ import {
     CustomGrid,
     Navigation,
     Controls,
-} from './helpers';
+} from '../../helpers';
 
 // Create a test theme
 const testTheme = createTheme({
