@@ -134,42 +134,6 @@ const ZSharp = () => {
                     epoch: point.epoch,
                     improvement: point.zsharp - point.sgd,
                 }));
-            case 'summary':
-                const finalSGD = chartData[chartData.length - 1]?.sgd || 0;
-                const finalZSharp =
-                    chartData[chartData.length - 1]?.zsharp || 0;
-                const finalSGDLoss =
-                    chartData[chartData.length - 1]?.sgdLoss || 0;
-                const finalZSharpLoss =
-                    chartData[chartData.length - 1]?.zsharpLoss || 0;
-                const improvement = finalZSharp - finalSGD;
-                const lossImprovement = finalSGDLoss - finalZSharpLoss;
-                return [
-                    {
-                        metric: 'Final SGD Accuracy',
-                        value: (finalSGD * 100).toFixed(1) + '%',
-                    },
-                    {
-                        metric: 'Final ZSharp Accuracy',
-                        value: (finalZSharp * 100).toFixed(1) + '%',
-                    },
-                    {
-                        metric: 'Accuracy Improvement',
-                        value: (improvement * 100).toFixed(1) + '%',
-                    },
-                    {
-                        metric: 'Final SGD Loss',
-                        value: finalSGDLoss.toFixed(3),
-                    },
-                    {
-                        metric: 'Final ZSharp Loss',
-                        value: finalZSharpLoss.toFixed(3),
-                    },
-                    {
-                        metric: 'Loss Reduction',
-                        value: (lossImprovement * 100).toFixed(1) + '%',
-                    },
-                ];
             case 'convergence':
                 return chartData.map((point, index) => {
                     if (index === 0)
@@ -265,9 +229,9 @@ const ZSharp = () => {
                                     color: 'text.primary',
                                     fontWeight: 700,
                                     fontSize: {
-                                        xs: '2.5rem',
-                                        sm: '3.5rem',
-                                        md: '4rem',
+                                        xs: '2rem',
+                                        sm: '2.8rem',
+                                        md: '3.2rem',
                                     },
                                 }}
                             >
@@ -338,7 +302,6 @@ const ZSharp = () => {
                                 'Learning Gap Evolution'}
                             {viewType === 'convergence' &&
                                 'Convergence Rate Analysis'}
-                            {viewType === 'summary' && 'Summary Statistics'}
                         </Typography>
                         <Box sx={{ height: 300 }}>
                             {loading ? (
@@ -354,41 +317,6 @@ const ZSharp = () => {
                                     <Typography>
                                         Loading real experiment data...
                                     </Typography>
-                                </Box>
-                            ) : viewType === 'summary' ? (
-                                <Box sx={{ padding: 2 }}>
-                                    {currentData.map((item, index) => (
-                                        <Box
-                                            key={index}
-                                            sx={{
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'center',
-                                                padding: 1,
-                                                borderBottom:
-                                                    index <
-                                                    currentData.length - 1
-                                                        ? '1px solid rgba(255,255,255,0.1)'
-                                                        : 'none',
-                                            }}
-                                        >
-                                            <Typography
-                                                variant="body1"
-                                                sx={{ color: 'text.secondary' }}
-                                            >
-                                                {item.metric}:
-                                            </Typography>
-                                            <Typography
-                                                variant="h6"
-                                                sx={{
-                                                    color: 'primary.light',
-                                                    fontWeight: 600,
-                                                }}
-                                            >
-                                                {item.value}
-                                            </Typography>
-                                        </Box>
-                                    ))}
                                 </Box>
                             ) : (
                                 <ResponsiveContainer width="100%" height="100%">
@@ -607,10 +535,20 @@ const ZSharp = () => {
                     <Box
                         sx={{
                             marginTop: 3,
-                            display: 'flex',
+                            display: 'grid',
+                            gridTemplateColumns: {
+                                xs: '1fr 1fr',
+                                sm: 'repeat(4, 1fr)',
+                            },
                             gap: 1,
-                            flexWrap: 'wrap',
-                            justifyContent: 'center',
+                            maxWidth: {
+                                xs: '300px',
+                                sm: 'none',
+                            },
+                            margin: {
+                                xs: '3rem auto 0',
+                                sm: '3rem 0 0',
+                            },
                         }}
                     >
                         <Button
@@ -698,28 +636,6 @@ const ZSharp = () => {
                             }}
                         >
                             Convergence
-                        </Button>
-                        <Button
-                            variant={
-                                viewType === 'summary'
-                                    ? 'contained'
-                                    : 'outlined'
-                            }
-                            size="small"
-                            onClick={() => setViewType('summary')}
-                            sx={{
-                                borderColor: 'rgba(255, 255, 255, 0.3)',
-                                color:
-                                    viewType === 'summary'
-                                        ? 'white'
-                                        : 'rgba(255,255,255,0.7)',
-                                '&:hover': {
-                                    borderColor: 'primary.main',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                },
-                            }}
-                        >
-                            Summary
                         </Button>
                     </Box>
                 </Box>

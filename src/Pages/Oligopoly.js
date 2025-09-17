@@ -248,9 +248,9 @@ const Oligopoly = () => {
                                     color: 'text.primary',
                                     fontWeight: 700,
                                     fontSize: {
-                                        xs: '2.5rem',
-                                        sm: '3.5rem',
-                                        md: '4rem',
+                                        xs: '2rem',
+                                        sm: '2.8rem',
+                                        md: '3.2rem',
                                     },
                                 }}
                             >

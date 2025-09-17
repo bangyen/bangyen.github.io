@@ -33,4 +33,17 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
     unobserve: jest.fn(),
 }));
 
+// Mock TextEncoder for Node.js environment
+global.TextEncoder = class TextEncoder {
+    encode(str) {
+        return new Uint8Array(str.split('').map(c => c.charCodeAt(0)));
+    }
+};
+
+global.TextDecoder = class TextDecoder {
+    decode(bytes) {
+        return String.fromCharCode(...bytes);
+    }
+};
+
 // All warnings have been fixed at the root cause - no suppressions needed!
