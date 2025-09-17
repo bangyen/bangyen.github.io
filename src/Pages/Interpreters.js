@@ -1,16 +1,8 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
-import {
-    Typography,
-    Box,
-    IconButton,
-    Card,
-    CardContent,
-    Chip,
-} from '@mui/material';
-import { GitHub, Home, Code, GridView, TextFields } from '@mui/icons-material';
-import { names } from '../Interpreters';
+import { Typography, Box, IconButton, Card, CardContent } from '@mui/material';
+import { GitHub, Home, GridView, TextFields } from '@mui/icons-material';
 
 export default function Interpreters() {
     useEffect(() => {

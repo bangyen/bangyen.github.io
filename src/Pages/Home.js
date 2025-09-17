@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
 
 import { TooltipButton } from '../helpers';
-import { names } from '../Interpreters';
 import { pages } from './';
 
 import {
@@ -17,15 +16,7 @@ import {
     OpenInNew,
 } from '@mui/icons-material';
 
-import {
-    Typography,
-    Divider,
-    Box,
-    Menu,
-    MenuItem,
-    Chip,
-    Fade,
-} from '@mui/material';
+import { Typography, Box, Menu, MenuItem, Chip, Fade } from '@mui/material';
 
 function dropdown(name, options) {
     const padHeight = '1rem';
