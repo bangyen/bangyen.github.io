@@ -128,10 +128,18 @@ export default function Interpreters() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <GitHub fontSize="large" />
+                                <GitHub
+                                    sx={{
+                                        fontSize: { xs: '1.5rem', sm: '2rem' },
+                                    }}
+                                />
                             </IconButton>
                             <IconButton component={Link} to="/">
-                                <Home fontSize="large" />
+                                <Home
+                                    sx={{
+                                        fontSize: { xs: '1.5rem', sm: '2rem' },
+                                    }}
+                                />
                             </IconButton>
                         </Box>
                     </Grid>

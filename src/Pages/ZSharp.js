@@ -280,10 +280,18 @@ const ZSharp = () => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
-                                <GitHub fontSize="large" />
+                                <GitHub
+                                    sx={{
+                                        fontSize: { xs: '1.5rem', sm: '2rem' },
+                                    }}
+                                />
                             </IconButton>
                             <IconButton component="a" href="/">
-                                <Home fontSize="large" />
+                                <Home
+                                    sx={{
+                                        fontSize: { xs: '1.5rem', sm: '2rem' },
+                                    }}
+                                />
                             </IconButton>
                         </Grid>
                     </Grid>
