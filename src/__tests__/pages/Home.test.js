@@ -137,7 +137,7 @@ describe('Home Component', () => {
 
         expect(screen.getByText('ZSharp')).toBeInTheDocument();
         expect(screen.getByText('Snake')).toBeInTheDocument();
-        expect(screen.getByText('Lights_Out')).toBeInTheDocument();
+        expect(screen.getByText('Lights Out')).toBeInTheDocument();
         expect(screen.getByText('Interpreters')).toBeInTheDocument();
     });
 
