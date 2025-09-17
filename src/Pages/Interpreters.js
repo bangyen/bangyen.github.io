@@ -114,6 +114,10 @@ export default function Interpreters() {
                             sx={{
                                 color: 'text.primary',
                                 fontWeight: 600,
+                                fontSize: {
+                                    xs: '1.5rem',
+                                    sm: '2.125rem',
+                                },
                             }}
                         >
                             Esolang Interpreters

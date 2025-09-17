@@ -198,7 +198,7 @@ export default function Home() {
                                 fontWeight: 700,
                                 marginBottom: 2,
                                 fontSize: {
-                                    xs: '2.5rem',
+                                    xs: '2rem',
                                     sm: '3.5rem',
                                     md: '4rem',
                                 },
@@ -213,7 +213,7 @@ export default function Home() {
                                 color: 'text.secondary',
                                 marginBottom: 2,
                                 fontWeight: 400,
-                                fontSize: { xs: '1.1rem', sm: '1.3rem' },
+                                fontSize: { xs: '0.95rem', sm: '1.3rem' },
                             }}
                         >
                             Backend Developer & AI/ML Engineer
