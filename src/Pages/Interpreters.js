@@ -115,7 +115,7 @@ export default function Interpreters() {
                                 color: 'text.primary',
                                 fontWeight: 600,
                                 fontSize: {
-                                    xs: '1.5rem',
+                                    xs: '1.25rem',
                                     sm: '2.125rem',
                                 },
                             }}
