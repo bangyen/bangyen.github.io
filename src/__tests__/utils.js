@@ -116,7 +116,9 @@ export const testUtils = {
      * Mocks console methods to suppress expected warnings in tests
      */
     suppressConsoleWarnings: () => {
+        // eslint-disable-next-line no-console
         const originalWarn = console.warn;
+        // eslint-disable-next-line no-console
         const originalError = console.error;
 
         // eslint-disable-next-line no-console
