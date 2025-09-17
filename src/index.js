@@ -58,7 +58,13 @@ function Website() {
     ];
 
     return (
-        <HashRouter basename="/">
+        <HashRouter
+            basename="/"
+            future={{
+                v7_startTransition: true,
+                v7_relativeSplatPath: true,
+            }}
+        >
             <Routes>
                 {interpreters.map(({ Component, url }) =>
                     getRoute(Component, url)

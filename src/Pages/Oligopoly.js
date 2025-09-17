@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import {
     Box,
     Typography,
-    Grid,
     Button,
     IconButton,
     ToggleButton,
     ToggleButtonGroup,
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { GitHub, Refresh, Home } from '@mui/icons-material';
 import {
     LineChart,
@@ -180,7 +180,7 @@ const Oligopoly = () => {
 
     return (
         <Grid
-            container
+            container={true}
             minHeight="100vh"
             flexDirection="column"
             sx={{
@@ -208,6 +208,7 @@ const Oligopoly = () => {
 
             {/* Main Content */}
             <Grid
+                size={12}
                 flex={1}
                 display="flex"
                 justifyContent="center"
@@ -235,12 +236,12 @@ const Oligopoly = () => {
                 >
                     {/* Header */}
                     <Grid
-                        container
+                        container={true}
                         alignItems="center"
                         justifyContent="space-between"
                         sx={{ marginBottom: 2 }}
                     >
-                        <Grid>
+                        <Grid size="auto">
                             <Typography
                                 variant="h1"
                                 sx={{
@@ -256,7 +257,7 @@ const Oligopoly = () => {
                                 Oligopoly
                             </Typography>
                         </Grid>
-                        <Grid sx={{ display: 'flex', gap: 1 }}>
+                        <Grid size="auto" sx={{ display: 'flex', gap: 1 }}>
                             <IconButton
                                 href="https://github.com/bangyen/Oligopoly"
                                 target="_blank"
@@ -456,9 +457,9 @@ const Oligopoly = () => {
                             </Button>
                         </Box>
 
-                        <Grid container spacing={3}>
+                        <Grid container={true} spacing={3}>
                             {/* Top Row - Toggle Buttons */}
-                            <Grid item xs={12} md={4}>
+                            <Grid size={{ xs: 12, md: 4 }}>
                                 <Box sx={{ marginBottom: 2 }}>
                                     <Typography
                                         variant="body2"
@@ -508,7 +509,7 @@ const Oligopoly = () => {
                                 </Box>
                             </Grid>
 
-                            <Grid item xs={12} md={4}>
+                            <Grid size={{ xs: 12, md: 4 }}>
                                 <Box sx={{ marginBottom: 2 }}>
                                     <Typography
                                         variant="body2"
@@ -563,7 +564,7 @@ const Oligopoly = () => {
                                 </Box>
                             </Grid>
 
-                            <Grid item xs={12} md={4}>
+                            <Grid size={{ xs: 12, md: 4 }}>
                                 <Box sx={{ marginBottom: 2 }}>
                                     <Typography
                                         variant="body2"

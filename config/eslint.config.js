@@ -6,11 +6,16 @@ module.exports = {
     'plugin:jsx-a11y/recommended',
     'plugin:import/recommended'
   ],
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
     ecmaFeatures: {
       jsx: true
+    },
+    requireConfigFile: false,
+    babelOptions: {
+      presets: ['@babel/preset-react']
     }
   },
   env: {
