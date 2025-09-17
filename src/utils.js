@@ -75,8 +75,14 @@ export const mockData = {
 export const mockFetchResponses = {
     success: data => ({
         ok: true,
-        arrayBuffer: () =>
-            Promise.resolve(new TextEncoder().encode(JSON.stringify(data))),
+        arrayBuffer: () => {
+            const uint8Array = new Uint8Array(
+                JSON.stringify(data)
+                    .split('')
+                    .map(c => c.charCodeAt(0))
+            );
+            return Promise.resolve(uint8Array.buffer);
+        },
     }),
     error: () => Promise.reject(new Error('Network error')),
 };
