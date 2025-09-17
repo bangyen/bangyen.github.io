@@ -164,17 +164,7 @@ export default function Home() {
                     marginBottom: { xs: '1rem', sm: '1.5rem', md: '2rem' },
                 }}
             >
-                <MenuButton>
-                    {dropdown('Miscellaneous', pages)}
-                    <Divider
-                        variant="middle"
-                        sx={{
-                            margin: '8px 0',
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                        }}
-                    />
-                    {dropdown('Interpreters', names)}
-                </MenuButton>
+                <MenuButton>{dropdown('Projects', pages)}</MenuButton>
                 <TooltipButton
                     href="https://github.com/bangyen"
                     title="GitHub"

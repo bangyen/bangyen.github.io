@@ -21,6 +21,7 @@ import {
     Lights_Out,
     ZSharp,
     Oligopoly,
+    Interpreters,
     pages as pageRoutes,
 } from './Pages';
 
@@ -53,6 +54,7 @@ function Website() {
         { Component: Lights_Out, url: pageRoutes.Lights_Out },
         { Component: ZSharp, url: pageRoutes.ZSharp },
         { Component: Oligopoly, url: pageRoutes.Oligopoly },
+        { Component: Interpreters, url: pageRoutes.Interpreters },
     ];
 
     return (
