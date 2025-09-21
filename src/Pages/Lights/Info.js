@@ -6,6 +6,7 @@ import Grid from '@mui/material/Grid2';
 import { getProduct } from './matrices';
 import { CustomGrid } from '../../helpers';
 import { useGetters } from '../Board';
+import { useMobile } from '../../hooks';
 import Example from './Example';
 
 function getInput(getters, toggleTile) {
@@ -56,6 +57,7 @@ function useHandler(row, size, palette) {
 
 export default function Info(props) {
     const { rows, cols, size, open, score, palette, toggleOpen } = props;
+    const isMobile = useMobile('md');
 
     const [row, setRow] = useState(Array(cols).fill(0));
 
@@ -93,7 +95,9 @@ export default function Info(props) {
             >
                 <CardContent
                     sx={{
-                        p: 4,
+                        pt: '48px !important',
+                        pb: '48px !important',
+                        px: '48px !important',
                         height: '100%',
                         display: 'flex',
                         flexDirection: 'column',
@@ -104,7 +108,7 @@ export default function Info(props) {
                         <Grid
                             container
                             size={12}
-                            spacing={3}
+                            spacing={4}
                             sx={{
                                 flex: 1,
                                 minHeight: 0,
@@ -114,7 +118,7 @@ export default function Info(props) {
                         >
                             {/* Left half: Algorithm instructions */}
                             <Grid
-                                size={{ xs: 12, lg: 6 }}
+                                size={{ xs: 12, lg: isMobile ? 12 : 6 }}
                                 sx={{
                                     display: 'flex',
                                     flexDirection: 'column',
@@ -167,25 +171,27 @@ export default function Info(props) {
                             </Grid>
 
                             {/* Right half: Animations */}
-                            <Grid
-                                size={{ xs: 12, lg: 6 }}
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Example
-                                    dims={3}
-                                    size={size * 0.6}
-                                    start={[1, 3, 8]}
-                                    palette={palette}
-                                />
-                            </Grid>
+                            {!isMobile && (
+                                <Grid
+                                    size={{ xs: 12, lg: 6 }}
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <Example
+                                        dims={3}
+                                        size={size * 0.6}
+                                        start={[1, 3, 8]}
+                                        palette={palette}
+                                    />
+                                </Grid>
+                            )}
                         </Grid>
 
                         {/* Bottom section: Lights Out Calculator (full width) */}
-                        <Grid container size={12} spacing={3}>
+                        <Grid container size={12} spacing={4}>
                             <Grid size={12}>
                                 <Typography
                                     variant="h6"
