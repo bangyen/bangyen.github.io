@@ -2,19 +2,23 @@
 
 A personal website and portfolio showcasing interactive programming interpreters, games, and web development projects. Built with React and deployed on GitHub Pages.
 
-🌐 **Live Site**: [https://bangyen.github.io](https://bangyen.github.io)
+**Live Site**: [https://bangyen.github.io](https://bangyen.github.io)
 
-## 🎮 Features
+## Features
 
 ### Programming Language Interpreters
-- **Stun Step**: A Brainfuck-like esoteric programming language interpreter
-- **Suffolk**: A minimal programming language interpreter with RISC-V equivalent display
-- **WII2D**: A 2D grid-based programming language interpreter
-- **Back**: A grid-based programming language interpreter
+- **Stun Step**: Brainfuck-like esoteric language
+- **Suffolk**: Minimal register-based language
+- **WII2D**: 2D grid-based programming language
+- **Back**: Grid-based language with mirror reflections
 
 ### Interactive Games
-- **Snake**: Classic snake game with responsive controls
-- **Lights Out**: Puzzle game where you turn off all lights on a grid
+- **Snake**: Classic snake game
+- **Lights Out**: Grid puzzle game
+
+### Data Visualization
+- **Oligopoly**: Economic simulation with market dynamics
+- **ZSharp**: ML experiment comparing optimization algorithms
 
 ### Technical Features
 - Responsive design with Material-UI components
@@ -23,16 +27,16 @@ A personal website and portfolio showcasing interactive programming interpreters
 - Step-by-step program execution with debugging tools
 - Tape, register, and output displays for interpreters
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-- **Frontend**: React 17, Material-UI (MUI)
-- **Routing**: React Router DOM
+- **Frontend**: React 18, Material-UI, React Router
 - **Styling**: Emotion (styled components)
-- **Icons**: Material-UI Icons, React Icons
-- **Build Tool**: Create React App
+- **Charts**: Recharts
+- **Testing**: Jest, React Testing Library
+- **Tools**: ESLint, Prettier, Stylelint, Husky
 - **Deployment**: GitHub Pages
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js (v14 or higher)
@@ -58,46 +62,26 @@ npm start
 
 4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-## 📜 Available Scripts
+## Available Scripts
 
-### Development
-- `npm start` - Runs the app in development mode
-- `npm test` - Launches the test runner in interactive watch mode
-- `npm run build` - Builds the app for production
+- `npm start` - Development server
+- `npm test` - Run tests
+- `npm run test:coverage` - Test coverage report
+- `npm run build` - Production build
+- `npm run lint:all` - Run all linting checks
+- `npm run deploy` - Deploy to GitHub Pages
 
-### Code Quality
-- `npm run lint` - Runs ESLint on source files
-- `npm run lint:fix` - Fixes ESLint issues automatically
-- `npm run format` - Formats code with Prettier
-- `npm run format:check` - Checks code formatting
-- `npm run stylelint` - Runs Stylelint on CSS/SCSS files
-- `npm run stylelint:fix` - Fixes Stylelint issues automatically
-- `npm run lint:all` - Runs all linting checks
-
-### Deployment
-- `npm run predeploy` - Builds the app for production
-- `npm run deploy` - Deploys to GitHub Pages
-
-## 🏗️ Project Structure
+## Project Structure
 
 ```
 src/
-├── Interpreters/          # Programming language interpreters
-│   ├── Text/             # Text-based interpreters (StunStep, Suffolk)
-│   ├── Grid/             # Grid-based interpreters (WII2D, Back)
-│   ├── Editor.js         # Main editor component
-│   ├── Toolbar.js        # Editor toolbar with controls
-│   └── Display.js        # Program execution displays
-├── Pages/                # Main application pages
-│   ├── Home.js           # Landing page
-│   ├── Snake.js          # Snake game
-│   └── Lights/           # Lights Out game
-├── helpers.js            # Utility functions
-├── hooks.js              # Custom React hooks
-└── index.js              # Main application entry point
+├── Interpreters/     # Programming language interpreters
+├── Pages/           # Application pages (Home, Games, Visualizations)
+├── __tests__/       # Test files
+└── utils/           # Helper functions and utilities
 ```
 
-## 🎯 How to Use
+## How to Use
 
 ### Interpreters
 1. Navigate to any interpreter from the home page menu
@@ -113,12 +97,12 @@ src/
 - **Snake**: Use arrow keys to control the snake
 - **Lights Out**: Click lights to toggle them and solve the puzzle
 
-## 🔧 Development
+### Data Visualization
+- **Oligopoly**: Economic simulation with market dynamics
+- **ZSharp**: ML experiment comparing optimization algorithms
 
-This project uses several development tools for code quality:
+## Development
 
-- **ESLint**: JavaScript/React linting
-- **Prettier**: Code formatting
-- **Stylelint**: CSS/SCSS linting
-- **Husky**: Git hooks for pre-commit checks
-- **lint-staged**: Run linters on staged files
+**Testing**: Jest, React Testing Library with coverage reports  
+**Code Quality**: ESLint, Prettier, Stylelint with pre-commit hooks  
+**Tools**: Husky, lint-staged for automated quality checks
