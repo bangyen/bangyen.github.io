@@ -141,24 +141,70 @@ export default function Info(props) {
                                     Chasing Lights Algorithm
                                 </Typography>
                                 <Box sx={{ flex: 1, overflow: 'auto' }}>
-                                    <Typography variant="body2" sx={{ mb: 2 }}>
-                                        • <strong>Chase to bottom:</strong>{' '}
-                                        Click lights in each row to turn off the
-                                        row above, working your way down until
-                                        only the bottom row remains lit.
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ mb: 2 }}>
-                                        • <strong>Use the calculator:</strong>{' '}
-                                        Enter the bottom row pattern below to
-                                        calculate which top row lights need to
-                                        be activated for the final solution.
-                                    </Typography>
-                                    <Typography variant="body2" sx={{ mb: 3 }}>
-                                        • <strong>Chase again:</strong> Click
-                                        the calculated top row lights and chase
-                                        downward to turn off all remaining
-                                        lights and complete the puzzle.
-                                    </Typography>
+                                    {isMobile ? (
+                                        <>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ mb: 2 }}
+                                            >
+                                                • <strong>Chase down:</strong>{' '}
+                                                Turn off rows from top to bottom
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ mb: 2 }}
+                                            >
+                                                • <strong>Calculate:</strong>{' '}
+                                                Enter bottom row pattern below
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ mb: 3 }}
+                                            >
+                                                • <strong>Solve:</strong> Click
+                                                calculated lights and chase down
+                                            </Typography>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ mb: 2 }}
+                                            >
+                                                •{' '}
+                                                <strong>
+                                                    Chase to bottom:
+                                                </strong>{' '}
+                                                Click lights in each row to turn
+                                                off the row above, working your
+                                                way down until only the bottom
+                                                row remains lit.
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ mb: 2 }}
+                                            >
+                                                •{' '}
+                                                <strong>
+                                                    Use the calculator:
+                                                </strong>{' '}
+                                                Enter the bottom row pattern
+                                                below to calculate which top row
+                                                lights need to be activated for
+                                                the final solution.
+                                            </Typography>
+                                            <Typography
+                                                variant="body2"
+                                                sx={{ mb: 3 }}
+                                            >
+                                                • <strong>Chase again:</strong>{' '}
+                                                Click the calculated top row
+                                                lights and chase downward to
+                                                turn off all remaining lights
+                                                and complete the puzzle.
+                                            </Typography>
+                                        </>
+                                    )}
 
                                     <Typography
                                         variant="h6"
