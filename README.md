@@ -1,5 +1,9 @@
 # Bangyen's Personal Website
 
+[![React](https://img.shields.io/badge/React-18.2.0-blue.svg?logo=react)](https://reactjs.org/)
+[![GitHub Pages](https://img.shields.io/badge/Deployed%20on-GitHub%20Pages-green.svg?logo=github)](https://pages.github.com/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 A personal website and portfolio showcasing interactive programming interpreters, games, and web development projects. Built with React and deployed on GitHub Pages.
 
 **Live Site**: [https://bangyen.github.io](https://bangyen.github.io)
