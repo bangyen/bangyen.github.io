@@ -105,11 +105,16 @@ export default function Info(props) {
                             container
                             size={12}
                             spacing={3}
-                            sx={{ flex: 1, minHeight: 0 }}
+                            sx={{
+                                flex: 1,
+                                minHeight: 0,
+                                maxWidth: { xs: '100%', lg: '1200px' },
+                                mx: 'auto',
+                            }}
                         >
                             {/* Left half: Algorithm instructions */}
                             <Grid
-                                size={{ xs: 12, md: 6 }}
+                                size={{ xs: 12, lg: 6 }}
                                 sx={{
                                     display: 'flex',
                                     flexDirection: 'column',
@@ -118,27 +123,37 @@ export default function Info(props) {
                                 <Typography
                                     variant="h5"
                                     gutterBottom
-                                    sx={{ fontWeight: 'bold', mb: 3 }}
+                                    sx={{
+                                        fontWeight: 'bold',
+                                        mb: 3,
+                                        fontSize: {
+                                            xs: '1.5rem',
+                                            md: '1.75rem',
+                                            lg: '1.6rem',
+                                            xl: '2rem',
+                                        },
+                                    }}
                                 >
                                     Chasing Lights Algorithm
                                 </Typography>
                                 <Box sx={{ flex: 1, overflow: 'auto' }}>
                                     <Typography variant="body2" sx={{ mb: 2 }}>
                                         • <strong>Chase to bottom:</strong>{' '}
-                                        Click lights in each row to eliminate
-                                        the row above until only the bottom row
-                                        is lit
+                                        Click lights in each row to turn off the
+                                        row above, working your way down until
+                                        only the bottom row remains lit.
                                     </Typography>
                                     <Typography variant="body2" sx={{ mb: 2 }}>
                                         • <strong>Use the calculator:</strong>{' '}
-                                        Enter the bottom row pattern to
-                                        determine which top row lights to
-                                        activate
+                                        Enter the bottom row pattern below to
+                                        calculate which top row lights need to
+                                        be activated for the final solution.
                                     </Typography>
                                     <Typography variant="body2" sx={{ mb: 3 }}>
                                         • <strong>Chase again:</strong> Click
                                         the calculated top row lights and chase
-                                        downward to complete the solution
+                                        downward to turn off all remaining
+                                        lights and complete the puzzle.
                                     </Typography>
 
                                     <Typography
@@ -153,7 +168,7 @@ export default function Info(props) {
 
                             {/* Right half: Animations */}
                             <Grid
-                                size={{ xs: 12, md: 6 }}
+                                size={{ xs: 12, lg: 6 }}
                                 sx={{
                                     display: 'flex',
                                     alignItems: 'center',
@@ -162,7 +177,7 @@ export default function Info(props) {
                             >
                                 <Example
                                     dims={3}
-                                    size={size * 0.8}
+                                    size={size * 0.6}
                                     start={[1, 3, 8]}
                                     palette={palette}
                                 />
@@ -178,6 +193,11 @@ export default function Info(props) {
                                         textAlign: 'center',
                                         fontWeight: 'bold',
                                         mb: 1,
+                                        fontSize: {
+                                            xs: '1.25rem',
+                                            md: '1.5rem',
+                                            lg: '1.75rem',
+                                        },
                                     }}
                                 >
                                     Interactive Calculator

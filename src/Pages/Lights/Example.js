@@ -96,7 +96,7 @@ function Title({ children }) {
 }
 
 export default function Example({ start, dims, size, palette }) {
-    const small = useMobile('md');
+    const small = useMobile('lg');
     const states = getStates(start, dims);
     const width = small ? size / 2 : size;
 
