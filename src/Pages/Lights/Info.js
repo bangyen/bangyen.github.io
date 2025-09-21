@@ -103,7 +103,11 @@ export default function Info(props) {
                         flexDirection: 'column',
                     }}
                 >
-                    <Grid container spacing={4} sx={{ flex: 1, minHeight: 0 }}>
+                    <Grid
+                        container
+                        spacing={isMobile ? 2 : 4}
+                        sx={{ flex: 1, minHeight: 0 }}
+                    >
                         {/* Top section: Instructions on left, animations on right */}
                         <Grid
                             container
@@ -130,6 +134,7 @@ export default function Info(props) {
                                     sx={{
                                         fontWeight: 'bold',
                                         mb: 3,
+                                        textAlign: isMobile ? 'center' : 'left',
                                         fontSize: {
                                             xs: '1.5rem',
                                             md: '1.75rem',
@@ -142,29 +147,47 @@ export default function Info(props) {
                                 </Typography>
                                 <Box sx={{ flex: 1, overflow: 'auto' }}>
                                     {isMobile ? (
-                                        <>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                            }}
+                                        >
                                             <Typography
                                                 variant="body2"
-                                                sx={{ mb: 2 }}
+                                                sx={{
+                                                    mb: 2,
+                                                    textAlign: 'left',
+                                                    maxWidth: '400px',
+                                                }}
                                             >
                                                 • <strong>Chase down:</strong>{' '}
                                                 Turn off rows from top to bottom
                                             </Typography>
                                             <Typography
                                                 variant="body2"
-                                                sx={{ mb: 2 }}
+                                                sx={{
+                                                    mb: 2,
+                                                    textAlign: 'left',
+                                                    maxWidth: '400px',
+                                                }}
                                             >
                                                 • <strong>Calculate:</strong>{' '}
                                                 Enter bottom row pattern below
                                             </Typography>
                                             <Typography
                                                 variant="body2"
-                                                sx={{ mb: 3 }}
+                                                sx={{
+                                                    mb: 3,
+                                                    textAlign: 'left',
+                                                    maxWidth: '400px',
+                                                }}
                                             >
                                                 • <strong>Solve:</strong> Click
                                                 calculated lights and chase down
                                             </Typography>
-                                        </>
+                                        </Box>
                                     ) : (
                                         <>
                                             <Typography
@@ -206,13 +229,15 @@ export default function Info(props) {
                                         </>
                                     )}
 
-                                    <Typography
-                                        variant="h6"
-                                        textAlign="center"
-                                        sx={{ mt: 4 }}
-                                    >
-                                        Boards Solved: &nbsp;{score}
-                                    </Typography>
+                                    {!isMobile && (
+                                        <Typography
+                                            variant="h6"
+                                            textAlign="center"
+                                            sx={{ mt: 4 }}
+                                        >
+                                            Boards Solved: &nbsp;{score}
+                                        </Typography>
+                                    )}
                                 </Box>
                             </Grid>
 
@@ -244,7 +269,7 @@ export default function Info(props) {
                                     sx={{
                                         textAlign: 'center',
                                         fontWeight: 'bold',
-                                        mb: 1,
+                                        mb: 0.5,
                                         fontSize: {
                                             xs: '1.25rem',
                                             md: '1.5rem',
