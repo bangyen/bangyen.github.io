@@ -83,17 +83,11 @@ function Title({ children }) {
     return (
         <Bifold>
             <Typography
+                variant="h6"
                 sx={{
-                    typography: {
-                        xs: 'h6',
-                        sm: 'h5',
-                        md: 'h4',
-                    },
+                    textAlign: 'center',
+                    fontWeight: 'bold',
                 }}
-                justifyContent="center"
-                alignItems="center"
-                display="flex"
-                variant="h4"
             >
                 {children}
             </Typography>
@@ -102,7 +96,7 @@ function Title({ children }) {
 }
 
 export default function Example({ start, dims, size, palette }) {
-    const small = useMobile('md');
+    const small = useMobile('lg');
     const states = getStates(start, dims);
     const width = small ? size / 2 : size;
 
@@ -146,8 +140,8 @@ export default function Example({ start, dims, size, palette }) {
                 </Grid>
             </Grid>
             <Grid container size={12}>
-                <Title>Example Board</Title>
-                <Title>Example Input</Title>
+                <Title>Animation Demo</Title>
+                <Title>Pattern Input</Title>
             </Grid>
         </Grid>
     );
