@@ -1,0 +1,37 @@
+/* Neutral Color Palette - HSL with hue=0, saturation=0 */
+:root {
+  /* Background colors */
+  --bg-dark: hsl(0, 0%, 0%);      /* Pure black */
+  --bg-surface: hsl(0, 0%, 5%);   /* Very dark gray */
+  --bg-raised: hsl(0, 0%, 10%);   /* Dark gray */
+  
+  /* Text colors */
+  --text-strong: hsl(0, 0%, 90%); /* Light gray */
+  --text-muted: hsl(0, 0%, 70%);  /* Medium gray */
+}
+
+/* Apply to body */
+body {
+  background-color: var(--bg-dark);
+  color: var(--text-strong);
+}
+
+/* Card component styles */
+.card {
+  background-color: var(--bg-surface);
+  color: var(--text-strong);
+}
+
+.card-raised {
+  background-color: var(--bg-raised);
+  color: var(--text-strong);
+}
+
+/* Text utility classes */
+.text-strong {
+  color: var(--text-strong);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
