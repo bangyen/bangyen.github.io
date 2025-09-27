@@ -4,7 +4,6 @@ import React from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { grey, blueGrey } from '@mui/material/colors';
 import { CssBaseline } from '@mui/material';
 
 import {
@@ -27,12 +26,54 @@ import {
 
 const darkTheme = createTheme({
     palette: {
-        primary: blueGrey,
-        secondary: grey,
+        primary: {
+            main: '#3B82F6', // Blue for main actions and personality
+            light: '#60A5FA',
+            dark: '#1D4ED8',
+        },
+        secondary: {
+            main: '#6B7280', // Neutral gray for secondary elements
+            light: '#9CA3AF',
+            dark: '#374151',
+        },
+        background: {
+            default: 'hsl(0, 0%, 0%)', // Base color (0% lightness)
+            paper: 'hsl(0, 0%, 5%)', // Cards and surfaces (5% lightness)
+        },
+        text: {
+            primary: 'hsl(0, 0%, 90%)', // High contrast for headings
+            secondary: 'hsl(0, 0%, 70%)', // Muted for body text
+        },
         mode: 'dark',
     },
     typography: {
-        fontFamily: 'monospace',
+        fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+        h1: {
+            fontWeight: 700,
+            letterSpacing: '-0.02em',
+        },
+        h2: {
+            fontWeight: 600,
+            letterSpacing: '-0.01em',
+        },
+        h3: {
+            fontWeight: 600,
+        },
+        h4: {
+            fontWeight: 600,
+        },
+        h5: {
+            fontWeight: 500,
+        },
+        h6: {
+            fontWeight: 500,
+        },
+        body1: {
+            lineHeight: 1.6,
+        },
+        body2: {
+            lineHeight: 1.5,
+        },
     },
 });
 
