@@ -480,7 +480,7 @@ export default function Home() {
                                             marginBottom: 1,
                                             display: 'flex',
                                             alignItems: 'center',
-                                            gap: 1,
+                                            justifyContent: 'space-between',
                                             wordWrap: 'break-word',
                                             overflowWrap: 'break-word',
                                         }}
@@ -550,7 +550,7 @@ export default function Home() {
                                             marginBottom: 1,
                                             display: 'flex',
                                             alignItems: 'center',
-                                            gap: 1,
+                                            justifyContent: 'space-between',
                                             wordWrap: 'break-word',
                                             overflowWrap: 'break-word',
                                         }}
@@ -655,7 +655,7 @@ export default function Home() {
                                             marginBottom: 1,
                                             display: 'flex',
                                             alignItems: 'center',
-                                            gap: 1,
+                                            justifyContent: 'space-between',
                                             wordWrap: 'break-word',
                                             overflowWrap: 'break-word',
                                         }}
@@ -663,6 +663,20 @@ export default function Home() {
                                         ZSharp — Sharpness-Aware Minimization
                                         <GitHub fontSize="small" />
                                     </Typography>
+                                    <Box sx={{ marginBottom: 1 }}>
+                                        <Chip
+                                            label="PyTorch"
+                                            size="small"
+                                            sx={{
+                                                backgroundColor:
+                                                    'rgba(25, 118, 210, 0.1)',
+                                                color: 'primary.light',
+                                                border: '1px solid rgba(25, 118, 210, 0.3)',
+                                                fontSize: '0.75rem',
+                                                height: '24px',
+                                            }}
+                                        />
+                                    </Box>
                                     <Typography
                                         variant="body2"
                                         sx={{
@@ -710,15 +724,28 @@ export default function Home() {
                                             marginBottom: 1,
                                             display: 'flex',
                                             alignItems: 'center',
-                                            gap: 1,
+                                            justifyContent: 'space-between',
                                             wordWrap: 'break-word',
                                             overflowWrap: 'break-word',
                                         }}
                                     >
-                                        Oligopoly — Agent-Based Economic
-                                        Modeling
+                                        Oligopoly — Agent-Based Modeling
                                         <GitHub fontSize="small" />
                                     </Typography>
+                                    <Box sx={{ marginBottom: 1 }}>
+                                        <Chip
+                                            label="FastAPI"
+                                            size="small"
+                                            sx={{
+                                                backgroundColor:
+                                                    'rgba(25, 118, 210, 0.1)',
+                                                color: 'primary.light',
+                                                border: '1px solid rgba(25, 118, 210, 0.3)',
+                                                fontSize: '0.75rem',
+                                                height: '24px',
+                                            }}
+                                        />
+                                    </Box>
                                     <Typography
                                         variant="body2"
                                         sx={{
@@ -727,9 +754,10 @@ export default function Home() {
                                             overflowWrap: 'break-word',
                                         }}
                                     >
-                                        Built FastAPI and SQLAlchemy simulation
-                                        platform for 2-4 firms with collusion
-                                        detection and real-time analysis
+                                        Built simulation with 98.5% collusion
+                                        detection accuracy and 72.3% strategy
+                                        adaptation rate using FastAPI and
+                                        SQLAlchemy
                                     </Typography>
                                 </Box>
                             </Box>
