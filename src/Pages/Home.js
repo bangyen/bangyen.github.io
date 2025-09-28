@@ -323,7 +323,7 @@ export default function Home() {
                                             overflow: 'hidden',
                                             '&:hover': {
                                                 backgroundColor:
-                                                    'rgba(255, 255, 255, 0.1)',
+                                                    'hsla(0, 0%, 10%, 0.2)', // Using raised background for hover
                                             },
                                             '& .MuiChip-icon': {
                                                 marginLeft: {
@@ -401,7 +401,7 @@ export default function Home() {
                                             overflow: 'hidden',
                                             '&:hover': {
                                                 backgroundColor:
-                                                    'rgba(128, 128, 128, 0.1)',
+                                                    'hsla(0, 0%, 10%, 0.3)', // Using raised background for hover
                                                 transform:
                                                     ANIMATIONS.hover.transform,
                                             },
@@ -516,7 +516,7 @@ export default function Home() {
                                             overflow: 'hidden',
                                             '&:hover': {
                                                 backgroundColor:
-                                                    'rgba(128, 128, 128, 0.1)',
+                                                    'hsla(0, 0%, 10%, 0.3)', // Using raised background for hover
                                                 transform:
                                                     ANIMATIONS.hover.transform,
                                             },
