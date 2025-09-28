@@ -8,7 +8,7 @@ import {
     ToggleButtonGroup,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { URLS } from '../config/constants';
+import { COMPONENTS, COLORS, SPACING, URLS } from '../config/constants';
 import { GitHub, Refresh, Home } from '@mui/icons-material';
 import {
     LineChart,
@@ -201,8 +201,7 @@ const Oligopoly = () => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background:
-                        'linear-gradient(135deg, #0a0a0a 0%, #0e0e0e 50%, #0a0a0a 100%)',
+                    background: COLORS.background.default,
                     zIndex: -2,
                 }}
             />
@@ -224,7 +223,7 @@ const Oligopoly = () => {
                 <Box
                     sx={{
                         textAlign: 'center',
-                        maxWidth: '900px',
+                        maxWidth: SPACING.maxWidth.wide,
                         width: '100%',
                         padding: {
                             xs: '0 0.5rem',
@@ -296,9 +295,10 @@ const Oligopoly = () => {
                     <Box
                         sx={{
                             padding: { xs: 1.5, sm: 2 },
-                            backgroundColor: 'rgba(128, 128, 128, 0.05)',
+                            backgroundColor:
+                                COMPONENTS.cardLight.backgroundColor,
                             borderRadius: 2,
-                            border: '1px solid rgba(128, 128, 128, 0.2)',
+                            border: COMPONENTS.borders.light,
                             marginBottom: 4,
                             width: '100%',
                             boxSizing: 'border-box',
@@ -336,20 +336,20 @@ const Oligopoly = () => {
                                     <LineChart data={marketData}>
                                         <CartesianGrid
                                             strokeDasharray="3 3"
-                                            stroke="rgba(255,255,255,0.1)"
+                                            stroke={COLORS.chart.stroke.light}
                                         />
                                         <XAxis
                                             dataKey="round"
-                                            stroke="rgba(255,255,255,0.7)"
+                                            stroke={COLORS.chart.stroke.medium}
                                             tick={{
-                                                fill: 'rgba(255,255,255,0.7)',
+                                                fill: COLORS.chart.fill.medium,
                                             }}
                                         />
                                         <YAxis
                                             yAxisId="left"
-                                            stroke="rgba(255,255,255,0.7)"
+                                            stroke={COLORS.chart.stroke.medium}
                                             tick={{
-                                                fill: 'rgba(255,255,255,0.7)',
+                                                fill: COLORS.chart.fill.medium,
                                             }}
                                             tickFormatter={value =>
                                                 `$${value.toFixed(2)}`
@@ -362,9 +362,9 @@ const Oligopoly = () => {
                                         <YAxis
                                             yAxisId="right"
                                             orientation="right"
-                                            stroke="rgba(255,255,255,0.7)"
+                                            stroke={COLORS.chart.stroke.medium}
                                             tick={{
-                                                fill: 'rgba(255,255,255,0.7)',
+                                                fill: COLORS.chart.fill.medium,
                                             }}
                                             tickFormatter={value =>
                                                 value.toFixed(2)
@@ -377,10 +377,11 @@ const Oligopoly = () => {
                                         <RechartsTooltip
                                             contentStyle={{
                                                 backgroundColor:
-                                                    'rgba(26, 26, 26, 0.9)',
-                                                border: '1px solid rgba(255, 255, 255, 0.1)',
+                                                    COMPONENTS.overlays.dark,
+                                                border: COMPONENTS.borders
+                                                    .white,
                                                 borderRadius: 8,
-                                                color: 'white',
+                                                color: COLORS.text.white,
                                             }}
                                             labelFormatter={value =>
                                                 `Round ${value}`
@@ -390,11 +391,11 @@ const Oligopoly = () => {
                                             yAxisId="left"
                                             type="monotone"
                                             dataKey="price"
-                                            stroke="#1976d2"
+                                            stroke={COLORS.chart.blue}
                                             strokeWidth={3}
                                             name="Market Price"
                                             dot={{
-                                                fill: '#1976d2',
+                                                fill: COLORS.chart.blue,
                                                 strokeWidth: 2,
                                                 r: 4,
                                             }}
@@ -403,11 +404,11 @@ const Oligopoly = () => {
                                             yAxisId="right"
                                             type="monotone"
                                             dataKey="hhi"
-                                            stroke="#f57c00"
+                                            stroke={COLORS.chart.orange}
                                             strokeWidth={3}
                                             name="HHI Concentration"
                                             dot={{
-                                                fill: '#f57c00',
+                                                fill: COLORS.chart.orange,
                                                 strokeWidth: 2,
                                                 r: 4,
                                             }}
@@ -422,9 +423,10 @@ const Oligopoly = () => {
                     <Box
                         sx={{
                             padding: { xs: 1.5, sm: 2 },
-                            backgroundColor: 'rgba(128, 128, 128, 0.05)',
+                            backgroundColor:
+                                COMPONENTS.cardLight.backgroundColor,
                             borderRadius: 2,
-                            border: '1px solid rgba(128, 128, 128, 0.2)',
+                            border: COMPONENTS.borders.light,
                             width: '100%',
                             boxSizing: 'border-box',
                             overflow: 'hidden',
@@ -452,15 +454,7 @@ const Oligopoly = () => {
                                 size="small"
                                 startIcon={<Refresh />}
                                 onClick={resetToDefaults}
-                                sx={{
-                                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                                    color: 'rgba(255,255,255,0.7)',
-                                    '&:hover': {
-                                        borderColor: 'primary.main',
-                                        backgroundColor:
-                                            'rgba(255, 255, 255, 0.1)',
-                                    },
-                                }}
+                                sx={COMPONENTS.button.outlined}
                             >
                                 Reset
                             </Button>
@@ -489,15 +483,15 @@ const Oligopoly = () => {
                                             width: '80%',
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
-                                                color: 'rgba(255,255,255,0.7)',
+                                                color: COLORS.chart.fill.medium,
                                                 borderColor:
-                                                    'rgba(255,255,255,0.3)',
+                                                    COLORS.chart.legend.light,
                                                 padding: '8px 12px',
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:
                                                         'primary.main',
-                                                    color: 'white',
+                                                    color: COLORS.text.white,
                                                     '&:hover': {
                                                         backgroundColor:
                                                             'primary.dark',
@@ -505,7 +499,8 @@ const Oligopoly = () => {
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        'rgba(255,255,255,0.1)',
+                                                        COLORS.chart.legend
+                                                            .lighter,
                                                 },
                                             },
                                         }}
@@ -539,15 +534,15 @@ const Oligopoly = () => {
                                             width: '80%',
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
-                                                color: 'rgba(255,255,255,0.7)',
+                                                color: COLORS.chart.fill.medium,
                                                 borderColor:
-                                                    'rgba(255,255,255,0.3)',
+                                                    COLORS.chart.legend.light,
                                                 padding: '8px 12px',
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:
                                                         'success.main',
-                                                    color: 'white',
+                                                    color: COLORS.text.white,
                                                     '&:hover': {
                                                         backgroundColor:
                                                             'success.dark',
@@ -555,7 +550,8 @@ const Oligopoly = () => {
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        'rgba(255,255,255,0.1)',
+                                                        COLORS.chart.legend
+                                                            .lighter,
                                                 },
                                             },
                                         }}
@@ -594,15 +590,15 @@ const Oligopoly = () => {
                                             width: '80%',
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
-                                                color: 'rgba(255,255,255,0.7)',
+                                                color: COLORS.chart.fill.medium,
                                                 borderColor:
-                                                    'rgba(255,255,255,0.3)',
+                                                    COLORS.chart.legend.light,
                                                 padding: '8px 12px',
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:
                                                         'warning.main',
-                                                    color: 'white',
+                                                    color: COLORS.text.white,
                                                     '&:hover': {
                                                         backgroundColor:
                                                             'warning.dark',
@@ -610,7 +606,8 @@ const Oligopoly = () => {
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        'rgba(255,255,255,0.1)',
+                                                        COLORS.chart.legend
+                                                            .lighter,
                                                 },
                                             },
                                         }}

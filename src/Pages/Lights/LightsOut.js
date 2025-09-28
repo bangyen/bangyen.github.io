@@ -8,6 +8,7 @@ import Grid from '@mui/material/Grid2';
 
 import { Navigation, HomeButton, TooltipButton } from '../../helpers';
 import { Board, useHandler, usePalette } from '../Board';
+import { COLORS } from '../../config/constants';
 import { getGrid, handleBoard } from './boardHandlers';
 import { useWindow, useMobile } from '../../hooks';
 import { convertPixels } from '../../calculate';
@@ -99,7 +100,7 @@ export default function LightsOut() {
             container
             minHeight="100vh"
             sx={{
-                background: '#0a0a0a',
+                background: COLORS.background.default,
                 position: 'relative',
             }}
         >

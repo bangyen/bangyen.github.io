@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { Backdrop, Typography, Card, CardContent, Box } from '@mui/material';
 import { CircleRounded } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
+import { SPACING } from '../../config/constants';
 
 import { getProduct } from './matrices';
 import { CustomGrid } from '../../helpers';
@@ -116,7 +117,10 @@ export default function Info(props) {
                             sx={{
                                 flex: 1,
                                 minHeight: 0,
-                                maxWidth: { xs: '100%', lg: '1200px' },
+                                maxWidth: {
+                                    xs: '100%',
+                                    lg: SPACING.maxWidth.info,
+                                },
                                 mx: 'auto',
                             }}
                         >
@@ -159,7 +163,8 @@ export default function Info(props) {
                                                 sx={{
                                                     mb: 2,
                                                     textAlign: 'left',
-                                                    maxWidth: '400px',
+                                                    maxWidth:
+                                                        SPACING.maxWidth.card,
                                                 }}
                                             >
                                                 • <strong>Chase down:</strong>{' '}
@@ -170,7 +175,8 @@ export default function Info(props) {
                                                 sx={{
                                                     mb: 2,
                                                     textAlign: 'left',
-                                                    maxWidth: '400px',
+                                                    maxWidth:
+                                                        SPACING.maxWidth.card,
                                                 }}
                                             >
                                                 • <strong>Calculate:</strong>{' '}
@@ -181,7 +187,8 @@ export default function Info(props) {
                                                 sx={{
                                                     mb: 3,
                                                     textAlign: 'left',
-                                                    maxWidth: '400px',
+                                                    maxWidth:
+                                                        SPACING.maxWidth.card,
                                                 }}
                                             >
                                                 • <strong>Solve:</strong> Click

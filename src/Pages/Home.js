@@ -47,7 +47,7 @@ function dropdown(name, options) {
                         margin: '4px 8px',
                         transition: ANIMATIONS.menuHover.transition,
                         '&:hover': {
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                            backgroundColor: COMPONENTS.overlays.light,
                             transform: ANIMATIONS.menuHover.transform,
                         },
                     }}
@@ -305,7 +305,7 @@ export default function Home() {
                                         size="large"
                                         sx={{
                                             borderColor:
-                                                'rgba(255, 255, 255, 0.3)',
+                                                COMPONENTS.overlays.light,
                                             color: 'primary.light',
                                             padding: {
                                                 xs: COMPONENTS.chip.padding.xs,
@@ -323,7 +323,7 @@ export default function Home() {
                                             overflow: 'hidden',
                                             '&:hover': {
                                                 backgroundColor:
-                                                    'hsla(0, 0%, 10%, 0.2)', // Using raised background for hover
+                                                    COMPONENTS.hsl.hover.light, // Using raised background for hover
                                             },
                                             '& .MuiChip-icon': {
                                                 marginLeft: {
@@ -401,7 +401,7 @@ export default function Home() {
                                             overflow: 'hidden',
                                             '&:hover': {
                                                 backgroundColor:
-                                                    'hsla(0, 0%, 10%, 0.3)', // Using raised background for hover
+                                                    COMPONENTS.hsl.hover.medium, // Using raised background for hover
                                                 transform:
                                                     ANIMATIONS.hover.transform,
                                             },
@@ -516,7 +516,7 @@ export default function Home() {
                                             overflow: 'hidden',
                                             '&:hover': {
                                                 backgroundColor:
-                                                    'hsla(0, 0%, 10%, 0.3)', // Using raised background for hover
+                                                    COMPONENTS.hsl.hover.medium, // Using raised background for hover
                                                 transform:
                                                     ANIMATIONS.hover.transform,
                                             },

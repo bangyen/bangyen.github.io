@@ -2,6 +2,7 @@ import React from 'react';
 import Grid from '@mui/material/Grid2';
 import { Typography, Box, Fade } from '@mui/material';
 import { HomeButton } from '../helpers';
+import { COLORS, SPACING, COMPONENTS } from '../config/constants';
 
 export default function Error() {
     document.title = 'Page Not Found | Bangyen';
@@ -24,7 +25,7 @@ export default function Error() {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: '#0a0a0a',
+                    background: COLORS.background.default,
                     zIndex: -2,
                 }}
             />
@@ -46,7 +47,7 @@ export default function Error() {
                     <Box
                         sx={{
                             textAlign: 'center',
-                            maxWidth: '600px',
+                            maxWidth: SPACING.maxWidth.error,
                             width: '100%',
                             padding: {
                                 xs: '0 1rem',
@@ -59,7 +60,7 @@ export default function Error() {
                         <Typography
                             variant="h1"
                             sx={{
-                                color: 'hsl(0, 0%, 93%)',
+                                color: COMPONENTS.hsl.text.error,
                                 fontWeight: 700,
                                 marginBottom: 2,
                                 fontSize: {

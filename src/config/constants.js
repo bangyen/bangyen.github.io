@@ -117,11 +117,23 @@ export const COLORS = {
     text: {
         primary: 'hsl(0, 0%, 90%)', // High contrast for headings and important elements
         secondary: 'hsl(0, 0%, 70%)', // Muted shade for body text - still legible
+        white: 'white', // Pure white for high contrast elements
     },
     chart: {
         blue: '#1976d2',
         orange: '#f57c00',
         green: '#2e7d32',
+        stroke: {
+            light: 'rgba(255,255,255,0.1)',
+            medium: 'rgba(255,255,255,0.7)',
+        },
+        fill: {
+            medium: 'rgba(255,255,255,0.7)',
+        },
+        legend: {
+            light: 'rgba(255,255,255,0.3)',
+            lighter: 'rgba(255,255,255,0.1)',
+        },
     },
 };
 
@@ -146,6 +158,12 @@ export const SPACING = {
         wide: '900px',
         skills: '600px',
         error: '600px',
+        info: '1200px',
+        card: '400px',
+        small: '300px',
+        icon: '24px',
+        medium: '60px',
+        large: '80px',
     },
 };
 
@@ -224,12 +242,65 @@ export const COMPONENTS = {
         border: '1px solid rgba(128, 128, 128, 0.2)',
         borderRadius: 2,
     },
+    cardLight: {
+        backgroundColor: 'rgba(128, 128, 128, 0.05)', // Light card background
+    },
     badge: {
         backgroundColor: 'rgba(25, 118, 210, 0.1)',
         color: 'primary.light',
         border: '1px solid rgba(25, 118, 210, 0.3)',
         fontSize: '0.75rem',
         height: '24px',
+    },
+    button: {
+        outlined: {
+            borderColor: 'rgba(255, 255, 255, 0.3)',
+            color: 'rgba(255, 255, 255, 0.7)',
+            '&:hover': {
+                borderColor: 'primary.main',
+                backgroundColor: 'rgba(255, 255, 255, 0.1)',
+            },
+        },
+        contained: {
+            backgroundColor: 'primary.main',
+            color: 'white',
+            '&:hover': {
+                backgroundColor: 'primary.dark',
+            },
+        },
+    },
+    navigation: {
+        backgroundColor: 'hsla(0, 0%, 15%, 0.8)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(20px)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+    },
+    borders: {
+        light: '1px solid rgba(128, 128, 128, 0.2)',
+        white: '1px solid rgba(255, 255, 255, 0.1)',
+        medium: '1px solid rgba(128, 128, 128, 0.3)',
+        mediumWhite: '1px solid rgba(128, 128, 128, 0.25)',
+    },
+    borderColors: {
+        light: 'rgba(128, 128, 128, 0.2)',
+        medium: 'rgba(128, 128, 128, 0.25)',
+    },
+    overlays: {
+        dark: 'rgba(26, 26, 26, 0.9)',
+        light: 'rgba(128, 128, 128, 0.1)',
+        lighter: 'rgba(128, 128, 128, 0.05)',
+        medium: 'rgba(128, 128, 128, 0.08)',
+        hover: 'rgba(128, 128, 128, 0.15)',
+        hoverLight: 'rgba(128, 128, 128, 0.12)',
+    },
+    hsl: {
+        hover: {
+            light: 'hsla(0, 0%, 10%, 0.2)',
+            medium: 'hsla(0, 0%, 10%, 0.3)',
+        },
+        text: {
+            error: 'hsl(0, 0%, 93%)',
+        },
     },
 };
 

@@ -3,7 +3,13 @@ import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
 import { Typography, Box, IconButton, Card, CardContent } from '@mui/material';
 import { GitHub, Home, GridView, TextFields } from '@mui/icons-material';
-import { PERSONAL_INFO, URLS, COLORS, SPACING } from '../config/constants';
+import {
+    PERSONAL_INFO,
+    URLS,
+    COLORS,
+    SPACING,
+    COMPONENTS,
+} from '../config/constants';
 
 export default function Interpreters() {
     useEffect(() => {
@@ -168,9 +174,9 @@ export default function Interpreters() {
                                 sx={{
                                     padding: { xs: 1.5, sm: 2 },
                                     backgroundColor:
-                                        'rgba(128, 128, 128, 0.05)',
+                                        COMPONENTS.overlays.lighter,
                                     borderRadius: 2,
-                                    border: '1px solid rgba(128, 128, 128, 0.2)',
+                                    border: COMPONENTS.borders.light,
                                     textDecoration: 'none',
                                     cursor: 'pointer',
                                     transition: 'all 0.2s ease-in-out',
@@ -179,7 +185,7 @@ export default function Interpreters() {
                                     overflow: 'hidden',
                                     '&:hover': {
                                         backgroundColor:
-                                            'rgba(128, 128, 128, 0.1)',
+                                            COMPONENTS.overlays.light,
                                         transform: 'translateY(-2px)',
                                     },
                                 }}

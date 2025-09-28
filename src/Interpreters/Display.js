@@ -2,6 +2,7 @@ import { EditorContext, Text } from './Editor';
 
 import { Box, Typography, Chip, IconButton } from '@mui/material';
 import { useContext } from 'react';
+import { COMPONENTS, SPACING, COLORS } from '../config/constants';
 
 import {
     CodeRounded,
@@ -172,11 +173,12 @@ function CompactDisplay(props) {
                     backgroundColor:
                         color === 'info'
                             ? 'primary.light'
-                            : 'rgba(128, 128, 128, 0.1)',
-                    color: color === 'info' ? 'white' : 'text.primary',
+                            : COMPONENTS.overlays.light,
+                    color:
+                        color === 'info' ? COLORS.text.white : 'text.primary',
                     fontFamily: 'monospace',
                     fontSize: '0.75rem',
-                    height: '24px',
+                    height: SPACING.maxWidth.icon,
                 }}
             />
         );
@@ -186,11 +188,11 @@ function CompactDisplay(props) {
         <Box
             sx={{
                 padding: 1.5,
-                backgroundColor: 'rgba(128, 128, 128, 0.05)',
-                border: '1px solid rgba(128, 128, 128, 0.2)',
+                backgroundColor: COMPONENTS.overlays.lighter,
+                border: COMPONENTS.borders.light,
                 borderRadius: 2,
                 height: '100%',
-                minHeight: '60px',
+                minHeight: SPACING.maxWidth.medium,
             }}
         >
             <Box
@@ -256,10 +258,10 @@ function Scrollable(props) {
                 overflowX: 'auto',
                 width: '100%',
                 padding: 2,
-                backgroundColor: 'rgba(128, 128, 128, 0.05)',
-                border: '1px solid rgba(128, 128, 128, 0.2)',
+                backgroundColor: COMPONENTS.overlays.lighter,
+                border: COMPONENTS.borders.light,
                 borderRadius: 2,
-                height: '80px',
+                height: SPACING.maxWidth.large,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',

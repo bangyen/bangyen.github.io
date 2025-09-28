@@ -1,8 +1,9 @@
-import * as colors from '@mui/material/colors';
+// import * as colors from '@mui/material/colors'; // Removed unused import
 import Grid from '@mui/material/Grid2';
 
 import { useMemo, useCallback } from 'react';
 import { CustomGrid } from '../helpers';
+import { COLORS } from '../config/constants';
 
 export function Board(props) {
     const { frontProps, backProps, size, rows, cols } = props;
@@ -86,8 +87,8 @@ export function usePalette(score) {
     // Fixed color scheme - two shades of dark blue
     const palette = useMemo(() => {
         // Using two shades of dark blue for a cohesive look
-        const primary = colors.blue[700]; // Darker blue for "on" state (#1976d2)
-        const secondary = colors.blue[900]; // Very dark blue for "off" state (#0d47a1)
+        const primary = COLORS.chart.blue; // Darker blue for "on" state
+        const secondary = COLORS.primary.dark; // Very dark blue for "off" state
 
         return { primary, secondary };
     }, []); // Removed score dependency since we're using fixed colors
