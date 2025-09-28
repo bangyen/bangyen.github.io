@@ -168,8 +168,8 @@ export default function Snake() {
 
             if (index in board) {
                 if (board[index] > 0)
-                    color = COLORS.chart.blue; // Snake body - darker blue
-                else color = COLORS.primary.dark; // Food - very dark blue
+                    color = COLORS.primary.dark; // Snake body - dark blue
+                else color = COLORS.primary.darker; // Food - much darker blue for better contrast
             }
 
             return {

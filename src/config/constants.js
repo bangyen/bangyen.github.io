@@ -14,6 +14,7 @@ export const PERSONAL_INFO = {
 // URLs and Links
 export const URLS = {
     github: 'https://github.com/bangyen',
+    githubProfile: 'https://github.com/bangyen',
     zsharpRepo: 'https://github.com/bangyen/zsharp',
     oligopolyRepo: 'https://github.com/bangyen/oligopoly',
     esolangsRepo: 'https://github.com/bangyen/esolangs',
@@ -96,12 +97,13 @@ export const ROUTES = {
     },
 };
 
-// Color Palette - HSL-based neutral scheme
+// Color Palette - HSL-based neutral scheme following video transcript guidelines
 export const COLORS = {
     primary: {
         main: 'hsl(217, 91%, 60%)', // Blue
         light: 'hsl(217, 91%, 70%)', // Lighter blue
         dark: 'hsl(217, 91%, 50%)', // Darker blue
+        darker: 'hsl(217, 91%, 35%)', // Much darker blue for high contrast
     },
     secondary: {
         main: 'hsl(220, 9%, 46%)', // Gray
@@ -127,24 +129,25 @@ export const COLORS = {
             medium: 'hsla(0, 0%, 100%, 0.7)',
         },
         fill: {
-            medium: 'hsla(0, 0%, 100%, 0.7)',
+            blue: 'hsla(207, 79%, 46%, 0.1)',
+            orange: 'hsla(32, 100%, 48%, 0.1)',
+            green: 'hsla(122, 47%, 35%, 0.1)',
+            medium: 'hsla(0, 0%, 100%, 0.7)', // Added missing medium fill
         },
         legend: {
             light: 'hsla(0, 0%, 100%, 0.3)',
             lighter: 'hsla(0, 0%, 100%, 0.1)',
         },
     },
+    gradients: {
+        background:
+            'linear-gradient(135deg, #0a0a0a 0%, #0e0e0e 50%, #0a0a0a 100%)',
+        error: 'linear-gradient(135deg, #ffffff, #808080)',
+    },
 };
 
 // Spacing and Dimensions
 export const SPACING = {
-    // Common spacing values for both padding and margin
-    spacing: {
-        xs: '1rem',
-        sm: '1.5rem',
-        md: '2rem',
-    },
-    // Aliases for backward compatibility
     padding: {
         xs: '1rem',
         sm: '1.5rem',
@@ -158,20 +161,13 @@ export const SPACING = {
     borderRadius: {
         small: 2,
         medium: 3,
-        large: 4,
-        extraLarge: 8,
+        extraLarge: 4, // Added missing extraLarge border radius
     },
     maxWidth: {
-        content: '50rem', // 800px
-        wide: '56.25rem', // 900px
-        skills: '37.5rem', // 600px
-        error: '37.5rem', // 600px
-        info: '75rem', // 1200px
-        card: '25rem', // 400px
-        small: '18.75rem', // 300px
-        icon: '1.5rem', // 24px
-        medium: '3.75rem', // 60px
-        large: '5rem', // 80px
+        content: '800px',
+        wide: '900px',
+        skills: '600px',
+        error: '600px',
     },
 };
 
@@ -194,9 +190,6 @@ export const TYPOGRAPHY = {
         md: {
             h1: '4rem',
         },
-        // Common font sizes used across components
-        small: '0.75rem',
-        medium: '0.875rem',
         large: '1.2rem',
         icon: '1rem', // Same as sm.body - could be referenced but kept separate for clarity
     },
@@ -227,13 +220,14 @@ export const ANIMATIONS = {
 };
 
 // Component-specific constants
-const baseBackdropFilter = 'blur(1.25rem)'; // 20px
-const baseBorder = '0.0625rem solid'; // 1px solid
+const baseBorder = '1px solid';
+const baseBackdropFilter = 'blur(20px)';
+
 export const COMPONENTS = {
     menu: {
         backdropFilter: baseBackdropFilter,
-        backgroundColor: 'hsla(0, 0%, 15%, 0.9)', // Using raised background with transparency
-        border: '1px solid rgba(255, 255, 255, 0.1)',
+        backgroundColor: 'rgba(26, 26, 26, 0.9)',
+        border: `${baseBorder} rgba(255, 255, 255, 0.1)`,
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
         padding: {
             height: '1rem',
@@ -242,8 +236,8 @@ export const COMPONENTS = {
     },
     chip: {
         height: {
-            xs: '2.25rem', // 36px
-            sm: '3rem', // 48px
+            xs: '36px',
+            sm: '48px',
         },
         padding: {
             xs: '0.375rem 0.5rem', // 6px 8px
@@ -264,7 +258,7 @@ export const COMPONENTS = {
     },
     badge: {
         backgroundColor: 'hsla(207, 79%, 46%, 0.1)',
-        color: 'primary.light',
+        color: COLORS.primary.light, // Fixed: now references actual color value
         border: `${baseBorder} hsla(207, 79%, 46%, 0.3)`,
         fontSize: '0.75rem',
         height: '1.5rem', // 24px
@@ -274,15 +268,15 @@ export const COMPONENTS = {
             borderColor: 'hsla(0, 0%, 100%, 0.3)',
             color: 'hsla(0, 0%, 100%, 0.7)',
             '&:hover': {
-                borderColor: 'primary.main',
+                borderColor: COLORS.primary.main, // Fixed: now references actual color value
                 backgroundColor: 'hsla(0, 0%, 100%, 0.1)',
             },
         },
         contained: {
-            backgroundColor: 'primary.main',
+            backgroundColor: COLORS.primary.main, // Fixed: now references actual color value
             color: 'hsl(0, 0%, 100%)',
             '&:hover': {
-                backgroundColor: 'primary.dark',
+                backgroundColor: COLORS.primary.dark, // Fixed: now references actual color value
             },
         },
     },
@@ -312,8 +306,9 @@ export const COMPONENTS = {
     },
     hsl: {
         hover: {
-            light: 'hsla(0, 0%, 10%, 0.2)',
-            medium: 'hsla(0, 0%, 10%, 0.3)',
+            light: 'hsla(0, 0%, 50%, 0.15)', // Improved contrast for chips
+            medium: 'hsla(0, 0%, 50%, 0.25)', // Improved contrast for cards
+            strong: 'hsla(0, 0%, 50%, 0.35)', // New option for important elements
         },
         text: {
             error: 'hsl(0, 0%, 93%)',
@@ -325,11 +320,12 @@ export const COMPONENTS = {
 export const META = {
     title: `${PERSONAL_INFO.name} - ${PERSONAL_INFO.title}`,
     description: `${PERSONAL_INFO.name} - Backend Developer and AI/ML Engineer specializing in cloud architecture, HPC systems, and machine learning research. Northwestern MS Computer Science graduate with experience at Volta Health and Center for Nuclear Femtography.`,
-    themeColor: 'hsl(0, 0%, 95%)',
-    backgroundColor: 'hsl(0, 0%, 5%)',
+    themeColor: '#ffffff',
+    backgroundColor: '#ffffff',
 };
 
 // Development Constants
 export const DEV = {
+    localhost: 'http://localhost:3000',
     nodeVersion: 'v14 or higher',
 };
