@@ -167,7 +167,11 @@ const ZSharp = () => {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+                padding: {
+                    xs: SPACING.padding.xs,
+                    sm: SPACING.padding.sm,
+                    md: SPACING.padding.md,
+                },
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -197,7 +201,11 @@ const ZSharp = () => {
                 flexDirection="column"
                 sx={{
                     zIndex: 1,
-                    padding: { xs: '1rem 0', sm: '1.5rem 0', md: '2rem 0' },
+                    padding: {
+                        xs: `${SPACING.padding.xs} 0`,
+                        sm: `${SPACING.padding.sm} 0`,
+                        md: `${SPACING.padding.md} 0`,
+                    },
                     minHeight: 0,
                 }}
             >
