@@ -5,14 +5,9 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
+import { COLORS, TYPOGRAPHY, ROUTES } from './config/constants';
 
-import {
-    Stun_Step,
-    Suffolk,
-    WII2D,
-    Back,
-    names as runNames,
-} from './Interpreters';
+import { Stun_Step, Suffolk, WII2D, Back } from './Interpreters';
 import {
     Home,
     Error,
@@ -21,52 +16,51 @@ import {
     ZSharp,
     Oligopoly,
     Interpreters,
-    pages as pageRoutes,
 } from './Pages';
 
 const darkTheme = createTheme({
     palette: {
         primary: {
-            main: '#3B82F6', // Blue for main actions and personality
-            light: '#60A5FA',
-            dark: '#1D4ED8',
+            main: COLORS.primary.main,
+            light: COLORS.primary.light,
+            dark: COLORS.primary.dark,
         },
         secondary: {
-            main: '#6B7280', // Neutral gray for secondary elements
-            light: '#9CA3AF',
-            dark: '#374151',
+            main: COLORS.secondary.main,
+            light: COLORS.secondary.light,
+            dark: COLORS.secondary.dark,
         },
         background: {
-            default: 'hsl(0, 0%, 0%)', // Base color (0% lightness)
-            paper: 'hsl(0, 0%, 5%)', // Cards and surfaces (5% lightness)
+            default: COLORS.background.default,
+            paper: COLORS.background.paper,
         },
         text: {
-            primary: 'hsl(0, 0%, 90%)', // High contrast for headings
-            secondary: 'hsl(0, 0%, 70%)', // Muted for body text
+            primary: COLORS.text.primary,
+            secondary: COLORS.text.secondary,
         },
         mode: 'dark',
     },
     typography: {
-        fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+        fontFamily: TYPOGRAPHY.fontFamily,
         h1: {
-            fontWeight: 700,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
             letterSpacing: '-0.02em',
         },
         h2: {
-            fontWeight: 600,
+            fontWeight: TYPOGRAPHY.fontWeight.semiBold,
             letterSpacing: '-0.01em',
         },
         h3: {
-            fontWeight: 600,
+            fontWeight: TYPOGRAPHY.fontWeight.semiBold,
         },
         h4: {
-            fontWeight: 600,
+            fontWeight: TYPOGRAPHY.fontWeight.semiBold,
         },
         h5: {
-            fontWeight: 500,
+            fontWeight: TYPOGRAPHY.fontWeight.medium,
         },
         h6: {
-            fontWeight: 500,
+            fontWeight: TYPOGRAPHY.fontWeight.medium,
         },
         body1: {
             lineHeight: 1.6,
@@ -83,19 +77,19 @@ function getRoute(Elem, url) {
 
 function Website() {
     const interpreters = [
-        { Component: Stun_Step, url: runNames.Stun_Step },
-        { Component: Suffolk, url: runNames.Suffolk },
-        { Component: WII2D, url: runNames.WII2D },
-        { Component: Back, url: runNames.Back },
+        { Component: Stun_Step, url: ROUTES.interpreters.Stun_Step },
+        { Component: Suffolk, url: ROUTES.interpreters.Suffolk },
+        { Component: WII2D, url: ROUTES.interpreters.WII2D },
+        { Component: Back, url: ROUTES.interpreters.Back },
     ];
 
     const pages = [
         { Component: Home, url: '/' },
-        { Component: Snake, url: pageRoutes.Snake },
-        { Component: Lights_Out, url: pageRoutes.Lights_Out },
-        { Component: ZSharp, url: pageRoutes.ZSharp },
-        { Component: Oligopoly, url: pageRoutes.Oligopoly },
-        { Component: Interpreters, url: pageRoutes.Interpreters },
+        { Component: Snake, url: ROUTES.pages.Snake },
+        { Component: Lights_Out, url: ROUTES.pages.Lights_Out },
+        { Component: ZSharp, url: ROUTES.pages.ZSharp },
+        { Component: Oligopoly, url: ROUTES.pages.Oligopoly },
+        { Component: Interpreters, url: ROUTES.pages.Interpreters },
     ];
 
     return (

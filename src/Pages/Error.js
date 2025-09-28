@@ -2,6 +2,7 @@ import React from 'react';
 import Grid from '@mui/material/Grid2';
 import { Typography, Box, Fade } from '@mui/material';
 import { HomeButton } from '../helpers';
+import { COLORS, SPACING, TYPOGRAPHY } from '../config/constants';
 
 export default function Error() {
     document.title = 'Page Not Found | Bangyen';
@@ -12,7 +13,11 @@ export default function Error() {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+                padding: {
+                    xs: SPACING.padding.xs,
+                    sm: SPACING.padding.sm,
+                    md: SPACING.padding.md,
+                },
                 boxSizing: 'border-box',
             }}
         >
@@ -24,7 +29,7 @@ export default function Error() {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: '#0a0a0a',
+                    background: COLORS.background.default,
                     zIndex: -2,
                 }}
             />
@@ -38,7 +43,11 @@ export default function Error() {
                 flexDirection="column"
                 sx={{
                     zIndex: 1,
-                    padding: { xs: '1rem 0', sm: '1.5rem 0', md: '2rem 0' },
+                    padding: {
+                        xs: `${SPACING.padding.xs} 0`,
+                        sm: `${SPACING.padding.sm} 0`,
+                        md: `${SPACING.padding.md} 0`,
+                    },
                     minHeight: 0,
                 }}
             >
@@ -46,7 +55,7 @@ export default function Error() {
                     <Box
                         sx={{
                             textAlign: 'center',
-                            maxWidth: '600px',
+                            maxWidth: SPACING.maxWidth.error,
                             width: '100%',
                             padding: {
                                 xs: '0 1rem',
@@ -59,12 +68,8 @@ export default function Error() {
                         <Typography
                             variant="h1"
                             sx={{
-                                background:
-                                    'linear-gradient(135deg, #ffffff, #808080)',
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
-                                fontWeight: 700,
+                                color: COLORS.text.primary,
+                                fontWeight: TYPOGRAPHY.fontWeight.bold,
                                 marginBottom: 2,
                                 fontSize: {
                                     xs: '2.5rem',
@@ -81,8 +86,11 @@ export default function Error() {
                             sx={{
                                 color: 'text.secondary',
                                 marginBottom: 2,
-                                fontWeight: 400,
-                                fontSize: { xs: '1.1rem', sm: '1.3rem' },
+                                fontWeight: TYPOGRAPHY.fontWeight.normal,
+                                fontSize: {
+                                    xs: TYPOGRAPHY.fontSize.sm.h6,
+                                    sm: TYPOGRAPHY.fontSize.sm.h5,
+                                },
                             }}
                         >
                             Page Not Found
@@ -93,8 +101,11 @@ export default function Error() {
                             sx={{
                                 color: 'text.secondary',
                                 marginBottom: 4,
-                                fontWeight: 300,
-                                fontSize: { xs: '0.9rem', sm: '1rem' },
+                                fontWeight: TYPOGRAPHY.fontWeight.light,
+                                fontSize: {
+                                    xs: TYPOGRAPHY.fontSize.xs.h6,
+                                    sm: TYPOGRAPHY.fontSize.sm.body,
+                                },
                             }}
                         >
                             This page isn&apos;t available. The link you

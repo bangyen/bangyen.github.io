@@ -1,7 +1,18 @@
 import { useState, useCallback, useEffect } from 'react';
 import { Backdrop, Typography, Card, CardContent, Box } from '@mui/material';
-import { CircleRounded } from '@mui/icons-material';
+import {
+    CircleRounded,
+    KeyboardArrowDown,
+    Calculate,
+    Replay,
+} from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
+import {
+    SPACING,
+    COLORS,
+    TYPOGRAPHY,
+    COMPONENTS,
+} from '../../config/constants';
 
 import { getProduct } from './matrices';
 import { CustomGrid } from '../../helpers';
@@ -83,21 +94,31 @@ export default function Info(props) {
     const outputProps = getOutput(outputGetters);
 
     return (
-        <Backdrop open={open} onClick={toggleOpen}>
+        <Backdrop
+            open={open}
+            onClick={toggleOpen}
+            sx={{
+                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                backdropFilter: 'blur(4px)',
+            }}
+        >
             <Card
                 sx={{
                     maxWidth: '80vw',
                     maxHeight: '98vh',
                     overflow: 'hidden',
                     mx: 'auto',
-                    borderRadius: 4,
+                    borderRadius: SPACING.borderRadius.extraLarge,
+                    backgroundColor: COLORS.background.paper,
+                    border: COMPONENTS.borders.light,
+                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
                 }}
             >
                 <CardContent
                     sx={{
-                        pt: '48px !important',
-                        pb: '48px !important',
-                        px: '48px !important',
+                        pt: '3rem !important', // 48px
+                        pb: '3rem !important', // 48px
+                        px: '3rem !important', // 48px
                         height: '100%',
                         display: 'flex',
                         flexDirection: 'column',
@@ -116,7 +137,10 @@ export default function Info(props) {
                             sx={{
                                 flex: 1,
                                 minHeight: 0,
-                                maxWidth: { xs: '100%', lg: '1200px' },
+                                maxWidth: {
+                                    xs: '100%',
+                                    lg: SPACING.maxWidth.info,
+                                },
                                 mx: 'auto',
                             }}
                         >
@@ -132,7 +156,8 @@ export default function Info(props) {
                                     variant="h5"
                                     gutterBottom
                                     sx={{
-                                        fontWeight: 'bold',
+                                        color: COLORS.text.primary,
+                                        fontWeight: TYPOGRAPHY.fontWeight.bold,
                                         mb: 3,
                                         textAlign: isMobile ? 'center' : 'left',
                                         fontSize: {
@@ -152,88 +177,295 @@ export default function Info(props) {
                                                 display: 'flex',
                                                 flexDirection: 'column',
                                                 alignItems: 'center',
+                                                gap: 3,
                                             }}
                                         >
-                                            <Typography
-                                                variant="body2"
+                                            {/* Step 1 */}
+                                            <Box
                                                 sx={{
-                                                    mb: 2,
-                                                    textAlign: 'left',
-                                                    maxWidth: '400px',
+                                                    maxWidth: 'fit-content',
+                                                    mx: 'auto',
                                                 }}
                                             >
-                                                • <strong>Chase down:</strong>{' '}
-                                                Turn off rows from top to bottom
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    sx={{
+                                                        color: COLORS.text
+                                                            .primary,
+                                                        fontWeight:
+                                                            TYPOGRAPHY
+                                                                .fontWeight
+                                                                .semiBold,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent:
+                                                            'center',
+                                                        mb: 1,
+                                                        fontSize: '1rem',
+                                                    }}
+                                                >
+                                                    <KeyboardArrowDown
+                                                        sx={{
+                                                            mr: 1,
+                                                            color: COLORS
+                                                                .primary.main,
+                                                        }}
+                                                    />
+                                                    Chase to Bottom
+                                                </Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    sx={{
+                                                        color: COLORS.text
+                                                            .secondary,
+                                                        textAlign: 'center',
+                                                        lineHeight: 1.6,
+                                                    }}
+                                                >
+                                                    Click lights to chase rows
+                                                    from top to bottom.
+                                                </Typography>
+                                            </Box>
+
+                                            {/* Step 2 */}
+                                            <Box
                                                 sx={{
-                                                    mb: 2,
-                                                    textAlign: 'left',
-                                                    maxWidth: '400px',
+                                                    maxWidth: 'fit-content',
+                                                    mx: 'auto',
                                                 }}
                                             >
-                                                • <strong>Calculate:</strong>{' '}
-                                                Enter bottom row pattern below
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    sx={{
+                                                        color: COLORS.text
+                                                            .primary,
+                                                        fontWeight:
+                                                            TYPOGRAPHY
+                                                                .fontWeight
+                                                                .semiBold,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent:
+                                                            'center',
+                                                        mb: 1,
+                                                        fontSize: '1rem',
+                                                    }}
+                                                >
+                                                    <Calculate
+                                                        sx={{
+                                                            mr: 1,
+                                                            color: COLORS.chart
+                                                                .orange,
+                                                        }}
+                                                    />
+                                                    Use Calculator
+                                                </Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    sx={{
+                                                        color: COLORS.text
+                                                            .secondary,
+                                                        textAlign: 'center',
+                                                        lineHeight: 1.6,
+                                                    }}
+                                                >
+                                                    Enter the bottom row lights
+                                                    pattern below.
+                                                </Typography>
+                                            </Box>
+
+                                            {/* Step 3 */}
+                                            <Box
                                                 sx={{
-                                                    mb: 3,
-                                                    textAlign: 'left',
-                                                    maxWidth: '400px',
+                                                    maxWidth: 'fit-content',
+                                                    mx: 'auto',
                                                 }}
                                             >
-                                                • <strong>Solve:</strong> Click
-                                                calculated lights and chase down
-                                            </Typography>
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    sx={{
+                                                        color: COLORS.text
+                                                            .primary,
+                                                        fontWeight:
+                                                            TYPOGRAPHY
+                                                                .fontWeight
+                                                                .semiBold,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        justifyContent:
+                                                            'center',
+                                                        mb: 1,
+                                                        fontSize: '1rem',
+                                                    }}
+                                                >
+                                                    <Replay
+                                                        sx={{
+                                                            mr: 1,
+                                                            color: COLORS.chart
+                                                                .green,
+                                                        }}
+                                                    />
+                                                    Chase Again
+                                                </Typography>
+                                                <Typography
+                                                    variant="body2"
+                                                    sx={{
+                                                        color: COLORS.text
+                                                            .secondary,
+                                                        textAlign: 'center',
+                                                        lineHeight: 1.6,
+                                                    }}
+                                                >
+                                                    Apply the solution to top
+                                                    row, then chase to solve
+                                                    puzzle.
+                                                </Typography>
+                                            </Box>
                                         </Box>
                                     ) : (
-                                        <>
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ mb: 2 }}
-                                            >
-                                                •{' '}
-                                                <strong>
-                                                    Chase to bottom:
-                                                </strong>{' '}
-                                                Click lights in each row to turn
-                                                off the row above, working your
-                                                way down until only the bottom
-                                                row remains lit.
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ mb: 2 }}
-                                            >
-                                                •{' '}
-                                                <strong>
-                                                    Use the calculator:
-                                                </strong>{' '}
-                                                Enter the bottom row pattern
-                                                below to calculate which top row
-                                                lights need to be activated for
-                                                the final solution.
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                sx={{ mb: 3 }}
-                                            >
-                                                • <strong>Chase again:</strong>{' '}
-                                                Click the calculated top row
-                                                lights and chase downward to
-                                                turn off all remaining lights
-                                                and complete the puzzle.
-                                            </Typography>
-                                        </>
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                gap: 3,
+                                            }}
+                                        >
+                                            {/* Step 1 */}
+                                            <Box>
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    sx={{
+                                                        color: COLORS.text
+                                                            .primary,
+                                                        fontWeight:
+                                                            TYPOGRAPHY
+                                                                .fontWeight
+                                                                .semiBold,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        mb: 1,
+                                                        fontSize: '1rem',
+                                                    }}
+                                                >
+                                                    <KeyboardArrowDown
+                                                        sx={{
+                                                            mr: 1,
+                                                            color: COLORS
+                                                                .primary.main,
+                                                        }}
+                                                    />
+                                                    Chase to Bottom
+                                                </Typography>
+                                                <Typography
+                                                    variant="body1"
+                                                    sx={{
+                                                        color: COLORS.text
+                                                            .secondary,
+                                                        lineHeight: 1.6,
+                                                    }}
+                                                >
+                                                    Turn off rows from top to
+                                                    bottom by clicking lights in
+                                                    each row to eliminate all
+                                                    lights above the bottom row.
+                                                </Typography>
+                                            </Box>
+
+                                            {/* Step 2 */}
+                                            <Box>
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    sx={{
+                                                        color: COLORS.text
+                                                            .primary,
+                                                        fontWeight:
+                                                            TYPOGRAPHY
+                                                                .fontWeight
+                                                                .semiBold,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        mb: 1,
+                                                        fontSize: '1rem',
+                                                    }}
+                                                >
+                                                    <Calculate
+                                                        sx={{
+                                                            mr: 1,
+                                                            color: COLORS.chart
+                                                                .orange,
+                                                        }}
+                                                    />
+                                                    Use the Calculator
+                                                </Typography>
+                                                <Typography
+                                                    variant="body1"
+                                                    sx={{
+                                                        color: COLORS.text
+                                                            .secondary,
+                                                        lineHeight: 1.6,
+                                                    }}
+                                                >
+                                                    Enter the remaining lights
+                                                    pattern in the bottom row
+                                                    using the interactive
+                                                    calculator below.
+                                                </Typography>
+                                            </Box>
+
+                                            {/* Step 3 */}
+                                            <Box>
+                                                <Typography
+                                                    variant="subtitle1"
+                                                    sx={{
+                                                        color: COLORS.text
+                                                            .primary,
+                                                        fontWeight:
+                                                            TYPOGRAPHY
+                                                                .fontWeight
+                                                                .semiBold,
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        mb: 1,
+                                                        fontSize: '1rem',
+                                                    }}
+                                                >
+                                                    <Replay
+                                                        sx={{
+                                                            mr: 1,
+                                                            color: COLORS.chart
+                                                                .green,
+                                                        }}
+                                                    />
+                                                    Chase Again
+                                                </Typography>
+                                                <Typography
+                                                    variant="body1"
+                                                    sx={{
+                                                        color: COLORS.text
+                                                            .secondary,
+                                                        lineHeight: 1.6,
+                                                    }}
+                                                >
+                                                    Apply the calculated
+                                                    solution pattern to the top
+                                                    row, then chase downward to
+                                                    solve the entire puzzle.
+                                                </Typography>
+                                            </Box>
+                                        </Box>
                                     )}
 
                                     {!isMobile && (
                                         <Typography
                                             variant="h6"
                                             textAlign="center"
-                                            sx={{ mt: 4 }}
+                                            sx={{
+                                                mt: 4,
+                                                color: COLORS.text.primary,
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .semiBold,
+                                            }}
                                         >
                                             Boards Solved: &nbsp;{score}
                                         </Typography>
@@ -268,7 +500,8 @@ export default function Info(props) {
                                     variant="h6"
                                     sx={{
                                         textAlign: 'center',
-                                        fontWeight: 'bold',
+                                        color: COLORS.text.primary,
+                                        fontWeight: TYPOGRAPHY.fontWeight.bold,
                                         mb: 0.5,
                                         fontSize: {
                                             xs: '1.25rem',

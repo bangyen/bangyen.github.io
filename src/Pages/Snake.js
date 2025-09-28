@@ -1,10 +1,11 @@
 import { useMemo, useCallback, useReducer, useEffect } from 'react';
 import Grid from '@mui/material/Grid2';
-import * as colors from '@mui/material/colors';
+// import * as colors from '@mui/material/colors'; // Removed unused import
 
 import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
 import { CustomGrid, Controls } from '../helpers';
+import { COLORS } from '../config/constants';
 
 function getRandom(max) {
     return Math.floor(Math.random() * max);
@@ -167,14 +168,16 @@ export default function Snake() {
 
             if (index in board) {
                 if (board[index] > 0)
-                    color = colors.blue[700]; // Snake body - darker blue (#1976d2)
-                else color = colors.blue[900]; // Food - very dark blue (#0d47a1)
+                    color = COLORS.primary.dark; // Snake body - dark blue
+                else color = COLORS.primary.darker; // Food - much darker blue for better contrast
             }
 
             return {
                 backgroundColor: color,
-                boxShadow: color !== 'inherit' ? `0 0 20px ${color}40` : 'none',
-                border: color !== 'inherit' ? `1px solid ${color}` : 'none',
+                boxShadow:
+                    color !== 'inherit' ? `0 0 1.25rem ${color}40` : 'none', // 20px
+                border:
+                    color !== 'inherit' ? `0.0625rem solid ${color}` : 'none', // 1px
             };
         },
         [state, cols]
@@ -214,7 +217,7 @@ export default function Snake() {
             flexDirection="column"
             position="relative"
             sx={{
-                background: '#0a0a0a',
+                background: COLORS.background.default,
                 overflow: 'hidden',
             }}
         >

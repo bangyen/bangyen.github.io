@@ -3,6 +3,12 @@ import { useState, useCallback } from 'react';
 import Grid from '@mui/material/Grid2';
 import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
+import {
+    COMPONENTS,
+    SPACING,
+    TYPOGRAPHY,
+    ANIMATIONS,
+} from './config/constants';
 
 import {
     HomeRounded,
@@ -62,9 +68,9 @@ function Cell({ size, children, ...rest }) {
         height: remSize,
         width: remSize,
         fontSize: `${size * 0.4}rem`,
-        fontWeight: 600,
+        fontWeight: TYPOGRAPHY.fontWeight.semiBold,
         fontFamily: 'monospace',
-        transition: 'all 0.2s ease-in-out',
+        transition: ANIMATIONS.transition,
     };
 
     const combined = {
@@ -143,15 +149,12 @@ export function Navigation({ children, ...rest }) {
             sx={{
                 transform: 'translateX(-50%)',
                 position: 'absolute',
-                borderRadius: 3,
+                borderRadius: SPACING.borderRadius.medium,
                 padding: 2,
                 bottom: 50,
                 left: '50%',
-                backdropFilter: 'blur(20px)',
-                backgroundColor: 'rgba(26, 26, 26, 0.8)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
                 zIndex: 10,
+                ...COMPONENTS.navigation,
                 ...rest,
             }}
         >

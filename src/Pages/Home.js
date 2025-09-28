@@ -4,6 +4,18 @@ import Grid from '@mui/material/Grid2';
 
 import { TooltipButton } from '../helpers';
 import { pages } from './';
+import {
+    PERSONAL_INFO,
+    URLS,
+    SKILLS,
+    PUBLICATIONS,
+    PROJECTS,
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+    ANIMATIONS,
+    COMPONENTS,
+} from '../config/constants';
 
 import {
     MenuRounded,
@@ -19,8 +31,8 @@ import {
 import { Typography, Box, Menu, MenuItem, Chip, Fade } from '@mui/material';
 
 function dropdown(name, options) {
-    const padHeight = '1rem';
-    const padWidth = '1.5rem';
+    const padHeight = COMPONENTS.menu.padding.height;
+    const padWidth = COMPONENTS.menu.padding.width;
 
     return (
         <Box>
@@ -31,19 +43,22 @@ function dropdown(name, options) {
                         paddingTop: padHeight,
                         paddingLeft: padWidth,
                         paddingRight: padWidth,
-                        borderRadius: 2,
-                        margin: '4px 8px',
-                        transition: 'all 0.2s ease-in-out',
+                        borderRadius: SPACING.borderRadius.small,
+                        margin: '0.25rem 0.5rem', // 4px 8px
+                        transition: ANIMATIONS.menuHover.transition,
                         '&:hover': {
-                            backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                            transform: 'translateX(4px)',
+                            backgroundColor: COMPONENTS.overlays.light,
+                            transform: ANIMATIONS.menuHover.transform,
                         },
                     }}
                     key={text}
                     component={Link}
                     to={text.toLowerCase()}
                 >
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    <Typography
+                        variant="body2"
+                        sx={{ fontWeight: TYPOGRAPHY.fontWeight.medium }}
+                    >
                         {text.replace('_', ' ')}
                     </Typography>
                 </MenuItem>
@@ -93,11 +108,11 @@ function MenuButton({ children }) {
                     marginLeft: 1,
                     marginTop: 1,
                     '& .MuiPaper-root': {
-                        borderRadius: 3,
-                        backdropFilter: 'blur(20px)',
-                        backgroundColor: 'rgba(26, 26, 26, 0.9)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                        borderRadius: SPACING.borderRadius.medium,
+                        backdropFilter: COMPONENTS.menu.backdropFilter,
+                        backgroundColor: COMPONENTS.menu.backgroundColor,
+                        border: COMPONENTS.menu.border,
+                        boxShadow: COMPONENTS.menu.boxShadow,
                     },
                 }}
                 onClose={handleClose}
@@ -114,7 +129,7 @@ function MenuButton({ children }) {
 
 export default function Home() {
     useEffect(() => {
-        document.title = 'Bangyen Pham - Backend Developer & AI/ML Engineer';
+        document.title = `${PERSONAL_INFO.name} - ${PERSONAL_INFO.title}`;
     }, []);
 
     return (
@@ -124,7 +139,11 @@ export default function Home() {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+                padding: {
+                    xs: SPACING.padding.xs,
+                    sm: SPACING.padding.sm,
+                    md: SPACING.padding.md,
+                },
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -139,8 +158,7 @@ export default function Home() {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background:
-                        'linear-gradient(135deg, #0a0a0a 0%, #0e0e0e 50%, #0a0a0a 100%)',
+                    background: COLORS.background.default,
                     zIndex: -2,
                 }}
             />
@@ -152,12 +170,16 @@ export default function Home() {
                 spacing={2}
                 sx={{
                     zIndex: 1,
-                    marginBottom: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+                    marginBottom: {
+                        xs: SPACING.margin.xs,
+                        sm: SPACING.margin.sm,
+                        md: SPACING.margin.md,
+                    },
                 }}
             >
                 <MenuButton>{dropdown('Projects', pages)}</MenuButton>
                 <TooltipButton
-                    href="https://github.com/bangyen"
+                    href={URLS.github}
                     title="GitHub"
                     Icon={GitHub}
                 />
@@ -172,20 +194,24 @@ export default function Home() {
                 flexDirection="column"
                 sx={{
                     zIndex: 1,
-                    padding: { xs: '1rem 0', sm: '1.5rem 0', md: '2rem 0' },
+                    padding: {
+                        xs: `${SPACING.padding.xs} 0`,
+                        sm: `${SPACING.padding.sm} 0`,
+                        md: `${SPACING.padding.md} 0`,
+                    },
                     minHeight: 0, // Prevents flex item from overflowing
                 }}
             >
-                <Fade in timeout={1000}>
+                <Fade in timeout={ANIMATIONS.fadeIn.timeout}>
                     <Box
                         sx={{
                             textAlign: 'center',
-                            maxWidth: '800px',
+                            maxWidth: SPACING.maxWidth.content,
                             width: '100%',
                             padding: {
                                 xs: '0 0.5rem',
-                                sm: '0 1.5rem',
-                                md: '0 2rem',
+                                sm: `0 ${SPACING.padding.sm}`,
+                                md: `0 ${SPACING.padding.md}`,
                             },
                             boxSizing: 'border-box',
                             overflow: 'hidden',
@@ -195,16 +221,16 @@ export default function Home() {
                             variant="h1"
                             sx={{
                                 color: 'text.primary',
-                                fontWeight: 700,
+                                fontWeight: TYPOGRAPHY.fontWeight.bold,
                                 marginBottom: 2,
                                 fontSize: {
-                                    xs: '2rem',
-                                    sm: '3.5rem',
-                                    md: '4rem',
+                                    xs: TYPOGRAPHY.fontSize.xs.h1,
+                                    sm: TYPOGRAPHY.fontSize.sm.h1,
+                                    md: TYPOGRAPHY.fontSize.md.h1,
                                 },
                             }}
                         >
-                            Hey, I&apos;m Bangyen
+                            {PERSONAL_INFO.greeting}
                         </Typography>
 
                         <Typography
@@ -212,11 +238,14 @@ export default function Home() {
                             sx={{
                                 color: 'text.secondary',
                                 marginBottom: 2,
-                                fontWeight: 400,
-                                fontSize: { xs: '0.95rem', sm: '1.3rem' },
+                                fontWeight: TYPOGRAPHY.fontWeight.normal,
+                                fontSize: {
+                                    xs: TYPOGRAPHY.fontSize.xs.h5,
+                                    sm: TYPOGRAPHY.fontSize.sm.h5,
+                                },
                             }}
                         >
-                            Backend Developer & AI/ML Engineer
+                            {PERSONAL_INFO.title}
                         </Typography>
 
                         <Typography
@@ -224,8 +253,11 @@ export default function Home() {
                             sx={{
                                 color: 'text.secondary',
                                 marginBottom: 4,
-                                fontWeight: 300,
-                                fontSize: { xs: '0.9rem', sm: '1rem' },
+                                fontWeight: TYPOGRAPHY.fontWeight.light,
+                                fontSize: {
+                                    xs: TYPOGRAPHY.fontSize.xs.h6,
+                                    sm: TYPOGRAPHY.fontSize.sm.h6,
+                                },
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
@@ -233,7 +265,7 @@ export default function Home() {
                             }}
                         >
                             <LocationOn fontSize="small" />
-                            Chicago, IL
+                            {PERSONAL_INFO.location}
                         </Typography>
 
                         {/* Technical Skills */}
@@ -248,178 +280,79 @@ export default function Home() {
                                 gap: { xs: 1, sm: 2 },
                                 justifyContent: 'center',
                                 marginBottom: { xs: 3, sm: 4 },
-                                maxWidth: '600px',
+                                maxWidth: SPACING.maxWidth.skills,
                                 margin: {
-                                    xs: '0 auto 1.5rem auto',
-                                    sm: '0 auto 2rem auto',
+                                    xs: `0 auto ${SPACING.margin.xs} auto`,
+                                    sm: `0 auto ${SPACING.margin.sm} auto`,
                                 },
                                 width: '100%',
                                 overflow: 'hidden',
                             }}
                         >
-                            <Chip
-                                icon={<Code />}
-                                label="Python"
-                                variant="outlined"
-                                size="large"
-                                sx={{
-                                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                                    color: 'primary.light',
-                                    padding: {
-                                        xs: '6px 8px',
-                                        sm: '12px 16px',
-                                    },
-                                    height: { xs: '36px', sm: '48px' },
-                                    fontSize: { xs: '0.8rem', sm: '1rem' },
-                                    maxWidth: '100%',
-                                    overflow: 'hidden',
-                                    '&:hover': {
-                                        backgroundColor:
-                                            'rgba(255, 255, 255, 0.1)',
-                                    },
-                                    '& .MuiChip-icon': {
-                                        marginLeft: { xs: '6px', sm: '12px' },
-                                        marginRight: { xs: '4px', sm: '8px' },
-                                    },
-                                }}
-                            />
-                            <Chip
-                                icon={<Psychology />}
-                                label="PyTorch"
-                                variant="outlined"
-                                size="large"
-                                sx={{
-                                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                                    color: 'primary.light',
-                                    padding: {
-                                        xs: '6px 8px',
-                                        sm: '12px 16px',
-                                    },
-                                    height: { xs: '36px', sm: '48px' },
-                                    fontSize: { xs: '0.8rem', sm: '1rem' },
-                                    maxWidth: '100%',
-                                    overflow: 'hidden',
-                                    '&:hover': {
-                                        backgroundColor:
-                                            'rgba(255, 255, 255, 0.1)',
-                                    },
-                                    '& .MuiChip-icon': {
-                                        marginLeft: { xs: '6px', sm: '12px' },
-                                        marginRight: { xs: '4px', sm: '8px' },
-                                    },
-                                }}
-                            />
-                            <Chip
-                                icon={<Code />}
-                                label="JavaScript"
-                                variant="outlined"
-                                size="large"
-                                sx={{
-                                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                                    color: 'primary.light',
-                                    padding: {
-                                        xs: '6px 8px',
-                                        sm: '12px 16px',
-                                    },
-                                    height: { xs: '36px', sm: '48px' },
-                                    fontSize: { xs: '0.8rem', sm: '1rem' },
-                                    maxWidth: '100%',
-                                    overflow: 'hidden',
-                                    '&:hover': {
-                                        backgroundColor:
-                                            'rgba(255, 255, 255, 0.1)',
-                                    },
-                                    '& .MuiChip-icon': {
-                                        marginLeft: { xs: '6px', sm: '12px' },
-                                        marginRight: { xs: '4px', sm: '8px' },
-                                    },
-                                }}
-                            />
-                            <Chip
-                                icon={<Cloud />}
-                                label="AWS/GCP"
-                                variant="outlined"
-                                size="large"
-                                sx={{
-                                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                                    color: 'primary.light',
-                                    padding: {
-                                        xs: '6px 8px',
-                                        sm: '12px 16px',
-                                    },
-                                    height: { xs: '36px', sm: '48px' },
-                                    fontSize: { xs: '0.8rem', sm: '1rem' },
-                                    maxWidth: '100%',
-                                    overflow: 'hidden',
-                                    '&:hover': {
-                                        backgroundColor:
-                                            'rgba(255, 255, 255, 0.1)',
-                                    },
-                                    '& .MuiChip-icon': {
-                                        marginLeft: { xs: '6px', sm: '12px' },
-                                        marginRight: { xs: '4px', sm: '8px' },
-                                    },
-                                }}
-                            />
-                            <Chip
-                                icon={<Work />}
-                                label="Docker"
-                                variant="outlined"
-                                size="large"
-                                sx={{
-                                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                                    color: 'primary.light',
-                                    padding: {
-                                        xs: '6px 8px',
-                                        sm: '12px 16px',
-                                    },
-                                    height: { xs: '36px', sm: '48px' },
-                                    fontSize: { xs: '0.8rem', sm: '1rem' },
-                                    maxWidth: '100%',
-                                    overflow: 'hidden',
-                                    '&:hover': {
-                                        backgroundColor:
-                                            'rgba(255, 255, 255, 0.1)',
-                                    },
-                                    '& .MuiChip-icon': {
-                                        marginLeft: { xs: '6px', sm: '12px' },
-                                        marginRight: { xs: '4px', sm: '8px' },
-                                    },
-                                }}
-                            />
-                            <Chip
-                                icon={<Psychology />}
-                                label="TensorFlow"
-                                variant="outlined"
-                                size="large"
-                                sx={{
-                                    borderColor: 'rgba(255, 255, 255, 0.3)',
-                                    color: 'primary.light',
-                                    padding: {
-                                        xs: '6px 8px',
-                                        sm: '12px 16px',
-                                    },
-                                    height: { xs: '36px', sm: '48px' },
-                                    fontSize: { xs: '0.8rem', sm: '1rem' },
-                                    maxWidth: '100%',
-                                    overflow: 'hidden',
-                                    '&:hover': {
-                                        backgroundColor:
-                                            'rgba(255, 255, 255, 0.1)',
-                                    },
-                                    '& .MuiChip-icon': {
-                                        marginLeft: { xs: '6px', sm: '12px' },
-                                        marginRight: { xs: '4px', sm: '8px' },
-                                    },
-                                }}
-                            />
+                            {SKILLS.map(skill => {
+                                const IconComponent =
+                                    skill.icon === 'Code'
+                                        ? Code
+                                        : skill.icon === 'Psychology'
+                                          ? Psychology
+                                          : skill.icon === 'Cloud'
+                                            ? Cloud
+                                            : Work;
+
+                                return (
+                                    <Chip
+                                        key={skill.name}
+                                        icon={<IconComponent />}
+                                        label={skill.name}
+                                        variant="outlined"
+                                        size="large"
+                                        sx={{
+                                            borderColor:
+                                                COMPONENTS.overlays.light,
+                                            color: 'primary.light',
+                                            padding: {
+                                                xs: COMPONENTS.chip.padding.xs,
+                                                sm: COMPONENTS.chip.padding.sm,
+                                            },
+                                            height: {
+                                                xs: COMPONENTS.chip.height.xs,
+                                                sm: COMPONENTS.chip.height.sm,
+                                            },
+                                            fontSize: {
+                                                xs: TYPOGRAPHY.fontSize.xs.body,
+                                                sm: TYPOGRAPHY.fontSize.sm.body,
+                                            },
+                                            maxWidth: '100%',
+                                            overflow: 'hidden',
+                                            '&:hover': {
+                                                backgroundColor:
+                                                    COMPONENTS.hsl.hover.light, // Using raised background for hover
+                                            },
+                                            '& .MuiChip-icon': {
+                                                marginLeft: {
+                                                    xs: COMPONENTS.chip
+                                                        .iconMargin.left.xs,
+                                                    sm: COMPONENTS.chip
+                                                        .iconMargin.left.sm,
+                                                },
+                                                marginRight: {
+                                                    xs: COMPONENTS.chip
+                                                        .iconMargin.right.xs,
+                                                    sm: COMPONENTS.chip
+                                                        .iconMargin.right.sm,
+                                                },
+                                            },
+                                        }}
+                                    />
+                                );
+                            })}
                         </Box>
 
                         {/* Professional Highlights */}
                         <Box
                             sx={{
                                 marginTop: { xs: 4, sm: 5, md: 6 },
-                                maxWidth: '900px',
+                                maxWidth: SPACING.maxWidth.wide,
                                 textAlign: 'left',
                                 width: '100%',
                                 overflow: 'hidden',
@@ -432,7 +365,7 @@ export default function Home() {
                                     color: 'primary.light',
                                     marginBottom: 3,
                                     textAlign: 'center',
-                                    fontWeight: 600,
+                                    fontWeight: TYPOGRAPHY.fontWeight.semiBold,
                                 }}
                             >
                                 Research Publications
@@ -448,145 +381,85 @@ export default function Home() {
                                     gap: { xs: 2, sm: 3 },
                                 }}
                             >
-                                <Box
-                                    component="a"
-                                    href="https://ieeexplore.ieee.org/document/10319968"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    sx={{
-                                        padding: { xs: 1.5, sm: 2 },
-                                        backgroundColor:
-                                            'rgba(128, 128, 128, 0.05)',
-                                        borderRadius: 2,
-                                        border: '1px solid rgba(128, 128, 128, 0.2)',
-                                        textDecoration: 'none',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s ease-in-out',
-                                        width: '100%',
-                                        boxSizing: 'border-box',
-                                        overflow: 'hidden',
-                                        '&:hover': {
+                                {PUBLICATIONS.map(publication => (
+                                    <Box
+                                        key={publication.title}
+                                        component="a"
+                                        href={publication.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        sx={{
+                                            padding: { xs: 1.5, sm: 2 },
                                             backgroundColor:
-                                                'rgba(128, 128, 128, 0.1)',
-                                            transform: 'translateY(-2px)',
-                                        },
-                                    }}
-                                >
-                                    <Typography
-                                        variant="subtitle2"
-                                        sx={{
-                                            color: 'secondary.light',
-                                            fontWeight: 600,
-                                            marginBottom: 1,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: 1,
-                                            wordWrap: 'break-word',
-                                            overflowWrap: 'break-word',
-                                        }}
-                                    >
-                                        Generalized Collective Algorithms for
-                                        the Exascale Era
-                                        <OpenInNew fontSize="small" />
-                                    </Typography>
-                                    <Box sx={{ marginBottom: 1 }}>
-                                        <Chip
-                                            label="CLUSTER 2023"
-                                            size="small"
-                                            sx={{
+                                                COMPONENTS.card.backgroundColor,
+                                            borderRadius:
+                                                COMPONENTS.card.borderRadius,
+                                            border: COMPONENTS.card.border,
+                                            textDecoration: 'none',
+                                            cursor: 'pointer',
+                                            transition:
+                                                ANIMATIONS.hover.transition,
+                                            width: '100%',
+                                            boxSizing: 'border-box',
+                                            overflow: 'hidden',
+                                            '&:hover': {
                                                 backgroundColor:
-                                                    'rgba(25, 118, 210, 0.1)',
-                                                color: 'primary.light',
-                                                border: '1px solid rgba(25, 118, 210, 0.3)',
-                                                fontSize: '0.75rem',
-                                                height: '24px',
-                                            }}
-                                        />
-                                    </Box>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            color: 'text.secondary',
-                                            wordWrap: 'break-word',
-                                            overflowWrap: 'break-word',
+                                                    COMPONENTS.hsl.hover.medium, // Using raised background for hover
+                                                transform:
+                                                    ANIMATIONS.hover.transform,
+                                            },
                                         }}
                                     >
-                                        Introduced novel framework for exascale
-                                        collective algorithms, reducing
-                                        communication overhead by 30% and
-                                        latency by 20%
-                                    </Typography>
-                                </Box>
-
-                                <Box
-                                    component="a"
-                                    href="https://ieeexplore.ieee.org/document/10793131"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    sx={{
-                                        padding: { xs: 1.5, sm: 2 },
-                                        backgroundColor:
-                                            'rgba(128, 128, 128, 0.05)',
-                                        borderRadius: 2,
-                                        border: '1px solid rgba(128, 128, 128, 0.2)',
-                                        textDecoration: 'none',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s ease-in-out',
-                                        width: '100%',
-                                        boxSizing: 'border-box',
-                                        overflow: 'hidden',
-                                        '&:hover': {
-                                            backgroundColor:
-                                                'rgba(128, 128, 128, 0.1)',
-                                            transform: 'translateY(-2px)',
-                                        },
-                                    }}
-                                >
-                                    <Typography
-                                        variant="subtitle2"
-                                        sx={{
-                                            color: 'secondary.light',
-                                            fontWeight: 600,
-                                            marginBottom: 1,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: 1,
-                                            wordWrap: 'break-word',
-                                            overflowWrap: 'break-word',
-                                        }}
-                                    >
-                                        Revisiting Computation for Research:
-                                        Practices and Trends
-                                        <OpenInNew fontSize="small" />
-                                    </Typography>
-                                    <Box sx={{ marginBottom: 1 }}>
-                                        <Chip
-                                            label="SC 2024"
-                                            size="small"
+                                        <Typography
+                                            variant="subtitle2"
                                             sx={{
-                                                backgroundColor:
-                                                    'rgba(25, 118, 210, 0.1)',
-                                                color: 'primary.light',
-                                                border: '1px solid rgba(25, 118, 210, 0.3)',
-                                                fontSize: '0.75rem',
-                                                height: '24px',
+                                                color: 'secondary.light',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .semiBold,
+                                                marginBottom: 1,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                wordWrap: 'break-word',
+                                                overflowWrap: 'break-word',
                                             }}
-                                        />
+                                        >
+                                            {publication.title}
+                                            <OpenInNew fontSize="small" />
+                                        </Typography>
+                                        <Box sx={{ marginBottom: 1 }}>
+                                            <Chip
+                                                label={publication.conference}
+                                                size="small"
+                                                sx={{
+                                                    backgroundColor:
+                                                        COMPONENTS.badge
+                                                            .backgroundColor,
+                                                    color: COMPONENTS.badge
+                                                        .color,
+                                                    border: COMPONENTS.badge
+                                                        .border,
+                                                    fontSize:
+                                                        COMPONENTS.badge
+                                                            .fontSize,
+                                                    height: COMPONENTS.badge
+                                                        .height,
+                                                }}
+                                            />
+                                        </Box>
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: 'text.secondary',
+                                                wordWrap: 'break-word',
+                                                overflowWrap: 'break-word',
+                                            }}
+                                        >
+                                            {publication.description}
+                                        </Typography>
                                     </Box>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            color: 'text.secondary',
-                                            wordWrap: 'break-word',
-                                            overflowWrap: 'break-word',
-                                        }}
-                                    >
-                                        Interviewed 138 researchers across
-                                        multiple institutions using thematic
-                                        analysis to uncover evolving
-                                        computational research practices
-                                    </Typography>
-                                </Box>
+                                ))}
                             </Box>
                         </Box>
 
@@ -594,7 +467,7 @@ export default function Home() {
                         <Box
                             sx={{
                                 marginTop: { xs: 4, sm: 5, md: 6 },
-                                maxWidth: '900px',
+                                maxWidth: SPACING.maxWidth.wide,
                                 textAlign: 'left',
                                 width: '100%',
                                 overflow: 'hidden',
@@ -607,7 +480,7 @@ export default function Home() {
                                     color: 'primary.light',
                                     marginBottom: 3,
                                     textAlign: 'center',
-                                    fontWeight: 600,
+                                    fontWeight: TYPOGRAPHY.fontWeight.semiBold,
                                 }}
                             >
                                 Featured Projects
@@ -623,115 +496,85 @@ export default function Home() {
                                     gap: { xs: 2, sm: 3 },
                                 }}
                             >
-                                <Box
-                                    component="a"
-                                    href="https://github.com/bangyen/zsharp"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    sx={{
-                                        padding: { xs: 1.5, sm: 2 },
-                                        backgroundColor:
-                                            'rgba(128, 128, 128, 0.05)',
-                                        borderRadius: 2,
-                                        border: '1px solid rgba(128, 128, 128, 0.2)',
-                                        textDecoration: 'none',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s ease-in-out',
-                                        width: '100%',
-                                        boxSizing: 'border-box',
-                                        overflow: 'hidden',
-                                        '&:hover': {
+                                {PROJECTS.map(project => (
+                                    <Box
+                                        key={project.title}
+                                        component="a"
+                                        href={project.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        sx={{
+                                            padding: { xs: 1.5, sm: 2 },
                                             backgroundColor:
-                                                'rgba(128, 128, 128, 0.1)',
-                                            transform: 'translateY(-2px)',
-                                        },
-                                    }}
-                                >
-                                    <Typography
-                                        variant="subtitle2"
-                                        sx={{
-                                            color: 'secondary.light',
-                                            fontWeight: 600,
-                                            marginBottom: 1,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: 1,
-                                            wordWrap: 'break-word',
-                                            overflowWrap: 'break-word',
+                                                COMPONENTS.card.backgroundColor,
+                                            borderRadius:
+                                                COMPONENTS.card.borderRadius,
+                                            border: COMPONENTS.card.border,
+                                            textDecoration: 'none',
+                                            cursor: 'pointer',
+                                            transition:
+                                                ANIMATIONS.hover.transition,
+                                            width: '100%',
+                                            boxSizing: 'border-box',
+                                            overflow: 'hidden',
+                                            '&:hover': {
+                                                backgroundColor:
+                                                    COMPONENTS.hsl.hover.medium, // Using raised background for hover
+                                                transform:
+                                                    ANIMATIONS.hover.transform,
+                                            },
                                         }}
                                     >
-                                        ZSharp — Sharpness-Aware Minimization
-                                        <GitHub fontSize="small" />
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            color: 'text.secondary',
-                                            wordWrap: 'break-word',
-                                            overflowWrap: 'break-word',
-                                        }}
-                                    >
-                                        Developed PyTorch implementation with
-                                        Apple Silicon optimization, delivering
-                                        +5.2% accuracy over SGD and 4.4×
-                                        training speedup
-                                    </Typography>
-                                </Box>
-
-                                <Box
-                                    component="a"
-                                    href="https://github.com/bangyen/oligopoly"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    sx={{
-                                        padding: { xs: 1.5, sm: 2 },
-                                        backgroundColor:
-                                            'rgba(128, 128, 128, 0.05)',
-                                        borderRadius: 2,
-                                        border: '1px solid rgba(128, 128, 128, 0.2)',
-                                        textDecoration: 'none',
-                                        cursor: 'pointer',
-                                        transition: 'all 0.2s ease-in-out',
-                                        width: '100%',
-                                        boxSizing: 'border-box',
-                                        overflow: 'hidden',
-                                        '&:hover': {
-                                            backgroundColor:
-                                                'rgba(128, 128, 128, 0.1)',
-                                            transform: 'translateY(-2px)',
-                                        },
-                                    }}
-                                >
-                                    <Typography
-                                        variant="subtitle2"
-                                        sx={{
-                                            color: 'secondary.light',
-                                            fontWeight: 600,
-                                            marginBottom: 1,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: 1,
-                                            wordWrap: 'break-word',
-                                            overflowWrap: 'break-word',
-                                        }}
-                                    >
-                                        Oligopoly — Agent-Based Economic
-                                        Modeling
-                                        <GitHub fontSize="small" />
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            color: 'text.secondary',
-                                            wordWrap: 'break-word',
-                                            overflowWrap: 'break-word',
-                                        }}
-                                    >
-                                        Built FastAPI and SQLAlchemy simulation
-                                        platform for 2-4 firms with collusion
-                                        detection and real-time analysis
-                                    </Typography>
-                                </Box>
+                                        <Typography
+                                            variant="subtitle2"
+                                            sx={{
+                                                color: 'secondary.light',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .semiBold,
+                                                marginBottom: 1,
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                wordWrap: 'break-word',
+                                                overflowWrap: 'break-word',
+                                            }}
+                                        >
+                                            {project.title}
+                                            <GitHub fontSize="small" />
+                                        </Typography>
+                                        <Box sx={{ marginBottom: 1 }}>
+                                            <Chip
+                                                label={project.technology}
+                                                size="small"
+                                                sx={{
+                                                    backgroundColor:
+                                                        COMPONENTS.badge
+                                                            .backgroundColor,
+                                                    color: COMPONENTS.badge
+                                                        .color,
+                                                    border: COMPONENTS.badge
+                                                        .border,
+                                                    fontSize:
+                                                        COMPONENTS.badge
+                                                            .fontSize,
+                                                    height: COMPONENTS.badge
+                                                        .height,
+                                                }}
+                                            />
+                                        </Box>
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: 'text.secondary',
+                                                wordWrap: 'break-word',
+                                                overflowWrap: 'break-word',
+                                            }}
+                                        >
+                                            {project.description}
+                                        </Typography>
+                                    </Box>
+                                ))}
                             </Box>
                         </Box>
                     </Box>

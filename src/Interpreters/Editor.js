@@ -2,6 +2,7 @@ import { Program, Output, Tape, Register } from './Display';
 import { CustomGrid } from '../helpers';
 import Grid from '@mui/material/Grid2';
 import { Toolbar } from './Toolbar';
+import { COLORS, COMPONENTS, SPACING, ANIMATIONS } from '../config/constants';
 
 import { Typography, TextField } from '@mui/material';
 
@@ -53,7 +54,7 @@ export default function Editor({ container, sideProps, hide, children }) {
             flexDirection="column"
             padding="5vh 5vw 5vh 5vw"
             sx={{
-                background: '#0a0a0a',
+                background: COLORS.background.default,
                 position: 'relative',
             }}
         >
@@ -131,22 +132,22 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
         const getCellStyles = color => {
             const styles = {
                 primary: {
-                    bg: 'rgba(128, 128, 128, 0.1)',
+                    bg: COMPONENTS.overlays.light,
                     text: 'primary.light',
-                    border: '1px solid rgba(25, 118, 210, 0.3)',
-                    hover: 'rgba(128, 128, 128, 0.15)',
+                    border: COMPONENTS.badge.border,
+                    hover: COMPONENTS.overlays.hover,
                 },
                 info: {
-                    bg: 'rgba(128, 128, 128, 0.08)',
+                    bg: COMPONENTS.overlays.medium,
                     text: 'secondary.light',
-                    border: '1px solid rgba(128, 128, 128, 0.3)',
-                    hover: 'rgba(128, 128, 128, 0.12)',
+                    border: COMPONENTS.borders.medium,
+                    hover: COMPONENTS.overlays.hoverLight,
                 },
                 secondary: {
-                    bg: 'rgba(128, 128, 128, 0.05)',
+                    bg: COMPONENTS.overlays.lighter,
                     text: 'text.secondary',
-                    border: '1px solid rgba(128, 128, 128, 0.2)',
-                    hover: 'rgba(128, 128, 128, 0.1)',
+                    border: COMPONENTS.borders.light,
+                    hover: COMPONENTS.overlays.light,
                 },
             };
             return styles[color] || styles.secondary;
@@ -161,12 +162,12 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
             children: <Text text={value} />,
             sx: {
                 cursor: 'pointer',
-                borderRadius: 2,
+                borderRadius: SPACING.borderRadius.small,
                 border: cellStyle.border,
-                transition: 'all 0.2s ease-in-out',
+                transition: ANIMATIONS.transition,
                 '&:hover': {
                     backgroundColor: cellStyle.hover,
-                    transform: 'translateY(-2px)',
+                    transform: 'translateY(-0.125rem)', // -2px
                 },
             },
         };
@@ -208,18 +209,18 @@ export function TextArea({
             sx={{
                 '& .MuiInputBase-root': {
                     alignItems: 'flex-start',
-                    backgroundColor: 'rgba(128, 128, 128, 0.05)',
-                    borderRadius: 2,
+                    backgroundColor: COMPONENTS.overlays.lighter,
+                    borderRadius: SPACING.borderRadius.small,
                 },
                 '& .MuiInputBase-input': {
                     fontFamily: 'monospace',
                     color: 'text.primary',
                 },
                 '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'rgba(128, 128, 128, 0.2)',
+                    borderColor: COMPONENTS.borderColors.light,
                 },
                 '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: 'rgba(128, 128, 128, 0.25)',
+                    borderColor: COMPONENTS.borderColors.medium,
                 },
                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                     borderColor: 'primary.light',

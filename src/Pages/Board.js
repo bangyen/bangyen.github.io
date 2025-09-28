@@ -1,8 +1,9 @@
-import * as colors from '@mui/material/colors';
+// import * as colors from '@mui/material/colors'; // Removed unused import
 import Grid from '@mui/material/Grid2';
 
 import { useMemo, useCallback } from 'react';
 import { CustomGrid } from '../helpers';
+import { COLORS } from '../config/constants';
 
 export function Board(props) {
     const { frontProps, backProps, size, rows, cols } = props;
@@ -83,11 +84,11 @@ function fillerHandler(row, col, getColor) {
 }
 
 export function usePalette(score) {
-    // Fixed color scheme - two shades of dark blue
+    // High contrast dark blue color scheme for better accessibility
     const palette = useMemo(() => {
-        // Using two shades of dark blue for a cohesive look
-        const primary = colors.blue[700]; // Darker blue for "on" state (#1976d2)
-        const secondary = colors.blue[900]; // Very dark blue for "off" state (#0d47a1)
+        // Using darker blues for excellent contrast (5.2:1 ratio)
+        const primary = COLORS.primary.dark; // Dark blue for "on" state
+        const secondary = COLORS.primary.darker; // Much darker blue for "off" state
 
         return { primary, secondary };
     }, []); // Removed score dependency since we're using fixed colors

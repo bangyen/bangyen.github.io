@@ -2,6 +2,7 @@ import { EditorContext, Text } from './Editor';
 
 import { Box, Typography, Chip, IconButton } from '@mui/material';
 import { useContext } from 'react';
+import { COMPONENTS, SPACING, COLORS, TYPOGRAPHY } from '../config/constants';
 
 import {
     CodeRounded,
@@ -120,8 +121,8 @@ function Display(props) {
                 color={color}
                 text={val}
                 sx={{
-                    fontSize: '1.2rem',
-                    fontWeight: 600,
+                    fontSize: TYPOGRAPHY.fontSize.large,
+                    fontWeight: TYPOGRAPHY.fontWeight.semiBold,
                     fontFamily: 'monospace',
                 }}
             />
@@ -143,8 +144,8 @@ function Display(props) {
                     variant="subtitle2"
                     sx={{
                         color: 'primary.light',
-                        fontWeight: 600,
-                        fontSize: '0.875rem',
+                        fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                        fontSize: TYPOGRAPHY.fontSize.medium,
                     }}
                 >
                     {title}
@@ -172,11 +173,12 @@ function CompactDisplay(props) {
                     backgroundColor:
                         color === 'info'
                             ? 'primary.light'
-                            : 'rgba(128, 128, 128, 0.1)',
-                    color: color === 'info' ? 'white' : 'text.primary',
+                            : COMPONENTS.overlays.light,
+                    color:
+                        color === 'info' ? COLORS.text.white : 'text.primary',
                     fontFamily: 'monospace',
-                    fontSize: '0.75rem',
-                    height: '24px',
+                    fontSize: TYPOGRAPHY.fontSize.small,
+                    height: SPACING.maxWidth.icon,
                 }}
             />
         );
@@ -186,11 +188,11 @@ function CompactDisplay(props) {
         <Box
             sx={{
                 padding: 1.5,
-                backgroundColor: 'rgba(128, 128, 128, 0.05)',
-                border: '1px solid rgba(128, 128, 128, 0.2)',
-                borderRadius: 2,
+                backgroundColor: COMPONENTS.overlays.lighter,
+                border: COMPONENTS.borders.light,
+                borderRadius: SPACING.borderRadius.small,
                 height: '100%',
-                minHeight: '60px',
+                minHeight: SPACING.maxWidth.medium,
             }}
         >
             <Box
@@ -201,13 +203,18 @@ function CompactDisplay(props) {
                     marginBottom: 1,
                 }}
             >
-                <Icon sx={{ color: 'primary.light', fontSize: '1rem' }} />
+                <Icon
+                    sx={{
+                        color: 'primary.light',
+                        fontSize: TYPOGRAPHY.fontSize.icon,
+                    }}
+                />
                 <Typography
                     variant="caption"
                     sx={{
                         color: 'primary.light',
-                        fontWeight: 600,
-                        fontSize: '0.75rem',
+                        fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                        fontSize: TYPOGRAPHY.fontSize.small,
                     }}
                 >
                     {title}
@@ -256,10 +263,10 @@ function Scrollable(props) {
                 overflowX: 'auto',
                 width: '100%',
                 padding: 2,
-                backgroundColor: 'rgba(128, 128, 128, 0.05)',
-                border: '1px solid rgba(128, 128, 128, 0.2)',
-                borderRadius: 2,
-                height: '80px',
+                backgroundColor: COMPONENTS.overlays.lighter,
+                border: COMPONENTS.borders.light,
+                borderRadius: SPACING.borderRadius.small,
+                height: SPACING.maxWidth.large,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',

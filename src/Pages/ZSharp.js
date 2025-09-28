@@ -3,6 +3,13 @@ import { Box, Typography, IconButton, Button } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { GitHub, Home } from '@mui/icons-material';
 import {
+    URLS,
+    COMPONENTS,
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+} from '../config/constants';
+import {
     LineChart,
     Line,
     XAxis,
@@ -166,7 +173,11 @@ const ZSharp = () => {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+                padding: {
+                    xs: SPACING.padding.xs,
+                    sm: SPACING.padding.sm,
+                    md: SPACING.padding.md,
+                },
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -181,8 +192,7 @@ const ZSharp = () => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background:
-                        'linear-gradient(135deg, #0a0a0a 0%, #0e0e0e 50%, #0a0a0a 100%)',
+                    background: COLORS.background.default,
                     zIndex: -2,
                 }}
             />
@@ -197,14 +207,18 @@ const ZSharp = () => {
                 flexDirection="column"
                 sx={{
                     zIndex: 1,
-                    padding: { xs: '1rem 0', sm: '1.5rem 0', md: '2rem 0' },
+                    padding: {
+                        xs: `${SPACING.padding.xs} 0`,
+                        sm: `${SPACING.padding.sm} 0`,
+                        md: `${SPACING.padding.md} 0`,
+                    },
                     minHeight: 0,
                 }}
             >
                 <Box
                     sx={{
                         textAlign: 'center',
-                        maxWidth: '900px',
+                        maxWidth: SPACING.maxWidth.wide,
                         width: '100%',
                         padding: {
                             xs: '0 0.5rem',
@@ -227,7 +241,7 @@ const ZSharp = () => {
                                 variant="h1"
                                 sx={{
                                     color: 'text.primary',
-                                    fontWeight: 700,
+                                    fontWeight: TYPOGRAPHY.fontWeight.bold,
                                     fontSize: {
                                         xs: '2rem',
                                         sm: '2.8rem',
@@ -240,20 +254,26 @@ const ZSharp = () => {
                         </Grid>
                         <Grid size="auto" sx={{ display: 'flex', gap: 1 }}>
                             <IconButton
-                                href="https://github.com/bangyen/ZSharp"
+                                href={URLS.zsharpRepo}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
                                 <GitHub
                                     sx={{
-                                        fontSize: { xs: '1.5rem', sm: '2rem' },
+                                        fontSize: {
+                                            xs: TYPOGRAPHY.fontSize.large,
+                                            sm: '2rem',
+                                        },
                                     }}
                                 />
                             </IconButton>
                             <IconButton component="a" href="/">
                                 <Home
                                     sx={{
-                                        fontSize: { xs: '1.5rem', sm: '2rem' },
+                                        fontSize: {
+                                            xs: TYPOGRAPHY.fontSize.large,
+                                            sm: '2rem',
+                                        },
                                     }}
                                 />
                             </IconButton>
@@ -265,8 +285,11 @@ const ZSharp = () => {
                         sx={{
                             color: 'text.secondary',
                             marginBottom: 3,
-                            fontWeight: 400,
-                            fontSize: { xs: '1.1rem', sm: '1.3rem' },
+                            fontWeight: TYPOGRAPHY.fontWeight.normal,
+                            fontSize: {
+                                xs: TYPOGRAPHY.fontSize.sm.h6,
+                                sm: TYPOGRAPHY.fontSize.sm.h5,
+                            },
                         }}
                     >
                         Sharpness-Aware Minimization with Z-Score Gradient
@@ -277,9 +300,10 @@ const ZSharp = () => {
                     <Box
                         sx={{
                             padding: { xs: 1.5, sm: 2 },
-                            backgroundColor: 'rgba(128, 128, 128, 0.05)',
-                            borderRadius: 2,
-                            border: '1px solid rgba(128, 128, 128, 0.2)',
+                            backgroundColor:
+                                COMPONENTS.cardLight.backgroundColor,
+                            borderRadius: SPACING.borderRadius.small,
+                            border: COMPONENTS.borders.light,
                             marginBottom: 4,
                             width: '100%',
                             boxSizing: 'border-box',
@@ -292,7 +316,7 @@ const ZSharp = () => {
                                 color: 'primary.light',
                                 marginBottom: 3,
                                 textAlign: 'center',
-                                fontWeight: 600,
+                                fontWeight: TYPOGRAPHY.fontWeight.semiBold,
                             }}
                         >
                             {viewType === 'accuracy' &&
@@ -323,19 +347,19 @@ const ZSharp = () => {
                                     <LineChart data={currentData}>
                                         <CartesianGrid
                                             strokeDasharray="3 3"
-                                            stroke="rgba(255,255,255,0.1)"
+                                            stroke={COLORS.chart.stroke.light}
                                         />
                                         <XAxis
                                             dataKey="epoch"
-                                            stroke="rgba(255,255,255,0.7)"
+                                            stroke={COLORS.chart.stroke.medium}
                                             tick={{
-                                                fill: 'rgba(255,255,255,0.7)',
+                                                fill: COLORS.chart.fill.medium,
                                             }}
                                         />
                                         <YAxis
-                                            stroke="rgba(255,255,255,0.7)"
+                                            stroke={COLORS.chart.stroke.medium}
                                             tick={{
-                                                fill: 'rgba(255,255,255,0.7)',
+                                                fill: COLORS.chart.fill.medium,
                                             }}
                                             tickFormatter={value => {
                                                 if (viewType === 'loss') {
@@ -392,10 +416,13 @@ const ZSharp = () => {
                                         <RechartsTooltip
                                             contentStyle={{
                                                 backgroundColor:
-                                                    'rgba(26, 26, 26, 0.9)',
-                                                border: '1px solid rgba(255, 255, 255, 0.1)',
-                                                borderRadius: 8,
-                                                color: 'white',
+                                                    COMPONENTS.overlays.dark,
+                                                border: COMPONENTS.borders
+                                                    .white,
+                                                borderRadius:
+                                                    SPACING.borderRadius
+                                                        .extraLarge,
+                                                color: COLORS.text.white,
                                             }}
                                             labelFormatter={value =>
                                                 `Epoch ${value}`
@@ -418,11 +445,11 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="sgd"
-                                                    stroke="#1976d2"
+                                                    stroke={COLORS.chart.blue}
                                                     strokeWidth={3}
                                                     name="SGD"
                                                     dot={{
-                                                        fill: '#1976d2',
+                                                        fill: COLORS.chart.blue,
                                                         strokeWidth: 2,
                                                         r: 4,
                                                     }}
@@ -430,11 +457,12 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="zsharp"
-                                                    stroke="#2e7d32"
+                                                    stroke={COLORS.chart.green}
                                                     strokeWidth={3}
                                                     name="ZSharp"
                                                     dot={{
-                                                        fill: '#2e7d32',
+                                                        fill: COLORS.chart
+                                                            .green,
                                                         strokeWidth: 2,
                                                         r: 4,
                                                     }}
@@ -446,11 +474,11 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="sgd"
-                                                    stroke="#1976d2"
+                                                    stroke={COLORS.chart.blue}
                                                     strokeWidth={3}
                                                     name="SGD Loss"
                                                     dot={{
-                                                        fill: '#1976d2',
+                                                        fill: COLORS.chart.blue,
                                                         strokeWidth: 2,
                                                         r: 4,
                                                     }}
@@ -458,11 +486,12 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="zsharp"
-                                                    stroke="#2e7d32"
+                                                    stroke={COLORS.chart.green}
                                                     strokeWidth={3}
                                                     name="ZSharp Loss"
                                                     dot={{
-                                                        fill: '#2e7d32',
+                                                        fill: COLORS.chart
+                                                            .green,
                                                         strokeWidth: 2,
                                                         r: 4,
                                                     }}
@@ -473,11 +502,11 @@ const ZSharp = () => {
                                             <Line
                                                 type="monotone"
                                                 dataKey="gap"
-                                                stroke="#f57c00"
+                                                stroke={COLORS.chart.orange}
                                                 strokeWidth={3}
                                                 name="Accuracy Gap"
                                                 dot={{
-                                                    fill: '#f57c00',
+                                                    fill: COLORS.chart.orange,
                                                     strokeWidth: 2,
                                                     r: 4,
                                                 }}
@@ -487,11 +516,11 @@ const ZSharp = () => {
                                             <Line
                                                 type="monotone"
                                                 dataKey="improvement"
-                                                stroke="#f57c00"
+                                                stroke={COLORS.chart.orange}
                                                 strokeWidth={3}
                                                 name="Improvement"
                                                 dot={{
-                                                    fill: '#f57c00',
+                                                    fill: COLORS.chart.orange,
                                                     strokeWidth: 2,
                                                     r: 4,
                                                 }}
@@ -502,11 +531,11 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="sgd"
-                                                    stroke="#1976d2"
+                                                    stroke={COLORS.chart.blue}
                                                     strokeWidth={3}
                                                     name="SGD Rate"
                                                     dot={{
-                                                        fill: '#1976d2',
+                                                        fill: COLORS.chart.blue,
                                                         strokeWidth: 2,
                                                         r: 4,
                                                     }}
@@ -514,11 +543,12 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="zsharp"
-                                                    stroke="#2e7d32"
+                                                    stroke={COLORS.chart.green}
                                                     strokeWidth={3}
                                                     name="ZSharp Rate"
                                                     dot={{
-                                                        fill: '#2e7d32',
+                                                        fill: COLORS.chart
+                                                            .green,
                                                         strokeWidth: 2,
                                                         r: 4,
                                                     }}
@@ -542,7 +572,7 @@ const ZSharp = () => {
                             },
                             gap: 1,
                             maxWidth: {
-                                xs: '300px',
+                                xs: SPACING.maxWidth.small,
                                 sm: 'none',
                             },
                             margin: {
@@ -560,15 +590,11 @@ const ZSharp = () => {
                             size="small"
                             onClick={() => setViewType('accuracy')}
                             sx={{
-                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                ...COMPONENTS.button.outlined,
                                 color:
                                     viewType === 'accuracy'
-                                        ? 'white'
-                                        : 'rgba(255,255,255,0.7)',
-                                '&:hover': {
-                                    borderColor: 'primary.main',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                },
+                                        ? COLORS.text.white
+                                        : COMPONENTS.button.outlined.color,
                             }}
                         >
                             Accuracy
@@ -580,15 +606,11 @@ const ZSharp = () => {
                             size="small"
                             onClick={() => setViewType('loss')}
                             sx={{
-                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                ...COMPONENTS.button.outlined,
                                 color:
                                     viewType === 'loss'
-                                        ? 'white'
-                                        : 'rgba(255,255,255,0.7)',
-                                '&:hover': {
-                                    borderColor: 'primary.main',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                },
+                                        ? COLORS.text.white
+                                        : COMPONENTS.button.outlined.color,
                             }}
                         >
                             Loss
@@ -602,15 +624,11 @@ const ZSharp = () => {
                             size="small"
                             onClick={() => setViewType('learning_curve')}
                             sx={{
-                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                ...COMPONENTS.button.outlined,
                                 color:
                                     viewType === 'learning_curve'
-                                        ? 'white'
-                                        : 'rgba(255,255,255,0.7)',
-                                '&:hover': {
-                                    borderColor: 'primary.main',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                },
+                                        ? COLORS.text.white
+                                        : COMPONENTS.button.outlined.color,
                             }}
                         >
                             Learning Gap
@@ -624,15 +642,11 @@ const ZSharp = () => {
                             size="small"
                             onClick={() => setViewType('convergence')}
                             sx={{
-                                borderColor: 'rgba(255, 255, 255, 0.3)',
+                                ...COMPONENTS.button.outlined,
                                 color:
                                     viewType === 'convergence'
-                                        ? 'white'
-                                        : 'rgba(255,255,255,0.7)',
-                                '&:hover': {
-                                    borderColor: 'primary.main',
-                                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                                },
+                                        ? COLORS.text.white
+                                        : COMPONENTS.button.outlined.color,
                             }}
                         >
                             Convergence
