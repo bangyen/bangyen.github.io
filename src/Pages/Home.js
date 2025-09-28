@@ -44,7 +44,7 @@ function dropdown(name, options) {
                         paddingLeft: padWidth,
                         paddingRight: padWidth,
                         borderRadius: 2,
-                        margin: '4px 8px',
+                        margin: '0.25rem 0.5rem', // 4px 8px
                         transition: ANIMATIONS.menuHover.transition,
                         '&:hover': {
                             backgroundColor: COMPONENTS.overlays.light,

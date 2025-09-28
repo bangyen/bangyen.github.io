@@ -167,7 +167,7 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
                 transition: 'all 0.2s ease-in-out',
                 '&:hover': {
                     backgroundColor: cellStyle.hover,
-                    transform: 'translateY(-2px)',
+                    transform: 'translateY(-0.125rem)', // -2px
                 },
             },
         };

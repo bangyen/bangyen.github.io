@@ -486,7 +486,7 @@ const Oligopoly = () => {
                                                 color: COLORS.chart.fill.medium,
                                                 borderColor:
                                                     COLORS.chart.legend.light,
-                                                padding: '8px 12px',
+                                                padding: '0.5rem 0.75rem', // 8px 12px
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:
@@ -537,7 +537,7 @@ const Oligopoly = () => {
                                                 color: COLORS.chart.fill.medium,
                                                 borderColor:
                                                     COLORS.chart.legend.light,
-                                                padding: '8px 12px',
+                                                padding: '0.5rem 0.75rem', // 8px 12px
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:
@@ -593,7 +593,7 @@ const Oligopoly = () => {
                                                 color: COLORS.chart.fill.medium,
                                                 borderColor:
                                                     COLORS.chart.legend.light,
-                                                padding: '8px 12px',
+                                                padding: '0.5rem 0.75rem', // 8px 12px
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:

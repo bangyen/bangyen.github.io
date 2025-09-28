@@ -174,8 +174,10 @@ export default function Snake() {
 
             return {
                 backgroundColor: color,
-                boxShadow: color !== 'inherit' ? `0 0 20px ${color}40` : 'none',
-                border: color !== 'inherit' ? `1px solid ${color}` : 'none',
+                boxShadow:
+                    color !== 'inherit' ? `0 0 1.25rem ${color}40` : 'none', // 20px
+                border:
+                    color !== 'inherit' ? `0.0625rem solid ${color}` : 'none', // 1px
             };
         },
         [state, cols]

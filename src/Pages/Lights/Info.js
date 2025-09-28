@@ -96,9 +96,9 @@ export default function Info(props) {
             >
                 <CardContent
                     sx={{
-                        pt: '48px !important',
-                        pb: '48px !important',
-                        px: '48px !important',
+                        pt: '3rem !important', // 48px
+                        pb: '3rem !important', // 48px
+                        px: '3rem !important', // 48px
                         height: '100%',
                         display: 'flex',
                         flexDirection: 'column',

@@ -154,16 +154,16 @@ export const SPACING = {
         medium: 3,
     },
     maxWidth: {
-        content: '800px',
-        wide: '900px',
-        skills: '600px',
-        error: '600px',
-        info: '1200px',
-        card: '400px',
-        small: '300px',
-        icon: '24px',
-        medium: '60px',
-        large: '80px',
+        content: '50rem', // 800px
+        wide: '56.25rem', // 900px
+        skills: '37.5rem', // 600px
+        error: '37.5rem', // 600px
+        info: '75rem', // 1200px
+        card: '25rem', // 400px
+        small: '18.75rem', // 300px
+        icon: '1.5rem', // 24px
+        medium: '3.75rem', // 60px
+        large: '5rem', // 80px
     },
 };
 
@@ -202,11 +202,11 @@ export const ANIMATIONS = {
         timeout: 1000,
     },
     hover: {
-        transform: 'translateY(-2px)',
+        transform: 'translateY(-0.125rem)', // -2px
         transition: 'all 0.2s ease-in-out',
     },
     menuHover: {
-        transform: 'translateX(4px)',
+        transform: 'translateX(0.25rem)', // 4px
         transition: 'all 0.2s ease-in-out',
     },
 };
@@ -214,7 +214,7 @@ export const ANIMATIONS = {
 // Component-specific constants
 export const COMPONENTS = {
     menu: {
-        backdropFilter: 'blur(20px)',
+        backdropFilter: 'blur(1.25rem)', // 20px
         backgroundColor: 'hsla(0, 0%, 15%, 0.9)', // Using raised background with transparency
         border: '1px solid rgba(255, 255, 255, 0.1)',
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
@@ -225,21 +225,21 @@ export const COMPONENTS = {
     },
     chip: {
         height: {
-            xs: '36px',
-            sm: '48px',
+            xs: '2.25rem', // 36px
+            sm: '3rem', // 48px
         },
         padding: {
-            xs: '6px 8px',
-            sm: '12px 16px',
+            xs: '0.375rem 0.5rem', // 6px 8px
+            sm: '0.75rem 1rem', // 12px 16px
         },
         iconMargin: {
-            left: { xs: '6px', sm: '12px' },
-            right: { xs: '4px', sm: '8px' },
+            left: { xs: '0.375rem', sm: '0.75rem' }, // 6px 12px
+            right: { xs: '0.25rem', sm: '0.5rem' }, // 4px 8px
         },
     },
     card: {
         backgroundColor: 'hsla(0, 0%, 10%, 0.5)', // Using paper background with transparency
-        border: '1px solid hsla(0, 0%, 50%, 0.2)',
+        border: '0.0625rem solid hsla(0, 0%, 50%, 0.2)', // 1px
         borderRadius: 2,
     },
     cardLight: {
@@ -248,9 +248,9 @@ export const COMPONENTS = {
     badge: {
         backgroundColor: 'hsla(207, 79%, 46%, 0.1)',
         color: 'primary.light',
-        border: '1px solid hsla(207, 79%, 46%, 0.3)',
+        border: '0.0625rem solid hsla(207, 79%, 46%, 0.3)', // 1px
         fontSize: '0.75rem',
-        height: '24px',
+        height: '1.5rem', // 24px
     },
     button: {
         outlined: {
@@ -271,15 +271,15 @@ export const COMPONENTS = {
     },
     navigation: {
         backgroundColor: 'hsla(0, 0%, 15%, 0.8)',
-        border: '1px solid hsla(0, 0%, 100%, 0.1)',
-        backdropFilter: 'blur(20px)',
-        boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.3)',
+        border: '0.0625rem solid hsla(0, 0%, 100%, 0.1)', // 1px
+        backdropFilter: 'blur(1.25rem)', // 20px
+        boxShadow: '0 0.5rem 2rem hsla(0, 0%, 0%, 0.3)', // 8px 32px
     },
     borders: {
-        light: '1px solid hsla(0, 0%, 50%, 0.2)',
-        white: '1px solid hsla(0, 0%, 100%, 0.1)',
-        medium: '1px solid hsla(0, 0%, 50%, 0.3)',
-        mediumWhite: '1px solid hsla(0, 0%, 50%, 0.25)',
+        light: '0.0625rem solid hsla(0, 0%, 50%, 0.2)', // 1px
+        white: '0.0625rem solid hsla(0, 0%, 100%, 0.1)', // 1px
+        medium: '0.0625rem solid hsla(0, 0%, 50%, 0.3)', // 1px
+        mediumWhite: '0.0625rem solid hsla(0, 0%, 50%, 0.25)', // 1px
     },
     borderColors: {
         light: 'hsla(0, 0%, 50%, 0.2)',

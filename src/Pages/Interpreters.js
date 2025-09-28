@@ -186,7 +186,7 @@ export default function Interpreters() {
                                     '&:hover': {
                                         backgroundColor:
                                             COMPONENTS.overlays.light,
-                                        transform: 'translateY(-2px)',
+                                        transform: 'translateY(-0.125rem)', // -2px
                                     },
                                 }}
                             >
