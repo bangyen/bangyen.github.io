@@ -2,7 +2,7 @@ import React from 'react';
 import Grid from '@mui/material/Grid2';
 import { Typography, Box, Fade } from '@mui/material';
 import { HomeButton } from '../helpers';
-import { COLORS, SPACING, COMPONENTS } from '../config/constants';
+import { COLORS, SPACING, TYPOGRAPHY } from '../config/constants';
 
 export default function Error() {
     document.title = 'Page Not Found | Bangyen';
@@ -69,7 +69,7 @@ export default function Error() {
                             variant="h1"
                             sx={{
                                 color: COLORS.text.primary,
-                                fontWeight: 700,
+                                fontWeight: TYPOGRAPHY.fontWeight.bold,
                                 marginBottom: 2,
                                 fontSize: {
                                     xs: '2.5rem',
@@ -86,8 +86,11 @@ export default function Error() {
                             sx={{
                                 color: 'text.secondary',
                                 marginBottom: 2,
-                                fontWeight: 400,
-                                fontSize: { xs: '1.1rem', sm: '1.3rem' },
+                                fontWeight: TYPOGRAPHY.fontWeight.normal,
+                                fontSize: {
+                                    xs: TYPOGRAPHY.fontSize.sm.h6,
+                                    sm: TYPOGRAPHY.fontSize.sm.h5,
+                                },
                             }}
                         >
                             Page Not Found
@@ -98,8 +101,11 @@ export default function Error() {
                             sx={{
                                 color: 'text.secondary',
                                 marginBottom: 4,
-                                fontWeight: 300,
-                                fontSize: { xs: '0.9rem', sm: '1rem' },
+                                fontWeight: TYPOGRAPHY.fontWeight.light,
+                                fontSize: {
+                                    xs: TYPOGRAPHY.fontSize.xs.h6,
+                                    sm: TYPOGRAPHY.fontSize.sm.body,
+                                },
                             }}
                         >
                             This page isn&apos;t available. The link you

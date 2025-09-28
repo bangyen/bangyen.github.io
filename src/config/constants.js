@@ -14,7 +14,6 @@ export const PERSONAL_INFO = {
 // URLs and Links
 export const URLS = {
     github: 'https://github.com/bangyen',
-    githubProfile: 'https://github.com/bangyen',
     zsharpRepo: 'https://github.com/bangyen/zsharp',
     oligopolyRepo: 'https://github.com/bangyen/oligopoly',
     esolangsRepo: 'https://github.com/bangyen/esolangs',
@@ -139,6 +138,13 @@ export const COLORS = {
 
 // Spacing and Dimensions
 export const SPACING = {
+    // Common spacing values for both padding and margin
+    spacing: {
+        xs: '1rem',
+        sm: '1.5rem',
+        md: '2rem',
+    },
+    // Aliases for backward compatibility
     padding: {
         xs: '1rem',
         sm: '1.5rem',
@@ -152,6 +158,8 @@ export const SPACING = {
     borderRadius: {
         small: 2,
         medium: 3,
+        large: 4,
+        extraLarge: 8,
     },
     maxWidth: {
         content: '50rem', // 800px
@@ -186,6 +194,11 @@ export const TYPOGRAPHY = {
         md: {
             h1: '4rem',
         },
+        // Common font sizes used across components
+        small: '0.75rem',
+        medium: '0.875rem',
+        large: '1.2rem',
+        icon: '1rem', // Same as sm.body - could be referenced but kept separate for clarity
     },
     fontWeight: {
         light: 300,
@@ -197,24 +210,28 @@ export const TYPOGRAPHY = {
 };
 
 // Animation and Transitions
+const baseTransition = 'all 0.2s ease-in-out';
 export const ANIMATIONS = {
     fadeIn: {
         timeout: 1000,
     },
+    transition: baseTransition, // Common transition for reuse
     hover: {
         transform: 'translateY(-0.125rem)', // -2px
-        transition: 'all 0.2s ease-in-out',
+        transition: baseTransition,
     },
     menuHover: {
         transform: 'translateX(0.25rem)', // 4px
-        transition: 'all 0.2s ease-in-out',
+        transition: baseTransition,
     },
 };
 
 // Component-specific constants
+const baseBackdropFilter = 'blur(1.25rem)'; // 20px
+const baseBorder = '0.0625rem solid'; // 1px solid
 export const COMPONENTS = {
     menu: {
-        backdropFilter: 'blur(1.25rem)', // 20px
+        backdropFilter: baseBackdropFilter,
         backgroundColor: 'hsla(0, 0%, 15%, 0.9)', // Using raised background with transparency
         border: '1px solid rgba(255, 255, 255, 0.1)',
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
@@ -239,8 +256,8 @@ export const COMPONENTS = {
     },
     card: {
         backgroundColor: 'hsla(0, 0%, 10%, 0.5)', // Using paper background with transparency
-        border: '0.0625rem solid hsla(0, 0%, 50%, 0.2)', // 1px
-        borderRadius: 2,
+        border: `${baseBorder} hsla(0, 0%, 50%, 0.2)`,
+        borderRadius: SPACING.borderRadius.small,
     },
     cardLight: {
         backgroundColor: 'hsla(0, 0%, 50%, 0.05)', // Light card background
@@ -248,7 +265,7 @@ export const COMPONENTS = {
     badge: {
         backgroundColor: 'hsla(207, 79%, 46%, 0.1)',
         color: 'primary.light',
-        border: '0.0625rem solid hsla(207, 79%, 46%, 0.3)', // 1px
+        border: `${baseBorder} hsla(207, 79%, 46%, 0.3)`,
         fontSize: '0.75rem',
         height: '1.5rem', // 24px
     },
@@ -271,15 +288,15 @@ export const COMPONENTS = {
     },
     navigation: {
         backgroundColor: 'hsla(0, 0%, 15%, 0.8)',
-        border: '0.0625rem solid hsla(0, 0%, 100%, 0.1)', // 1px
-        backdropFilter: 'blur(1.25rem)', // 20px
+        border: `${baseBorder} hsla(0, 0%, 100%, 0.1)`,
+        backdropFilter: baseBackdropFilter,
         boxShadow: '0 0.5rem 2rem hsla(0, 0%, 0%, 0.3)', // 8px 32px
     },
     borders: {
-        light: '0.0625rem solid hsla(0, 0%, 50%, 0.2)', // 1px
-        white: '0.0625rem solid hsla(0, 0%, 100%, 0.1)', // 1px
-        medium: '0.0625rem solid hsla(0, 0%, 50%, 0.3)', // 1px
-        mediumWhite: '0.0625rem solid hsla(0, 0%, 50%, 0.25)', // 1px
+        light: `${baseBorder} hsla(0, 0%, 50%, 0.2)`,
+        white: `${baseBorder} hsla(0, 0%, 100%, 0.1)`,
+        medium: `${baseBorder} hsla(0, 0%, 50%, 0.3)`,
+        mediumWhite: `${baseBorder} hsla(0, 0%, 50%, 0.25)`,
     },
     borderColors: {
         light: 'hsla(0, 0%, 50%, 0.2)',
@@ -314,6 +331,5 @@ export const META = {
 
 // Development Constants
 export const DEV = {
-    localhost: 'http://localhost:3000',
     nodeVersion: 'v14 or higher',
 };

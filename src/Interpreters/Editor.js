@@ -2,7 +2,7 @@ import { Program, Output, Tape, Register } from './Display';
 import { CustomGrid } from '../helpers';
 import Grid from '@mui/material/Grid2';
 import { Toolbar } from './Toolbar';
-import { COLORS, COMPONENTS } from '../config/constants';
+import { COLORS, COMPONENTS, SPACING, ANIMATIONS } from '../config/constants';
 
 import { Typography, TextField } from '@mui/material';
 
@@ -162,9 +162,9 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
             children: <Text text={value} />,
             sx: {
                 cursor: 'pointer',
-                borderRadius: 2,
+                borderRadius: SPACING.borderRadius.small,
                 border: cellStyle.border,
-                transition: 'all 0.2s ease-in-out',
+                transition: ANIMATIONS.transition,
                 '&:hover': {
                     backgroundColor: cellStyle.hover,
                     transform: 'translateY(-0.125rem)', // -2px
@@ -210,7 +210,7 @@ export function TextArea({
                 '& .MuiInputBase-root': {
                     alignItems: 'flex-start',
                     backgroundColor: COMPONENTS.overlays.lighter,
-                    borderRadius: 2,
+                    borderRadius: SPACING.borderRadius.small,
                 },
                 '& .MuiInputBase-input': {
                     fontFamily: 'monospace',

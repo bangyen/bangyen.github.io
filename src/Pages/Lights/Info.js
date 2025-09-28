@@ -91,7 +91,7 @@ export default function Info(props) {
                     maxHeight: '98vh',
                     overflow: 'hidden',
                     mx: 'auto',
-                    borderRadius: 4,
+                    borderRadius: SPACING.borderRadius.large,
                 }}
             >
                 <CardContent

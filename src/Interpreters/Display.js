@@ -2,7 +2,7 @@ import { EditorContext, Text } from './Editor';
 
 import { Box, Typography, Chip, IconButton } from '@mui/material';
 import { useContext } from 'react';
-import { COMPONENTS, SPACING, COLORS } from '../config/constants';
+import { COMPONENTS, SPACING, COLORS, TYPOGRAPHY } from '../config/constants';
 
 import {
     CodeRounded,
@@ -121,8 +121,8 @@ function Display(props) {
                 color={color}
                 text={val}
                 sx={{
-                    fontSize: '1.2rem',
-                    fontWeight: 600,
+                    fontSize: TYPOGRAPHY.fontSize.large,
+                    fontWeight: TYPOGRAPHY.fontWeight.semiBold,
                     fontFamily: 'monospace',
                 }}
             />
@@ -144,8 +144,8 @@ function Display(props) {
                     variant="subtitle2"
                     sx={{
                         color: 'primary.light',
-                        fontWeight: 600,
-                        fontSize: '0.875rem',
+                        fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                        fontSize: TYPOGRAPHY.fontSize.medium,
                     }}
                 >
                     {title}
@@ -177,7 +177,7 @@ function CompactDisplay(props) {
                     color:
                         color === 'info' ? COLORS.text.white : 'text.primary',
                     fontFamily: 'monospace',
-                    fontSize: '0.75rem',
+                    fontSize: TYPOGRAPHY.fontSize.small,
                     height: SPACING.maxWidth.icon,
                 }}
             />
@@ -190,7 +190,7 @@ function CompactDisplay(props) {
                 padding: 1.5,
                 backgroundColor: COMPONENTS.overlays.lighter,
                 border: COMPONENTS.borders.light,
-                borderRadius: 2,
+                borderRadius: SPACING.borderRadius.small,
                 height: '100%',
                 minHeight: SPACING.maxWidth.medium,
             }}
@@ -203,13 +203,18 @@ function CompactDisplay(props) {
                     marginBottom: 1,
                 }}
             >
-                <Icon sx={{ color: 'primary.light', fontSize: '1rem' }} />
+                <Icon
+                    sx={{
+                        color: 'primary.light',
+                        fontSize: TYPOGRAPHY.fontSize.icon,
+                    }}
+                />
                 <Typography
                     variant="caption"
                     sx={{
                         color: 'primary.light',
-                        fontWeight: 600,
-                        fontSize: '0.75rem',
+                        fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                        fontSize: TYPOGRAPHY.fontSize.small,
                     }}
                 >
                     {title}
@@ -260,7 +265,7 @@ function Scrollable(props) {
                 padding: 2,
                 backgroundColor: COMPONENTS.overlays.lighter,
                 border: COMPONENTS.borders.light,
-                borderRadius: 2,
+                borderRadius: SPACING.borderRadius.small,
                 height: SPACING.maxWidth.large,
                 display: 'flex',
                 flexDirection: 'column',

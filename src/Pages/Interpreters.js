@@ -9,6 +9,8 @@ import {
     COLORS,
     SPACING,
     COMPONENTS,
+    TYPOGRAPHY,
+    ANIMATIONS,
 } from '../config/constants';
 
 export default function Interpreters() {
@@ -123,7 +125,7 @@ export default function Interpreters() {
                             variant="h4"
                             sx={{
                                 color: 'text.primary',
-                                fontWeight: 600,
+                                fontWeight: TYPOGRAPHY.fontWeight.semiBold,
                                 fontSize: {
                                     xs: '1.25rem',
                                     sm: '2.125rem',
@@ -140,14 +142,20 @@ export default function Interpreters() {
                             >
                                 <GitHub
                                     sx={{
-                                        fontSize: { xs: '1.5rem', sm: '2rem' },
+                                        fontSize: {
+                                            xs: TYPOGRAPHY.fontSize.large,
+                                            sm: '2rem',
+                                        },
                                     }}
                                 />
                             </IconButton>
                             <IconButton component={Link} to="/">
                                 <Home
                                     sx={{
-                                        fontSize: { xs: '1.5rem', sm: '2rem' },
+                                        fontSize: {
+                                            xs: TYPOGRAPHY.fontSize.large,
+                                            sm: '2rem',
+                                        },
                                     }}
                                 />
                             </IconButton>
@@ -175,11 +183,11 @@ export default function Interpreters() {
                                     padding: { xs: 1.5, sm: 2 },
                                     backgroundColor:
                                         COMPONENTS.overlays.lighter,
-                                    borderRadius: 2,
+                                    borderRadius: SPACING.borderRadius.small,
                                     border: COMPONENTS.borders.light,
                                     textDecoration: 'none',
                                     cursor: 'pointer',
-                                    transition: 'all 0.2s ease-in-out',
+                                    transition: ANIMATIONS.transition,
                                     width: '100%',
                                     boxSizing: 'border-box',
                                     overflow: 'hidden',
@@ -205,7 +213,9 @@ export default function Interpreters() {
                                             variant="h6"
                                             sx={{
                                                 color: 'primary.light',
-                                                fontWeight: 600,
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .semiBold,
                                             }}
                                         >
                                             {interpreter.name}

@@ -2,7 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Box, Typography, IconButton, Button } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { GitHub, Home } from '@mui/icons-material';
-import { URLS, COMPONENTS, COLORS, SPACING } from '../config/constants';
+import {
+    URLS,
+    COMPONENTS,
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+} from '../config/constants';
 import {
     LineChart,
     Line,
@@ -235,7 +241,7 @@ const ZSharp = () => {
                                 variant="h1"
                                 sx={{
                                     color: 'text.primary',
-                                    fontWeight: 700,
+                                    fontWeight: TYPOGRAPHY.fontWeight.bold,
                                     fontSize: {
                                         xs: '2rem',
                                         sm: '2.8rem',
@@ -254,14 +260,20 @@ const ZSharp = () => {
                             >
                                 <GitHub
                                     sx={{
-                                        fontSize: { xs: '1.5rem', sm: '2rem' },
+                                        fontSize: {
+                                            xs: TYPOGRAPHY.fontSize.large,
+                                            sm: '2rem',
+                                        },
                                     }}
                                 />
                             </IconButton>
                             <IconButton component="a" href="/">
                                 <Home
                                     sx={{
-                                        fontSize: { xs: '1.5rem', sm: '2rem' },
+                                        fontSize: {
+                                            xs: TYPOGRAPHY.fontSize.large,
+                                            sm: '2rem',
+                                        },
                                     }}
                                 />
                             </IconButton>
@@ -273,8 +285,11 @@ const ZSharp = () => {
                         sx={{
                             color: 'text.secondary',
                             marginBottom: 3,
-                            fontWeight: 400,
-                            fontSize: { xs: '1.1rem', sm: '1.3rem' },
+                            fontWeight: TYPOGRAPHY.fontWeight.normal,
+                            fontSize: {
+                                xs: TYPOGRAPHY.fontSize.sm.h6,
+                                sm: TYPOGRAPHY.fontSize.sm.h5,
+                            },
                         }}
                     >
                         Sharpness-Aware Minimization with Z-Score Gradient
@@ -287,7 +302,7 @@ const ZSharp = () => {
                             padding: { xs: 1.5, sm: 2 },
                             backgroundColor:
                                 COMPONENTS.cardLight.backgroundColor,
-                            borderRadius: 2,
+                            borderRadius: SPACING.borderRadius.small,
                             border: COMPONENTS.borders.light,
                             marginBottom: 4,
                             width: '100%',
@@ -301,7 +316,7 @@ const ZSharp = () => {
                                 color: 'primary.light',
                                 marginBottom: 3,
                                 textAlign: 'center',
-                                fontWeight: 600,
+                                fontWeight: TYPOGRAPHY.fontWeight.semiBold,
                             }}
                         >
                             {viewType === 'accuracy' &&
@@ -404,7 +419,9 @@ const ZSharp = () => {
                                                     COMPONENTS.overlays.dark,
                                                 border: COMPONENTS.borders
                                                     .white,
-                                                borderRadius: 8,
+                                                borderRadius:
+                                                    SPACING.borderRadius
+                                                        .extraLarge,
                                                 color: COLORS.text.white,
                                             }}
                                             labelFormatter={value =>

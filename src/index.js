@@ -7,13 +7,7 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { COLORS, TYPOGRAPHY, ROUTES } from './config/constants';
 
-import {
-    Stun_Step,
-    Suffolk,
-    WII2D,
-    Back,
-    names as runNames,
-} from './Interpreters';
+import { Stun_Step, Suffolk, WII2D, Back } from './Interpreters';
 import {
     Home,
     Error,
@@ -22,7 +16,6 @@ import {
     ZSharp,
     Oligopoly,
     Interpreters,
-    pages as pageRoutes,
 } from './Pages';
 
 const darkTheme = createTheme({

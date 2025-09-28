@@ -8,7 +8,13 @@ import {
     ToggleButtonGroup,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
-import { COMPONENTS, COLORS, SPACING, URLS } from '../config/constants';
+import {
+    COMPONENTS,
+    COLORS,
+    SPACING,
+    URLS,
+    TYPOGRAPHY,
+} from '../config/constants';
 import { GitHub, Refresh, Home } from '@mui/icons-material';
 import {
     LineChart,
@@ -246,7 +252,7 @@ const Oligopoly = () => {
                                 variant="h1"
                                 sx={{
                                     color: 'text.primary',
-                                    fontWeight: 700,
+                                    fontWeight: TYPOGRAPHY.fontWeight.bold,
                                     fontSize: {
                                         xs: '2rem',
                                         sm: '2.8rem',
@@ -265,14 +271,20 @@ const Oligopoly = () => {
                             >
                                 <GitHub
                                     sx={{
-                                        fontSize: { xs: '1.5rem', sm: '2rem' },
+                                        fontSize: {
+                                            xs: TYPOGRAPHY.fontSize.large,
+                                            sm: '2rem',
+                                        },
                                     }}
                                 />
                             </IconButton>
                             <IconButton component="a" href="/">
                                 <Home
                                     sx={{
-                                        fontSize: { xs: '1.5rem', sm: '2rem' },
+                                        fontSize: {
+                                            xs: TYPOGRAPHY.fontSize.large,
+                                            sm: '2rem',
+                                        },
                                     }}
                                 />
                             </IconButton>
@@ -284,8 +296,11 @@ const Oligopoly = () => {
                         sx={{
                             color: 'text.secondary',
                             marginBottom: 4,
-                            fontWeight: 400,
-                            fontSize: { xs: '1.1rem', sm: '1.3rem' },
+                            fontWeight: TYPOGRAPHY.fontWeight.normal,
+                            fontSize: {
+                                xs: TYPOGRAPHY.fontSize.sm.h6,
+                                sm: TYPOGRAPHY.fontSize.sm.h5,
+                            },
                         }}
                     >
                         Cournot Competition Simulation
@@ -297,7 +312,7 @@ const Oligopoly = () => {
                             padding: { xs: 1.5, sm: 2 },
                             backgroundColor:
                                 COMPONENTS.cardLight.backgroundColor,
-                            borderRadius: 2,
+                            borderRadius: SPACING.borderRadius.small,
                             border: COMPONENTS.borders.light,
                             marginBottom: 4,
                             width: '100%',
@@ -311,7 +326,7 @@ const Oligopoly = () => {
                                 color: 'primary.light',
                                 marginBottom: 3,
                                 textAlign: 'center',
-                                fontWeight: 600,
+                                fontWeight: TYPOGRAPHY.fontWeight.semiBold,
                             }}
                         >
                             Cournot Market Dynamics
@@ -380,7 +395,9 @@ const Oligopoly = () => {
                                                     COMPONENTS.overlays.dark,
                                                 border: COMPONENTS.borders
                                                     .white,
-                                                borderRadius: 8,
+                                                borderRadius:
+                                                    SPACING.borderRadius
+                                                        .extraLarge,
                                                 color: COLORS.text.white,
                                             }}
                                             labelFormatter={value =>
@@ -425,7 +442,7 @@ const Oligopoly = () => {
                             padding: { xs: 1.5, sm: 2 },
                             backgroundColor:
                                 COMPONENTS.cardLight.backgroundColor,
-                            borderRadius: 2,
+                            borderRadius: SPACING.borderRadius.small,
                             border: COMPONENTS.borders.light,
                             width: '100%',
                             boxSizing: 'border-box',
@@ -444,7 +461,7 @@ const Oligopoly = () => {
                                 variant="h6"
                                 sx={{
                                     color: 'primary.light',
-                                    fontWeight: 600,
+                                    fontWeight: TYPOGRAPHY.fontWeight.semiBold,
                                 }}
                             >
                                 Market Parameters

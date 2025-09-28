@@ -43,7 +43,7 @@ function dropdown(name, options) {
                         paddingTop: padHeight,
                         paddingLeft: padWidth,
                         paddingRight: padWidth,
-                        borderRadius: 2,
+                        borderRadius: SPACING.borderRadius.small,
                         margin: '0.25rem 0.5rem', // 4px 8px
                         transition: ANIMATIONS.menuHover.transition,
                         '&:hover': {
@@ -55,7 +55,10 @@ function dropdown(name, options) {
                     component={Link}
                     to={text.toLowerCase()}
                 >
-                    <Typography variant="body2" sx={{ fontWeight: 500 }}>
+                    <Typography
+                        variant="body2"
+                        sx={{ fontWeight: TYPOGRAPHY.fontWeight.medium }}
+                    >
                         {text.replace('_', ' ')}
                     </Typography>
                 </MenuItem>
@@ -176,7 +179,7 @@ export default function Home() {
             >
                 <MenuButton>{dropdown('Projects', pages)}</MenuButton>
                 <TooltipButton
-                    href={URLS.githubProfile}
+                    href={URLS.github}
                     title="GitHub"
                     Icon={GitHub}
                 />
