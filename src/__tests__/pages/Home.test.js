@@ -121,7 +121,7 @@ describe('Home Component', () => {
 
         // Check skill chips are rendered
         expect(screen.getByText('Python')).toBeInTheDocument();
-        expect(screen.getByText('PyTorch')).toBeInTheDocument();
+        expect(screen.getAllByText('PyTorch')).toHaveLength(2); // One in skills, one in projects
         expect(screen.getAllByTestId('code-icon')).toHaveLength(2); // Multiple code icons
         expect(screen.getAllByTestId('psychology-icon')).toHaveLength(2); // Multiple psychology icons
     });

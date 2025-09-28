@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
 import { Typography, Box, IconButton, Card, CardContent } from '@mui/material';
 import { GitHub, Home, GridView, TextFields } from '@mui/icons-material';
+import { PERSONAL_INFO, URLS, COLORS, SPACING } from '../config/constants';
 
 export default function Interpreters() {
     useEffect(() => {
-        document.title = 'Interpreters - Bangyen Pham';
+        document.title = `Interpreters - ${PERSONAL_INFO.name}`;
     }, []);
 
     const interpreters = [
@@ -66,8 +67,7 @@ export default function Interpreters() {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background:
-                        'linear-gradient(135deg, #0a0a0a 0%, #0e0e0e 50%, #0a0a0a 100%)',
+                    background: COLORS.gradients.background,
                     zIndex: -2,
                 }}
             />
@@ -81,19 +81,23 @@ export default function Interpreters() {
                 flexDirection="column"
                 sx={{
                     zIndex: 1,
-                    padding: { xs: '1rem 0', sm: '1.5rem 0', md: '2rem 0' },
+                    padding: {
+                        xs: `${SPACING.padding.xs} 0`,
+                        sm: `${SPACING.padding.sm} 0`,
+                        md: `${SPACING.padding.md} 0`,
+                    },
                     minHeight: 0,
                 }}
             >
                 <Box
                     sx={{
                         textAlign: 'center',
-                        maxWidth: '900px',
+                        maxWidth: SPACING.maxWidth.wide,
                         width: '100%',
                         padding: {
                             xs: '0 0.5rem',
-                            sm: '0 1.5rem',
-                            md: '0 2rem',
+                            sm: `0 ${SPACING.padding.sm}`,
+                            md: `0 ${SPACING.padding.md}`,
                         },
                         boxSizing: 'border-box',
                         overflow: 'hidden',
@@ -124,7 +128,7 @@ export default function Interpreters() {
                         </Typography>
                         <Box sx={{ display: 'flex', gap: 1 }}>
                             <IconButton
-                                href="https://github.com/bangyen/esolangs"
+                                href={URLS.esolangsRepo}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >

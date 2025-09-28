@@ -8,6 +8,7 @@ import {
     ToggleButtonGroup,
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
+import { URLS } from '../config/constants';
 import { GitHub, Refresh, Home } from '@mui/icons-material';
 import {
     LineChart,
@@ -259,7 +260,7 @@ const Oligopoly = () => {
                         </Grid>
                         <Grid size="auto" sx={{ display: 'flex', gap: 1 }}>
                             <IconButton
-                                href="https://github.com/bangyen/Oligopoly"
+                                href={URLS.oligopolyRepo}
                                 target="_blank"
                                 rel="noopener noreferrer"
                             >
