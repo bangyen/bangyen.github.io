@@ -59,11 +59,7 @@ export default function Error() {
                         <Typography
                             variant="h1"
                             sx={{
-                                background:
-                                    'linear-gradient(135deg, #ffffff, #808080)',
-                                backgroundClip: 'text',
-                                WebkitBackgroundClip: 'text',
-                                WebkitTextFillColor: 'transparent',
+                                color: 'hsl(0, 0%, 93%)',
                                 fontWeight: 700,
                                 marginBottom: 2,
                                 fontSize: {

@@ -110,18 +110,13 @@ export const COLORS = {
         dark: '#374151',
     },
     background: {
-        default: 'hsl(0, 0%, 0%)', // Base color - 0% lightness
-        paper: 'hsl(0, 0%, 5%)', // Cards and surfaces - 5% lightness
-        raised: 'hsl(0, 0%, 10%)', // Most important/raised elements - 10% lightness
+        default: 'hsl(0, 0%, 5%)', // Base color - 5% lightness
+        paper: 'hsl(0, 0%, 10%)', // Cards and surfaces - 10% lightness
+        raised: 'hsl(0, 0%, 15%)', // Most important/raised elements - 15% lightness
     },
     text: {
         primary: 'hsl(0, 0%, 90%)', // High contrast for headings and important elements
         secondary: 'hsl(0, 0%, 70%)', // Muted shade for body text - still legible
-    },
-    gradients: {
-        background:
-            'linear-gradient(135deg, hsl(0, 0%, 0%) 0%, hsl(0, 0%, 5%) 50%, hsl(0, 0%, 0%) 100%)',
-        error: 'linear-gradient(135deg, #ffffff, #808080)',
     },
     chart: {
         blue: '#1976d2',
@@ -202,7 +197,7 @@ export const ANIMATIONS = {
 export const COMPONENTS = {
     menu: {
         backdropFilter: 'blur(20px)',
-        backgroundColor: 'hsla(0, 0%, 10%, 0.9)', // Using raised background with transparency
+        backgroundColor: 'hsla(0, 0%, 15%, 0.9)', // Using raised background with transparency
         border: '1px solid rgba(255, 255, 255, 0.1)',
         boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
         padding: {
@@ -225,7 +220,7 @@ export const COMPONENTS = {
         },
     },
     card: {
-        backgroundColor: 'hsla(0, 0%, 5%, 0.5)', // Using paper background with transparency
+        backgroundColor: 'hsla(0, 0%, 10%, 0.5)', // Using paper background with transparency
         border: '1px solid rgba(128, 128, 128, 0.2)',
         borderRadius: 2,
     },
@@ -242,8 +237,8 @@ export const COMPONENTS = {
 export const META = {
     title: `${PERSONAL_INFO.name} - ${PERSONAL_INFO.title}`,
     description: `${PERSONAL_INFO.name} - Backend Developer and AI/ML Engineer specializing in cloud architecture, HPC systems, and machine learning research. Northwestern MS Computer Science graduate with experience at Volta Health and Center for Nuclear Femtography.`,
-    themeColor: '#ffffff',
-    backgroundColor: '#ffffff',
+    themeColor: 'hsl(0, 0%, 95%)',
+    backgroundColor: 'hsl(0, 0%, 5%)',
 };
 
 // Development Constants

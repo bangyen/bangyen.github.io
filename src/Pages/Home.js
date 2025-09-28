@@ -155,7 +155,7 @@ export default function Home() {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: COLORS.gradients.background,
+                    background: COLORS.background.default,
                     zIndex: -2,
                 }}
             />
