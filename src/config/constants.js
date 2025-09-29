@@ -168,6 +168,8 @@ export const SPACING = {
         wide: '900px',
         skills: '600px',
         error: '600px',
+        info: '1000px', // For help page layout
+        card: '500px', // For help page text content
     },
 };
 
