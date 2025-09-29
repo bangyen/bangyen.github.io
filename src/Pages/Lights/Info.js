@@ -222,10 +222,8 @@ export default function Info(props) {
                                                         lineHeight: 1.6,
                                                     }}
                                                 >
-                                                    Turn off rows from top to
-                                                    bottom by clicking lights in
-                                                    each row to eliminate all
-                                                    lights above the bottom row.
+                                                    Click lights to chase rows
+                                                    from top to bottom.
                                                 </Typography>
                                             </Box>
 
@@ -271,10 +269,8 @@ export default function Info(props) {
                                                         lineHeight: 1.6,
                                                     }}
                                                 >
-                                                    Enter the remaining lights
-                                                    pattern in the bottom row
-                                                    using the interactive
-                                                    calculator below.
+                                                    Enter the bottom row lights
+                                                    pattern below.
                                                 </Typography>
                                             </Box>
 
@@ -320,10 +316,9 @@ export default function Info(props) {
                                                         lineHeight: 1.6,
                                                     }}
                                                 >
-                                                    Apply the calculated
-                                                    solution pattern to the top
-                                                    row, then chase downward to
-                                                    solve the entire puzzle.
+                                                    Apply the solution to top
+                                                    row, then chase to solve
+                                                    puzzle.
                                                 </Typography>
                                             </Box>
                                         </Box>
