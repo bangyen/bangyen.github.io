@@ -108,7 +108,7 @@ export default function Info(props) {
                     maxHeight: '98vh',
                     overflow: 'hidden',
                     mx: 'auto',
-                    borderRadius: SPACING.borderRadius.large,
+                    borderRadius: SPACING.borderRadius.extraLarge,
                     backgroundColor: COLORS.background.paper,
                     border: COMPONENTS.borders.light,
                     boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
