@@ -2,7 +2,13 @@ import { Program, Output, Tape, Register } from './Display';
 import { CustomGrid } from '../helpers';
 import Grid from '@mui/material/Grid2';
 import { Toolbar } from './Toolbar';
-import { COLORS, COMPONENTS, SPACING, ANIMATIONS } from '../config/constants';
+import {
+    COLORS,
+    COMPONENTS,
+    SPACING,
+    ANIMATIONS,
+    TYPOGRAPHY,
+} from '../config/constants';
 
 import { Typography, TextField } from '@mui/material';
 
@@ -60,7 +66,15 @@ export default function Editor({ container, sideProps, hide, children }) {
         >
             <Grid container alignItems="center" justifyContent="space-between">
                 <Grid {...titleProps}>
-                    <Typography variant="h2">{name}</Typography>
+                    <Typography
+                        variant="h4"
+                        sx={{
+                            fontSize: TYPOGRAPHY.fontSize.lg.h3,
+                            fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                        }}
+                    >
+                        {name}
+                    </Typography>
                 </Grid>
                 <Toolbar />
             </Grid>

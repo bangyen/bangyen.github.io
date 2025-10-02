@@ -5,7 +5,15 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import { COLORS, TYPOGRAPHY, ROUTES } from './config/constants';
+import './styles/animations.css';
+import {
+    COLORS,
+    TYPOGRAPHY,
+    ROUTES,
+    SPACING,
+    ANIMATIONS,
+    COMPONENTS,
+} from './config/constants';
 
 import { Stun_Step, Suffolk, WII2D, Back } from './Interpreters';
 import {
@@ -26,13 +34,13 @@ const darkTheme = createTheme({
             dark: COLORS.primary.dark,
         },
         secondary: {
-            main: COLORS.secondary.main,
-            light: COLORS.secondary.light,
-            dark: COLORS.secondary.dark,
+            main: COLORS.neutral[600],
+            light: COLORS.neutral[400],
+            dark: COLORS.neutral[800],
         },
         background: {
-            default: COLORS.background.default,
-            paper: COLORS.background.paper,
+            default: COLORS.surface.background,
+            paper: COLORS.surface.elevated,
         },
         text: {
             primary: COLORS.text.primary,
@@ -41,32 +49,111 @@ const darkTheme = createTheme({
         mode: 'dark',
     },
     typography: {
-        fontFamily: TYPOGRAPHY.fontFamily,
+        fontFamily: TYPOGRAPHY.fontFamily.primary,
         h1: {
-            fontWeight: TYPOGRAPHY.fontWeight.bold,
-            letterSpacing: '-0.02em',
+            fontWeight: TYPOGRAPHY.fontWeight.extrabold,
+            fontSize: TYPOGRAPHY.fontSize.lg.display,
+            letterSpacing: TYPOGRAPHY.letterSpacing.tight,
+            lineHeight: TYPOGRAPHY.lineHeight.tight,
         },
         h2: {
-            fontWeight: TYPOGRAPHY.fontWeight.semiBold,
-            letterSpacing: '-0.01em',
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            fontSize: TYPOGRAPHY.fontSize.lg.h1,
+            letterSpacing: TYPOGRAPHY.letterSpacing.tight,
+            lineHeight: TYPOGRAPHY.lineHeight.snug,
         },
         h3: {
-            fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+            fontWeight: TYPOGRAPHY.fontWeight.semibold,
+            fontSize: TYPOGRAPHY.fontSize.lg.h2,
+            letterSpacing: TYPOGRAPHY.letterSpacing.normal,
+            lineHeight: TYPOGRAPHY.lineHeight.normal,
         },
         h4: {
-            fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+            fontWeight: TYPOGRAPHY.fontWeight.semibold,
+            fontSize: TYPOGRAPHY.fontSize.lg.h3,
+            letterSpacing: TYPOGRAPHY.letterSpacing.normal,
+            lineHeight: TYPOGRAPHY.lineHeight.normal,
         },
         h5: {
             fontWeight: TYPOGRAPHY.fontWeight.medium,
+            fontSize: TYPOGRAPHY.fontSize.lg.h4,
+            letterSpacing: TYPOGRAPHY.letterSpacing.normal,
+            lineHeight: TYPOGRAPHY.lineHeight.normal,
         },
         h6: {
             fontWeight: TYPOGRAPHY.fontWeight.medium,
+            fontSize: TYPOGRAPHY.fontSize.lg.h5,
+            letterSpacing: TYPOGRAPHY.letterSpacing.normal,
+            lineHeight: TYPOGRAPHY.lineHeight.normal,
         },
         body1: {
-            lineHeight: 1.6,
+            fontSize: TYPOGRAPHY.fontSize.md.body,
+            fontWeight: TYPOGRAPHY.fontWeight.normal,
+            letterSpacing: TYPOGRAPHY.letterSpacing.normal,
+            lineHeight: TYPOGRAPHY.lineHeight.relaxed,
         },
         body2: {
-            lineHeight: 1.5,
+            fontSize: TYPOGRAPHY.fontSize.md.caption,
+            fontWeight: TYPOGRAPHY.fontWeight.normal,
+            letterSpacing: TYPOGRAPHY.letterSpacing.wide,
+            lineHeight: TYPOGRAPHY.lineHeight.normal,
+        },
+    },
+    components: {
+        // Globally enhance Material-UI components with our design system
+        MuiCssBaseline: {
+            styleOverrides: {
+                body: {
+                    backgroundColor: COLORS.surface.background,
+                    color: COLORS.text.primary,
+                },
+            },
+        },
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    borderRadius: SPACING.borderRadius.md,
+                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                    textTransform: 'none',
+                    transition: ANIMATIONS.transitions.normal,
+                },
+                contained: {
+                    boxShadow: COLORS.shadows.xs,
+                    '&:hover': {
+                        boxShadow: COLORS.shadows.sm,
+                        transform: 'translateY(-1px)',
+                    },
+                },
+            },
+        },
+        MuiCard: {
+            styleOverrides: {
+                root: {
+                    backgroundColor: COLORS.surface.elevated,
+                    border: COMPONENTS.borders.subtle,
+                    borderRadius: SPACING.borderRadius.lg,
+                    boxShadow: COLORS.shadows.sm,
+                    transition: ANIMATIONS.transitions.gentle,
+                    '&:hover': {
+                        boxShadow: COLORS.shadows.md,
+                    },
+                },
+            },
+        },
+        MuiChip: {
+            styleOverrides: {
+                root: {
+                    borderRadius: SPACING.borderRadius.full,
+                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                    transition: ANIMATIONS.transitions.fast,
+                },
+                outlined: {
+                    borderColor: COLORS.border.subtle,
+                    '&:hover': {
+                        backgroundColor: COLORS.interactive.hover,
+                    },
+                },
+            },
         },
     },
 });

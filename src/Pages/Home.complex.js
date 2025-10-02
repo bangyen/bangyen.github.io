@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import Grid from '@mui/material/Grid2';
 
-import { TooltipButton } from '../helpers';
-import { pages } from './';
 import {
     PERSONAL_INFO,
     URLS,
@@ -18,7 +15,6 @@ import {
 } from '../config/constants';
 
 import {
-    MenuRounded,
     GitHub,
     Code,
     Cloud,
@@ -29,108 +25,7 @@ import {
     ArrowForward,
 } from '@mui/icons-material';
 
-import {
-    Typography,
-    Box,
-    Menu,
-    MenuItem,
-    Fade,
-    Container,
-} from '@mui/material';
-
-function dropdown(name, routes) {
-    const padHeight = COMPONENTS.menu.padding.vertical;
-    const padWidth = COMPONENTS.menu.padding.horizontal;
-
-    return (
-        <Box>
-            {Object.entries(routes).map(([routeName, routePath]) => (
-                <MenuItem
-                    sx={{
-                        paddingBottom: padHeight,
-                        paddingTop: padHeight,
-                        paddingLeft: padWidth,
-                        paddingRight: padWidth,
-                        borderRadius: SPACING.borderRadius.md,
-                        margin: '0.25rem 0.5rem', // 4px 8px
-                        transition: ANIMATIONS.transitions.fast,
-                        '&:hover': ANIMATIONS.hover.modern,
-                    }}
-                    key={routeName}
-                    component={Link}
-                    to={routePath}
-                >
-                    <Typography
-                        sx={{
-                            fontWeight: TYPOGRAPHY.fontWeight.medium,
-                            fontSize: TYPOGRAPHY.fontSize.sm.body,
-                            color: COLORS.text.primary,
-                        }}
-                    >
-                        {routeName.replace('_', ' ')}
-                    </Typography>
-                </MenuItem>
-            ))}
-        </Box>
-    );
-}
-
-function clickHandler(setAnchor) {
-    return event => {
-        setAnchor(event.currentTarget);
-    };
-}
-
-function closeHandler(setAnchor) {
-    return () => {
-        setAnchor(null);
-    };
-}
-
-function MenuButton({ children }) {
-    const [anchor, setAnchor] = useState(null);
-    const handleClick = clickHandler(setAnchor);
-    const handleClose = closeHandler(setAnchor);
-    const open = Boolean(anchor);
-
-    const define = value => {
-        return open ? value : undefined;
-    };
-
-    return (
-        <Box>
-            <TooltipButton
-                title="Menu"
-                id="basic-button"
-                Icon={MenuRounded}
-                aria-controls={define('basic-menu')}
-                aria-expanded={define('true')}
-                aria-haspopup="true"
-                onClick={handleClick}
-            />
-            <Menu
-                id="basic-menu"
-                open={open}
-                anchorEl={anchor}
-                sx={{
-                    marginLeft: 1,
-                    marginTop: 1,
-                    '& .MuiPaper-root': {
-                        ...COMPONENTS.menu,
-                        boxShadow: COLORS.shadows.lg,
-                    },
-                }}
-                onClose={handleClose}
-                MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                    sx: { padding: 1 },
-                }}
-            >
-                {children}
-            </Menu>
-        </Box>
-    );
-}
+import { Typography, Box, Fade, Container } from '@mui/material';
 
 export default function Home() {
     useEffect(() => {
@@ -154,32 +49,26 @@ export default function Home() {
             {/* Modern Navigation */}
             <Box
                 sx={{
-                    position: 'relative',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    padding: {
-                        xs: SPACING.padding.xs, // Smaller padding on mobile
-                        sm: SPACING.padding.sm,
-                        md: SPACING.padding.md,
-                    },
+                    position: 'fixed',
+                    top: SPACING.padding.md,
+                    left: SPACING.padding.md,
+                    right: SPACING.padding.md,
                     zIndex: 1000,
                     display: 'flex',
-                    justifyContent: 'space-between',
+                    justifyContent: 'flex-start',
                     alignItems: 'center',
-                    maxWidth: '100%', // Prevent overflow
-                    overflowX: 'hidden', // Hide any overflow
                 }}
             >
-                <MenuButton>{dropdown('Projects', pages)}</MenuButton>
-                <TooltipButton
-                    component="a"
-                    href={URLS.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="GitHub Profile"
-                    Icon={GitHub}
-                />
+                <Typography
+                    sx={{
+                        color: COLORS.text.primary,
+                        fontSize: TYPOGRAPHY.fontSize.md.body,
+                        fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                        letterSpacing: TYPOGRAPHY.letterSpacing.normal,
+                    }}
+                >
+                    {PERSONAL_INFO.name.split(' ')[0]}
+                </Typography>
             </Box>
 
             {/* Hero Section */}
@@ -190,15 +79,9 @@ export default function Home() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    paddingTop: 0, // No gap needed with relative nav
+                    paddingTop: '8rem', // Space for fixed nav
                     paddingBottom: '4rem',
-                    paddingX: {
-                        xs: SPACING.padding.xs, // Smaller padding on mobile
-                        sm: SPACING.padding.sm,
-                        md: SPACING.padding.md,
-                    },
-                    maxWidth: '100%', // Prevent container from exceeding viewport
-                    overflowX: 'hidden', // Hide any horizontal overflow
+                    paddingX: SPACING.padding.md,
                 }}
             >
                 <Grid
@@ -232,17 +115,13 @@ export default function Home() {
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.extrabold,
                                         fontSize: {
-                                            xs: 'clamp(2rem, 8vw, 2.5rem)', // Smaller on mobile, prevents wrapping under 500px
-                                            sm: 'clamp(2.5rem, 7vw, 3.5rem)', // Medium sizing
-                                            md: 'clamp(3rem, 6vw, 5rem)', // Large sizing
+                                            xs: TYPOGRAPHY.fontSize.lg.display,
+                                            md: 'clamp(3rem, 6vw, 5rem)',
                                         },
                                         lineHeight: TYPOGRAPHY.lineHeight.tight,
                                         letterSpacing:
                                             TYPOGRAPHY.letterSpacing.tight,
                                         marginBottom: 2,
-                                        // Allow controlled wrapping, but prevent breaks in names
-                                        wordBreak: 'keep-all', // Prevent breaking within words
-                                        hyphens: 'none', // Disable hyphenation
                                     }}
                                 >
                                     {PERSONAL_INFO.name}
@@ -252,18 +131,14 @@ export default function Home() {
                                     sx={{
                                         color: COLORS.text.secondary,
                                         fontSize: {
-                                            xs: 'clamp(0.875rem, 4vw, 1.125rem)', // Prevents wrapping under 400px
-                                            sm: 'clamp(1rem, 3vw, 1.25rem)', // Medium sizing, prevents wrapping between 900-1200px
-                                            md: 'clamp(1.125rem, 2.5vw, 1.5rem)', // Large sizing
+                                            xs: TYPOGRAPHY.fontSize.md.h4,
+                                            md: TYPOGRAPHY.fontSize.lg.h3,
                                         },
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.semibold,
                                         marginBottom: 4,
                                         lineHeight:
                                             TYPOGRAPHY.lineHeight.normal,
-                                        // Control how text breaks, allowing smart wrapping
-                                        wordBreak: 'keep-all', // Prevent breaking within words
-                                        hyphens: 'none', // Disable hyphenation
                                     }}
                                 >
                                     {PERSONAL_INFO.title}
@@ -296,6 +171,24 @@ export default function Home() {
                                     </Typography>
                                 </Box>
 
+                                <Typography
+                                    sx={{
+                                        color: COLORS.text.secondary,
+                                        fontSize: TYPOGRAPHY.fontSize.md.body,
+                                        lineHeight:
+                                            TYPOGRAPHY.lineHeight.relaxed,
+                                        marginBottom: 4,
+                                        maxWidth: '90%',
+                                    }}
+                                >
+                                    Backend Developer & AI/ML Engineer
+                                    specializing in cloud architecture, HPC
+                                    systems, and machine learning research.
+                                    Northwestern MS Computer Science graduate
+                                    with experience at Volta Health and Center
+                                    for Nuclear Femtography.
+                                </Typography>
+
                                 <Box
                                     sx={{
                                         display: 'flex',
@@ -304,19 +197,8 @@ export default function Home() {
                                     }}
                                 >
                                     <Box
-                                        onClick={() => {
-                                            const element =
-                                                document.getElementById(
-                                                    'featured-work'
-                                                );
-                                            if (element) {
-                                                element.scrollIntoView({
-                                                    behavior: 'smooth',
-                                                    block: 'start',
-                                                    inline: 'nearest',
-                                                });
-                                            }
-                                        }}
+                                        component="a"
+                                        href="#featured-work"
                                         sx={{
                                             display: 'flex',
                                             alignItems: 'center',
@@ -328,7 +210,7 @@ export default function Home() {
                                                 SPACING.borderRadius.full,
                                             transition:
                                                 ANIMATIONS.transitions.normal,
-                                            cursor: 'pointer',
+                                            textDecoration: 'none',
                                             '&:hover': ANIMATIONS.hover.modern,
                                         }}
                                     >
@@ -342,7 +224,7 @@ export default function Home() {
                                                     TYPOGRAPHY.fontSize.sm.body,
                                             }}
                                         >
-                                            View Work
+                                            Projects & Work
                                         </Typography>
                                         <ArrowForward
                                             sx={{
@@ -391,19 +273,13 @@ export default function Home() {
                                         Tech Stack
                                     </Typography>
 
-                                    {/* Responsive Skills Grid */}
+                                    {/* Compact Grid Layout */}
                                     <Box
                                         sx={{
                                             display: 'grid',
-                                            gridTemplateColumns: {
-                                                xs: '1fr', // Single column on mobile
-                                                sm: 'repeat(2, 1fr)', // 2 columns on small screens and up
-                                                md: 'repeat(3, 1fr)', // 3 columns on medium screens and up
-                                            },
-                                            gap: {
-                                                xs: 1.5, // Smaller gap on mobile
-                                                sm: 2,
-                                            },
+                                            gridTemplateColumns:
+                                                'repeat(2, 1fr)',
+                                            gap: 2,
                                             marginBottom: 3,
                                         }}
                                     >
@@ -435,24 +311,16 @@ export default function Home() {
                                                                 SPACING
                                                                     .borderRadius
                                                                     .md,
-                                                            padding: {
-                                                                xs: '12px', // Smaller padding on mobile
-                                                                sm: '16px',
-                                                            },
+                                                            padding: '16px',
                                                             display: 'flex',
                                                             alignItems:
                                                                 'center',
-                                                            gap: {
-                                                                xs: 1, // Smaller gap on mobile
-                                                                sm: 1.5,
-                                                            },
+                                                            gap: 1.5,
                                                             transition:
                                                                 ANIMATIONS
                                                                     .transitions
                                                                     .normal,
                                                             cursor: 'pointer',
-                                                            minWidth: 0, // Allow shrinking
-                                                            overflow: 'hidden', // Prevent text overflow
                                                             '&:hover': {
                                                                 backgroundColor:
                                                                     COLORS
@@ -481,27 +349,15 @@ export default function Home() {
                                                                 color: COLORS
                                                                     .text
                                                                     .accent,
-                                                                fontSize: {
-                                                                    xs: TYPOGRAPHY
-                                                                        .fontSize
-                                                                        .xs
-                                                                        .body, // Smaller on mobile
-                                                                    sm: TYPOGRAPHY
+                                                                fontSize:
+                                                                    TYPOGRAPHY
                                                                         .fontSize
                                                                         .sm
                                                                         .body,
-                                                                },
                                                                 fontWeight:
                                                                     TYPOGRAPHY
                                                                         .fontWeight
                                                                         .medium,
-                                                                whiteSpace:
-                                                                    'nowrap', // Prevent wrapping
-                                                                overflow:
-                                                                    'hidden', // Hide overflow
-                                                                textOverflow:
-                                                                    'ellipsis', // Show ellipsis if too long
-                                                                flexShrink: 1, // Allow text to shrink
                                                             }}
                                                         >
                                                             {skill.name}
@@ -631,20 +487,17 @@ export default function Home() {
             >
                 <Box sx={{ maxWidth: SPACING.maxWidth.lg, margin: '0 auto' }}>
                     <Fade in timeout={1400}>
-                        <Box
-                            id="featured-work"
-                            className="featured-work-section"
-                        >
+                        <Box id="featured-work">
                             <Typography
                                 sx={{
                                     color: COLORS.text.primary,
-                                    fontSize: TYPOGRAPHY.fontSize.lg.h3,
-                                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                                    fontSize: TYPOGRAPHY.fontSize.lg.h2,
+                                    fontWeight: TYPOGRAPHY.fontWeight.bold,
                                     textAlign: 'center',
                                     marginBottom: 6,
                                 }}
                             >
-                                Featured Work
+                                Featured Work & Research
                             </Typography>
 
                             <Box
@@ -653,7 +506,7 @@ export default function Home() {
                                     gridTemplateColumns: {
                                         xs: '1fr',
                                         md: 'repeat(2, 1fr)',
-                                        lg: 'repeat(2, 1fr)', // Changed from 3 to 2 columns
+                                        lg: 'repeat(3, 1fr)',
                                     },
                                     gap: 4,
                                 }}
@@ -691,12 +544,9 @@ export default function Home() {
                                                 overflow: 'hidden',
                                                 '&:hover': {
                                                     transform:
-                                                        'translateY(-2px)',
+                                                        'translateY(-8px) scale(1.02)',
                                                     boxShadow:
-                                                        COLORS.shadows.lg,
-                                                    backgroundColor:
-                                                        COLORS.interactive
-                                                            .selected,
+                                                        COLORS.shadows.xl,
                                                 },
                                                 '&:focus':
                                                     ANIMATIONS.focus.ring,
@@ -717,11 +567,11 @@ export default function Home() {
                                                             .accent,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .xs.caption,
+                                                                .md.h5,
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
-                                                                .medium,
+                                                                .semibold,
                                                         textTransform:
                                                             'uppercase',
                                                         letterSpacing:
@@ -824,12 +674,9 @@ export default function Home() {
                                                 overflow: 'hidden',
                                                 '&:hover': {
                                                     transform:
-                                                        'translateY(-2px)',
+                                                        'translateY(-8px) scale(1.02)',
                                                     boxShadow:
-                                                        COLORS.shadows.lg,
-                                                    backgroundColor:
-                                                        COLORS.interactive
-                                                            .selected,
+                                                        COLORS.shadows.xl,
                                                 },
                                                 '&:focus':
                                                     ANIMATIONS.focus.ring,
@@ -850,11 +697,11 @@ export default function Home() {
                                                             .accent,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .xs.caption,
+                                                                .md.h5,
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
-                                                                .medium,
+                                                                .semibold,
                                                         textTransform:
                                                             'uppercase',
                                                         letterSpacing:

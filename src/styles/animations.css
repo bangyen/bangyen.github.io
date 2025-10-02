@@ -1,0 +1,150 @@
+/* Modern Animation Keyframes - Enterprise-grade micro-interactions */
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes bounce {
+    0%,
+    100% {
+        transform: translateY(-25%);
+        animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+    }
+
+    50% {
+        transform: translateY(0);
+        animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+    }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes slide-in-left {
+    from {
+        opacity: 0;
+        transform: translate3d(-40px, 0, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 20px rgb(33 150 243 / 40%);
+    }
+
+    to {
+        box-shadow:
+            0 0 30px rgb(33 150 243 / 60%),
+            0 0 40px rgb(33 150 243 / 40%);
+    }
+}
+
+/* Smooth transitions for reduced motion users */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: hsl(0deg 0% 8%);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: hsl(217deg 91% 45%);
+    border-radius: 4px;
+    transition: background-color 150ms ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: hsl(217deg 91% 50%);
+}
+
+/* Selection styles */
+::selection {
+    background-color: hsl(217deg 91% 60% / 20%);
+    color: hsl(0deg 0% 98%);
+}
+
+/* Focus visible styles for better accessibility */
+.focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px hsl(217deg 91% 60% / 15%);
+}
+
+/* Modern backdrop filter support */
+.glass-effect {
+    backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* Smooth text rendering */
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizelegibility;
+}
+
+/* Smooth scrolling behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Ensure proper scroll positioning */
+.featured-work-section {
+    scroll-margin-top: 2rem;
+}
