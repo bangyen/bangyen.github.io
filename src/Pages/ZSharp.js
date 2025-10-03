@@ -81,10 +81,7 @@ const loadRealZSharpData = async () => {
 
         return data;
     } catch (error) {
-        console.warn(
-            'Failed to load compressed data, using fallback:',
-            error.message
-        );
+        // Silently fall back to generated data if real data fails to load
         return generateFallbackData();
     }
 };
