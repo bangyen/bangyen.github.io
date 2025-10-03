@@ -158,11 +158,17 @@ export default function Home() {
                     top: 0,
                     left: 0,
                     right: 0,
-                    padding: SPACING.padding.sm,
+                    padding: {
+                        xs: SPACING.padding.xs, // Smaller padding on mobile
+                        sm: SPACING.padding.sm,
+                        md: SPACING.padding.md,
+                    },
                     zIndex: 1000,
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
+                    maxWidth: '100%', // Prevent overflow
+                    overflowX: 'hidden', // Hide any overflow
                 }}
             >
                 <MenuButton>{dropdown('Projects', pages)}</MenuButton>
@@ -186,7 +192,13 @@ export default function Home() {
                     justifyContent: 'center',
                     paddingTop: 0, // No gap needed with relative nav
                     paddingBottom: '4rem',
-                    paddingX: SPACING.padding.md,
+                    paddingX: {
+                        xs: SPACING.padding.xs, // Smaller padding on mobile
+                        sm: SPACING.padding.sm,
+                        md: SPACING.padding.md,
+                    },
+                    maxWidth: '100%', // Prevent container from exceeding viewport
+                    overflowX: 'hidden', // Hide any horizontal overflow
                 }}
             >
                 <Grid
@@ -220,13 +232,17 @@ export default function Home() {
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.extrabold,
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.lg.display,
-                                            md: 'clamp(3rem, 6vw, 5rem)',
+                                            xs: 'clamp(2rem, 8vw, 2.5rem)', // Smaller on mobile, prevents wrapping under 500px
+                                            sm: 'clamp(2.5rem, 7vw, 3.5rem)', // Medium sizing
+                                            md: 'clamp(3rem, 6vw, 5rem)', // Large sizing
                                         },
                                         lineHeight: TYPOGRAPHY.lineHeight.tight,
                                         letterSpacing:
                                             TYPOGRAPHY.letterSpacing.tight,
                                         marginBottom: 2,
+                                        // Allow controlled wrapping, but prevent breaks in names
+                                        wordBreak: 'keep-all', // Prevent breaking within words
+                                        hyphens: 'none', // Disable hyphenation
                                     }}
                                 >
                                     {PERSONAL_INFO.name}
@@ -236,14 +252,18 @@ export default function Home() {
                                     sx={{
                                         color: COLORS.text.secondary,
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.md.h5,
-                                            md: TYPOGRAPHY.fontSize.md.h4,
+                                            xs: 'clamp(0.875rem, 4vw, 1.125rem)', // Prevents wrapping under 400px
+                                            sm: 'clamp(1rem, 3vw, 1.25rem)', // Medium sizing, prevents wrapping between 900-1200px
+                                            md: 'clamp(1.125rem, 2.5vw, 1.5rem)', // Large sizing
                                         },
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.semibold,
                                         marginBottom: 4,
                                         lineHeight:
                                             TYPOGRAPHY.lineHeight.normal,
+                                        // Control how text breaks, allowing smart wrapping
+                                        wordBreak: 'keep-all', // Prevent breaking within words
+                                        hyphens: 'none', // Disable hyphenation
                                     }}
                                 >
                                     {PERSONAL_INFO.title}
@@ -371,13 +391,19 @@ export default function Home() {
                                         Tech Stack
                                     </Typography>
 
-                                    {/* Compact Grid Layout */}
+                                    {/* Responsive Skills Grid */}
                                     <Box
                                         sx={{
                                             display: 'grid',
-                                            gridTemplateColumns:
-                                                'repeat(2, 1fr)',
-                                            gap: 2,
+                                            gridTemplateColumns: {
+                                                xs: '1fr', // Single column on mobile
+                                                sm: 'repeat(2, 1fr)', // 2 columns on small screens and up
+                                                md: 'repeat(3, 1fr)', // 3 columns on medium screens and up
+                                            },
+                                            gap: {
+                                                xs: 1.5, // Smaller gap on mobile
+                                                sm: 2,
+                                            },
                                             marginBottom: 3,
                                         }}
                                     >
@@ -409,16 +435,24 @@ export default function Home() {
                                                                 SPACING
                                                                     .borderRadius
                                                                     .md,
-                                                            padding: '16px',
+                                                            padding: {
+                                                                xs: '12px', // Smaller padding on mobile
+                                                                sm: '16px',
+                                                            },
                                                             display: 'flex',
                                                             alignItems:
                                                                 'center',
-                                                            gap: 1.5,
+                                                            gap: {
+                                                                xs: 1, // Smaller gap on mobile
+                                                                sm: 1.5,
+                                                            },
                                                             transition:
                                                                 ANIMATIONS
                                                                     .transitions
                                                                     .normal,
                                                             cursor: 'pointer',
+                                                            minWidth: 0, // Allow shrinking
+                                                            overflow: 'hidden', // Prevent text overflow
                                                             '&:hover': {
                                                                 backgroundColor:
                                                                     COLORS
@@ -447,15 +481,27 @@ export default function Home() {
                                                                 color: COLORS
                                                                     .text
                                                                     .accent,
-                                                                fontSize:
-                                                                    TYPOGRAPHY
+                                                                fontSize: {
+                                                                    xs: TYPOGRAPHY
+                                                                        .fontSize
+                                                                        .xs
+                                                                        .body, // Smaller on mobile
+                                                                    sm: TYPOGRAPHY
                                                                         .fontSize
                                                                         .sm
                                                                         .body,
+                                                                },
                                                                 fontWeight:
                                                                     TYPOGRAPHY
                                                                         .fontWeight
                                                                         .medium,
+                                                                whiteSpace:
+                                                                    'nowrap', // Prevent wrapping
+                                                                overflow:
+                                                                    'hidden', // Hide overflow
+                                                                textOverflow:
+                                                                    'ellipsis', // Show ellipsis if too long
+                                                                flexShrink: 1, // Allow text to shrink
                                                             }}
                                                         >
                                                             {skill.name}

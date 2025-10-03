@@ -659,6 +659,8 @@ export const COMPONENTS = {
         primary: `1px solid ${COLORS.border.primary}`,
         interactive: `2px solid ${COLORS.border.interactive}`,
         divider: `1px solid ${COLORS.border.subtle}`,
+        light: '1px solid hsla(0, 0%, 50%, 0.2)', // Legacy support
+        white: '1px solid hsla(0, 0%, 100%, 0.1)', // Legacy support
     },
     // Interactive states
     interactive: {
@@ -677,10 +679,6 @@ export const COMPONENTS = {
     // Legacy component support for Oligopoly
     cardLight: {
         backgroundColor: 'hsla(0, 0%, 50%, 0.05)',
-    },
-    borders: {
-        light: '1px solid hsla(0, 0%, 50%, 0.2)',
-        white: '1px solid hsla(0, 0%, 100%, 0.1)',
     },
     overlays: {
         dark: 'hsla(0, 0%, 5%, 0.95)',
