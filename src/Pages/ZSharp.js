@@ -81,10 +81,7 @@ const loadRealZSharpData = async () => {
 
         return data;
     } catch (error) {
-        console.warn(
-            'Failed to load compressed data, using fallback:',
-            error.message
-        );
+        // Silently fall back to generated data if real data fails to load
         return generateFallbackData();
     }
 };
@@ -296,6 +293,7 @@ const ZSharp = () => {
                         variant="h5"
                         sx={{
                             color: 'text.secondary',
+                            marginTop: 2,
                             marginBottom: 3,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
                             fontSize: {
@@ -304,8 +302,7 @@ const ZSharp = () => {
                             },
                         }}
                     >
-                        Sharpness-Aware Minimization with Z-Score Gradient
-                        Filtering
+                        Neural Network Optimization Research
                     </Typography>
 
                     {/* Performance Chart */}
@@ -323,21 +320,22 @@ const ZSharp = () => {
                         }}
                     >
                         <Typography
-                            variant="h6"
+                            variant="subtitle1"
                             sx={{
-                                color: 'primary.light',
+                                color: COLORS.text.secondary,
                                 marginBottom: 3,
                                 textAlign: 'center',
-                                fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                                fontSize: TYPOGRAPHY.fontSize.md.h5,
                             }}
                         >
                             {viewType === 'accuracy' &&
-                                'Training Accuracy Comparison'}
-                            {viewType === 'loss' && 'Training Loss Comparison'}
+                                'Performance Comparison'}
+                            {viewType === 'loss' && 'Loss Evaluation'}
                             {viewType === 'learning_curve' &&
-                                'Learning Gap Evolution'}
+                                'Learning Progress'}
                             {viewType === 'convergence' &&
-                                'Convergence Rate Analysis'}
+                                'Convergence Analysis'}
                         </Typography>
                         <Box sx={{ height: 300 }}>
                             {loading ? (
