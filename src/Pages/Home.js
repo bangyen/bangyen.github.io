@@ -164,17 +164,15 @@ export default function Home() {
                     alignItems: 'center',
                 }}
             >
-                <Typography
-                    sx={{
-                        color: COLORS.text.primary,
-                        fontSize: TYPOGRAPHY.fontSize.md.body,
-                        fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                        letterSpacing: TYPOGRAPHY.letterSpacing.normal,
-                    }}
-                >
-                    {PERSONAL_INFO.name.split(' ')[0]}
-                </Typography>
                 <MenuButton>{dropdown('Projects', pages)}</MenuButton>
+                <TooltipButton
+                    component="a"
+                    href={URLS.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="GitHub Profile"
+                    Icon={GitHub}
+                />
             </Box>
 
             {/* Hero Section */}
@@ -237,8 +235,8 @@ export default function Home() {
                                     sx={{
                                         color: COLORS.text.secondary,
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.md.h4,
-                                            md: TYPOGRAPHY.fontSize.lg.h3,
+                                            xs: TYPOGRAPHY.fontSize.md.h5,
+                                            md: TYPOGRAPHY.fontSize.md.h4,
                                         },
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.semibold,
@@ -276,24 +274,6 @@ export default function Home() {
                                         {PERSONAL_INFO.location}
                                     </Typography>
                                 </Box>
-
-                                <Typography
-                                    sx={{
-                                        color: COLORS.text.secondary,
-                                        fontSize: TYPOGRAPHY.fontSize.md.body,
-                                        lineHeight:
-                                            TYPOGRAPHY.lineHeight.relaxed,
-                                        marginBottom: 4,
-                                        maxWidth: '90%',
-                                    }}
-                                >
-                                    Backend Developer & AI/ML Engineer
-                                    specializing in cloud architecture, HPC
-                                    systems, and machine learning research.
-                                    Northwestern MS Computer Science graduate
-                                    with experience at Volta Health and Center
-                                    for Nuclear Femtography.
-                                </Typography>
 
                                 <Box
                                     sx={{
@@ -611,13 +591,13 @@ export default function Home() {
                             <Typography
                                 sx={{
                                     color: COLORS.text.primary,
-                                    fontSize: TYPOGRAPHY.fontSize.lg.h2,
-                                    fontWeight: TYPOGRAPHY.fontWeight.bold,
+                                    fontSize: TYPOGRAPHY.fontSize.lg.h3,
+                                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                     textAlign: 'center',
                                     marginBottom: 6,
                                 }}
                             >
-                                Featured Work & Research
+                                Featured Work
                             </Typography>
 
                             <Box
@@ -664,9 +644,12 @@ export default function Home() {
                                                 overflow: 'hidden',
                                                 '&:hover': {
                                                     transform:
-                                                        'translateY(-8px) scale(1.02)',
+                                                        'translateY(-2px)',
                                                     boxShadow:
-                                                        COLORS.shadows.xl,
+                                                        COLORS.shadows.lg,
+                                                    backgroundColor:
+                                                        COLORS.interactive
+                                                            .selected,
                                                 },
                                                 '&:focus':
                                                     ANIMATIONS.focus.ring,
@@ -687,11 +670,11 @@ export default function Home() {
                                                             .accent,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .md.h5,
+                                                                .xs.caption,
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
-                                                                .semibold,
+                                                                .medium,
                                                         textTransform:
                                                             'uppercase',
                                                         letterSpacing:
@@ -794,9 +777,12 @@ export default function Home() {
                                                 overflow: 'hidden',
                                                 '&:hover': {
                                                     transform:
-                                                        'translateY(-8px) scale(1.02)',
+                                                        'translateY(-2px)',
                                                     boxShadow:
-                                                        COLORS.shadows.xl,
+                                                        COLORS.shadows.lg,
+                                                    backgroundColor:
+                                                        COLORS.interactive
+                                                            .selected,
                                                 },
                                                 '&:focus':
                                                     ANIMATIONS.focus.ring,
@@ -817,11 +803,11 @@ export default function Home() {
                                                             .accent,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .md.h5,
+                                                                .xs.caption,
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
-                                                                .semibold,
+                                                                .medium,
                                                         textTransform:
                                                             'uppercase',
                                                         letterSpacing:
