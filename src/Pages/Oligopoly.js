@@ -295,6 +295,7 @@ const Oligopoly = () => {
                         variant="h5"
                         sx={{
                             color: 'text.secondary',
+                            marginTop: 2,
                             marginBottom: 4,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
                             fontSize: {
@@ -303,7 +304,7 @@ const Oligopoly = () => {
                             },
                         }}
                     >
-                        Cournot Competition Simulation
+                        Agent-Based Economic Competition Analysis
                     </Typography>
 
                     {/* Market Dynamics Chart */}
@@ -321,15 +322,16 @@ const Oligopoly = () => {
                         }}
                     >
                         <Typography
-                            variant="h6"
+                            variant="subtitle1"
                             sx={{
-                                color: 'primary.light',
+                                color: COLORS.text.secondary,
                                 marginBottom: 3,
                                 textAlign: 'center',
-                                fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                                fontSize: TYPOGRAPHY.fontSize.md.h5,
                             }}
                         >
-                            Cournot Market Dynamics
+                            Market Dynamics
                         </Typography>
                         <Box sx={{ height: 300 }}>
                             {loading ? (
