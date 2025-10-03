@@ -154,10 +154,11 @@ export default function Home() {
             {/* Modern Navigation */}
             <Box
                 sx={{
-                    position: 'fixed',
-                    top: SPACING.padding.md,
-                    left: SPACING.padding.md,
-                    right: SPACING.padding.md,
+                    position: 'relative',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    padding: SPACING.padding.sm,
                     zIndex: 1000,
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -183,7 +184,7 @@ export default function Home() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    paddingTop: '8rem', // Space for fixed nav
+                    paddingTop: 0, // No gap needed with relative nav
                     paddingBottom: '4rem',
                     paddingX: SPACING.padding.md,
                 }}

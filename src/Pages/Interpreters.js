@@ -216,6 +216,8 @@ export default function Interpreters() {
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
                                                         .semiBold,
+                                                fontSize:
+                                                    TYPOGRAPHY.fontSize.md.h5,
                                             }}
                                         >
                                             {interpreter.name}
