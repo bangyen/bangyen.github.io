@@ -471,7 +471,7 @@ const Oligopoly = () => {
                                 size="small"
                                 startIcon={<Refresh />}
                                 onClick={resetToDefaults}
-                                sx={COMPONENTS.button.outlined}
+                                sx={COMPONENTS.legacyButton.outlined}
                             >
                                 Reset
                             </Button>

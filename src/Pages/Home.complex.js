@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import Grid from '@mui/material/Grid2';
 
-import { TooltipButton } from '../helpers';
-import { pages } from './';
 import {
     PERSONAL_INFO,
     URLS,
@@ -18,7 +15,6 @@ import {
 } from '../config/constants';
 
 import {
-    MenuRounded,
     GitHub,
     Code,
     Cloud,
@@ -29,108 +25,7 @@ import {
     ArrowForward,
 } from '@mui/icons-material';
 
-import {
-    Typography,
-    Box,
-    Menu,
-    MenuItem,
-    Fade,
-    Container,
-} from '@mui/material';
-
-function dropdown(name, routes) {
-    const padHeight = COMPONENTS.menu.padding.vertical;
-    const padWidth = COMPONENTS.menu.padding.horizontal;
-
-    return (
-        <Box>
-            {Object.entries(routes).map(([routeName, routePath]) => (
-                <MenuItem
-                    sx={{
-                        paddingBottom: padHeight,
-                        paddingTop: padHeight,
-                        paddingLeft: padWidth,
-                        paddingRight: padWidth,
-                        borderRadius: SPACING.borderRadius.md,
-                        margin: '0.25rem 0.5rem', // 4px 8px
-                        transition: ANIMATIONS.transitions.fast,
-                        '&:hover': ANIMATIONS.hover.modern,
-                    }}
-                    key={routeName}
-                    component={Link}
-                    to={routePath}
-                >
-                    <Typography
-                        sx={{
-                            fontWeight: TYPOGRAPHY.fontWeight.medium,
-                            fontSize: TYPOGRAPHY.fontSize.sm.body,
-                            color: COLORS.text.primary,
-                        }}
-                    >
-                        {routeName.replace('_', ' ')}
-                    </Typography>
-                </MenuItem>
-            ))}
-        </Box>
-    );
-}
-
-function clickHandler(setAnchor) {
-    return event => {
-        setAnchor(event.currentTarget);
-    };
-}
-
-function closeHandler(setAnchor) {
-    return () => {
-        setAnchor(null);
-    };
-}
-
-function MenuButton({ children }) {
-    const [anchor, setAnchor] = useState(null);
-    const handleClick = clickHandler(setAnchor);
-    const handleClose = closeHandler(setAnchor);
-    const open = Boolean(anchor);
-
-    const define = value => {
-        return open ? value : undefined;
-    };
-
-    return (
-        <Box>
-            <TooltipButton
-                title="Menu"
-                id="basic-button"
-                Icon={MenuRounded}
-                aria-controls={define('basic-menu')}
-                aria-expanded={define('true')}
-                aria-haspopup="true"
-                onClick={handleClick}
-            />
-            <Menu
-                id="basic-menu"
-                open={open}
-                anchorEl={anchor}
-                sx={{
-                    marginLeft: 1,
-                    marginTop: 1,
-                    '& .MuiPaper-root': {
-                        ...COMPONENTS.menu,
-                        boxShadow: COLORS.shadows.lg,
-                    },
-                }}
-                onClose={handleClose}
-                MenuListProps={{
-                    'aria-labelledby': 'basic-button',
-                    sx: { padding: 1 },
-                }}
-            >
-                {children}
-            </Menu>
-        </Box>
-    );
-}
+import { Typography, Box, Fade, Container } from '@mui/material';
 
 export default function Home() {
     useEffect(() => {
@@ -160,7 +55,7 @@ export default function Home() {
                     right: SPACING.padding.md,
                     zIndex: 1000,
                     display: 'flex',
-                    justifyContent: 'space-between',
+                    justifyContent: 'flex-start',
                     alignItems: 'center',
                 }}
             >
@@ -174,7 +69,6 @@ export default function Home() {
                 >
                     {PERSONAL_INFO.name.split(' ')[0]}
                 </Typography>
-                <MenuButton>{dropdown('Projects', pages)}</MenuButton>
             </Box>
 
             {/* Hero Section */}
@@ -303,19 +197,8 @@ export default function Home() {
                                     }}
                                 >
                                     <Box
-                                        onClick={() => {
-                                            const element =
-                                                document.getElementById(
-                                                    'featured-work'
-                                                );
-                                            if (element) {
-                                                element.scrollIntoView({
-                                                    behavior: 'smooth',
-                                                    block: 'start',
-                                                    inline: 'nearest',
-                                                });
-                                            }
-                                        }}
+                                        component="a"
+                                        href="#featured-work"
                                         sx={{
                                             display: 'flex',
                                             alignItems: 'center',
@@ -327,7 +210,7 @@ export default function Home() {
                                                 SPACING.borderRadius.full,
                                             transition:
                                                 ANIMATIONS.transitions.normal,
-                                            cursor: 'pointer',
+                                            textDecoration: 'none',
                                             '&:hover': ANIMATIONS.hover.modern,
                                         }}
                                     >
@@ -341,7 +224,7 @@ export default function Home() {
                                                     TYPOGRAPHY.fontSize.sm.body,
                                             }}
                                         >
-                                            View Work
+                                            Projects & Work
                                         </Typography>
                                         <ArrowForward
                                             sx={{
@@ -604,10 +487,7 @@ export default function Home() {
             >
                 <Box sx={{ maxWidth: SPACING.maxWidth.lg, margin: '0 auto' }}>
                     <Fade in timeout={1400}>
-                        <Box
-                            id="featured-work"
-                            className="featured-work-section"
-                        >
+                        <Box id="featured-work">
                             <Typography
                                 sx={{
                                     color: COLORS.text.primary,
@@ -626,7 +506,7 @@ export default function Home() {
                                     gridTemplateColumns: {
                                         xs: '1fr',
                                         md: 'repeat(2, 1fr)',
-                                        lg: 'repeat(2, 1fr)', // Changed from 3 to 2 columns
+                                        lg: 'repeat(3, 1fr)',
                                     },
                                     gap: 4,
                                 }}

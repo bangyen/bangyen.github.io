@@ -22,7 +22,15 @@ import {
 // Load real ZSharp experiment data
 const loadRealZSharpData = async () => {
     try {
+        // Check if browser supports DecompressionStream
+        if (typeof DecompressionStream === 'undefined') {
+            throw new Error('DecompressionStream not supported');
+        }
+
         const response = await fetch('/zsharp_data.json.gz');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
         const compressedData = await response.arrayBuffer();
         const decompressedData = await new Response(
             new ReadableStream({
@@ -73,6 +81,10 @@ const loadRealZSharpData = async () => {
 
         return data;
     } catch (error) {
+        console.warn(
+            'Failed to load compressed data, using fallback:',
+            error.message
+        );
         return generateFallbackData();
     }
 };
@@ -590,11 +602,12 @@ const ZSharp = () => {
                             size="small"
                             onClick={() => setViewType('accuracy')}
                             sx={{
-                                ...COMPONENTS.button.outlined,
+                                ...COMPONENTS.legacyButton.outlined,
                                 color:
                                     viewType === 'accuracy'
                                         ? COLORS.text.white
-                                        : COMPONENTS.button.outlined.color,
+                                        : COMPONENTS.legacyButton.outlined
+                                              .color,
                             }}
                         >
                             Accuracy
@@ -606,11 +619,12 @@ const ZSharp = () => {
                             size="small"
                             onClick={() => setViewType('loss')}
                             sx={{
-                                ...COMPONENTS.button.outlined,
+                                ...COMPONENTS.legacyButton.outlined,
                                 color:
                                     viewType === 'loss'
                                         ? COLORS.text.white
-                                        : COMPONENTS.button.outlined.color,
+                                        : COMPONENTS.legacyButton.outlined
+                                              .color,
                             }}
                         >
                             Loss
@@ -624,11 +638,12 @@ const ZSharp = () => {
                             size="small"
                             onClick={() => setViewType('learning_curve')}
                             sx={{
-                                ...COMPONENTS.button.outlined,
+                                ...COMPONENTS.legacyButton.outlined,
                                 color:
                                     viewType === 'learning_curve'
                                         ? COLORS.text.white
-                                        : COMPONENTS.button.outlined.color,
+                                        : COMPONENTS.legacyButton.outlined
+                                              .color,
                             }}
                         >
                             Learning Gap
@@ -642,11 +657,12 @@ const ZSharp = () => {
                             size="small"
                             onClick={() => setViewType('convergence')}
                             sx={{
-                                ...COMPONENTS.button.outlined,
+                                ...COMPONENTS.legacyButton.outlined,
                                 color:
                                     viewType === 'convergence'
                                         ? COLORS.text.white
-                                        : COMPONENTS.button.outlined.color,
+                                        : COMPONENTS.legacyButton.outlined
+                                              .color,
                             }}
                         >
                             Convergence
