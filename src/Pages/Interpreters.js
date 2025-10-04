@@ -183,7 +183,7 @@ export default function Interpreters() {
                                     padding: { xs: 1.5, sm: 2 },
                                     backgroundColor:
                                         COMPONENTS.overlays.lighter,
-                                    borderRadius: SPACING.borderRadius.small,
+                                    borderRadius: SPACING.borderRadius.sm,
                                     border: COMPONENTS.borders.light,
                                     textDecoration: 'none',
                                     cursor: 'pointer',

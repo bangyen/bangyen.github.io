@@ -231,10 +231,10 @@ export function TextArea({
                     color: 'text.primary',
                 },
                 '& .MuiOutlinedInput-notchedOutline': {
-                    borderColor: COMPONENTS.borderColors.light,
+                    borderColor: COLORS.border.subtle,
                 },
                 '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: COMPONENTS.borderColors.medium,
+                    borderColor: COLORS.border.primary,
                 },
                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                     borderColor: 'primary.light',
