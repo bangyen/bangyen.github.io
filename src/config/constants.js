@@ -557,6 +557,8 @@ export const COMPONENTS = {
             alignItems: 'center',
             transition: ANIMATIONS.transitions.fast,
         },
+        // Simple border for grid editor cells
+        border: `1px solid ${COLORS.border.interactive}`,
         secondary: {
             backgroundColor: COLORS.interactive.hover,
             color: COLORS.text.secondary,
@@ -683,6 +685,10 @@ export const COMPONENTS = {
     overlays: {
         dark: 'hsla(0, 0%, 5%, 0.95)',
         lighter: 'hsla(0, 0%, 12%, 0.8)', // For text areas and input fields
+        light: 'hsla(0, 0%, 15%, 0.9)', // For highlighted cells
+        medium: 'hsla(0, 0%, 18%, 0.9)', // For info cells
+        hover: 'hsla(0, 0%, 20%, 0.95)', // For hover states
+        hoverLight: 'hsla(0, 0%, 16%, 0.9)', // For light hover states
     },
     borderColors: {
         light: 'hsla(0, 0%, 50%, 0.2)',
