@@ -86,7 +86,10 @@ function Title({ children }) {
                 variant="h6"
                 sx={{
                     textAlign: 'center',
-                    fontWeight: 'bold',
+                    fontWeight: 'semibold',
+                    fontSize: 'clamp(1.5rem, 2.5vw, 1.75rem)',
+                    lineHeight: '1.2',
+                    letterSpacing: '-0.025em',
                 }}
             >
                 {children}

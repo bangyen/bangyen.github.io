@@ -309,10 +309,9 @@ const ZSharp = () => {
                     <Box
                         sx={{
                             padding: { xs: 1.5, sm: 2 },
-                            backgroundColor:
-                                COMPONENTS.cardLight.backgroundColor,
-                            borderRadius: SPACING.borderRadius.small,
-                            border: COMPONENTS.borders.light,
+                            backgroundColor: COLORS.surface.subtle,
+                            borderRadius: SPACING.borderRadius.sm,
+                            border: COMPONENTS.borders.subtle,
                             marginBottom: 4,
                             width: '100%',
                             boxSizing: 'border-box',
@@ -600,12 +599,15 @@ const ZSharp = () => {
                             size="small"
                             onClick={() => setViewType('accuracy')}
                             sx={{
-                                ...COMPONENTS.legacyButton.outlined,
                                 color:
                                     viewType === 'accuracy'
                                         ? COLORS.text.white
-                                        : COMPONENTS.legacyButton.outlined
-                                              .color,
+                                        : COLORS.text.secondary,
+                                borderColor: COLORS.border.primary,
+                                '&:hover': {
+                                    borderColor: COLORS.border.interactive,
+                                    backgroundColor: COLORS.interactive.hover,
+                                },
                             }}
                         >
                             Accuracy
@@ -617,12 +619,15 @@ const ZSharp = () => {
                             size="small"
                             onClick={() => setViewType('loss')}
                             sx={{
-                                ...COMPONENTS.legacyButton.outlined,
                                 color:
                                     viewType === 'loss'
                                         ? COLORS.text.white
-                                        : COMPONENTS.legacyButton.outlined
-                                              .color,
+                                        : COLORS.text.secondary,
+                                borderColor: COLORS.border.primary,
+                                '&:hover': {
+                                    borderColor: COLORS.border.interactive,
+                                    backgroundColor: COLORS.interactive.hover,
+                                },
                             }}
                         >
                             Loss
@@ -636,12 +641,15 @@ const ZSharp = () => {
                             size="small"
                             onClick={() => setViewType('learning_curve')}
                             sx={{
-                                ...COMPONENTS.legacyButton.outlined,
                                 color:
                                     viewType === 'learning_curve'
                                         ? COLORS.text.white
-                                        : COMPONENTS.legacyButton.outlined
-                                              .color,
+                                        : COLORS.text.secondary,
+                                borderColor: COLORS.border.primary,
+                                '&:hover': {
+                                    borderColor: COLORS.border.interactive,
+                                    backgroundColor: COLORS.interactive.hover,
+                                },
                             }}
                         >
                             Learning Gap
@@ -655,12 +663,15 @@ const ZSharp = () => {
                             size="small"
                             onClick={() => setViewType('convergence')}
                             sx={{
-                                ...COMPONENTS.legacyButton.outlined,
                                 color:
                                     viewType === 'convergence'
                                         ? COLORS.text.white
-                                        : COMPONENTS.legacyButton.outlined
-                                              .color,
+                                        : COLORS.text.secondary,
+                                borderColor: COLORS.border.primary,
+                                '&:hover': {
+                                    borderColor: COLORS.border.interactive,
+                                    backgroundColor: COLORS.interactive.hover,
+                                },
                             }}
                         >
                             Convergence

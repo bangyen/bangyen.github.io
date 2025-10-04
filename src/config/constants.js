@@ -239,7 +239,7 @@ export const SPACING = {
         none: 0,
         xs: '4px', // Subtle rounding
         sm: '8px', // Small rounding
-        small: '8px', // Legacy compatibility
+        small: '8px', // Migrated - use sm for new code
         md: '12px', // Medium rounding
         lg: '16px', // Large rounding
         xl: '20px', // Extra large rounding
@@ -557,6 +557,8 @@ export const COMPONENTS = {
             alignItems: 'center',
             transition: ANIMATIONS.transitions.fast,
         },
+        // Simple border for grid editor cells
+        border: `1px solid ${COLORS.border.interactive}`,
         secondary: {
             backgroundColor: COLORS.interactive.hover,
             color: COLORS.text.secondary,
@@ -659,8 +661,8 @@ export const COMPONENTS = {
         primary: `1px solid ${COLORS.border.primary}`,
         interactive: `2px solid ${COLORS.border.interactive}`,
         divider: `1px solid ${COLORS.border.subtle}`,
-        light: '1px solid hsla(0, 0%, 50%, 0.2)', // Legacy support
-        white: '1px solid hsla(0, 0%, 100%, 0.1)', // Legacy support
+        light: `1px solid ${COLORS.border.subtle}`, // Migrated to semantic colors
+        white: `1px solid ${COLORS.border.primary}`, // Migrated to semantic colors
     },
     // Interactive states
     interactive: {
@@ -676,26 +678,31 @@ export const COMPONENTS = {
         selected: COLORS.interactive.selected,
         disabled: COLORS.interactive.disabled,
     },
-    // Legacy component support for Oligopoly
+    // Legacy component support for Oligopoly - migrated to semantic colors
     cardLight: {
-        backgroundColor: 'hsla(0, 0%, 50%, 0.05)',
+        backgroundColor: COLORS.surface.subtle,
     },
     overlays: {
         dark: 'hsla(0, 0%, 5%, 0.95)',
         lighter: 'hsla(0, 0%, 12%, 0.8)', // For text areas and input fields
+        light: 'hsla(0, 0%, 15%, 0.9)', // For highlighted cells
+        medium: 'hsla(0, 0%, 18%, 0.9)', // For info cells
+        hover: 'hsla(0, 0%, 20%, 0.95)', // For hover states
+        hoverLight: 'hsla(0, 0%, 16%, 0.9)', // For light hover states
     },
+    // Migrated to semantic border colors
     borderColors: {
-        light: 'hsla(0, 0%, 50%, 0.2)',
-        medium: 'hsla(0, 0%, 50%, 0.3)',
+        light: COLORS.border.subtle,
+        medium: COLORS.border.primary,
     },
-    // Legacy button support for ZSharp - Add as additional variant to existing button system
+    // Legacy button support for ZSharp - migrated to semantic colors
     legacyButton: {
         outlined: {
-            color: 'hsla(0, 0%, 100%, 0.7)',
-            borderColor: 'hsla(0, 0%, 100%, 0.3)',
+            color: COLORS.text.secondary,
+            borderColor: COLORS.border.primary,
             '&:hover': {
-                borderColor: 'hsl(217, 91%, 60%)',
-                backgroundColor: 'hsla(0, 0%, 100%, 0.1)',
+                borderColor: COLORS.border.interactive,
+                backgroundColor: COLORS.interactive.hover,
             },
         },
     },

@@ -590,7 +590,7 @@ export default function Home() {
 
                                         <Box
                                             component="a"
-                                            href="mailto:bangyen.pham@example.com?subject=Project%20Collaboration"
+                                            href="mailto:bangyenp@gmail.com?subject=Project%20Collaboration"
                                             sx={{
                                                 ...COMPONENTS.button.ghost,
                                                 display: 'flex',
@@ -625,8 +625,7 @@ export default function Home() {
             <Container
                 maxWidth={false}
                 sx={{
-                    paddingTop: SPACING.margin.section,
-                    paddingBottom: SPACING.padding.md,
+                    paddingY: SPACING.margin.section,
                     paddingX: SPACING.padding.md,
                 }}
             >

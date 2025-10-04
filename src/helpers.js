@@ -158,7 +158,17 @@ export function Navigation({ children, ...rest }) {
                 ...rest,
             }}
         >
-            <Grid container spacing={2}>
+            <Grid
+                container
+                spacing={2}
+                sx={{
+                    display: 'flex',
+                    flexWrap: 'nowrap',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minWidth: 0, // Allow shrinking on mobile
+                }}
+            >
                 {children}
             </Grid>
         </Paper>
