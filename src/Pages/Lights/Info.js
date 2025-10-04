@@ -64,6 +64,7 @@ function useHandler(row, size, palette) {
 export default function Info(props) {
     const { rows, cols, size, open, palette, toggleOpen } = props;
     const isMobile = useMobile('md');
+    const isLargeScreen = useMobile('lg');
 
     const [row, setRow] = useState(Array(cols).fill(0));
 
@@ -149,500 +150,214 @@ export default function Info(props) {
                                 sx={{
                                     display: 'flex',
                                     flexDirection: 'column',
+                                    height: isLargeScreen ? '100%' : 'auto',
                                 }}
                             >
-                                <Typography
-                                    variant="h5"
-                                    gutterBottom
-                                    sx={{
-                                        color: COLORS.text.primary,
-                                        fontWeight:
-                                            TYPOGRAPHY.fontWeight.semibold,
-                                        mb: 3,
-                                        textAlign: isMobile ? 'center' : 'left',
-                                        fontSize: TYPOGRAPHY.fontSize.md.h3,
-                                        lineHeight: TYPOGRAPHY.lineHeight.tight,
-                                        letterSpacing:
-                                            TYPOGRAPHY.letterSpacing.tight,
-                                    }}
-                                >
-                                    Chasing Lights Algorithm
-                                </Typography>
                                 <Box sx={{ flex: 1, overflow: 'auto' }}>
-                                    {isMobile ? (
-                                        <Box
+                                    <Box
+                                        sx={{
+                                            backgroundColor:
+                                                COLORS.surface.elevated,
+                                            border: `1px solid hsla(0, 0%, 100%, 0.05)`,
+                                            borderRadius:
+                                                SPACING.borderRadius.lg,
+                                            padding: 3,
+                                            height: !isLargeScreen
+                                                ? '100%'
+                                                : 'auto',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            transition:
+                                                'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                            '&:hover': {
+                                                backgroundColor:
+                                                    COLORS.interactive.hover,
+                                                transform: 'translateY(-2px)',
+                                                boxShadow: COLORS.shadows.sm,
+                                            },
+                                        }}
+                                    >
+                                        <Typography
+                                            variant="h5"
+                                            gutterBottom
                                             sx={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                alignItems: 'center',
-                                                gap: 2,
+                                                color: COLORS.text.primary,
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .semibold,
+                                                mb: 3,
+                                                textAlign: isMobile
+                                                    ? 'center'
+                                                    : 'left',
+                                                fontSize:
+                                                    TYPOGRAPHY.fontSize.md.h3,
+                                                lineHeight:
+                                                    TYPOGRAPHY.lineHeight.tight,
+                                                letterSpacing:
+                                                    TYPOGRAPHY.letterSpacing
+                                                        .tight,
                                             }}
                                         >
-                                            {/* Step 1 */}
-                                            <Box
+                                            Chasing Lights Algorithm
+                                        </Typography>
+                                        {/* Step 1 */}
+                                        <Box sx={{ mb: 3 }}>
+                                            <Typography
+                                                variant="subtitle1"
                                                 sx={{
-                                                    width: '100%',
-                                                    backgroundColor:
-                                                        COLORS.surface.elevated,
-                                                    border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                                    borderRadius:
-                                                        SPACING.borderRadius.lg,
-                                                    padding: 2,
-                                                    transition:
-                                                        'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                                    '&:hover': {
-                                                        backgroundColor:
-                                                            COLORS.interactive
-                                                                .hover,
-                                                        transform:
-                                                            'translateY(-2px)',
-                                                        boxShadow:
-                                                            COLORS.shadows.sm,
-                                                    },
+                                                    color: COLORS.text.primary,
+                                                    fontWeight:
+                                                        TYPOGRAPHY.fontWeight
+                                                            .semibold,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    mb: 1,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize.sm
+                                                            .h5,
+                                                    letterSpacing:
+                                                        TYPOGRAPHY.letterSpacing
+                                                            .wide,
                                                 }}
                                             >
-                                                <Typography
-                                                    variant="subtitle1"
+                                                <KeyboardArrowDown
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .primary,
-                                                        fontWeight:
-                                                            TYPOGRAPHY
-                                                                .fontWeight
-                                                                .semibold,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent:
-                                                            'center',
-                                                        mb: 2,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .sm.h5,
-                                                        letterSpacing:
-                                                            TYPOGRAPHY
-                                                                .letterSpacing
-                                                                .wide,
+                                                        mr: 1.5,
+                                                        color: COLORS.primary
+                                                            .main,
+                                                        fontSize: '1.5rem',
                                                     }}
-                                                >
-                                                    <KeyboardArrowDown
-                                                        sx={{
-                                                            mr: 1.5,
-                                                            color: COLORS
-                                                                .primary.main,
-                                                            fontSize: '1.5rem',
-                                                        }}
-                                                    />
-                                                    Chase to Bottom
-                                                </Typography>
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{
-                                                        color: COLORS.text
-                                                            .secondary,
-                                                        textAlign: 'center',
-                                                        lineHeight:
-                                                            TYPOGRAPHY
-                                                                .lineHeight
-                                                                .relaxed,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .sm.body,
-                                                    }}
-                                                >
-                                                    Click lights to chase rows
-                                                    from top to bottom.
-                                                </Typography>
-                                            </Box>
-
-                                            {/* Step 2 */}
-                                            <Box
+                                                />
+                                                Chase to Bottom
+                                            </Typography>
+                                            <Typography
+                                                variant="body1"
                                                 sx={{
-                                                    width: '100%',
-                                                    backgroundColor:
-                                                        COLORS.surface.elevated,
-                                                    border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                                    borderRadius:
-                                                        SPACING.borderRadius.lg,
-                                                    padding: 2,
-                                                    transition:
-                                                        'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                                    '&:hover': {
-                                                        backgroundColor:
-                                                            COLORS.interactive
-                                                                .hover,
-                                                        transform:
-                                                            'translateY(-2px)',
-                                                        boxShadow:
-                                                            COLORS.shadows.sm,
-                                                    },
+                                                    color: COLORS.text
+                                                        .secondary,
+                                                    lineHeight:
+                                                        TYPOGRAPHY.lineHeight
+                                                            .relaxed,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize.sm
+                                                            .body,
+                                                    ml: 4,
                                                 }}
                                             >
-                                                <Typography
-                                                    variant="subtitle1"
-                                                    sx={{
-                                                        color: COLORS.text
-                                                            .primary,
-                                                        fontWeight:
-                                                            TYPOGRAPHY
-                                                                .fontWeight
-                                                                .semibold,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent:
-                                                            'center',
-                                                        mb: 2,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .sm.h5,
-                                                        letterSpacing:
-                                                            TYPOGRAPHY
-                                                                .letterSpacing
-                                                                .wide,
-                                                    }}
-                                                >
-                                                    <Calculate
-                                                        sx={{
-                                                            mr: 1.5,
-                                                            color: COLORS.chart
-                                                                .orange,
-                                                            fontSize: '1.5rem',
-                                                        }}
-                                                    />
-                                                    Use Calculator
-                                                </Typography>
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{
-                                                        color: COLORS.text
-                                                            .secondary,
-                                                        textAlign: 'center',
-                                                        lineHeight:
-                                                            TYPOGRAPHY
-                                                                .lineHeight
-                                                                .relaxed,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .sm.body,
-                                                    }}
-                                                >
-                                                    Enter the bottom row lights
-                                                    pattern below.
-                                                </Typography>
-                                            </Box>
-
-                                            {/* Step 3 */}
-                                            <Box
-                                                sx={{
-                                                    width: '100%',
-                                                    backgroundColor:
-                                                        COLORS.surface.elevated,
-                                                    border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                                    borderRadius:
-                                                        SPACING.borderRadius.lg,
-                                                    padding: 2,
-                                                    transition:
-                                                        'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                                    '&:hover': {
-                                                        backgroundColor:
-                                                            COLORS.interactive
-                                                                .hover,
-                                                        transform:
-                                                            'translateY(-2px)',
-                                                        boxShadow:
-                                                            COLORS.shadows.sm,
-                                                    },
-                                                }}
-                                            >
-                                                <Typography
-                                                    variant="subtitle1"
-                                                    sx={{
-                                                        color: COLORS.text
-                                                            .primary,
-                                                        fontWeight:
-                                                            TYPOGRAPHY
-                                                                .fontWeight
-                                                                .semibold,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent:
-                                                            'center',
-                                                        mb: 2,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .sm.h5,
-                                                        letterSpacing:
-                                                            TYPOGRAPHY
-                                                                .letterSpacing
-                                                                .wide,
-                                                    }}
-                                                >
-                                                    <Replay
-                                                        sx={{
-                                                            mr: 1.5,
-                                                            color: COLORS.chart
-                                                                .green,
-                                                            fontSize: '1.5rem',
-                                                        }}
-                                                    />
-                                                    Chase Again
-                                                </Typography>
-                                                <Typography
-                                                    variant="body2"
-                                                    sx={{
-                                                        color: COLORS.text
-                                                            .secondary,
-                                                        textAlign: 'center',
-                                                        lineHeight:
-                                                            TYPOGRAPHY
-                                                                .lineHeight
-                                                                .relaxed,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .sm.body,
-                                                    }}
-                                                >
-                                                    Apply the solution to top
-                                                    row, then chase to solve
-                                                    puzzle.
-                                                </Typography>
-                                            </Box>
+                                                Turn off rows from top to bottom
+                                                by clicking lights in each row
+                                                to eliminate all lights above
+                                                the bottom row.
+                                            </Typography>
                                         </Box>
-                                    ) : (
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                gap: 3,
-                                            }}
-                                        >
-                                            {/* Step 1 */}
-                                            <Box
-                                                sx={{
-                                                    backgroundColor:
-                                                        COLORS.surface.elevated,
-                                                    border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                                    borderRadius:
-                                                        SPACING.borderRadius.lg,
-                                                    padding: 2,
-                                                    transition:
-                                                        'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                                    '&:hover': {
-                                                        backgroundColor:
-                                                            COLORS.interactive
-                                                                .hover,
-                                                        transform:
-                                                            'translateY(-2px)',
-                                                        boxShadow:
-                                                            COLORS.shadows.sm,
-                                                    },
-                                                }}
-                                            >
-                                                <Typography
-                                                    variant="subtitle1"
-                                                    sx={{
-                                                        color: COLORS.text
-                                                            .primary,
-                                                        fontWeight:
-                                                            TYPOGRAPHY
-                                                                .fontWeight
-                                                                .semibold,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        mb: 2,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .sm.h5,
-                                                        letterSpacing:
-                                                            TYPOGRAPHY
-                                                                .letterSpacing
-                                                                .wide,
-                                                    }}
-                                                >
-                                                    <KeyboardArrowDown
-                                                        sx={{
-                                                            mr: 1.5,
-                                                            color: COLORS
-                                                                .primary.main,
-                                                            fontSize: '1.5rem',
-                                                        }}
-                                                    />
-                                                    Chase to Bottom
-                                                </Typography>
-                                                <Typography
-                                                    variant="body1"
-                                                    sx={{
-                                                        color: COLORS.text
-                                                            .secondary,
-                                                        lineHeight:
-                                                            TYPOGRAPHY
-                                                                .lineHeight
-                                                                .relaxed,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .sm.body,
-                                                    }}
-                                                >
-                                                    Turn off rows from top to
-                                                    bottom by clicking lights in
-                                                    each row to eliminate all
-                                                    lights above the bottom row.
-                                                </Typography>
-                                            </Box>
 
-                                            {/* Step 2 */}
-                                            <Box
+                                        {/* Step 2 */}
+                                        <Box sx={{ mb: 3 }}>
+                                            <Typography
+                                                variant="subtitle1"
                                                 sx={{
-                                                    backgroundColor:
-                                                        COLORS.surface.elevated,
-                                                    border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                                    borderRadius:
-                                                        SPACING.borderRadius.lg,
-                                                    padding: 2,
-                                                    transition:
-                                                        'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                                    '&:hover': {
-                                                        backgroundColor:
-                                                            COLORS.interactive
-                                                                .hover,
-                                                        transform:
-                                                            'translateY(-2px)',
-                                                        boxShadow:
-                                                            COLORS.shadows.sm,
-                                                    },
+                                                    color: COLORS.text.primary,
+                                                    fontWeight:
+                                                        TYPOGRAPHY.fontWeight
+                                                            .semibold,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    mb: 1,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize.sm
+                                                            .h5,
+                                                    letterSpacing:
+                                                        TYPOGRAPHY.letterSpacing
+                                                            .wide,
                                                 }}
                                             >
-                                                <Typography
-                                                    variant="subtitle1"
+                                                <Calculate
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .primary,
-                                                        fontWeight:
-                                                            TYPOGRAPHY
-                                                                .fontWeight
-                                                                .semibold,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        mb: 2,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .sm.h5,
-                                                        letterSpacing:
-                                                            TYPOGRAPHY
-                                                                .letterSpacing
-                                                                .wide,
+                                                        mr: 1.5,
+                                                        color: COLORS.chart
+                                                            .orange,
+                                                        fontSize: '1.5rem',
                                                     }}
-                                                >
-                                                    <Calculate
-                                                        sx={{
-                                                            mr: 1.5,
-                                                            color: COLORS.chart
-                                                                .orange,
-                                                            fontSize: '1.5rem',
-                                                        }}
-                                                    />
-                                                    Use the Calculator
-                                                </Typography>
-                                                <Typography
-                                                    variant="body1"
-                                                    sx={{
-                                                        color: COLORS.text
-                                                            .secondary,
-                                                        lineHeight:
-                                                            TYPOGRAPHY
-                                                                .lineHeight
-                                                                .relaxed,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .sm.body,
-                                                    }}
-                                                >
-                                                    Enter the remaining lights
-                                                    pattern in the bottom row
-                                                    using the interactive
-                                                    calculator below.
-                                                </Typography>
-                                            </Box>
-
-                                            {/* Step 3 */}
-                                            <Box
+                                                />
+                                                Use the Calculator
+                                            </Typography>
+                                            <Typography
+                                                variant="body1"
                                                 sx={{
-                                                    backgroundColor:
-                                                        COLORS.surface.elevated,
-                                                    border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                                    borderRadius:
-                                                        SPACING.borderRadius.lg,
-                                                    padding: 2,
-                                                    transition:
-                                                        'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                                    '&:hover': {
-                                                        backgroundColor:
-                                                            COLORS.interactive
-                                                                .hover,
-                                                        transform:
-                                                            'translateY(-2px)',
-                                                        boxShadow:
-                                                            COLORS.shadows.sm,
-                                                    },
+                                                    color: COLORS.text
+                                                        .secondary,
+                                                    lineHeight:
+                                                        TYPOGRAPHY.lineHeight
+                                                            .relaxed,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize.sm
+                                                            .body,
+                                                    ml: 4,
                                                 }}
                                             >
-                                                <Typography
-                                                    variant="subtitle1"
-                                                    sx={{
-                                                        color: COLORS.text
-                                                            .primary,
-                                                        fontWeight:
-                                                            TYPOGRAPHY
-                                                                .fontWeight
-                                                                .semibold,
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        mb: 2,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .sm.h5,
-                                                        letterSpacing:
-                                                            TYPOGRAPHY
-                                                                .letterSpacing
-                                                                .wide,
-                                                    }}
-                                                >
-                                                    <Replay
-                                                        sx={{
-                                                            mr: 1.5,
-                                                            color: COLORS.chart
-                                                                .green,
-                                                            fontSize: '1.5rem',
-                                                        }}
-                                                    />
-                                                    Chase Again
-                                                </Typography>
-                                                <Typography
-                                                    variant="body1"
-                                                    sx={{
-                                                        color: COLORS.text
-                                                            .secondary,
-                                                        lineHeight:
-                                                            TYPOGRAPHY
-                                                                .lineHeight
-                                                                .relaxed,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .sm.body,
-                                                    }}
-                                                >
-                                                    Apply the calculated
-                                                    solution pattern to the top
-                                                    row, then chase downward to
-                                                    solve the entire puzzle.
-                                                </Typography>
-                                            </Box>
+                                                Enter the remaining lights
+                                                pattern in the bottom row using
+                                                the interactive calculator
+                                                below.
+                                            </Typography>
                                         </Box>
-                                    )}
+
+                                        {/* Step 3 */}
+                                        <Box>
+                                            <Typography
+                                                variant="subtitle1"
+                                                sx={{
+                                                    color: COLORS.text.primary,
+                                                    fontWeight:
+                                                        TYPOGRAPHY.fontWeight
+                                                            .semibold,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    mb: 1,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize.sm
+                                                            .h5,
+                                                    letterSpacing:
+                                                        TYPOGRAPHY.letterSpacing
+                                                            .wide,
+                                                }}
+                                            >
+                                                <Replay
+                                                    sx={{
+                                                        mr: 1.5,
+                                                        color: COLORS.chart
+                                                            .green,
+                                                        fontSize: '1.5rem',
+                                                    }}
+                                                />
+                                                Chase Again
+                                            </Typography>
+                                            <Typography
+                                                variant="body1"
+                                                sx={{
+                                                    color: COLORS.text
+                                                        .secondary,
+                                                    lineHeight:
+                                                        TYPOGRAPHY.lineHeight
+                                                            .relaxed,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize.sm
+                                                            .body,
+                                                    ml: 4,
+                                                }}
+                                            >
+                                                Apply the calculated solution
+                                                pattern to the top row, then
+                                                chase downward to solve the
+                                                entire puzzle.
+                                            </Typography>
+                                        </Box>
+                                    </Box>
                                 </Box>
                             </Grid>
 
                             {/* Right half: Animations */}
-                            {!isMobile && (
+                            {!isLargeScreen && (
                                 <Grid
                                     size={{ xs: 12, lg: 6 }}
                                     sx={{
@@ -651,12 +366,36 @@ export default function Info(props) {
                                         justifyContent: 'center',
                                     }}
                                 >
-                                    <Example
-                                        dims={3}
-                                        size={size * 0.6}
-                                        start={[1, 3, 8]}
-                                        palette={palette}
-                                    />
+                                    <Box
+                                        sx={{
+                                            backgroundColor:
+                                                COLORS.surface.elevated,
+                                            border: `1px solid hsla(0, 0%, 100%, 0.05)`,
+                                            borderRadius:
+                                                SPACING.borderRadius.lg,
+                                            padding: 3,
+                                            width: '100%',
+                                            height: '100%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            transition:
+                                                'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                            '&:hover': {
+                                                backgroundColor:
+                                                    COLORS.interactive.hover,
+                                                transform: 'translateY(-2px)',
+                                                boxShadow: COLORS.shadows.sm,
+                                            },
+                                        }}
+                                    >
+                                        <Example
+                                            dims={3}
+                                            size={size * 0.6}
+                                            start={[1, 3, 8]}
+                                            palette={palette}
+                                        />
+                                    </Box>
                                 </Grid>
                             )}
                         </Grid>
