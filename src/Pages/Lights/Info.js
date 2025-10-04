@@ -7,12 +7,7 @@ import {
     Replay,
 } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
-import {
-    SPACING,
-    COLORS,
-    TYPOGRAPHY,
-    COMPONENTS,
-} from '../../config/constants';
+import { SPACING, COLORS, TYPOGRAPHY } from '../../config/constants';
 
 import { getProduct } from './matrices';
 import { CustomGrid } from '../../helpers';
@@ -67,7 +62,7 @@ function useHandler(row, size, palette) {
 }
 
 export default function Info(props) {
-    const { rows, cols, size, open, score, palette, toggleOpen } = props;
+    const { rows, cols, size, open, palette, toggleOpen } = props;
     const isMobile = useMobile('md');
 
     const [row, setRow] = useState(Array(cols).fill(0));
@@ -98,42 +93,46 @@ export default function Info(props) {
             open={open}
             onClick={toggleOpen}
             sx={{
-                backgroundColor: 'rgba(0, 0, 0, 0.8)',
-                backdropFilter: 'blur(4px)',
+                backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
             }}
         >
             <Card
                 sx={{
                     maxWidth: '80vw',
-                    maxHeight: '98vh',
-                    overflow: 'hidden',
+                    maxHeight: '95vh',
+                    overflow: 'auto',
                     mx: 'auto',
-                    borderRadius: SPACING.borderRadius.extraLarge,
-                    backgroundColor: COLORS.background.paper,
-                    border: COMPONENTS.borders.light,
-                    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                    borderRadius: SPACING.borderRadius.xl,
+                    backgroundColor: COLORS.surface.glass,
+                    backdropFilter: 'blur(20px) saturate(180%)',
+                    border: `1px solid hsla(0, 0%, 100%, 0.1)`,
+                    boxShadow: COLORS.shadows.lg,
+                    transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
             >
                 <CardContent
                     sx={{
-                        pt: '3rem !important', // 48px
-                        pb: '3rem !important', // 48px
-                        px: '3rem !important', // 48px
+                        pt: '1.5rem',
+                        pb: '1.5rem',
+                        px: '1.5rem',
                         height: '100%',
                         display: 'flex',
                         flexDirection: 'column',
+                        minHeight: 0,
                     }}
                 >
                     <Grid
                         container
-                        spacing={isMobile ? 2 : 4}
+                        spacing={isMobile ? 2 : 3}
                         sx={{ flex: 1, minHeight: 0 }}
                     >
                         {/* Top section: Instructions on left, animations on right */}
                         <Grid
                             container
                             size={12}
-                            spacing={4}
+                            spacing={3}
                             sx={{
                                 flex: 1,
                                 minHeight: 0,
@@ -157,15 +156,14 @@ export default function Info(props) {
                                     gutterBottom
                                     sx={{
                                         color: COLORS.text.primary,
-                                        fontWeight: TYPOGRAPHY.fontWeight.bold,
+                                        fontWeight:
+                                            TYPOGRAPHY.fontWeight.semibold,
                                         mb: 3,
                                         textAlign: isMobile ? 'center' : 'left',
-                                        fontSize: {
-                                            xs: '1.5rem',
-                                            md: '1.75rem',
-                                            lg: '1.6rem',
-                                            xl: '2rem',
-                                        },
+                                        fontSize: TYPOGRAPHY.fontSize.md.h3,
+                                        lineHeight: TYPOGRAPHY.lineHeight.tight,
+                                        letterSpacing:
+                                            TYPOGRAPHY.letterSpacing.tight,
                                     }}
                                 >
                                     Chasing Lights Algorithm
@@ -177,14 +175,30 @@ export default function Info(props) {
                                                 display: 'flex',
                                                 flexDirection: 'column',
                                                 alignItems: 'center',
-                                                gap: 3,
+                                                gap: 2,
                                             }}
                                         >
                                             {/* Step 1 */}
                                             <Box
                                                 sx={{
-                                                    maxWidth: 'fit-content',
-                                                    mx: 'auto',
+                                                    width: '100%',
+                                                    backgroundColor:
+                                                        COLORS.surface.elevated,
+                                                    border: `1px solid hsla(0, 0%, 100%, 0.05)`,
+                                                    borderRadius:
+                                                        SPACING.borderRadius.lg,
+                                                    padding: 2,
+                                                    transition:
+                                                        'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                                    '&:hover': {
+                                                        backgroundColor:
+                                                            COLORS.interactive
+                                                                .hover,
+                                                        transform:
+                                                            'translateY(-2px)',
+                                                        boxShadow:
+                                                            COLORS.shadows.sm,
+                                                    },
                                                 }}
                                             >
                                                 <Typography
@@ -195,20 +209,27 @@ export default function Info(props) {
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
-                                                                .semiBold,
+                                                                .semibold,
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         justifyContent:
                                                             'center',
-                                                        mb: 1,
-                                                        fontSize: '1rem',
+                                                        mb: 2,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .sm.h5,
+                                                        letterSpacing:
+                                                            TYPOGRAPHY
+                                                                .letterSpacing
+                                                                .wide,
                                                     }}
                                                 >
                                                     <KeyboardArrowDown
                                                         sx={{
-                                                            mr: 1,
+                                                            mr: 1.5,
                                                             color: COLORS
                                                                 .primary.main,
+                                                            fontSize: '1.5rem',
                                                         }}
                                                     />
                                                     Chase to Bottom
@@ -219,7 +240,13 @@ export default function Info(props) {
                                                         color: COLORS.text
                                                             .secondary,
                                                         textAlign: 'center',
-                                                        lineHeight: 1.6,
+                                                        lineHeight:
+                                                            TYPOGRAPHY
+                                                                .lineHeight
+                                                                .relaxed,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .sm.body,
                                                     }}
                                                 >
                                                     Click lights to chase rows
@@ -230,8 +257,24 @@ export default function Info(props) {
                                             {/* Step 2 */}
                                             <Box
                                                 sx={{
-                                                    maxWidth: 'fit-content',
-                                                    mx: 'auto',
+                                                    width: '100%',
+                                                    backgroundColor:
+                                                        COLORS.surface.elevated,
+                                                    border: `1px solid hsla(0, 0%, 100%, 0.05)`,
+                                                    borderRadius:
+                                                        SPACING.borderRadius.lg,
+                                                    padding: 2,
+                                                    transition:
+                                                        'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                                    '&:hover': {
+                                                        backgroundColor:
+                                                            COLORS.interactive
+                                                                .hover,
+                                                        transform:
+                                                            'translateY(-2px)',
+                                                        boxShadow:
+                                                            COLORS.shadows.sm,
+                                                    },
                                                 }}
                                             >
                                                 <Typography
@@ -242,20 +285,27 @@ export default function Info(props) {
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
-                                                                .semiBold,
+                                                                .semibold,
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         justifyContent:
                                                             'center',
-                                                        mb: 1,
-                                                        fontSize: '1rem',
+                                                        mb: 2,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .sm.h5,
+                                                        letterSpacing:
+                                                            TYPOGRAPHY
+                                                                .letterSpacing
+                                                                .wide,
                                                     }}
                                                 >
                                                     <Calculate
                                                         sx={{
-                                                            mr: 1,
+                                                            mr: 1.5,
                                                             color: COLORS.chart
                                                                 .orange,
+                                                            fontSize: '1.5rem',
                                                         }}
                                                     />
                                                     Use Calculator
@@ -266,7 +316,13 @@ export default function Info(props) {
                                                         color: COLORS.text
                                                             .secondary,
                                                         textAlign: 'center',
-                                                        lineHeight: 1.6,
+                                                        lineHeight:
+                                                            TYPOGRAPHY
+                                                                .lineHeight
+                                                                .relaxed,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .sm.body,
                                                     }}
                                                 >
                                                     Enter the bottom row lights
@@ -277,8 +333,24 @@ export default function Info(props) {
                                             {/* Step 3 */}
                                             <Box
                                                 sx={{
-                                                    maxWidth: 'fit-content',
-                                                    mx: 'auto',
+                                                    width: '100%',
+                                                    backgroundColor:
+                                                        COLORS.surface.elevated,
+                                                    border: `1px solid hsla(0, 0%, 100%, 0.05)`,
+                                                    borderRadius:
+                                                        SPACING.borderRadius.lg,
+                                                    padding: 2,
+                                                    transition:
+                                                        'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                                    '&:hover': {
+                                                        backgroundColor:
+                                                            COLORS.interactive
+                                                                .hover,
+                                                        transform:
+                                                            'translateY(-2px)',
+                                                        boxShadow:
+                                                            COLORS.shadows.sm,
+                                                    },
                                                 }}
                                             >
                                                 <Typography
@@ -289,20 +361,27 @@ export default function Info(props) {
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
-                                                                .semiBold,
+                                                                .semibold,
                                                         display: 'flex',
                                                         alignItems: 'center',
                                                         justifyContent:
                                                             'center',
-                                                        mb: 1,
-                                                        fontSize: '1rem',
+                                                        mb: 2,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .sm.h5,
+                                                        letterSpacing:
+                                                            TYPOGRAPHY
+                                                                .letterSpacing
+                                                                .wide,
                                                     }}
                                                 >
                                                     <Replay
                                                         sx={{
-                                                            mr: 1,
+                                                            mr: 1.5,
                                                             color: COLORS.chart
                                                                 .green,
+                                                            fontSize: '1.5rem',
                                                         }}
                                                     />
                                                     Chase Again
@@ -313,7 +392,13 @@ export default function Info(props) {
                                                         color: COLORS.text
                                                             .secondary,
                                                         textAlign: 'center',
-                                                        lineHeight: 1.6,
+                                                        lineHeight:
+                                                            TYPOGRAPHY
+                                                                .lineHeight
+                                                                .relaxed,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .sm.body,
                                                     }}
                                                 >
                                                     Apply the solution to top
@@ -331,7 +416,27 @@ export default function Info(props) {
                                             }}
                                         >
                                             {/* Step 1 */}
-                                            <Box>
+                                            <Box
+                                                sx={{
+                                                    backgroundColor:
+                                                        COLORS.surface.elevated,
+                                                    border: `1px solid hsla(0, 0%, 100%, 0.05)`,
+                                                    borderRadius:
+                                                        SPACING.borderRadius.lg,
+                                                    padding: 2,
+                                                    transition:
+                                                        'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                                    '&:hover': {
+                                                        backgroundColor:
+                                                            COLORS.interactive
+                                                                .hover,
+                                                        transform:
+                                                            'translateY(-2px)',
+                                                        boxShadow:
+                                                            COLORS.shadows.sm,
+                                                    },
+                                                }}
+                                            >
                                                 <Typography
                                                     variant="subtitle1"
                                                     sx={{
@@ -340,18 +445,25 @@ export default function Info(props) {
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
-                                                                .semiBold,
+                                                                .semibold,
                                                         display: 'flex',
                                                         alignItems: 'center',
-                                                        mb: 1,
-                                                        fontSize: '1rem',
+                                                        mb: 2,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .sm.h5,
+                                                        letterSpacing:
+                                                            TYPOGRAPHY
+                                                                .letterSpacing
+                                                                .wide,
                                                     }}
                                                 >
                                                     <KeyboardArrowDown
                                                         sx={{
-                                                            mr: 1,
+                                                            mr: 1.5,
                                                             color: COLORS
                                                                 .primary.main,
+                                                            fontSize: '1.5rem',
                                                         }}
                                                     />
                                                     Chase to Bottom
@@ -361,7 +473,13 @@ export default function Info(props) {
                                                     sx={{
                                                         color: COLORS.text
                                                             .secondary,
-                                                        lineHeight: 1.6,
+                                                        lineHeight:
+                                                            TYPOGRAPHY
+                                                                .lineHeight
+                                                                .relaxed,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .sm.body,
                                                     }}
                                                 >
                                                     Turn off rows from top to
@@ -372,7 +490,27 @@ export default function Info(props) {
                                             </Box>
 
                                             {/* Step 2 */}
-                                            <Box>
+                                            <Box
+                                                sx={{
+                                                    backgroundColor:
+                                                        COLORS.surface.elevated,
+                                                    border: `1px solid hsla(0, 0%, 100%, 0.05)`,
+                                                    borderRadius:
+                                                        SPACING.borderRadius.lg,
+                                                    padding: 2,
+                                                    transition:
+                                                        'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                                    '&:hover': {
+                                                        backgroundColor:
+                                                            COLORS.interactive
+                                                                .hover,
+                                                        transform:
+                                                            'translateY(-2px)',
+                                                        boxShadow:
+                                                            COLORS.shadows.sm,
+                                                    },
+                                                }}
+                                            >
                                                 <Typography
                                                     variant="subtitle1"
                                                     sx={{
@@ -381,18 +519,25 @@ export default function Info(props) {
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
-                                                                .semiBold,
+                                                                .semibold,
                                                         display: 'flex',
                                                         alignItems: 'center',
-                                                        mb: 1,
-                                                        fontSize: '1rem',
+                                                        mb: 2,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .sm.h5,
+                                                        letterSpacing:
+                                                            TYPOGRAPHY
+                                                                .letterSpacing
+                                                                .wide,
                                                     }}
                                                 >
                                                     <Calculate
                                                         sx={{
-                                                            mr: 1,
+                                                            mr: 1.5,
                                                             color: COLORS.chart
                                                                 .orange,
+                                                            fontSize: '1.5rem',
                                                         }}
                                                     />
                                                     Use the Calculator
@@ -402,7 +547,13 @@ export default function Info(props) {
                                                     sx={{
                                                         color: COLORS.text
                                                             .secondary,
-                                                        lineHeight: 1.6,
+                                                        lineHeight:
+                                                            TYPOGRAPHY
+                                                                .lineHeight
+                                                                .relaxed,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .sm.body,
                                                     }}
                                                 >
                                                     Enter the remaining lights
@@ -413,7 +564,27 @@ export default function Info(props) {
                                             </Box>
 
                                             {/* Step 3 */}
-                                            <Box>
+                                            <Box
+                                                sx={{
+                                                    backgroundColor:
+                                                        COLORS.surface.elevated,
+                                                    border: `1px solid hsla(0, 0%, 100%, 0.05)`,
+                                                    borderRadius:
+                                                        SPACING.borderRadius.lg,
+                                                    padding: 2,
+                                                    transition:
+                                                        'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                                    '&:hover': {
+                                                        backgroundColor:
+                                                            COLORS.interactive
+                                                                .hover,
+                                                        transform:
+                                                            'translateY(-2px)',
+                                                        boxShadow:
+                                                            COLORS.shadows.sm,
+                                                    },
+                                                }}
+                                            >
                                                 <Typography
                                                     variant="subtitle1"
                                                     sx={{
@@ -422,18 +593,25 @@ export default function Info(props) {
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
-                                                                .semiBold,
+                                                                .semibold,
                                                         display: 'flex',
                                                         alignItems: 'center',
-                                                        mb: 1,
-                                                        fontSize: '1rem',
+                                                        mb: 2,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .sm.h5,
+                                                        letterSpacing:
+                                                            TYPOGRAPHY
+                                                                .letterSpacing
+                                                                .wide,
                                                     }}
                                                 >
                                                     <Replay
                                                         sx={{
-                                                            mr: 1,
+                                                            mr: 1.5,
                                                             color: COLORS.chart
                                                                 .green,
+                                                            fontSize: '1.5rem',
                                                         }}
                                                     />
                                                     Chase Again
@@ -443,7 +621,13 @@ export default function Info(props) {
                                                     sx={{
                                                         color: COLORS.text
                                                             .secondary,
-                                                        lineHeight: 1.6,
+                                                        lineHeight:
+                                                            TYPOGRAPHY
+                                                                .lineHeight
+                                                                .relaxed,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .sm.body,
                                                     }}
                                                 >
                                                     Apply the calculated
@@ -453,22 +637,6 @@ export default function Info(props) {
                                                 </Typography>
                                             </Box>
                                         </Box>
-                                    )}
-
-                                    {!isMobile && (
-                                        <Typography
-                                            variant="h6"
-                                            textAlign="center"
-                                            sx={{
-                                                mt: 4,
-                                                color: COLORS.text.primary,
-                                                fontWeight:
-                                                    TYPOGRAPHY.fontWeight
-                                                        .semiBold,
-                                            }}
-                                        >
-                                            Boards Solved: &nbsp;{score}
-                                        </Typography>
                                     )}
                                 </Box>
                             </Grid>
@@ -494,54 +662,57 @@ export default function Info(props) {
                         </Grid>
 
                         {/* Bottom section: Lights Out Calculator (full width) */}
-                        <Grid container size={12} spacing={4}>
+                        <Grid container size={12} spacing={3}>
                             <Grid size={12}>
-                                <Typography
-                                    variant="h6"
+                                <Box
                                     sx={{
+                                        backgroundColor:
+                                            COLORS.surface.elevated,
+                                        border: `1px solid hsla(0, 0%, 100%, 0.05)`,
+                                        borderRadius: SPACING.borderRadius.xl,
+                                        padding: 3,
                                         textAlign: 'center',
-                                        color: COLORS.text.primary,
-                                        fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                        mb: 0.5,
-                                        fontSize: {
-                                            xs: '1.25rem',
-                                            md: '1.5rem',
-                                            lg: '1.75rem',
-                                        },
                                     }}
                                 >
-                                    Interactive Calculator
-                                </Typography>
-                            </Grid>
-                            <Grid
-                                size={12}
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <CustomGrid
-                                    space={0}
-                                    rows={1}
-                                    cols={cols}
-                                    size={size * 0.7}
-                                    cellProps={inputProps}
-                                />
-                            </Grid>
-                            <Grid
-                                size={12}
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <CustomGrid
-                                    space={0}
-                                    rows={1}
-                                    cols={cols}
-                                    size={size * 0.7}
-                                    cellProps={outputProps}
-                                />
+                                    <Typography
+                                        variant="h6"
+                                        sx={{
+                                            color: COLORS.text.primary,
+                                            fontWeight:
+                                                TYPOGRAPHY.fontWeight.semibold,
+                                            fontSize: TYPOGRAPHY.fontSize.md.h4,
+                                            lineHeight:
+                                                TYPOGRAPHY.lineHeight.tight,
+                                            letterSpacing:
+                                                TYPOGRAPHY.letterSpacing.tight,
+                                            mb: 3,
+                                        }}
+                                    >
+                                        Interactive Calculator
+                                    </Typography>
+
+                                    {/* Input Pattern */}
+                                    <Box sx={{ mb: 3 }}>
+                                        <CustomGrid
+                                            space={0}
+                                            rows={1}
+                                            cols={cols}
+                                            size={size * 0.7}
+                                            cellProps={inputProps}
+                                        />
+                                    </Box>
+
+                                    {/* Solution Pattern */}
+                                    <Box>
+                                        <CustomGrid
+                                            space={0}
+                                            rows={1}
+                                            cols={cols}
+                                            size={size * 0.7}
+                                            cellProps={outputProps}
+                                        />
+                                    </Box>
+                                </Box>
                             </Grid>
                         </Grid>
                     </Grid>
