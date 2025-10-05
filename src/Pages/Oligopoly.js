@@ -17,7 +17,6 @@ import {
     PAGE_TITLES,
     CHART_DIMENSIONS,
     CHART_FORMATTING,
-    FONT_SIZES,
     MODEL_TYPES,
     LAYOUT,
     GAME_CONSTANTS,
@@ -271,7 +270,7 @@ const Oligopoly = () => {
                                 sx={{
                                     color: 'text.primary',
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                    fontSize: FONT_SIZES.hero,
+                                    fontSize: TYPOGRAPHY.fontSize.large,
                                 }}
                             >
                                 Oligopoly

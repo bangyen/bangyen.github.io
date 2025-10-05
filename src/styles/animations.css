@@ -78,13 +78,13 @@
 
 @keyframes glow {
     from {
-        box-shadow: 0 0 20px rgb(33 150 243 / 40%);
+        box-shadow: 0 0 20px hsl(217deg 91% 60% / 40%);
     }
 
     to {
         box-shadow:
-            0 0 30px rgb(33 150 243 / 60%),
-            0 0 40px rgb(33 150 243 / 40%);
+            0 0 30px hsl(217deg 91% 60% / 60%),
+            0 0 40px hsl(217deg 91% 60% / 40%);
     }
 }
 
@@ -100,7 +100,7 @@
     }
 }
 
-/* Custom scrollbars */
+/* Custom scrollbars - Consolidated with constants */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;

@@ -2,13 +2,7 @@ import React from 'react';
 import Grid from '@mui/material/Grid2';
 import { Typography, Box, Fade } from '@mui/material';
 import { HomeButton } from '../helpers';
-import {
-    COLORS,
-    SPACING,
-    TYPOGRAPHY,
-    PAGE_TITLES,
-    FONT_SIZES,
-} from '../config/constants';
+import { COLORS, SPACING, TYPOGRAPHY, PAGE_TITLES } from '../config/constants';
 
 export default function Error() {
     document.title = PAGE_TITLES.error;
@@ -77,7 +71,7 @@ export default function Error() {
                                 color: COLORS.text.primary,
                                 fontWeight: TYPOGRAPHY.fontWeight.bold,
                                 marginBottom: 2,
-                                fontSize: FONT_SIZES.error,
+                                fontSize: TYPOGRAPHY.fontSize.lg.display,
                             }}
                         >
                             404

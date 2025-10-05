@@ -65,7 +65,9 @@ export function Tape({ compact = false }) {
             title="Tape"
             data={tape}
             pointer={pointer}
-        />
+        >
+            <Text text={'\xA0'} />
+        </Display>
     );
 }
 
@@ -106,7 +108,11 @@ export function Register({ compact = false }) {
         );
     }
 
-    return <Display Icon={PlusOneRounded} title="Register" data={[register]} />;
+    return (
+        <Display Icon={PlusOneRounded} title="Register" data={[register]}>
+            <Text text={'\xA0'} />
+        </Display>
+    );
 }
 
 function Display(props) {
@@ -178,7 +184,7 @@ function CompactDisplay(props) {
                         color === 'info' ? COLORS.text.white : 'text.primary',
                     fontFamily: 'monospace',
                     fontSize: TYPOGRAPHY.fontSize.xs.caption,
-                    height: SPACING.maxWidth.icon,
+                    height: SPACING.components.chip.height,
                 }}
             />
         );
@@ -266,7 +272,7 @@ function Scrollable(props) {
                 backgroundColor: COMPONENTS.overlays.lighter,
                 border: COMPONENTS.borders.light,
                 borderRadius: SPACING.borderRadius.sm,
-                height: SPACING.maxWidth.large,
+                height: SPACING.height.scrollable,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',

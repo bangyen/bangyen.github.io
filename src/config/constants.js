@@ -154,62 +154,97 @@ export const ALPHA = {
     glass: 0.85,
 };
 
+// Base Color Definitions - Single source of truth for all color values
+export const BASE_COLORS = {
+    // Primary brand colors
+    primaryBlue: 'hsl(217, 91%, 60%)',
+    primaryBlueLight: 'hsl(217, 91%, 70%)',
+    primaryBlueDark: 'hsl(217, 91%, 45%)',
+    primaryBlueSofter: 'hsl(217, 45%, 65%)',
+    primaryBlueSubtle: 'hsl(217, 25%, 95%)',
+
+    // Semantic colors
+    success: 'hsl(141, 64%, 49%)',
+    warning: 'hsl(34, 95%, 58%)',
+    error: 'hsl(0, 73%, 56%)',
+
+    // Neutral grays
+    neutral50: 'hsl(0, 0%, 98%)',
+    neutral100: 'hsl(0, 0%, 96%)',
+    neutral200: 'hsl(0, 0%, 93%)',
+    neutral300: 'hsl(0, 0%, 88%)',
+    neutral400: 'hsl(0, 0%, 80%)',
+    neutral500: 'hsl(0, 0%, 65%)',
+    neutral600: 'hsl(0, 0%, 45%)',
+    neutral700: 'hsl(0, 0%, 30%)',
+    neutral800: 'hsl(0, 0%, 18%)',
+    neutral900: 'hsl(0, 0%, 8%)',
+    neutral950: 'hsl(0, 0%, 3%)',
+
+    // Additional colors
+    purple: 'hsl(271, 91%, 65%)',
+    cyan: 'hsl(188, 91%, 60%)',
+    indigo: 'hsl(231, 91%, 60%)',
+    pink: 'hsl(329, 85%, 70%)',
+    white: 'hsl(0, 0%, 100%)',
+};
+
 // Modern Semantic Color System - Enterprise-grade with Apple/Linear inspiration
 export const COLORS = {
     // Brand Colors - Professional blue palette (consolidated from PRIMARY_BLUE constants)
     primary: {
-        main: 'hsl(217, 91%, 60%)', // Primary brand blue
-        light: 'hsl(217, 91%, 70%)', // Light variant
-        dark: 'hsl(217, 91%, 45%)', // Dark variant (improved contrast)
-        softer: 'hsl(217, 45%, 65%)', // Softer variant for backgrounds
-        subtle: 'hsl(217, 25%, 95%)', // Very subtle for interactive states
+        main: BASE_COLORS.primaryBlue, // Primary brand blue
+        light: BASE_COLORS.primaryBlueLight, // Light variant
+        dark: BASE_COLORS.primaryBlueDark, // Dark variant (improved contrast)
+        softer: BASE_COLORS.primaryBlueSofter, // Softer variant for backgrounds
+        subtle: BASE_COLORS.primaryBlueSubtle, // Very subtle for interactive states
     },
     // Semantic Function Colors
     accent: {
-        success: 'hsl(141, 64%, 49%)', // Green for success states
-        warning: 'hsl(34, 95%, 58%)', // Amber for warnings (fixed typo)
-        error: 'hsl(0, 73%, 56%)', // Red for errors
-        info: 'hsl(217, 91%, 60%)', // Blue for info (same as primary)
+        success: BASE_COLORS.success, // Green for success states
+        warning: BASE_COLORS.warning, // Amber for warnings
+        error: BASE_COLORS.error, // Red for errors
+        info: BASE_COLORS.primaryBlue, // Blue for info (same as primary)
     },
     // Enhanced Neutral Palette - Sophisticated grays following Apple's design language
     neutral: {
-        50: 'hsl(0, 0%, 98%)', // Lightest gray (near white)
-        100: 'hsl(0, 0%, 96%)', // Very light gray
-        200: 'hsl(0, 0%, 93%)', // Light gray
-        300: 'hsl(0, 0%, 88%)', // Medium light gray
-        400: 'hsl(0, 0%, 80%)', // Medium gray
-        500: 'hsl(0, 0%, 65%)', // Medium dark gray
-        600: 'hsl(0, 0%, 45%)', // Dark gray
-        700: 'hsl(0, 0%, 30%)', // Very dark gray
-        800: 'hsl(0, 0%, 18%)', // Almost black gray
-        900: 'hsl(0, 0%, 8%)', // Near black gray
-        950: 'hsl(0, 0%, 3%)', // Darkest gray
+        50: BASE_COLORS.neutral50, // Lightest gray (near white)
+        100: BASE_COLORS.neutral100, // Very light gray
+        200: BASE_COLORS.neutral200, // Light gray
+        300: BASE_COLORS.neutral300, // Medium light gray
+        400: BASE_COLORS.neutral400, // Medium gray
+        500: BASE_COLORS.neutral500, // Medium dark gray
+        600: BASE_COLORS.neutral600, // Dark gray
+        700: BASE_COLORS.neutral700, // Very dark gray
+        800: BASE_COLORS.neutral800, // Almost black gray
+        900: BASE_COLORS.neutral900, // Near black gray
+        950: BASE_COLORS.neutral950, // Darkest gray
     },
     // Semantic Surface Colors
     surface: {
         // Background layers with proper elevation hierarchy
-        background: 'hsl(0, 0%, 3%)', // Main background (neutral-950)
+        background: BASE_COLORS.neutral950, // Main background (neutral-950)
         container: 'hsl(0, 0%, 5%)', // Container background (neutral-900)
-        elevated: 'hsl(0, 0%, 8%)', // Elevated surfaces
+        elevated: BASE_COLORS.neutral900, // Elevated surfaces
         overlay: 'hsl(0, 0%, 12%)', // Overlays and modals
         glass: `hsla(0, 0%, 8%, ${ALPHA.glass})`, // Glass morphism backgrounds
     },
     // Text Colors with proper semantic hierarchy
     text: {
-        primary: 'hsl(0, 0%, 98%)', // High contrast text (neutral-50)
-        secondary: 'hsl(0, 0%, 80%)', // Secondary text (neutral-400)
-        tertiary: 'hsl(0, 0%, 65%)', // Tertiary text (neutral-500)
-        muted: 'hsl(0, 0%, 45%)', // Muted text (neutral-600)
-        inverse: 'hsl(0, 0%, 8%)', // Inverse text for colored backgrounds
-        accent: 'hsl(217, 91%, 60%)', // Accent text color (consolidated with primary.main)
-        white: 'hsl(0, 0%, 100%)', // Pure white text for overlays and charts
+        primary: BASE_COLORS.neutral50, // High contrast text (neutral-50)
+        secondary: BASE_COLORS.neutral400, // Secondary text (neutral-400)
+        tertiary: BASE_COLORS.neutral500, // Tertiary text (neutral-500)
+        muted: BASE_COLORS.neutral600, // Muted text (neutral-600)
+        inverse: BASE_COLORS.neutral900, // Inverse text for colored backgrounds
+        accent: BASE_COLORS.primaryBlue, // Accent text color (consolidated with primary.main)
+        white: BASE_COLORS.white, // Pure white text for overlays and charts
     },
     // Border and Divider Colors - Consolidated with primary colors
     border: {
-        subtle: 'hsl(0, 0%, 18%)', // Subtle borders (neutral-800)
-        primary: 'hsl(0, 0%, 30%)', // Primary borders (neutral-700)
-        interactive: 'hsl(217, 91%, 60%)', // Interactive element borders (consolidated with primary.main)
-        focus: 'hsl(217, 91%, 70%)', // Focus ring borders (consolidated with primary.light)
+        subtle: BASE_COLORS.neutral800, // Subtle borders (neutral-800)
+        primary: BASE_COLORS.neutral700, // Primary borders (neutral-700)
+        interactive: BASE_COLORS.primaryBlue, // Interactive element borders (consolidated with primary.main)
+        focus: BASE_COLORS.primaryBlueLight, // Focus ring borders (consolidated with primary.light)
     },
     // Interactive State Colors - Consolidated with primary colors
     interactive: {
@@ -221,28 +256,26 @@ export const COLORS = {
     },
     // Chart Colors (Enhanced) - Consolidated with primary colors
     data: {
-        blue: 'hsl(217, 91%, 60%)', // Same as primary.main
-        green: 'hsl(141, 64%, 49%)', // Same as accent.success
-        amber: 'hsl(34, 95%, 58%)', // Same as accent.warning
-        red: 'hsl(0, 73%, 56%)', // Same as accent.error
-        purple: 'hsl(271, 91%, 65%)',
-        cyan: 'hsl(188, 91%, 60%)',
-        indigo: 'hsl(231, 91%, 60%)',
-        pink: 'hsl(329, 85%, 70%)',
+        blue: BASE_COLORS.primaryBlue, // Same as primary.main
+        green: BASE_COLORS.success, // Same as accent.success
+        amber: BASE_COLORS.warning, // Same as accent.warning
+        red: BASE_COLORS.error, // Same as accent.error
+        purple: BASE_COLORS.purple,
+        cyan: BASE_COLORS.cyan,
+        indigo: BASE_COLORS.indigo,
+        pink: BASE_COLORS.pink,
     },
     // Game-specific colors - Consolidated with primary colors
     game: {
-        snakeBody: 'hsl(217, 91%, 45%)', // Same as primary.dark
+        snakeBody: BASE_COLORS.primaryBlueDark, // Same as primary.dark
         snakeFood: 'hsl(217, 91%, 25%)', // Much darker blue for food
     },
     // Sophisticated Gradients for Modern Effects - Consolidated with primary colors
     gradients: {
-        primary:
-            'linear-gradient(135deg, hsl(217, 91%, 60%), hsl(217, 91%, 45%))',
+        primary: `linear-gradient(135deg, ${BASE_COLORS.primaryBlue}, ${BASE_COLORS.primaryBlueDark})`,
         subtle: 'linear-gradient(135deg, hsl(0, 0%, 5%), hsl(0, 0%, 8%))',
         glass: 'linear-gradient(135deg, hsla(0, 0%, 8%, 0.9), hsla(0, 0%, 12%, 0.85))',
-        shimmer:
-            'linear-gradient(90deg, hsl(0, 0%, 8%), hsl(0, 0%, 12%), hsl(0, 0%, 8%))',
+        shimmer: `linear-gradient(90deg, ${BASE_COLORS.neutral900}, hsl(0, 0%, 12%), ${BASE_COLORS.neutral900})`,
     },
     // Shadows for Depth and Elevation
     shadows: {
@@ -324,6 +357,10 @@ export const SPACING = {
         content: '48rem', // Content areas
         wide: '56rem', // Wide content areas
     },
+    // Component heights
+    height: {
+        scrollable: '60px', // Fixed height for interpreter scrollable areas
+    },
     // Component-specific spacing
     components: {
         button: {
@@ -396,6 +433,7 @@ export const TYPOGRAPHY = {
             h3: 'clamp(1.125rem, 2vw, 1.25rem)', // Subsection headings
             h4: 'clamp(1rem, 1.5vw, 1.125rem)', // Card titles
             h5: 'clamp(0.875rem, 1.25vw, 1rem)', // Meta headings
+            h6: 'clamp(0.75rem, 1vw, 0.875rem)', // Small headings
             body: 'clamp(0.8rem, 1vw, 0.875rem)', // Body text
             caption: 'clamp(0.7rem, 0.8vw, 0.75rem)', // Small text
         },
@@ -406,6 +444,7 @@ export const TYPOGRAPHY = {
             h3: 'clamp(1.5rem, 2.5vw, 1.75rem)', // Subsection headings
             h4: 'clamp(1.25rem, 2vw, 1.5rem)', // Card titles
             h5: 'clamp(1rem, 1.5vw, 1.25rem)', // Meta headings
+            h6: 'clamp(0.875rem, 1.25vw, 1rem)', // Small headings
             body: 'clamp(0.875rem, 1vw, 1rem)', // Body text
             caption: 'clamp(0.75rem, 0.8vw, 0.875rem)', // Small text
         },
@@ -416,6 +455,7 @@ export const TYPOGRAPHY = {
             h3: 'clamp(1.75rem, 3vw, 2.25rem)', // Subsection headings
             h4: 'clamp(1.5rem, 2.5vw, 1.75rem)', // Card titles
             h5: 'clamp(1.25rem, 2vw, 1.5rem)', // Meta headings
+            h6: 'clamp(1rem, 1.5vw, 1.25rem)', // Small headings
             body: 'clamp(1rem, 1vw, 1.125rem)', // Body text
             caption: 'clamp(0.875rem, 0.8vw, 1rem)', // Small text
         },
@@ -426,8 +466,25 @@ export const TYPOGRAPHY = {
             h3: 'clamp(2rem, 4vw, 2.75rem)', // Subsection headings
             h4: 'clamp(1.75rem, 3vw, 2.25rem)', // Card titles
             h5: 'clamp(1.5rem, 2.5vw, 1.875rem)', // Meta headings
+            h6: 'clamp(1.25rem, 2vw, 1.5rem)', // Small headings
             body: 'clamp(1.125rem, 1vw, 1.25rem)', // Body text
             caption: 'clamp(1rem, 0.8vw, 1.125rem)', // Small text
+        },
+        // Legacy font sizes for backward compatibility
+        large: {
+            xs: 'clamp(0.875rem, 2vw, 1rem)',
+            sm: 'clamp(1rem, 2.5vw, 1.125rem)',
+            md: 'clamp(1.125rem, 3vw, 1.25rem)',
+        },
+        medium: {
+            xs: 'clamp(0.75rem, 1.5vw, 0.875rem)',
+            sm: 'clamp(0.875rem, 2vw, 1rem)',
+            md: 'clamp(1rem, 2.5vw, 1.125rem)',
+        },
+        icon: {
+            xs: 'clamp(0.875rem, 1.5vw, 1rem)',
+            sm: 'clamp(1rem, 2vw, 1.125rem)',
+            md: 'clamp(1.125rem, 2.5vw, 1.25rem)',
         },
     },
     // Enhanced font weights with optical sizing considerations
@@ -882,22 +939,55 @@ export const ZSHARP_DEFAULTS = {
     maxEpochs: 20,
 };
 
-// Common Font Sizes (for components that need specific sizes)
+// Legacy font sizes - DEPRECATED: Use TYPOGRAPHY.fontSize.* instead
+// These are kept for backward compatibility but should be migrated
 export const FONT_SIZES = {
     hero: {
-        xs: '2rem',
-        sm: '2.8rem',
-        md: '3.2rem',
+        xs: TYPOGRAPHY.fontSize.large.xs,
+        sm: TYPOGRAPHY.fontSize.large.sm,
+        md: TYPOGRAPHY.fontSize.large.md,
     },
     large: {
-        xs: '2rem',
-        sm: '2.5rem',
-        md: '3rem',
+        xs: TYPOGRAPHY.fontSize.large.xs,
+        sm: TYPOGRAPHY.fontSize.large.sm,
+        md: TYPOGRAPHY.fontSize.large.md,
     },
     error: {
-        xs: '2.5rem',
-        sm: '3.5rem',
-        md: '4rem',
+        xs: 'clamp(2rem, 6vw, 2.5rem)',
+        sm: 'clamp(3rem, 8vw, 3.5rem)',
+        md: 'clamp(3.5rem, 10vw, 4rem)',
+    },
+};
+
+// Hardcoded Values - Consolidated from components
+export const HARDCODED_VALUES = {
+    // Spacing values found in components
+    spacing: {
+        chipMargin: '0.25rem 0.5rem', // 4px 8px - found in Home.js
+        sectionPadding: '4rem', // found in Home.js
+    },
+    // Font sizes found in components
+    fontSize: {
+        subtitle: '1.25rem', // found in Home.js
+        body: '1rem', // found in Home.js
+    },
+    // Animation and visual effects
+    effects: {
+        blurAmount: '20px',
+        saturation: '180%',
+        borderRadius: '1px',
+        alpha: '0.1',
+        alphaStrong: '0.2',
+    },
+    // Transform values
+    transforms: {
+        translateY: '-2px',
+        scale: '1.01',
+    },
+    // CSS-specific values
+    css: {
+        scrollbarWidth: '8px',
+        scrollbarBorderRadius: '4px',
     },
 };
 

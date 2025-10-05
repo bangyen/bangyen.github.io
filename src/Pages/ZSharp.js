@@ -11,7 +11,6 @@ import {
     PAGE_TITLES,
     CHART_DIMENSIONS,
     CHART_FORMATTING,
-    FONT_SIZES,
     ZSHARP_DEFAULTS,
     PERCENTAGE,
     LAYOUT,
@@ -264,7 +263,7 @@ const ZSharp = () => {
                                 sx={{
                                     color: 'text.primary',
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                    fontSize: FONT_SIZES.hero,
+                                    fontSize: TYPOGRAPHY.fontSize.large,
                                 }}
                             >
                                 ZSharp
