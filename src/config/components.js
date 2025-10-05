@@ -233,10 +233,6 @@ export const COMPONENTS = {
         selected: 'hsla(217, 91%, 60%, 0.1)',
         disabled: 'hsla(0, 0%, 45%, 0.3)',
     },
-    // Legacy component support for Oligopoly
-    cardLight: {
-        backgroundColor: 'hsl(0, 0%, 8%)',
-    },
     overlays: {
         dark: 'hsla(0, 0%, 5%, 0.95)',
         lighter: 'hsla(0, 0%, 12%, 0.8)',
@@ -244,21 +240,5 @@ export const COMPONENTS = {
         medium: 'hsla(0, 0%, 18%, 0.9)',
         hover: 'hsla(0, 0%, 20%, 0.95)',
         hoverLight: 'hsla(0, 0%, 16%, 0.9)',
-    },
-    // Migrated to semantic border colors
-    borderColors: {
-        light: 'hsl(0, 0%, 18%)',
-        medium: 'hsl(0, 0%, 30%)',
-    },
-    // Legacy button support for ZSharp
-    legacyButton: {
-        outlined: {
-            color: 'hsl(0, 0%, 80%)',
-            borderColor: 'hsl(0, 0%, 30%)',
-            '&:hover': {
-                borderColor: 'hsl(217, 91%, 60%)',
-                backgroundColor: 'hsla(0, 0%, 80%, 0.08)',
-            },
-        },
     },
 };

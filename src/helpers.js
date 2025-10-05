@@ -64,7 +64,7 @@ function Cell({ size, children, ...rest }) {
         height: remSize,
         width: remSize,
         fontSize: `${size * 0.25}rem`,
-        fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+        fontWeight: TYPOGRAPHY.fontWeight.semibold,
         fontFamily: 'monospace',
         transition: ANIMATIONS.transition,
     };

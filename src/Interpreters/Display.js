@@ -128,8 +128,8 @@ function Display(props) {
                 color={color}
                 text={val}
                 sx={{
-                    fontSize: TYPOGRAPHY.fontSize.md.h4,
-                    fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                    fontSize: TYPOGRAPHY.fontSize.md.body,
+                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
                     fontFamily: 'monospace',
                 }}
             />
@@ -151,7 +151,7 @@ function Display(props) {
                     variant="subtitle2"
                     sx={{
                         color: 'primary.light',
-                        fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                        fontWeight: TYPOGRAPHY.fontWeight.semibold,
                         fontSize: TYPOGRAPHY.fontSize.md.body,
                     }}
                 >
@@ -213,14 +213,14 @@ function CompactDisplay(props) {
                 <Icon
                     sx={{
                         color: 'primary.light',
-                        fontSize: TYPOGRAPHY.fontSize.md.h5,
+                        fontSize: TYPOGRAPHY.fontSize.md.body,
                     }}
                 />
                 <Typography
                     variant="caption"
                     sx={{
                         color: 'primary.light',
-                        fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                        fontWeight: TYPOGRAPHY.fontWeight.semibold,
                         fontSize: TYPOGRAPHY.fontSize.caption,
                     }}
                 >

@@ -125,7 +125,7 @@ export default function Interpreters() {
                             variant="h4"
                             sx={{
                                 color: 'text.primary',
-                                fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                                fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                 fontSize: {
                                     xs: '1.25rem',
                                     sm: '2.125rem',
@@ -215,7 +215,7 @@ export default function Interpreters() {
                                                 color: 'primary.light',
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
-                                                        .semiBold,
+                                                        .semibold,
                                                 fontSize:
                                                     TYPOGRAPHY.fontSize.md.h5,
                                             }}

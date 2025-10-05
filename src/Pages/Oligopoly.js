@@ -486,7 +486,7 @@ const Oligopoly = () => {
                                 variant="h6"
                                 sx={{
                                     color: 'primary.light',
-                                    fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                 }}
                             >
                                 Market Parameters
