@@ -201,7 +201,7 @@ const ZSharp = () => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: COLORS.background.default,
+                    background: COLORS.surface.background,
                     zIndex: -2,
                 }}
             />
@@ -356,19 +356,19 @@ const ZSharp = () => {
                                     <LineChart data={currentData}>
                                         <CartesianGrid
                                             strokeDasharray="3 3"
-                                            stroke={COLORS.chart.stroke.light}
+                                            stroke={COLORS.border.primary}
                                         />
                                         <XAxis
                                             dataKey="epoch"
-                                            stroke={COLORS.chart.stroke.medium}
+                                            stroke={COLORS.text.secondary}
                                             tick={{
-                                                fill: COLORS.chart.fill.medium,
+                                                fill: COLORS.text.secondary,
                                             }}
                                         />
                                         <YAxis
-                                            stroke={COLORS.chart.stroke.medium}
+                                            stroke={COLORS.text.secondary}
                                             tick={{
-                                                fill: COLORS.chart.fill.medium,
+                                                fill: COLORS.text.secondary,
                                             }}
                                             tickFormatter={value => {
                                                 if (viewType === 'loss') {
@@ -454,11 +454,11 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="sgd"
-                                                    stroke={COLORS.chart.blue}
+                                                    stroke={COLORS.data.blue}
                                                     strokeWidth={3}
                                                     name="SGD"
                                                     dot={{
-                                                        fill: COLORS.chart.blue,
+                                                        fill: COLORS.data.blue,
                                                         strokeWidth: 2,
                                                         r: 4,
                                                     }}
@@ -466,11 +466,11 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="zsharp"
-                                                    stroke={COLORS.chart.green}
+                                                    stroke={COLORS.data.green}
                                                     strokeWidth={3}
                                                     name="ZSharp"
                                                     dot={{
-                                                        fill: COLORS.chart
+                                                        fill: COLORS.data.green
                                                             .green,
                                                         strokeWidth: 2,
                                                         r: 4,
@@ -483,11 +483,11 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="sgd"
-                                                    stroke={COLORS.chart.blue}
+                                                    stroke={COLORS.data.blue}
                                                     strokeWidth={3}
                                                     name="SGD Loss"
                                                     dot={{
-                                                        fill: COLORS.chart.blue,
+                                                        fill: COLORS.data.blue,
                                                         strokeWidth: 2,
                                                         r: 4,
                                                     }}
@@ -495,11 +495,11 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="zsharp"
-                                                    stroke={COLORS.chart.green}
+                                                    stroke={COLORS.data.green}
                                                     strokeWidth={3}
                                                     name="ZSharp Loss"
                                                     dot={{
-                                                        fill: COLORS.chart
+                                                        fill: COLORS.data.green
                                                             .green,
                                                         strokeWidth: 2,
                                                         r: 4,
@@ -511,11 +511,11 @@ const ZSharp = () => {
                                             <Line
                                                 type="monotone"
                                                 dataKey="gap"
-                                                stroke={COLORS.chart.orange}
+                                                stroke={COLORS.data.amber}
                                                 strokeWidth={3}
                                                 name="Accuracy Gap"
                                                 dot={{
-                                                    fill: COLORS.chart.orange,
+                                                    fill: COLORS.data.amber,
                                                     strokeWidth: 2,
                                                     r: 4,
                                                 }}
@@ -525,11 +525,11 @@ const ZSharp = () => {
                                             <Line
                                                 type="monotone"
                                                 dataKey="improvement"
-                                                stroke={COLORS.chart.orange}
+                                                stroke={COLORS.data.amber}
                                                 strokeWidth={3}
                                                 name="Improvement"
                                                 dot={{
-                                                    fill: COLORS.chart.orange,
+                                                    fill: COLORS.data.amber,
                                                     strokeWidth: 2,
                                                     r: 4,
                                                 }}
@@ -540,11 +540,11 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="sgd"
-                                                    stroke={COLORS.chart.blue}
+                                                    stroke={COLORS.data.blue}
                                                     strokeWidth={3}
                                                     name="SGD Rate"
                                                     dot={{
-                                                        fill: COLORS.chart.blue,
+                                                        fill: COLORS.data.blue,
                                                         strokeWidth: 2,
                                                         r: 4,
                                                     }}
@@ -552,11 +552,11 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="zsharp"
-                                                    stroke={COLORS.chart.green}
+                                                    stroke={COLORS.data.green}
                                                     strokeWidth={3}
                                                     name="ZSharp Rate"
                                                     dot={{
-                                                        fill: COLORS.chart
+                                                        fill: COLORS.data.green
                                                             .green,
                                                         strokeWidth: 2,
                                                         r: 4,
@@ -581,7 +581,7 @@ const ZSharp = () => {
                             },
                             gap: 1,
                             maxWidth: {
-                                xs: SPACING.maxWidth.small,
+                                xs: SPACING.maxWidth.xs,
                                 sm: 'none',
                             },
                             margin: {

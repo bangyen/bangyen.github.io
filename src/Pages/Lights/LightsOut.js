@@ -100,7 +100,7 @@ export default function LightsOut() {
             container
             minHeight="100vh"
             sx={{
-                background: COLORS.background.default,
+                background: COLORS.surface.background,
                 position: 'relative',
             }}
         >

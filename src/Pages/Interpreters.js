@@ -75,7 +75,7 @@ export default function Interpreters() {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: COLORS.background.default,
+                    background: COLORS.surface.background,
                     zIndex: -2,
                 }}
             />

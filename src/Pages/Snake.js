@@ -217,7 +217,7 @@ export default function Snake() {
             flexDirection="column"
             position="relative"
             sx={{
-                background: COLORS.background.default,
+                background: COLORS.surface.background,
                 overflow: 'hidden',
             }}
         >

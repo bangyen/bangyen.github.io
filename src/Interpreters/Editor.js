@@ -60,7 +60,7 @@ export default function Editor({ container, sideProps, hide, children }) {
             flexDirection="column"
             padding="5vh 5vw 5vh 5vw"
             sx={{
-                background: COLORS.background.default,
+                background: COLORS.surface.background,
                 position: 'relative',
             }}
         >
@@ -176,7 +176,7 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
             children: <Text text={value} />,
             sx: {
                 cursor: 'pointer',
-                borderRadius: SPACING.borderRadius.small,
+                borderRadius: SPACING.borderRadius.sm,
                 border: cellStyle.border,
                 transition: ANIMATIONS.transition,
                 '&:hover': {
@@ -224,7 +224,7 @@ export function TextArea({
                 '& .MuiInputBase-root': {
                     alignItems: 'flex-start',
                     backgroundColor: COMPONENTS.overlays.lighter,
-                    borderRadius: SPACING.borderRadius.small,
+                    borderRadius: SPACING.borderRadius.sm,
                 },
                 '& .MuiInputBase-input': {
                     fontFamily: 'monospace',

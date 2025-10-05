@@ -207,7 +207,7 @@ const Oligopoly = () => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: COLORS.background.default,
+                    background: COLORS.surface.background,
                     zIndex: -2,
                 }}
             />
@@ -352,20 +352,20 @@ const Oligopoly = () => {
                                     <LineChart data={marketData}>
                                         <CartesianGrid
                                             strokeDasharray="3 3"
-                                            stroke={COLORS.chart.stroke.light}
+                                            stroke={COLORS.border.primary}
                                         />
                                         <XAxis
                                             dataKey="round"
-                                            stroke={COLORS.chart.stroke.medium}
+                                            stroke={COLORS.text.secondary}
                                             tick={{
-                                                fill: COLORS.chart.fill.medium,
+                                                fill: COLORS.text.secondary,
                                             }}
                                         />
                                         <YAxis
                                             yAxisId="left"
-                                            stroke={COLORS.chart.stroke.medium}
+                                            stroke={COLORS.text.secondary}
                                             tick={{
-                                                fill: COLORS.chart.fill.medium,
+                                                fill: COLORS.text.secondary,
                                             }}
                                             tickFormatter={value =>
                                                 `$${value.toFixed(2)}`
@@ -378,9 +378,9 @@ const Oligopoly = () => {
                                         <YAxis
                                             yAxisId="right"
                                             orientation="right"
-                                            stroke={COLORS.chart.stroke.medium}
+                                            stroke={COLORS.text.secondary}
                                             tick={{
-                                                fill: COLORS.chart.fill.medium,
+                                                fill: COLORS.text.secondary,
                                             }}
                                             tickFormatter={value =>
                                                 value.toFixed(2)
@@ -409,11 +409,11 @@ const Oligopoly = () => {
                                             yAxisId="left"
                                             type="monotone"
                                             dataKey="price"
-                                            stroke={COLORS.chart.blue}
+                                            stroke={COLORS.data.blue}
                                             strokeWidth={3}
                                             name="Market Price"
                                             dot={{
-                                                fill: COLORS.chart.blue,
+                                                fill: COLORS.data.blue,
                                                 strokeWidth: 2,
                                                 r: 4,
                                             }}
@@ -422,11 +422,11 @@ const Oligopoly = () => {
                                             yAxisId="right"
                                             type="monotone"
                                             dataKey="hhi"
-                                            stroke={COLORS.chart.orange}
+                                            stroke={COLORS.data.amber}
                                             strokeWidth={3}
                                             name="HHI Concentration"
                                             dot={{
-                                                fill: COLORS.chart.orange,
+                                                fill: COLORS.data.amber,
                                                 strokeWidth: 2,
                                                 r: 4,
                                             }}
@@ -508,9 +508,9 @@ const Oligopoly = () => {
                                             width: '80%',
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
-                                                color: COLORS.chart.fill.medium,
+                                                color: COLORS.text.secondary,
                                                 borderColor:
-                                                    COLORS.chart.legend.light,
+                                                    COLORS.text.tertiary,
                                                 padding: '0.5rem 0.75rem', // 8px 12px
                                                 flex: 1,
                                                 '&.Mui-selected': {
@@ -524,7 +524,7 @@ const Oligopoly = () => {
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        COLORS.chart.legend
+                                                        COLORS.text.muted
                                                             .lighter,
                                                 },
                                             },
@@ -559,9 +559,9 @@ const Oligopoly = () => {
                                             width: '80%',
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
-                                                color: COLORS.chart.fill.medium,
+                                                color: COLORS.text.secondary,
                                                 borderColor:
-                                                    COLORS.chart.legend.light,
+                                                    COLORS.text.tertiary,
                                                 padding: '0.5rem 0.75rem', // 8px 12px
                                                 flex: 1,
                                                 '&.Mui-selected': {
@@ -575,7 +575,7 @@ const Oligopoly = () => {
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        COLORS.chart.legend
+                                                        COLORS.text.muted
                                                             .lighter,
                                                 },
                                             },
@@ -615,9 +615,9 @@ const Oligopoly = () => {
                                             width: '80%',
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
-                                                color: COLORS.chart.fill.medium,
+                                                color: COLORS.text.secondary,
                                                 borderColor:
-                                                    COLORS.chart.legend.light,
+                                                    COLORS.text.tertiary,
                                                 padding: '0.5rem 0.75rem', // 8px 12px
                                                 flex: 1,
                                                 '&.Mui-selected': {
@@ -631,7 +631,7 @@ const Oligopoly = () => {
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        COLORS.chart.legend
+                                                        COLORS.text.muted
                                                             .lighter,
                                                 },
                                             },

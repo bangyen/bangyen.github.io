@@ -177,7 +177,7 @@ function CompactDisplay(props) {
                     color:
                         color === 'info' ? COLORS.text.white : 'text.primary',
                     fontFamily: 'monospace',
-                    fontSize: TYPOGRAPHY.fontSize.small,
+                    fontSize: TYPOGRAPHY.fontSize.xs.caption,
                     height: SPACING.maxWidth.icon,
                 }}
             />
@@ -190,7 +190,7 @@ function CompactDisplay(props) {
                 padding: 1.5,
                 backgroundColor: COMPONENTS.overlays.lighter,
                 border: COMPONENTS.borders.light,
-                borderRadius: SPACING.borderRadius.small,
+                borderRadius: SPACING.borderRadius.sm,
                 height: '100%',
                 minHeight: SPACING.maxWidth.medium,
             }}
@@ -214,7 +214,7 @@ function CompactDisplay(props) {
                     sx={{
                         color: 'primary.light',
                         fontWeight: TYPOGRAPHY.fontWeight.semiBold,
-                        fontSize: TYPOGRAPHY.fontSize.small,
+                        fontSize: TYPOGRAPHY.fontSize.xs.caption,
                     }}
                 >
                     {title}
@@ -265,7 +265,7 @@ function Scrollable(props) {
                 padding: 2,
                 backgroundColor: COMPONENTS.overlays.lighter,
                 border: COMPONENTS.borders.light,
-                borderRadius: SPACING.borderRadius.small,
+                borderRadius: SPACING.borderRadius.sm,
                 height: SPACING.maxWidth.large,
                 display: 'flex',
                 flexDirection: 'column',

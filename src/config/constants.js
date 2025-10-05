@@ -97,6 +97,25 @@ export const ROUTES = {
     },
 };
 
+// Game Constants
+export const GAME_CONSTANTS = {
+    snake: {
+        initialLength: 3,
+        segmentSize: 3,
+        initialVelocity: 1,
+        timerInterval: 100,
+    },
+    oligopoly: {
+        defaultFirms: 3,
+        defaultElasticity: 2.0,
+        defaultBasePrice: 40,
+        maxRounds: 15,
+    },
+    lightsOut: {
+        defaultSize: 5,
+    },
+};
+
 // Modern Semantic Color System - Enterprise-grade with Apple/Linear inspiration
 export const COLORS = {
     // Brand Colors - Professional blue palette
@@ -191,28 +210,32 @@ export const COLORS = {
         xl: '0 24px 80px hsla(0, 0%, 0%, 0.25)',
         glow: '0 0 20px hsla(217, 91%, 60%, 0.15)', // Subtle blue glow
     },
-    // Chart Colors for Data Visualization (Legacy compatibility)
-    chart: {
-        blue: 'hsl(217, 91%, 60%)', // Primary chart color
-        orange: 'hsl(34, 95%, 58%)', // Secondary chart color
-        green: 'hsl(141, 64%, 49%)', // Success/tool color
-        stroke: {
-            light: 'hsl(0, 0%, 30%)',
-            medium: 'hsl(0, 0%, 50%)',
-        },
-        fill: {
-            medium: 'hsl(0, 0%, 50%)',
-        },
-        legend: {
-            light: 'hsl(0, 0%, 40%)',
-            lighter: 'hsl(0, 0%, 60%)',
-        },
+};
+
+// Layout Constants
+export const LAYOUT = {
+    commonGaps: {
+        xs: 1,
+        sm: 2,
+        md: 3,
+        lg: 4,
     },
-    // Background colors for backward compatibility
-    background: {
-        default: 'hsl(0, 0%, 5%)',
-        raised: 'hsl(0, 0%, 15%)',
+    zIndex: {
+        navigation: 1000,
+        modal: 1300,
+        tooltip: 1500,
     },
+    gridSpacing: {
+        xs: 4,
+        md: 8,
+    },
+};
+
+// Common Border Styles
+export const BORDERS = {
+    light: '1px solid hsla(0, 0%, 100%, 0.1)',
+    subtle: `1px solid ${COLORS.border.subtle}`,
+    primary: `1px solid ${COLORS.border.primary}`,
 };
 
 // Modern Spacing System - 8pt grid with responsive scaling
@@ -239,7 +262,6 @@ export const SPACING = {
         none: 0,
         xs: '4px', // Subtle rounding
         sm: '8px', // Small rounding
-        small: '8px', // Migrated - use sm for new code
         md: '12px', // Medium rounding
         lg: '16px', // Large rounding
         xl: '20px', // Extra large rounding
