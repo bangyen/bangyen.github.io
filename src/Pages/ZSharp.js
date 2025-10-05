@@ -12,6 +12,8 @@ import {
     CHART_DIMENSIONS,
     FONT_SIZES,
     ZSHARP_DEFAULTS,
+    PERCENTAGE,
+    LAYOUT,
 } from '../config/constants';
 import {
     LineChart,
@@ -76,8 +78,8 @@ const loadRealZSharpData = async () => {
         for (let i = 0; i < maxEpochs; i++) {
             data.push({
                 epoch: i + 1,
-                sgd: (sgdAccuracies[i] || 0) / 100, // Convert to 0-1 range
-                zsharp: (zsharpAccuracies[i] || 0) / 100,
+                sgd: (sgdAccuracies[i] || 0) / PERCENTAGE.divisor, // Convert to 0-1 range
+                zsharp: (zsharpAccuracies[i] || 0) / PERCENTAGE.divisor,
                 sgdLoss: sgdLosses[i] || 0,
                 zsharpLoss: zsharpLosses[i] || 0,
             });
@@ -212,7 +214,7 @@ const ZSharp = () => {
                     right: 0,
                     bottom: 0,
                     background: COLORS.surface.background,
-                    zIndex: -2,
+                    zIndex: LAYOUT.zIndex.background,
                 }}
             />
 
@@ -225,7 +227,7 @@ const ZSharp = () => {
                 alignItems="center"
                 flexDirection="column"
                 sx={{
-                    zIndex: 1,
+                    zIndex: LAYOUT.zIndex.content,
                     padding: {
                         xs: `${SPACING.padding.xs} 0`,
                         sm: `${SPACING.padding.sm} 0`,
@@ -384,23 +386,26 @@ const ZSharp = () => {
                                                     'learning_curve'
                                                 ) {
                                                     return (
-                                                        (value * 100).toFixed(
-                                                            1
-                                                        ) + '%'
+                                                        (
+                                                            value *
+                                                            PERCENTAGE.multiplier
+                                                        ).toFixed(1) + '%'
                                                     );
                                                 } else if (
                                                     viewType === 'convergence'
                                                 ) {
                                                     return (
-                                                        (value * 100).toFixed(
-                                                            1
-                                                        ) + '%'
+                                                        (
+                                                            value *
+                                                            PERCENTAGE.multiplier
+                                                        ).toFixed(1) + '%'
                                                     );
                                                 } else {
                                                     return (
-                                                        (value * 100).toFixed(
-                                                            1
-                                                        ) + '%'
+                                                        (
+                                                            value *
+                                                            PERCENTAGE.multiplier
+                                                        ).toFixed(1) + '%'
                                                     );
                                                 }
                                             }}
@@ -447,11 +452,11 @@ const ZSharp = () => {
                                                     ? value.toFixed(3)
                                                     : viewType ===
                                                         'learning_curve'
-                                                      ? `${(value * 100).toFixed(2)}%`
+                                                      ? `${(value * PERCENTAGE.multiplier).toFixed(2)}%`
                                                       : viewType ===
                                                           'convergence'
-                                                        ? `${(value * 100).toFixed(3)}%`
-                                                        : `${(value * 100).toFixed(1)}%`,
+                                                        ? `${(value * PERCENTAGE.multiplier).toFixed(3)}%`
+                                                        : `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
                                                 name,
                                             ]}
                                         />

@@ -18,6 +18,8 @@ import {
     CHART_DIMENSIONS,
     FONT_SIZES,
     MODEL_TYPES,
+    LAYOUT,
+    GAME_CONSTANTS,
 } from '../config/constants';
 import { GitHub, Refresh, Home } from '@mui/icons-material';
 import {
@@ -121,9 +123,15 @@ const generateFallbackOligopolyData = () => {
 };
 
 const Oligopoly = () => {
-    const [numFirms, setNumFirms] = useState(3);
-    const [demandElasticity, setDemandElasticity] = useState(2.0);
-    const [basePrice, setBasePrice] = useState(40);
+    const [numFirms, setNumFirms] = useState(
+        GAME_CONSTANTS.oligopoly.defaultFirms
+    );
+    const [demandElasticity, setDemandElasticity] = useState(
+        GAME_CONSTANTS.oligopoly.defaultElasticity
+    );
+    const [basePrice, setBasePrice] = useState(
+        GAME_CONSTANTS.oligopoly.defaultBasePrice
+    );
     const [marketData, setMarketData] = useState([]);
     const [matrixData, setMatrixData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -184,9 +192,9 @@ const Oligopoly = () => {
     ]);
 
     const resetToDefaults = () => {
-        setNumFirms(3);
-        setDemandElasticity(2.0);
-        setBasePrice(40);
+        setNumFirms(GAME_CONSTANTS.oligopoly.defaultFirms);
+        setDemandElasticity(GAME_CONSTANTS.oligopoly.defaultElasticity);
+        setBasePrice(GAME_CONSTANTS.oligopoly.defaultBasePrice);
     };
 
     return (
@@ -212,7 +220,7 @@ const Oligopoly = () => {
                     right: 0,
                     bottom: 0,
                     background: COLORS.surface.background,
-                    zIndex: -2,
+                    zIndex: LAYOUT.zIndex.background,
                 }}
             />
 

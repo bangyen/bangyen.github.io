@@ -247,6 +247,8 @@ export const COLORS = {
 // Layout Constants
 export const LAYOUT = {
     zIndex: {
+        background: -2,
+        content: 1,
         navigation: 1000,
         modal: 1300,
         tooltip: 1500,
@@ -338,6 +340,12 @@ export const SPACING = {
             padding: '12px 20px',
             height: '40px',
         },
+    },
+    // Common grid sizing patterns
+    grid: {
+        full: { xs: 12, sm: 12 },
+        half: { xs: 12, sm: 6 },
+        auto: 'auto',
     },
 };
 
@@ -801,6 +809,18 @@ export const CHART_DIMENSIONS = {
     height: 300,
     dotRadius: 4,
     strokeWidth: 3,
+};
+
+// Percentage Conversion Constants
+export const PERCENTAGE = {
+    multiplier: 100,
+    divisor: 100,
+};
+
+// Calculation Constants - Extracted from calculate.js
+export const CALCULATION = {
+    spaceDivisor: 20,
+    pixelMultiplier: 16,
 };
 
 // ZSharp Simulation Defaults - Consolidated hardcoded simulation values

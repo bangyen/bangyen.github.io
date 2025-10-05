@@ -12,6 +12,7 @@ import {
     TYPOGRAPHY,
     ANIMATIONS,
     PAGE_TITLES,
+    LAYOUT,
 } from '../config/constants';
 
 export default function Interpreters() {
@@ -89,7 +90,7 @@ export default function Interpreters() {
                 alignItems="center"
                 flexDirection="column"
                 sx={{
-                    zIndex: 1,
+                    zIndex: LAYOUT.zIndex.content,
                     padding: {
                         xs: `${SPACING.padding.xs} 0`,
                         sm: `${SPACING.padding.sm} 0`,

@@ -8,6 +8,7 @@ import {
     SPACING,
     ANIMATIONS,
     TYPOGRAPHY,
+    LAYOUT,
 } from '../config/constants';
 
 import { Typography, TextField } from '@mui/material';
@@ -95,8 +96,8 @@ export default function Editor({ container, sideProps, hide, children }) {
                     ].filter(Boolean).length;
                     const gridSize =
                         fieldCount === 1
-                            ? { xs: 12, sm: 12 }
-                            : { xs: 12, sm: 6 };
+                            ? SPACING.grid.full
+                            : SPACING.grid.half;
 
                     if (code !== undefined) {
                         fields.push(

@@ -1,10 +1,12 @@
+import { CALCULATION } from './config/constants';
+
 export function getSpace(size) {
-    return size / 20;
+    return size / CALCULATION.spaceDivisor;
 }
 
 export function convertPixels(size, height, width) {
     const space = getSpace(size);
-    const pixel = 16 * (size + space);
+    const pixel = CALCULATION.pixelMultiplier * (size + space);
     const rows = Math.floor(height / pixel);
     const cols = Math.floor(width / pixel);
 
