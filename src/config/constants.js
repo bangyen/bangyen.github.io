@@ -3,6 +3,11 @@
  * Centralizes all hardcoded values for easier maintenance and customization
  */
 
+// Base Color Constants
+const PRIMARY_BLUE = 'hsl(217, 91%, 60%)';
+const PRIMARY_BLUE_DARK = 'hsl(217, 91%, 45%)';
+const PRIMARY_BLUE_LIGHT = 'hsl(217, 91%, 70%)';
+
 // Personal Information
 export const PERSONAL_INFO = {
     name: 'Bangyen Pham',
@@ -103,7 +108,6 @@ export const GAME_CONSTANTS = {
         initialLength: 3,
         segmentSize: 3,
         initialVelocity: 1,
-        timerInterval: 100,
     },
     oligopoly: {
         defaultFirms: 3,
@@ -120,9 +124,9 @@ export const GAME_CONSTANTS = {
 export const COLORS = {
     // Brand Colors - Professional blue palette
     primary: {
-        main: 'hsl(217, 91%, 60%)', // Primary brand blue
-        light: 'hsl(217, 91%, 70%)', // Light variant
-        dark: 'hsl(217, 91%, 45%)', // Dark variant (improved contrast)
+        main: PRIMARY_BLUE, // Primary brand blue
+        light: PRIMARY_BLUE_LIGHT, // Light variant
+        dark: PRIMARY_BLUE_DARK, // Dark variant (improved contrast)
         softer: 'hsl(217, 45%, 65%)', // Softer variant for backgrounds
         subtle: 'hsl(217, 25%, 95%)', // Very subtle for interactive states
     },
@@ -131,7 +135,7 @@ export const COLORS = {
         success: 'hsl(141, 64%, 49%)', // Green for success states
         warning: 'hsl(34, 95%， 58%)', // Amber for warnings
         error: 'hsl(0, 73%, 56%)', // Red for errors
-        info: 'hsl(217, 91%, 60%)', // Blue for info (same as primary)
+        info: PRIMARY_BLUE, // Blue for info (same as primary)
     },
     // Enhanced Neutral Palette - Sophisticated grays following Apple's design language
     neutral: {
@@ -163,15 +167,15 @@ export const COLORS = {
         tertiary: 'hsl(0, 0%, 65%)', // Tertiary text (neutral-500)
         muted: 'hsl(0, 0%, 45%)', // Muted text (neutral-600)
         inverse: 'hsl(0, 0%, 8%)', // Inverse text for colored backgrounds
-        accent: 'hsl(217, 91%, 60%)', // Accent text color
+        accent: PRIMARY_BLUE, // Accent text color
         white: 'hsl(0, 0%, 100%)', // Pure white text for overlays and charts
     },
     // Border and Divider Colors
     border: {
         subtle: 'hsl(0, 0%, 18%)', // Subtle borders (neutral-800)
         primary: 'hsl(0, 0%, 30%)', // Primary borders (neutral-700)
-        interactive: 'hsl(217, 91%, 60%)', // Interactive element borders
-        focus: 'hsl(217, 91%, 70%)', // Focus ring borders
+        interactive: PRIMARY_BLUE, // Interactive element borders
+        focus: PRIMARY_BLUE_LIGHT, // Focus ring borders
     },
     // Interactive State Colors
     interactive: {
@@ -183,7 +187,7 @@ export const COLORS = {
     },
     // Chart Colors (Enhanced)
     data: {
-        blue: 'hsl(217, 91%, 60%)',
+        blue: PRIMARY_BLUE,
         green: 'hsl(141, 64%, 49%)',
         amber: 'hsl(34, 95%, 58%)',
         red: 'hsl(0, 73%, 56%)',
@@ -199,8 +203,7 @@ export const COLORS = {
     },
     // Sophisticated Gradients for Modern Effects
     gradients: {
-        primary:
-            'linear-gradient(135deg, hsl(217, 91%, 60%), hsl(217, 91%, 45%))',
+        primary: `linear-gradient(135deg, ${PRIMARY_BLUE}, ${PRIMARY_BLUE_DARK})`,
         subtle: 'linear-gradient(135deg, hsl(0, 0%, 5%), hsl(0, 0%, 8%)),',
         glass: 'linear-gradient(135deg, hsla(0, 0%, 8%, 0.9), hsla(0, 0%, 12%, 0.85))',
         shimmer:
@@ -236,8 +239,9 @@ export const LAYOUT = {
     },
 };
 
-// Common Border Styles (deprecated - use COMPONENTS.borders instead)
+// Legacy Border Styles (deprecated - use COMPONENTS.borders instead)
 // Kept for backward compatibility but should be migrated to COMPONENTS.borders
+// TODO: Remove this object once all usage is migrated
 export const BORDERS = {
     light: '1px solid hsla(0, 0%, 100%, 0.1)',
     subtle: `1px solid ${COLORS.border.subtle}`,
@@ -266,7 +270,7 @@ export const SPACING = {
     // Enhanced border radius system
     borderRadius: {
         none: 0,
-        xs: '4px', // Subtle rounding
+        xs: '4px', // Subtle rounding (matches CSS animations)
         sm: '8px', // Small rounding
         md: '12px', // Medium rounding
         lg: '16px', // Large rounding
@@ -300,6 +304,15 @@ export const SPACING = {
         input: {
             padding: '12px 16px',
             height: '48px',
+        },
+        // Additional padding variants for consistency
+        small: {
+            padding: '0.5rem 0.75rem', // 8px 12px
+            height: '32px',
+        },
+        medium: {
+            padding: '12px 20px',
+            height: '40px',
         },
     },
 };
@@ -796,6 +809,5 @@ export const GRID_SIZES = {
 
 // Development Constants
 export const DEV = {
-    localhost: 'http://localhost:3000',
     nodeVersion: 'v14 or higher',
 };

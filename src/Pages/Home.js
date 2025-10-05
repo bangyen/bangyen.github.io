@@ -322,7 +322,9 @@ export default function Home() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: 1,
-                                            padding: '12px 20px',
+                                            padding:
+                                                SPACING.components.medium
+                                                    .padding,
                                             backgroundColor:
                                                 COLORS.interactive.selected,
                                             borderRadius:

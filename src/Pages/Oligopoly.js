@@ -514,7 +514,9 @@ const Oligopoly = () => {
                                                 color: COLORS.text.secondary,
                                                 borderColor:
                                                     COLORS.text.tertiary,
-                                                padding: '0.5rem 0.75rem', // 8px 12px
+                                                padding:
+                                                    SPACING.components.small
+                                                        .padding,
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:
@@ -565,7 +567,9 @@ const Oligopoly = () => {
                                                 color: COLORS.text.secondary,
                                                 borderColor:
                                                     COLORS.text.tertiary,
-                                                padding: '0.5rem 0.75rem', // 8px 12px
+                                                padding:
+                                                    SPACING.components.small
+                                                        .padding,
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:
@@ -621,7 +625,9 @@ const Oligopoly = () => {
                                                 color: COLORS.text.secondary,
                                                 borderColor:
                                                     COLORS.text.tertiary,
-                                                padding: '0.5rem 0.75rem', // 8px 12px
+                                                padding:
+                                                    SPACING.components.small
+                                                        .padding,
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:

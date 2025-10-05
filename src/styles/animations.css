@@ -1,3 +1,13 @@
+/* CSS Custom Properties for border radius */
+:root {
+    --border-radius-xs: 4px;
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --border-radius-lg: 16px;
+    --border-radius-xl: 20px;
+    --border-radius-full: 9999px;
+}
+
 /* Modern Animation Keyframes - Enterprise-grade micro-interactions */
 
 @keyframes shimmer {
@@ -102,12 +112,12 @@
 
 ::-webkit-scrollbar-track {
     background: hsl(0deg 0% 8%);
-    border-radius: 4px;
+    border-radius: var(--border-radius-xs);
 }
 
 ::-webkit-scrollbar-thumb {
     background: hsl(217deg 91% 45%);
-    border-radius: 4px;
+    border-radius: var(--border-radius-xs);
     transition: background-color 150ms ease-in-out;
 }
 
