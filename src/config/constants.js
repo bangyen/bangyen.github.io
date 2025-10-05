@@ -312,6 +312,10 @@ export const TIMING = {
         snake: 100,
         editor: 200,
     },
+    // Reduced motion support
+    reducedMotion: 0.01,
+    // CSS animation durations
+    scrollbar: 150,
 };
 
 // Legacy Border Styles - REMOVED
@@ -360,6 +364,11 @@ export const SPACING = {
     // Component heights
     height: {
         scrollable: '60px', // Fixed height for interpreter scrollable areas
+        scrollbar: '8px', // Scrollbar dimensions
+    },
+    // Scroll margins
+    scrollMargin: {
+        section: '2rem', // Section scroll margin
     },
     // Component-specific spacing
     components: {
@@ -600,6 +609,23 @@ export const ANIMATIONS = {
             initial: { opacity: 0, scale: 0.9 },
             animate: { opacity: 1, scale: 1 },
             transition: { duration: TIMING.fast / 1000, ease: 'easeOut' },
+        },
+    },
+    // CSS-specific animation values
+    css: {
+        // Keyframe transforms
+        translateY: '40px',
+        translateX: '40px',
+        // Glow effects
+        glow: {
+            offset: '20px',
+            spread: '30px',
+            blur: '40px',
+        },
+        // Backdrop filter
+        backdrop: {
+            blur: '20px',
+            saturation: '180%',
         },
     },
     // Loading states and skeleton animations
@@ -942,26 +968,18 @@ export const ZSHARP_DEFAULTS = {
 // Legacy font sizes - DEPRECATED: Use TYPOGRAPHY.fontSize.* instead
 // These are kept for backward compatibility but should be migrated
 export const FONT_SIZES = {
-    hero: {
-        xs: TYPOGRAPHY.fontSize.large.xs,
-        sm: TYPOGRAPHY.fontSize.large.sm,
-        md: TYPOGRAPHY.fontSize.large.md,
-    },
-    large: {
-        xs: TYPOGRAPHY.fontSize.large.xs,
-        sm: TYPOGRAPHY.fontSize.large.sm,
-        md: TYPOGRAPHY.fontSize.large.md,
-    },
+    // Consolidated error sizes into TYPOGRAPHY.fontSize.md.display
     error: {
-        xs: 'clamp(2rem, 6vw, 2.5rem)',
-        sm: 'clamp(3rem, 8vw, 3.5rem)',
-        md: 'clamp(3.5rem, 10vw, 4rem)',
+        xs: TYPOGRAPHY.fontSize.md.display,
+        sm: TYPOGRAPHY.fontSize.lg.display,
+        md: TYPOGRAPHY.fontSize.lg.display,
     },
 };
 
 // Hardcoded Values - Consolidated from components
+// DEPRECATED: Most values moved to their respective constant objects
 export const HARDCODED_VALUES = {
-    // Spacing values found in components
+    // Only keep values not yet consolidated elsewhere
     spacing: {
         chipMargin: '0.25rem 0.5rem', // 4px 8px - found in Home.js
         sectionPadding: '4rem', // found in Home.js
@@ -971,7 +989,7 @@ export const HARDCODED_VALUES = {
         subtitle: '1.25rem', // found in Home.js
         body: '1rem', // found in Home.js
     },
-    // Animation and visual effects
+    // Animation and visual effects - still used in Home.js
     effects: {
         blurAmount: '20px',
         saturation: '180%',
@@ -979,15 +997,10 @@ export const HARDCODED_VALUES = {
         alpha: '0.1',
         alphaStrong: '0.2',
     },
-    // Transform values
+    // Transform values - still used in Home.js
     transforms: {
         translateY: '-2px',
         scale: '1.01',
-    },
-    // CSS-specific values
-    css: {
-        scrollbarWidth: '8px',
-        scrollbarBorderRadius: '4px',
     },
 };
 
