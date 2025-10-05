@@ -771,11 +771,10 @@ export default function Home() {
                                                         ...COMPONENTS.badge
                                                             .primary,
                                                         backgroundColor:
-                                                            COLORS.accent
-                                                                .success + '10', // 10% opacity
+                                                            'hsla(141, 64%, 49%, 0.1)', // 10% opacity
                                                         color: COLORS.accent
                                                             .success,
-                                                        border: `1px solid ${COLORS.accent.success}20`, // 20% opacity
+                                                        border: `1px solid hsla(141, 64%, 49%, 0.2)`, // 20% opacity
                                                     }}
                                                 >
                                                     {publication.conference}
