@@ -625,8 +625,7 @@ export default function Home() {
             <Container
                 maxWidth={false}
                 sx={{
-                    paddingTop: SPACING.margin.section,
-                    paddingBottom: SPACING.padding.md,
+                    paddingY: SPACING.margin.section,
                     paddingX: SPACING.padding.md,
                 }}
             >
