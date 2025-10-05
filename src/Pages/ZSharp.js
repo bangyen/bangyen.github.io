@@ -11,6 +11,7 @@ import {
     PAGE_TITLES,
     CHART_DIMENSIONS,
     FONT_SIZES,
+    ZSHARP_DEFAULTS,
 } from '../config/constants';
 import {
     LineChart,
@@ -92,11 +93,17 @@ const loadRealZSharpData = async () => {
 // Fallback data generation if real data fails to load
 const generateFallbackData = () => {
     const data = [];
-    for (let i = 0; i <= 20; i++) {
-        const sgdAccuracy = 0.65 + (i / 20) * 0.1; // 65% to 75%
-        const zsharpAccuracy = sgdAccuracy + 0.05; // 5% improvement
-        const sgdLoss = 2.0 - (i / 20) * 1.2; // 2.0 to 0.8
-        const zsharpLoss = sgdLoss - 0.1; // Slightly lower loss
+    for (let i = 0; i <= ZSHARP_DEFAULTS.maxEpochs; i++) {
+        const sgdAccuracy =
+            ZSHARP_DEFAULTS.baseAccuracy +
+            (i / ZSHARP_DEFAULTS.maxEpochs) *
+                (ZSHARP_DEFAULTS.maxAccuracy - ZSHARP_DEFAULTS.baseAccuracy);
+        const zsharpAccuracy = sgdAccuracy + ZSHARP_DEFAULTS.improvement;
+        const sgdLoss =
+            ZSHARP_DEFAULTS.baseLoss -
+            (i / ZSHARP_DEFAULTS.maxEpochs) *
+                (ZSHARP_DEFAULTS.baseLoss - ZSHARP_DEFAULTS.minLoss);
+        const zsharpLoss = sgdLoss - ZSHARP_DEFAULTS.lossReduction;
 
         data.push({
             epoch: i + 1,

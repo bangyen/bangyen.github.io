@@ -123,6 +123,26 @@ export const GAME_CONSTANTS = {
     },
 };
 
+// Model Types and Game Controls - Consolidated hardcoded strings
+export const MODEL_TYPES = {
+    cournot: 'cournot',
+};
+
+export const GAME_CONTROLS = {
+    arrowPrefix: 'arrow',
+};
+
+// Alpha Values - Consolidated opacity constants for consistent transparency
+export const ALPHA = {
+    subtle: 0.1,
+    hover: 0.08,
+    pressed: 0.12,
+    focus: 0.15,
+    overlay: 0.8,
+    disabled: 0.3,
+    glass: 0.85,
+};
+
 // Modern Semantic Color System - Enterprise-grade with Apple/Linear inspiration
 export const COLORS = {
     // Brand Colors - Professional blue palette (consolidated from PRIMARY_BLUE constants)
@@ -161,7 +181,7 @@ export const COLORS = {
         container: 'hsl(0, 0%, 5%)', // Container background (neutral-900)
         elevated: 'hsl(0, 0%, 8%)', // Elevated surfaces
         overlay: 'hsl(0, 0%, 12%)', // Overlays and modals
-        glass: 'hsla(0, 0%, 8%, 0.85)', // Glass morphism backgrounds
+        glass: `hsla(0, 0%, 8%, ${ALPHA.glass})`, // Glass morphism backgrounds
     },
     // Text Colors with proper semantic hierarchy
     text: {
@@ -182,11 +202,11 @@ export const COLORS = {
     },
     // Interactive State Colors - Consolidated with primary colors
     interactive: {
-        hover: 'hsla(0, 0%, 80%, 0.08)', // Hover states
-        pressed: 'hsla(0, 0%, 80%, 0.12)', // Pressed states
-        focus: 'hsla(217, 91%, 60%, 0.15)', // Focus ring (consolidated with primary.main)
-        selected: 'hsla(217, 91%, 60%, 0.1)', // Selected states (consolidated with primary.main)
-        disabled: 'hsla(0, 0%, 45%, 0.3)', // Disabled states
+        hover: `hsla(0, 0%, 80%, ${ALPHA.hover})`, // Hover states
+        pressed: `hsla(0, 0%, 80%, ${ALPHA.pressed})`, // Pressed states
+        focus: `hsla(217, 91%, 60%, ${ALPHA.focus})`, // Focus ring (consolidated with primary.main)
+        selected: `hsla(217, 91%, 60%, ${ALPHA.subtle})`, // Selected states (consolidated with primary.main)
+        disabled: `hsla(0, 0%, 45%, ${ALPHA.disabled})`, // Disabled states
     },
     // Chart Colors (Enhanced) - Consolidated with primary colors
     data: {
@@ -220,7 +240,7 @@ export const COLORS = {
         md: '0 8px 32px hsla(0, 0%, 0%, 0.35)',
         lg: '0 16px 64px hsla(0, 0%, 0%, 0.3)',
         xl: '0 24px 80px hsla(0, 0%, 0%, 0.25)',
-        glow: '0 0 20px hsla(217, 91%, 60%, 0.15)', // Subtle blue glow (consolidated with primary color)
+        glow: `0 0 20px hsla(217, 91%, 60%, ${ALPHA.focus})`, // Subtle blue glow (consolidated with primary color)
     },
 };
 
@@ -523,8 +543,8 @@ export const COMPONENTS = {
     // Glass morphism menu with modern aesthetics
     menu: {
         backdropFilter: 'blur(24px) saturate(180%)',
-        backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
-        border: '1px solid hsla(0, 0%, 100%, 0.1)',
+        backgroundColor: `hsla(0, 0%, 3%, ${ALPHA.glass})`,
+        border: `1px solid hsla(0, 0%, 100%, ${ALPHA.subtle})`,
         borderRadius: SPACING.borderRadius.lg,
         boxShadow: COLORS.shadows.lg,
         padding: {
@@ -569,7 +589,7 @@ export const COMPONENTS = {
         glassmorphism: {
             backgroundColor: COLORS.surface.glass,
             backdropFilter: 'blur(20px) saturate(180%)',
-            border: `1px solid hsla(0, 0%, 100%, 0.1)`,
+            border: `1px solid hsla(0, 0%, 100%, ${ALPHA.subtle})`,
             borderRadius: SPACING.borderRadius.lg,
             padding: SPACING.components.card.padding,
             transition: ANIMATIONS.transitions.gentle,
@@ -592,7 +612,7 @@ export const COMPONENTS = {
         primary: {
             backgroundColor: COLORS.interactive.selected,
             color: COLORS.text.accent,
-            border: `1px solid hsla(217, 91%, 60%, 0.2)`,
+            border: `1px solid hsla(217, 91%, 60%, ${ALPHA.subtle * 2})`,
             borderRadius: SPACING.borderRadius.xl,
             fontSize: TYPOGRAPHY.fontSize.xs.caption,
             fontWeight: TYPOGRAPHY.fontWeight.medium,
@@ -693,7 +713,7 @@ export const COMPONENTS = {
             '&:focus': {
                 outline: 'none',
                 borderColor: COLORS.border.interactive,
-                boxShadow: '0 0 0 3px hsla(217, 91%, 60%, 0.1)',
+                boxShadow: `0 0 0 3px hsla(217, 91%, 60%, ${ALPHA.subtle})`,
             },
             '&:hover': {
                 borderColor: COLORS.border.primary,
@@ -717,7 +737,7 @@ export const COMPONENTS = {
             strong: COLORS.interactive.pressed,
         },
         focus: {
-            ring: '0 0 0 3px hsla(217, 91%, 60%, 0.15)',
+            ring: `0 0 0 3px hsla(217, 91%, 60%, ${ALPHA.focus})`,
             outline: 'none',
         },
         selected: COLORS.interactive.selected,
@@ -729,7 +749,7 @@ export const COMPONENTS = {
     },
     overlays: {
         dark: 'hsla(0, 0%, 5%, 0.95)',
-        lighter: 'hsla(0, 0%, 12%, 0.8)', // For text areas and input fields
+        lighter: `hsla(0, 0%, 12%, ${ALPHA.overlay})`, // For text areas and input fields
         light: 'hsla(0, 0%, 15%, 0.9)', // For highlighted cells
         medium: 'hsla(0, 0%, 18%, 0.9)', // For info cells
         hover: 'hsla(0, 0%, 20%, 0.95)', // For hover states
@@ -781,6 +801,17 @@ export const CHART_DIMENSIONS = {
     height: 300,
     dotRadius: 4,
     strokeWidth: 3,
+};
+
+// ZSharp Simulation Defaults - Consolidated hardcoded simulation values
+export const ZSHARP_DEFAULTS = {
+    baseAccuracy: 0.65,
+    maxAccuracy: 0.75,
+    baseLoss: 2.0,
+    minLoss: 0.8,
+    improvement: 0.05,
+    lossReduction: 0.1,
+    maxEpochs: 20,
 };
 
 // Common Font Sizes (for components that need specific sizes)

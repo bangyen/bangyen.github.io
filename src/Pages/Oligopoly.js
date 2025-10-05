@@ -17,6 +17,7 @@ import {
     PAGE_TITLES,
     CHART_DIMENSIONS,
     FONT_SIZES,
+    MODEL_TYPES,
 } from '../config/constants';
 import { GitHub, Refresh, Home } from '@mui/icons-material';
 import {
@@ -128,7 +129,7 @@ const Oligopoly = () => {
     const [loading, setLoading] = useState(true);
 
     // Fixed parameters - Cournot model with no collusion
-    const modelType = 'cournot';
+    const modelType = MODEL_TYPES.cournot;
     const collusionEnabled = false;
 
     useEffect(() => {
