@@ -10,7 +10,6 @@ import {
     PAGE_TITLES,
     TIMING,
     GAME_CONSTANTS,
-    GAME_CONTROLS,
 } from '../config/constants';
 
 function getRandom(max) {
@@ -156,7 +155,7 @@ export default function Snake() {
 
     const controlHandler = useCallback(
         event => () => {
-            const key = GAME_CONTROLS.arrowPrefix + event;
+            const key = GAME_CONSTANTS.controls.arrowPrefix + event;
 
             dispatch({
                 type: 'steer',

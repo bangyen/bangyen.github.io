@@ -3,9 +3,6 @@
  * Centralizes all hardcoded values for easier maintenance and customization
  */
 
-// Base Color Constants - Consolidated into COLORS.primary
-// Legacy constants removed - use COLORS.primary.* instead
-
 // Personal Information
 export const PERSONAL_INFO = {
     name: 'Bangyen Pham',
@@ -16,7 +13,6 @@ export const PERSONAL_INFO = {
 
 // URLs and Links
 export const URLS = {
-    github: 'https://github.com/bangyen',
     githubProfile: 'https://github.com/bangyen',
     zsharpRepo: 'https://github.com/bangyen/zsharp',
     oligopolyRepo: 'https://github.com/bangyen/oligopoly',
@@ -132,15 +128,13 @@ export const GAME_CONSTANTS = {
         mobile: 3,
         desktop: 5,
     },
-};
-
-// Model Types and Game Controls - Consolidated hardcoded strings
-export const MODEL_TYPES = {
-    cournot: 'cournot',
-};
-
-export const GAME_CONTROLS = {
-    arrowPrefix: 'arrow',
+    // Model types and game controls - consolidated from separate constants
+    modelTypes: {
+        cournot: 'cournot',
+    },
+    controls: {
+        arrowPrefix: 'arrow',
+    },
 };
 
 // Alpha Values - Consolidated opacity constants for consistent transparency
@@ -317,10 +311,6 @@ export const TIMING = {
     // CSS animation durations
     scrollbar: 150,
 };
-
-// Legacy Border Styles - REMOVED
-// This object has been deprecated and removed. Use COMPONENTS.borders instead.
-// All references have been migrated to use the consolidated border system.
 
 // Modern Spacing System - 8pt grid with responsive scaling
 export const SPACING = {
@@ -912,9 +902,6 @@ export const PAGE_TITLES = {
     interpreter: name => `${name} Interpreter | Bangyen`,
 };
 
-// Timer Intervals - REMOVED (consolidated into TIMING.game)
-// These intervals have been moved to TIMING.game for better organization.
-
 // Common Chart Dimensions
 export const CHART_DIMENSIONS = {
     height: 300,
@@ -942,7 +929,7 @@ export const CHART_FORMATTING = {
     },
 };
 
-// Percentage Conversion Constants
+// Percentage Conversion Constants - Simplified
 export const PERCENTAGE = {
     multiplier: 100,
     divisor: 100,
@@ -964,17 +951,3 @@ export const ZSHARP_DEFAULTS = {
     lossReduction: 0.1,
     maxEpochs: 20,
 };
-
-// Legacy font sizes - DEPRECATED: Use TYPOGRAPHY.fontSize.* instead
-// These are kept for backward compatibility but should be migrated
-export const FONT_SIZES = {
-    // Consolidated error sizes into TYPOGRAPHY.fontSize.md.display
-    error: {
-        xs: TYPOGRAPHY.fontSize.md.display,
-        sm: TYPOGRAPHY.fontSize.lg.display,
-        md: TYPOGRAPHY.fontSize.lg.display,
-    },
-};
-
-// Game Grid Sizes - REMOVED (moved to GAME_CONSTANTS.gridSizes)
-// Grid sizes have been consolidated into GAME_CONSTANTS.gridSizes for better organization.

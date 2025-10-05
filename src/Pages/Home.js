@@ -175,7 +175,7 @@ export default function Home() {
                 <MenuButton>{dropdown('Projects', pages)}</MenuButton>
                 <TooltipButton
                     component="a"
-                    href={URLS.github}
+                    href={URLS.githubProfile}
                     target="_blank"
                     rel="noopener noreferrer"
                     title="GitHub Profile"
@@ -571,7 +571,7 @@ export default function Home() {
                                     >
                                         <Box
                                             component="a"
-                                            href={URLS.github}
+                                            href={URLS.githubProfile}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             sx={{
