@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid2';
 import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
 import { CustomGrid, Controls } from '../helpers';
-import { COLORS } from '../config/constants';
+import { COLORS, PAGE_TITLES, TIMER_INTERVALS } from '../config/constants';
 
 function getRandom(max) {
     return Math.floor(Math.random() * max);
@@ -122,7 +122,7 @@ function handleAction(state, action) {
 }
 
 export default function Snake() {
-    const { create: createTimer } = useTimer(100);
+    const { create: createTimer } = useTimer(TIMER_INTERVALS.snake);
     const { create: createKeys } = useKeys();
 
     const { height, width } = useWindow();
@@ -168,8 +168,8 @@ export default function Snake() {
 
             if (index in board) {
                 if (board[index] > 0)
-                    color = COLORS.primary.dark; // Snake body - dark blue
-                else color = 'hsl(217, 91%, 25%)'; // Food - much darker blue shade
+                    color = COLORS.game.snakeBody; // Snake body - dark blue
+                else color = COLORS.game.snakeFood; // Food - much darker blue shade
             }
 
             return {
@@ -207,7 +207,7 @@ export default function Snake() {
     }, [rows, cols]);
 
     useEffect(() => {
-        document.title = 'Snake | Bangyen';
+        document.title = PAGE_TITLES.snake;
     }, []);
 
     return (

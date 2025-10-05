@@ -8,7 +8,7 @@ import Grid from '@mui/material/Grid2';
 
 import { Navigation, HomeButton, TooltipButton } from '../../helpers';
 import { Board, useHandler, usePalette } from '../Board';
-import { COLORS } from '../../config/constants';
+import { COLORS, PAGE_TITLES, GRID_SIZES } from '../../config/constants';
 import { getGrid, handleBoard } from './boardHandlers';
 import { useWindow, useMobile } from '../../hooks';
 import { convertPixels } from '../../calculate';
@@ -48,7 +48,7 @@ function getFrontProps(getters, dispatch) {
 export default function LightsOut() {
     const { height, width } = useWindow();
     const mobile = useMobile('sm');
-    const size = mobile ? 3 : 5;
+    const size = mobile ? GRID_SIZES.mobile : GRID_SIZES.desktop;
 
     let { rows, cols } = useMemo(
         () => convertPixels(size, height, width),
@@ -74,7 +74,7 @@ export default function LightsOut() {
     const palette = usePalette(state.score);
 
     useEffect(() => {
-        document.title = 'Lights Out | Bangyen';
+        document.title = PAGE_TITLES.lightsOut;
     }, []);
 
     useEffect(() => {

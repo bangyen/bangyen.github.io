@@ -11,11 +11,12 @@ import {
     COMPONENTS,
     TYPOGRAPHY,
     ANIMATIONS,
+    PAGE_TITLES,
 } from '../config/constants';
 
 export default function Interpreters() {
     useEffect(() => {
-        document.title = `Interpreters - ${PERSONAL_INFO.name}`;
+        document.title = PAGE_TITLES.interpreters;
     }, []);
 
     const interpreters = [

@@ -192,6 +192,11 @@ export const COLORS = {
         indigo: 'hsl(231, 91%, 60%)',
         pink: 'hsl(329, 85%, 70%)',
     },
+    // Game-specific colors
+    game: {
+        snakeBody: 'hsl(217, 91%, 45%)', // Darker blue for snake body
+        snakeFood: 'hsl(217, 91%, 25%)', // Much darker blue for food
+    },
     // Sophisticated Gradients for Modern Effects
     gradients: {
         primary:
@@ -231,7 +236,8 @@ export const LAYOUT = {
     },
 };
 
-// Common Border Styles
+// Common Border Styles (deprecated - use COMPONENTS.borders instead)
+// Kept for backward compatibility but should be migrated to COMPONENTS.borders
 export const BORDERS = {
     light: '1px solid hsla(0, 0%, 100%, 0.1)',
     subtle: `1px solid ${COLORS.border.subtle}`,
@@ -736,6 +742,56 @@ export const META = {
     description: `${PERSONAL_INFO.name} - Backend Developer and AI/ML Engineer specializing in cloud architecture, HPC systems, and machine learning research. Northwestern MS Computer Science graduate with experience at Volta Health and Center for Nuclear Femtography.`,
     themeColor: '#ffffff',
     backgroundColor: '#ffffff',
+};
+
+// Page Titles
+export const PAGE_TITLES = {
+    home: `${PERSONAL_INFO.name} - ${PERSONAL_INFO.title}`,
+    snake: 'Snake | Bangyen',
+    lightsOut: 'Lights Out | Bangyen',
+    zsharp: 'ZSharp - Sharpness-Aware Minimization',
+    oligopoly: 'Oligopoly - Cournot Competition',
+    error: 'Page Not Found | Bangyen',
+    interpreters: `Interpreters - ${PERSONAL_INFO.name}`,
+    interpreter: name => `${name} Interpreter | Bangyen`,
+};
+
+// Timer Intervals (in milliseconds)
+export const TIMER_INTERVALS = {
+    snake: 100,
+    editor: 200,
+};
+
+// Common Chart Dimensions
+export const CHART_DIMENSIONS = {
+    height: 300,
+    dotRadius: 4,
+    strokeWidth: 3,
+};
+
+// Common Font Sizes (for components that need specific sizes)
+export const FONT_SIZES = {
+    hero: {
+        xs: '2rem',
+        sm: '2.8rem',
+        md: '3.2rem',
+    },
+    large: {
+        xs: '2rem',
+        sm: '2.5rem',
+        md: '3rem',
+    },
+    error: {
+        xs: '2.5rem',
+        sm: '3.5rem',
+        md: '4rem',
+    },
+};
+
+// Game Grid Sizes
+export const GRID_SIZES = {
+    mobile: 3,
+    desktop: 5,
 };
 
 // Development Constants

@@ -14,6 +14,9 @@ import {
     SPACING,
     URLS,
     TYPOGRAPHY,
+    PAGE_TITLES,
+    CHART_DIMENSIONS,
+    FONT_SIZES,
 } from '../config/constants';
 import { GitHub, Refresh, Home } from '@mui/icons-material';
 import {
@@ -129,7 +132,7 @@ const Oligopoly = () => {
     const collusionEnabled = false;
 
     useEffect(() => {
-        document.title = 'Oligopoly - Cournot Competition';
+        document.title = PAGE_TITLES.oligopoly;
 
         // Load real simulation matrix on component mount
         const loadData = async () => {
@@ -253,11 +256,7 @@ const Oligopoly = () => {
                                 sx={{
                                     color: 'text.primary',
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                    fontSize: {
-                                        xs: '2rem',
-                                        sm: '2.8rem',
-                                        md: '3.2rem',
-                                    },
+                                    fontSize: FONT_SIZES.hero,
                                 }}
                             >
                                 Oligopoly
@@ -332,7 +331,7 @@ const Oligopoly = () => {
                         >
                             Market Dynamics
                         </Typography>
-                        <Box sx={{ height: 300 }}>
+                        <Box sx={{ height: CHART_DIMENSIONS.height }}>
                             {loading ? (
                                 <Box
                                     sx={{
@@ -410,12 +409,14 @@ const Oligopoly = () => {
                                             type="monotone"
                                             dataKey="price"
                                             stroke={COLORS.data.blue}
-                                            strokeWidth={3}
+                                            strokeWidth={
+                                                CHART_DIMENSIONS.strokeWidth
+                                            }
                                             name="Market Price"
                                             dot={{
                                                 fill: COLORS.data.blue,
                                                 strokeWidth: 2,
-                                                r: 4,
+                                                r: CHART_DIMENSIONS.dotRadius,
                                             }}
                                         />
                                         <Line
@@ -423,12 +424,14 @@ const Oligopoly = () => {
                                             type="monotone"
                                             dataKey="hhi"
                                             stroke={COLORS.data.amber}
-                                            strokeWidth={3}
+                                            strokeWidth={
+                                                CHART_DIMENSIONS.strokeWidth
+                                            }
                                             name="HHI Concentration"
                                             dot={{
                                                 fill: COLORS.data.amber,
                                                 strokeWidth: 2,
-                                                r: 4,
+                                                r: CHART_DIMENSIONS.dotRadius,
                                             }}
                                         />
                                     </LineChart>

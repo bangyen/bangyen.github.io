@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback, useReducer } from 'react';
 import Editor, { EditorContext, TextArea } from '../Editor';
 import { useTimer, useCache, useContainer } from '../../hooks';
 import { handleToolbar } from '../Toolbar';
+import { PAGE_TITLES, TIMER_INTERVALS } from '../../config/constants';
 
 function handleAction(state, action) {
     const { type, payload } = action;
@@ -53,7 +54,7 @@ function handleAction(state, action) {
 }
 
 export default function TextEditor(props) {
-    const { create, clear } = useTimer(200);
+    const { create, clear } = useTimer(TIMER_INTERVALS.editor);
 
     const { runner, clean, name, start, tape, output, register } = props;
 
@@ -89,7 +90,7 @@ export default function TextEditor(props) {
     );
 
     useEffect(() => {
-        document.title = name + ' Interpreter | Bangyen';
+        document.title = PAGE_TITLES.interpreter(name);
     }, [name]);
 
     const wrapDispatch = useCallback(

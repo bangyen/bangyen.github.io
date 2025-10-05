@@ -15,6 +15,7 @@ import {
     TYPOGRAPHY,
     ANIMATIONS,
     COMPONENTS,
+    PAGE_TITLES,
 } from '../config/constants';
 
 import {
@@ -134,7 +135,7 @@ function MenuButton({ children }) {
 
 export default function Home() {
     useEffect(() => {
-        document.title = `${PERSONAL_INFO.name} - ${PERSONAL_INFO.title}`;
+        document.title = PAGE_TITLES.home;
     }, []);
 
     return (

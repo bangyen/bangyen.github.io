@@ -8,6 +8,9 @@ import {
     COLORS,
     SPACING,
     TYPOGRAPHY,
+    PAGE_TITLES,
+    CHART_DIMENSIONS,
+    FONT_SIZES,
 } from '../config/constants';
 import {
     LineChart,
@@ -112,7 +115,7 @@ const ZSharp = () => {
     const [viewType, setViewType] = useState('accuracy');
 
     useEffect(() => {
-        document.title = 'ZSharp - Sharpness-Aware Minimization';
+        document.title = PAGE_TITLES.zsharp;
 
         // Load real data on component mount
         const loadData = async () => {
@@ -251,11 +254,7 @@ const ZSharp = () => {
                                 sx={{
                                     color: 'text.primary',
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                    fontSize: {
-                                        xs: '2rem',
-                                        sm: '2.8rem',
-                                        md: '3.2rem',
-                                    },
+                                    fontSize: FONT_SIZES.hero,
                                 }}
                             >
                                 ZSharp
@@ -336,7 +335,7 @@ const ZSharp = () => {
                             {viewType === 'convergence' &&
                                 'Convergence Analysis'}
                         </Typography>
-                        <Box sx={{ height: 300 }}>
+                        <Box sx={{ height: CHART_DIMENSIONS.height }}>
                             {loading ? (
                                 <Box
                                     sx={{
@@ -455,25 +454,28 @@ const ZSharp = () => {
                                                     type="monotone"
                                                     dataKey="sgd"
                                                     stroke={COLORS.data.blue}
-                                                    strokeWidth={3}
+                                                    strokeWidth={
+                                                        CHART_DIMENSIONS.strokeWidth
+                                                    }
                                                     name="SGD"
                                                     dot={{
                                                         fill: COLORS.data.blue,
                                                         strokeWidth: 2,
-                                                        r: 4,
+                                                        r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
                                                 <Line
                                                     type="monotone"
                                                     dataKey="zsharp"
                                                     stroke={COLORS.data.green}
-                                                    strokeWidth={3}
+                                                    strokeWidth={
+                                                        CHART_DIMENSIONS.strokeWidth
+                                                    }
                                                     name="ZSharp"
                                                     dot={{
-                                                        fill: COLORS.data.green
-                                                            .green,
+                                                        fill: COLORS.data.green,
                                                         strokeWidth: 2,
-                                                        r: 4,
+                                                        r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
                                             </>
@@ -484,25 +486,28 @@ const ZSharp = () => {
                                                     type="monotone"
                                                     dataKey="sgd"
                                                     stroke={COLORS.data.blue}
-                                                    strokeWidth={3}
+                                                    strokeWidth={
+                                                        CHART_DIMENSIONS.strokeWidth
+                                                    }
                                                     name="SGD Loss"
                                                     dot={{
                                                         fill: COLORS.data.blue,
                                                         strokeWidth: 2,
-                                                        r: 4,
+                                                        r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
                                                 <Line
                                                     type="monotone"
                                                     dataKey="zsharp"
                                                     stroke={COLORS.data.green}
-                                                    strokeWidth={3}
+                                                    strokeWidth={
+                                                        CHART_DIMENSIONS.strokeWidth
+                                                    }
                                                     name="ZSharp Loss"
                                                     dot={{
-                                                        fill: COLORS.data.green
-                                                            .green,
+                                                        fill: COLORS.data.green,
                                                         strokeWidth: 2,
-                                                        r: 4,
+                                                        r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
                                             </>
@@ -512,12 +517,14 @@ const ZSharp = () => {
                                                 type="monotone"
                                                 dataKey="gap"
                                                 stroke={COLORS.data.amber}
-                                                strokeWidth={3}
+                                                strokeWidth={
+                                                    CHART_DIMENSIONS.strokeWidth
+                                                }
                                                 name="Accuracy Gap"
                                                 dot={{
                                                     fill: COLORS.data.amber,
                                                     strokeWidth: 2,
-                                                    r: 4,
+                                                    r: CHART_DIMENSIONS.dotRadius,
                                                 }}
                                             />
                                         )}
@@ -526,12 +533,14 @@ const ZSharp = () => {
                                                 type="monotone"
                                                 dataKey="improvement"
                                                 stroke={COLORS.data.amber}
-                                                strokeWidth={3}
+                                                strokeWidth={
+                                                    CHART_DIMENSIONS.strokeWidth
+                                                }
                                                 name="Improvement"
                                                 dot={{
                                                     fill: COLORS.data.amber,
                                                     strokeWidth: 2,
-                                                    r: 4,
+                                                    r: CHART_DIMENSIONS.dotRadius,
                                                 }}
                                             />
                                         )}
@@ -541,25 +550,28 @@ const ZSharp = () => {
                                                     type="monotone"
                                                     dataKey="sgd"
                                                     stroke={COLORS.data.blue}
-                                                    strokeWidth={3}
+                                                    strokeWidth={
+                                                        CHART_DIMENSIONS.strokeWidth
+                                                    }
                                                     name="SGD Rate"
                                                     dot={{
                                                         fill: COLORS.data.blue,
                                                         strokeWidth: 2,
-                                                        r: 4,
+                                                        r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
                                                 <Line
                                                     type="monotone"
                                                     dataKey="zsharp"
                                                     stroke={COLORS.data.green}
-                                                    strokeWidth={3}
+                                                    strokeWidth={
+                                                        CHART_DIMENSIONS.strokeWidth
+                                                    }
                                                     name="ZSharp Rate"
                                                     dot={{
-                                                        fill: COLORS.data.green
-                                                            .green,
+                                                        fill: COLORS.data.green,
                                                         strokeWidth: 2,
-                                                        r: 4,
+                                                        r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
                                             </>
