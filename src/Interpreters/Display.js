@@ -2,7 +2,8 @@ import { EditorContext, Text } from './Editor';
 
 import { Box, Typography, Chip, IconButton } from '@mui/material';
 import { useContext } from 'react';
-import { COMPONENTS, SPACING, COLORS, TYPOGRAPHY } from '../config/constants';
+import { SPACING, COLORS, TYPOGRAPHY } from '../config/theme';
+import { COMPONENTS } from '../config/components';
 
 import {
     CodeRounded,
@@ -65,7 +66,9 @@ export function Tape({ compact = false }) {
             title="Tape"
             data={tape}
             pointer={pointer}
-        />
+        >
+            <Text text={'\xA0'} />
+        </Display>
     );
 }
 
@@ -106,7 +109,11 @@ export function Register({ compact = false }) {
         );
     }
 
-    return <Display Icon={PlusOneRounded} title="Register" data={[register]} />;
+    return (
+        <Display Icon={PlusOneRounded} title="Register" data={[register]}>
+            <Text text={'\xA0'} />
+        </Display>
+    );
 }
 
 function Display(props) {
@@ -121,8 +128,8 @@ function Display(props) {
                 color={color}
                 text={val}
                 sx={{
-                    fontSize: TYPOGRAPHY.fontSize.large,
-                    fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                    fontSize: TYPOGRAPHY.fontSize.md.body,
+                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
                     fontFamily: 'monospace',
                 }}
             />
@@ -144,8 +151,8 @@ function Display(props) {
                     variant="subtitle2"
                     sx={{
                         color: 'primary.light',
-                        fontWeight: TYPOGRAPHY.fontWeight.semiBold,
-                        fontSize: TYPOGRAPHY.fontSize.medium,
+                        fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                        fontSize: TYPOGRAPHY.fontSize.md.body,
                     }}
                 >
                     {title}
@@ -177,8 +184,8 @@ function CompactDisplay(props) {
                     color:
                         color === 'info' ? COLORS.text.white : 'text.primary',
                     fontFamily: 'monospace',
-                    fontSize: TYPOGRAPHY.fontSize.small,
-                    height: SPACING.maxWidth.icon,
+                    fontSize: TYPOGRAPHY.fontSize.caption,
+                    height: SPACING.components.chip.height,
                 }}
             />
         );
@@ -190,7 +197,7 @@ function CompactDisplay(props) {
                 padding: 1.5,
                 backgroundColor: COMPONENTS.overlays.lighter,
                 border: COMPONENTS.borders.light,
-                borderRadius: SPACING.borderRadius.small,
+                borderRadius: SPACING.borderRadius.sm,
                 height: '100%',
                 minHeight: SPACING.maxWidth.medium,
             }}
@@ -206,15 +213,15 @@ function CompactDisplay(props) {
                 <Icon
                     sx={{
                         color: 'primary.light',
-                        fontSize: TYPOGRAPHY.fontSize.icon,
+                        fontSize: TYPOGRAPHY.fontSize.md.body,
                     }}
                 />
                 <Typography
                     variant="caption"
                     sx={{
                         color: 'primary.light',
-                        fontWeight: TYPOGRAPHY.fontWeight.semiBold,
-                        fontSize: TYPOGRAPHY.fontSize.small,
+                        fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                        fontSize: TYPOGRAPHY.fontSize.caption,
                     }}
                 >
                     {title}
@@ -265,8 +272,8 @@ function Scrollable(props) {
                 padding: 2,
                 backgroundColor: COMPONENTS.overlays.lighter,
                 border: COMPONENTS.borders.light,
-                borderRadius: SPACING.borderRadius.small,
-                height: SPACING.maxWidth.large,
+                borderRadius: SPACING.borderRadius.sm,
+                height: SPACING.height.scrollable,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',

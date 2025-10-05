@@ -9,12 +9,14 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import {
-    COMPONENTS,
-    COLORS,
-    SPACING,
     URLS,
-    TYPOGRAPHY,
+    PAGE_TITLES,
+    CHART_DIMENSIONS,
+    CHART_FORMATTING,
+    GAME_CONSTANTS,
 } from '../config/constants';
+import { COLORS, SPACING, TYPOGRAPHY, LAYOUT } from '../config/theme';
+import { COMPONENTS } from '../config/components';
 import { GitHub, Refresh, Home } from '@mui/icons-material';
 import {
     LineChart,
@@ -94,7 +96,7 @@ const filterMatrixData = (
         );
         // Sort by round to ensure proper order
         const sorted = closest.sort((a, b) => a.round - b.round);
-        return sorted.slice(0, 15);
+        return sorted.slice(0, GAME_CONSTANTS.oligopoly.maxRounds);
     }
 
     // Sort by round to ensure proper order
@@ -105,31 +107,42 @@ const filterMatrixData = (
 // Fallback data generation if real data fails to load
 const generateFallbackOligopolyData = () => {
     const data = [];
-    for (let i = 1; i <= 15; i++) {
+    for (let i = 1; i <= GAME_CONSTANTS.oligopoly.maxRounds; i++) {
+        const sim = GAME_CONSTANTS.oligopoly.simulation;
         data.push({
             round: i,
-            price: 20 + Math.sin(i * 0.3) * 5,
-            hhi: 0.3 + Math.sin(i * 0.1) * 0.1,
-            collusion: i > 5 && i < 11,
+            price:
+                sim.fallbackPrice +
+                Math.sin(i * sim.priceFrequency) * sim.priceAmplitude,
+            hhi:
+                sim.fallbackHHI +
+                Math.sin(i * sim.hhiFrequency) * sim.hhiAmplitude,
+            collusion: i > sim.collusionStart && i < sim.collusionEnd,
         });
     }
     return data;
 };
 
 const Oligopoly = () => {
-    const [numFirms, setNumFirms] = useState(3);
-    const [demandElasticity, setDemandElasticity] = useState(2.0);
-    const [basePrice, setBasePrice] = useState(40);
+    const [numFirms, setNumFirms] = useState(
+        GAME_CONSTANTS.oligopoly.defaultFirms
+    );
+    const [demandElasticity, setDemandElasticity] = useState(
+        GAME_CONSTANTS.oligopoly.defaultElasticity
+    );
+    const [basePrice, setBasePrice] = useState(
+        GAME_CONSTANTS.oligopoly.defaultBasePrice
+    );
     const [marketData, setMarketData] = useState([]);
     const [matrixData, setMatrixData] = useState([]);
     const [loading, setLoading] = useState(true);
 
     // Fixed parameters - Cournot model with no collusion
-    const modelType = 'cournot';
+    const modelType = GAME_CONSTANTS.modelTypes.cournot;
     const collusionEnabled = false;
 
     useEffect(() => {
-        document.title = 'Oligopoly - Cournot Competition';
+        document.title = PAGE_TITLES.oligopoly;
 
         // Load real simulation matrix on component mount
         const loadData = async () => {
@@ -155,7 +168,7 @@ const Oligopoly = () => {
         };
 
         loadData();
-    }, [numFirms, demandElasticity, basePrice, collusionEnabled]);
+    }, [numFirms, demandElasticity, basePrice, collusionEnabled, modelType]);
 
     // Update data when parameters change
     useEffect(() => {
@@ -180,9 +193,9 @@ const Oligopoly = () => {
     ]);
 
     const resetToDefaults = () => {
-        setNumFirms(3);
-        setDemandElasticity(2.0);
-        setBasePrice(40);
+        setNumFirms(GAME_CONSTANTS.oligopoly.defaultFirms);
+        setDemandElasticity(GAME_CONSTANTS.oligopoly.defaultElasticity);
+        setBasePrice(GAME_CONSTANTS.oligopoly.defaultBasePrice);
     };
 
     return (
@@ -192,7 +205,7 @@ const Oligopoly = () => {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+                padding: SPACING.components.page.padding.md,
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -207,8 +220,8 @@ const Oligopoly = () => {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: COLORS.background.default,
-                    zIndex: -2,
+                    background: COLORS.surface.background,
+                    zIndex: LAYOUT.zIndex.background,
                 }}
             />
 
@@ -222,7 +235,7 @@ const Oligopoly = () => {
                 flexDirection="column"
                 sx={{
                     zIndex: 1,
-                    padding: { xs: '1rem 0', sm: '1.5rem 0', md: '2rem 0' },
+                    padding: SPACING.components.page.paddingVertical.md,
                     minHeight: 0,
                 }}
             >
@@ -253,11 +266,7 @@ const Oligopoly = () => {
                                 sx={{
                                     color: 'text.primary',
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                    fontSize: {
-                                        xs: '2rem',
-                                        sm: '2.8rem',
-                                        md: '3.2rem',
-                                    },
+                                    fontSize: TYPOGRAPHY.fontSize.md.h4,
                                 }}
                             >
                                 Oligopoly
@@ -324,7 +333,8 @@ const Oligopoly = () => {
                             variant="subtitle1"
                             sx={{
                                 color: COLORS.text.secondary,
-                                marginBottom: 3,
+                                marginBottom:
+                                    SPACING.components.section.marginBottom,
                                 textAlign: 'center',
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
                                 fontSize: TYPOGRAPHY.fontSize.md.h5,
@@ -332,7 +342,7 @@ const Oligopoly = () => {
                         >
                             Market Dynamics
                         </Typography>
-                        <Box sx={{ height: 300 }}>
+                        <Box sx={{ height: CHART_DIMENSIONS.height }}>
                             {loading ? (
                                 <Box
                                     sx={{
@@ -351,39 +361,45 @@ const Oligopoly = () => {
                                 <ResponsiveContainer width="100%" height="100%">
                                     <LineChart data={marketData}>
                                         <CartesianGrid
-                                            strokeDasharray="3 3"
-                                            stroke={COLORS.chart.stroke.light}
+                                            strokeDasharray={
+                                                CHART_FORMATTING.lines
+                                                    .strokeDashArray
+                                            }
+                                            stroke={COLORS.border.primary}
                                         />
                                         <XAxis
                                             dataKey="round"
-                                            stroke={COLORS.chart.stroke.medium}
+                                            stroke={COLORS.text.secondary}
                                             tick={{
-                                                fill: COLORS.chart.fill.medium,
+                                                fill: COLORS.text.secondary,
                                             }}
                                         />
                                         <YAxis
                                             yAxisId="left"
-                                            stroke={COLORS.chart.stroke.medium}
+                                            stroke={COLORS.text.secondary}
                                             tick={{
-                                                fill: COLORS.chart.fill.medium,
+                                                fill: COLORS.text.secondary,
                                             }}
                                             tickFormatter={value =>
-                                                `$${value.toFixed(2)}`
+                                                `${CHART_FORMATTING.price.prefix}${value.toFixed(CHART_FORMATTING.price.decimals)}`
                                             }
                                             domain={[
-                                                'dataMin - 5',
-                                                'dataMax + 5',
+                                                `dataMin - ${CHART_FORMATTING.axis.padding}`,
+                                                `dataMax + ${CHART_FORMATTING.axis.padding}`,
                                             ]}
                                         />
                                         <YAxis
                                             yAxisId="right"
                                             orientation="right"
-                                            stroke={COLORS.chart.stroke.medium}
+                                            stroke={COLORS.text.secondary}
                                             tick={{
-                                                fill: COLORS.chart.fill.medium,
+                                                fill: COLORS.text.secondary,
                                             }}
                                             tickFormatter={value =>
-                                                value.toFixed(2)
+                                                value.toFixed(
+                                                    CHART_FORMATTING.price
+                                                        .decimals
+                                                )
                                             }
                                             domain={[
                                                 'dataMin - 0.05',
@@ -409,26 +425,34 @@ const Oligopoly = () => {
                                             yAxisId="left"
                                             type="monotone"
                                             dataKey="price"
-                                            stroke={COLORS.chart.blue}
-                                            strokeWidth={3}
+                                            stroke={COLORS.data.blue}
+                                            strokeWidth={
+                                                CHART_DIMENSIONS.strokeWidth
+                                            }
                                             name="Market Price"
                                             dot={{
-                                                fill: COLORS.chart.blue,
-                                                strokeWidth: 2,
-                                                r: 4,
+                                                fill: COLORS.data.blue,
+                                                strokeWidth:
+                                                    CHART_FORMATTING.lines
+                                                        .defaultStrokeWidth,
+                                                r: CHART_DIMENSIONS.dotRadius,
                                             }}
                                         />
                                         <Line
                                             yAxisId="right"
                                             type="monotone"
                                             dataKey="hhi"
-                                            stroke={COLORS.chart.orange}
-                                            strokeWidth={3}
+                                            stroke={COLORS.data.amber}
+                                            strokeWidth={
+                                                CHART_DIMENSIONS.strokeWidth
+                                            }
                                             name="HHI Concentration"
                                             dot={{
-                                                fill: COLORS.chart.orange,
-                                                strokeWidth: 2,
-                                                r: 4,
+                                                fill: COLORS.data.amber,
+                                                strokeWidth:
+                                                    CHART_FORMATTING.lines
+                                                        .defaultStrokeWidth,
+                                                r: CHART_DIMENSIONS.dotRadius,
                                             }}
                                         />
                                     </LineChart>
@@ -444,6 +468,7 @@ const Oligopoly = () => {
                             backgroundColor: COLORS.surface.subtle,
                             borderRadius: SPACING.borderRadius.sm,
                             border: COMPONENTS.borders.subtle,
+                            marginBottom: 4,
                             width: '100%',
                             boxSizing: 'border-box',
                             overflow: 'hidden',
@@ -454,14 +479,15 @@ const Oligopoly = () => {
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                marginBottom: 3,
+                                marginBottom:
+                                    SPACING.components.section.marginBottom,
                             }}
                         >
                             <Typography
-                                variant="h6"
+                                variant="body1"
                                 sx={{
                                     color: 'primary.light',
-                                    fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                 }}
                             >
                                 Market Parameters
@@ -485,10 +511,19 @@ const Oligopoly = () => {
                             </Button>
                         </Box>
 
-                        <Grid container={true} spacing={3}>
+                        <Grid
+                            container={true}
+                            spacing={SPACING.layout.standardSpacing}
+                        >
                             {/* Top Row - Toggle Buttons */}
                             <Grid size={{ xs: 12, md: 4 }}>
-                                <Box sx={{ marginBottom: 2 }}>
+                                <Box
+                                    sx={{
+                                        marginBottom:
+                                            SPACING.components.page
+                                                .marginBottom,
+                                    }}
+                                >
                                     <Typography
                                         variant="body2"
                                         sx={{ color: 'text.secondary', mb: 1 }}
@@ -508,10 +543,12 @@ const Oligopoly = () => {
                                             width: '80%',
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
-                                                color: COLORS.chart.fill.medium,
+                                                color: COLORS.text.secondary,
                                                 borderColor:
-                                                    COLORS.chart.legend.light,
-                                                padding: '0.5rem 0.75rem', // 8px 12px
+                                                    COLORS.text.tertiary,
+                                                padding:
+                                                    SPACING.components.small
+                                                        .padding,
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:
@@ -524,7 +561,7 @@ const Oligopoly = () => {
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        COLORS.chart.legend
+                                                        COLORS.text.muted
                                                             .lighter,
                                                 },
                                             },
@@ -539,7 +576,13 @@ const Oligopoly = () => {
                             </Grid>
 
                             <Grid size={{ xs: 12, md: 4 }}>
-                                <Box sx={{ marginBottom: 2 }}>
+                                <Box
+                                    sx={{
+                                        marginBottom:
+                                            SPACING.components.page
+                                                .marginBottom,
+                                    }}
+                                >
                                     <Typography
                                         variant="body2"
                                         sx={{ color: 'text.secondary', mb: 1 }}
@@ -559,10 +602,12 @@ const Oligopoly = () => {
                                             width: '80%',
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
-                                                color: COLORS.chart.fill.medium,
+                                                color: COLORS.text.secondary,
                                                 borderColor:
-                                                    COLORS.chart.legend.light,
-                                                padding: '0.5rem 0.75rem', // 8px 12px
+                                                    COLORS.text.tertiary,
+                                                padding:
+                                                    SPACING.components.small
+                                                        .padding,
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:
@@ -575,7 +620,7 @@ const Oligopoly = () => {
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        COLORS.chart.legend
+                                                        COLORS.text.muted
                                                             .lighter,
                                                 },
                                             },
@@ -595,7 +640,13 @@ const Oligopoly = () => {
                             </Grid>
 
                             <Grid size={{ xs: 12, md: 4 }}>
-                                <Box sx={{ marginBottom: 2 }}>
+                                <Box
+                                    sx={{
+                                        marginBottom:
+                                            SPACING.components.page
+                                                .marginBottom,
+                                    }}
+                                >
                                     <Typography
                                         variant="body2"
                                         sx={{ color: 'text.secondary', mb: 1 }}
@@ -615,10 +666,12 @@ const Oligopoly = () => {
                                             width: '80%',
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
-                                                color: COLORS.chart.fill.medium,
+                                                color: COLORS.text.secondary,
                                                 borderColor:
-                                                    COLORS.chart.legend.light,
-                                                padding: '0.5rem 0.75rem', // 8px 12px
+                                                    COLORS.text.tertiary,
+                                                padding:
+                                                    SPACING.components.small
+                                                        .padding,
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:
@@ -631,7 +684,7 @@ const Oligopoly = () => {
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        COLORS.chart.legend
+                                                        COLORS.text.muted
                                                             .lighter,
                                                 },
                                             },

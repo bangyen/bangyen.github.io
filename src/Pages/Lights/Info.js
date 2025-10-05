@@ -7,7 +7,7 @@ import {
     Replay,
 } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
-import { SPACING, COLORS, TYPOGRAPHY } from '../../config/constants';
+import { SPACING, COLORS, TYPOGRAPHY } from '../../config/theme';
 
 import { getProduct } from './matrices';
 import { CustomGrid } from '../../helpers';
@@ -274,8 +274,8 @@ export default function Info(props) {
                                                 <Calculate
                                                     sx={{
                                                         mr: 1.5,
-                                                        color: COLORS.chart
-                                                            .orange,
+                                                        color: COLORS.data
+                                                            .amber,
                                                         fontSize: '1.5rem',
                                                     }}
                                                 />
@@ -325,7 +325,7 @@ export default function Info(props) {
                                                 <Replay
                                                     sx={{
                                                         mr: 1.5,
-                                                        color: COLORS.chart
+                                                        color: COLORS.data
                                                             .green,
                                                         fontSize: '1.5rem',
                                                     }}

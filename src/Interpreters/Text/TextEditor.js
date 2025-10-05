@@ -2,6 +2,8 @@ import { useEffect, useRef, useCallback, useReducer } from 'react';
 import Editor, { EditorContext, TextArea } from '../Editor';
 import { useTimer, useCache, useContainer } from '../../hooks';
 import { handleToolbar } from '../Toolbar';
+import { PAGE_TITLES } from '../../config/constants';
+import { TIMING } from '../../config/theme';
 
 function handleAction(state, action) {
     const { type, payload } = action;
@@ -53,7 +55,7 @@ function handleAction(state, action) {
 }
 
 export default function TextEditor(props) {
-    const { create, clear } = useTimer(200);
+    const { create, clear } = useTimer(TIMING.game.editor);
 
     const { runner, clean, name, start, tape, output, register } = props;
 
@@ -89,7 +91,7 @@ export default function TextEditor(props) {
     );
 
     useEffect(() => {
-        document.title = name + ' Interpreter | Bangyen';
+        document.title = PAGE_TITLES.interpreter(name);
     }, [name]);
 
     const wrapDispatch = useCallback(
@@ -123,7 +125,7 @@ export default function TextEditor(props) {
         readOnly: true,
         infoLabel: 'RISC-V Equivalent',
         fillValue: 'addi x0, x0, 0',
-        value: null,
+        value: '',
     };
 
     return (

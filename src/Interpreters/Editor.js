@@ -2,13 +2,8 @@ import { Program, Output, Tape, Register } from './Display';
 import { CustomGrid } from '../helpers';
 import Grid from '@mui/material/Grid2';
 import { Toolbar } from './Toolbar';
-import {
-    COLORS,
-    COMPONENTS,
-    SPACING,
-    ANIMATIONS,
-    TYPOGRAPHY,
-} from '../config/constants';
+import { COLORS, SPACING, ANIMATIONS, TYPOGRAPHY } from '../config/theme';
+import { COMPONENTS } from '../config/components';
 
 import { Typography, TextField } from '@mui/material';
 
@@ -60,7 +55,7 @@ export default function Editor({ container, sideProps, hide, children }) {
             flexDirection="column"
             padding="5vh 5vw 5vh 5vw"
             sx={{
-                background: COLORS.background.default,
+                background: COLORS.surface.background,
                 position: 'relative',
             }}
         >
@@ -95,8 +90,8 @@ export default function Editor({ container, sideProps, hide, children }) {
                     ].filter(Boolean).length;
                     const gridSize =
                         fieldCount === 1
-                            ? { xs: 12, sm: 12 }
-                            : { xs: 12, sm: 6 };
+                            ? SPACING.grid.full
+                            : SPACING.grid.half;
 
                     if (code !== undefined) {
                         fields.push(
@@ -176,7 +171,7 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
             children: <Text text={value} />,
             sx: {
                 cursor: 'pointer',
-                borderRadius: SPACING.borderRadius.small,
+                borderRadius: SPACING.borderRadius.sm,
                 border: cellStyle.border,
                 transition: ANIMATIONS.transition,
                 '&:hover': {
@@ -206,11 +201,21 @@ export function TextArea({
     infoLabel = infoLabel || 'Program code';
     readOnly = readOnly || false;
 
+    // Use controlled component if value is provided, otherwise use uncontrolled
+    const isControlled = value !== undefined && value !== null;
+    const textFieldProps = isControlled
+        ? {
+              value: value || '',
+              onChange: handleChange,
+          }
+        : {
+              defaultValue: fillValue,
+          };
+
     return (
         <TextField
             variant="outlined"
             label={infoLabel}
-            defaultValue={fillValue}
             slotProps={{
                 inputLabel: { shrink: true },
                 htmlInput: { readOnly },
@@ -218,13 +223,12 @@ export function TextArea({
             fullWidth
             multiline
             rows={rows}
-            value={value}
-            onChange={handleChange}
+            {...textFieldProps}
             sx={{
                 '& .MuiInputBase-root': {
                     alignItems: 'flex-start',
                     backgroundColor: COMPONENTS.overlays.lighter,
-                    borderRadius: SPACING.borderRadius.small,
+                    borderRadius: SPACING.borderRadius.sm,
                 },
                 '& .MuiInputBase-input': {
                     fontFamily: 'monospace',

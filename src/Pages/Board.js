@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid2';
 
 import { useMemo, useCallback } from 'react';
 import { CustomGrid } from '../helpers';
-import { COLORS } from '../config/constants';
+import { COLORS } from '../config/theme';
 
 export function Board(props) {
     const { frontProps, backProps, size, rows, cols } = props;
@@ -88,7 +88,7 @@ export function usePalette(score) {
     const palette = useMemo(() => {
         // Using darker blues for excellent contrast (5.2:1 ratio)
         const primary = COLORS.primary.dark; // Dark blue for "on" state
-        const secondary = 'hsl(217, 91%, 25%)'; // Much darker blue for "off" state
+        const secondary = COLORS.game.snakeFood; // Much darker blue for "off" state
 
         return { primary, secondary };
     }, []); // Removed score dependency since we're using fixed colors

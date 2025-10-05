@@ -1,3 +1,9 @@
+/* CSS Custom Properties for border radius - REMOVED */
+
+/* Border radius values are now managed in constants.js as SPACING.borderRadius */
+
+/* Use JavaScript constants instead of CSS custom properties for consistency */
+
 /* Modern Animation Keyframes - Enterprise-grade micro-interactions */
 
 @keyframes shimmer {
@@ -37,7 +43,7 @@
 @keyframes fade-in-up {
     from {
         opacity: 0;
-        transform: translate3d(0, 40px, 0);
+        transform: translate3d(0, var(--animation-translate-y, 40px), 0);
     }
 
     to {
@@ -49,7 +55,11 @@
 @keyframes slide-in-left {
     from {
         opacity: 0;
-        transform: translate3d(-40px, 0, 0);
+        transform: translate3d(
+            calc(-1 * var(--animation-translate-x, 40px)),
+            0,
+            0
+        );
     }
 
     to {
@@ -72,13 +82,13 @@
 
 @keyframes glow {
     from {
-        box-shadow: 0 0 20px rgb(33 150 243 / 40%);
+        box-shadow: 0 0 var(--glow-offset, 20px) hsl(217deg 91% 60% / 40%);
     }
 
     to {
         box-shadow:
-            0 0 30px rgb(33 150 243 / 60%),
-            0 0 40px rgb(33 150 243 / 40%);
+            0 0 var(--glow-spread, 30px) hsl(217deg 91% 60% / 60%),
+            0 0 var(--glow-blur, 40px) hsl(217deg 91% 60% / 40%);
     }
 }
 
@@ -87,49 +97,50 @@
     *,
     *::before,
     *::after {
-        animation-duration: 0.01ms !important;
+        animation-duration: var(--reduced-motion-duration, 0.01ms) !important;
         animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+        transition-duration: var(--reduced-motion-duration, 0.01ms) !important;
         scroll-behavior: auto !important;
     }
 }
 
-/* Custom scrollbars */
+/* Custom scrollbars - Consolidated with constants */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: var(--scrollbar-width, 8px);
+    height: var(--scrollbar-width, 8px);
 }
 
 ::-webkit-scrollbar-track {
-    background: hsl(0deg 0% 8%);
-    border-radius: 4px;
+    background: var(--scrollbar-track, hsl(0deg 0% 8%));
+    border-radius: var(--scrollbar-border-radius, 4px);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: hsl(217deg 91% 45%);
-    border-radius: 4px;
-    transition: background-color 150ms ease-in-out;
+    background: var(--scrollbar-thumb, hsl(217deg 91% 45%));
+    border-radius: var(--scrollbar-border-radius, 4px);
+    transition: background-color var(--scrollbar-transition, 150ms) ease-in-out;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: hsl(217deg 91% 50%);
+    background: var(--scrollbar-thumb-hover, hsl(217deg 91% 50%));
 }
 
 /* Selection styles */
 ::selection {
-    background-color: hsl(217deg 91% 60% / 20%);
-    color: hsl(0deg 0% 98%);
+    background-color: var(--selection-background, hsl(217deg 91% 60% / 20%));
+    color: var(--selection-color, hsl(0deg 0% 98%));
 }
 
 /* Focus visible styles for better accessibility */
 .focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px hsl(217deg 91% 60% / 15%);
+    box-shadow: 0 0 0 3px var(--focus-ring, hsl(217deg 91% 60% / 15%));
 }
 
 /* Modern backdrop filter support */
 .glass-effect {
-    backdrop-filter: blur(20px) saturate(180%);
+    backdrop-filter: blur(var(--backdrop-blur, 20px))
+        saturate(var(--backdrop-saturation, 180%));
 }
 
 /* Smooth text rendering */
@@ -146,5 +157,5 @@ html {
 
 /* Ensure proper scroll positioning */
 .featured-work-section {
-    scroll-margin-top: 2rem;
+    scroll-margin-top: var(--scroll-margin-section, 2rem);
 }

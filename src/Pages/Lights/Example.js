@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid2';
 import { getStates } from './chaseHandlers';
 import { CustomGrid } from '../../helpers';
 import { useMobile } from '../../hooks';
+import { TYPOGRAPHY } from '../../config/theme';
 
 function getFrames(states, palette) {
     const newStates = [-1, ...states, -1];
@@ -87,7 +88,7 @@ function Title({ children }) {
                 sx={{
                     textAlign: 'center',
                     fontWeight: 'semibold',
-                    fontSize: 'clamp(1.5rem, 2.5vw, 1.75rem)',
+                    fontSize: TYPOGRAPHY.fontSize.sm.h3,
                     lineHeight: '1.2',
                     letterSpacing: '-0.025em',
                 }}

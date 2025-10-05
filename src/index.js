@@ -6,14 +6,9 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import './styles/animations.css';
-import {
-    COLORS,
-    TYPOGRAPHY,
-    ROUTES,
-    SPACING,
-    ANIMATIONS,
-    COMPONENTS,
-} from './config/constants';
+import { ROUTES } from './config/constants';
+import { COLORS, TYPOGRAPHY, SPACING, ANIMATIONS } from './config/theme';
+import { COMPONENTS } from './config/components';
 
 import { Stun_Step, Suffolk, WII2D, Back } from './Interpreters';
 import {

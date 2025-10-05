@@ -5,7 +5,8 @@ import Grid from '@mui/material/Grid2';
 import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
 import { CustomGrid, Controls } from '../helpers';
-import { COLORS } from '../config/constants';
+import { PAGE_TITLES, GAME_CONSTANTS } from '../config/constants';
+import { COLORS, TIMING } from '../config/theme';
 
 function getRandom(max) {
     return Math.floor(Math.random() * max);
@@ -122,12 +123,12 @@ function handleAction(state, action) {
 }
 
 export default function Snake() {
-    const { create: createTimer } = useTimer(100);
+    const { create: createTimer } = useTimer(TIMING.game.snake);
     const { create: createKeys } = useKeys();
 
     const { height, width } = useWindow();
-    const length = 3;
-    const size = 3;
+    const length = GAME_CONSTANTS.snake.initialLength;
+    const size = GAME_CONSTANTS.snake.segmentSize;
 
     const { rows, cols } = useMemo(
         () => convertPixels(size, height, width),
@@ -136,11 +137,11 @@ export default function Snake() {
 
     const initial = useMemo(
         () => ({
-            velocity: 1,
+            velocity: GAME_CONSTANTS.snake.initialVelocity,
             buffer: [],
             length,
         }),
-        []
+        [length]
     );
 
     const [state, dispatch] = useReducer(
@@ -150,7 +151,7 @@ export default function Snake() {
 
     const controlHandler = useCallback(
         event => () => {
-            const key = 'arrow' + event;
+            const key = GAME_CONSTANTS.controls.arrowPrefix + event;
 
             dispatch({
                 type: 'steer',
@@ -168,8 +169,8 @@ export default function Snake() {
 
             if (index in board) {
                 if (board[index] > 0)
-                    color = COLORS.primary.dark; // Snake body - dark blue
-                else color = 'hsl(217, 91%, 25%)'; // Food - much darker blue shade
+                    color = COLORS.game.snakeBody; // Snake body - dark blue
+                else color = COLORS.game.snakeFood; // Food - much darker blue shade
             }
 
             return {
@@ -207,7 +208,7 @@ export default function Snake() {
     }, [rows, cols]);
 
     useEffect(() => {
-        document.title = 'Snake | Bangyen';
+        document.title = PAGE_TITLES.snake;
     }, []);
 
     return (
@@ -217,7 +218,7 @@ export default function Snake() {
             flexDirection="column"
             position="relative"
             sx={{
-                background: COLORS.background.default,
+                background: COLORS.surface.background,
                 overflow: 'hidden',
             }}
         >

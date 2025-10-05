@@ -10,12 +10,10 @@ import {
     SKILLS,
     PUBLICATIONS,
     PROJECTS,
-    COLORS,
-    SPACING,
-    TYPOGRAPHY,
-    ANIMATIONS,
-    COMPONENTS,
+    PAGE_TITLES,
 } from '../config/constants';
+import { COLORS, SPACING, TYPOGRAPHY, ANIMATIONS } from '../config/theme';
+import { COMPONENTS } from '../config/components';
 
 import {
     MenuRounded,
@@ -52,7 +50,7 @@ function dropdown(name, routes) {
                         paddingLeft: padWidth,
                         paddingRight: padWidth,
                         borderRadius: SPACING.borderRadius.md,
-                        margin: '0.25rem 0.5rem', // 4px 8px
+                        margin: '0.25rem 0.5rem',
                         transition: ANIMATIONS.transitions.fast,
                         '&:hover': ANIMATIONS.hover.modern,
                     }}
@@ -134,7 +132,7 @@ function MenuButton({ children }) {
 
 export default function Home() {
     useEffect(() => {
-        document.title = `${PERSONAL_INFO.name} - ${PERSONAL_INFO.title}`;
+        document.title = PAGE_TITLES.home;
     }, []);
 
     return (
@@ -174,7 +172,7 @@ export default function Home() {
                 <MenuButton>{dropdown('Projects', pages)}</MenuButton>
                 <TooltipButton
                     component="a"
-                    href={URLS.github}
+                    href={URLS.githubProfile}
                     target="_blank"
                     rel="noopener noreferrer"
                     title="GitHub Profile"
@@ -203,7 +201,7 @@ export default function Home() {
             >
                 <Grid
                     container
-                    spacing={{ xs: 4, md: 8 }}
+                    spacing={SPACING.layout.containerSpacing}
                     alignItems="center"
                     sx={{ maxWidth: SPACING.maxWidth.lg }}
                 >
@@ -321,7 +319,9 @@ export default function Home() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: 1,
-                                            padding: '12px 20px',
+                                            padding:
+                                                SPACING.components.medium
+                                                    .padding,
                                             backgroundColor:
                                                 COLORS.interactive.selected,
                                             borderRadius:
@@ -371,8 +371,8 @@ export default function Home() {
                                     sx={{
                                         backgroundColor: COLORS.surface.glass,
                                         backdropFilter:
-                                            'blur(20px) saturate(180%)',
-                                        border: `1px solid hsla(0, 0%, 100%, 0.1)`,
+                                            COMPONENTS.menu.backdropFilter,
+                                        border: COMPONENTS.menu.border,
                                         borderRadius: SPACING.borderRadius.xl,
                                         padding:
                                             SPACING.components.card.padding,
@@ -459,7 +459,10 @@ export default function Home() {
                                                                         .interactive
                                                                         .pressed,
                                                                 transform:
-                                                                    'translateY(-2px)',
+                                                                    ANIMATIONS
+                                                                        .hover
+                                                                        .lift
+                                                                        .transform,
                                                                 boxShadow:
                                                                     COLORS
                                                                         .shadows
@@ -473,7 +476,10 @@ export default function Home() {
                                                                     .text
                                                                     .accent,
                                                                 fontSize:
-                                                                    '1.5rem',
+                                                                    TYPOGRAPHY
+                                                                        .fontSize
+                                                                        .sm
+                                                                        .body,
                                                             }}
                                                         />
                                                         <Typography
@@ -518,8 +524,8 @@ export default function Home() {
                                     sx={{
                                         backgroundColor: COLORS.surface.glass,
                                         backdropFilter:
-                                            'blur(20px) saturate(180%)',
-                                        border: `1px solid hsla(0, 0%, 100%, 0.1)`,
+                                            COMPONENTS.menu.backdropFilter,
+                                        border: COMPONENTS.menu.border,
                                         borderRadius: SPACING.borderRadius.xl,
                                         padding:
                                             SPACING.components.card.padding,
@@ -562,7 +568,7 @@ export default function Home() {
                                     >
                                         <Box
                                             component="a"
-                                            href={URLS.github}
+                                            href={URLS.githubProfile}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             sx={{
@@ -674,8 +680,9 @@ export default function Home() {
                                                 backgroundColor:
                                                     COLORS.surface.glass,
                                                 backdropFilter:
-                                                    'blur(20px) saturate(180%)',
-                                                border: `1px solid hsla(0, 0%, 100%, 0.1)`,
+                                                    COMPONENTS.menu
+                                                        .backdropFilter,
+                                                border: COMPONENTS.menu.border,
                                                 borderRadius:
                                                     SPACING.borderRadius.xl,
                                                 padding:
@@ -764,9 +771,10 @@ export default function Home() {
                                                         ...COMPONENTS.badge
                                                             .primary,
                                                         backgroundColor:
-                                                            'hsla(141, 64%, 49%, 0.1)',
-                                                        color: 'hsl(141, 64%, 49%)',
-                                                        border: '1px solid hsla(141, 64%, 49%, 0.2)',
+                                                            'hsla(141, 64%, 49%, 0.1)', // 10% opacity
+                                                        color: COLORS.accent
+                                                            .success,
+                                                        border: '1px solid hsla(141, 64%, 49%, 0.2)', // 20% opacity
                                                     }}
                                                 >
                                                     {publication.conference}
@@ -807,8 +815,9 @@ export default function Home() {
                                                 backgroundColor:
                                                     COLORS.surface.glass,
                                                 backdropFilter:
-                                                    'blur(20px) saturate(180%)',
-                                                border: `1px solid hsla(0, 0%, 100%, 0.1)`,
+                                                    COMPONENTS.menu
+                                                        .backdropFilter,
+                                                border: COMPONENTS.menu.border,
                                                 borderRadius:
                                                     SPACING.borderRadius.xl,
                                                 padding:

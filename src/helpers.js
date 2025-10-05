@@ -3,12 +3,8 @@ import { useState, useCallback } from 'react';
 import Grid from '@mui/material/Grid2';
 import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
-import {
-    COMPONENTS,
-    SPACING,
-    TYPOGRAPHY,
-    ANIMATIONS,
-} from './config/constants';
+import { SPACING, TYPOGRAPHY, ANIMATIONS } from './config/theme';
+import { COMPONENTS } from './config/components';
 
 import {
     HomeRounded,
@@ -67,8 +63,8 @@ function Cell({ size, children, ...rest }) {
         borderRadius: radius,
         height: remSize,
         width: remSize,
-        fontSize: `${size * 0.4}rem`,
-        fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+        fontSize: `${size * 0.25}rem`,
+        fontWeight: TYPOGRAPHY.fontWeight.semibold,
         fontFamily: 'monospace',
         transition: ANIMATIONS.transition,
     };

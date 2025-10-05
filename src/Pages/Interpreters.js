@@ -3,19 +3,19 @@ import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
 import { Typography, Box, IconButton, Card, CardContent } from '@mui/material';
 import { GitHub, Home, GridView, TextFields } from '@mui/icons-material';
+import { URLS, PAGE_TITLES } from '../config/constants';
 import {
-    PERSONAL_INFO,
-    URLS,
     COLORS,
     SPACING,
-    COMPONENTS,
     TYPOGRAPHY,
     ANIMATIONS,
-} from '../config/constants';
+    LAYOUT,
+} from '../config/theme';
+import { COMPONENTS } from '../config/components';
 
 export default function Interpreters() {
     useEffect(() => {
-        document.title = `Interpreters - ${PERSONAL_INFO.name}`;
+        document.title = PAGE_TITLES.interpreters;
     }, []);
 
     const interpreters = [
@@ -75,7 +75,7 @@ export default function Interpreters() {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: COLORS.background.default,
+                    background: COLORS.surface.background,
                     zIndex: -2,
                 }}
             />
@@ -88,7 +88,7 @@ export default function Interpreters() {
                 alignItems="center"
                 flexDirection="column"
                 sx={{
-                    zIndex: 1,
+                    zIndex: LAYOUT.zIndex.content,
                     padding: {
                         xs: `${SPACING.padding.xs} 0`,
                         sm: `${SPACING.padding.sm} 0`,
@@ -125,7 +125,7 @@ export default function Interpreters() {
                             variant="h4"
                             sx={{
                                 color: 'text.primary',
-                                fontWeight: TYPOGRAPHY.fontWeight.semiBold,
+                                fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                 fontSize: {
                                     xs: '1.25rem',
                                     sm: '2.125rem',
@@ -143,7 +143,7 @@ export default function Interpreters() {
                                 <GitHub
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.large,
+                                            xs: TYPOGRAPHY.fontSize.md.h4,
                                             sm: '2rem',
                                         },
                                     }}
@@ -153,7 +153,7 @@ export default function Interpreters() {
                                 <Home
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.large,
+                                            xs: TYPOGRAPHY.fontSize.md.h4,
                                             sm: '2rem',
                                         },
                                     }}
@@ -215,7 +215,7 @@ export default function Interpreters() {
                                                 color: 'primary.light',
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
-                                                        .semiBold,
+                                                        .semibold,
                                                 fontSize:
                                                     TYPOGRAPHY.fontSize.md.h5,
                                             }}
