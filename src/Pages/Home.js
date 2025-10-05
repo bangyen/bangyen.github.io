@@ -16,7 +16,6 @@ import {
     ANIMATIONS,
     COMPONENTS,
     PAGE_TITLES,
-    HARDCODED_VALUES,
 } from '../config/constants';
 
 import {
@@ -54,7 +53,7 @@ function dropdown(name, routes) {
                         paddingLeft: padWidth,
                         paddingRight: padWidth,
                         borderRadius: SPACING.borderRadius.md,
-                        margin: HARDCODED_VALUES.spacing.chipMargin,
+                        margin: '0.25rem 0.5rem',
                         transition: ANIMATIONS.transitions.fast,
                         '&:hover': ANIMATIONS.hover.modern,
                     }}
@@ -193,7 +192,7 @@ export default function Home() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     paddingTop: 0, // No gap needed with relative nav
-                    paddingBottom: HARDCODED_VALUES.spacing.sectionPadding,
+                    paddingBottom: '4rem',
                     paddingX: {
                         xs: SPACING.padding.xs, // Smaller padding on mobile
                         sm: SPACING.padding.sm,
@@ -282,9 +281,7 @@ export default function Home() {
                                     <LocationOn
                                         sx={{
                                             color: COLORS.text.muted,
-                                            fontSize:
-                                                HARDCODED_VALUES.fontSize
-                                                    .subtitle,
+                                            fontSize: '1.25rem',
                                         }}
                                     />
                                     <Typography
@@ -353,9 +350,7 @@ export default function Home() {
                                         <ArrowForward
                                             sx={{
                                                 color: COLORS.text.accent,
-                                                fontSize:
-                                                    HARDCODED_VALUES.fontSize
-                                                        .body,
+                                                fontSize: '1rem',
                                             }}
                                         />
                                     </Box>
@@ -378,8 +373,9 @@ export default function Home() {
                                 <Box
                                     sx={{
                                         backgroundColor: COLORS.surface.glass,
-                                        backdropFilter: `blur(${HARDCODED_VALUES.effects.blurAmount}) saturate(${HARDCODED_VALUES.effects.saturation})`,
-                                        border: `${HARDCODED_VALUES.effects.borderRadius} solid hsla(0, 0%, 100%, ${HARDCODED_VALUES.effects.alpha})`,
+                                        backdropFilter:
+                                            COMPONENTS.menu.backdropFilter,
+                                        border: COMPONENTS.menu.border,
                                         borderRadius: SPACING.borderRadius.xl,
                                         padding:
                                             SPACING.components.card.padding,
@@ -437,7 +433,7 @@ export default function Home() {
                                                                 COLORS
                                                                     .interactive
                                                                     .selected,
-                                                            border: `${HARDCODED_VALUES.effects.borderRadius} solid hsla(217, 91%, 60%, ${HARDCODED_VALUES.effects.alphaStrong})`,
+                                                            border: `1px solid hsla(217, 91%, 60%, 0.2)`,
                                                             borderRadius:
                                                                 SPACING
                                                                     .borderRadius
@@ -465,7 +461,11 @@ export default function Home() {
                                                                     COLORS
                                                                         .interactive
                                                                         .pressed,
-                                                                transform: `translateY(${HARDCODED_VALUES.transforms.translateY})`,
+                                                                transform:
+                                                                    ANIMATIONS
+                                                                        .hover
+                                                                        .lift
+                                                                        .transform,
                                                                 boxShadow:
                                                                     COLORS
                                                                         .shadows
@@ -526,8 +526,9 @@ export default function Home() {
                                 <Box
                                     sx={{
                                         backgroundColor: COLORS.surface.glass,
-                                        backdropFilter: `blur(${HARDCODED_VALUES.effects.blurAmount}) saturate(${HARDCODED_VALUES.effects.saturation})`,
-                                        border: `${HARDCODED_VALUES.effects.borderRadius} solid hsla(0, 0%, 100%, ${HARDCODED_VALUES.effects.alpha})`,
+                                        backdropFilter:
+                                            COMPONENTS.menu.backdropFilter,
+                                        border: COMPONENTS.menu.border,
                                         borderRadius: SPACING.borderRadius.xl,
                                         padding:
                                             SPACING.components.card.padding,
@@ -681,8 +682,10 @@ export default function Home() {
                                             sx={{
                                                 backgroundColor:
                                                     COLORS.surface.glass,
-                                                backdropFilter: `blur(${HARDCODED_VALUES.effects.blurAmount}) saturate(${HARDCODED_VALUES.effects.saturation})`,
-                                                border: `${HARDCODED_VALUES.effects.borderRadius} solid hsla(0, 0%, 100%, ${HARDCODED_VALUES.effects.alpha})`,
+                                                backdropFilter:
+                                                    COMPONENTS.menu
+                                                        .backdropFilter,
+                                                border: COMPONENTS.menu.border,
                                                 borderRadius:
                                                     SPACING.borderRadius.xl,
                                                 padding:
@@ -774,7 +777,7 @@ export default function Home() {
                                                             'hsla(141, 64%, 49%, 0.1)', // 10% opacity
                                                         color: COLORS.accent
                                                             .success,
-                                                        border: `1px solid hsla(141, 64%, 49%, 0.2)`, // 20% opacity
+                                                        border: '1px solid hsla(141, 64%, 49%, 0.2)', // 20% opacity
                                                     }}
                                                 >
                                                     {publication.conference}
@@ -814,8 +817,10 @@ export default function Home() {
                                             sx={{
                                                 backgroundColor:
                                                     COLORS.surface.glass,
-                                                backdropFilter: `blur(${HARDCODED_VALUES.effects.blurAmount}) saturate(${HARDCODED_VALUES.effects.saturation})`,
-                                                border: `${HARDCODED_VALUES.effects.borderRadius} solid hsla(0, 0%, 100%, ${HARDCODED_VALUES.effects.alpha})`,
+                                                backdropFilter:
+                                                    COMPONENTS.menu
+                                                        .backdropFilter,
+                                                border: COMPONENTS.menu.border,
                                                 borderRadius:
                                                     SPACING.borderRadius.xl,
                                                 padding:

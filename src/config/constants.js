@@ -976,33 +976,5 @@ export const FONT_SIZES = {
     },
 };
 
-// Hardcoded Values - Consolidated from components
-// DEPRECATED: Most values moved to their respective constant objects
-export const HARDCODED_VALUES = {
-    // Only keep values not yet consolidated elsewhere
-    spacing: {
-        chipMargin: '0.25rem 0.5rem', // 4px 8px - found in Home.js
-        sectionPadding: '4rem', // found in Home.js
-    },
-    // Font sizes found in components
-    fontSize: {
-        subtitle: '1.25rem', // found in Home.js
-        body: '1rem', // found in Home.js
-    },
-    // Animation and visual effects - still used in Home.js
-    effects: {
-        blurAmount: '20px',
-        saturation: '180%',
-        borderRadius: '1px',
-        alpha: '0.1',
-        alphaStrong: '0.2',
-    },
-    // Transform values - still used in Home.js
-    transforms: {
-        translateY: '-2px',
-        scale: '1.01',
-    },
-};
-
 // Game Grid Sizes - REMOVED (moved to GAME_CONSTANTS.gridSizes)
 // Grid sizes have been consolidated into GAME_CONSTANTS.gridSizes for better organization.
