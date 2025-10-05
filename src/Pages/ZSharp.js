@@ -10,6 +10,7 @@ import {
     TYPOGRAPHY,
     PAGE_TITLES,
     CHART_DIMENSIONS,
+    CHART_FORMATTING,
     FONT_SIZES,
     ZSHARP_DEFAULTS,
     PERCENTAGE,
@@ -244,7 +245,7 @@ const ZSharp = () => {
                         padding: {
                             xs: '0 0.5rem',
                             sm: '0 1.5rem',
-                            md: '0 2rem',
+                            md: SPACING.components.page.padding,
                         },
                         boxSizing: 'border-box',
                         overflow: 'hidden',

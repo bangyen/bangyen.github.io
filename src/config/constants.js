@@ -112,6 +112,17 @@ export const GAME_CONSTANTS = {
         defaultElasticity: 2.0,
         defaultBasePrice: 40,
         maxRounds: 15,
+        // Simulation fallback constants
+        simulation: {
+            fallbackPrice: 20,
+            fallbackHHI: 0.3,
+            collusionStart: 6,
+            collusionEnd: 10,
+            priceAmplitude: 5,
+            hhiAmplitude: 0.1,
+            priceFrequency: 0.3,
+            hhiFrequency: 0.1,
+        },
     },
     lightsOut: {
         defaultSize: 5,
@@ -340,12 +351,29 @@ export const SPACING = {
             padding: '12px 20px',
             height: '40px',
         },
+        // Common page layout spacing
+        page: {
+            padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+            paddingVertical: { xs: '1rem 0', sm: '1.5rem 0', md: '2rem 0' },
+            marginBottom: 2,
+        },
+        // Section spacing
+        section: {
+            marginBottom: 3,
+            padding: { xs: 1.5, sm: 2 },
+        },
     },
     // Common grid sizing patterns
     grid: {
         full: { xs: 12, sm: 12 },
         half: { xs: 12, sm: 6 },
         auto: 'auto',
+    },
+    // Common grid layout patterns
+    layout: {
+        fullWidth: { size: 12, flex: 1 },
+        standardSpacing: 3,
+        containerSpacing: { xs: 4, md: 8 },
     },
 };
 
@@ -809,6 +837,26 @@ export const CHART_DIMENSIONS = {
     height: 300,
     dotRadius: 4,
     strokeWidth: 3,
+};
+
+// Chart Formatting and Styling Constants
+export const CHART_FORMATTING = {
+    price: {
+        format: '$.2f',
+        prefix: '$',
+        decimals: 2,
+    },
+    axis: {
+        padding: 5,
+        strokeWidth: 2,
+    },
+    tooltip: {
+        strokeWidth: 2,
+    },
+    lines: {
+        strokeDashArray: '3 3',
+        defaultStrokeWidth: 2,
+    },
 };
 
 // Percentage Conversion Constants

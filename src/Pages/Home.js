@@ -204,7 +204,7 @@ export default function Home() {
             >
                 <Grid
                     container
-                    spacing={{ xs: 4, md: 8 }}
+                    spacing={SPACING.layout.containerSpacing}
                     alignItems="center"
                     sx={{ maxWidth: SPACING.maxWidth.lg }}
                 >
