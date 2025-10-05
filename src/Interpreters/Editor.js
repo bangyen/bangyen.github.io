@@ -8,7 +8,6 @@ import {
     SPACING,
     ANIMATIONS,
     TYPOGRAPHY,
-    LAYOUT,
 } from '../config/constants';
 
 import { Typography, TextField } from '@mui/material';

@@ -171,7 +171,7 @@ const Oligopoly = () => {
         };
 
         loadData();
-    }, [numFirms, demandElasticity, basePrice, collusionEnabled]);
+    }, [numFirms, demandElasticity, basePrice, collusionEnabled, modelType]);
 
     // Update data when parameters change
     useEffect(() => {
@@ -311,8 +311,8 @@ const Oligopoly = () => {
                             marginBottom: 4,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
                             fontSize: {
-                                xs: TYPOGRAPHY.fontSize.sm.h6,
-                                sm: TYPOGRAPHY.fontSize.sm.h5,
+                                xs: TYPOGRAPHY.fontSize.h6,
+                                sm: TYPOGRAPHY.fontSize.h5,
                             },
                         }}
                     >
@@ -340,7 +340,7 @@ const Oligopoly = () => {
                                     SPACING.components.section.marginBottom,
                                 textAlign: 'center',
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                fontSize: TYPOGRAPHY.fontSize.md.h5,
+                                fontSize: TYPOGRAPHY.fontSize.h5,
                             }}
                         >
                             Market Dynamics

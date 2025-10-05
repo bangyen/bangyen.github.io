@@ -145,7 +145,7 @@ export default function Snake() {
             buffer: [],
             length,
         }),
-        []
+        [length]
     );
 
     const [state, dispatch] = useReducer(

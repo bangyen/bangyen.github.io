@@ -183,7 +183,7 @@ function CompactDisplay(props) {
                     color:
                         color === 'info' ? COLORS.text.white : 'text.primary',
                     fontFamily: 'monospace',
-                    fontSize: TYPOGRAPHY.fontSize.xs.caption,
+                    fontSize: TYPOGRAPHY.fontSize.caption,
                     height: SPACING.components.chip.height,
                 }}
             />
@@ -220,7 +220,7 @@ function CompactDisplay(props) {
                     sx={{
                         color: 'primary.light',
                         fontWeight: TYPOGRAPHY.fontWeight.semiBold,
-                        fontSize: TYPOGRAPHY.fontSize.xs.caption,
+                        fontSize: TYPOGRAPHY.fontSize.caption,
                     }}
                 >
                     {title}

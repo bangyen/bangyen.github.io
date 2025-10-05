@@ -4,7 +4,6 @@ import Grid from '@mui/material/Grid2';
 import { Typography, Box, IconButton, Card, CardContent } from '@mui/material';
 import { GitHub, Home, GridView, TextFields } from '@mui/icons-material';
 import {
-    PERSONAL_INFO,
     URLS,
     COLORS,
     SPACING,
