@@ -3,16 +3,15 @@ import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
 import { Typography, Box, IconButton, Card, CardContent } from '@mui/material';
 import { GitHub, Home, GridView, TextFields } from '@mui/icons-material';
+import { URLS, PAGE_TITLES } from '../config/constants';
 import {
-    URLS,
     COLORS,
     SPACING,
-    COMPONENTS,
     TYPOGRAPHY,
     ANIMATIONS,
-    PAGE_TITLES,
     LAYOUT,
-} from '../config/constants';
+} from '../config/theme';
+import { COMPONENTS } from '../config/components';
 
 export default function Interpreters() {
     useEffect(() => {

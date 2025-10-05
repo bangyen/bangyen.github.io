@@ -4,16 +4,13 @@ import Grid from '@mui/material/Grid2';
 import { GitHub, Home } from '@mui/icons-material';
 import {
     URLS,
-    COMPONENTS,
-    COLORS,
-    SPACING,
-    TYPOGRAPHY,
     PAGE_TITLES,
     CHART_DIMENSIONS,
     ZSHARP_DEFAULTS,
     PERCENTAGE,
-    LAYOUT,
 } from '../config/constants';
+import { COLORS, SPACING, TYPOGRAPHY, LAYOUT } from '../config/theme';
+import { COMPONENTS } from '../config/components';
 import {
     LineChart,
     Line,

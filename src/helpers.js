@@ -3,12 +3,8 @@ import { useState, useCallback } from 'react';
 import Grid from '@mui/material/Grid2';
 import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
-import {
-    COMPONENTS,
-    SPACING,
-    TYPOGRAPHY,
-    ANIMATIONS,
-} from './config/constants';
+import { SPACING, TYPOGRAPHY, ANIMATIONS } from './config/theme';
+import { COMPONENTS } from './config/components';
 
 import {
     HomeRounded,

@@ -2,7 +2,8 @@ import React from 'react';
 import Grid from '@mui/material/Grid2';
 import { Typography, Box, Fade } from '@mui/material';
 import { HomeButton } from '../helpers';
-import { COLORS, SPACING, TYPOGRAPHY, PAGE_TITLES } from '../config/constants';
+import { PAGE_TITLES } from '../config/constants';
+import { COLORS, SPACING, TYPOGRAPHY } from '../config/theme';
 
 export default function Error() {
     document.title = PAGE_TITLES.error;

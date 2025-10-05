@@ -8,7 +8,8 @@ import Grid from '@mui/material/Grid2';
 
 import { Navigation, HomeButton, TooltipButton } from '../../helpers';
 import { Board, useHandler, usePalette } from '../Board';
-import { COLORS, PAGE_TITLES, GAME_CONSTANTS } from '../../config/constants';
+import { PAGE_TITLES, GAME_CONSTANTS } from '../../config/constants';
+import { COLORS } from '../../config/theme';
 import { getGrid, handleBoard } from './boardHandlers';
 import { useWindow, useMobile } from '../../hooks';
 import { convertPixels } from '../../calculate';

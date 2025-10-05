@@ -5,12 +5,8 @@ import Grid from '@mui/material/Grid2';
 import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
 import { CustomGrid, Controls } from '../helpers';
-import {
-    COLORS,
-    PAGE_TITLES,
-    TIMING,
-    GAME_CONSTANTS,
-} from '../config/constants';
+import { PAGE_TITLES, GAME_CONSTANTS } from '../config/constants';
+import { COLORS, TIMING } from '../config/theme';
 
 function getRandom(max) {
     return Math.floor(Math.random() * max);

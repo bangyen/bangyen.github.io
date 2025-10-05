@@ -2,13 +2,8 @@ import { Program, Output, Tape, Register } from './Display';
 import { CustomGrid } from '../helpers';
 import Grid from '@mui/material/Grid2';
 import { Toolbar } from './Toolbar';
-import {
-    COLORS,
-    COMPONENTS,
-    SPACING,
-    ANIMATIONS,
-    TYPOGRAPHY,
-} from '../config/constants';
+import { COLORS, SPACING, ANIMATIONS, TYPOGRAPHY } from '../config/theme';
+import { COMPONENTS } from '../config/components';
 
 import { Typography, TextField } from '@mui/material';
 

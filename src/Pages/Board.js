@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid2';
 
 import { useMemo, useCallback } from 'react';
 import { CustomGrid } from '../helpers';
-import { COLORS } from '../config/constants';
+import { COLORS } from '../config/theme';
 
 export function Board(props) {
     const { frontProps, backProps, size, rows, cols } = props;

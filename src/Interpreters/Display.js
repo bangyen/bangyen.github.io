@@ -2,7 +2,8 @@ import { EditorContext, Text } from './Editor';
 
 import { Box, Typography, Chip, IconButton } from '@mui/material';
 import { useContext } from 'react';
-import { COMPONENTS, SPACING, COLORS, TYPOGRAPHY } from '../config/constants';
+import { SPACING, COLORS, TYPOGRAPHY } from '../config/theme';
+import { COMPONENTS } from '../config/components';
 
 import {
     CodeRounded,

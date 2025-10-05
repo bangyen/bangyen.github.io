@@ -9,17 +9,14 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import {
-    COMPONENTS,
-    COLORS,
-    SPACING,
     URLS,
-    TYPOGRAPHY,
     PAGE_TITLES,
     CHART_DIMENSIONS,
     CHART_FORMATTING,
     GAME_CONSTANTS,
-    LAYOUT,
 } from '../config/constants';
+import { COLORS, SPACING, TYPOGRAPHY, LAYOUT } from '../config/theme';
+import { COMPONENTS } from '../config/components';
 import { GitHub, Refresh, Home } from '@mui/icons-material';
 import {
     LineChart,

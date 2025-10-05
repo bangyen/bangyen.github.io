@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid2';
 import { getStates } from './chaseHandlers';
 import { CustomGrid } from '../../helpers';
 import { useMobile } from '../../hooks';
-import { TYPOGRAPHY } from '../../config/constants';
+import { TYPOGRAPHY } from '../../config/theme';
 
 function getFrames(states, palette) {
     const newStates = [-1, ...states, -1];

@@ -7,7 +7,7 @@ import {
     Replay,
 } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
-import { SPACING, COLORS, TYPOGRAPHY } from '../../config/constants';
+import { SPACING, COLORS, TYPOGRAPHY } from '../../config/theme';
 
 import { getProduct } from './matrices';
 import { CustomGrid } from '../../helpers';
