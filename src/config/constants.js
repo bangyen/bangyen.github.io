@@ -226,20 +226,10 @@ export const COLORS = {
 
 // Layout Constants
 export const LAYOUT = {
-    commonGaps: {
-        xs: 1,
-        sm: 2,
-        md: 3,
-        lg: 4,
-    },
     zIndex: {
         navigation: 1000,
         modal: 1300,
         tooltip: 1500,
-    },
-    gridSpacing: {
-        xs: 4,
-        md: 8,
     },
 };
 
@@ -256,23 +246,6 @@ export const TIMING = {
         snake: 100,
         editor: 200,
     },
-};
-
-// Spacing Values - Common spacing numbers used throughout components
-export const SPACING_VALUES = {
-    xs: 1,
-    sm: 2,
-    md: 3,
-    lg: 4,
-    xl: 5,
-    xxl: 6,
-};
-
-// Z-Index Values - Consolidated z-index management
-export const Z_INDEX = {
-    navigation: 1000,
-    modal: 1300,
-    tooltip: 1500,
 };
 
 // Legacy Border Styles - REMOVED
@@ -831,8 +804,3 @@ export const FONT_SIZES = {
 
 // Game Grid Sizes - REMOVED (moved to GAME_CONSTANTS.gridSizes)
 // Grid sizes have been consolidated into GAME_CONSTANTS.gridSizes for better organization.
-
-// Development Constants
-export const DEV = {
-    nodeVersion: 'v14 or higher',
-};

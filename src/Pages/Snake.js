@@ -5,7 +5,12 @@ import Grid from '@mui/material/Grid2';
 import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
 import { CustomGrid, Controls } from '../helpers';
-import { COLORS, PAGE_TITLES, TIMING } from '../config/constants';
+import {
+    COLORS,
+    PAGE_TITLES,
+    TIMING,
+    GAME_CONSTANTS,
+} from '../config/constants';
 
 function getRandom(max) {
     return Math.floor(Math.random() * max);
@@ -126,8 +131,8 @@ export default function Snake() {
     const { create: createKeys } = useKeys();
 
     const { height, width } = useWindow();
-    const length = 3;
-    const size = 3;
+    const length = GAME_CONSTANTS.snake.initialLength;
+    const size = GAME_CONSTANTS.snake.segmentSize;
 
     const { rows, cols } = useMemo(
         () => convertPixels(size, height, width),
@@ -136,7 +141,7 @@ export default function Snake() {
 
     const initial = useMemo(
         () => ({
-            velocity: 1,
+            velocity: GAME_CONSTANTS.snake.initialVelocity,
             buffer: [],
             length,
         }),
