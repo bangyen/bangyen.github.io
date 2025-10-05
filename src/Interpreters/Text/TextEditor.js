@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback, useReducer } from 'react';
 import Editor, { EditorContext, TextArea } from '../Editor';
 import { useTimer, useCache, useContainer } from '../../hooks';
 import { handleToolbar } from '../Toolbar';
-import { PAGE_TITLES, TIMER_INTERVALS } from '../../config/constants';
+import { PAGE_TITLES, TIMING } from '../../config/constants';
 
 function handleAction(state, action) {
     const { type, payload } = action;
@@ -54,7 +54,7 @@ function handleAction(state, action) {
 }
 
 export default function TextEditor(props) {
-    const { create, clear } = useTimer(TIMER_INTERVALS.editor);
+    const { create, clear } = useTimer(TIMING.game.editor);
 
     const { runner, clean, name, start, tape, output, register } = props;
 

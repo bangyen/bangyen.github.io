@@ -3,10 +3,8 @@
  * Centralizes all hardcoded values for easier maintenance and customization
  */
 
-// Base Color Constants
-const PRIMARY_BLUE = 'hsl(217, 91%, 60%)';
-const PRIMARY_BLUE_DARK = 'hsl(217, 91%, 45%)';
-const PRIMARY_BLUE_LIGHT = 'hsl(217, 91%, 70%)';
+// Base Color Constants - Consolidated into COLORS.primary
+// Legacy constants removed - use COLORS.primary.* instead
 
 // Personal Information
 export const PERSONAL_INFO = {
@@ -102,7 +100,7 @@ export const ROUTES = {
     },
 };
 
-// Game Constants
+// Game Constants - Consolidated with all game-related settings
 export const GAME_CONSTANTS = {
     snake: {
         initialLength: 3,
@@ -118,24 +116,29 @@ export const GAME_CONSTANTS = {
     lightsOut: {
         defaultSize: 5,
     },
+    // Grid sizes for different screen sizes - moved from separate GRID_SIZES
+    gridSizes: {
+        mobile: 3,
+        desktop: 5,
+    },
 };
 
 // Modern Semantic Color System - Enterprise-grade with Apple/Linear inspiration
 export const COLORS = {
-    // Brand Colors - Professional blue palette
+    // Brand Colors - Professional blue palette (consolidated from PRIMARY_BLUE constants)
     primary: {
-        main: PRIMARY_BLUE, // Primary brand blue
-        light: PRIMARY_BLUE_LIGHT, // Light variant
-        dark: PRIMARY_BLUE_DARK, // Dark variant (improved contrast)
+        main: 'hsl(217, 91%, 60%)', // Primary brand blue
+        light: 'hsl(217, 91%, 70%)', // Light variant
+        dark: 'hsl(217, 91%, 45%)', // Dark variant (improved contrast)
         softer: 'hsl(217, 45%, 65%)', // Softer variant for backgrounds
         subtle: 'hsl(217, 25%, 95%)', // Very subtle for interactive states
     },
     // Semantic Function Colors
     accent: {
         success: 'hsl(141, 64%, 49%)', // Green for success states
-        warning: 'hsl(34, 95%， 58%)', // Amber for warnings
+        warning: 'hsl(34, 95%, 58%)', // Amber for warnings (fixed typo)
         error: 'hsl(0, 73%, 56%)', // Red for errors
-        info: PRIMARY_BLUE, // Blue for info (same as primary)
+        info: 'hsl(217, 91%, 60%)', // Blue for info (same as primary)
     },
     // Enhanced Neutral Palette - Sophisticated grays following Apple's design language
     neutral: {
@@ -167,44 +170,45 @@ export const COLORS = {
         tertiary: 'hsl(0, 0%, 65%)', // Tertiary text (neutral-500)
         muted: 'hsl(0, 0%, 45%)', // Muted text (neutral-600)
         inverse: 'hsl(0, 0%, 8%)', // Inverse text for colored backgrounds
-        accent: PRIMARY_BLUE, // Accent text color
+        accent: 'hsl(217, 91%, 60%)', // Accent text color (consolidated with primary.main)
         white: 'hsl(0, 0%, 100%)', // Pure white text for overlays and charts
     },
-    // Border and Divider Colors
+    // Border and Divider Colors - Consolidated with primary colors
     border: {
         subtle: 'hsl(0, 0%, 18%)', // Subtle borders (neutral-800)
         primary: 'hsl(0, 0%, 30%)', // Primary borders (neutral-700)
-        interactive: PRIMARY_BLUE, // Interactive element borders
-        focus: PRIMARY_BLUE_LIGHT, // Focus ring borders
+        interactive: 'hsl(217, 91%, 60%)', // Interactive element borders (consolidated with primary.main)
+        focus: 'hsl(217, 91%, 70%)', // Focus ring borders (consolidated with primary.light)
     },
-    // Interactive State Colors
+    // Interactive State Colors - Consolidated with primary colors
     interactive: {
         hover: 'hsla(0, 0%, 80%, 0.08)', // Hover states
         pressed: 'hsla(0, 0%, 80%, 0.12)', // Pressed states
-        focus: 'hsla(217, 91%, 60%, 0.15)', // Focus ring
-        selected: 'hsla(217, 91%, 60%, 0.1)', // Selected states
+        focus: 'hsla(217, 91%, 60%, 0.15)', // Focus ring (consolidated with primary.main)
+        selected: 'hsla(217, 91%, 60%, 0.1)', // Selected states (consolidated with primary.main)
         disabled: 'hsla(0, 0%, 45%, 0.3)', // Disabled states
     },
-    // Chart Colors (Enhanced)
+    // Chart Colors (Enhanced) - Consolidated with primary colors
     data: {
-        blue: PRIMARY_BLUE,
-        green: 'hsl(141, 64%, 49%)',
-        amber: 'hsl(34, 95%, 58%)',
-        red: 'hsl(0, 73%, 56%)',
+        blue: 'hsl(217, 91%, 60%)', // Same as primary.main
+        green: 'hsl(141, 64%, 49%)', // Same as accent.success
+        amber: 'hsl(34, 95%, 58%)', // Same as accent.warning
+        red: 'hsl(0, 73%, 56%)', // Same as accent.error
         purple: 'hsl(271, 91%, 65%)',
         cyan: 'hsl(188, 91%, 60%)',
         indigo: 'hsl(231, 91%, 60%)',
         pink: 'hsl(329, 85%, 70%)',
     },
-    // Game-specific colors
+    // Game-specific colors - Consolidated with primary colors
     game: {
-        snakeBody: 'hsl(217, 91%, 45%)', // Darker blue for snake body
+        snakeBody: 'hsl(217, 91%, 45%)', // Same as primary.dark
         snakeFood: 'hsl(217, 91%, 25%)', // Much darker blue for food
     },
-    // Sophisticated Gradients for Modern Effects
+    // Sophisticated Gradients for Modern Effects - Consolidated with primary colors
     gradients: {
-        primary: `linear-gradient(135deg, ${PRIMARY_BLUE}, ${PRIMARY_BLUE_DARK})`,
-        subtle: 'linear-gradient(135deg, hsl(0, 0%, 5%), hsl(0, 0%, 8%)),',
+        primary:
+            'linear-gradient(135deg, hsl(217, 91%, 60%), hsl(217, 91%, 45%))',
+        subtle: 'linear-gradient(135deg, hsl(0, 0%, 5%), hsl(0, 0%, 8%))',
         glass: 'linear-gradient(135deg, hsla(0, 0%, 8%, 0.9), hsla(0, 0%, 12%, 0.85))',
         shimmer:
             'linear-gradient(90deg, hsl(0, 0%, 8%), hsl(0, 0%, 12%), hsl(0, 0%, 8%))',
@@ -216,7 +220,7 @@ export const COLORS = {
         md: '0 8px 32px hsla(0, 0%, 0%, 0.35)',
         lg: '0 16px 64px hsla(0, 0%, 0%, 0.3)',
         xl: '0 24px 80px hsla(0, 0%, 0%, 0.25)',
-        glow: '0 0 20px hsla(217, 91%, 60%, 0.15)', // Subtle blue glow
+        glow: '0 0 20px hsla(217, 91%, 60%, 0.15)', // Subtle blue glow (consolidated with primary color)
     },
 };
 
@@ -239,14 +243,41 @@ export const LAYOUT = {
     },
 };
 
-// Legacy Border Styles (deprecated - use COMPONENTS.borders instead)
-// Kept for backward compatibility but should be migrated to COMPONENTS.borders
-// TODO: Remove this object once all usage is migrated
-export const BORDERS = {
-    light: '1px solid hsla(0, 0%, 100%, 0.1)',
-    subtle: `1px solid ${COLORS.border.subtle}`,
-    primary: `1px solid ${COLORS.border.primary}`,
+// Timing Constants - Consolidated animation and interaction timings
+export const TIMING = {
+    fast: 150,
+    normal: 300,
+    slow: 500,
+    slower: 750,
+    fadeIn: 1000,
+    staggerDelay: 200,
+    initialDelay: 1600,
+    game: {
+        snake: 100,
+        editor: 200,
+    },
 };
+
+// Spacing Values - Common spacing numbers used throughout components
+export const SPACING_VALUES = {
+    xs: 1,
+    sm: 2,
+    md: 3,
+    lg: 4,
+    xl: 5,
+    xxl: 6,
+};
+
+// Z-Index Values - Consolidated z-index management
+export const Z_INDEX = {
+    navigation: 1000,
+    modal: 1300,
+    tooltip: 1500,
+};
+
+// Legacy Border Styles - REMOVED
+// This object has been deprecated and removed. Use COMPONENTS.borders instead.
+// All references have been migrated to use the consolidated border system.
 
 // Modern Spacing System - 8pt grid with responsive scaling
 export const SPACING = {
@@ -413,18 +444,18 @@ export const ANIMATIONS = {
         snappy: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
         linear: 'linear',
     },
-    // Timing system with semantic naming
+    // Timing system with semantic naming - Consolidated with TIMING constants
     duration: {
-        fast: '150ms', // Quick interactions
-        normal: '300ms', // Standard transitions
-        slow: '500ms', // Deliberate animations
-        slower: '750ms', // Page transitions
+        fast: `${TIMING.fast}ms`, // Quick interactions
+        normal: `${TIMING.normal}ms`, // Standard transitions
+        slow: `${TIMING.slow}ms`, // Deliberate animations
+        slower: `${TIMING.slower}ms`, // Page transitions
     },
-    // Comprehensive transition library
+    // Comprehensive transition library - Consolidated with TIMING constants
     transitions: {
         // Base transitions with modern easing
-        fast: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-        normal: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+        fast: `all ${TIMING.fast}ms cubic-bezier(0.4, 0, 0.2, 1)`,
+        normal: `all ${TIMING.normal}ms cubic-bezier(0.4, 0, 0.2, 1)`,
         smooth: 'all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
         spring: 'all 350ms cubic-bezier(0.34, 1.56, 0.64, 1)',
         gentle: 'all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
@@ -462,12 +493,12 @@ export const ANIMATIONS = {
             transition: 'box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1)',
         },
     },
-    // Animation presets for common use cases
+    // Animation presets for common use cases - Consolidated with TIMING constants
     presets: {
         fadeIn: {
             initial: { opacity: 0, y: 20 },
             animate: { opacity: 1, y: 0 },
-            transition: { duration: 0.3, ease: 'easeOut' },
+            transition: { duration: TIMING.normal / 1000, ease: 'easeOut' },
         },
         fadeInUp: {
             initial: { opacity: 0, y: 30 },
@@ -477,12 +508,12 @@ export const ANIMATIONS = {
         slideInLeft: {
             initial: { opacity: 0, x: -30 },
             animate: { opacity: 1, x: 0 },
-            transition: { duration: 0.3, ease: 'easeOut' },
+            transition: { duration: TIMING.normal / 1000, ease: 'easeOut' },
         },
         scaleIn: {
             initial: { opacity: 0, scale: 0.9 },
             animate: { opacity: 1, scale: 1 },
-            transition: { duration: 0.2, ease: 'easeOut' },
+            transition: { duration: TIMING.fast / 1000, ease: 'easeOut' },
         },
     },
     // Loading states and skeleton animations
@@ -500,15 +531,15 @@ export const ANIMATIONS = {
             animation: 'bounce 1s infinite',
         },
     },
-    // Page transitions and route changes
+    // Page transitions and route changes - Consolidated with TIMING constants
     pageTransition: {
         fadeOut: {
             opacity: 0,
-            transition: 'opacity 200ms ease-out',
+            transition: `opacity ${TIMING.fast}ms ease-out`,
         },
         fadeIn: {
             opacity: 1,
-            transition: 'opacity 300ms ease-in',
+            transition: `opacity ${TIMING.normal}ms ease-in`,
         },
     },
 };
@@ -769,11 +800,8 @@ export const PAGE_TITLES = {
     interpreter: name => `${name} Interpreter | Bangyen`,
 };
 
-// Timer Intervals (in milliseconds)
-export const TIMER_INTERVALS = {
-    snake: 100,
-    editor: 200,
-};
+// Timer Intervals - REMOVED (consolidated into TIMING.game)
+// These intervals have been moved to TIMING.game for better organization.
 
 // Common Chart Dimensions
 export const CHART_DIMENSIONS = {
@@ -801,11 +829,8 @@ export const FONT_SIZES = {
     },
 };
 
-// Game Grid Sizes
-export const GRID_SIZES = {
-    mobile: 3,
-    desktop: 5,
-};
+// Game Grid Sizes - REMOVED (moved to GAME_CONSTANTS.gridSizes)
+// Grid sizes have been consolidated into GAME_CONSTANTS.gridSizes for better organization.
 
 // Development Constants
 export const DEV = {

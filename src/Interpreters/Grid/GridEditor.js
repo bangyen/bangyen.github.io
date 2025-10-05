@@ -1,7 +1,7 @@
 import Editor, { EditorContext, GridArea } from '../Editor';
 import { convertPixels } from '../../calculate';
 import { handleAction } from './eventHandlers';
-import { TIMER_INTERVALS, PAGE_TITLES } from '../../config/constants';
+import { TIMING, PAGE_TITLES } from '../../config/constants';
 
 import {
     useContainer,
@@ -17,7 +17,7 @@ function useWrappers(state, props, dispatch) {
     const { runner, start } = props;
     const { rows, cols } = state;
 
-    const { create, clear } = useTimer(TIMER_INTERVALS.editor);
+    const { create, clear } = useTimer(TIMING.game.editor);
     const nextIter = useCache(runner);
 
     const resetState = useCallback(

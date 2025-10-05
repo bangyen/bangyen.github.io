@@ -5,7 +5,7 @@ import Grid from '@mui/material/Grid2';
 import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
 import { CustomGrid, Controls } from '../helpers';
-import { COLORS, PAGE_TITLES, TIMER_INTERVALS } from '../config/constants';
+import { COLORS, PAGE_TITLES, TIMING } from '../config/constants';
 
 function getRandom(max) {
     return Math.floor(Math.random() * max);
@@ -122,7 +122,7 @@ function handleAction(state, action) {
 }
 
 export default function Snake() {
-    const { create: createTimer } = useTimer(TIMER_INTERVALS.snake);
+    const { create: createTimer } = useTimer(TIMING.game.snake);
     const { create: createKeys } = useKeys();
 
     const { height, width } = useWindow();
