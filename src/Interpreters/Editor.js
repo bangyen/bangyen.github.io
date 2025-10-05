@@ -201,11 +201,21 @@ export function TextArea({
     infoLabel = infoLabel || 'Program code';
     readOnly = readOnly || false;
 
+    // Use controlled component if value is provided, otherwise use uncontrolled
+    const isControlled = value !== undefined && value !== null;
+    const textFieldProps = isControlled
+        ? {
+              value: value || '',
+              onChange: handleChange,
+          }
+        : {
+              defaultValue: fillValue,
+          };
+
     return (
         <TextField
             variant="outlined"
             label={infoLabel}
-            defaultValue={fillValue}
             slotProps={{
                 inputLabel: { shrink: true },
                 htmlInput: { readOnly },
@@ -213,8 +223,7 @@ export function TextArea({
             fullWidth
             multiline
             rows={rows}
-            value={value}
-            onChange={handleChange}
+            {...textFieldProps}
             sx={{
                 '& .MuiInputBase-root': {
                     alignItems: 'flex-start',

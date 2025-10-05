@@ -205,7 +205,7 @@ const Oligopoly = () => {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: SPACING.components.page.padding,
+                padding: SPACING.components.page.padding.md,
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -235,7 +235,7 @@ const Oligopoly = () => {
                 flexDirection="column"
                 sx={{
                     zIndex: 1,
-                    padding: SPACING.components.page.paddingVertical,
+                    padding: SPACING.components.page.paddingVertical.md,
                     minHeight: 0,
                 }}
             >
@@ -266,7 +266,7 @@ const Oligopoly = () => {
                                 sx={{
                                     color: 'text.primary',
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                    fontSize: TYPOGRAPHY.fontSize.large,
+                                    fontSize: TYPOGRAPHY.fontSize.md.h4,
                                 }}
                             >
                                 Oligopoly
@@ -319,7 +319,7 @@ const Oligopoly = () => {
                     {/* Market Dynamics Chart */}
                     <Box
                         sx={{
-                            padding: SPACING.components.section.padding,
+                            padding: SPACING.components.section.padding.md,
                             backgroundColor: COLORS.surface.subtle,
                             borderRadius: SPACING.borderRadius.sm,
                             border: COMPONENTS.borders.subtle,
@@ -464,7 +464,7 @@ const Oligopoly = () => {
                     {/* Interactive Control Panel */}
                     <Box
                         sx={{
-                            padding: SPACING.components.section.padding,
+                            padding: SPACING.components.section.padding.md,
                             backgroundColor: COLORS.surface.subtle,
                             borderRadius: SPACING.borderRadius.sm,
                             border: COMPONENTS.borders.subtle,

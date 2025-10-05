@@ -240,7 +240,7 @@ const ZSharp = () => {
                         padding: {
                             xs: '0 0.5rem',
                             sm: '0 1.5rem',
-                            md: SPACING.components.page.padding,
+                            md: `0 ${SPACING.components.page.padding.md}`,
                         },
                         boxSizing: 'border-box',
                         overflow: 'hidden',
@@ -259,7 +259,7 @@ const ZSharp = () => {
                                 sx={{
                                     color: 'text.primary',
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                    fontSize: TYPOGRAPHY.fontSize.large,
+                                    fontSize: TYPOGRAPHY.fontSize.md.h4,
                                 }}
                             >
                                 ZSharp

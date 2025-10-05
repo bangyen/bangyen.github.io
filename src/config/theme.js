@@ -9,7 +9,6 @@ export const ALPHA = {
     hover: 0.08,
     pressed: 0.12,
     focus: 0.15,
-    overlay: 0.8,
     disabled: 0.3,
     glass: 0.85,
 };
@@ -20,8 +19,6 @@ export const BASE_COLORS = {
     primaryBlue: 'hsl(217, 91%, 60%)',
     primaryBlueLight: 'hsl(217, 91%, 70%)',
     primaryBlueDark: 'hsl(217, 91%, 45%)',
-    primaryBlueSofter: 'hsl(217, 45%, 65%)',
-    primaryBlueSubtle: 'hsl(217, 25%, 95%)',
 
     // Semantic colors
     success: 'hsl(141, 64%, 49%)',
@@ -56,8 +53,8 @@ export const COLORS = {
         main: BASE_COLORS.primaryBlue,
         light: BASE_COLORS.primaryBlueLight,
         dark: BASE_COLORS.primaryBlueDark,
-        softer: BASE_COLORS.primaryBlueSofter,
-        subtle: BASE_COLORS.primaryBlueSubtle,
+        softer: `hsla(217, 45%, 65%, ${ALPHA.subtle})`,
+        subtle: `hsla(217, 25%, 95%, ${ALPHA.subtle})`,
     },
     // Semantic Function Colors
     accent: {
@@ -203,22 +200,6 @@ export const TYPOGRAPHY = {
             h6: 'clamp(1.25rem, 2vw, 1.5rem)',
             body: 'clamp(1.125rem, 1vw, 1.25rem)',
             caption: 'clamp(1rem, 0.8vw, 1.125rem)',
-        },
-        // Legacy font sizes for backward compatibility
-        large: {
-            xs: 'clamp(0.875rem, 2vw, 1rem)',
-            sm: 'clamp(1rem, 2.5vw, 1.125rem)',
-            md: 'clamp(1.125rem, 3vw, 1.25rem)',
-        },
-        medium: {
-            xs: 'clamp(0.75rem, 1.5vw, 0.875rem)',
-            sm: 'clamp(0.875rem, 2vw, 1rem)',
-            md: 'clamp(1rem, 2.5vw, 1.125rem)',
-        },
-        icon: {
-            xs: 'clamp(0.875rem, 1.5vw, 1rem)',
-            sm: 'clamp(1rem, 2vw, 1.125rem)',
-            md: 'clamp(1.125rem, 2.5vw, 1.25rem)',
         },
     },
     // Enhanced font weights with optical sizing considerations

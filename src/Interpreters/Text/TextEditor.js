@@ -125,7 +125,7 @@ export default function TextEditor(props) {
         readOnly: true,
         infoLabel: 'RISC-V Equivalent',
         fillValue: 'addi x0, x0, 0',
-        value: null,
+        value: '',
     };
 
     return (
