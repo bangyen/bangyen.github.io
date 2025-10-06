@@ -192,8 +192,9 @@ export default function Interpreters() {
                                     overflow: 'hidden',
                                     '&:hover': {
                                         backgroundColor:
-                                            COMPONENTS.overlays.light,
-                                        transform: 'translateY(-0.125rem)', // -2px
+                                            COLORS.interactive.selected,
+                                        transform: 'translateY(-2px)', // -2px
+                                        boxShadow: COLORS.shadows.md,
                                     },
                                 }}
                             >

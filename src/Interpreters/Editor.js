@@ -156,7 +156,7 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
                     bg: COMPONENTS.overlays.light,
                     text: 'text.secondary',
                     border: COMPONENTS.borders.subtle,
-                    hover: COMPONENTS.overlays.light,
+                    hover: COLORS.interactive.selected,
                 },
             };
             return styles[color] || styles.secondary;
