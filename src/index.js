@@ -116,7 +116,7 @@ const darkTheme = createTheme({
                         padding: '12px 24px',
                         minHeight: '44px',
                         fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                        transition: ANIMATIONS.transitions.normal,
+                        transition: ANIMATIONS.transition,
                         boxShadow: COLORS.shadows.xs,
                         '&:hover': {
                             backgroundColor: COLORS.primary.dark,
@@ -139,7 +139,7 @@ const darkTheme = createTheme({
                         padding: '12px 24px',
                         minHeight: '44px',
                         fontWeight: TYPOGRAPHY.fontWeight.medium,
-                        transition: ANIMATIONS.transitions.normal,
+                        transition: ANIMATIONS.transition,
                         '&:hover': {
                             backgroundColor: COLORS.interactive.hover,
                             borderColor: COLORS.primary.main,
@@ -161,7 +161,7 @@ const darkTheme = createTheme({
                         padding: '12px 24px',
                         minHeight: '44px',
                         fontWeight: TYPOGRAPHY.fontWeight.medium,
-                        transition: ANIMATIONS.transitions.fast,
+                        transition: ANIMATIONS.fast,
                         '&:hover': {
                             backgroundColor: COLORS.interactive.hover,
                             color: COLORS.text.primary,
@@ -188,7 +188,7 @@ const darkTheme = createTheme({
                         border: `1px solid ${COLORS.border.subtle}`,
                         borderRadius: SPACING.borderRadius.lg,
                         padding: '24px',
-                        transition: ANIMATIONS.transitions.normal,
+                        transition: ANIMATIONS.transition,
                         boxShadow: COLORS.shadows.sm,
                     },
                 },
@@ -200,7 +200,7 @@ const darkTheme = createTheme({
                         border: `1px solid ${COLORS.border.subtle}`,
                         borderRadius: SPACING.borderRadius.lg,
                         padding: '24px',
-                        transition: ANIMATIONS.transitions.gentle,
+                        transition: ANIMATIONS.transition,
                         boxShadow: COLORS.shadows.md,
                     },
                 },
@@ -211,7 +211,7 @@ const darkTheme = createTheme({
                         border: `1px solid ${COLORS.border.subtle}`,
                         borderRadius: SPACING.borderRadius.lg,
                         padding: '24px',
-                        transition: ANIMATIONS.transitions.normal,
+                        transition: ANIMATIONS.transition,
                         boxShadow: COLORS.shadows.sm,
                         cursor: 'pointer',
                         '&:hover': {
@@ -231,7 +231,7 @@ const darkTheme = createTheme({
                     border: `1px solid ${COLORS.border.subtle}`,
                     borderRadius: SPACING.borderRadius.lg,
                     boxShadow: COLORS.shadows.sm,
-                    transition: ANIMATIONS.transitions.spring,
+                    transition: ANIMATIONS.transition,
                     '&:hover': {
                         boxShadow: COLORS.shadows.md,
                     },
@@ -243,7 +243,7 @@ const darkTheme = createTheme({
                 root: {
                     borderRadius: SPACING.borderRadius.full,
                     fontWeight: TYPOGRAPHY.fontWeight.medium,
-                    transition: ANIMATIONS.transitions.fast,
+                    transition: ANIMATIONS.fast,
                 },
                 outlined: {
                     borderColor: COLORS.border.subtle,
@@ -270,7 +270,7 @@ const darkTheme = createTheme({
                 root: {
                     borderRadius: SPACING.borderRadius.md,
                     margin: '0.25rem 0.25rem',
-                    transition: ANIMATIONS.transitions.fast,
+                    transition: ANIMATIONS.fast,
                     '&:hover': {
                         transform: 'scale(1.02) translateY(-1px)',
                         transition:

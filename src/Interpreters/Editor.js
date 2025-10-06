@@ -173,7 +173,7 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
                 cursor: 'pointer',
                 borderRadius: SPACING.borderRadius.sm,
                 border: cellStyle.border,
-                transition: ANIMATIONS.transitions.normal,
+                transition: ANIMATIONS.transition,
                 '&:hover': {
                     backgroundColor: cellStyle.hover,
                     transform: 'translateY(-0.125rem)', // -2px

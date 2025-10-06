@@ -153,29 +153,21 @@ export const SPACING = {
     },
 };
 
-// Simplified Animation System - Only the animations actually being used
+// Simplified Animation System - Consolidated for consistency
 export const ANIMATIONS = {
-    // Essential transitions
-    transitions: {
-        fast: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-        normal: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-        spring: 'all 350ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-    },
-    // Hover states
+    // Standard transition used throughout the app
+    transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+    // Fast transition for quick interactions
+    fast: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+    // Hover effect used consistently across components
     hover: {
-        modern: {
-            transform: 'scale(1.02) translateY(-1px)',
-            transition: 'all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            boxShadow: '0 4px 20px hsla(0, 0%, 0%, 0.25)',
-        },
+        transform: 'translateY(-2px)',
+        boxShadow: '0 4px 20px hsla(0, 0%, 0%, 0.25)',
     },
-    // Focus states
+    // Focus ring for accessibility
     focus: {
-        ring: {
-            outline: 'none',
-            boxShadow: '0 0 0 3px hsla(217, 91%, 60%, 0.15)',
-            transition: 'box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-        },
+        outline: 'none',
+        boxShadow: '0 0 0 3px hsla(217, 91%, 60%, 0.15)',
     },
 };
 

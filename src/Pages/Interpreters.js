@@ -186,7 +186,7 @@ export default function Interpreters() {
                                     border: COMPONENTS.borders.subtle,
                                     textDecoration: 'none',
                                     cursor: 'pointer',
-                                    transition: ANIMATIONS.transitions.normal,
+                                    transition: ANIMATIONS.transition,
                                     width: '100%',
                                     boxSizing: 'border-box',
                                     overflow: 'hidden',

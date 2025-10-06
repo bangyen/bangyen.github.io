@@ -66,7 +66,7 @@ function Cell({ size, children, ...rest }) {
         fontSize: `${size * 0.25}rem`,
         fontWeight: TYPOGRAPHY.fontWeight.semibold,
         fontFamily: 'monospace',
-        transition: ANIMATIONS.transitions.normal,
+        transition: ANIMATIONS.transition,
     };
 
     const combined = {

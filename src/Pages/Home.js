@@ -46,8 +46,8 @@ function dropdown(name, routes) {
                         padding: '12px 16px',
                         borderRadius: SPACING.borderRadius.md,
                         margin: '0.25rem 0.25rem',
-                        transition: ANIMATIONS.transitions.fast,
-                        '&:hover': ANIMATIONS.hover.modern,
+                        transition: ANIMATIONS.fast,
+                        '&:hover': ANIMATIONS.hover,
                     }}
                     key={routeName}
                     component={Link}
@@ -314,8 +314,7 @@ export default function Home() {
                                                 COLORS.interactive.selected,
                                             borderRadius:
                                                 SPACING.borderRadius.full,
-                                            transition:
-                                                ANIMATIONS.transitions.normal,
+                                            transition: ANIMATIONS.transition,
                                             cursor: 'pointer',
                                             '&:hover': {
                                                 backgroundColor:
@@ -445,9 +444,7 @@ export default function Home() {
                                                                 sm: 1.5,
                                                             },
                                                             transition:
-                                                                ANIMATIONS
-                                                                    .transitions
-                                                                    .normal,
+                                                                ANIMATIONS.transition,
                                                             cursor: 'pointer',
                                                             minWidth: 0, // Allow shrinking
                                                             overflow: 'hidden', // Prevent text overflow
@@ -654,7 +651,7 @@ export default function Home() {
                                                 textDecoration: 'none',
                                                 cursor: 'pointer',
                                                 transition:
-                                                    ANIMATIONS.transitions
+                                                    ANIMATIONS.transition
                                                         .normal,
                                                 boxShadow: COLORS.shadows.md,
                                                 position: 'relative',
@@ -668,8 +665,7 @@ export default function Home() {
                                                         COLORS.interactive
                                                             .selected,
                                                 },
-                                                '&:focus':
-                                                    ANIMATIONS.focus.ring,
+                                                '&:focus': ANIMATIONS.focus,
                                             }}
                                         >
                                             <Box
@@ -793,7 +789,7 @@ export default function Home() {
                                                 textDecoration: 'none',
                                                 cursor: 'pointer',
                                                 transition:
-                                                    ANIMATIONS.transitions
+                                                    ANIMATIONS.transition
                                                         .normal,
                                                 boxShadow: COLORS.shadows.md,
                                                 position: 'relative',
@@ -807,8 +803,7 @@ export default function Home() {
                                                         COLORS.interactive
                                                             .selected,
                                                 },
-                                                '&:focus':
-                                                    ANIMATIONS.focus.ring,
+                                                '&:focus': ANIMATIONS.focus,
                                             }}
                                         >
                                             <Box
