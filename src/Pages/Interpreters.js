@@ -59,7 +59,7 @@ export default function Interpreters() {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+                padding: { xs: '1rem', md: '2rem' },
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -90,7 +90,6 @@ export default function Interpreters() {
                     zIndex: LAYOUT.zIndex.content,
                     padding: {
                         xs: `${SPACING.padding.xs} 0`,
-                        sm: `${SPACING.padding.sm} 0`,
                         md: `${SPACING.padding.md} 0`,
                     },
                     minHeight: 0,
@@ -103,7 +102,6 @@ export default function Interpreters() {
                         width: '100%',
                         padding: {
                             xs: '0 0.5rem',
-                            sm: `0 ${SPACING.padding.sm}`,
                             md: `0 ${SPACING.padding.md}`,
                         },
                         boxSizing: 'border-box',
@@ -127,7 +125,7 @@ export default function Interpreters() {
                                 fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                 fontSize: {
                                     xs: '1.25rem',
-                                    sm: '2.125rem',
+                                    md: '2.125rem',
                                 },
                             }}
                         >
@@ -142,8 +140,8 @@ export default function Interpreters() {
                                 <GitHub
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.sm.h3,
-                                            sm: '2rem',
+                                            xs: TYPOGRAPHY.fontSize.h2,
+                                            md: '2rem',
                                         },
                                     }}
                                 />
@@ -152,8 +150,8 @@ export default function Interpreters() {
                                 <Home
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.sm.h3,
-                                            sm: '2rem',
+                                            xs: TYPOGRAPHY.fontSize.h2,
+                                            md: '2rem',
                                         },
                                     }}
                                 />
@@ -167,9 +165,9 @@ export default function Interpreters() {
                             display: 'grid',
                             gridTemplateColumns: {
                                 xs: '1fr',
-                                sm: '1fr 1fr',
+                                md: '1fr 1fr',
                             },
-                            gap: { xs: 2, sm: 3 },
+                            gap: { xs: 2, md: 3 },
                             marginTop: 4,
                         }}
                     >
@@ -179,7 +177,7 @@ export default function Interpreters() {
                                 component={Link}
                                 to={interpreter.path}
                                 sx={{
-                                    padding: { xs: 1.5, sm: 2 },
+                                    padding: { xs: 1.5, md: 2 },
                                     backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
                                     borderRadius: SPACING.borderRadius.sm,
                                     border: `1px solid ${COLORS.border.subtle}`,

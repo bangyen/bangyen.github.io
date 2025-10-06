@@ -245,7 +245,6 @@ const Oligopoly = () => {
                         width: '100%',
                         padding: {
                             xs: '0 0.5rem',
-                            sm: '0 1.5rem',
                             md: '0 2rem',
                         },
                         boxSizing: 'border-box',
@@ -280,8 +279,8 @@ const Oligopoly = () => {
                                 <GitHub
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.md.h3,
-                                            sm: '2rem',
+                                            xs: TYPOGRAPHY.fontSize.h2,
+                                            md: '2rem',
                                         },
                                     }}
                                 />
@@ -290,8 +289,8 @@ const Oligopoly = () => {
                                 <Home
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.md.h3,
-                                            sm: '2rem',
+                                            xs: TYPOGRAPHY.fontSize.h2,
+                                            md: '2rem',
                                         },
                                     }}
                                 />
@@ -307,8 +306,8 @@ const Oligopoly = () => {
                             marginBottom: 4,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
                             fontSize: {
-                                xs: TYPOGRAPHY.fontSize.sm.body,
-                                sm: TYPOGRAPHY.fontSize.sm.subheading,
+                                xs: TYPOGRAPHY.fontSize.body,
+                                md: TYPOGRAPHY.fontSize.body,
                             },
                         }}
                     >
@@ -318,7 +317,7 @@ const Oligopoly = () => {
                     {/* Market Dynamics Chart */}
                     <Box
                         sx={{
-                            padding: { xs: 1.5, sm: 2 },
+                            padding: { xs: 1.5, md: 2 },
                             backgroundColor: COLORS.surface.elevated,
                             borderRadius: SPACING.borderRadius.sm,
                             border: `1px solid ${COLORS.border.subtle}`,
@@ -460,7 +459,7 @@ const Oligopoly = () => {
                     {/* Interactive Control Panel */}
                     <Box
                         sx={{
-                            padding: { xs: 1.5, sm: 2 },
+                            padding: { xs: 1.5, md: 2 },
                             backgroundColor: COLORS.surface.elevated,
                             borderRadius: SPACING.borderRadius.sm,
                             border: `1px solid ${COLORS.border.subtle}`,
