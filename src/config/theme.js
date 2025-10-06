@@ -238,116 +238,28 @@ export const SPACING = {
     },
 };
 
-// Timing Constants - Consolidated animation and interaction timings
-export const TIMING = {
-    fast: 150,
-    normal: 300,
-    slow: 500,
-    slower: 750,
-    fadeIn: 1000,
-    staggerDelay: 200,
-    initialDelay: 1600,
-    game: {
-        snake: 100,
-        editor: 200,
-    },
-    reducedMotion: 0.01,
-    scrollbar: 150,
-};
-
-// Modern Animation System - Spring physics and sophisticated interactions
+// Simplified Animation System - Only the animations actually being used
 export const ANIMATIONS = {
-    // Modern easing curves inspired by Apple and Linear
-    easing: {
-        smooth: 'cubic-bezier(0.4, 0, 0.2, 1)',
-        spring: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
-        gentle: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-        snappy: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        linear: 'linear',
-    },
-    // Timing system with semantic naming
-    duration: {
-        fast: `${TIMING.fast}ms`,
-        normal: `${TIMING.normal}ms`,
-        slow: `${TIMING.slow}ms`,
-        slower: `${TIMING.slower}ms`,
-    },
-    // Comprehensive transition library
+    // Essential transitions
     transitions: {
-        fast: `all ${TIMING.fast}ms cubic-bezier(0.4, 0, 0.2, 1)`,
-        normal: `all ${TIMING.normal}ms cubic-bezier(0.4, 0, 0.2, 1)`,
-        smooth: 'all 400ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        fast: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+        normal: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
         spring: 'all 350ms cubic-bezier(0.34, 1.56, 0.64, 1)',
-        gentle: 'all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
     },
-    // Hover states with sophisticated interactions
+    // Hover states
     hover: {
-        lift: {
-            transform: 'translateY(-2px) scale(1.01)',
-            transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-            boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.4)',
-        },
-        slide: {
-            transform: 'translateX(4px)',
-            transition: 'transform 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-        },
-        glow: {
-            boxShadow: '0 0 20px hsla(217, 91%, 60%, 0.15)',
-            transition: 'box-shadow 200ms cubic-bezier(0.4, 0, 0.2, 1)',
-        },
         modern: {
             transform: 'scale(1.02) translateY(-1px)',
             transition: 'all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
             boxShadow: '0 4px 20px hsla(0, 0%, 0%, 0.25)',
         },
     },
-    // Focus states with accessibility in mind
+    // Focus states
     focus: {
         ring: {
             outline: 'none',
             boxShadow: '0 0 0 3px hsla(217, 91%, 60%, 0.15)',
             transition: 'box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-        },
-    },
-    // Animation presets section removed (unused)
-    // CSS-specific animation values
-    css: {
-        translateY: '40px',
-        translateX: '40px',
-        glow: {
-            offset: '20px',
-            spread: '30px',
-            blur: '40px',
-        },
-        backdrop: {
-            blur: '20px',
-            saturation: '180%',
-        },
-    },
-    // Loading states and skeleton animations
-    loading: {
-        shimmer: {
-            background:
-                'linear-gradient(90deg, hsl(0, 0%, 8%), hsl(0, 0%, 12%), hsl(0, 0%, 8%))',
-            backgroundSize: '200% 100%',
-            animation: 'shimmer 1.5s infinite linear',
-        },
-        pulse: {
-            animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        },
-        bounce: {
-            animation: 'bounce 1s infinite',
-        },
-    },
-    // Page transitions and route changes
-    pageTransition: {
-        fadeOut: {
-            opacity: 0,
-            transition: `opacity ${TIMING.fast}ms ease-out`,
-        },
-        fadeIn: {
-            opacity: 1,
-            transition: `opacity ${TIMING.normal}ms ease-in`,
         },
     },
 };

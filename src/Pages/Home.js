@@ -456,10 +456,7 @@ export default function Home() {
                                                                         .interactive
                                                                         .pressed,
                                                                 transform:
-                                                                    ANIMATIONS
-                                                                        .hover
-                                                                        .lift
-                                                                        .transform,
+                                                                    'translateY(-2px) scale(1.01)',
                                                                 boxShadow:
                                                                     COLORS
                                                                         .shadows
