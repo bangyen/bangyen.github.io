@@ -3,7 +3,6 @@ import { CustomGrid } from '../helpers';
 import Grid from '@mui/material/Grid2';
 import { Toolbar } from './Toolbar';
 import { COLORS, SPACING, ANIMATIONS, TYPOGRAPHY } from '../config/theme';
-import { COMPONENTS } from '../config/components';
 
 import { Typography, TextField } from '@mui/material';
 
@@ -141,19 +140,19 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
         const getCellStyles = color => {
             const styles = {
                 primary: {
-                    bg: COMPONENTS.overlays.light,
+                    bg: 'hsla(0, 0%, 15%, 0.9)',
                     text: 'primary.light',
                     border: `1px solid ${COLORS.primary.main}`,
-                    hover: COMPONENTS.overlays.medium,
+                    hover: 'hsla(0, 0%, 18%, 0.9)',
                 },
                 info: {
-                    bg: COMPONENTS.overlays.medium,
+                    bg: 'hsla(0, 0%, 18%, 0.9)',
                     text: 'secondary.light',
                     border: `1px solid ${COLORS.border.primary}`,
-                    hover: COMPONENTS.overlays.light,
+                    hover: 'hsla(0, 0%, 15%, 0.9)',
                 },
                 secondary: {
-                    bg: COMPONENTS.overlays.light,
+                    bg: 'hsla(0, 0%, 15%, 0.9)',
                     text: 'text.secondary',
                     border: `1px solid ${COLORS.border.subtle}`,
                     hover: COLORS.interactive.selected,
@@ -227,7 +226,7 @@ export function TextArea({
             sx={{
                 '& .MuiInputBase-root': {
                     alignItems: 'flex-start',
-                    backgroundColor: COMPONENTS.overlays.light,
+                    backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
                     borderRadius: SPACING.borderRadius.sm,
                 },
                 '& .MuiInputBase-input': {

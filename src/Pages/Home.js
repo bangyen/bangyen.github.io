@@ -13,7 +13,6 @@ import {
     PAGE_TITLES,
 } from '../config/constants';
 import { COLORS, SPACING, TYPOGRAPHY, ANIMATIONS } from '../config/theme';
-import { COMPONENTS } from '../config/components';
 
 import {
     MenuRounded,

@@ -3,7 +3,6 @@ import { EditorContext, Text } from './Editor';
 import { Box, Typography, Chip, IconButton } from '@mui/material';
 import { useContext } from 'react';
 import { SPACING, COLORS, TYPOGRAPHY } from '../config/theme';
-import { COMPONENTS } from '../config/components';
 
 import {
     CodeRounded,
@@ -180,7 +179,7 @@ function CompactDisplay(props) {
                     backgroundColor:
                         color === 'info'
                             ? 'primary.light'
-                            : COMPONENTS.overlays.light,
+                            : 'hsla(0, 0%, 15%, 0.9)',
                     color:
                         color === 'info' ? COLORS.text.primary : 'text.primary',
                     fontFamily: 'monospace',
@@ -195,7 +194,7 @@ function CompactDisplay(props) {
         <Box
             sx={{
                 padding: 1.5,
-                backgroundColor: COMPONENTS.overlays.light,
+                backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
                 border: `1px solid ${COLORS.border.subtle}`,
                 borderRadius: SPACING.borderRadius.sm,
                 height: '100%',
@@ -270,7 +269,7 @@ function Scrollable(props) {
                 overflowX: 'auto',
                 width: '100%',
                 padding: 2,
-                backgroundColor: COMPONENTS.overlays.light,
+                backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
                 border: `1px solid ${COLORS.border.subtle}`,
                 borderRadius: SPACING.borderRadius.sm,
                 height: '60px',

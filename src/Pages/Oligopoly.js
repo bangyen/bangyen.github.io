@@ -16,7 +16,6 @@ import {
     GAME_CONSTANTS,
 } from '../config/constants';
 import { COLORS, SPACING, TYPOGRAPHY, LAYOUT } from '../config/theme';
-import { COMPONENTS } from '../config/components';
 import { GitHub, Refresh, Home } from '@mui/icons-material';
 import {
     LineChart,
@@ -408,7 +407,7 @@ const Oligopoly = () => {
                                         <RechartsTooltip
                                             contentStyle={{
                                                 backgroundColor:
-                                                    COMPONENTS.overlays.dark,
+                                                    'hsla(0, 0%, 5%, 0.95)',
                                                 border: `1px solid ${COLORS.border.primary}`,
                                                 borderRadius:
                                                     SPACING.borderRadius.lg,

@@ -4,7 +4,6 @@ import Grid from '@mui/material/Grid2';
 import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
 import { SPACING, TYPOGRAPHY, ANIMATIONS } from './config/theme';
-import { COMPONENTS } from './config/components';
 
 import {
     HomeRounded,

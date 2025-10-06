@@ -11,7 +11,6 @@ import {
     ANIMATIONS,
     LAYOUT,
 } from '../config/theme';
-import { COMPONENTS } from '../config/components';
 
 export default function Interpreters() {
     useEffect(() => {
@@ -181,7 +180,7 @@ export default function Interpreters() {
                                 to={interpreter.path}
                                 sx={{
                                     padding: { xs: 1.5, sm: 2 },
-                                    backgroundColor: COMPONENTS.overlays.light,
+                                    backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
                                     borderRadius: SPACING.borderRadius.sm,
                                     border: `1px solid ${COLORS.border.subtle}`,
                                     textDecoration: 'none',
