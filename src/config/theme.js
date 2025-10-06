@@ -39,10 +39,6 @@ export const BASE_COLORS = {
     neutral950: 'hsl(0, 0%, 3%)',
 
     // Additional colors
-    purple: 'hsl(271, 91%, 65%)',
-    cyan: 'hsl(188, 91%, 60%)',
-    indigo: 'hsl(231, 91%, 60%)',
-    pink: 'hsl(329, 85%, 70%)',
     white: 'hsl(0, 0%, 100%)',
 };
 
@@ -80,9 +76,7 @@ export const COLORS = {
     // Semantic Surface Colors
     surface: {
         background: BASE_COLORS.neutral950,
-        container: 'hsl(0, 0%, 5%)',
         elevated: BASE_COLORS.neutral900,
-        overlay: 'hsl(0, 0%, 12%)',
         glass: `hsla(0, 0%, 8%, ${ALPHA.glass})`,
         subtle: BASE_COLORS.neutral900,
     },
@@ -92,7 +86,6 @@ export const COLORS = {
         secondary: BASE_COLORS.neutral400,
         tertiary: BASE_COLORS.neutral500,
         muted: BASE_COLORS.neutral600,
-        inverse: BASE_COLORS.neutral900,
         accent: BASE_COLORS.primaryBlue,
         white: BASE_COLORS.white,
     },
@@ -117,10 +110,6 @@ export const COLORS = {
         green: BASE_COLORS.success,
         amber: BASE_COLORS.warning,
         red: BASE_COLORS.error,
-        purple: BASE_COLORS.purple,
-        cyan: BASE_COLORS.cyan,
-        indigo: BASE_COLORS.indigo,
-        pink: BASE_COLORS.pink,
     },
     // Game-specific colors
     game: {
