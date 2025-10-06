@@ -370,7 +370,7 @@ export default function Home() {
                                         backdropFilter:
                                             COMPONENTS.menu.backdropFilter,
                                         border: COMPONENTS.menu.border,
-                                        borderRadius: SPACING.borderRadius.xl,
+                                        borderRadius: SPACING.borderRadius.lg,
                                         padding:
                                             SPACING.components.card.padding,
                                         boxShadow: COLORS.shadows.md,
@@ -523,7 +523,7 @@ export default function Home() {
                                         backdropFilter:
                                             COMPONENTS.menu.backdropFilter,
                                         border: COMPONENTS.menu.border,
-                                        borderRadius: SPACING.borderRadius.xl,
+                                        borderRadius: SPACING.borderRadius.lg,
                                         padding:
                                             SPACING.components.card.padding,
                                         boxShadow: COLORS.shadows.md,
@@ -681,7 +681,7 @@ export default function Home() {
                                                         .backdropFilter,
                                                 border: COMPONENTS.menu.border,
                                                 borderRadius:
-                                                    SPACING.borderRadius.xl,
+                                                    SPACING.borderRadius.lg,
                                                 padding:
                                                     SPACING.components.card
                                                         .padding,
@@ -816,7 +816,7 @@ export default function Home() {
                                                         .backdropFilter,
                                                 border: COMPONENTS.menu.border,
                                                 borderRadius:
-                                                    SPACING.borderRadius.xl,
+                                                    SPACING.borderRadius.lg,
                                                 padding:
                                                     SPACING.components.card
                                                         .padding,

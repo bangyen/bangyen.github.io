@@ -105,7 +105,7 @@ export default function Info(props) {
                     maxHeight: '95vh',
                     overflow: 'auto',
                     mx: 'auto',
-                    borderRadius: SPACING.borderRadius.xl,
+                    borderRadius: SPACING.borderRadius.lg,
                     backgroundColor: COLORS.surface.glass,
                     backdropFilter: 'blur(20px) saturate(180%)',
                     border: `1px solid hsla(0, 0%, 100%, 0.1)`,
@@ -408,7 +408,7 @@ export default function Info(props) {
                                         backgroundColor:
                                             COLORS.surface.elevated,
                                         border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                        borderRadius: SPACING.borderRadius.xl,
+                                        borderRadius: SPACING.borderRadius.lg,
                                         padding: 3,
                                         textAlign: 'center',
                                     }}
