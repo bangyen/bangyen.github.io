@@ -678,8 +678,8 @@ export default function Home() {
                                             >
                                                 <Typography
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .accent,
+                                                        color: COLORS.primary
+                                                            .main,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
                                                                 .sm.caption,
@@ -699,8 +699,8 @@ export default function Home() {
                                                 </Typography>
                                                 <OpenInNew
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .accent,
+                                                        color: COLORS.primary
+                                                            .main,
                                                     }}
                                                 />
                                             </Box>
@@ -816,8 +816,8 @@ export default function Home() {
                                             >
                                                 <Typography
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .accent,
+                                                        color: COLORS.primary
+                                                            .main,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
                                                                 .sm.caption,
@@ -837,8 +837,8 @@ export default function Home() {
                                                 </Typography>
                                                 <GitHub
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .accent,
+                                                        color: COLORS.primary
+                                                            .main,
                                                     }}
                                                 />
                                             </Box>
