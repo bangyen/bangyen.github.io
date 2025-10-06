@@ -628,7 +628,7 @@ export default function Home() {
                                                                 .primary.main,
                                                             fontSize:
                                                                 TYPOGRAPHY
-                                                                    .fontSize.sm
+                                                                    .fontSize
                                                                     .caption,
                                                             fontWeight:
                                                                 TYPOGRAPHY
@@ -769,7 +769,7 @@ export default function Home() {
                                                                 .primary.main,
                                                             fontSize:
                                                                 TYPOGRAPHY
-                                                                    .fontSize.sm
+                                                                    .fontSize
                                                                     .caption,
                                                             fontWeight:
                                                                 TYPOGRAPHY
