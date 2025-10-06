@@ -305,10 +305,7 @@ const Oligopoly = () => {
                             marginTop: 2,
                             marginBottom: 4,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
-                            fontSize: {
-                                xs: TYPOGRAPHY.fontSize.body,
-                                md: TYPOGRAPHY.fontSize.body,
-                            },
+                            fontSize: TYPOGRAPHY.fontSize.subheading,
                         }}
                     >
                         Agent-Based Economic Competition Analysis
