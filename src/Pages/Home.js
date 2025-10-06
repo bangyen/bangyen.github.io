@@ -436,7 +436,7 @@ export default function Home() {
                                                             sx={{
                                                                 color: COLORS
                                                                     .text
-                                                                    .accent,
+                                                                    .primary,
                                                                 fontSize:
                                                                     TYPOGRAPHY
                                                                         .fontSize
@@ -447,7 +447,7 @@ export default function Home() {
                                                             sx={{
                                                                 color: COLORS
                                                                     .text
-                                                                    .accent,
+                                                                    .primary,
                                                                 fontSize:
                                                                     TYPOGRAPHY
                                                                         .fontSize
