@@ -90,8 +90,8 @@ export default function Editor({ container, sideProps, hide, children }) {
                     ].filter(Boolean).length;
                     const gridSize =
                         fieldCount === 1
-                            ? SPACING.grid.full
-                            : SPACING.grid.half;
+                            ? { xs: 12, sm: 12 }
+                            : { xs: 12, sm: 6 };
 
                     if (code !== undefined) {
                         fields.push(
@@ -144,18 +144,18 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
                     bg: COMPONENTS.overlays.light,
                     text: 'primary.light',
                     border: COMPONENTS.badge.border,
-                    hover: COMPONENTS.overlays.hover,
+                    hover: COMPONENTS.overlays.medium,
                 },
                 info: {
                     bg: COMPONENTS.overlays.medium,
                     text: 'secondary.light',
-                    border: COMPONENTS.borders.medium,
-                    hover: COMPONENTS.overlays.hoverLight,
+                    border: COMPONENTS.borders.primary,
+                    hover: COMPONENTS.overlays.light,
                 },
                 secondary: {
-                    bg: COMPONENTS.overlays.lighter,
+                    bg: COMPONENTS.overlays.light,
                     text: 'text.secondary',
-                    border: COMPONENTS.borders.light,
+                    border: COMPONENTS.borders.subtle,
                     hover: COMPONENTS.overlays.light,
                 },
             };
@@ -173,7 +173,7 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
                 cursor: 'pointer',
                 borderRadius: SPACING.borderRadius.sm,
                 border: cellStyle.border,
-                transition: ANIMATIONS.transition,
+                transition: ANIMATIONS.transitions.normal,
                 '&:hover': {
                     backgroundColor: cellStyle.hover,
                     transform: 'translateY(-0.125rem)', // -2px
@@ -227,7 +227,7 @@ export function TextArea({
             sx={{
                 '& .MuiInputBase-root': {
                     alignItems: 'flex-start',
-                    backgroundColor: COMPONENTS.overlays.lighter,
+                    backgroundColor: COMPONENTS.overlays.light,
                     borderRadius: SPACING.borderRadius.sm,
                 },
                 '& .MuiInputBase-input': {

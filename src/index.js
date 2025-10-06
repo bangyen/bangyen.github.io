@@ -46,7 +46,7 @@ const darkTheme = createTheme({
     typography: {
         fontFamily: TYPOGRAPHY.fontFamily.primary,
         h1: {
-            fontWeight: TYPOGRAPHY.fontWeight.extrabold,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
             fontSize: TYPOGRAPHY.fontSize.lg.display,
             letterSpacing: TYPOGRAPHY.letterSpacing.tight,
             lineHeight: TYPOGRAPHY.lineHeight.tight,
@@ -128,7 +128,7 @@ const darkTheme = createTheme({
                     border: COMPONENTS.borders.subtle,
                     borderRadius: SPACING.borderRadius.lg,
                     boxShadow: COLORS.shadows.sm,
-                    transition: ANIMATIONS.transitions.gentle,
+                    transition: ANIMATIONS.transitions.spring,
                     '&:hover': {
                         boxShadow: COLORS.shadows.md,
                     },

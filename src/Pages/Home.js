@@ -227,8 +227,7 @@ export default function Home() {
                                 <Typography
                                     sx={{
                                         color: COLORS.text.primary,
-                                        fontWeight:
-                                            TYPOGRAPHY.fontWeight.extrabold,
+                                        fontWeight: TYPOGRAPHY.fontWeight.bold,
                                         fontSize: {
                                             xs: 'clamp(2rem, 8vw, 2.5rem)', // Smaller on mobile, prevents wrapping under 500px
                                             sm: 'clamp(2.5rem, 7vw, 3.5rem)', // Medium sizing

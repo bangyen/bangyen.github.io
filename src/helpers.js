@@ -66,7 +66,7 @@ function Cell({ size, children, ...rest }) {
         fontSize: `${size * 0.25}rem`,
         fontWeight: TYPOGRAPHY.fontWeight.semibold,
         fontFamily: 'monospace',
-        transition: ANIMATIONS.transition,
+        transition: ANIMATIONS.transitions.normal,
     };
 
     const combined = {
@@ -145,7 +145,7 @@ export function Navigation({ children, ...rest }) {
             sx={{
                 transform: 'translateX(-50%)',
                 position: 'absolute',
-                borderRadius: SPACING.borderRadius.medium,
+                borderRadius: SPACING.borderRadius.md,
                 padding: 2,
                 bottom: 50,
                 left: '50%',

@@ -210,35 +210,22 @@ export const COMPONENTS = {
             },
         },
     },
-    // Sophisticated borders and dividers
+    // Essential borders
     borders: {
         subtle: '1px solid hsl(0, 0%, 18%)',
         primary: '1px solid hsl(0, 0%, 30%)',
         interactive: '2px solid hsl(217, 91%, 60%)',
-        divider: '1px solid hsl(0, 0%, 18%)',
-        light: '1px solid hsl(0, 0%, 18%)',
-        white: '1px solid hsl(0, 0%, 30%)',
     },
     // Interactive states
     interactive: {
-        hover: {
-            standard: 'hsla(0, 0%, 80%, 0.08)',
-            subtle: 'hsla(0, 0%, 80%, 0.08)',
-            strong: 'hsla(0, 0%, 80%, 0.12)',
-        },
-        focus: {
-            ring: '0 0 0 3px hsla(217, 91%, 60%, 0.15)',
-            outline: 'none',
-        },
+        hover: 'hsla(0, 0%, 80%, 0.08)',
+        focus: '0 0 0 3px hsla(217, 91%, 60%, 0.15)',
         selected: 'hsla(217, 91%, 60%, 0.1)',
         disabled: 'hsla(0, 0%, 45%, 0.3)',
     },
     overlays: {
         dark: 'hsla(0, 0%, 5%, 0.95)',
-        lighter: 'hsla(0, 0%, 12%, 0.8)',
         light: 'hsla(0, 0%, 15%, 0.9)',
         medium: 'hsla(0, 0%, 18%, 0.9)',
-        hover: 'hsla(0, 0%, 20%, 0.95)',
-        hoverLight: 'hsla(0, 0%, 16%, 0.9)',
     },
 };

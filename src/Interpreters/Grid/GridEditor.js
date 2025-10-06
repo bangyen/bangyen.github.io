@@ -18,7 +18,7 @@ function useWrappers(state, props, dispatch) {
     const { runner, start } = props;
     const { rows, cols } = state;
 
-    const { create, clear } = useTimer(TIMING.game.editor);
+    const { create, clear } = useTimer(200);
     const nextIter = useCache(runner);
 
     const resetState = useCallback(

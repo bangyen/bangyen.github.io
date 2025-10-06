@@ -55,7 +55,7 @@ function handleAction(state, action) {
 }
 
 export default function TextEditor(props) {
-    const { create, clear } = useTimer(TIMING.game.editor);
+    const { create, clear } = useTimer(200);
 
     const { runner, clean, name, start, tape, output, register } = props;
 

@@ -123,7 +123,7 @@ function handleAction(state, action) {
 }
 
 export default function Snake() {
-    const { create: createTimer } = useTimer(TIMING.game.snake);
+    const { create: createTimer } = useTimer(100);
     const { create: createKeys } = useKeys();
 
     const { height, width } = useWindow();

@@ -100,7 +100,7 @@ export default function Interpreters() {
                 <Box
                     sx={{
                         textAlign: 'center',
-                        maxWidth: SPACING.maxWidth.wide,
+                        maxWidth: SPACING.maxWidth.md,
                         width: '100%',
                         padding: {
                             xs: '0 0.5rem',
@@ -181,13 +181,12 @@ export default function Interpreters() {
                                 to={interpreter.path}
                                 sx={{
                                     padding: { xs: 1.5, sm: 2 },
-                                    backgroundColor:
-                                        COMPONENTS.overlays.lighter,
+                                    backgroundColor: COMPONENTS.overlays.light,
                                     borderRadius: SPACING.borderRadius.sm,
-                                    border: COMPONENTS.borders.light,
+                                    border: COMPONENTS.borders.subtle,
                                     textDecoration: 'none',
                                     cursor: 'pointer',
-                                    transition: ANIMATIONS.transition,
+                                    transition: ANIMATIONS.transitions.normal,
                                     width: '100%',
                                     boxSizing: 'border-box',
                                     overflow: 'hidden',

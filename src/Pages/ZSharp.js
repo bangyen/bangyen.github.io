@@ -224,23 +224,19 @@ const ZSharp = () => {
                 flexDirection="column"
                 sx={{
                     zIndex: LAYOUT.zIndex.content,
-                    padding: {
-                        xs: `${SPACING.padding.xs} 0`,
-                        sm: `${SPACING.padding.sm} 0`,
-                        md: `${SPACING.padding.md} 0`,
-                    },
+                    padding: 0,
                     minHeight: 0,
                 }}
             >
                 <Box
                     sx={{
                         textAlign: 'center',
-                        maxWidth: SPACING.maxWidth.wide,
+                        maxWidth: SPACING.maxWidth.md,
                         width: '100%',
                         padding: {
                             xs: '0 0.5rem',
                             sm: '0 1.5rem',
-                            md: `0 ${SPACING.components.page.padding.md}`,
+                            md: `0 ${SPACING.padding.md}`,
                         },
                         boxSizing: 'border-box',
                         overflow: 'hidden',
@@ -434,10 +430,9 @@ const ZSharp = () => {
                                                 backgroundColor:
                                                     COMPONENTS.overlays.dark,
                                                 border: COMPONENTS.borders
-                                                    .white,
+                                                    .primary,
                                                 borderRadius:
-                                                    SPACING.borderRadius
-                                                        .extraLarge,
+                                                    SPACING.borderRadius.lg,
                                                 color: COLORS.text.primary,
                                             }}
                                             labelFormatter={value =>

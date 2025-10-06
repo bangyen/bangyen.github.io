@@ -205,7 +205,7 @@ const Oligopoly = () => {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: SPACING.components.page.padding.md,
+                padding: SPACING.padding.md,
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -235,14 +235,14 @@ const Oligopoly = () => {
                 flexDirection="column"
                 sx={{
                     zIndex: 1,
-                    padding: SPACING.components.page.paddingVertical.md,
+                    padding: 0,
                     minHeight: 0,
                 }}
             >
                 <Box
                     sx={{
                         textAlign: 'center',
-                        maxWidth: SPACING.maxWidth.wide,
+                        maxWidth: SPACING.maxWidth.md,
                         width: '100%',
                         padding: {
                             xs: '0 0.5rem',
@@ -333,8 +333,7 @@ const Oligopoly = () => {
                             variant="subtitle1"
                             sx={{
                                 color: COLORS.text.secondary,
-                                marginBottom:
-                                    SPACING.components.section.marginBottom,
+                                marginBottom: 3,
                                 textAlign: 'center',
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
                                 fontSize: TYPOGRAPHY.fontSize.md.h5,
@@ -411,10 +410,9 @@ const Oligopoly = () => {
                                                 backgroundColor:
                                                     COMPONENTS.overlays.dark,
                                                 border: COMPONENTS.borders
-                                                    .white,
+                                                    .primary,
                                                 borderRadius:
-                                                    SPACING.borderRadius
-                                                        .extraLarge,
+                                                    SPACING.borderRadius.lg,
                                                 color: COLORS.text.primary,
                                             }}
                                             labelFormatter={value =>
@@ -479,8 +477,7 @@ const Oligopoly = () => {
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                marginBottom:
-                                    SPACING.components.section.marginBottom,
+                                marginBottom: 3,
                             }}
                         >
                             <Typography
@@ -511,17 +508,13 @@ const Oligopoly = () => {
                             </Button>
                         </Box>
 
-                        <Grid
-                            container={true}
-                            spacing={SPACING.layout.standardSpacing}
-                        >
+                        <Grid container={true} spacing={3}>
                             {/* Top Row - Toggle Buttons */}
                             <Grid size={{ xs: 12, md: 4 }}>
                                 <Box
                                     sx={{
                                         marginBottom:
-                                            SPACING.components.page
-                                                .marginBottom,
+                                            SPACING.padding.marginBottom,
                                     }}
                                 >
                                     <Typography
@@ -576,8 +569,7 @@ const Oligopoly = () => {
                                 <Box
                                     sx={{
                                         marginBottom:
-                                            SPACING.components.page
-                                                .marginBottom,
+                                            SPACING.padding.marginBottom,
                                     }}
                                 >
                                     <Typography
@@ -637,8 +629,7 @@ const Oligopoly = () => {
                                 <Box
                                     sx={{
                                         marginBottom:
-                                            SPACING.components.page
-                                                .marginBottom,
+                                            SPACING.padding.marginBottom,
                                     }}
                                 >
                                     <Typography
