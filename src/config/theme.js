@@ -26,14 +26,12 @@ export const COLORS = {
         background: 'hsl(0, 0%, 3%)',
         elevated: 'hsl(0, 0%, 8%)',
         glass: `hsla(0, 0%, 8%, ${ALPHA.glass})`,
-        subtle: 'hsl(0, 0%, 8%)',
     },
-    // Text Colors - Simplified to 4 essential variants
+    // Text Colors - Simplified to 3 essential variants
     text: {
         primary: 'hsl(0, 0%, 98%)', // Main text
         secondary: 'hsl(0, 0%, 80%)', // Secondary text
         muted: 'hsl(0, 0%, 45%)', // Muted/disabled text
-        accent: 'hsl(217, 91%, 60%)', // Accent/highlight text
     },
     // Border and Divider Colors
     border: {
@@ -49,7 +47,6 @@ export const COLORS = {
     },
     // Chart Colors
     data: {
-        blue: 'hsl(217, 91%, 60%)',
         green: 'hsl(141, 64%, 49%)',
         amber: 'hsl(34, 95%, 58%)',
         red: 'hsl(0, 73%, 56%)',

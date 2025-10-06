@@ -196,7 +196,7 @@ function CompactDisplay(props) {
             sx={{
                 padding: 1.5,
                 backgroundColor: COMPONENTS.overlays.light,
-                border: COMPONENTS.borders.subtle,
+                border: `1px solid ${COLORS.border.subtle}`,
                 borderRadius: SPACING.borderRadius.sm,
                 height: '100%',
                 minHeight: SPACING.maxWidth.medium,
@@ -271,7 +271,7 @@ function Scrollable(props) {
                 width: '100%',
                 padding: 2,
                 backgroundColor: COMPONENTS.overlays.light,
-                border: COMPONENTS.borders.subtle,
+                border: `1px solid ${COLORS.border.subtle}`,
                 borderRadius: SPACING.borderRadius.sm,
                 height: '60px',
                 display: 'flex',

@@ -183,7 +183,7 @@ export default function Interpreters() {
                                     padding: { xs: 1.5, sm: 2 },
                                     backgroundColor: COMPONENTS.overlays.light,
                                     borderRadius: SPACING.borderRadius.sm,
-                                    border: COMPONENTS.borders.subtle,
+                                    border: `1px solid ${COLORS.border.subtle}`,
                                     textDecoration: 'none',
                                     cursor: 'pointer',
                                     transition: ANIMATIONS.transition,

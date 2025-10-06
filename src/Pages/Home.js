@@ -202,7 +202,7 @@ export default function Home() {
                             <Box>
                                 <Typography
                                     sx={{
-                                        color: COLORS.text.accent,
+                                        color: COLORS.primary.main,
                                         fontSize: TYPOGRAPHY.fontSize.md.body,
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.semibold,
@@ -330,7 +330,7 @@ export default function Home() {
                                     >
                                         <Typography
                                             sx={{
-                                                color: COLORS.text.accent,
+                                                color: COLORS.primary.main,
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
                                                         .semibold,
@@ -342,7 +342,7 @@ export default function Home() {
                                         </Typography>
                                         <ArrowForward
                                             sx={{
-                                                color: COLORS.text.accent,
+                                                color: COLORS.primary.main,
                                                 fontSize: '1rem',
                                             }}
                                         />
@@ -376,7 +376,7 @@ export default function Home() {
                                 >
                                     <Typography
                                         sx={{
-                                            color: COLORS.text.accent,
+                                            color: COLORS.primary.main,
                                             fontSize:
                                                 TYPOGRAPHY.fontSize.md
                                                     .subheading,
@@ -523,7 +523,7 @@ export default function Home() {
                                 >
                                     <Typography
                                         sx={{
-                                            color: COLORS.text.accent,
+                                            color: COLORS.primary.main,
                                             fontSize:
                                                 TYPOGRAPHY.fontSize.md
                                                     .subheading,

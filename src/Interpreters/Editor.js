@@ -143,19 +143,19 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
                 primary: {
                     bg: COMPONENTS.overlays.light,
                     text: 'primary.light',
-                    border: COMPONENTS.badge.border,
+                    border: `1px solid ${COLORS.primary.main}`,
                     hover: COMPONENTS.overlays.medium,
                 },
                 info: {
                     bg: COMPONENTS.overlays.medium,
                     text: 'secondary.light',
-                    border: COMPONENTS.borders.primary,
+                    border: `1px solid ${COLORS.border.primary}`,
                     hover: COMPONENTS.overlays.light,
                 },
                 secondary: {
                     bg: COMPONENTS.overlays.light,
                     text: 'text.secondary',
-                    border: COMPONENTS.borders.subtle,
+                    border: `1px solid ${COLORS.border.subtle}`,
                     hover: COLORS.interactive.selected,
                 },
             };
