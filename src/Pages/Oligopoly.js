@@ -319,7 +319,7 @@ const Oligopoly = () => {
                     {/* Market Dynamics Chart */}
                     <Box
                         sx={{
-                            padding: SPACING.components.section.padding.md,
+                            padding: { xs: 1.5, sm: 2 },
                             backgroundColor: COLORS.surface.subtle,
                             borderRadius: SPACING.borderRadius.sm,
                             border: COMPONENTS.borders.subtle,
@@ -464,10 +464,11 @@ const Oligopoly = () => {
                     {/* Interactive Control Panel */}
                     <Box
                         sx={{
-                            padding: SPACING.components.section.padding.md,
+                            padding: { xs: 1.5, sm: 2 },
                             backgroundColor: COLORS.surface.subtle,
                             borderRadius: SPACING.borderRadius.sm,
                             border: COMPONENTS.borders.subtle,
+                            marginBottom: 4,
                             width: '100%',
                             boxSizing: 'border-box',
                             overflow: 'hidden',
