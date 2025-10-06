@@ -150,7 +150,12 @@ export function Navigation({ children, ...rest }) {
                 bottom: 50,
                 left: '50%',
                 zIndex: 10,
-                ...COMPONENTS.navigation,
+                backgroundColor: 'hsla(0, 0%, 3%, 0.95)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid hsl(0, 0%, 18%)',
+                borderRadius: '16px',
+                boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.35)',
+                padding: '16px 24px',
                 ...rest,
             }}
         >

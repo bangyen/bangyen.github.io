@@ -34,23 +34,18 @@ import {
     MenuItem,
     Fade,
     Container,
+    Button,
 } from '@mui/material';
 
 function dropdown(name, routes) {
-    const padHeight = COMPONENTS.menu.padding.vertical;
-    const padWidth = COMPONENTS.menu.padding.horizontal;
-
     return (
         <Box>
             {Object.entries(routes).map(([routeName, routePath]) => (
                 <MenuItem
                     sx={{
-                        paddingBottom: padHeight,
-                        paddingTop: padHeight,
-                        paddingLeft: padWidth,
-                        paddingRight: padWidth,
+                        padding: '12px 16px',
                         borderRadius: SPACING.borderRadius.md,
-                        margin: '0.25rem 0.5rem',
+                        margin: '0.25rem 0.25rem',
                         transition: ANIMATIONS.transitions.fast,
                         '&:hover': ANIMATIONS.hover.modern,
                     }}
@@ -113,15 +108,11 @@ function MenuButton({ children }) {
                 sx={{
                     marginLeft: 1,
                     marginTop: 1,
-                    '& .MuiPaper-root': {
-                        ...COMPONENTS.menu,
-                        boxShadow: COLORS.shadows.lg,
-                    },
                 }}
                 onClose={handleClose}
                 MenuListProps={{
                     'aria-labelledby': 'basic-button',
-                    sx: { padding: 1 },
+                    sx: { padding: 0 },
                 }}
             >
                 {children}
@@ -368,8 +359,8 @@ export default function Home() {
                                     sx={{
                                         backgroundColor: COLORS.surface.glass,
                                         backdropFilter:
-                                            COMPONENTS.menu.backdropFilter,
-                                        border: COMPONENTS.menu.border,
+                                            'blur(24px) saturate(180%)',
+                                        border: `1px solid ${COLORS.border.subtle}`,
                                         borderRadius: SPACING.borderRadius.lg,
                                         padding:
                                             SPACING.components.card.padding,
@@ -520,8 +511,8 @@ export default function Home() {
                                     sx={{
                                         backgroundColor: COLORS.surface.glass,
                                         backdropFilter:
-                                            COMPONENTS.menu.backdropFilter,
-                                        border: COMPONENTS.menu.border,
+                                            'blur(24px) saturate(180%)',
+                                        border: `1px solid ${COLORS.border.subtle}`,
                                         borderRadius: SPACING.borderRadius.lg,
                                         padding:
                                             SPACING.components.card.padding,
@@ -564,59 +555,31 @@ export default function Home() {
                                             gap: 2,
                                         }}
                                     >
-                                        <Box
+                                        <Button
                                             component="a"
                                             href={URLS.githubProfile}
                                             target="_blank"
                                             rel="noopener noreferrer"
+                                            variant="secondary"
+                                            startIcon={<GitHub />}
                                             sx={{
-                                                ...COMPONENTS.button.secondary,
                                                 textDecoration: 'none',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: 1,
                                             }}
                                         >
-                                            <GitHub
-                                                sx={{ fontSize: '1.25rem' }}
-                                            />
-                                            <Typography
-                                                sx={{
-                                                    fontWeight:
-                                                        TYPOGRAPHY.fontWeight
-                                                            .semibold,
-                                                }}
-                                            >
-                                                View GitHub
-                                            </Typography>
-                                        </Box>
+                                            View GitHub
+                                        </Button>
 
-                                        <Box
+                                        <Button
                                             component="a"
                                             href="mailto:bangyenp@gmail.com?subject=Project%20Collaboration"
+                                            variant="ghost"
+                                            endIcon={<ArrowForward />}
                                             sx={{
-                                                ...COMPONENTS.button.ghost,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: 1,
                                                 textDecoration: 'none',
                                             }}
                                         >
-                                            <Typography
-                                                sx={{
-                                                    fontWeight:
-                                                        TYPOGRAPHY.fontWeight
-                                                            .semibold,
-                                                }}
-                                            >
-                                                Available for Projects
-                                            </Typography>
-                                            <ArrowForward
-                                                sx={{ fontSize: '1rem' }}
-                                            />
-                                        </Box>
+                                            Available for Projects
+                                        </Button>
                                     </Box>
                                 </Box>
                             </Box>
@@ -678,9 +641,8 @@ export default function Home() {
                                                 backgroundColor:
                                                     COLORS.surface.glass,
                                                 backdropFilter:
-                                                    COMPONENTS.menu
-                                                        .backdropFilter,
-                                                border: COMPONENTS.menu.border,
+                                                    'blur(24px) saturate(180%)',
+                                                border: `1px solid ${COLORS.border.subtle}`,
                                                 borderRadius:
                                                     SPACING.borderRadius.lg,
                                                 padding:
@@ -766,13 +728,21 @@ export default function Home() {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
-                                                        ...COMPONENTS.badge
-                                                            .primary,
                                                         backgroundColor:
-                                                            'hsla(141, 64%, 49%, 0.1)', // 10% opacity
+                                                            'hsla(141, 64%, 49%, 0.1)',
                                                         color: COLORS.accent
                                                             .success,
-                                                        border: '1px solid hsla(141, 64%, 49%, 0.2)', // 20% opacity
+                                                        border: '1px solid hsla(141, 64%, 49%, 0.2)',
+                                                        borderRadius: '20px',
+                                                        fontSize:
+                                                            'clamp(0.7rem, 0.8vw, 0.75rem)',
+                                                        fontWeight: 500,
+                                                        padding: '4px 12px',
+                                                        minHeight: '24px',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        transition:
+                                                            'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
                                                     }}
                                                 >
                                                     {publication.conference}
@@ -813,9 +783,8 @@ export default function Home() {
                                                 backgroundColor:
                                                     COLORS.surface.glass,
                                                 backdropFilter:
-                                                    COMPONENTS.menu
-                                                        .backdropFilter,
-                                                border: COMPONENTS.menu.border,
+                                                    'blur(24px) saturate(180%)',
+                                                border: `1px solid ${COLORS.border.subtle}`,
                                                 borderRadius:
                                                     SPACING.borderRadius.lg,
                                                 padding:
@@ -901,8 +870,20 @@ export default function Home() {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
-                                                        ...COMPONENTS.badge
-                                                            .primary,
+                                                        backgroundColor:
+                                                            'hsla(217, 91%, 60%, 0.1)',
+                                                        color: 'hsl(217, 91%, 60%)',
+                                                        border: '1px solid hsla(217, 91%, 60%, 0.2)',
+                                                        borderRadius: '20px',
+                                                        fontSize:
+                                                            'clamp(0.7rem, 0.8vw, 0.75rem)',
+                                                        fontWeight: 500,
+                                                        padding: '4px 12px',
+                                                        minHeight: '24px',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        transition:
+                                                            'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
                                                     }}
                                                 >
                                                     {project.technology}
