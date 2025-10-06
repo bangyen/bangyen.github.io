@@ -707,7 +707,7 @@ export default function Home() {
                                                             .secondary,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .subheading,
+                                                                .body,
                                                         lineHeight:
                                                             TYPOGRAPHY
                                                                 .lineHeight
@@ -848,7 +848,7 @@ export default function Home() {
                                                             .secondary,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .subheading,
+                                                                .body,
                                                         lineHeight:
                                                             TYPOGRAPHY
                                                                 .lineHeight
