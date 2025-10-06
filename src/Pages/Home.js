@@ -730,8 +730,7 @@ export default function Home() {
                                                     sx={{
                                                         backgroundColor:
                                                             'hsla(141, 64%, 49%, 0.1)',
-                                                        color: COLORS.accent
-                                                            .success,
+                                                        color: 'hsl(141, 64%, 49%)',
                                                         border: '1px solid hsla(141, 64%, 49%, 0.2)',
                                                         borderRadius: '20px',
                                                         fontSize:

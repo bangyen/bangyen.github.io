@@ -20,15 +20,6 @@ export const COLORS = {
         main: 'hsl(217, 91%, 60%)',
         light: 'hsl(217, 91%, 70%)',
         dark: 'hsl(217, 91%, 45%)',
-        softer: `hsla(217, 45%, 65%, ${ALPHA.subtle})`,
-        subtle: `hsla(217, 25%, 95%, ${ALPHA.subtle})`,
-    },
-    // Semantic Function Colors
-    accent: {
-        success: 'hsl(141, 64%, 49%)',
-        warning: 'hsl(34, 95%, 58%)',
-        error: 'hsl(0, 73%, 56%)',
-        info: 'hsl(217, 91%, 60%)',
     },
     // Semantic Surface Colors
     surface: {
@@ -49,15 +40,12 @@ export const COLORS = {
         subtle: 'hsl(0, 0%, 18%)',
         primary: 'hsl(0, 0%, 30%)',
         interactive: 'hsl(217, 91%, 60%)',
-        focus: 'hsl(217, 91%, 70%)',
     },
     // Interactive State Colors
     interactive: {
         hover: `hsla(0, 0%, 80%, ${ALPHA.hover})`,
-        pressed: `hsla(0, 0%, 80%, ${ALPHA.pressed})`,
         focus: `hsla(217, 91%, 60%, ${ALPHA.focus})`,
         selected: `hsla(217, 91%, 60%, ${ALPHA.subtle})`,
-        disabled: `hsla(0, 0%, 45%, ${ALPHA.disabled})`,
     },
     // Chart Colors
     data: {
@@ -71,23 +59,12 @@ export const COLORS = {
         snakeBody: 'hsl(217, 91%, 45%)',
         snakeFood: 'hsl(217, 91%, 25%)',
     },
-    // Sophisticated Gradients for Modern Effects
-    gradients: {
-        primary:
-            'linear-gradient(135deg, hsl(217, 91%, 60%), hsl(217, 91%, 45%))',
-        subtle: 'linear-gradient(135deg, hsl(0, 0%, 5%), hsl(0, 0%, 8%))',
-        glass: 'linear-gradient(135deg, hsla(0, 0%, 8%, 0.9), hsla(0, 0%, 12%, 0.85))',
-        shimmer:
-            'linear-gradient(90deg, hsl(0, 0%, 8%), hsl(0, 0%, 12%), hsl(0, 0%, 8%))',
-    },
     // Shadows for Depth and Elevation
     shadows: {
         xs: '0 1px 2px hsla(0, 0%, 0%, 0.5)',
         sm: '0 2px 8px hsla(0, 0%, 0%, 0.4)',
         md: '0 8px 32px hsla(0, 0%, 0%, 0.35)',
         lg: '0 16px 64px hsla(0, 0%, 0%, 0.3)',
-        xl: '0 24px 80px hsla(0, 0%, 0%, 0.25)',
-        glow: `0 0 20px hsla(217, 91%, 60%, ${ALPHA.focus})`,
     },
 };
 
