@@ -189,17 +189,14 @@ export const TYPOGRAPHY = {
             caption: 'clamp(1rem, 0.8vw, 1.125rem)',
         },
     },
-    // Enhanced font weights with optical sizing considerations
+    // Essential font weights - only the ones actually used
     fontWeight: {
-        thin: 200,
-        extralight: 300,
         light: 300,
         normal: 400,
         medium: 500,
         semibold: 600,
         bold: 700,
         extrabold: 800,
-        black: 900,
     },
     // Improved line heights for optical balance
     lineHeight: {
