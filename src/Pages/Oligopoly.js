@@ -334,7 +334,7 @@ const Oligopoly = () => {
                                 marginBottom: 3,
                                 textAlign: 'center',
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                fontSize: TYPOGRAPHY.fontSize.body,
+                                fontSize: TYPOGRAPHY.fontSize.subheading,
                             }}
                         >
                             Market Dynamics

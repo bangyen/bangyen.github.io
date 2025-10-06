@@ -358,7 +358,8 @@ export default function Home() {
                                     <Typography
                                         sx={{
                                             color: COLORS.primary.main,
-                                            fontSize: TYPOGRAPHY.fontSize.body,
+                                            fontSize:
+                                                TYPOGRAPHY.fontSize.subheading,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
                                             marginBottom: 3,
@@ -478,7 +479,8 @@ export default function Home() {
                                     <Typography
                                         sx={{
                                             color: COLORS.primary.main,
-                                            fontSize: TYPOGRAPHY.fontSize.body,
+                                            fontSize:
+                                                TYPOGRAPHY.fontSize.subheading,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
                                             marginBottom: 3,

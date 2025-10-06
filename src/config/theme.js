@@ -75,11 +75,12 @@ export const TYPOGRAPHY = {
         display:
             '"SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", sans-serif',
     },
-    // Simplified typography scale - 5 essential sizes with responsive scaling
+    // Simplified typography scale - 6 essential sizes with responsive scaling
     fontSize: {
         display: 'clamp(2.5rem, 6vw, 4rem)', // Hero text
         h1: 'clamp(2rem, 4vw, 3rem)', // Page titles
         h2: 'clamp(1.5rem, 3vw, 2rem)', // Section headers
+        subheading: 'clamp(1.125rem, 2vw, 1.375rem)', // Subsection headers
         body: 'clamp(0.875rem, 1.5vw, 1rem)', // Body text
         caption: 'clamp(0.75rem, 1vw, 0.875rem)', // Small text
     }, // Essential font weights - only the ones actually used

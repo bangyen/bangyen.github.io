@@ -293,10 +293,7 @@ const ZSharp = () => {
                             marginTop: 2,
                             marginBottom: 3,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
-                            fontSize: {
-                                xs: TYPOGRAPHY.fontSize.body,
-                                md: TYPOGRAPHY.fontSize.body,
-                            },
+                            fontSize: TYPOGRAPHY.fontSize.subheading,
                         }}
                     >
                         Neural Network Optimization Research
@@ -322,7 +319,7 @@ const ZSharp = () => {
                                 marginBottom: 3,
                                 textAlign: 'center',
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                fontSize: TYPOGRAPHY.fontSize.body,
+                                fontSize: TYPOGRAPHY.fontSize.subheading,
                             }}
                         >
                             {viewType === 'accuracy' &&
