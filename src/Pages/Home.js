@@ -41,7 +41,7 @@ function dropdown(name, routes) {
                     sx={{
                         padding: '12px 16px',
                         borderRadius: SPACING.borderRadius.md,
-                        margin: '0.25rem 0.25rem',
+                        margin: '0.25rem 0.5rem',
                         transition: ANIMATIONS.fast,
                         '&:hover': ANIMATIONS.hover,
                     }}
@@ -447,7 +447,7 @@ export default function Home() {
                                                                 fontSize:
                                                                     TYPOGRAPHY
                                                                         .fontSize
-                                                                        .sm
+                                                                        .md
                                                                         .body,
                                                             }}
                                                         />
