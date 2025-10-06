@@ -139,7 +139,7 @@ export default function Info(props) {
                                 minHeight: 0,
                                 maxWidth: {
                                     xs: '100%',
-                                    lg: SPACING.maxWidth.info,
+                                    lg: SPACING.maxWidth.lg,
                                 },
                                 mx: 'auto',
                             }}

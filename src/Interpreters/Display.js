@@ -185,7 +185,7 @@ function CompactDisplay(props) {
                         color === 'info' ? COLORS.text.primary : 'text.primary',
                     fontFamily: 'monospace',
                     fontSize: TYPOGRAPHY.fontSize.caption,
-                    height: SPACING.components.chip.height,
+                    height: '32px',
                 }}
             />
         );

@@ -218,43 +218,37 @@ export const TYPOGRAPHY = {
     },
 };
 
-// Modern Spacing System - 8pt grid with responsive scaling
+// Simplified Spacing System - 8pt grid with essential values only
 export const SPACING = {
     // 8pt grid system for consistent spacing
     unit: 8,
-    // Padding with semantic naming
+    // Responsive padding - only the most commonly used sizes
     padding: {
         xs: 'clamp(1rem, 4vw, 1.5rem)',
         sm: 'clamp(1.5rem, 5vw, 2rem)',
         md: 'clamp(2rem, 6vw, 3rem)',
-        lg: 'clamp(2.5rem, 7vw, 4rem)',
     },
-    // Margin with semantic naming
+    // Responsive margin - only the most commonly used sizes
     margin: {
         xs: 'clamp(0.5rem, 2vw, 1rem)',
         sm: 'clamp(1rem, 3vw, 1.5rem)',
         md: 'clamp(1.5rem, 4vw, 2.5rem)',
-        lg: 'clamp(2rem, 5vw, 3.5rem)',
         section: 'clamp(3rem, 8vw, 6rem)',
     },
-    // Enhanced border radius system
+    // Essential border radius values
     borderRadius: {
         none: 0,
-        xs: '4px',
         sm: '8px',
         md: '12px',
         lg: '16px',
         xl: '20px',
         full: '9999px',
     },
-    // Container sizing with fluid typography
+    // Essential container widths
     maxWidth: {
         xs: 'clamp(16rem, 90vw, 24rem)',
-        sm: 'clamp(28rem, 90vw, 42rem)',
         md: 'clamp(48rem, 90vw, 64rem)',
         lg: 'clamp(60rem, 90vw, 80rem)',
-        prose: '42rem',
-        content: '48rem',
         wide: '56rem',
     },
     // Component heights
@@ -262,55 +256,26 @@ export const SPACING = {
         scrollable: '60px',
         scrollbar: '8px',
     },
-    // Scroll margins
-    scrollMargin: {
-        section: '2rem',
-    },
-    // Component-specific spacing
+    // Essential component spacing - consolidated from multiple similar values
     components: {
-        button: {
-            padding: '12px 24px',
-            minHeight: '44px',
-        },
-        chip: {
-            padding: '8px 16px',
-            height: '32px',
-        },
         card: {
             padding: '24px',
-            gap: '16px',
-        },
-        input: {
-            padding: '12px 16px',
-            height: '48px',
-        },
-        small: {
-            padding: '0.5rem 0.75rem',
-            height: '32px',
-        },
-        medium: {
-            padding: '12px 20px',
-            height: '40px',
         },
         page: {
             padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
             paddingVertical: { xs: '1rem 0', sm: '1.5rem 0', md: '2rem 0' },
-            marginBottom: 2,
         },
         section: {
             marginBottom: 3,
-            padding: { xs: 1.5, sm: 2 },
         },
     },
-    // Common grid sizing patterns
+    // Essential grid patterns
     grid: {
         full: { xs: 12, sm: 12 },
         half: { xs: 12, sm: 6 },
-        auto: 'auto',
     },
-    // Common grid layout patterns
+    // Essential layout patterns
     layout: {
-        fullWidth: { size: 12, flex: 1 },
         standardSpacing: 3,
         containerSpacing: { xs: 4, md: 8 },
     },
