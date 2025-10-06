@@ -52,7 +52,7 @@ function dropdown(name, routes) {
                     <Typography
                         sx={{
                             fontWeight: TYPOGRAPHY.fontWeight.medium,
-                            fontSize: TYPOGRAPHY.fontSize.sm.body,
+                            fontSize: TYPOGRAPHY.fontSize.body,
                             color: COLORS.text.primary,
                         }}
                     >
@@ -326,7 +326,7 @@ export default function Home() {
                                                     TYPOGRAPHY.fontWeight
                                                         .semibold,
                                                 fontSize:
-                                                    TYPOGRAPHY.fontSize.sm.body,
+                                                    TYPOGRAPHY.fontSize.body,
                                             }}
                                         >
                                             View Work
