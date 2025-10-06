@@ -435,8 +435,8 @@ export default function Home() {
                                                         <IconComponent
                                                             sx={{
                                                                 color: COLORS
-                                                                    .text
-                                                                    .primary,
+                                                                    .primary
+                                                                    .main,
                                                                 fontSize:
                                                                     TYPOGRAPHY
                                                                         .fontSize
@@ -446,8 +446,8 @@ export default function Home() {
                                                         <Typography
                                                             sx={{
                                                                 color: COLORS
-                                                                    .text
-                                                                    .primary,
+                                                                    .primary
+                                                                    .main,
                                                                 fontSize:
                                                                     TYPOGRAPHY
                                                                         .fontSize
