@@ -128,64 +128,28 @@ export const TYPOGRAPHY = {
     },
 };
 
-// Simplified Spacing System - 8pt grid with essential values only
+// Simplified Spacing System - Only essential values actually used
 export const SPACING = {
-    // 8pt grid system for consistent spacing
-    unit: 8,
-    // Responsive padding - only the most commonly used sizes
+    // Responsive padding - consolidated from padding/margin
     padding: {
-        xs: 'clamp(1rem, 4vw, 1.5rem)',
-        sm: 'clamp(1.5rem, 5vw, 2rem)',
-        md: 'clamp(2rem, 6vw, 3rem)',
+        xs: '1rem',
+        md: '2rem',
+        lg: '3rem',
     },
-    // Responsive margin - only the most commonly used sizes
-    margin: {
-        xs: 'clamp(0.5rem, 2vw, 1rem)',
-        sm: 'clamp(1rem, 3vw, 1.5rem)',
-        md: 'clamp(1.5rem, 4vw, 2.5rem)',
-        section: 'clamp(3rem, 8vw, 6rem)',
-    },
-    // Essential border radius values
+    // Section spacing
+    section: '4rem',
+    // Border radius - only the 4 values actually used
     borderRadius: {
         sm: '8px',
         md: '12px',
         lg: '16px',
         full: '9999px',
     },
-    // Essential container widths
+    // Container widths - only the 3 values actually used
     maxWidth: {
-        xs: 'clamp(16rem, 90vw, 24rem)',
-        md: 'clamp(48rem, 90vw, 64rem)',
-        lg: 'clamp(60rem, 90vw, 80rem)',
-        wide: '56rem',
-    },
-    // Component heights
-    height: {
-        scrollable: '60px',
-        scrollbar: '8px',
-    },
-    // Essential component spacing - consolidated from multiple similar values
-    components: {
-        card: {
-            padding: '24px',
-        },
-        page: {
-            padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
-            paddingVertical: { xs: '1rem 0', sm: '1.5rem 0', md: '2rem 0' },
-        },
-        section: {
-            marginBottom: 3,
-        },
-    },
-    // Essential grid patterns
-    grid: {
-        full: { xs: 12, sm: 12 },
-        half: { xs: 12, sm: 6 },
-    },
-    // Essential layout patterns
-    layout: {
-        standardSpacing: 3,
-        containerSpacing: { xs: 4, md: 8 },
+        xs: '24rem',
+        md: '64rem',
+        lg: '80rem',
     },
 };
 

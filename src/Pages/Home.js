@@ -192,7 +192,7 @@ export default function Home() {
             >
                 <Grid
                     container
-                    spacing={SPACING.layout.containerSpacing}
+                    spacing={{ xs: 4, md: 8 }}
                     alignItems="center"
                     sx={{ maxWidth: SPACING.maxWidth.lg }}
                 >
@@ -371,8 +371,7 @@ export default function Home() {
                                             'blur(24px) saturate(180%)',
                                         border: `1px solid ${COLORS.border.subtle}`,
                                         borderRadius: SPACING.borderRadius.lg,
-                                        padding:
-                                            SPACING.components.card.padding,
+                                        padding: '24px',
                                         boxShadow: COLORS.shadows.md,
                                     }}
                                 >
@@ -521,8 +520,7 @@ export default function Home() {
                                             'blur(24px) saturate(180%)',
                                         border: `1px solid ${COLORS.border.subtle}`,
                                         borderRadius: SPACING.borderRadius.lg,
-                                        padding:
-                                            SPACING.components.card.padding,
+                                        padding: '24px',
                                         boxShadow: COLORS.shadows.md,
                                     }}
                                 >
@@ -599,7 +597,7 @@ export default function Home() {
             <Container
                 maxWidth={false}
                 sx={{
-                    paddingY: SPACING.margin.section,
+                    paddingY: SPACING.section,
                     paddingX: SPACING.padding.md,
                 }}
             >
@@ -652,9 +650,7 @@ export default function Home() {
                                                 border: `1px solid ${COLORS.border.subtle}`,
                                                 borderRadius:
                                                     SPACING.borderRadius.lg,
-                                                padding:
-                                                    SPACING.components.card
-                                                        .padding,
+                                                padding: '24px',
                                                 textDecoration: 'none',
                                                 cursor: 'pointer',
                                                 transition:
@@ -793,9 +789,7 @@ export default function Home() {
                                                 border: `1px solid ${COLORS.border.subtle}`,
                                                 borderRadius:
                                                     SPACING.borderRadius.lg,
-                                                padding:
-                                                    SPACING.components.card
-                                                        .padding,
+                                                padding: '24px',
                                                 textDecoration: 'none',
                                                 cursor: 'pointer',
                                                 transition:
