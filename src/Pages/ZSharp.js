@@ -255,7 +255,7 @@ const ZSharp = () => {
                                 sx={{
                                     color: 'text.primary',
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                    fontSize: TYPOGRAPHY.fontSize.md.h4,
+                                    fontSize: TYPOGRAPHY.fontSize.md.h3,
                                 }}
                             >
                                 ZSharp
@@ -298,7 +298,7 @@ const ZSharp = () => {
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
                             fontSize: {
                                 xs: TYPOGRAPHY.fontSize.sm.body,
-                                sm: TYPOGRAPHY.fontSize.sm.h3,
+                                sm: TYPOGRAPHY.fontSize.sm.subheading,
                             },
                         }}
                     >
@@ -325,7 +325,7 @@ const ZSharp = () => {
                                 marginBottom: 3,
                                 textAlign: 'center',
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                fontSize: TYPOGRAPHY.fontSize.md.h3,
+                                fontSize: TYPOGRAPHY.fontSize.md.subheading,
                             }}
                         >
                             {viewType === 'accuracy' &&
