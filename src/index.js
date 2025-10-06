@@ -29,9 +29,9 @@ const darkTheme = createTheme({
             dark: COLORS.primary.dark,
         },
         secondary: {
-            main: COLORS.neutral[600],
-            light: COLORS.neutral[400],
-            dark: COLORS.neutral[800],
+            main: COLORS.text.muted,
+            light: COLORS.text.secondary,
+            dark: COLORS.border.subtle,
         },
         background: {
             default: COLORS.surface.background,

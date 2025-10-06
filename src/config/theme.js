@@ -13,86 +13,43 @@ export const ALPHA = {
     glass: 0.85,
 };
 
-// Base Color Definitions - Single source of truth for all color values
-export const BASE_COLORS = {
-    // Primary brand colors
-    primaryBlue: 'hsl(217, 91%, 60%)',
-    primaryBlueLight: 'hsl(217, 91%, 70%)',
-    primaryBlueDark: 'hsl(217, 91%, 45%)',
-
-    // Semantic colors
-    success: 'hsl(141, 64%, 49%)',
-    warning: 'hsl(34, 95%, 58%)',
-    error: 'hsl(0, 73%, 56%)',
-
-    // Neutral grays
-    neutral50: 'hsl(0, 0%, 98%)',
-    neutral100: 'hsl(0, 0%, 96%)',
-    neutral200: 'hsl(0, 0%, 93%)',
-    neutral300: 'hsl(0, 0%, 88%)',
-    neutral400: 'hsl(0, 0%, 80%)',
-    neutral500: 'hsl(0, 0%, 65%)',
-    neutral600: 'hsl(0, 0%, 45%)',
-    neutral700: 'hsl(0, 0%, 30%)',
-    neutral800: 'hsl(0, 0%, 18%)',
-    neutral900: 'hsl(0, 0%, 8%)',
-    neutral950: 'hsl(0, 0%, 3%)',
-
-    // Additional colors
-    white: 'hsl(0, 0%, 100%)',
-};
-
-// Modern Semantic Color System - Enterprise-grade with Apple/Linear inspiration
+// Simplified Color System - Consolidated from BASE_COLORS and COLORS
 export const COLORS = {
     // Brand Colors - Professional blue palette
     primary: {
-        main: BASE_COLORS.primaryBlue,
-        light: BASE_COLORS.primaryBlueLight,
-        dark: BASE_COLORS.primaryBlueDark,
+        main: 'hsl(217, 91%, 60%)',
+        light: 'hsl(217, 91%, 70%)',
+        dark: 'hsl(217, 91%, 45%)',
         softer: `hsla(217, 45%, 65%, ${ALPHA.subtle})`,
         subtle: `hsla(217, 25%, 95%, ${ALPHA.subtle})`,
     },
     // Semantic Function Colors
     accent: {
-        success: BASE_COLORS.success,
-        warning: BASE_COLORS.warning,
-        error: BASE_COLORS.error,
-        info: BASE_COLORS.primaryBlue,
-    },
-    // Enhanced Neutral Palette - Sophisticated grays following Apple's design language
-    neutral: {
-        50: BASE_COLORS.neutral50,
-        100: BASE_COLORS.neutral100,
-        200: BASE_COLORS.neutral200,
-        300: BASE_COLORS.neutral300,
-        400: BASE_COLORS.neutral400,
-        500: BASE_COLORS.neutral500,
-        600: BASE_COLORS.neutral600,
-        700: BASE_COLORS.neutral700,
-        800: BASE_COLORS.neutral800,
-        900: BASE_COLORS.neutral900,
-        950: BASE_COLORS.neutral950,
+        success: 'hsl(141, 64%, 49%)',
+        warning: 'hsl(34, 95%, 58%)',
+        error: 'hsl(0, 73%, 56%)',
+        info: 'hsl(217, 91%, 60%)',
     },
     // Semantic Surface Colors
     surface: {
-        background: BASE_COLORS.neutral950,
-        elevated: BASE_COLORS.neutral900,
+        background: 'hsl(0, 0%, 3%)',
+        elevated: 'hsl(0, 0%, 8%)',
         glass: `hsla(0, 0%, 8%, ${ALPHA.glass})`,
-        subtle: BASE_COLORS.neutral900,
+        subtle: 'hsl(0, 0%, 8%)',
     },
     // Text Colors - Simplified to 4 essential variants
     text: {
-        primary: BASE_COLORS.neutral50, // Main text
-        secondary: BASE_COLORS.neutral400, // Secondary text
-        muted: BASE_COLORS.neutral600, // Muted/disabled text
-        accent: BASE_COLORS.primaryBlue, // Accent/highlight text
+        primary: 'hsl(0, 0%, 98%)', // Main text
+        secondary: 'hsl(0, 0%, 80%)', // Secondary text
+        muted: 'hsl(0, 0%, 45%)', // Muted/disabled text
+        accent: 'hsl(217, 91%, 60%)', // Accent/highlight text
     },
     // Border and Divider Colors
     border: {
-        subtle: BASE_COLORS.neutral800,
-        primary: BASE_COLORS.neutral700,
-        interactive: BASE_COLORS.primaryBlue,
-        focus: BASE_COLORS.primaryBlueLight,
+        subtle: 'hsl(0, 0%, 18%)',
+        primary: 'hsl(0, 0%, 30%)',
+        interactive: 'hsl(217, 91%, 60%)',
+        focus: 'hsl(217, 91%, 70%)',
     },
     // Interactive State Colors
     interactive: {
@@ -104,22 +61,24 @@ export const COLORS = {
     },
     // Chart Colors
     data: {
-        blue: BASE_COLORS.primaryBlue,
-        green: BASE_COLORS.success,
-        amber: BASE_COLORS.warning,
-        red: BASE_COLORS.error,
+        blue: 'hsl(217, 91%, 60%)',
+        green: 'hsl(141, 64%, 49%)',
+        amber: 'hsl(34, 95%, 58%)',
+        red: 'hsl(0, 73%, 56%)',
     },
     // Game-specific colors
     game: {
-        snakeBody: BASE_COLORS.primaryBlueDark,
+        snakeBody: 'hsl(217, 91%, 45%)',
         snakeFood: 'hsl(217, 91%, 25%)',
     },
     // Sophisticated Gradients for Modern Effects
     gradients: {
-        primary: `linear-gradient(135deg, ${BASE_COLORS.primaryBlue}, ${BASE_COLORS.primaryBlueDark})`,
+        primary:
+            'linear-gradient(135deg, hsl(217, 91%, 60%), hsl(217, 91%, 45%))',
         subtle: 'linear-gradient(135deg, hsl(0, 0%, 5%), hsl(0, 0%, 8%))',
         glass: 'linear-gradient(135deg, hsla(0, 0%, 8%, 0.9), hsla(0, 0%, 12%, 0.85))',
-        shimmer: `linear-gradient(90deg, ${BASE_COLORS.neutral900}, hsl(0, 0%, 12%), ${BASE_COLORS.neutral900})`,
+        shimmer:
+            'linear-gradient(90deg, hsl(0, 0%, 8%), hsl(0, 0%, 12%), hsl(0, 0%, 8%))',
     },
     // Shadows for Depth and Elevation
     shadows: {
