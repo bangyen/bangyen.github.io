@@ -352,29 +352,7 @@ export const ANIMATIONS = {
             transition: 'box-shadow 150ms cubic-bezier(0.4, 0, 0.2, 1)',
         },
     },
-    // Animation presets for common use cases
-    presets: {
-        fadeIn: {
-            initial: { opacity: 0, y: 20 },
-            animate: { opacity: 1, y: 0 },
-            transition: { duration: TIMING.normal / 1000, ease: 'easeOut' },
-        },
-        fadeInUp: {
-            initial: { opacity: 0, y: 30 },
-            animate: { opacity: 1, y: 0 },
-            transition: { duration: 0.4, ease: 'easeOut' },
-        },
-        slideInLeft: {
-            initial: { opacity: 0, x: -30 },
-            animate: { opacity: 1, x: 0 },
-            transition: { duration: TIMING.normal / 1000, ease: 'easeOut' },
-        },
-        scaleIn: {
-            initial: { opacity: 0, scale: 0.9 },
-            animate: { opacity: 1, scale: 1 },
-            transition: { duration: TIMING.fast / 1000, ease: 'easeOut' },
-        },
-    },
+    // Animation presets section removed (unused)
     // CSS-specific animation values
     css: {
         translateY: '40px',
