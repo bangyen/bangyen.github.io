@@ -664,7 +664,7 @@ export default function Home() {
                                                                 .semibold,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .body,
+                                                                .subheading,
                                                         lineHeight:
                                                             TYPOGRAPHY
                                                                 .lineHeight
@@ -707,7 +707,7 @@ export default function Home() {
                                                             .secondary,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .body,
+                                                                .subheading,
                                                         lineHeight:
                                                             TYPOGRAPHY
                                                                 .lineHeight
@@ -805,7 +805,7 @@ export default function Home() {
                                                                 .semibold,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .body,
+                                                                .subheading,
                                                         lineHeight:
                                                             TYPOGRAPHY
                                                                 .lineHeight
@@ -848,7 +848,7 @@ export default function Home() {
                                                             .secondary,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .body,
+                                                                .subheading,
                                                         lineHeight:
                                                             TYPOGRAPHY
                                                                 .lineHeight
