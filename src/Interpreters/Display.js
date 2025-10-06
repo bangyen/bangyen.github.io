@@ -182,7 +182,7 @@ function CompactDisplay(props) {
                             ? 'primary.light'
                             : COMPONENTS.overlays.light,
                     color:
-                        color === 'info' ? COLORS.text.white : 'text.primary',
+                        color === 'info' ? COLORS.text.primary : 'text.primary',
                     fontFamily: 'monospace',
                     fontSize: TYPOGRAPHY.fontSize.caption,
                     height: SPACING.components.chip.height,

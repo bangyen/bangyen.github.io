@@ -80,14 +80,12 @@ export const COLORS = {
         glass: `hsla(0, 0%, 8%, ${ALPHA.glass})`,
         subtle: BASE_COLORS.neutral900,
     },
-    // Text Colors with proper semantic hierarchy
+    // Text Colors - Simplified to 4 essential variants
     text: {
-        primary: BASE_COLORS.neutral50,
-        secondary: BASE_COLORS.neutral400,
-        tertiary: BASE_COLORS.neutral500,
-        muted: BASE_COLORS.neutral600,
-        accent: BASE_COLORS.primaryBlue,
-        white: BASE_COLORS.white,
+        primary: BASE_COLORS.neutral50, // Main text
+        secondary: BASE_COLORS.neutral400, // Secondary text
+        muted: BASE_COLORS.neutral600, // Muted/disabled text
+        accent: BASE_COLORS.primaryBlue, // Accent/highlight text
     },
     // Border and Divider Colors
     border: {

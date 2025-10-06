@@ -415,7 +415,7 @@ const Oligopoly = () => {
                                                 borderRadius:
                                                     SPACING.borderRadius
                                                         .extraLarge,
-                                                color: COLORS.text.white,
+                                                color: COLORS.text.primary,
                                             }}
                                             labelFormatter={value =>
                                                 `Round ${value}`
@@ -544,8 +544,7 @@ const Oligopoly = () => {
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
                                                 color: COLORS.text.secondary,
-                                                borderColor:
-                                                    COLORS.text.tertiary,
+                                                borderColor: COLORS.text.muted,
                                                 padding:
                                                     SPACING.components.small
                                                         .padding,
@@ -553,7 +552,7 @@ const Oligopoly = () => {
                                                 '&.Mui-selected': {
                                                     backgroundColor:
                                                         'primary.main',
-                                                    color: COLORS.text.white,
+                                                    color: COLORS.text.primary,
                                                     '&:hover': {
                                                         backgroundColor:
                                                             'primary.dark',
@@ -603,8 +602,7 @@ const Oligopoly = () => {
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
                                                 color: COLORS.text.secondary,
-                                                borderColor:
-                                                    COLORS.text.tertiary,
+                                                borderColor: COLORS.text.muted,
                                                 padding:
                                                     SPACING.components.small
                                                         .padding,
@@ -612,7 +610,7 @@ const Oligopoly = () => {
                                                 '&.Mui-selected': {
                                                     backgroundColor:
                                                         'success.main',
-                                                    color: COLORS.text.white,
+                                                    color: COLORS.text.primary,
                                                     '&:hover': {
                                                         backgroundColor:
                                                             'success.dark',
@@ -667,8 +665,7 @@ const Oligopoly = () => {
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
                                                 color: COLORS.text.secondary,
-                                                borderColor:
-                                                    COLORS.text.tertiary,
+                                                borderColor: COLORS.text.muted,
                                                 padding:
                                                     SPACING.components.small
                                                         .padding,
@@ -676,7 +673,7 @@ const Oligopoly = () => {
                                                 '&.Mui-selected': {
                                                     backgroundColor:
                                                         'warning.main',
-                                                    color: COLORS.text.white,
+                                                    color: COLORS.text.primary,
                                                     '&:hover': {
                                                         backgroundColor:
                                                             'warning.dark',

@@ -438,7 +438,7 @@ const ZSharp = () => {
                                                 borderRadius:
                                                     SPACING.borderRadius
                                                         .extraLarge,
-                                                color: COLORS.text.white,
+                                                color: COLORS.text.primary,
                                             }}
                                             labelFormatter={value =>
                                                 `Epoch ${value}`
@@ -617,7 +617,7 @@ const ZSharp = () => {
                             sx={{
                                 color:
                                     viewType === 'accuracy'
-                                        ? COLORS.text.white
+                                        ? COLORS.text.primary
                                         : COLORS.text.secondary,
                                 backgroundColor:
                                     viewType === 'accuracy'
@@ -645,7 +645,7 @@ const ZSharp = () => {
                             sx={{
                                 color:
                                     viewType === 'loss'
-                                        ? COLORS.text.white
+                                        ? COLORS.text.primary
                                         : COLORS.text.secondary,
                                 backgroundColor:
                                     viewType === 'loss'
@@ -673,7 +673,7 @@ const ZSharp = () => {
                             sx={{
                                 color:
                                     viewType === 'learning_curve'
-                                        ? COLORS.text.white
+                                        ? COLORS.text.primary
                                         : COLORS.text.secondary,
                                 backgroundColor:
                                     viewType === 'learning_curve'
@@ -701,7 +701,7 @@ const ZSharp = () => {
                             sx={{
                                 color:
                                     viewType === 'convergence'
-                                        ? COLORS.text.white
+                                        ? COLORS.text.primary
                                         : COLORS.text.secondary,
                                 backgroundColor:
                                     viewType === 'convergence'
