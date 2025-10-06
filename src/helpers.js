@@ -256,12 +256,13 @@ function Arrows({ show, setShow, handler }) {
  * Uses forwardRef to support Material-UI transitions like Fade.
  */
 export const GlassCard = forwardRef(function GlassCard(
-    { children, padding = '24px', ...props },
+    { children, padding = '24px', sx, className, ...props },
     ref
 ) {
     return (
         <Box
             ref={ref}
+            className={`glass-card ${className || ''}`}
             sx={{
                 backgroundColor: COLORS.surface.glass,
                 backdropFilter: 'blur(24px) saturate(180%)',
@@ -269,7 +270,7 @@ export const GlassCard = forwardRef(function GlassCard(
                 borderRadius: SPACING.borderRadius.lg,
                 padding,
                 boxShadow: COLORS.shadows.md,
-                ...props.sx,
+                ...sx,
             }}
             {...props}
         >
