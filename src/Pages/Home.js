@@ -600,6 +600,8 @@ export default function Home() {
                                                         .normal,
                                                 position: 'relative',
                                                 overflow: 'hidden',
+                                                height: '100%',
+                                                display: 'flex',
                                                 '&:hover': {
                                                     transform:
                                                         'translateY(-2px)',
@@ -712,6 +714,7 @@ export default function Home() {
                                                             TYPOGRAPHY
                                                                 .lineHeight
                                                                 .relaxed,
+                                                        flex: 1,
                                                     }}
                                                 >
                                                     {publication.description}
@@ -741,6 +744,8 @@ export default function Home() {
                                                         .normal,
                                                 position: 'relative',
                                                 overflow: 'hidden',
+                                                height: '100%',
+                                                display: 'flex',
                                                 '&:hover': {
                                                     transform:
                                                         'translateY(-2px)',
@@ -853,6 +858,7 @@ export default function Home() {
                                                             TYPOGRAPHY
                                                                 .lineHeight
                                                                 .relaxed,
+                                                        flex: 1,
                                                     }}
                                                 >
                                                     {project.description}
