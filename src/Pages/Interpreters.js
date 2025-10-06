@@ -143,7 +143,7 @@ export default function Interpreters() {
                                 <GitHub
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.md.h4,
+                                            xs: TYPOGRAPHY.fontSize.sm.h3,
                                             sm: '2rem',
                                         },
                                     }}
@@ -153,7 +153,7 @@ export default function Interpreters() {
                                 <Home
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.md.h4,
+                                            xs: TYPOGRAPHY.fontSize.sm.h3,
                                             sm: '2rem',
                                         },
                                     }}
@@ -216,7 +216,7 @@ export default function Interpreters() {
                                                     TYPOGRAPHY.fontWeight
                                                         .semibold,
                                                 fontSize:
-                                                    TYPOGRAPHY.fontSize.md.h5,
+                                                    TYPOGRAPHY.fontSize.md.h3,
                                             }}
                                         >
                                             {interpreter.name}

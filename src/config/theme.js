@@ -101,27 +101,13 @@ export const TYPOGRAPHY = {
         display:
             '"SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", sans-serif',
     },
-    // Fluid typography using clamp() for responsive scaling
+    // Simplified typography scale - 2 breakpoints, 6 size variants
     fontSize: {
-        xs: {
-            display: 'clamp(1.75rem, 4vw, 2.25rem)',
-            h1: 'clamp(1.5rem, 3vw, 2rem)',
-            h2: 'clamp(1.25rem, 2.5vw, 1.5rem)',
-            h3: 'clamp(1.125rem, 2vw, 1.25rem)',
-            h4: 'clamp(1rem, 1.5vw, 1.125rem)',
-            h5: 'clamp(0.875rem, 1.25vw, 1rem)',
-            h6: 'clamp(0.75rem, 1vw, 0.875rem)',
-            body: 'clamp(0.8rem, 1vw, 0.875rem)',
-            caption: 'clamp(0.7rem, 0.8vw, 0.75rem)',
-        },
         sm: {
             display: 'clamp(2.5rem, 5vw, 4rem)',
             h1: 'clamp(2.25rem, 4vw, 3.5rem)',
             h2: 'clamp(1.75rem, 3vw, 2.25rem)',
             h3: 'clamp(1.5rem, 2.5vw, 1.75rem)',
-            h4: 'clamp(1.25rem, 2vw, 1.5rem)',
-            h5: 'clamp(1rem, 1.5vw, 1.25rem)',
-            h6: 'clamp(0.875rem, 1.25vw, 1rem)',
             body: 'clamp(0.875rem, 1vw, 1rem)',
             caption: 'clamp(0.75rem, 0.8vw, 0.875rem)',
         },
@@ -130,22 +116,8 @@ export const TYPOGRAPHY = {
             h1: 'clamp(3rem, 5vw, 4.5rem)',
             h2: 'clamp(2rem, 4vw, 3rem)',
             h3: 'clamp(1.75rem, 3vw, 2.25rem)',
-            h4: 'clamp(1.5rem, 2.5vw, 1.75rem)',
-            h5: 'clamp(1.25rem, 2vw, 1.5rem)',
-            h6: 'clamp(1rem, 1.5vw, 1.25rem)',
             body: 'clamp(1rem, 1vw, 1.125rem)',
             caption: 'clamp(0.875rem, 0.8vw, 1rem)',
-        },
-        lg: {
-            display: 'clamp(4rem, 8vw, 7rem)',
-            h1: 'clamp(3.5rem, 6vw, 5.5rem)',
-            h2: 'clamp(2.5rem, 5vw, 3.75rem)',
-            h3: 'clamp(2rem, 4vw, 2.75rem)',
-            h4: 'clamp(1.75rem, 3vw, 2.25rem)',
-            h5: 'clamp(1.5rem, 2.5vw, 1.875rem)',
-            h6: 'clamp(1.25rem, 2vw, 1.5rem)',
-            body: 'clamp(1.125rem, 1vw, 1.25rem)',
-            caption: 'clamp(1rem, 0.8vw, 1.125rem)',
         },
     },
     // Essential font weights - only the ones actually used

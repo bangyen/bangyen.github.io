@@ -419,7 +419,7 @@ export default function Info(props) {
                                             color: COLORS.text.primary,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
-                                            fontSize: TYPOGRAPHY.fontSize.md.h4,
+                                            fontSize: TYPOGRAPHY.fontSize.md.h3,
                                             lineHeight:
                                                 TYPOGRAPHY.lineHeight.tight,
                                             letterSpacing:

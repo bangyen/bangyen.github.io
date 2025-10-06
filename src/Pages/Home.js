@@ -379,7 +379,7 @@ export default function Home() {
                                     <Typography
                                         sx={{
                                             color: COLORS.text.accent,
-                                            fontSize: TYPOGRAPHY.fontSize.md.h5,
+                                            fontSize: TYPOGRAPHY.fontSize.md.h3,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
                                             marginBottom: 3,
@@ -484,7 +484,7 @@ export default function Home() {
                                                                 fontSize: {
                                                                     xs: TYPOGRAPHY
                                                                         .fontSize
-                                                                        .xs
+                                                                        .sm
                                                                         .body, // Smaller on mobile
                                                                     sm: TYPOGRAPHY
                                                                         .fontSize
@@ -529,7 +529,7 @@ export default function Home() {
                                     <Typography
                                         sx={{
                                             color: COLORS.text.accent,
-                                            fontSize: TYPOGRAPHY.fontSize.md.h5,
+                                            fontSize: TYPOGRAPHY.fontSize.md.h3,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
                                             marginBottom: 3,
@@ -638,7 +638,7 @@ export default function Home() {
                             <Typography
                                 sx={{
                                     color: COLORS.text.primary,
-                                    fontSize: TYPOGRAPHY.fontSize.lg.h3,
+                                    fontSize: TYPOGRAPHY.fontSize.md.h3,
                                     fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                     textAlign: 'center',
                                     marginBottom: 6,
@@ -718,7 +718,7 @@ export default function Home() {
                                                             .accent,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .xs.caption,
+                                                                .sm.caption,
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
@@ -749,7 +749,7 @@ export default function Home() {
                                                             .semibold,
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize.md
-                                                            .h4,
+                                                            .h3,
                                                     lineHeight:
                                                         TYPOGRAPHY.lineHeight
                                                             .normal,
@@ -853,7 +853,7 @@ export default function Home() {
                                                             .accent,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .xs.caption,
+                                                                .sm.caption,
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
@@ -884,7 +884,7 @@ export default function Home() {
                                                             .semibold,
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize.md
-                                                            .h4,
+                                                            .h3,
                                                     lineHeight:
                                                         TYPOGRAPHY.lineHeight
                                                             .normal,

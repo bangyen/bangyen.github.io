@@ -72,7 +72,7 @@ export default function Error() {
                                 color: COLORS.text.primary,
                                 fontWeight: TYPOGRAPHY.fontWeight.bold,
                                 marginBottom: 2,
-                                fontSize: TYPOGRAPHY.fontSize.lg.display,
+                                fontSize: TYPOGRAPHY.fontSize.md.display,
                             }}
                         >
                             404

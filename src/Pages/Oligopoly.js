@@ -266,7 +266,7 @@ const Oligopoly = () => {
                                 sx={{
                                     color: 'text.primary',
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                    fontSize: TYPOGRAPHY.fontSize.md.h4,
+                                    fontSize: TYPOGRAPHY.fontSize.md.h3,
                                 }}
                             >
                                 Oligopoly
@@ -281,7 +281,7 @@ const Oligopoly = () => {
                                 <GitHub
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.large,
+                                            xs: TYPOGRAPHY.fontSize.md.h3,
                                             sm: '2rem',
                                         },
                                     }}
@@ -291,7 +291,7 @@ const Oligopoly = () => {
                                 <Home
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.large,
+                                            xs: TYPOGRAPHY.fontSize.md.h3,
                                             sm: '2rem',
                                         },
                                     }}
@@ -308,8 +308,8 @@ const Oligopoly = () => {
                             marginBottom: 4,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
                             fontSize: {
-                                xs: TYPOGRAPHY.fontSize.sm.h6,
-                                sm: TYPOGRAPHY.fontSize.sm.h5,
+                                xs: TYPOGRAPHY.fontSize.sm.body,
+                                sm: TYPOGRAPHY.fontSize.sm.h3,
                             },
                         }}
                     >
@@ -336,7 +336,7 @@ const Oligopoly = () => {
                                 marginBottom: 3,
                                 textAlign: 'center',
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                fontSize: TYPOGRAPHY.fontSize.md.h5,
+                                fontSize: TYPOGRAPHY.fontSize.md.h3,
                             }}
                         >
                             Market Dynamics

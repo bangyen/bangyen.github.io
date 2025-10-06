@@ -64,7 +64,7 @@ export default function Editor({ container, sideProps, hide, children }) {
                     <Typography
                         variant="h4"
                         sx={{
-                            fontSize: TYPOGRAPHY.fontSize.lg.h3,
+                            fontSize: TYPOGRAPHY.fontSize.md.h3,
                             fontWeight: TYPOGRAPHY.fontWeight.semibold,
                         }}
                     >

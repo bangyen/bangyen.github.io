@@ -270,7 +270,7 @@ const ZSharp = () => {
                                 <GitHub
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.large,
+                                            xs: TYPOGRAPHY.fontSize.md.h3,
                                             sm: '2rem',
                                         },
                                     }}
@@ -280,7 +280,7 @@ const ZSharp = () => {
                                 <Home
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.large,
+                                            xs: TYPOGRAPHY.fontSize.md.h3,
                                             sm: '2rem',
                                         },
                                     }}
@@ -297,8 +297,8 @@ const ZSharp = () => {
                             marginBottom: 3,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
                             fontSize: {
-                                xs: TYPOGRAPHY.fontSize.sm.h6,
-                                sm: TYPOGRAPHY.fontSize.sm.h5,
+                                xs: TYPOGRAPHY.fontSize.sm.body,
+                                sm: TYPOGRAPHY.fontSize.sm.h3,
                             },
                         }}
                     >
@@ -325,7 +325,7 @@ const ZSharp = () => {
                                 marginBottom: 3,
                                 textAlign: 'center',
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                fontSize: TYPOGRAPHY.fontSize.md.h5,
+                                fontSize: TYPOGRAPHY.fontSize.md.h3,
                             }}
                         >
                             {viewType === 'accuracy' &&
