@@ -317,7 +317,16 @@ export default function Home() {
                                             transition:
                                                 ANIMATIONS.transitions.normal,
                                             cursor: 'pointer',
-                                            '&:hover': ANIMATIONS.hover.modern,
+                                            '&:hover': {
+                                                backgroundColor:
+                                                    COLORS.interactive.hover,
+                                                transform:
+                                                    'scale(1.02) translateY(-1px)',
+                                                boxShadow:
+                                                    '0 4px 20px hsla(0, 0%, 0%, 0.25)',
+                                                transition:
+                                                    'all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                                            },
                                         }}
                                     >
                                         <Typography
@@ -445,9 +454,7 @@ export default function Home() {
                                                             overflow: 'hidden', // Prevent text overflow
                                                             '&:hover': {
                                                                 backgroundColor:
-                                                                    COLORS
-                                                                        .interactive
-                                                                        .pressed,
+                                                                    'hsla(0, 0%, 80%, 0.12)',
                                                                 transform:
                                                                     'translateY(-2px) scale(1.01)',
                                                                 boxShadow:
