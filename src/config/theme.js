@@ -101,13 +101,14 @@ export const TYPOGRAPHY = {
         display:
             '"SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", sans-serif',
     },
-    // Simplified typography scale - 2 breakpoints, 6 size variants
+    // Simplified typography scale - 2 breakpoints, 7 size variants
     fontSize: {
         sm: {
             display: 'clamp(2.5rem, 5vw, 4rem)',
             h1: 'clamp(2.25rem, 4vw, 3.5rem)',
             h2: 'clamp(1.75rem, 3vw, 2.25rem)',
             h3: 'clamp(1.5rem, 2.5vw, 1.75rem)',
+            subheading: 'clamp(1.125rem, 1.75vw, 1.375rem)',
             body: 'clamp(0.875rem, 1vw, 1rem)',
             caption: 'clamp(0.75rem, 0.8vw, 0.875rem)',
         },
@@ -116,6 +117,7 @@ export const TYPOGRAPHY = {
             h1: 'clamp(3rem, 5vw, 4.5rem)',
             h2: 'clamp(2rem, 4vw, 3rem)',
             h3: 'clamp(1.75rem, 3vw, 2.25rem)',
+            subheading: 'clamp(1.25rem, 2vw, 1.5rem)',
             body: 'clamp(1rem, 1vw, 1.125rem)',
             caption: 'clamp(0.875rem, 0.8vw, 1rem)',
         },

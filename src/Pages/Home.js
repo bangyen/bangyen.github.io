@@ -379,7 +379,9 @@ export default function Home() {
                                     <Typography
                                         sx={{
                                             color: COLORS.text.accent,
-                                            fontSize: TYPOGRAPHY.fontSize.md.h3,
+                                            fontSize:
+                                                TYPOGRAPHY.fontSize.md
+                                                    .subheading,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
                                             marginBottom: 3,
@@ -529,7 +531,9 @@ export default function Home() {
                                     <Typography
                                         sx={{
                                             color: COLORS.text.accent,
-                                            fontSize: TYPOGRAPHY.fontSize.md.h3,
+                                            fontSize:
+                                                TYPOGRAPHY.fontSize.md
+                                                    .subheading,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
                                             marginBottom: 3,
@@ -749,7 +753,7 @@ export default function Home() {
                                                             .semibold,
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize.md
-                                                            .h3,
+                                                            .subheading,
                                                     lineHeight:
                                                         TYPOGRAPHY.lineHeight
                                                             .normal,
@@ -884,7 +888,7 @@ export default function Home() {
                                                             .semibold,
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize.md
-                                                            .h3,
+                                                            .subheading,
                                                     lineHeight:
                                                         TYPOGRAPHY.lineHeight
                                                             .normal,
