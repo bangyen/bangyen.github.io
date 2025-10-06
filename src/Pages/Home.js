@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
 
-import { TooltipButton, GlassCard } from '../helpers';
+import { TooltipButton, GlassCard, ICON_MAP } from '../helpers';
 import { pages } from './';
 import {
     PERSONAL_INFO,
@@ -17,9 +17,6 @@ import { COLORS, SPACING, TYPOGRAPHY, ANIMATIONS } from '../config/theme';
 import {
     MenuRounded,
     GitHub,
-    Code,
-    Cloud,
-    Psychology,
     Work,
     LocationOn,
     OpenInNew,
@@ -395,14 +392,7 @@ export default function Home() {
                                     >
                                         {SKILLS.map((skill, index) => {
                                             const IconComponent =
-                                                skill.icon === 'Code'
-                                                    ? Code
-                                                    : skill.icon ===
-                                                        'Psychology'
-                                                      ? Psychology
-                                                      : skill.icon === 'Cloud'
-                                                        ? Cloud
-                                                        : Work;
+                                                ICON_MAP[skill.icon] || Work;
 
                                             return (
                                                 <Fade

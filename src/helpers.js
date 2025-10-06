@@ -13,7 +13,22 @@ import {
     KeyboardArrowDownRounded,
     KeyboardArrowLeftRounded,
     KeyboardArrowRightRounded,
+    Code,
+    Psychology,
+    Cloud,
+    Work,
 } from '@mui/icons-material';
+
+/**
+ * Icon mapping utility to eliminate repetitive icon selection logic
+ * Maps skill icon names to their corresponding Material-UI icon components
+ */
+export const ICON_MAP = {
+    Code: Code,
+    Psychology: Psychology,
+    Cloud: Cloud,
+    Work: Work,
+};
 
 /**
  * TooltipButton component provides accessible icon buttons with tooltips
