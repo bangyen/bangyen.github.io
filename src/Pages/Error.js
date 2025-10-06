@@ -56,7 +56,7 @@ export default function Error() {
                     <Box
                         sx={{
                             textAlign: 'center',
-                            maxWidth: SPACING.maxWidth.error,
+                            maxWidth: SPACING.maxWidth.xs,
                             width: '100%',
                             padding: {
                                 xs: '0 1rem',
@@ -79,14 +79,14 @@ export default function Error() {
                         </Typography>
 
                         <Typography
-                            variant="h5"
+                            variant="h3"
                             sx={{
                                 color: 'text.secondary',
                                 marginBottom: 2,
-                                fontWeight: TYPOGRAPHY.fontWeight.normal,
+                                fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                 fontSize: {
-                                    xs: TYPOGRAPHY.fontSize.sm.h6,
-                                    sm: TYPOGRAPHY.fontSize.sm.h5,
+                                    xs: TYPOGRAPHY.fontSize.sm.h3,
+                                    sm: TYPOGRAPHY.fontSize.md.h3,
                                 },
                             }}
                         >
@@ -94,15 +94,16 @@ export default function Error() {
                         </Typography>
 
                         <Typography
-                            variant="h6"
+                            variant="body1"
                             sx={{
                                 color: 'text.secondary',
                                 marginBottom: 4,
-                                fontWeight: TYPOGRAPHY.fontWeight.light,
+                                fontWeight: TYPOGRAPHY.fontWeight.normal,
                                 fontSize: {
-                                    xs: TYPOGRAPHY.fontSize.xs.h6,
-                                    sm: TYPOGRAPHY.fontSize.sm.body,
+                                    xs: TYPOGRAPHY.fontSize.sm.body,
+                                    sm: TYPOGRAPHY.fontSize.md.body,
                                 },
+                                lineHeight: TYPOGRAPHY.lineHeight.relaxed,
                             }}
                         >
                             This page isn&apos;t available. The link you
