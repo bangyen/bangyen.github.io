@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
 
 import { TooltipButton, GlassCard, ICON_MAP } from '../helpers';
+import { Section, HeroContainer } from '../components/Layout';
 import { pages } from './';
 import {
     PERSONAL_INFO,
@@ -23,15 +24,7 @@ import {
     ArrowForward,
 } from '@mui/icons-material';
 
-import {
-    Typography,
-    Box,
-    Menu,
-    MenuItem,
-    Fade,
-    Container,
-    Button,
-} from '@mui/material';
+import { Typography, Box, Menu, MenuItem, Fade, Button } from '@mui/material';
 
 function dropdown(name, routes) {
     return (
@@ -167,29 +160,8 @@ export default function Home() {
             </Box>
 
             {/* Hero Section */}
-            <Container
-                maxWidth={false}
-                sx={{
-                    flex: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    paddingTop: 0, // No gap needed with relative nav
-                    paddingBottom: '4rem',
-                    paddingX: {
-                        xs: SPACING.padding.xs, // Smaller padding on mobile
-                        md: SPACING.padding.md,
-                    },
-                    maxWidth: '100%', // Prevent container from exceeding viewport
-                    overflowX: 'hidden', // Hide any horizontal overflow
-                }}
-            >
-                <Grid
-                    container
-                    spacing={{ xs: 4, md: 8 }}
-                    alignItems="center"
-                    sx={{ maxWidth: SPACING.maxWidth.lg }}
-                >
+            <HeroContainer>
+                <Grid container spacing={{ xs: 4, md: 8 }} alignItems="center">
                     {/* Left Side - Introduction */}
                     <Grid size={{ xs: 12, md: 6 }}>
                         <Fade in timeout={800}>
@@ -541,337 +513,302 @@ export default function Home() {
                         </Fade>
                     </Grid>
                 </Grid>
-            </Container>
+            </HeroContainer>
 
             {/* Featured Work Section */}
-            <Container
-                maxWidth={false}
-                sx={{
-                    paddingY: SPACING.section,
-                    paddingX: SPACING.padding.md,
-                }}
-            >
-                <Box sx={{ maxWidth: SPACING.maxWidth.lg, margin: '0 auto' }}>
-                    <Fade in timeout={1400}>
-                        <Box
-                            id="featured-work"
-                            className="featured-work-section"
+            <Section id="featured-work">
+                <Fade in timeout={1400}>
+                    <Box>
+                        <Typography
+                            sx={{
+                                color: COLORS.text.primary,
+                                fontSize: TYPOGRAPHY.fontSize.h2,
+                                fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                                textAlign: 'center',
+                                marginBottom: 6,
+                            }}
                         >
-                            <Typography
-                                sx={{
-                                    color: COLORS.text.primary,
-                                    fontSize: TYPOGRAPHY.fontSize.h2,
-                                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                                    textAlign: 'center',
-                                    marginBottom: 6,
-                                }}
-                            >
-                                Featured Work
-                            </Typography>
+                            Featured Work
+                        </Typography>
 
-                            <Box
-                                sx={{
-                                    display: 'grid',
-                                    gridTemplateColumns: {
-                                        xs: '1fr',
-                                        md: 'repeat(2, 1fr)',
-                                        lg: 'repeat(2, 1fr)', // Changed from 3 to 2 columns
-                                    },
-                                    gap: 4,
-                                }}
-                            >
-                                {/* Publications */}
-                                {PUBLICATIONS.map((publication, index) => (
-                                    <Fade
-                                        in
-                                        timeout={1600 + index * 200}
-                                        key={publication.title}
+                        <Box
+                            sx={{
+                                display: 'grid',
+                                gridTemplateColumns: {
+                                    xs: '1fr',
+                                    md: 'repeat(2, 1fr)',
+                                    lg: 'repeat(2, 1fr)', // Changed from 3 to 2 columns
+                                },
+                                gap: 4,
+                            }}
+                        >
+                            {/* Publications */}
+                            {PUBLICATIONS.map((publication, index) => (
+                                <Fade
+                                    in
+                                    timeout={1600 + index * 200}
+                                    key={publication.title}
+                                >
+                                    <Box
+                                        component="a"
+                                        href={publication.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        sx={{
+                                            textDecoration: 'none',
+                                            cursor: 'pointer',
+                                            transition:
+                                                ANIMATIONS.transition.normal,
+                                            position: 'relative',
+                                            overflow: 'hidden',
+                                            height: '100%',
+                                            display: 'flex',
+                                            '&:hover': {
+                                                transform: 'translateY(-2px)',
+                                                boxShadow: COLORS.shadows.lg,
+                                            },
+                                            '&:hover .glass-card': {
+                                                backgroundColor:
+                                                    COLORS.interactive.selected,
+                                            },
+                                            '&:focus': ANIMATIONS.focus,
+                                        }}
                                     >
-                                        <Box
-                                            component="a"
-                                            href={publication.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            sx={{
-                                                textDecoration: 'none',
-                                                cursor: 'pointer',
-                                                transition:
-                                                    ANIMATIONS.transition
-                                                        .normal,
-                                                position: 'relative',
-                                                overflow: 'hidden',
-                                                height: '100%',
-                                                display: 'flex',
-                                                '&:hover': {
-                                                    transform:
-                                                        'translateY(-2px)',
-                                                    boxShadow:
-                                                        COLORS.shadows.lg,
-                                                },
-                                                '&:hover .glass-card': {
-                                                    backgroundColor:
-                                                        COLORS.interactive
-                                                            .selected,
-                                                },
-                                                '&:focus': ANIMATIONS.focus,
-                                            }}
-                                        >
-                                            <GlassCard>
-                                                <Box
-                                                    sx={{
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent:
-                                                            'space-between',
-                                                        marginBottom: 3,
-                                                    }}
-                                                >
-                                                    <Typography
-                                                        sx={{
-                                                            color: COLORS
-                                                                .primary.main,
-                                                            fontSize:
-                                                                TYPOGRAPHY
-                                                                    .fontSize
-                                                                    .caption,
-                                                            fontWeight:
-                                                                TYPOGRAPHY
-                                                                    .fontWeight
-                                                                    .medium,
-                                                            textTransform:
-                                                                'uppercase',
-                                                            letterSpacing:
-                                                                TYPOGRAPHY
-                                                                    .letterSpacing
-                                                                    .wider,
-                                                        }}
-                                                    >
-                                                        Research
-                                                    </Typography>
-                                                    <OpenInNew
-                                                        sx={{
-                                                            color: COLORS
-                                                                .primary.main,
-                                                        }}
-                                                    />
-                                                </Box>
-
+                                        <GlassCard>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent:
+                                                        'space-between',
+                                                    marginBottom: 3,
+                                                }}
+                                            >
                                                 <Typography
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .primary,
+                                                        color: COLORS.primary
+                                                            .main,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .caption,
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
-                                                                .semibold,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .subheading,
-                                                        lineHeight:
+                                                                .medium,
+                                                        textTransform:
+                                                            'uppercase',
+                                                        letterSpacing:
                                                             TYPOGRAPHY
-                                                                .lineHeight
-                                                                .normal,
-                                                        marginBottom: 2,
+                                                                .letterSpacing
+                                                                .wider,
                                                     }}
                                                 >
-                                                    {publication.title}
+                                                    Research
                                                 </Typography>
-
-                                                <Box sx={{ marginBottom: 3 }}>
-                                                    <Box
-                                                        sx={{
-                                                            backgroundColor:
-                                                                'hsla(141, 64%, 49%, 0.1)',
-                                                            color: 'hsl(141, 64%, 49%)',
-                                                            border: '1px solid hsla(141, 64%, 49%, 0.2)',
-                                                            borderRadius:
-                                                                '20px',
-                                                            fontSize:
-                                                                'clamp(0.7rem, 0.8vw, 0.75rem)',
-                                                            fontWeight: 500,
-                                                            padding: '4px 12px',
-                                                            minHeight: '24px',
-                                                            display:
-                                                                'inline-flex',
-                                                            alignItems:
-                                                                'center',
-                                                            transition:
-                                                                'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                                        }}
-                                                    >
-                                                        {publication.conference}
-                                                    </Box>
-                                                </Box>
-
-                                                <Typography
+                                                <OpenInNew
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .secondary,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .body,
-                                                        lineHeight:
-                                                            TYPOGRAPHY
-                                                                .lineHeight
-                                                                .relaxed,
-                                                        flex: 1,
+                                                        color: COLORS.primary
+                                                            .main,
                                                     }}
-                                                >
-                                                    {publication.description}
-                                                </Typography>
-                                            </GlassCard>
-                                        </Box>
-                                    </Fade>
-                                ))}
+                                                />
+                                            </Box>
 
-                                {/* Projects */}
-                                {PROJECTS.map((project, index) => (
-                                    <Fade
-                                        in
-                                        timeout={1600 + (index + 2) * 200}
-                                        key={project.title}
-                                    >
-                                        <Box
-                                            component="a"
-                                            href={project.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            sx={{
-                                                textDecoration: 'none',
-                                                cursor: 'pointer',
-                                                transition:
-                                                    ANIMATIONS.transition
-                                                        .normal,
-                                                position: 'relative',
-                                                overflow: 'hidden',
-                                                height: '100%',
-                                                display: 'flex',
-                                                '&:hover': {
-                                                    transform:
-                                                        'translateY(-2px)',
-                                                    boxShadow:
-                                                        COLORS.shadows.lg,
-                                                },
-                                                '&:hover .glass-card': {
-                                                    backgroundColor:
-                                                        COLORS.interactive
-                                                            .selected,
-                                                },
-                                                '&:focus': ANIMATIONS.focus,
-                                            }}
-                                        >
-                                            <GlassCard>
+                                            <Typography
+                                                sx={{
+                                                    color: COLORS.text.primary,
+                                                    fontWeight:
+                                                        TYPOGRAPHY.fontWeight
+                                                            .semibold,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize
+                                                            .subheading,
+                                                    lineHeight:
+                                                        TYPOGRAPHY.lineHeight
+                                                            .normal,
+                                                    marginBottom: 2,
+                                                }}
+                                            >
+                                                {publication.title}
+                                            </Typography>
+
+                                            <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
-                                                        display: 'flex',
+                                                        backgroundColor:
+                                                            'hsla(141, 64%, 49%, 0.1)',
+                                                        color: 'hsl(141, 64%, 49%)',
+                                                        border: '1px solid hsla(141, 64%, 49%, 0.2)',
+                                                        borderRadius: '20px',
+                                                        fontSize:
+                                                            'clamp(0.7rem, 0.8vw, 0.75rem)',
+                                                        fontWeight: 500,
+                                                        padding: '4px 12px',
+                                                        minHeight: '24px',
+                                                        display: 'inline-flex',
                                                         alignItems: 'center',
-                                                        justifyContent:
-                                                            'space-between',
-                                                        marginBottom: 3,
+                                                        transition:
+                                                            'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
                                                     }}
                                                 >
-                                                    <Typography
-                                                        sx={{
-                                                            color: COLORS
-                                                                .primary.main,
-                                                            fontSize:
-                                                                TYPOGRAPHY
-                                                                    .fontSize
-                                                                    .caption,
-                                                            fontWeight:
-                                                                TYPOGRAPHY
-                                                                    .fontWeight
-                                                                    .medium,
-                                                            textTransform:
-                                                                'uppercase',
-                                                            letterSpacing:
-                                                                TYPOGRAPHY
-                                                                    .letterSpacing
-                                                                    .wider,
-                                                        }}
-                                                    >
-                                                        Project
-                                                    </Typography>
-                                                    <GitHub
-                                                        sx={{
-                                                            color: COLORS
-                                                                .primary.main,
-                                                        }}
-                                                    />
+                                                    {publication.conference}
                                                 </Box>
+                                            </Box>
 
+                                            <Typography
+                                                sx={{
+                                                    color: COLORS.text
+                                                        .secondary,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize
+                                                            .body,
+                                                    lineHeight:
+                                                        TYPOGRAPHY.lineHeight
+                                                            .relaxed,
+                                                    flex: 1,
+                                                }}
+                                            >
+                                                {publication.description}
+                                            </Typography>
+                                        </GlassCard>
+                                    </Box>
+                                </Fade>
+                            ))}
+
+                            {/* Projects */}
+                            {PROJECTS.map((project, index) => (
+                                <Fade
+                                    in
+                                    timeout={1600 + (index + 2) * 200}
+                                    key={project.title}
+                                >
+                                    <Box
+                                        component="a"
+                                        href={project.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        sx={{
+                                            textDecoration: 'none',
+                                            cursor: 'pointer',
+                                            transition:
+                                                ANIMATIONS.transition.normal,
+                                            position: 'relative',
+                                            overflow: 'hidden',
+                                            height: '100%',
+                                            display: 'flex',
+                                            '&:hover': {
+                                                transform: 'translateY(-2px)',
+                                                boxShadow: COLORS.shadows.lg,
+                                            },
+                                            '&:hover .glass-card': {
+                                                backgroundColor:
+                                                    COLORS.interactive.selected,
+                                            },
+                                            '&:focus': ANIMATIONS.focus,
+                                        }}
+                                    >
+                                        <GlassCard>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent:
+                                                        'space-between',
+                                                    marginBottom: 3,
+                                                }}
+                                            >
                                                 <Typography
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .primary,
+                                                        color: COLORS.primary
+                                                            .main,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .caption,
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
-                                                                .semibold,
-                                                        fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .subheading,
-                                                        lineHeight:
+                                                                .medium,
+                                                        textTransform:
+                                                            'uppercase',
+                                                        letterSpacing:
                                                             TYPOGRAPHY
-                                                                .lineHeight
-                                                                .normal,
-                                                        marginBottom: 2,
+                                                                .letterSpacing
+                                                                .wider,
                                                     }}
                                                 >
-                                                    {project.title}
+                                                    Project
                                                 </Typography>
-
-                                                <Box sx={{ marginBottom: 3 }}>
-                                                    <Box
-                                                        sx={{
-                                                            backgroundColor:
-                                                                'hsla(217, 91%, 60%, 0.1)',
-                                                            color: 'hsl(217, 91%, 60%)',
-                                                            border: '1px solid hsla(217, 91%, 60%, 0.2)',
-                                                            borderRadius:
-                                                                '20px',
-                                                            fontSize:
-                                                                'clamp(0.7rem, 0.8vw, 0.75rem)',
-                                                            fontWeight: 500,
-                                                            padding: '4px 12px',
-                                                            minHeight: '24px',
-                                                            display:
-                                                                'inline-flex',
-                                                            alignItems:
-                                                                'center',
-                                                            transition:
-                                                                'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                                        }}
-                                                    >
-                                                        {project.technology}
-                                                    </Box>
-                                                </Box>
-
-                                                <Typography
+                                                <GitHub
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .secondary,
+                                                        color: COLORS.primary
+                                                            .main,
+                                                    }}
+                                                />
+                                            </Box>
+
+                                            <Typography
+                                                sx={{
+                                                    color: COLORS.text.primary,
+                                                    fontWeight:
+                                                        TYPOGRAPHY.fontWeight
+                                                            .semibold,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize
+                                                            .subheading,
+                                                    lineHeight:
+                                                        TYPOGRAPHY.lineHeight
+                                                            .normal,
+                                                    marginBottom: 2,
+                                                }}
+                                            >
+                                                {project.title}
+                                            </Typography>
+
+                                            <Box sx={{ marginBottom: 3 }}>
+                                                <Box
+                                                    sx={{
+                                                        backgroundColor:
+                                                            'hsla(217, 91%, 60%, 0.1)',
+                                                        color: 'hsl(217, 91%, 60%)',
+                                                        border: '1px solid hsla(217, 91%, 60%, 0.2)',
+                                                        borderRadius: '20px',
                                                         fontSize:
-                                                            TYPOGRAPHY.fontSize
-                                                                .body,
-                                                        lineHeight:
-                                                            TYPOGRAPHY
-                                                                .lineHeight
-                                                                .relaxed,
-                                                        flex: 1,
+                                                            'clamp(0.7rem, 0.8vw, 0.75rem)',
+                                                        fontWeight: 500,
+                                                        padding: '4px 12px',
+                                                        minHeight: '24px',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        transition:
+                                                            'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
                                                     }}
                                                 >
-                                                    {project.description}
-                                                </Typography>
-                                            </GlassCard>
-                                        </Box>
-                                    </Fade>
-                                ))}
-                            </Box>
+                                                    {project.technology}
+                                                </Box>
+                                            </Box>
+
+                                            <Typography
+                                                sx={{
+                                                    color: COLORS.text
+                                                        .secondary,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize
+                                                            .body,
+                                                    lineHeight:
+                                                        TYPOGRAPHY.lineHeight
+                                                            .relaxed,
+                                                    flex: 1,
+                                                }}
+                                            >
+                                                {project.description}
+                                            </Typography>
+                                        </GlassCard>
+                                    </Box>
+                                </Fade>
+                            ))}
                         </Box>
-                    </Fade>
-                </Box>
-            </Container>
+                    </Box>
+                </Fade>
+            </Section>
         </Grid>
     );
 }
