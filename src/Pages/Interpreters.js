@@ -214,8 +214,7 @@ export default function Interpreters() {
                                                     TYPOGRAPHY.fontWeight
                                                         .semibold,
                                                 fontSize:
-                                                    TYPOGRAPHY.fontSize.md
-                                                        .subheading,
+                                                    TYPOGRAPHY.fontSize.body,
                                             }}
                                         >
                                             {interpreter.name}

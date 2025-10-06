@@ -213,8 +213,8 @@ export default function Info(props) {
                                                     alignItems: 'center',
                                                     mb: 1,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.sm
-                                                            .subheading,
+                                                        TYPOGRAPHY.fontSize
+                                                            .body,
                                                     letterSpacing:
                                                         TYPOGRAPHY.letterSpacing
                                                             .wide,
@@ -264,8 +264,8 @@ export default function Info(props) {
                                                     alignItems: 'center',
                                                     mb: 1,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.sm
-                                                            .subheading,
+                                                        TYPOGRAPHY.fontSize
+                                                            .body,
                                                     letterSpacing:
                                                         TYPOGRAPHY.letterSpacing
                                                             .wide,
@@ -315,8 +315,8 @@ export default function Info(props) {
                                                     alignItems: 'center',
                                                     mb: 1,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.sm
-                                                            .subheading,
+                                                        TYPOGRAPHY.fontSize
+                                                            .body,
                                                     letterSpacing:
                                                         TYPOGRAPHY.letterSpacing
                                                             .wide,
@@ -419,9 +419,7 @@ export default function Info(props) {
                                             color: COLORS.text.primary,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
-                                            fontSize:
-                                                TYPOGRAPHY.fontSize.md
-                                                    .subheading,
+                                            fontSize: TYPOGRAPHY.fontSize.body,
                                             lineHeight:
                                                 TYPOGRAPHY.lineHeight.tight,
                                             letterSpacing:
