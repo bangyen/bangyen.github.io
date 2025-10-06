@@ -88,7 +88,7 @@ function Title({ children }) {
                 sx={{
                     textAlign: 'center',
                     fontWeight: 'semibold',
-                    fontSize: TYPOGRAPHY.fontSize.sm.h3,
+                    fontSize: TYPOGRAPHY.fontSize.sm.subheading,
                     lineHeight: '1.2',
                     letterSpacing: '-0.025em',
                 }}

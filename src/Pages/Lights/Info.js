@@ -214,7 +214,7 @@ export default function Info(props) {
                                                     mb: 1,
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize.sm
-                                                            .h5,
+                                                            .subheading,
                                                     letterSpacing:
                                                         TYPOGRAPHY.letterSpacing
                                                             .wide,
@@ -265,7 +265,7 @@ export default function Info(props) {
                                                     mb: 1,
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize.sm
-                                                            .h5,
+                                                            .subheading,
                                                     letterSpacing:
                                                         TYPOGRAPHY.letterSpacing
                                                             .wide,
@@ -316,7 +316,7 @@ export default function Info(props) {
                                                     mb: 1,
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize.sm
-                                                            .h5,
+                                                            .subheading,
                                                     letterSpacing:
                                                         TYPOGRAPHY.letterSpacing
                                                             .wide,
@@ -419,7 +419,9 @@ export default function Info(props) {
                                             color: COLORS.text.primary,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
-                                            fontSize: TYPOGRAPHY.fontSize.md.h3,
+                                            fontSize:
+                                                TYPOGRAPHY.fontSize.md
+                                                    .subheading,
                                             lineHeight:
                                                 TYPOGRAPHY.lineHeight.tight,
                                             letterSpacing:
