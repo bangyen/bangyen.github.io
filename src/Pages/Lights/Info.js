@@ -239,7 +239,7 @@ export default function Info(props) {
                                                         TYPOGRAPHY.lineHeight
                                                             .relaxed,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.sm
+                                                        TYPOGRAPHY.fontSize
                                                             .body,
                                                     ml: 4,
                                                 }}
@@ -290,7 +290,7 @@ export default function Info(props) {
                                                         TYPOGRAPHY.lineHeight
                                                             .relaxed,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.sm
+                                                        TYPOGRAPHY.fontSize
                                                             .body,
                                                     ml: 4,
                                                 }}
@@ -341,7 +341,7 @@ export default function Info(props) {
                                                         TYPOGRAPHY.lineHeight
                                                             .relaxed,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.sm
+                                                        TYPOGRAPHY.fontSize
                                                             .body,
                                                     ml: 4,
                                                 }}
