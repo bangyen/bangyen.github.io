@@ -145,7 +145,6 @@ export default function Home() {
                     right: 0,
                     padding: {
                         xs: SPACING.padding.xs, // Smaller padding on mobile
-                        sm: SPACING.padding.sm,
                         md: SPACING.padding.md,
                     },
                     zIndex: 1000,
@@ -179,7 +178,6 @@ export default function Home() {
                     paddingBottom: '4rem',
                     paddingX: {
                         xs: SPACING.padding.xs, // Smaller padding on mobile
-                        sm: SPACING.padding.sm,
                         md: SPACING.padding.md,
                     },
                     maxWidth: '100%', // Prevent container from exceeding viewport
@@ -199,7 +197,7 @@ export default function Home() {
                                 <Typography
                                     sx={{
                                         color: COLORS.primary.main,
-                                        fontSize: TYPOGRAPHY.fontSize.md.body,
+                                        fontSize: TYPOGRAPHY.fontSize.body,
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.semibold,
                                         textTransform: 'uppercase',
@@ -216,9 +214,8 @@ export default function Home() {
                                         color: COLORS.text.primary,
                                         fontWeight: TYPOGRAPHY.fontWeight.bold,
                                         fontSize: {
-                                            xs: 'clamp(2rem, 8vw, 2.5rem)', // Smaller on mobile, prevents wrapping under 500px
-                                            sm: 'clamp(2.5rem, 7vw, 3.5rem)', // Medium sizing
-                                            md: 'clamp(3rem, 6vw, 5rem)', // Large sizing
+                                            xs: 'clamp(2rem, 8vw, 2.5rem)', // Mobile sizing
+                                            md: 'clamp(3rem, 6vw, 5rem)', // Desktop sizing
                                         },
                                         lineHeight: TYPOGRAPHY.lineHeight.tight,
                                         letterSpacing:
@@ -236,9 +233,8 @@ export default function Home() {
                                     sx={{
                                         color: COLORS.text.secondary,
                                         fontSize: {
-                                            xs: 'clamp(0.875rem, 4vw, 1.125rem)', // Prevents wrapping under 400px
-                                            sm: 'clamp(1rem, 3vw, 1.25rem)', // Medium sizing, prevents wrapping between 900-1200px
-                                            md: 'clamp(1.125rem, 2.5vw, 1.5rem)', // Large sizing
+                                            xs: 'clamp(0.875rem, 4vw, 1.125rem)', // Mobile sizing
+                                            md: 'clamp(1.125rem, 2.5vw, 1.5rem)', // Desktop sizing
                                         },
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.semibold,
@@ -270,8 +266,7 @@ export default function Home() {
                                     <Typography
                                         sx={{
                                             color: COLORS.text.muted,
-                                            fontSize:
-                                                TYPOGRAPHY.fontSize.md.body,
+                                            fontSize: TYPOGRAPHY.fontSize.body,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.medium,
                                         }}
@@ -380,12 +375,11 @@ export default function Home() {
                                             display: 'grid',
                                             gridTemplateColumns: {
                                                 xs: '1fr', // Single column on mobile
-                                                sm: 'repeat(2, 1fr)', // 2 columns on small screens and up
-                                                md: 'repeat(3, 1fr)', // 3 columns on medium screens and up
+                                                md: 'repeat(3, 1fr)', // 3 columns on desktop
                                             },
                                             gap: {
                                                 xs: 1.5, // Smaller gap on mobile
-                                                sm: 2,
+                                                md: 2,
                                             },
                                             marginBottom: 3,
                                         }}
@@ -413,14 +407,14 @@ export default function Home() {
                                                                     .md,
                                                             padding: {
                                                                 xs: '12px', // Smaller padding on mobile
-                                                                sm: '16px',
+                                                                md: '16px',
                                                             },
                                                             display: 'flex',
                                                             alignItems:
                                                                 'center',
                                                             gap: {
                                                                 xs: 1, // Smaller gap on mobile
-                                                                sm: 1.5,
+                                                                md: 1.5,
                                                             },
                                                             transition:
                                                                 ANIMATIONS.transition,
@@ -460,8 +454,8 @@ export default function Home() {
                                                                     xs: TYPOGRAPHY
                                                                         .fontSize
                                                                         .sm
-                                                                        .body, // Smaller on mobile
-                                                                    sm: TYPOGRAPHY
+                                                                        .body, // Mobile sizing
+                                                                    md: TYPOGRAPHY
                                                                         .fontSize
                                                                         .sm
                                                                         .body,
@@ -507,8 +501,7 @@ export default function Home() {
                                     <Typography
                                         sx={{
                                             color: COLORS.text.secondary,
-                                            fontSize:
-                                                TYPOGRAPHY.fontSize.md.body,
+                                            fontSize: TYPOGRAPHY.fontSize.body,
                                             lineHeight:
                                                 TYPOGRAPHY.lineHeight.relaxed,
                                             marginBottom: 4,
@@ -576,7 +569,7 @@ export default function Home() {
                             <Typography
                                 sx={{
                                     color: COLORS.text.primary,
-                                    fontSize: TYPOGRAPHY.fontSize.md.h3,
+                                    fontSize: TYPOGRAPHY.fontSize.h2,
                                     fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                     textAlign: 'center',
                                     marginBottom: 6,

@@ -190,7 +190,7 @@ export default function Info(props) {
                                                     ? 'center'
                                                     : 'left',
                                                 fontSize:
-                                                    TYPOGRAPHY.fontSize.md.h3,
+                                                    TYPOGRAPHY.fontSize.h2,
                                                 lineHeight:
                                                     TYPOGRAPHY.lineHeight.tight,
                                                 letterSpacing:

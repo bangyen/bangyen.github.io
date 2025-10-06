@@ -14,14 +14,14 @@ export default function Editor({ container, sideProps, hide, children }) {
     const { name, tapeFlag, outFlag, regFlag, code } =
         useContext(EditorContext);
 
-    const rightProps = { xs: 6, sm: 4 };
+    const rightProps = { xs: 6, md: 4 };
     let display, leftProps;
 
     if (hide) {
         display = 'none';
         leftProps = 12;
     } else {
-        leftProps = { xs: 6, sm: 8 };
+        leftProps = { xs: 6, md: 8 };
         display = 'flex';
     }
 
@@ -63,7 +63,7 @@ export default function Editor({ container, sideProps, hide, children }) {
                     <Typography
                         variant="h4"
                         sx={{
-                            fontSize: TYPOGRAPHY.fontSize.md.h3,
+                            fontSize: TYPOGRAPHY.fontSize.h2,
                             fontWeight: TYPOGRAPHY.fontWeight.semibold,
                         }}
                     >
@@ -89,8 +89,8 @@ export default function Editor({ container, sideProps, hide, children }) {
                     ].filter(Boolean).length;
                     const gridSize =
                         fieldCount === 1
-                            ? { xs: 12, sm: 12 }
-                            : { xs: 12, sm: 6 };
+                            ? { xs: 12, md: 12 }
+                            : { xs: 12, md: 6 };
 
                     if (code !== undefined) {
                         fields.push(

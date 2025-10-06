@@ -16,7 +16,6 @@ export default function Error() {
                 position: 'relative',
                 padding: {
                     xs: SPACING.padding.xs,
-                    sm: SPACING.padding.sm,
                     md: SPACING.padding.md,
                 },
                 boxSizing: 'border-box',
@@ -46,7 +45,6 @@ export default function Error() {
                     zIndex: 1,
                     padding: {
                         xs: `${SPACING.padding.xs} 0`,
-                        sm: `${SPACING.padding.sm} 0`,
                         md: `${SPACING.padding.md} 0`,
                     },
                     minHeight: 0,
@@ -60,7 +58,6 @@ export default function Error() {
                             width: '100%',
                             padding: {
                                 xs: '0 1rem',
-                                sm: '0 1.5rem',
                                 md: '0 2rem',
                             },
                             boxSizing: 'border-box',
@@ -72,7 +69,7 @@ export default function Error() {
                                 color: COLORS.text.primary,
                                 fontWeight: TYPOGRAPHY.fontWeight.bold,
                                 marginBottom: 2,
-                                fontSize: TYPOGRAPHY.fontSize.md.display,
+                                fontSize: TYPOGRAPHY.fontSize.display,
                             }}
                         >
                             404
@@ -85,8 +82,8 @@ export default function Error() {
                                 marginBottom: 2,
                                 fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                 fontSize: {
-                                    xs: TYPOGRAPHY.fontSize.sm.h3,
-                                    sm: TYPOGRAPHY.fontSize.md.h3,
+                                    xs: TYPOGRAPHY.fontSize.h2,
+                                    md: TYPOGRAPHY.fontSize.h2,
                                 },
                             }}
                         >
@@ -100,8 +97,8 @@ export default function Error() {
                                 marginBottom: 4,
                                 fontWeight: TYPOGRAPHY.fontWeight.normal,
                                 fontSize: {
-                                    xs: TYPOGRAPHY.fontSize.sm.body,
-                                    sm: TYPOGRAPHY.fontSize.md.body,
+                                    xs: TYPOGRAPHY.fontSize.body,
+                                    md: TYPOGRAPHY.fontSize.body,
                                 },
                                 lineHeight: TYPOGRAPHY.lineHeight.relaxed,
                             }}
