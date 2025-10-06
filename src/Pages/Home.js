@@ -358,9 +358,7 @@ export default function Home() {
                                     <Typography
                                         sx={{
                                             color: COLORS.primary.main,
-                                            fontSize:
-                                                TYPOGRAPHY.fontSize.md
-                                                    .subheading,
+                                            fontSize: TYPOGRAPHY.fontSize.body,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
                                             marginBottom: 3,
@@ -441,7 +439,6 @@ export default function Home() {
                                                                 fontSize:
                                                                     TYPOGRAPHY
                                                                         .fontSize
-                                                                        .md
                                                                         .body,
                                                             }}
                                                         />
@@ -450,16 +447,10 @@ export default function Home() {
                                                                 color: COLORS
                                                                     .text
                                                                     .accent,
-                                                                fontSize: {
-                                                                    xs: TYPOGRAPHY
+                                                                fontSize:
+                                                                    TYPOGRAPHY
                                                                         .fontSize
-                                                                        .sm
-                                                                        .body, // Mobile sizing
-                                                                    md: TYPOGRAPHY
-                                                                        .fontSize
-                                                                        .sm
                                                                         .body,
-                                                                },
                                                                 fontWeight:
                                                                     TYPOGRAPHY
                                                                         .fontWeight
@@ -487,9 +478,7 @@ export default function Home() {
                                     <Typography
                                         sx={{
                                             color: COLORS.primary.main,
-                                            fontSize:
-                                                TYPOGRAPHY.fontSize.md
-                                                    .subheading,
+                                            fontSize: TYPOGRAPHY.fontSize.body,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
                                             marginBottom: 3,
@@ -673,7 +662,7 @@ export default function Home() {
                                                                 .semibold,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .md.subheading,
+                                                                .body,
                                                         lineHeight:
                                                             TYPOGRAPHY
                                                                 .lineHeight
@@ -716,7 +705,7 @@ export default function Home() {
                                                             .secondary,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .md.body,
+                                                                .body,
                                                         lineHeight:
                                                             TYPOGRAPHY
                                                                 .lineHeight
@@ -814,7 +803,7 @@ export default function Home() {
                                                                 .semibold,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .md.subheading,
+                                                                .body,
                                                         lineHeight:
                                                             TYPOGRAPHY
                                                                 .lineHeight
@@ -857,7 +846,7 @@ export default function Home() {
                                                             .secondary,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .md.body,
+                                                                .body,
                                                         lineHeight:
                                                             TYPOGRAPHY
                                                                 .lineHeight
