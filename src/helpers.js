@@ -1,9 +1,9 @@
 import { Tooltip, IconButton, Paper, Box } from '@mui/material';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, forwardRef } from 'react';
 import Grid from '@mui/material/Grid2';
 import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
-import { SPACING, TYPOGRAPHY, ANIMATIONS } from './config/theme';
+import { SPACING, TYPOGRAPHY, ANIMATIONS, COLORS } from './config/theme';
 
 import {
     HomeRounded,
@@ -144,8 +144,6 @@ export function Navigation({ children, ...rest }) {
             sx={{
                 transform: 'translateX(-50%)',
                 position: 'absolute',
-                borderRadius: SPACING.borderRadius.md,
-                padding: 2,
                 bottom: 50,
                 left: '50%',
                 zIndex: 10,
@@ -250,3 +248,32 @@ function Arrows({ show, setShow, handler }) {
         </Grid>
     );
 }
+
+/**
+ * GlassCard component provides a consistent glassmorphism container
+ * with backdrop blur, subtle borders, and elevation shadows.
+ * Replaces repetitive glass container styling across components.
+ * Uses forwardRef to support Material-UI transitions like Fade.
+ */
+export const GlassCard = forwardRef(function GlassCard(
+    { children, padding = '24px', ...props },
+    ref
+) {
+    return (
+        <Box
+            ref={ref}
+            sx={{
+                backgroundColor: COLORS.surface.glass,
+                backdropFilter: 'blur(24px) saturate(180%)',
+                border: `1px solid ${COLORS.border.subtle}`,
+                borderRadius: SPACING.borderRadius.lg,
+                padding,
+                boxShadow: COLORS.shadows.md,
+                ...props.sx,
+            }}
+            {...props}
+        >
+            {children}
+        </Box>
+    );
+});

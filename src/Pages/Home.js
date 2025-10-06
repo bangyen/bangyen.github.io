@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid2';
 
-import { TooltipButton } from '../helpers';
+import { TooltipButton, GlassCard } from '../helpers';
 import { pages } from './';
 import {
     PERSONAL_INFO,
@@ -362,17 +362,7 @@ export default function Home() {
                                 }}
                             >
                                 {/* Compact Skills Section */}
-                                <Box
-                                    sx={{
-                                        backgroundColor: COLORS.surface.glass,
-                                        backdropFilter:
-                                            'blur(24px) saturate(180%)',
-                                        border: `1px solid ${COLORS.border.subtle}`,
-                                        borderRadius: SPACING.borderRadius.lg,
-                                        padding: '24px',
-                                        boxShadow: COLORS.shadows.md,
-                                    }}
-                                >
+                                <GlassCard>
                                     <Typography
                                         sx={{
                                             color: COLORS.primary.main,
@@ -506,20 +496,10 @@ export default function Home() {
                                             );
                                         })}
                                     </Box>
-                                </Box>
+                                </GlassCard>
 
                                 {/* Contact & Action Section */}
-                                <Box
-                                    sx={{
-                                        backgroundColor: COLORS.surface.glass,
-                                        backdropFilter:
-                                            'blur(24px) saturate(180%)',
-                                        border: `1px solid ${COLORS.border.subtle}`,
-                                        borderRadius: SPACING.borderRadius.lg,
-                                        padding: '24px',
-                                        boxShadow: COLORS.shadows.md,
-                                    }}
-                                >
+                                <GlassCard>
                                     <Typography
                                         sx={{
                                             color: COLORS.primary.main,
@@ -582,7 +562,7 @@ export default function Home() {
                                             Available for Projects
                                         </Button>
                                     </Box>
-                                </Box>
+                                </GlassCard>
                             </Box>
                         </Fade>
                     </Grid>
@@ -633,26 +613,17 @@ export default function Home() {
                                         timeout={1600 + index * 200}
                                         key={publication.title}
                                     >
-                                        <Box
+                                        <GlassCard
                                             component="a"
                                             href={publication.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             sx={{
-                                                backgroundColor:
-                                                    COLORS.surface.glass,
-                                                backdropFilter:
-                                                    'blur(24px) saturate(180%)',
-                                                border: `1px solid ${COLORS.border.subtle}`,
-                                                borderRadius:
-                                                    SPACING.borderRadius.lg,
-                                                padding: '24px',
                                                 textDecoration: 'none',
                                                 cursor: 'pointer',
                                                 transition:
                                                     ANIMATIONS.transition
                                                         .normal,
-                                                boxShadow: COLORS.shadows.md,
                                                 position: 'relative',
                                                 overflow: 'hidden',
                                                 '&:hover': {
@@ -760,7 +731,7 @@ export default function Home() {
                                             >
                                                 {publication.description}
                                             </Typography>
-                                        </Box>
+                                        </GlassCard>
                                     </Fade>
                                 ))}
 
@@ -771,26 +742,17 @@ export default function Home() {
                                         timeout={1600 + (index + 2) * 200}
                                         key={project.title}
                                     >
-                                        <Box
+                                        <GlassCard
                                             component="a"
                                             href={project.url}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             sx={{
-                                                backgroundColor:
-                                                    COLORS.surface.glass,
-                                                backdropFilter:
-                                                    'blur(24px) saturate(180%)',
-                                                border: `1px solid ${COLORS.border.subtle}`,
-                                                borderRadius:
-                                                    SPACING.borderRadius.lg,
-                                                padding: '24px',
                                                 textDecoration: 'none',
                                                 cursor: 'pointer',
                                                 transition:
                                                     ANIMATIONS.transition
                                                         .normal,
-                                                boxShadow: COLORS.shadows.md,
                                                 position: 'relative',
                                                 overflow: 'hidden',
                                                 '&:hover': {
@@ -898,7 +860,7 @@ export default function Home() {
                                             >
                                                 {project.description}
                                             </Typography>
-                                        </Box>
+                                        </GlassCard>
                                     </Fade>
                                 ))}
                             </Box>
