@@ -484,7 +484,7 @@ const Oligopoly = () => {
                             }}
                         >
                             <Typography
-                                variant="h6"
+                                variant="body1"
                                 sx={{
                                     color: 'primary.light',
                                     fontWeight: TYPOGRAPHY.fontWeight.semibold,
