@@ -320,9 +320,9 @@ const Oligopoly = () => {
                     <Box
                         sx={{
                             padding: { xs: 1.5, sm: 2 },
-                            backgroundColor: COLORS.surface.subtle,
+                            backgroundColor: COLORS.surface.elevated,
                             borderRadius: SPACING.borderRadius.sm,
-                            border: COMPONENTS.borders.subtle,
+                            border: `1px solid ${COLORS.border.subtle}`,
                             marginBottom: 4,
                             width: '100%',
                             boxSizing: 'border-box',
@@ -409,8 +409,7 @@ const Oligopoly = () => {
                                             contentStyle={{
                                                 backgroundColor:
                                                     COMPONENTS.overlays.dark,
-                                                border: COMPONENTS.borders
-                                                    .primary,
+                                                border: `1px solid ${COLORS.border.primary}`,
                                                 borderRadius:
                                                     SPACING.borderRadius.lg,
                                                 color: COLORS.text.primary,
@@ -423,13 +422,13 @@ const Oligopoly = () => {
                                             yAxisId="left"
                                             type="monotone"
                                             dataKey="price"
-                                            stroke={COLORS.data.blue}
+                                            stroke={COLORS.primary.main}
                                             strokeWidth={
                                                 CHART_DIMENSIONS.strokeWidth
                                             }
                                             name="Market Price"
                                             dot={{
-                                                fill: COLORS.data.blue,
+                                                fill: COLORS.primary.main,
                                                 strokeWidth:
                                                     CHART_FORMATTING.lines
                                                         .defaultStrokeWidth,
@@ -463,9 +462,9 @@ const Oligopoly = () => {
                     <Box
                         sx={{
                             padding: { xs: 1.5, sm: 2 },
-                            backgroundColor: COLORS.surface.subtle,
+                            backgroundColor: COLORS.surface.elevated,
                             borderRadius: SPACING.borderRadius.sm,
-                            border: COMPONENTS.borders.subtle,
+                            border: `1px solid ${COLORS.border.subtle}`,
                             marginBottom: 4,
                             width: '100%',
                             boxSizing: 'border-box',

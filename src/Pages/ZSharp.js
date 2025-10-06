@@ -309,9 +309,9 @@ const ZSharp = () => {
                     <Box
                         sx={{
                             padding: { xs: 1.5, sm: 2 },
-                            backgroundColor: COLORS.surface.subtle,
+                            backgroundColor: COLORS.surface.elevated,
                             borderRadius: SPACING.borderRadius.sm,
-                            border: COMPONENTS.borders.subtle,
+                            border: `1px solid ${COLORS.border.subtle}`,
                             marginBottom: 4,
                             width: '100%',
                             boxSizing: 'border-box',
@@ -429,8 +429,7 @@ const ZSharp = () => {
                                             contentStyle={{
                                                 backgroundColor:
                                                     COMPONENTS.overlays.dark,
-                                                border: COMPONENTS.borders
-                                                    .primary,
+                                                border: `1px solid ${COLORS.border.primary}`,
                                                 borderRadius:
                                                     SPACING.borderRadius.lg,
                                                 color: COLORS.text.primary,
@@ -456,13 +455,14 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="sgd"
-                                                    stroke={COLORS.data.blue}
+                                                    stroke={COLORS.primary.main}
                                                     strokeWidth={
                                                         CHART_DIMENSIONS.strokeWidth
                                                     }
                                                     name="SGD"
                                                     dot={{
-                                                        fill: COLORS.data.blue,
+                                                        fill: COLORS.primary
+                                                            .main,
                                                         strokeWidth: 2,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
@@ -488,13 +488,14 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="sgd"
-                                                    stroke={COLORS.data.blue}
+                                                    stroke={COLORS.primary.main}
                                                     strokeWidth={
                                                         CHART_DIMENSIONS.strokeWidth
                                                     }
                                                     name="SGD Loss"
                                                     dot={{
-                                                        fill: COLORS.data.blue,
+                                                        fill: COLORS.primary
+                                                            .main,
                                                         strokeWidth: 2,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
@@ -552,13 +553,14 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="sgd"
-                                                    stroke={COLORS.data.blue}
+                                                    stroke={COLORS.primary.main}
                                                     strokeWidth={
                                                         CHART_DIMENSIONS.strokeWidth
                                                     }
                                                     name="SGD Rate"
                                                     dot={{
-                                                        fill: COLORS.data.blue,
+                                                        fill: COLORS.primary
+                                                            .main,
                                                         strokeWidth: 2,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
