@@ -611,11 +611,7 @@ const ZSharp = () => {
                         }}
                     >
                         <Button
-                            variant={
-                                viewType === 'accuracy'
-                                    ? 'contained'
-                                    : 'outlined'
-                            }
+                            variant="outlined"
                             size="small"
                             onClick={() => setViewType('accuracy')}
                             sx={{
@@ -623,19 +619,27 @@ const ZSharp = () => {
                                     viewType === 'accuracy'
                                         ? COLORS.text.white
                                         : COLORS.text.secondary,
+                                backgroundColor:
+                                    viewType === 'accuracy'
+                                        ? COLORS.primary.main
+                                        : 'transparent',
                                 borderColor: COLORS.border.primary,
+                                borderWidth: '1px',
+                                borderStyle: 'solid',
+                                minHeight: '36px',
                                 '&:hover': {
                                     borderColor: COLORS.border.interactive,
-                                    backgroundColor: COLORS.interactive.hover,
+                                    backgroundColor:
+                                        viewType === 'accuracy'
+                                            ? COLORS.primary.dark
+                                            : COLORS.interactive.hover,
                                 },
                             }}
                         >
                             Accuracy
                         </Button>
                         <Button
-                            variant={
-                                viewType === 'loss' ? 'contained' : 'outlined'
-                            }
+                            variant="outlined"
                             size="small"
                             onClick={() => setViewType('loss')}
                             sx={{
@@ -643,21 +647,27 @@ const ZSharp = () => {
                                     viewType === 'loss'
                                         ? COLORS.text.white
                                         : COLORS.text.secondary,
+                                backgroundColor:
+                                    viewType === 'loss'
+                                        ? COLORS.primary.main
+                                        : 'transparent',
                                 borderColor: COLORS.border.primary,
+                                borderWidth: '1px',
+                                borderStyle: 'solid',
+                                minHeight: '36px',
                                 '&:hover': {
                                     borderColor: COLORS.border.interactive,
-                                    backgroundColor: COLORS.interactive.hover,
+                                    backgroundColor:
+                                        viewType === 'loss'
+                                            ? COLORS.primary.dark
+                                            : COLORS.interactive.hover,
                                 },
                             }}
                         >
                             Loss
                         </Button>
                         <Button
-                            variant={
-                                viewType === 'learning_curve'
-                                    ? 'contained'
-                                    : 'outlined'
-                            }
+                            variant="outlined"
                             size="small"
                             onClick={() => setViewType('learning_curve')}
                             sx={{
@@ -665,21 +675,27 @@ const ZSharp = () => {
                                     viewType === 'learning_curve'
                                         ? COLORS.text.white
                                         : COLORS.text.secondary,
+                                backgroundColor:
+                                    viewType === 'learning_curve'
+                                        ? COLORS.primary.main
+                                        : 'transparent',
                                 borderColor: COLORS.border.primary,
+                                borderWidth: '1px',
+                                borderStyle: 'solid',
+                                minHeight: '36px',
                                 '&:hover': {
                                     borderColor: COLORS.border.interactive,
-                                    backgroundColor: COLORS.interactive.hover,
+                                    backgroundColor:
+                                        viewType === 'learning_curve'
+                                            ? COLORS.primary.dark
+                                            : COLORS.interactive.hover,
                                 },
                             }}
                         >
                             Learning Gap
                         </Button>
                         <Button
-                            variant={
-                                viewType === 'convergence'
-                                    ? 'contained'
-                                    : 'outlined'
-                            }
+                            variant="outlined"
                             size="small"
                             onClick={() => setViewType('convergence')}
                             sx={{
@@ -687,10 +703,20 @@ const ZSharp = () => {
                                     viewType === 'convergence'
                                         ? COLORS.text.white
                                         : COLORS.text.secondary,
+                                backgroundColor:
+                                    viewType === 'convergence'
+                                        ? COLORS.primary.main
+                                        : 'transparent',
                                 borderColor: COLORS.border.primary,
+                                borderWidth: '1px',
+                                borderStyle: 'solid',
+                                minHeight: '36px',
                                 '&:hover': {
                                     borderColor: COLORS.border.interactive,
-                                    backgroundColor: COLORS.interactive.hover,
+                                    backgroundColor:
+                                        viewType === 'convergence'
+                                            ? COLORS.primary.dark
+                                            : COLORS.interactive.hover,
                                 },
                             }}
                         >
