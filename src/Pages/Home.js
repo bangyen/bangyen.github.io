@@ -1,8 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Grid from '@mui/material/Grid2';
+import {
+    Grid,
+    Typography,
+    Box,
+    Menu,
+    MenuItem,
+    Fade,
+    Button,
+} from '../components/mui';
 
-import { TooltipButton } from '../helpers';
+import { TooltipButton, GlassCard, ICON_MAP } from '../helpers';
+import { Section, HeroContainer } from '../components/Layout';
 import { pages } from './';
 import {
     PERSONAL_INFO,
@@ -12,47 +21,34 @@ import {
     PROJECTS,
     PAGE_TITLES,
 } from '../config/constants';
-import { COLORS, SPACING, TYPOGRAPHY, ANIMATIONS } from '../config/theme';
-import { COMPONENTS } from '../config/components';
+import {
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+    ANIMATIONS,
+    COMPONENT_VARIANTS,
+} from '../config/theme';
 
 import {
     MenuRounded,
     GitHub,
-    Code,
-    Cloud,
-    Psychology,
     Work,
     LocationOn,
     OpenInNew,
     ArrowForward,
-} from '@mui/icons-material';
-
-import {
-    Typography,
-    Box,
-    Menu,
-    MenuItem,
-    Fade,
-    Container,
-} from '@mui/material';
+} from '../components/icons';
 
 function dropdown(name, routes) {
-    const padHeight = COMPONENTS.menu.padding.vertical;
-    const padWidth = COMPONENTS.menu.padding.horizontal;
-
     return (
         <Box>
             {Object.entries(routes).map(([routeName, routePath]) => (
                 <MenuItem
                     sx={{
-                        paddingBottom: padHeight,
-                        paddingTop: padHeight,
-                        paddingLeft: padWidth,
-                        paddingRight: padWidth,
+                        padding: '12px 16px',
                         borderRadius: SPACING.borderRadius.md,
                         margin: '0.25rem 0.5rem',
-                        transition: ANIMATIONS.transitions.fast,
-                        '&:hover': ANIMATIONS.hover.modern,
+                        transition: ANIMATIONS.transition,
+                        '&:hover': ANIMATIONS.presets.interactiveHover,
                     }}
                     key={routeName}
                     component={Link}
@@ -61,7 +57,7 @@ function dropdown(name, routes) {
                     <Typography
                         sx={{
                             fontWeight: TYPOGRAPHY.fontWeight.medium,
-                            fontSize: TYPOGRAPHY.fontSize.sm.body,
+                            fontSize: TYPOGRAPHY.fontSize.body,
                             color: COLORS.text.primary,
                         }}
                     >
@@ -114,14 +110,19 @@ function MenuButton({ children }) {
                     marginLeft: 1,
                     marginTop: 1,
                     '& .MuiPaper-root': {
-                        ...COMPONENTS.menu,
-                        boxShadow: COLORS.shadows.lg,
+                        height: 'fit-content',
+                        minHeight: 'auto',
+                        maxHeight: 'fit-content',
                     },
                 }}
                 onClose={handleClose}
                 MenuListProps={{
                     'aria-labelledby': 'basic-button',
-                    sx: { padding: 1 },
+                    sx: {
+                        padding: 0,
+                        height: 'fit-content',
+                        minHeight: 'auto',
+                    },
                 }}
             >
                 {children}
@@ -156,11 +157,7 @@ export default function Home() {
                     top: 0,
                     left: 0,
                     right: 0,
-                    padding: {
-                        xs: SPACING.padding.xs, // Smaller padding on mobile
-                        sm: SPACING.padding.sm,
-                        md: SPACING.padding.md,
-                    },
+                    padding: SPACING.responsive.padding,
                     zIndex: 1000,
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -180,44 +177,28 @@ export default function Home() {
                 />
             </Box>
 
-            {/* Hero Section */}
-            <Container
-                maxWidth={false}
+            {/* Spacing between nav and hero */}
+            <Box
                 sx={{
-                    flex: 1,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    paddingTop: 0, // No gap needed with relative nav
-                    paddingBottom: '4rem',
-                    paddingX: {
-                        xs: SPACING.padding.xs, // Smaller padding on mobile
-                        sm: SPACING.padding.sm,
-                        md: SPACING.padding.md,
-                    },
-                    maxWidth: '100%', // Prevent container from exceeding viewport
-                    overflowX: 'hidden', // Hide any horizontal overflow
+                    height: SPACING.responsive.margin,
                 }}
-            >
-                <Grid
-                    container
-                    spacing={SPACING.layout.containerSpacing}
-                    alignItems="center"
-                    sx={{ maxWidth: SPACING.maxWidth.lg }}
-                >
+            />
+
+            {/* Hero Section */}
+            <HeroContainer>
+                <Grid container spacing={{ xs: 4, md: 8 }} alignItems="center">
                     {/* Left Side - Introduction */}
                     <Grid size={{ xs: 12, md: 6 }}>
                         <Fade in timeout={800}>
                             <Box>
                                 <Typography
                                     sx={{
-                                        color: COLORS.text.accent,
-                                        fontSize: TYPOGRAPHY.fontSize.md.body,
+                                        color: COLORS.primary.main,
+                                        fontSize: TYPOGRAPHY.fontSize.body,
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.semibold,
                                         textTransform: 'uppercase',
-                                        letterSpacing:
-                                            TYPOGRAPHY.letterSpacing.wider,
+                                        letterSpacing: '0.025em',
                                         marginBottom: 3,
                                     }}
                                 >
@@ -227,16 +208,15 @@ export default function Home() {
                                 <Typography
                                     sx={{
                                         color: COLORS.text.primary,
-                                        fontWeight:
-                                            TYPOGRAPHY.fontWeight.extrabold,
+                                        fontWeight: TYPOGRAPHY.fontWeight.bold,
                                         fontSize: {
-                                            xs: 'clamp(2rem, 8vw, 2.5rem)', // Smaller on mobile, prevents wrapping under 500px
-                                            sm: 'clamp(2.5rem, 7vw, 3.5rem)', // Medium sizing
-                                            md: 'clamp(3rem, 6vw, 5rem)', // Large sizing
+                                            xs: 'clamp(2rem, 8vw, 2.5rem)', // Mobile sizing
+                                            md: 'clamp(3rem, 6vw, 5rem)', // Desktop sizing
                                         },
-                                        lineHeight: TYPOGRAPHY.lineHeight.tight,
+                                        lineHeight:
+                                            TYPOGRAPHY.lineHeight.normal,
                                         letterSpacing:
-                                            TYPOGRAPHY.letterSpacing.tight,
+                                            TYPOGRAPHY.letterSpacing.normal,
                                         marginBottom: 2,
                                         // Allow controlled wrapping, but prevent breaks in names
                                         wordBreak: 'keep-all', // Prevent breaking within words
@@ -250,9 +230,8 @@ export default function Home() {
                                     sx={{
                                         color: COLORS.text.secondary,
                                         fontSize: {
-                                            xs: 'clamp(0.875rem, 4vw, 1.125rem)', // Prevents wrapping under 400px
-                                            sm: 'clamp(1rem, 3vw, 1.25rem)', // Medium sizing, prevents wrapping between 900-1200px
-                                            md: 'clamp(1.125rem, 2.5vw, 1.5rem)', // Large sizing
+                                            xs: 'clamp(0.875rem, 4vw, 1.125rem)', // Mobile sizing
+                                            md: 'clamp(1.125rem, 2.5vw, 1.5rem)', // Desktop sizing
                                         },
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.semibold,
@@ -277,15 +256,14 @@ export default function Home() {
                                 >
                                     <LocationOn
                                         sx={{
-                                            color: COLORS.text.muted,
+                                            color: COLORS.text.secondary,
                                             fontSize: '1.25rem',
                                         }}
                                     />
                                     <Typography
                                         sx={{
-                                            color: COLORS.text.muted,
-                                            fontSize:
-                                                TYPOGRAPHY.fontSize.md.body,
+                                            color: COLORS.text.secondary,
+                                            fontSize: TYPOGRAPHY.fontSize.body,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.medium,
                                         }}
@@ -319,34 +297,32 @@ export default function Home() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             gap: 1,
-                                            padding:
-                                                SPACING.components.medium
-                                                    .padding,
+                                            padding: '12px 20px',
                                             backgroundColor:
                                                 COLORS.interactive.selected,
                                             borderRadius:
                                                 SPACING.borderRadius.full,
-                                            transition:
-                                                ANIMATIONS.transitions.normal,
+                                            transition: ANIMATIONS.transition,
                                             cursor: 'pointer',
-                                            '&:hover': ANIMATIONS.hover.modern,
+                                            '&:hover':
+                                                ANIMATIONS.presets.scaleHover,
                                         }}
                                     >
                                         <Typography
                                             sx={{
-                                                color: COLORS.text.accent,
+                                                color: COLORS.primary.main,
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
                                                         .semibold,
                                                 fontSize:
-                                                    TYPOGRAPHY.fontSize.sm.body,
+                                                    TYPOGRAPHY.fontSize.body,
                                             }}
                                         >
                                             View Work
                                         </Typography>
                                         <ArrowForward
                                             sx={{
-                                                color: COLORS.text.accent,
+                                                color: COLORS.primary.main,
                                                 fontSize: '1rem',
                                             }}
                                         />
@@ -367,22 +343,12 @@ export default function Home() {
                                 }}
                             >
                                 {/* Compact Skills Section */}
-                                <Box
-                                    sx={{
-                                        backgroundColor: COLORS.surface.glass,
-                                        backdropFilter:
-                                            COMPONENTS.menu.backdropFilter,
-                                        border: COMPONENTS.menu.border,
-                                        borderRadius: SPACING.borderRadius.xl,
-                                        padding:
-                                            SPACING.components.card.padding,
-                                        boxShadow: COLORS.shadows.md,
-                                    }}
-                                >
+                                <GlassCard>
                                     <Typography
                                         sx={{
-                                            color: COLORS.text.accent,
-                                            fontSize: TYPOGRAPHY.fontSize.md.h5,
+                                            color: COLORS.primary.main,
+                                            fontSize:
+                                                TYPOGRAPHY.fontSize.subheading,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
                                             marginBottom: 3,
@@ -397,26 +363,18 @@ export default function Home() {
                                             display: 'grid',
                                             gridTemplateColumns: {
                                                 xs: '1fr', // Single column on mobile
-                                                sm: 'repeat(2, 1fr)', // 2 columns on small screens and up
-                                                md: 'repeat(3, 1fr)', // 3 columns on medium screens and up
+                                                md: 'repeat(3, 1fr)', // 3 columns on desktop
                                             },
                                             gap: {
                                                 xs: 1.5, // Smaller gap on mobile
-                                                sm: 2,
+                                                md: 2,
                                             },
                                             marginBottom: 3,
                                         }}
                                     >
                                         {SKILLS.map((skill, index) => {
                                             const IconComponent =
-                                                skill.icon === 'Code'
-                                                    ? Code
-                                                    : skill.icon ===
-                                                        'Psychology'
-                                                      ? Psychology
-                                                      : skill.icon === 'Cloud'
-                                                        ? Cloud
-                                                        : Work;
+                                                ICON_MAP[skill.icon] || Work;
 
                                             return (
                                                 <Fade
@@ -436,67 +394,50 @@ export default function Home() {
                                                                     .borderRadius
                                                                     .md,
                                                             padding: {
-                                                                xs: '12px', // Smaller padding on mobile
-                                                                sm: '16px',
+                                                                xs: '12px',
+                                                                md: '16px',
                                                             },
                                                             display: 'flex',
                                                             alignItems:
                                                                 'center',
                                                             gap: {
-                                                                xs: 1, // Smaller gap on mobile
-                                                                sm: 1.5,
+                                                                xs: 1,
+                                                                md: 1.5,
                                                             },
                                                             transition:
-                                                                ANIMATIONS
-                                                                    .transitions
-                                                                    .normal,
+                                                                ANIMATIONS.transition,
                                                             cursor: 'pointer',
-                                                            minWidth: 0, // Allow shrinking
-                                                            overflow: 'hidden', // Prevent text overflow
+                                                            minWidth: 0,
+                                                            overflow: 'hidden',
                                                             '&:hover': {
-                                                                backgroundColor:
-                                                                    COLORS
-                                                                        .interactive
-                                                                        .pressed,
+                                                                ...ANIMATIONS
+                                                                    .presets
+                                                                    .cardHover,
                                                                 transform:
-                                                                    ANIMATIONS
-                                                                        .hover
-                                                                        .lift
-                                                                        .transform,
-                                                                boxShadow:
-                                                                    COLORS
-                                                                        .shadows
-                                                                        .md,
+                                                                    'translateY(-2px) scale(1.01)',
                                                             },
                                                         }}
                                                     >
                                                         <IconComponent
                                                             sx={{
                                                                 color: COLORS
-                                                                    .text
-                                                                    .accent,
+                                                                    .primary
+                                                                    .main,
                                                                 fontSize:
                                                                     TYPOGRAPHY
                                                                         .fontSize
-                                                                        .sm
                                                                         .body,
                                                             }}
                                                         />
                                                         <Typography
                                                             sx={{
                                                                 color: COLORS
-                                                                    .text
-                                                                    .accent,
-                                                                fontSize: {
-                                                                    xs: TYPOGRAPHY
+                                                                    .primary
+                                                                    .main,
+                                                                fontSize:
+                                                                    TYPOGRAPHY
                                                                         .fontSize
-                                                                        .xs
-                                                                        .body, // Smaller on mobile
-                                                                    sm: TYPOGRAPHY
-                                                                        .fontSize
-                                                                        .sm
                                                                         .body,
-                                                                },
                                                                 fontWeight:
                                                                     TYPOGRAPHY
                                                                         .fontWeight
@@ -517,25 +458,15 @@ export default function Home() {
                                             );
                                         })}
                                     </Box>
-                                </Box>
+                                </GlassCard>
 
                                 {/* Contact & Action Section */}
-                                <Box
-                                    sx={{
-                                        backgroundColor: COLORS.surface.glass,
-                                        backdropFilter:
-                                            COMPONENTS.menu.backdropFilter,
-                                        border: COMPONENTS.menu.border,
-                                        borderRadius: SPACING.borderRadius.xl,
-                                        padding:
-                                            SPACING.components.card.padding,
-                                        boxShadow: COLORS.shadows.md,
-                                    }}
-                                >
+                                <GlassCard>
                                     <Typography
                                         sx={{
-                                            color: COLORS.text.accent,
-                                            fontSize: TYPOGRAPHY.fontSize.md.h5,
+                                            color: COLORS.primary.main,
+                                            fontSize:
+                                                TYPOGRAPHY.fontSize.subheading,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
                                             marginBottom: 3,
@@ -547,10 +478,8 @@ export default function Home() {
                                     <Typography
                                         sx={{
                                             color: COLORS.text.secondary,
-                                            fontSize:
-                                                TYPOGRAPHY.fontSize.md.body,
-                                            lineHeight:
-                                                TYPOGRAPHY.lineHeight.relaxed,
+                                            fontSize: TYPOGRAPHY.fontSize.body,
+                                            lineHeight: 1.5,
                                             marginBottom: 4,
                                         }}
                                     >
@@ -566,149 +495,91 @@ export default function Home() {
                                             gap: 2,
                                         }}
                                     >
-                                        <Box
+                                        <Button
                                             component="a"
                                             href={URLS.githubProfile}
                                             target="_blank"
                                             rel="noopener noreferrer"
+                                            variant="secondary"
+                                            startIcon={<GitHub />}
                                             sx={{
-                                                ...COMPONENTS.button.secondary,
                                                 textDecoration: 'none',
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: 1,
                                             }}
                                         >
-                                            <GitHub
-                                                sx={{ fontSize: '1.25rem' }}
-                                            />
-                                            <Typography
-                                                sx={{
-                                                    fontWeight:
-                                                        TYPOGRAPHY.fontWeight
-                                                            .semibold,
-                                                }}
-                                            >
-                                                View GitHub
-                                            </Typography>
-                                        </Box>
+                                            View GitHub
+                                        </Button>
 
-                                        <Box
+                                        <Button
                                             component="a"
                                             href="mailto:bangyenp@gmail.com?subject=Project%20Collaboration"
+                                            variant="ghost"
+                                            endIcon={<ArrowForward />}
                                             sx={{
-                                                ...COMPONENTS.button.ghost,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: 1,
                                                 textDecoration: 'none',
                                             }}
                                         >
-                                            <Typography
-                                                sx={{
-                                                    fontWeight:
-                                                        TYPOGRAPHY.fontWeight
-                                                            .semibold,
-                                                }}
-                                            >
-                                                Available for Projects
-                                            </Typography>
-                                            <ArrowForward
-                                                sx={{ fontSize: '1rem' }}
-                                            />
-                                        </Box>
+                                            Available for Projects
+                                        </Button>
                                     </Box>
-                                </Box>
+                                </GlassCard>
                             </Box>
                         </Fade>
                     </Grid>
                 </Grid>
-            </Container>
+            </HeroContainer>
 
             {/* Featured Work Section */}
-            <Container
-                maxWidth={false}
-                sx={{
-                    paddingY: SPACING.margin.section,
-                    paddingX: SPACING.padding.md,
-                }}
-            >
-                <Box sx={{ maxWidth: SPACING.maxWidth.lg, margin: '0 auto' }}>
-                    <Fade in timeout={1400}>
-                        <Box
-                            id="featured-work"
-                            className="featured-work-section"
+            <Section id="featured-work">
+                <Fade in timeout={1400}>
+                    <Box>
+                        <Typography
+                            sx={{
+                                color: COLORS.text.primary,
+                                fontSize: TYPOGRAPHY.fontSize.h2,
+                                fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                                textAlign: 'center',
+                                marginBottom: 6,
+                            }}
                         >
-                            <Typography
-                                sx={{
-                                    color: COLORS.text.primary,
-                                    fontSize: TYPOGRAPHY.fontSize.lg.h3,
-                                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                                    textAlign: 'center',
-                                    marginBottom: 6,
-                                }}
-                            >
-                                Featured Work
-                            </Typography>
+                            Featured Work
+                        </Typography>
 
-                            <Box
-                                sx={{
-                                    display: 'grid',
-                                    gridTemplateColumns: {
-                                        xs: '1fr',
-                                        md: 'repeat(2, 1fr)',
-                                        lg: 'repeat(2, 1fr)', // Changed from 3 to 2 columns
-                                    },
-                                    gap: 4,
-                                }}
-                            >
-                                {/* Publications */}
-                                {PUBLICATIONS.map((publication, index) => (
-                                    <Fade
-                                        in
-                                        timeout={1600 + index * 200}
-                                        key={publication.title}
-                                    >
-                                        <Box
-                                            component="a"
-                                            href={publication.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            sx={{
+                        <Box
+                            sx={{
+                                display: 'grid',
+                                gridTemplateColumns: {
+                                    xs: '1fr',
+                                    md: 'repeat(2, 1fr)',
+                                },
+                                gap: 4,
+                            }}
+                        >
+                            {/* Publications */}
+                            {PUBLICATIONS.map((publication, index) => (
+                                <Fade
+                                    in
+                                    timeout={1600 + index * 200}
+                                    key={publication.title}
+                                >
+                                    <Box
+                                        component="a"
+                                        href={publication.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        sx={{
+                                            textDecoration: 'none',
+                                            position: 'relative',
+                                            overflow: 'hidden',
+                                            height: '100%',
+                                            display: 'flex',
+                                            ...COMPONENT_VARIANTS.card,
+                                            '&:hover .glass-card': {
                                                 backgroundColor:
-                                                    COLORS.surface.glass,
-                                                backdropFilter:
-                                                    COMPONENTS.menu
-                                                        .backdropFilter,
-                                                border: COMPONENTS.menu.border,
-                                                borderRadius:
-                                                    SPACING.borderRadius.xl,
-                                                padding:
-                                                    SPACING.components.card
-                                                        .padding,
-                                                textDecoration: 'none',
-                                                cursor: 'pointer',
-                                                transition:
-                                                    ANIMATIONS.transitions
-                                                        .normal,
-                                                boxShadow: COLORS.shadows.md,
-                                                position: 'relative',
-                                                overflow: 'hidden',
-                                                '&:hover': {
-                                                    transform:
-                                                        'translateY(-2px)',
-                                                    boxShadow:
-                                                        COLORS.shadows.lg,
-                                                    backgroundColor:
-                                                        COLORS.interactive
-                                                            .selected,
-                                                },
-                                                '&:focus':
-                                                    ANIMATIONS.focus.ring,
-                                            }}
-                                        >
+                                                    COLORS.interactive.selected,
+                                            },
+                                        }}
+                                    >
+                                        <GlassCard>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -720,11 +591,11 @@ export default function Home() {
                                             >
                                                 <Typography
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .accent,
+                                                        color: COLORS.primary
+                                                            .main,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .xs.caption,
+                                                                .caption,
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
@@ -741,8 +612,8 @@ export default function Home() {
                                                 </Typography>
                                                 <OpenInNew
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .accent,
+                                                        color: COLORS.primary
+                                                            .main,
                                                     }}
                                                 />
                                             </Box>
@@ -754,8 +625,8 @@ export default function Home() {
                                                         TYPOGRAPHY.fontWeight
                                                             .semibold,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.md
-                                                            .h4,
+                                                        TYPOGRAPHY.fontSize
+                                                            .subheading,
                                                     lineHeight:
                                                         TYPOGRAPHY.lineHeight
                                                             .normal,
@@ -768,13 +639,20 @@ export default function Home() {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
-                                                        ...COMPONENTS.badge
-                                                            .primary,
+                                                        borderRadius: '20px',
+                                                        fontSize:
+                                                            'clamp(0.7rem, 0.8vw, 0.75rem)',
+                                                        fontWeight: 500,
+                                                        padding: '4px 12px',
+                                                        minHeight: '24px',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        transition:
+                                                            'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
                                                         backgroundColor:
-                                                            'hsla(141, 64%, 49%, 0.1)', // 10% opacity
-                                                        color: COLORS.accent
-                                                            .success,
-                                                        border: '1px solid hsla(141, 64%, 49%, 0.2)', // 20% opacity
+                                                            'hsla(141, 64%, 49%, 0.1)',
+                                                        color: 'hsl(141, 64%, 49%)',
+                                                        border: '1px solid hsla(141, 64%, 49%, 0.2)',
                                                     }}
                                                 >
                                                     {publication.conference}
@@ -786,64 +664,47 @@ export default function Home() {
                                                     color: COLORS.text
                                                         .secondary,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.md
+                                                        TYPOGRAPHY.fontSize
                                                             .body,
                                                     lineHeight:
                                                         TYPOGRAPHY.lineHeight
                                                             .relaxed,
+                                                    flex: 1,
                                                 }}
                                             >
                                                 {publication.description}
                                             </Typography>
-                                        </Box>
-                                    </Fade>
-                                ))}
+                                        </GlassCard>
+                                    </Box>
+                                </Fade>
+                            ))}
 
-                                {/* Projects */}
-                                {PROJECTS.map((project, index) => (
-                                    <Fade
-                                        in
-                                        timeout={1600 + (index + 2) * 200}
-                                        key={project.title}
-                                    >
-                                        <Box
-                                            component="a"
-                                            href={project.url}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            sx={{
+                            {/* Projects */}
+                            {PROJECTS.map((project, index) => (
+                                <Fade
+                                    in
+                                    timeout={1600 + (index + 2) * 200}
+                                    key={project.title}
+                                >
+                                    <Box
+                                        component="a"
+                                        href={project.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        sx={{
+                                            textDecoration: 'none',
+                                            position: 'relative',
+                                            overflow: 'hidden',
+                                            height: '100%',
+                                            display: 'flex',
+                                            ...COMPONENT_VARIANTS.card,
+                                            '&:hover .glass-card': {
                                                 backgroundColor:
-                                                    COLORS.surface.glass,
-                                                backdropFilter:
-                                                    COMPONENTS.menu
-                                                        .backdropFilter,
-                                                border: COMPONENTS.menu.border,
-                                                borderRadius:
-                                                    SPACING.borderRadius.xl,
-                                                padding:
-                                                    SPACING.components.card
-                                                        .padding,
-                                                textDecoration: 'none',
-                                                cursor: 'pointer',
-                                                transition:
-                                                    ANIMATIONS.transitions
-                                                        .normal,
-                                                boxShadow: COLORS.shadows.md,
-                                                position: 'relative',
-                                                overflow: 'hidden',
-                                                '&:hover': {
-                                                    transform:
-                                                        'translateY(-2px)',
-                                                    boxShadow:
-                                                        COLORS.shadows.lg,
-                                                    backgroundColor:
-                                                        COLORS.interactive
-                                                            .selected,
-                                                },
-                                                '&:focus':
-                                                    ANIMATIONS.focus.ring,
-                                            }}
-                                        >
+                                                    COLORS.interactive.selected,
+                                            },
+                                        }}
+                                    >
+                                        <GlassCard>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -855,11 +716,11 @@ export default function Home() {
                                             >
                                                 <Typography
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .accent,
+                                                        color: COLORS.primary
+                                                            .main,
                                                         fontSize:
                                                             TYPOGRAPHY.fontSize
-                                                                .xs.caption,
+                                                                .caption,
                                                         fontWeight:
                                                             TYPOGRAPHY
                                                                 .fontWeight
@@ -876,8 +737,8 @@ export default function Home() {
                                                 </Typography>
                                                 <GitHub
                                                     sx={{
-                                                        color: COLORS.text
-                                                            .accent,
+                                                        color: COLORS.primary
+                                                            .main,
                                                     }}
                                                 />
                                             </Box>
@@ -889,8 +750,8 @@ export default function Home() {
                                                         TYPOGRAPHY.fontWeight
                                                             .semibold,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.md
-                                                            .h4,
+                                                        TYPOGRAPHY.fontSize
+                                                            .subheading,
                                                     lineHeight:
                                                         TYPOGRAPHY.lineHeight
                                                             .normal,
@@ -903,8 +764,20 @@ export default function Home() {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
-                                                        ...COMPONENTS.badge
-                                                            .primary,
+                                                        borderRadius: '20px',
+                                                        fontSize:
+                                                            'clamp(0.7rem, 0.8vw, 0.75rem)',
+                                                        fontWeight: 500,
+                                                        padding: '4px 12px',
+                                                        minHeight: '24px',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        transition:
+                                                            'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                                        backgroundColor:
+                                                            'hsla(217, 91%, 60%, 0.1)',
+                                                        color: 'hsl(217, 91%, 60%)',
+                                                        border: '1px solid hsla(217, 91%, 60%, 0.2)',
                                                     }}
                                                 >
                                                     {project.technology}
@@ -916,23 +789,31 @@ export default function Home() {
                                                     color: COLORS.text
                                                         .secondary,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.md
+                                                        TYPOGRAPHY.fontSize
                                                             .body,
                                                     lineHeight:
                                                         TYPOGRAPHY.lineHeight
                                                             .relaxed,
+                                                    flex: 1,
                                                 }}
                                             >
                                                 {project.description}
                                             </Typography>
-                                        </Box>
-                                    </Fade>
-                                ))}
-                            </Box>
+                                        </GlassCard>
+                                    </Box>
+                                </Fade>
+                            ))}
                         </Box>
-                    </Fade>
-                </Box>
-            </Container>
+                    </Box>
+                </Fade>
+            </Section>
+
+            {/* Bottom spacing */}
+            <Box
+                sx={{
+                    height: SPACING.responsive.margin,
+                }}
+            />
         </Grid>
     );
 }

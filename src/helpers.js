@@ -1,10 +1,9 @@
-import { Tooltip, IconButton, Paper, Box } from '@mui/material';
-import { useState, useCallback } from 'react';
-import Grid from '@mui/material/Grid2';
+import { Tooltip, IconButton, Paper, Box, Grid } from './components/mui';
+import { useState, useCallback, forwardRef } from 'react';
+
 import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
-import { SPACING, TYPOGRAPHY, ANIMATIONS } from './config/theme';
-import { COMPONENTS } from './config/components';
+import { TYPOGRAPHY, ANIMATIONS, COMPONENT_VARIANTS } from './config/theme';
 
 import {
     HomeRounded,
@@ -14,7 +13,22 @@ import {
     KeyboardArrowDownRounded,
     KeyboardArrowLeftRounded,
     KeyboardArrowRightRounded,
-} from '@mui/icons-material';
+    Code,
+    Psychology,
+    Cloud,
+    Work,
+} from './components/icons';
+
+/**
+ * Icon mapping utility to eliminate repetitive icon selection logic
+ * Maps skill icon names to their corresponding Material-UI icon components
+ */
+export const ICON_MAP = {
+    Code: Code,
+    Psychology: Psychology,
+    Cloud: Cloud,
+    Work: Work,
+};
 
 /**
  * TooltipButton component provides accessible icon buttons with tooltips
@@ -57,9 +71,7 @@ function Cell({ size, children, ...rest }) {
     const radius = `${size / 4}rem`;
 
     const props = {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        ...COMPONENT_VARIANTS.flexCenter,
         borderRadius: radius,
         height: remSize,
         width: remSize,
@@ -145,12 +157,15 @@ export function Navigation({ children, ...rest }) {
             sx={{
                 transform: 'translateX(-50%)',
                 position: 'absolute',
-                borderRadius: SPACING.borderRadius.medium,
-                padding: 2,
                 bottom: 50,
                 left: '50%',
                 zIndex: 10,
-                ...COMPONENTS.navigation,
+                backgroundColor: 'hsla(0, 0%, 3%, 0.95)',
+                backdropFilter: 'blur(24px) saturate(180%)',
+                border: '1px solid hsl(0, 0%, 18%)',
+                borderRadius: '16px',
+                boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.35)',
+                padding: '16px 24px',
                 ...rest,
             }}
         >
@@ -158,10 +173,8 @@ export function Navigation({ children, ...rest }) {
                 container
                 spacing={2}
                 sx={{
-                    display: 'flex',
+                    ...COMPONENT_VARIANTS.flexCenter,
                     flexWrap: 'nowrap',
-                    justifyContent: 'center',
-                    alignItems: 'center',
                     minWidth: 0, // Allow shrinking on mobile
                 }}
             >
@@ -246,3 +259,29 @@ function Arrows({ show, setShow, handler }) {
         </Grid>
     );
 }
+
+/**
+ * GlassCard component provides a consistent glassmorphism container
+ * with backdrop blur, subtle borders, and elevation shadows.
+ * Replaces repetitive glass container styling across components.
+ * Uses forwardRef to support Material-UI transitions like Fade.
+ */
+export const GlassCard = forwardRef(function GlassCard(
+    { children, padding = '24px', sx, className, ...props },
+    ref
+) {
+    return (
+        <Box
+            ref={ref}
+            className={`glass-card ${className || ''}`}
+            sx={{
+                ...COMPONENT_VARIANTS.card,
+                padding,
+                ...sx,
+            }}
+            {...props}
+        >
+            {children}
+        </Box>
+    );
+});

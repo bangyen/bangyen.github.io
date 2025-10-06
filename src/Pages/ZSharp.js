@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, IconButton, Button } from '@mui/material';
-import Grid from '@mui/material/Grid2';
-import { GitHub, Home } from '@mui/icons-material';
+import { Box, Typography, IconButton, Button, Grid } from '../components/mui';
+import { GitHub, HomeRounded as Home } from '../components/icons';
 import {
     URLS,
     PAGE_TITLES,
@@ -9,8 +8,12 @@ import {
     ZSHARP_DEFAULTS,
     PERCENTAGE,
 } from '../config/constants';
-import { COLORS, SPACING, TYPOGRAPHY, LAYOUT } from '../config/theme';
-import { COMPONENTS } from '../config/components';
+import {
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+    COMPONENT_VARIANTS,
+} from '../config/theme';
 import {
     LineChart,
     Line,
@@ -190,11 +193,7 @@ const ZSharp = () => {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: {
-                    xs: SPACING.padding.xs,
-                    sm: SPACING.padding.sm,
-                    md: SPACING.padding.md,
-                },
+                padding: SPACING.responsive.padding,
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -210,7 +209,7 @@ const ZSharp = () => {
                     right: 0,
                     bottom: 0,
                     background: COLORS.surface.background,
-                    zIndex: LAYOUT.zIndex.background,
+                    zIndex: -1,
                 }}
             />
 
@@ -218,30 +217,20 @@ const ZSharp = () => {
             <Grid
                 size={12}
                 flex={1}
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                flexDirection="column"
                 sx={{
-                    zIndex: LAYOUT.zIndex.content,
-                    padding: {
-                        xs: `${SPACING.padding.xs} 0`,
-                        sm: `${SPACING.padding.sm} 0`,
-                        md: `${SPACING.padding.md} 0`,
-                    },
+                    ...COMPONENT_VARIANTS.flexCenter,
+                    flexDirection: 'column',
+                    zIndex: 1,
+                    padding: 0,
                     minHeight: 0,
                 }}
             >
                 <Box
                     sx={{
                         textAlign: 'center',
-                        maxWidth: SPACING.maxWidth.wide,
+                        maxWidth: SPACING.maxWidth.md,
                         width: '100%',
-                        padding: {
-                            xs: '0 0.5rem',
-                            sm: '0 1.5rem',
-                            md: `0 ${SPACING.components.page.padding.md}`,
-                        },
+                        padding: SPACING.responsive.padding,
                         boxSizing: 'border-box',
                         overflow: 'hidden',
                     }}
@@ -259,13 +248,16 @@ const ZSharp = () => {
                                 sx={{
                                     color: 'text.primary',
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                    fontSize: TYPOGRAPHY.fontSize.md.h4,
+                                    fontSize: TYPOGRAPHY.fontSize.h2,
                                 }}
                             >
                                 ZSharp
                             </Typography>
                         </Grid>
-                        <Grid size="auto" sx={{ display: 'flex', gap: 1 }}>
+                        <Grid
+                            size="auto"
+                            sx={{ ...COMPONENT_VARIANTS.flexCenter, gap: 1 }}
+                        >
                             <IconButton
                                 href={URLS.zsharpRepo}
                                 target="_blank"
@@ -274,8 +266,8 @@ const ZSharp = () => {
                                 <GitHub
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.large,
-                                            sm: '2rem',
+                                            xs: TYPOGRAPHY.fontSize.h2,
+                                            md: '2rem',
                                         },
                                     }}
                                 />
@@ -284,8 +276,8 @@ const ZSharp = () => {
                                 <Home
                                     sx={{
                                         fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.large,
-                                            sm: '2rem',
+                                            xs: TYPOGRAPHY.fontSize.h2,
+                                            md: '2rem',
                                         },
                                     }}
                                 />
@@ -300,10 +292,7 @@ const ZSharp = () => {
                             marginTop: 2,
                             marginBottom: 3,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
-                            fontSize: {
-                                xs: TYPOGRAPHY.fontSize.sm.h6,
-                                sm: TYPOGRAPHY.fontSize.sm.h5,
-                            },
+                            fontSize: TYPOGRAPHY.fontSize.subheading,
                         }}
                     >
                         Neural Network Optimization Research
@@ -312,10 +301,9 @@ const ZSharp = () => {
                     {/* Performance Chart */}
                     <Box
                         sx={{
-                            padding: { xs: 1.5, sm: 2 },
-                            backgroundColor: COLORS.surface.subtle,
-                            borderRadius: SPACING.borderRadius.sm,
-                            border: COMPONENTS.borders.subtle,
+                            backgroundColor: COLORS.surface.elevated,
+                            borderRadius: SPACING.borderRadius.md,
+                            border: `1px solid ${COLORS.border.subtle}`,
                             marginBottom: 4,
                             width: '100%',
                             boxSizing: 'border-box',
@@ -329,7 +317,7 @@ const ZSharp = () => {
                                 marginBottom: 3,
                                 textAlign: 'center',
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                fontSize: TYPOGRAPHY.fontSize.md.h5,
+                                fontSize: TYPOGRAPHY.fontSize.subheading,
                             }}
                         >
                             {viewType === 'accuracy' &&
@@ -344,9 +332,7 @@ const ZSharp = () => {
                             {loading ? (
                                 <Box
                                     sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
+                                        ...COMPONENT_VARIANTS.flexCenter,
                                         height: '100%',
                                         color: 'text.secondary',
                                     }}
@@ -360,7 +346,7 @@ const ZSharp = () => {
                                     <LineChart data={currentData}>
                                         <CartesianGrid
                                             strokeDasharray="3 3"
-                                            stroke={COLORS.border.primary}
+                                            stroke={COLORS.border.subtle}
                                         />
                                         <XAxis
                                             dataKey="epoch"
@@ -432,13 +418,11 @@ const ZSharp = () => {
                                         <RechartsTooltip
                                             contentStyle={{
                                                 backgroundColor:
-                                                    COMPONENTS.overlays.dark,
-                                                border: COMPONENTS.borders
-                                                    .white,
+                                                    'hsla(0, 0%, 5%, 0.95)',
+                                                border: `1px solid ${COLORS.border.subtle}`,
                                                 borderRadius:
-                                                    SPACING.borderRadius
-                                                        .extraLarge,
-                                                color: COLORS.text.white,
+                                                    SPACING.borderRadius.lg,
+                                                color: COLORS.text.primary,
                                             }}
                                             labelFormatter={value =>
                                                 `Epoch ${value}`
@@ -461,13 +445,14 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="sgd"
-                                                    stroke={COLORS.data.blue}
+                                                    stroke={COLORS.primary.main}
                                                     strokeWidth={
                                                         CHART_DIMENSIONS.strokeWidth
                                                     }
                                                     name="SGD"
                                                     dot={{
-                                                        fill: COLORS.data.blue,
+                                                        fill: COLORS.primary
+                                                            .main,
                                                         strokeWidth: 2,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
@@ -493,13 +478,14 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="sgd"
-                                                    stroke={COLORS.data.blue}
+                                                    stroke={COLORS.primary.main}
                                                     strokeWidth={
                                                         CHART_DIMENSIONS.strokeWidth
                                                     }
                                                     name="SGD Loss"
                                                     dot={{
-                                                        fill: COLORS.data.blue,
+                                                        fill: COLORS.primary
+                                                            .main,
                                                         strokeWidth: 2,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
@@ -557,13 +543,14 @@ const ZSharp = () => {
                                                 <Line
                                                     type="monotone"
                                                     dataKey="sgd"
-                                                    stroke={COLORS.data.blue}
+                                                    stroke={COLORS.primary.main}
                                                     strokeWidth={
                                                         CHART_DIMENSIONS.strokeWidth
                                                     }
                                                     name="SGD Rate"
                                                     dot={{
-                                                        fill: COLORS.data.blue,
+                                                        fill: COLORS.primary
+                                                            .main,
                                                         strokeWidth: 2,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
@@ -597,16 +584,16 @@ const ZSharp = () => {
                             display: 'grid',
                             gridTemplateColumns: {
                                 xs: '1fr 1fr',
-                                sm: 'repeat(4, 1fr)',
+                                md: 'repeat(4, 1fr)',
                             },
                             gap: 1,
                             maxWidth: {
-                                xs: SPACING.maxWidth.xs,
-                                sm: 'none',
+                                xs: '24rem',
+                                md: 'none',
                             },
                             margin: {
                                 xs: '3rem auto 0',
-                                sm: '3rem 0 0',
+                                md: '3rem 0 0',
                             },
                         }}
                     >
@@ -617,18 +604,19 @@ const ZSharp = () => {
                             sx={{
                                 color:
                                     viewType === 'accuracy'
-                                        ? COLORS.text.white
+                                        ? COLORS.text.primary
                                         : COLORS.text.secondary,
                                 backgroundColor:
                                     viewType === 'accuracy'
                                         ? COLORS.primary.main
                                         : 'transparent',
-                                borderColor: COLORS.border.primary,
+                                borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
+                                borderRadius: SPACING.borderRadius.lg,
                                 minHeight: '36px',
                                 '&:hover': {
-                                    borderColor: COLORS.border.interactive,
+                                    borderColor: COLORS.border.subtle,
                                     backgroundColor:
                                         viewType === 'accuracy'
                                             ? COLORS.primary.dark
@@ -645,18 +633,19 @@ const ZSharp = () => {
                             sx={{
                                 color:
                                     viewType === 'loss'
-                                        ? COLORS.text.white
+                                        ? COLORS.text.primary
                                         : COLORS.text.secondary,
                                 backgroundColor:
                                     viewType === 'loss'
                                         ? COLORS.primary.main
                                         : 'transparent',
-                                borderColor: COLORS.border.primary,
+                                borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
+                                borderRadius: SPACING.borderRadius.lg,
                                 minHeight: '36px',
                                 '&:hover': {
-                                    borderColor: COLORS.border.interactive,
+                                    borderColor: COLORS.border.subtle,
                                     backgroundColor:
                                         viewType === 'loss'
                                             ? COLORS.primary.dark
@@ -673,18 +662,19 @@ const ZSharp = () => {
                             sx={{
                                 color:
                                     viewType === 'learning_curve'
-                                        ? COLORS.text.white
+                                        ? COLORS.text.primary
                                         : COLORS.text.secondary,
                                 backgroundColor:
                                     viewType === 'learning_curve'
                                         ? COLORS.primary.main
                                         : 'transparent',
-                                borderColor: COLORS.border.primary,
+                                borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
+                                borderRadius: SPACING.borderRadius.lg,
                                 minHeight: '36px',
                                 '&:hover': {
-                                    borderColor: COLORS.border.interactive,
+                                    borderColor: COLORS.border.subtle,
                                     backgroundColor:
                                         viewType === 'learning_curve'
                                             ? COLORS.primary.dark
@@ -701,18 +691,19 @@ const ZSharp = () => {
                             sx={{
                                 color:
                                     viewType === 'convergence'
-                                        ? COLORS.text.white
+                                        ? COLORS.text.primary
                                         : COLORS.text.secondary,
                                 backgroundColor:
                                     viewType === 'convergence'
                                         ? COLORS.primary.main
                                         : 'transparent',
-                                borderColor: COLORS.border.primary,
+                                borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
+                                borderRadius: SPACING.borderRadius.lg,
                                 minHeight: '36px',
                                 '&:hover': {
-                                    borderColor: COLORS.border.interactive,
+                                    borderColor: COLORS.border.subtle,
                                     backgroundColor:
                                         viewType === 'convergence'
                                             ? COLORS.primary.dark

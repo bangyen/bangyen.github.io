@@ -1,13 +1,24 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Backdrop, Typography, Card, CardContent, Box } from '@mui/material';
+import {
+    Backdrop,
+    Typography,
+    Card,
+    CardContent,
+    Box,
+    Grid,
+} from '../../components/mui';
 import {
     CircleRounded,
     KeyboardArrowDown,
     Calculate,
     Replay,
-} from '@mui/icons-material';
-import Grid from '@mui/material/Grid2';
-import { SPACING, COLORS, TYPOGRAPHY } from '../../config/theme';
+} from '../../components/icons';
+import {
+    SPACING,
+    COLORS,
+    TYPOGRAPHY,
+    COMPONENT_VARIANTS,
+} from '../../config/theme';
 
 import { getProduct } from './matrices';
 import { CustomGrid } from '../../helpers';
@@ -94,23 +105,26 @@ export default function Info(props) {
             open={open}
             onClick={toggleOpen}
             sx={{
+                ...COMPONENT_VARIANTS.card,
                 backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
             }}
         >
             <Card
                 sx={{
                     maxWidth: '80vw',
-                    maxHeight: '95vh',
+                    height: 'fit-content',
+                    maxHeight: '90vh',
                     overflow: 'auto',
                     mx: 'auto',
-                    borderRadius: SPACING.borderRadius.xl,
                     backgroundColor: COLORS.surface.glass,
-                    backdropFilter: 'blur(20px) saturate(180%)',
+                    backdropFilter: 'blur(24px) saturate(180%)',
                     border: `1px solid hsla(0, 0%, 100%, 0.1)`,
-                    boxShadow: COLORS.shadows.lg,
-                    transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                    borderRadius: SPACING.borderRadius.lg,
+                    boxShadow: COLORS.shadow.medium,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
             >
                 <CardContent
@@ -118,7 +132,7 @@ export default function Info(props) {
                         pt: '1.5rem',
                         pb: '1.5rem',
                         px: '1.5rem',
-                        height: '100%',
+                        height: 'fit-content',
                         display: 'flex',
                         flexDirection: 'column',
                         minHeight: 0,
@@ -139,7 +153,7 @@ export default function Info(props) {
                                 minHeight: 0,
                                 maxWidth: {
                                     xs: '100%',
-                                    lg: SPACING.maxWidth.info,
+                                    lg: SPACING.maxWidth.lg,
                                 },
                                 mx: 'auto',
                             }}
@@ -169,11 +183,10 @@ export default function Info(props) {
                                             flexDirection: 'column',
                                             transition:
                                                 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                            ...COMPONENT_VARIANTS.card,
                                             '&:hover': {
                                                 backgroundColor:
                                                     COLORS.interactive.hover,
-                                                transform: 'translateY(-2px)',
-                                                boxShadow: COLORS.shadows.sm,
                                             },
                                         }}
                                     >
@@ -190,9 +203,10 @@ export default function Info(props) {
                                                     ? 'center'
                                                     : 'left',
                                                 fontSize:
-                                                    TYPOGRAPHY.fontSize.md.h3,
+                                                    TYPOGRAPHY.fontSize.h2,
                                                 lineHeight:
-                                                    TYPOGRAPHY.lineHeight.tight,
+                                                    TYPOGRAPHY.lineHeight
+                                                        .normal,
                                                 letterSpacing:
                                                     TYPOGRAPHY.letterSpacing
                                                         .tight,
@@ -213,8 +227,8 @@ export default function Info(props) {
                                                     alignItems: 'center',
                                                     mb: 1,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.sm
-                                                            .h5,
+                                                        TYPOGRAPHY.fontSize
+                                                            .body,
                                                     letterSpacing:
                                                         TYPOGRAPHY.letterSpacing
                                                             .wide,
@@ -239,7 +253,7 @@ export default function Info(props) {
                                                         TYPOGRAPHY.lineHeight
                                                             .relaxed,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.sm
+                                                        TYPOGRAPHY.fontSize
                                                             .body,
                                                     ml: 4,
                                                 }}
@@ -264,8 +278,8 @@ export default function Info(props) {
                                                     alignItems: 'center',
                                                     mb: 1,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.sm
-                                                            .h5,
+                                                        TYPOGRAPHY.fontSize
+                                                            .body,
                                                     letterSpacing:
                                                         TYPOGRAPHY.letterSpacing
                                                             .wide,
@@ -290,7 +304,7 @@ export default function Info(props) {
                                                         TYPOGRAPHY.lineHeight
                                                             .relaxed,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.sm
+                                                        TYPOGRAPHY.fontSize
                                                             .body,
                                                     ml: 4,
                                                 }}
@@ -315,8 +329,8 @@ export default function Info(props) {
                                                     alignItems: 'center',
                                                     mb: 1,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.sm
-                                                            .h5,
+                                                        TYPOGRAPHY.fontSize
+                                                            .body,
                                                     letterSpacing:
                                                         TYPOGRAPHY.letterSpacing
                                                             .wide,
@@ -341,7 +355,7 @@ export default function Info(props) {
                                                         TYPOGRAPHY.lineHeight
                                                             .relaxed,
                                                     fontSize:
-                                                        TYPOGRAPHY.fontSize.sm
+                                                        TYPOGRAPHY.fontSize
                                                             .body,
                                                     ml: 4,
                                                 }}
@@ -361,9 +375,7 @@ export default function Info(props) {
                                 <Grid
                                     size={{ xs: 12, lg: 6 }}
                                     sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
+                                        ...COMPONENT_VARIANTS.flexCenter,
                                     }}
                                 >
                                     <Box
@@ -376,16 +388,13 @@ export default function Info(props) {
                                             padding: 3,
                                             width: '100%',
                                             height: '100%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
+                                            ...COMPONENT_VARIANTS.flexCenter,
                                             transition:
                                                 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                            ...COMPONENT_VARIANTS.card,
                                             '&:hover': {
                                                 backgroundColor:
                                                     COLORS.interactive.hover,
-                                                transform: 'translateY(-2px)',
-                                                boxShadow: COLORS.shadows.sm,
                                             },
                                         }}
                                     >
@@ -408,7 +417,7 @@ export default function Info(props) {
                                         backgroundColor:
                                             COLORS.surface.elevated,
                                         border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                        borderRadius: SPACING.borderRadius.xl,
+                                        borderRadius: SPACING.borderRadius.lg,
                                         padding: 3,
                                         textAlign: 'center',
                                     }}
@@ -419,11 +428,12 @@ export default function Info(props) {
                                             color: COLORS.text.primary,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.semibold,
-                                            fontSize: TYPOGRAPHY.fontSize.md.h4,
+                                            fontSize:
+                                                TYPOGRAPHY.fontSize.subheading,
                                             lineHeight:
-                                                TYPOGRAPHY.lineHeight.tight,
+                                                TYPOGRAPHY.lineHeight.normal,
                                             letterSpacing:
-                                                TYPOGRAPHY.letterSpacing.tight,
+                                                TYPOGRAPHY.letterSpacing.normal,
                                             mb: 3,
                                         }}
                                     >

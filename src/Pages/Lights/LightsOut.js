@@ -1,10 +1,6 @@
-import {
-    RefreshRounded,
-    InfoRounded,
-    CircleRounded,
-} from '@mui/icons-material';
+import { Refresh, InfoRounded, CircleRounded } from '../../components/icons';
 import { useMemo, useEffect, useReducer } from 'react';
-import Grid from '@mui/material/Grid2';
+import { Grid } from '../../components/mui';
 
 import { Navigation, HomeButton, TooltipButton } from '../../helpers';
 import { Board, useHandler, usePalette } from '../Board';
@@ -117,7 +113,7 @@ export default function LightsOut() {
             <Navigation>
                 <HomeButton size="inherit" />
                 <TooltipButton
-                    Icon={RefreshRounded}
+                    Icon={Refresh}
                     title="Randomize"
                     size="inherit"
                     onClick={() =>

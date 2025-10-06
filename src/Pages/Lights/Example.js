@@ -1,5 +1,4 @@
-import { Typography } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import { Typography, Grid } from '../../components/mui';
 
 import { getStates } from './chaseHandlers';
 import { CustomGrid } from '../../helpers';
@@ -88,7 +87,7 @@ function Title({ children }) {
                 sx={{
                     textAlign: 'center',
                     fontWeight: 'semibold',
-                    fontSize: TYPOGRAPHY.fontSize.sm.h3,
+                    fontSize: TYPOGRAPHY.fontSize.body,
                     lineHeight: '1.2',
                     letterSpacing: '-0.025em',
                 }}

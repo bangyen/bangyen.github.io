@@ -1,11 +1,13 @@
 import { Program, Output, Tape, Register } from './Display';
 import { CustomGrid } from '../helpers';
-import Grid from '@mui/material/Grid2';
+import { Grid, Typography, TextField } from '../components/mui';
 import { Toolbar } from './Toolbar';
-import { COLORS, SPACING, ANIMATIONS, TYPOGRAPHY } from '../config/theme';
-import { COMPONENTS } from '../config/components';
-
-import { Typography, TextField } from '@mui/material';
+import {
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+    COMPONENT_VARIANTS,
+} from '../config/theme';
 
 import React, { createContext, useContext } from 'react';
 
@@ -15,14 +17,14 @@ export default function Editor({ container, sideProps, hide, children }) {
     const { name, tapeFlag, outFlag, regFlag, code } =
         useContext(EditorContext);
 
-    const rightProps = { xs: 6, sm: 4 };
+    const rightProps = { xs: 6, md: 4 };
     let display, leftProps;
 
     if (hide) {
         display = 'none';
         leftProps = 12;
     } else {
-        leftProps = { xs: 6, sm: 8 };
+        leftProps = { xs: 6, md: 8 };
         display = 'flex';
     }
 
@@ -64,7 +66,7 @@ export default function Editor({ container, sideProps, hide, children }) {
                     <Typography
                         variant="h4"
                         sx={{
-                            fontSize: TYPOGRAPHY.fontSize.lg.h3,
+                            fontSize: TYPOGRAPHY.fontSize.h2,
                             fontWeight: TYPOGRAPHY.fontWeight.semibold,
                         }}
                     >
@@ -90,8 +92,8 @@ export default function Editor({ container, sideProps, hide, children }) {
                     ].filter(Boolean).length;
                     const gridSize =
                         fieldCount === 1
-                            ? SPACING.grid.full
-                            : SPACING.grid.half;
+                            ? { xs: 12, md: 12 }
+                            : { xs: 12, md: 6 };
 
                     if (code !== undefined) {
                         fields.push(
@@ -141,22 +143,22 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
         const getCellStyles = color => {
             const styles = {
                 primary: {
-                    bg: COMPONENTS.overlays.light,
+                    bg: 'hsla(0, 0%, 15%, 0.9)',
                     text: 'primary.light',
-                    border: COMPONENTS.badge.border,
-                    hover: COMPONENTS.overlays.hover,
+                    border: `1px solid ${COLORS.primary.main}`,
+                    hover: 'hsla(0, 0%, 18%, 0.9)',
                 },
                 info: {
-                    bg: COMPONENTS.overlays.medium,
+                    bg: 'hsla(0, 0%, 18%, 0.9)',
                     text: 'secondary.light',
-                    border: COMPONENTS.borders.medium,
-                    hover: COMPONENTS.overlays.hoverLight,
+                    border: `1px solid ${COLORS.border.subtle}`,
+                    hover: 'hsla(0, 0%, 15%, 0.9)',
                 },
                 secondary: {
-                    bg: COMPONENTS.overlays.lighter,
+                    bg: 'hsla(0, 0%, 15%, 0.9)',
                     text: 'text.secondary',
-                    border: COMPONENTS.borders.light,
-                    hover: COMPONENTS.overlays.light,
+                    border: `1px solid ${COLORS.border.subtle}`,
+                    hover: COLORS.interactive.selected,
                 },
             };
             return styles[color] || styles.secondary;
@@ -170,13 +172,11 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
             onClick: handleClick(pos),
             children: <Text text={value} />,
             sx: {
-                cursor: 'pointer',
-                borderRadius: SPACING.borderRadius.sm,
+                borderRadius: SPACING.borderRadius.md,
                 border: cellStyle.border,
-                transition: ANIMATIONS.transition,
+                ...COMPONENT_VARIANTS.card,
                 '&:hover': {
                     backgroundColor: cellStyle.hover,
-                    transform: 'translateY(-0.125rem)', // -2px
                 },
             },
         };
@@ -227,8 +227,8 @@ export function TextArea({
             sx={{
                 '& .MuiInputBase-root': {
                     alignItems: 'flex-start',
-                    backgroundColor: COMPONENTS.overlays.lighter,
-                    borderRadius: SPACING.borderRadius.sm,
+                    backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
+                    borderRadius: SPACING.borderRadius.md,
                 },
                 '& .MuiInputBase-input': {
                     fontFamily: 'monospace',
@@ -238,7 +238,7 @@ export function TextArea({
                     borderColor: COLORS.border.subtle,
                 },
                 '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: COLORS.border.primary,
+                    borderColor: COLORS.border.subtle,
                 },
                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                     borderColor: 'primary.light',

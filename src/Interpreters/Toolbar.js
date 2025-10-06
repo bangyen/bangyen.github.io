@@ -14,7 +14,7 @@ import {
     PauseRounded,
     InfoRounded,
     HomeRounded,
-} from '@mui/icons-material';
+} from '../components/icons';
 
 export function Toolbar() {
     const { name, dispatch, fastForward, pause } = useContext(EditorContext);

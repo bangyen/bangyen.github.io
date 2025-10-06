@@ -3,12 +3,16 @@ import React from 'react';
 
 import { HashRouter, Routes, Route } from 'react-router-dom';
 
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
+import { ThemeProvider, createTheme, CssBaseline } from './components/mui';
 import './styles/animations.css';
 import { ROUTES } from './config/constants';
-import { COLORS, TYPOGRAPHY, SPACING, ANIMATIONS } from './config/theme';
-import { COMPONENTS } from './config/components';
+import {
+    COLORS,
+    TYPOGRAPHY,
+    SPACING,
+    ANIMATIONS,
+    COMPONENT_VARIANTS,
+} from './config/theme';
 
 import { Stun_Step, Suffolk, WII2D, Back } from './Interpreters';
 import {
@@ -29,9 +33,9 @@ const darkTheme = createTheme({
             dark: COLORS.primary.dark,
         },
         secondary: {
-            main: COLORS.neutral[600],
-            light: COLORS.neutral[400],
-            dark: COLORS.neutral[800],
+            main: COLORS.text.secondary,
+            light: COLORS.text.secondary,
+            dark: COLORS.border.subtle,
         },
         background: {
             default: COLORS.surface.background,
@@ -46,51 +50,51 @@ const darkTheme = createTheme({
     typography: {
         fontFamily: TYPOGRAPHY.fontFamily.primary,
         h1: {
-            fontWeight: TYPOGRAPHY.fontWeight.extrabold,
-            fontSize: TYPOGRAPHY.fontSize.lg.display,
-            letterSpacing: TYPOGRAPHY.letterSpacing.tight,
-            lineHeight: TYPOGRAPHY.lineHeight.tight,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            fontSize: TYPOGRAPHY.fontSize.display,
+            letterSpacing: TYPOGRAPHY.letterSpacing.normal,
+            lineHeight: TYPOGRAPHY.lineHeight.normal,
         },
         h2: {
             fontWeight: TYPOGRAPHY.fontWeight.bold,
-            fontSize: TYPOGRAPHY.fontSize.lg.h1,
-            letterSpacing: TYPOGRAPHY.letterSpacing.tight,
-            lineHeight: TYPOGRAPHY.lineHeight.snug,
+            fontSize: TYPOGRAPHY.fontSize.h1,
+            letterSpacing: TYPOGRAPHY.letterSpacing.normal,
+            lineHeight: TYPOGRAPHY.lineHeight.normal,
         },
         h3: {
             fontWeight: TYPOGRAPHY.fontWeight.semibold,
-            fontSize: TYPOGRAPHY.fontSize.lg.h2,
+            fontSize: TYPOGRAPHY.fontSize.h2,
             letterSpacing: TYPOGRAPHY.letterSpacing.normal,
             lineHeight: TYPOGRAPHY.lineHeight.normal,
         },
         h4: {
             fontWeight: TYPOGRAPHY.fontWeight.semibold,
-            fontSize: TYPOGRAPHY.fontSize.lg.h3,
+            fontSize: TYPOGRAPHY.fontSize.h2,
             letterSpacing: TYPOGRAPHY.letterSpacing.normal,
             lineHeight: TYPOGRAPHY.lineHeight.normal,
         },
         h5: {
             fontWeight: TYPOGRAPHY.fontWeight.medium,
-            fontSize: TYPOGRAPHY.fontSize.lg.h4,
+            fontSize: TYPOGRAPHY.fontSize.h2,
             letterSpacing: TYPOGRAPHY.letterSpacing.normal,
             lineHeight: TYPOGRAPHY.lineHeight.normal,
         },
         h6: {
             fontWeight: TYPOGRAPHY.fontWeight.medium,
-            fontSize: TYPOGRAPHY.fontSize.lg.h5,
+            fontSize: TYPOGRAPHY.fontSize.body,
             letterSpacing: TYPOGRAPHY.letterSpacing.normal,
             lineHeight: TYPOGRAPHY.lineHeight.normal,
         },
         body1: {
-            fontSize: TYPOGRAPHY.fontSize.md.body,
+            fontSize: TYPOGRAPHY.fontSize.body,
             fontWeight: TYPOGRAPHY.fontWeight.normal,
             letterSpacing: TYPOGRAPHY.letterSpacing.normal,
-            lineHeight: TYPOGRAPHY.lineHeight.relaxed,
+            lineHeight: 1.5,
         },
         body2: {
-            fontSize: TYPOGRAPHY.fontSize.md.caption,
+            fontSize: TYPOGRAPHY.fontSize.caption,
             fontWeight: TYPOGRAPHY.fontWeight.normal,
-            letterSpacing: TYPOGRAPHY.letterSpacing.wide,
+            letterSpacing: '0.025em',
             lineHeight: TYPOGRAPHY.lineHeight.normal,
         },
     },
@@ -105,32 +109,119 @@ const darkTheme = createTheme({
             },
         },
         MuiButton: {
+            variants: [
+                {
+                    props: { variant: 'primary' },
+                    style: {
+                        backgroundColor: COLORS.primary.main,
+                        color: COLORS.text.primary,
+                        border: 'none',
+                        borderRadius: SPACING.borderRadius.md,
+                        padding: '12px 24px',
+                        minHeight: '44px',
+                        fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                        transition: ANIMATIONS.transition,
+                        boxShadow: COLORS.shadow.mediumall,
+                        '&:hover': {
+                            backgroundColor: COLORS.primary.dark,
+                            boxShadow: COLORS.shadow.medium,
+                            transform: 'translateY(-1px)',
+                        },
+                        '&:focus': ANIMATIONS.presets.focus,
+                    },
+                },
+                {
+                    props: { variant: 'secondary' },
+                    style: {
+                        backgroundColor: 'transparent',
+                        color: COLORS.text.secondary,
+                        border: `1px solid ${COLORS.border.subtle}`,
+                        borderRadius: SPACING.borderRadius.md,
+                        padding: '12px 24px',
+                        minHeight: '44px',
+                        fontWeight: TYPOGRAPHY.fontWeight.medium,
+                        transition: ANIMATIONS.transition,
+                        '&:hover': {
+                            backgroundColor: COLORS.interactive.hover,
+                            borderColor: COLORS.primary.main,
+                            transform: 'translateY(-1px)',
+                        },
+                        '&:focus': ANIMATIONS.presets.focus,
+                    },
+                },
+                {
+                    props: { variant: 'ghost' },
+                    style: {
+                        backgroundColor: 'transparent',
+                        color: COLORS.text.secondary,
+                        border: 'none',
+                        borderRadius: SPACING.borderRadius.md,
+                        padding: '12px 24px',
+                        minHeight: '44px',
+                        fontWeight: TYPOGRAPHY.fontWeight.medium,
+                        transition: ANIMATIONS.transition,
+                        '&:hover': {
+                            backgroundColor: COLORS.interactive.hover,
+                            color: COLORS.text.primary,
+                        },
+                        '&:focus': ANIMATIONS.presets.focus,
+                    },
+                },
+            ],
             styleOverrides: {
                 root: {
-                    borderRadius: SPACING.borderRadius.md,
-                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
                     textTransform: 'none',
-                    transition: ANIMATIONS.transitions.normal,
-                },
-                contained: {
-                    boxShadow: COLORS.shadows.xs,
-                    '&:hover': {
-                        boxShadow: COLORS.shadows.sm,
-                        transform: 'translateY(-1px)',
-                    },
                 },
             },
         },
         MuiCard: {
+            variants: [
+                {
+                    props: { variant: 'elevated' },
+                    style: {
+                        backgroundColor: COLORS.surface.elevated,
+                        border: `1px solid ${COLORS.border.subtle}`,
+                        borderRadius: SPACING.borderRadius.lg,
+                        padding: '24px',
+                        transition: ANIMATIONS.transition,
+                        boxShadow: COLORS.shadow.medium,
+                    },
+                },
+                {
+                    props: { variant: 'glassmorphism' },
+                    style: {
+                        ...COMPONENT_VARIANTS.card,
+                        backdropFilter: 'blur(24px) saturate(180%)',
+                        padding: '24px',
+                    },
+                },
+                {
+                    props: { variant: 'interactive' },
+                    style: {
+                        backgroundColor: COLORS.surface.elevated,
+                        border: `1px solid ${COLORS.border.subtle}`,
+                        borderRadius: SPACING.borderRadius.lg,
+                        padding: '24px',
+                        transition: ANIMATIONS.transition,
+                        boxShadow: COLORS.shadow.medium,
+                        cursor: 'pointer',
+                        '&:hover': {
+                            ...ANIMATIONS.presets.scaleHover,
+                            boxShadow: COLORS.shadow.medium,
+                        },
+                        '&:focus': ANIMATIONS.presets.focus,
+                    },
+                },
+            ],
             styleOverrides: {
                 root: {
                     backgroundColor: COLORS.surface.elevated,
-                    border: COMPONENTS.borders.subtle,
+                    border: `1px solid ${COLORS.border.subtle}`,
                     borderRadius: SPACING.borderRadius.lg,
-                    boxShadow: COLORS.shadows.sm,
-                    transition: ANIMATIONS.transitions.gentle,
+                    boxShadow: COLORS.shadow.medium,
+                    transition: ANIMATIONS.transition,
                     '&:hover': {
-                        boxShadow: COLORS.shadows.md,
+                        boxShadow: COLORS.shadow.medium,
                     },
                 },
             },
@@ -140,12 +231,35 @@ const darkTheme = createTheme({
                 root: {
                     borderRadius: SPACING.borderRadius.full,
                     fontWeight: TYPOGRAPHY.fontWeight.medium,
-                    transition: ANIMATIONS.transitions.fast,
+                    transition: ANIMATIONS.transition,
                 },
                 outlined: {
                     borderColor: COLORS.border.subtle,
                     '&:hover': {
                         backgroundColor: COLORS.interactive.hover,
+                    },
+                },
+            },
+        },
+        MuiMenu: {
+            styleOverrides: {
+                paper: {
+                    ...COMPONENT_VARIANTS.card,
+                    padding: '8px 8px',
+                },
+            },
+        },
+        MuiMenuItem: {
+            styleOverrides: {
+                root: {
+                    borderRadius: SPACING.borderRadius.md,
+                    margin: '0.25rem 0.25rem',
+                    transition: ANIMATIONS.transition,
+                    '&:hover': {
+                        transform: 'scale(1.02) translateY(-1px)',
+                        transition:
+                            'all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+                        boxShadow: '0 4px 20px hsla(0, 0%, 0%, 0.25)',
                     },
                 },
             },

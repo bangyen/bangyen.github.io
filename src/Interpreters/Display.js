@@ -1,9 +1,8 @@
 import { EditorContext, Text } from './Editor';
 
-import { Box, Typography, Chip, IconButton } from '@mui/material';
+import { Box, Typography, Chip, IconButton, Grid } from '../components/mui';
 import { useContext } from 'react';
 import { SPACING, COLORS, TYPOGRAPHY } from '../config/theme';
-import { COMPONENTS } from '../config/components';
 
 import {
     CodeRounded,
@@ -12,9 +11,7 @@ import {
     PlusOneRounded,
     ViewModuleRounded,
     ViewListRounded,
-} from '@mui/icons-material';
-
-import Grid from '@mui/material/Grid2';
+} from '../components/icons';
 
 export function Program({ compact = false }) {
     const { code, index } = useContext(EditorContext);
@@ -128,7 +125,7 @@ function Display(props) {
                 color={color}
                 text={val}
                 sx={{
-                    fontSize: TYPOGRAPHY.fontSize.md.body,
+                    fontSize: TYPOGRAPHY.fontSize.body,
                     fontWeight: TYPOGRAPHY.fontWeight.semibold,
                     fontFamily: 'monospace',
                 }}
@@ -152,7 +149,7 @@ function Display(props) {
                     sx={{
                         color: 'primary.light',
                         fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                        fontSize: TYPOGRAPHY.fontSize.md.body,
+                        fontSize: TYPOGRAPHY.fontSize.body,
                     }}
                 >
                     {title}
@@ -180,12 +177,12 @@ function CompactDisplay(props) {
                     backgroundColor:
                         color === 'info'
                             ? 'primary.light'
-                            : COMPONENTS.overlays.light,
+                            : 'hsla(0, 0%, 15%, 0.9)',
                     color:
-                        color === 'info' ? COLORS.text.white : 'text.primary',
+                        color === 'info' ? COLORS.text.primary : 'text.primary',
                     fontFamily: 'monospace',
                     fontSize: TYPOGRAPHY.fontSize.caption,
-                    height: SPACING.components.chip.height,
+                    height: '32px',
                 }}
             />
         );
@@ -195,11 +192,11 @@ function CompactDisplay(props) {
         <Box
             sx={{
                 padding: 1.5,
-                backgroundColor: COMPONENTS.overlays.lighter,
-                border: COMPONENTS.borders.light,
-                borderRadius: SPACING.borderRadius.sm,
+                backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
+                border: `1px solid ${COLORS.border.subtle}`,
+                borderRadius: SPACING.borderRadius.md,
                 height: '100%',
-                minHeight: SPACING.maxWidth.medium,
+                minHeight: '24rem',
             }}
         >
             <Box
@@ -213,7 +210,7 @@ function CompactDisplay(props) {
                 <Icon
                     sx={{
                         color: 'primary.light',
-                        fontSize: TYPOGRAPHY.fontSize.md.body,
+                        fontSize: TYPOGRAPHY.fontSize.body,
                     }}
                 />
                 <Typography
@@ -270,10 +267,10 @@ function Scrollable(props) {
                 overflowX: 'auto',
                 width: '100%',
                 padding: 2,
-                backgroundColor: COMPONENTS.overlays.lighter,
-                border: COMPONENTS.borders.light,
-                borderRadius: SPACING.borderRadius.sm,
-                height: SPACING.height.scrollable,
+                backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
+                border: `1px solid ${COLORS.border.subtle}`,
+                borderRadius: SPACING.borderRadius.md,
+                height: '60px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',

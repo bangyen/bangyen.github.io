@@ -1,9 +1,13 @@
 import React from 'react';
-import Grid from '@mui/material/Grid2';
-import { Typography, Box, Fade } from '@mui/material';
+import { Grid, Typography, Box, Fade } from '../components/mui';
 import { HomeButton } from '../helpers';
 import { PAGE_TITLES } from '../config/constants';
-import { COLORS, SPACING, TYPOGRAPHY } from '../config/theme';
+import {
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+    COMPONENT_VARIANTS,
+} from '../config/theme';
 
 export default function Error() {
     document.title = PAGE_TITLES.error;
@@ -14,11 +18,7 @@ export default function Error() {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: {
-                    xs: SPACING.padding.xs,
-                    sm: SPACING.padding.sm,
-                    md: SPACING.padding.md,
-                },
+                padding: SPACING.responsive.padding,
                 boxSizing: 'border-box',
             }}
         >
@@ -38,15 +38,12 @@ export default function Error() {
             {/* Main Content */}
             <Grid
                 flex={1}
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                flexDirection="column"
                 sx={{
+                    ...COMPONENT_VARIANTS.flexCenter,
+                    flexDirection: 'column',
                     zIndex: 1,
                     padding: {
-                        xs: `${SPACING.padding.xs} 0`,
-                        sm: `${SPACING.padding.sm} 0`,
+                        xs: '0.5rem 0',
                         md: `${SPACING.padding.md} 0`,
                     },
                     minHeight: 0,
@@ -56,11 +53,10 @@ export default function Error() {
                     <Box
                         sx={{
                             textAlign: 'center',
-                            maxWidth: SPACING.maxWidth.error,
+                            maxWidth: '24rem',
                             width: '100%',
                             padding: {
                                 xs: '0 1rem',
-                                sm: '0 1.5rem',
                                 md: '0 2rem',
                             },
                             boxSizing: 'border-box',
@@ -72,21 +68,21 @@ export default function Error() {
                                 color: COLORS.text.primary,
                                 fontWeight: TYPOGRAPHY.fontWeight.bold,
                                 marginBottom: 2,
-                                fontSize: TYPOGRAPHY.fontSize.lg.display,
+                                fontSize: TYPOGRAPHY.fontSize.display,
                             }}
                         >
                             404
                         </Typography>
 
                         <Typography
-                            variant="h5"
+                            variant="h3"
                             sx={{
                                 color: 'text.secondary',
                                 marginBottom: 2,
-                                fontWeight: TYPOGRAPHY.fontWeight.normal,
+                                fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                 fontSize: {
-                                    xs: TYPOGRAPHY.fontSize.sm.h6,
-                                    sm: TYPOGRAPHY.fontSize.sm.h5,
+                                    xs: TYPOGRAPHY.fontSize.h2,
+                                    md: TYPOGRAPHY.fontSize.h2,
                                 },
                             }}
                         >
@@ -94,15 +90,16 @@ export default function Error() {
                         </Typography>
 
                         <Typography
-                            variant="h6"
+                            variant="body1"
                             sx={{
                                 color: 'text.secondary',
                                 marginBottom: 4,
-                                fontWeight: TYPOGRAPHY.fontWeight.light,
+                                fontWeight: TYPOGRAPHY.fontWeight.normal,
                                 fontSize: {
-                                    xs: TYPOGRAPHY.fontSize.xs.h6,
-                                    sm: TYPOGRAPHY.fontSize.sm.body,
+                                    xs: TYPOGRAPHY.fontSize.body,
+                                    md: TYPOGRAPHY.fontSize.body,
                                 },
+                                lineHeight: 1.5,
                             }}
                         >
                             This page isn&apos;t available. The link you
@@ -112,8 +109,7 @@ export default function Error() {
 
                         <Box
                             sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
+                                ...COMPONENT_VARIANTS.flexCenter,
                                 marginTop: 4,
                             }}
                         >

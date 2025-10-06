@@ -1,17 +1,26 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Grid from '@mui/material/Grid2';
-import { Typography, Box, IconButton, Card, CardContent } from '@mui/material';
-import { GitHub, Home, GridView, TextFields } from '@mui/icons-material';
+import {
+    Grid,
+    Typography,
+    Box,
+    IconButton,
+    Card,
+    CardContent,
+} from '../components/mui';
+import {
+    GitHub,
+    HomeRounded as Home,
+    GridView,
+    TextFields,
+} from '../components/icons';
 import { URLS, PAGE_TITLES } from '../config/constants';
 import {
     COLORS,
     SPACING,
     TYPOGRAPHY,
-    ANIMATIONS,
-    LAYOUT,
+    COMPONENT_VARIANTS,
 } from '../config/theme';
-import { COMPONENTS } from '../config/components';
 
 export default function Interpreters() {
     useEffect(() => {
@@ -60,7 +69,7 @@ export default function Interpreters() {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: { xs: '1rem', sm: '1.5rem', md: '2rem' },
+                padding: { xs: '1rem', md: '2rem' },
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -88,10 +97,9 @@ export default function Interpreters() {
                 alignItems="center"
                 flexDirection="column"
                 sx={{
-                    zIndex: LAYOUT.zIndex.content,
+                    zIndex: 1,
                     padding: {
-                        xs: `${SPACING.padding.xs} 0`,
-                        sm: `${SPACING.padding.sm} 0`,
+                        xs: '0.5rem 0',
                         md: `${SPACING.padding.md} 0`,
                     },
                     minHeight: 0,
@@ -100,11 +108,10 @@ export default function Interpreters() {
                 <Box
                     sx={{
                         textAlign: 'center',
-                        maxWidth: SPACING.maxWidth.wide,
+                        maxWidth: SPACING.maxWidth.md,
                         width: '100%',
                         padding: {
                             xs: '0 0.5rem',
-                            sm: `0 ${SPACING.padding.sm}`,
                             md: `0 ${SPACING.padding.md}`,
                         },
                         boxSizing: 'border-box',
@@ -126,10 +133,7 @@ export default function Interpreters() {
                             sx={{
                                 color: 'text.primary',
                                 fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                                fontSize: {
-                                    xs: '1.25rem',
-                                    sm: '2.125rem',
-                                },
+                                fontSize: SPACING.responsive.fontSize,
                             }}
                         >
                             Esolang Interpreters
@@ -142,20 +146,14 @@ export default function Interpreters() {
                             >
                                 <GitHub
                                     sx={{
-                                        fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.md.h4,
-                                            sm: '2rem',
-                                        },
+                                        fontSize: SPACING.responsive.iconSize,
                                     }}
                                 />
                             </IconButton>
                             <IconButton component={Link} to="/">
                                 <Home
                                     sx={{
-                                        fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.md.h4,
-                                            sm: '2rem',
-                                        },
+                                        fontSize: SPACING.responsive.iconSize,
                                     }}
                                 />
                             </IconButton>
@@ -168,9 +166,9 @@ export default function Interpreters() {
                             display: 'grid',
                             gridTemplateColumns: {
                                 xs: '1fr',
-                                sm: '1fr 1fr',
+                                md: '1fr 1fr',
                             },
-                            gap: { xs: 2, sm: 3 },
+                            gap: SPACING.responsive.gap,
                             marginTop: 4,
                         }}
                     >
@@ -180,30 +178,25 @@ export default function Interpreters() {
                                 component={Link}
                                 to={interpreter.path}
                                 sx={{
-                                    padding: { xs: 1.5, sm: 2 },
-                                    backgroundColor:
-                                        COMPONENTS.overlays.lighter,
-                                    borderRadius: SPACING.borderRadius.sm,
-                                    border: COMPONENTS.borders.light,
+                                    padding: { xs: 1.5, md: 2 },
+                                    backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
+                                    borderRadius: SPACING.borderRadius.md,
+                                    border: `1px solid ${COLORS.border.subtle}`,
                                     textDecoration: 'none',
-                                    cursor: 'pointer',
-                                    transition: ANIMATIONS.transition,
                                     width: '100%',
                                     boxSizing: 'border-box',
                                     overflow: 'hidden',
+                                    ...COMPONENT_VARIANTS.card,
                                     '&:hover': {
                                         backgroundColor:
-                                            COMPONENTS.overlays.light,
-                                        transform: 'translateY(-0.125rem)', // -2px
+                                            COLORS.interactive.selected,
                                     },
                                 }}
                             >
                                 <CardContent sx={{ padding: 0 }}>
                                     <Box
                                         sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
+                                            ...COMPONENT_VARIANTS.flexCenter,
                                             gap: 1,
                                             marginBottom: 2,
                                         }}
@@ -217,7 +210,7 @@ export default function Interpreters() {
                                                     TYPOGRAPHY.fontWeight
                                                         .semibold,
                                                 fontSize:
-                                                    TYPOGRAPHY.fontSize.md.h5,
+                                                    TYPOGRAPHY.fontSize.body,
                                             }}
                                         >
                                             {interpreter.name}

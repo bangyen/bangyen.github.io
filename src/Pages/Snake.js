@@ -1,12 +1,12 @@
 import { useMemo, useCallback, useReducer, useEffect } from 'react';
-import Grid from '@mui/material/Grid2';
+import { Grid } from '../components/mui';
 // import * as colors from '@mui/material/colors'; // Removed unused import
 
 import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
 import { CustomGrid, Controls } from '../helpers';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../config/constants';
-import { COLORS, TIMING } from '../config/theme';
+import { COLORS, COMPONENT_VARIANTS } from '../config/theme';
 
 function getRandom(max) {
     return Math.floor(Math.random() * max);
@@ -123,7 +123,7 @@ function handleAction(state, action) {
 }
 
 export default function Snake() {
-    const { create: createTimer } = useTimer(TIMING.game.snake);
+    const { create: createTimer } = useTimer(100);
     const { create: createKeys } = useKeys();
 
     const { height, width } = useWindow();
@@ -169,8 +169,8 @@ export default function Snake() {
 
             if (index in board) {
                 if (board[index] > 0)
-                    color = COLORS.game.snakeBody; // Snake body - dark blue
-                else color = COLORS.game.snakeFood; // Food - much darker blue shade
+                    color = COLORS.primary.dark; // Snake body - dark blue
+                else color = COLORS.primary.main; // Food - much darker blue shade
             }
 
             return {
@@ -224,10 +224,10 @@ export default function Snake() {
         >
             <Grid
                 flex={1}
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                sx={{ zIndex: 1 }}
+                sx={{
+                    ...COMPONENT_VARIANTS.flexCenter,
+                    zIndex: 1,
+                }}
             >
                 <CustomGrid
                     size={size}
