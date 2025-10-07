@@ -127,7 +127,12 @@ export default function Home() {
             minHeight="100vh"
             flexDirection="column"
             sx={{
-                ...COMPONENT_VARIANTS.heroSection,
+                position: 'relative',
+                background: COLORS.surface.background,
+                boxSizing: 'border-box',
+                width: '100%',
+                maxWidth: '100vw',
+                overflowX: 'hidden',
             }}
         >
             {/* Modern Navigation */}
@@ -327,7 +332,8 @@ export default function Home() {
                         <Fade in timeout={1000}>
                             <Box
                                 sx={{
-                                    ...COMPONENT_VARIANTS.flexColumn,
+                                    display: 'flex',
+                                    flexDirection: 'column',
                                     gap: 4,
                                 }}
                             >
@@ -373,7 +379,43 @@ export default function Home() {
                                                 >
                                                     <Box
                                                         sx={{
-                                                            ...COMPONENT_VARIANTS.skillBadge,
+                                                            backgroundColor:
+                                                                COLORS
+                                                                    .interactive
+                                                                    .selected,
+                                                            border: `1px solid hsla(217, 91%, 60%, 0.2)`,
+                                                            borderRadius:
+                                                                SPACING
+                                                                    .borderRadius
+                                                                    .md,
+                                                            padding: {
+                                                                xs: '12px',
+                                                                md: '16px',
+                                                            },
+                                                            display: 'flex',
+                                                            alignItems:
+                                                                'center',
+                                                            gap: {
+                                                                xs: 1,
+                                                                md: 1.5,
+                                                            },
+                                                            transition:
+                                                                ANIMATIONS.transition,
+                                                            cursor: 'pointer',
+                                                            minWidth: 0,
+                                                            overflow: 'hidden',
+                                                            '&:hover': {
+                                                                backgroundColor:
+                                                                    COLORS
+                                                                        .interactive
+                                                                        .hover,
+                                                                transform:
+                                                                    'translateY(-2px) scale(1.01)',
+                                                                boxShadow:
+                                                                    COLORS
+                                                                        .shadows
+                                                                        .sm,
+                                                            },
                                                         }}
                                                     >
                                                         <IconComponent
@@ -448,7 +490,8 @@ export default function Home() {
 
                                     <Box
                                         sx={{
-                                            ...COMPONENT_VARIANTS.flexColumn,
+                                            display: 'flex',
+                                            flexDirection: 'column',
                                             gap: 2,
                                         }}
                                     >
@@ -503,7 +546,12 @@ export default function Home() {
 
                         <Box
                             sx={{
-                                ...COMPONENT_VARIANTS.responsiveGrid,
+                                display: 'grid',
+                                gridTemplateColumns: {
+                                    xs: '1fr',
+                                    md: 'repeat(2, 1fr)',
+                                },
+                                gap: 4,
                             }}
                         >
                             {/* Publications */}
@@ -591,7 +639,16 @@ export default function Home() {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
-                                                        ...COMPONENT_VARIANTS.techTag,
+                                                        borderRadius: '20px',
+                                                        fontSize:
+                                                            'clamp(0.7rem, 0.8vw, 0.75rem)',
+                                                        fontWeight: 500,
+                                                        padding: '4px 12px',
+                                                        minHeight: '24px',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        transition:
+                                                            'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
                                                         backgroundColor:
                                                             'hsla(141, 64%, 49%, 0.1)',
                                                         color: 'hsl(141, 64%, 49%)',
@@ -707,7 +764,16 @@ export default function Home() {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
-                                                        ...COMPONENT_VARIANTS.techTag,
+                                                        borderRadius: '20px',
+                                                        fontSize:
+                                                            'clamp(0.7rem, 0.8vw, 0.75rem)',
+                                                        fontWeight: 500,
+                                                        padding: '4px 12px',
+                                                        minHeight: '24px',
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        transition:
+                                                            'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
                                                         backgroundColor:
                                                             'hsla(217, 91%, 60%, 0.1)',
                                                         color: 'hsl(217, 91%, 60%)',
