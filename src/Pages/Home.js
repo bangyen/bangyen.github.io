@@ -303,8 +303,12 @@ export default function Home() {
                                                 SPACING.borderRadius.full,
                                             transition: ANIMATIONS.transition,
                                             cursor: 'pointer',
-                                            '&:hover':
-                                                ANIMATIONS.presets.scaleHover,
+                                            '&:hover': {
+                                                transform:
+                                                    'scale(1.02) translateY(-1px)',
+                                                boxShadow:
+                                                    '0 4px 20px hsla(0, 0%, 0%, 0.25)',
+                                            },
                                         }}
                                     >
                                         <Typography
