@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, IconButton, Button, Grid } from '../components/mui';
-import { GitHub, HomeRounded as Home } from '../components/icons';
+import {
+    GitHub,
+    HomeRounded as Home,
+    BarChartRounded,
+    TrendingUpRounded,
+    ShowChartRounded,
+    AnalyticsRounded,
+} from '../components/icons';
 import {
     URLS,
     PAGE_TITLES,
     CHART_DIMENSIONS,
+    CHART_FORMATTING,
     ZSHARP_DEFAULTS,
     PERCENTAGE,
 } from '../config/constants';
@@ -194,7 +202,7 @@ const ZSharp = () => {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: { xs: '0.5rem', md: '1.5rem' },
+                padding: SPACING.padding.md,
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -231,7 +239,10 @@ const ZSharp = () => {
                         textAlign: 'center',
                         maxWidth: SPACING.maxWidth.md,
                         width: '100%',
-                        padding: { xs: '0.5rem', md: '1.5rem' },
+                        padding: {
+                            xs: '0 0.5rem',
+                            md: '0 2rem',
+                        },
                         boxSizing: 'border-box',
                         overflow: 'hidden',
                     }}
@@ -255,10 +266,7 @@ const ZSharp = () => {
                                 ZSharp
                             </Typography>
                         </Grid>
-                        <Grid
-                            size="auto"
-                            sx={{ ...COMPONENT_VARIANTS.flexCenter, gap: 1 }}
-                        >
+                        <Grid size="auto" sx={{ display: 'flex', gap: 1 }}>
                             <IconButton
                                 href={URLS.zsharpRepo}
                                 target="_blank"
@@ -291,7 +299,7 @@ const ZSharp = () => {
                         sx={{
                             color: COLORS.text.secondary,
                             marginTop: 2,
-                            marginBottom: 3,
+                            marginBottom: 4,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
                             fontSize: TYPOGRAPHY.fontSize.subheading,
                         }}
@@ -330,7 +338,9 @@ const ZSharp = () => {
                             {loading ? (
                                 <Box
                                     sx={{
-                                        ...COMPONENT_VARIANTS.flexCenter,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
                                         height: '100%',
                                         color: COLORS.text.secondary,
                                     }}
@@ -343,7 +353,10 @@ const ZSharp = () => {
                                 <ResponsiveContainer width="100%" height="100%">
                                     <LineChart data={currentData}>
                                         <CartesianGrid
-                                            strokeDasharray="3 3"
+                                            strokeDasharray={
+                                                CHART_FORMATTING.lines
+                                                    .strokeDashArray
+                                            }
                                             stroke={COLORS.border.subtle}
                                         />
                                         <XAxis
@@ -451,7 +464,10 @@ const ZSharp = () => {
                                                     dot={{
                                                         fill: COLORS.primary
                                                             .main,
-                                                        strokeWidth: 2,
+                                                        strokeWidth:
+                                                            CHART_FORMATTING
+                                                                .lines
+                                                                .defaultStrokeWidth,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
@@ -465,7 +481,10 @@ const ZSharp = () => {
                                                     name="ZSharp"
                                                     dot={{
                                                         fill: COLORS.data.green,
-                                                        strokeWidth: 2,
+                                                        strokeWidth:
+                                                            CHART_FORMATTING
+                                                                .lines
+                                                                .defaultStrokeWidth,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
@@ -484,7 +503,10 @@ const ZSharp = () => {
                                                     dot={{
                                                         fill: COLORS.primary
                                                             .main,
-                                                        strokeWidth: 2,
+                                                        strokeWidth:
+                                                            CHART_FORMATTING
+                                                                .lines
+                                                                .defaultStrokeWidth,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
@@ -498,7 +520,10 @@ const ZSharp = () => {
                                                     name="ZSharp Loss"
                                                     dot={{
                                                         fill: COLORS.data.green,
-                                                        strokeWidth: 2,
+                                                        strokeWidth:
+                                                            CHART_FORMATTING
+                                                                .lines
+                                                                .defaultStrokeWidth,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
@@ -549,7 +574,10 @@ const ZSharp = () => {
                                                     dot={{
                                                         fill: COLORS.primary
                                                             .main,
-                                                        strokeWidth: 2,
+                                                        strokeWidth:
+                                                            CHART_FORMATTING
+                                                                .lines
+                                                                .defaultStrokeWidth,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
@@ -563,7 +591,10 @@ const ZSharp = () => {
                                                     name="ZSharp Rate"
                                                     dot={{
                                                         fill: COLORS.data.green,
-                                                        strokeWidth: 2,
+                                                        strokeWidth:
+                                                            CHART_FORMATTING
+                                                                .lines
+                                                                .defaultStrokeWidth,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
@@ -575,143 +606,218 @@ const ZSharp = () => {
                         </Box>
                     </GlassCard>
 
-                    {/* View Selection Buttons */}
-                    <Box
+                    {/* View Selection Control Panel */}
+                    <GlassCard
                         sx={{
                             marginTop: 3,
-                            display: 'grid',
-                            gridTemplateColumns: {
-                                xs: '1fr 1fr',
-                                md: 'repeat(4, 1fr)',
-                            },
-                            gap: 1,
-                            maxWidth: {
-                                xs: '24rem',
-                                md: 'none',
-                            },
-                            margin: {
-                                xs: '3rem auto 0',
-                                md: '3rem 0 0',
+                            width: '100%',
+                            boxSizing: 'border-box',
+                            overflow: 'hidden',
+                            transition: 'all 0.3s ease-in-out',
+                            '&:hover': {
+                                transform: 'translateY(-2px)',
+                                boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
                             },
                         }}
                     >
-                        <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => setViewType('accuracy')}
+                        <Box
                             sx={{
-                                color:
-                                    viewType === 'accuracy'
-                                        ? COLORS.text.primary
-                                        : COLORS.text.secondary,
-                                backgroundColor:
-                                    viewType === 'accuracy'
-                                        ? COLORS.primary.main
-                                        : 'transparent',
-                                borderColor: COLORS.border.subtle,
-                                borderWidth: '1px',
-                                borderStyle: 'solid',
-                                borderRadius: SPACING.borderRadius.lg,
-                                minHeight: '36px',
-                                '&:hover': {
-                                    borderColor: COLORS.border.subtle,
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: 3,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                }}
+                            >
+                                <BarChartRounded
+                                    sx={{
+                                        color: COLORS.primary.light,
+                                        fontSize: '1.25rem',
+                                    }}
+                                />
+                                <Typography
+                                    variant="body1"
+                                    sx={{
+                                        color: COLORS.primary.light,
+                                        fontWeight:
+                                            TYPOGRAPHY.fontWeight.semibold,
+                                    }}
+                                >
+                                    Chart Views
+                                </Typography>
+                            </Box>
+                        </Box>
+
+                        <Box
+                            sx={{
+                                display: 'grid',
+                                gridTemplateColumns: {
+                                    xs: '1fr 1fr',
+                                    md: 'repeat(4, 1fr)',
+                                },
+                                gap: 1,
+                                maxWidth: {
+                                    xs: '24rem',
+                                    md: 'none',
+                                },
+                                margin: {
+                                    xs: '0 auto',
+                                    md: '0',
+                                },
+                            }}
+                        >
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                startIcon={<BarChartRounded />}
+                                onClick={() => setViewType('accuracy')}
+                                sx={{
+                                    color:
+                                        viewType === 'accuracy'
+                                            ? COLORS.text.primary
+                                            : COLORS.text.secondary,
                                     backgroundColor:
                                         viewType === 'accuracy'
-                                            ? COLORS.primary.dark
-                                            : COLORS.interactive.hover,
-                                },
-                            }}
-                        >
-                            Accuracy
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => setViewType('loss')}
-                            sx={{
-                                color:
-                                    viewType === 'loss'
-                                        ? COLORS.text.primary
-                                        : COLORS.text.secondary,
-                                backgroundColor:
-                                    viewType === 'loss'
-                                        ? COLORS.primary.main
-                                        : 'transparent',
-                                borderColor: COLORS.border.subtle,
-                                borderWidth: '1px',
-                                borderStyle: 'solid',
-                                borderRadius: SPACING.borderRadius.lg,
-                                minHeight: '36px',
-                                '&:hover': {
+                                            ? COLORS.primary.main
+                                            : 'transparent',
                                     borderColor: COLORS.border.subtle,
+                                    borderWidth: '1px',
+                                    borderStyle: 'solid',
+                                    borderRadius: SPACING.borderRadius.lg,
+                                    minHeight: '40px',
+                                    padding: '0.5rem 1rem',
+                                    fontSize: '0.875rem',
+                                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                                    transition: 'all 0.2s ease-in-out',
+                                    '&:hover': {
+                                        borderColor: COLORS.primary.main,
+                                        backgroundColor:
+                                            viewType === 'accuracy'
+                                                ? COLORS.primary.dark
+                                                : COLORS.interactive.hover,
+                                        transform: 'translateY(-1px)',
+                                        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                                    },
+                                }}
+                            >
+                                Accuracy
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                startIcon={<TrendingUpRounded />}
+                                onClick={() => setViewType('loss')}
+                                sx={{
+                                    color:
+                                        viewType === 'loss'
+                                            ? COLORS.text.primary
+                                            : COLORS.text.secondary,
                                     backgroundColor:
                                         viewType === 'loss'
-                                            ? COLORS.primary.dark
-                                            : COLORS.interactive.hover,
-                                },
-                            }}
-                        >
-                            Loss
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => setViewType('learning_curve')}
-                            sx={{
-                                color:
-                                    viewType === 'learning_curve'
-                                        ? COLORS.text.primary
-                                        : COLORS.text.secondary,
-                                backgroundColor:
-                                    viewType === 'learning_curve'
-                                        ? COLORS.primary.main
-                                        : 'transparent',
-                                borderColor: COLORS.border.subtle,
-                                borderWidth: '1px',
-                                borderStyle: 'solid',
-                                borderRadius: SPACING.borderRadius.lg,
-                                minHeight: '36px',
-                                '&:hover': {
+                                            ? COLORS.primary.main
+                                            : 'transparent',
                                     borderColor: COLORS.border.subtle,
+                                    borderWidth: '1px',
+                                    borderStyle: 'solid',
+                                    borderRadius: SPACING.borderRadius.lg,
+                                    minHeight: '40px',
+                                    padding: '0.5rem 1rem',
+                                    fontSize: '0.875rem',
+                                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                                    transition: 'all 0.2s ease-in-out',
+                                    '&:hover': {
+                                        borderColor: COLORS.primary.main,
+                                        backgroundColor:
+                                            viewType === 'loss'
+                                                ? COLORS.primary.dark
+                                                : COLORS.interactive.hover,
+                                        transform: 'translateY(-1px)',
+                                        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                                    },
+                                }}
+                            >
+                                Loss
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                startIcon={<ShowChartRounded />}
+                                onClick={() => setViewType('learning_curve')}
+                                sx={{
+                                    color:
+                                        viewType === 'learning_curve'
+                                            ? COLORS.text.primary
+                                            : COLORS.text.secondary,
                                     backgroundColor:
                                         viewType === 'learning_curve'
-                                            ? COLORS.primary.dark
-                                            : COLORS.interactive.hover,
-                                },
-                            }}
-                        >
-                            Learning Gap
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => setViewType('convergence')}
-                            sx={{
-                                color:
-                                    viewType === 'convergence'
-                                        ? COLORS.text.primary
-                                        : COLORS.text.secondary,
-                                backgroundColor:
-                                    viewType === 'convergence'
-                                        ? COLORS.primary.main
-                                        : 'transparent',
-                                borderColor: COLORS.border.subtle,
-                                borderWidth: '1px',
-                                borderStyle: 'solid',
-                                borderRadius: SPACING.borderRadius.lg,
-                                minHeight: '36px',
-                                '&:hover': {
+                                            ? COLORS.primary.main
+                                            : 'transparent',
                                     borderColor: COLORS.border.subtle,
+                                    borderWidth: '1px',
+                                    borderStyle: 'solid',
+                                    borderRadius: SPACING.borderRadius.lg,
+                                    minHeight: '40px',
+                                    padding: '0.5rem 1rem',
+                                    fontSize: '0.875rem',
+                                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                                    transition: 'all 0.2s ease-in-out',
+                                    '&:hover': {
+                                        borderColor: COLORS.primary.main,
+                                        backgroundColor:
+                                            viewType === 'learning_curve'
+                                                ? COLORS.primary.dark
+                                                : COLORS.interactive.hover,
+                                        transform: 'translateY(-1px)',
+                                        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                                    },
+                                }}
+                            >
+                                Learning Gap
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                startIcon={<AnalyticsRounded />}
+                                onClick={() => setViewType('convergence')}
+                                sx={{
+                                    color:
+                                        viewType === 'convergence'
+                                            ? COLORS.text.primary
+                                            : COLORS.text.secondary,
                                     backgroundColor:
                                         viewType === 'convergence'
-                                            ? COLORS.primary.dark
-                                            : COLORS.interactive.hover,
-                                },
-                            }}
-                        >
-                            Convergence
-                        </Button>
-                    </Box>
+                                            ? COLORS.primary.main
+                                            : 'transparent',
+                                    borderColor: COLORS.border.subtle,
+                                    borderWidth: '1px',
+                                    borderStyle: 'solid',
+                                    borderRadius: SPACING.borderRadius.lg,
+                                    minHeight: '40px',
+                                    padding: '0.5rem 1rem',
+                                    fontSize: '0.875rem',
+                                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                                    transition: 'all 0.2s ease-in-out',
+                                    '&:hover': {
+                                        borderColor: COLORS.primary.main,
+                                        backgroundColor:
+                                            viewType === 'convergence'
+                                                ? COLORS.primary.dark
+                                                : COLORS.interactive.hover,
+                                        transform: 'translateY(-1px)',
+                                        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                                    },
+                                }}
+                            >
+                                Convergence
+                            </Button>
+                        </Box>
+                    </GlassCard>
                 </Box>
             </Grid>
         </Grid>
