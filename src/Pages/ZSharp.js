@@ -624,7 +624,7 @@ const ZSharp = () => {
                                 borderRadius: SPACING.borderRadius.lg,
                                 minHeight: '36px',
                                 '&:hover': {
-                                    borderColor: COLORS.border.interactive,
+                                    borderColor: COLORS.border.subtle,
                                     backgroundColor:
                                         viewType === 'accuracy'
                                             ? COLORS.primary.dark
@@ -653,7 +653,7 @@ const ZSharp = () => {
                                 borderRadius: SPACING.borderRadius.lg,
                                 minHeight: '36px',
                                 '&:hover': {
-                                    borderColor: COLORS.border.interactive,
+                                    borderColor: COLORS.border.subtle,
                                     backgroundColor:
                                         viewType === 'loss'
                                             ? COLORS.primary.dark
@@ -682,7 +682,7 @@ const ZSharp = () => {
                                 borderRadius: SPACING.borderRadius.lg,
                                 minHeight: '36px',
                                 '&:hover': {
-                                    borderColor: COLORS.border.interactive,
+                                    borderColor: COLORS.border.subtle,
                                     backgroundColor:
                                         viewType === 'learning_curve'
                                             ? COLORS.primary.dark
@@ -711,7 +711,7 @@ const ZSharp = () => {
                                 borderRadius: SPACING.borderRadius.lg,
                                 minHeight: '36px',
                                 '&:hover': {
-                                    borderColor: COLORS.border.interactive,
+                                    borderColor: COLORS.border.subtle,
                                     backgroundColor:
                                         viewType === 'convergence'
                                             ? COLORS.primary.dark

@@ -496,7 +496,7 @@ const Oligopoly = () => {
                                     color: COLORS.text.secondary,
                                     borderColor: COLORS.border.subtle,
                                     '&:hover': {
-                                        borderColor: COLORS.border.interactive,
+                                        borderColor: COLORS.border.subtle,
                                         backgroundColor:
                                             COLORS.interactive.hover,
                                     },

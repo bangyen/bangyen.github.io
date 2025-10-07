@@ -31,7 +31,6 @@ export const COLORS = {
     // Border and Divider Colors
     border: {
         subtle: 'hsl(0, 0%, 18%)',
-        interactive: 'hsl(217, 91%, 60%)',
     },
     // Interactive State Colors
     interactive: {
@@ -45,7 +44,7 @@ export const COLORS = {
         amber: 'hsl(34, 95%, 58%)',
     },
     // Shadows for Depth and Elevation
-    shadows: {
+    shadow: {
         xs: '0 1px 2px hsla(0, 0%, 0%, 0.5)',
         sm: '0 2px 8px hsla(0, 0%, 0%, 0.4)',
     },
@@ -115,7 +114,7 @@ export const ANIMATIONS = {
         // Card hover effect - lift with shadow
         cardHover: {
             transform: 'translateY(-2px)',
-            boxShadow: COLORS.shadows.sm,
+            boxShadow: COLORS.shadow.sm,
         },
 
         // Interactive hover - background change
@@ -156,7 +155,7 @@ export const COMPONENT_VARIANTS = {
         backdropFilter: 'blur(24px) saturate(180%)',
         border: `1px solid ${COLORS.border.subtle}`,
         borderRadius: SPACING.borderRadius.lg,
-        boxShadow: COLORS.shadows.sm,
+        boxShadow: COLORS.shadow.sm,
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -164,7 +163,7 @@ export const COMPONENT_VARIANTS = {
         transition: ANIMATIONS.transition,
         '&:hover': {
             transform: 'translateY(-2px)',
-            boxShadow: COLORS.shadows.sm,
+            boxShadow: COLORS.shadow.sm,
         },
         '&:focus': {
             outline: 'none',
