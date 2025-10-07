@@ -48,11 +48,6 @@ export const COLORS = {
         amber: 'hsl(34, 95%, 58%)',
         red: 'hsl(0, 73%, 56%)',
     },
-    // Game-specific colors
-    game: {
-        snakeBody: 'hsl(217, 91%, 45%)',
-        snakeFood: 'hsl(217, 91%, 25%)',
-    },
     // Shadows for Depth and Elevation
     shadows: {
         xs: '0 1px 2px hsla(0, 0%, 0%, 0.5)',

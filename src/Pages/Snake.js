@@ -6,7 +6,7 @@ import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
 import { CustomGrid, Controls } from '../helpers';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../config/constants';
-import { COLORS, TIMING } from '../config/theme';
+import { COLORS } from '../config/theme';
 
 function getRandom(max) {
     return Math.floor(Math.random() * max);
@@ -169,8 +169,8 @@ export default function Snake() {
 
             if (index in board) {
                 if (board[index] > 0)
-                    color = COLORS.game.snakeBody; // Snake body - dark blue
-                else color = COLORS.game.snakeFood; // Food - much darker blue shade
+                    color = COLORS.primary.dark; // Snake body - dark blue
+                else color = COLORS.primary.main; // Food - much darker blue shade
             }
 
             return {
