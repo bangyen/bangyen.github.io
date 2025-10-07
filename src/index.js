@@ -125,7 +125,7 @@ const darkTheme = createTheme({
                         '&:hover': {
                             backgroundColor: COLORS.primary.dark,
                             boxShadow: COLORS.shadows.sm,
-                            ...ANIMATIONS.presets.buttonHover,
+                            transform: 'translateY(-1px)',
                         },
                         '&:focus': ANIMATIONS.presets.focus,
                     },
@@ -144,7 +144,7 @@ const darkTheme = createTheme({
                         '&:hover': {
                             backgroundColor: COLORS.interactive.hover,
                             borderColor: COLORS.primary.main,
-                            ...ANIMATIONS.presets.buttonHover,
+                            transform: 'translateY(-1px)',
                         },
                         '&:focus': ANIMATIONS.presets.focus,
                     },
@@ -159,7 +159,7 @@ const darkTheme = createTheme({
                         padding: '12px 24px',
                         minHeight: '44px',
                         fontWeight: TYPOGRAPHY.fontWeight.medium,
-                        transition: ANIMATIONS.fast,
+                        transition: ANIMATIONS.transition,
                         '&:hover': {
                             backgroundColor: COLORS.interactive.hover,
                             color: COLORS.text.primary,
@@ -231,7 +231,7 @@ const darkTheme = createTheme({
                 root: {
                     borderRadius: SPACING.borderRadius.full,
                     fontWeight: TYPOGRAPHY.fontWeight.medium,
-                    transition: ANIMATIONS.fast,
+                    transition: ANIMATIONS.transition,
                 },
                 outlined: {
                     borderColor: COLORS.border.subtle,
@@ -254,7 +254,7 @@ const darkTheme = createTheme({
                 root: {
                     borderRadius: SPACING.borderRadius.md,
                     margin: '0.25rem 0.25rem',
-                    transition: ANIMATIONS.fast,
+                    transition: ANIMATIONS.transition,
                     '&:hover': {
                         transform: 'scale(1.02) translateY(-1px)',
                         transition:
