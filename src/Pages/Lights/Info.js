@@ -424,7 +424,7 @@ export default function Info(props) {
                                             lineHeight:
                                                 TYPOGRAPHY.lineHeight.tight,
                                             letterSpacing:
-                                                TYPOGRAPHY.letterSpacing.tight,
+                                                TYPOGRAPHY.letterSpacing.normal,
                                             mb: 3,
                                         }}
                                     >

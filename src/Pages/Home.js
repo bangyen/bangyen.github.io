@@ -174,7 +174,7 @@ export default function Home() {
                                             TYPOGRAPHY.fontWeight.semibold,
                                         textTransform: 'uppercase',
                                         letterSpacing:
-                                            TYPOGRAPHY.letterSpacing.wider,
+                                            TYPOGRAPHY.letterSpacing.wide,
                                         marginBottom: 3,
                                     }}
                                 >
@@ -191,7 +191,7 @@ export default function Home() {
                                         },
                                         lineHeight: TYPOGRAPHY.lineHeight.tight,
                                         letterSpacing:
-                                            TYPOGRAPHY.letterSpacing.tight,
+                                            TYPOGRAPHY.letterSpacing.normal,
                                         marginBottom: 2,
                                         // Allow controlled wrapping, but prevent breaks in names
                                         wordBreak: 'keep-all', // Prevent breaking within words
