@@ -17,6 +17,7 @@ export function Section({
     return (
         <Container
             maxWidth={false}
+            id={id}
             sx={{
                 paddingY,
                 paddingX,

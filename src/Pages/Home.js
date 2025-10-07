@@ -284,12 +284,20 @@ export default function Home() {
                                                 document.getElementById(
                                                     'featured-work'
                                                 );
+                                            console.log(
+                                                'View Work clicked, element:',
+                                                element
+                                            );
                                             if (element) {
                                                 element.scrollIntoView({
                                                     behavior: 'smooth',
                                                     block: 'start',
                                                     inline: 'nearest',
                                                 });
+                                            } else {
+                                                console.log(
+                                                    'Element not found'
+                                                );
                                             }
                                         }}
                                         sx={{
