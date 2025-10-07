@@ -275,7 +275,7 @@ export const GlassCard = forwardRef(function GlassCard(
             ref={ref}
             className={`glass-card ${className || ''}`}
             sx={{
-                ...COMPONENT_VARIANTS.glassCard,
+                ...COMPONENT_VARIANTS.card,
                 padding,
                 ...sx,
             }}

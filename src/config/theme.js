@@ -148,10 +148,10 @@ export const LAYOUT = {
     },
 };
 
-// Component Variants - Only patterns used in multiple places
+// Component Variants - Streamlined patterns used in multiple places
 export const COMPONENT_VARIANTS = {
-    // Glass morphism card styling - used in Home.js, Lights/Info.js, index.js
-    glassCard: {
+    // Unified card variant - combines glass and interactive functionality
+    card: {
         backgroundColor: COLORS.surface.glass,
         backdropFilter: 'blur(24px) saturate(180%)',
         border: `1px solid ${COLORS.border.subtle}`,
@@ -160,10 +160,6 @@ export const COMPONENT_VARIANTS = {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-    },
-
-    // Interactive card hover effects - used in Home.js and other components
-    interactiveCard: {
         cursor: 'pointer',
         transition: ANIMATIONS.transition,
         '&:hover': {

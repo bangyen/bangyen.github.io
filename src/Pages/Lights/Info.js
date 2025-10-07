@@ -105,7 +105,7 @@ export default function Info(props) {
             open={open}
             onClick={toggleOpen}
             sx={{
-                ...COMPONENT_VARIANTS.glassCard,
+                ...COMPONENT_VARIANTS.card,
                 backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
                 transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
             }}
@@ -183,7 +183,7 @@ export default function Info(props) {
                                             flexDirection: 'column',
                                             transition:
                                                 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                            ...COMPONENT_VARIANTS.interactiveCard,
+                                            ...COMPONENT_VARIANTS.card,
                                             '&:hover': {
                                                 backgroundColor:
                                                     COLORS.interactive.hover,
@@ -391,7 +391,7 @@ export default function Info(props) {
                                             ...COMPONENT_VARIANTS.flexCenter,
                                             transition:
                                                 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                            ...COMPONENT_VARIANTS.interactiveCard,
+                                            ...COMPONENT_VARIANTS.card,
                                             '&:hover': {
                                                 backgroundColor:
                                                     COLORS.interactive.hover,

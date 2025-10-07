@@ -190,7 +190,7 @@ const darkTheme = createTheme({
                 {
                     props: { variant: 'glassmorphism' },
                     style: {
-                        ...COMPONENT_VARIANTS.glassCard,
+                        ...COMPONENT_VARIANTS.card,
                         backdropFilter: 'blur(24px) saturate(180%)',
                         padding: '24px',
                     },
@@ -244,7 +244,7 @@ const darkTheme = createTheme({
         MuiMenu: {
             styleOverrides: {
                 paper: {
-                    ...COMPONENT_VARIANTS.glassCard,
+                    ...COMPONENT_VARIANTS.card,
                     padding: '8px 8px',
                 },
             },

@@ -175,7 +175,7 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
             sx: {
                 borderRadius: SPACING.borderRadius.md,
                 border: cellStyle.border,
-                ...COMPONENT_VARIANTS.interactiveCard,
+                ...COMPONENT_VARIANTS.card,
                 '&:hover': {
                     backgroundColor: cellStyle.hover,
                 },
