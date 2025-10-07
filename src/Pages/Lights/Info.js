@@ -107,7 +107,8 @@ export default function Info(props) {
             <Card
                 sx={{
                     maxWidth: '80vw',
-                    maxHeight: '95vh',
+                    height: 'fit-content',
+                    maxHeight: '90vh',
                     overflow: 'auto',
                     mx: 'auto',
                     ...COMPONENT_VARIANTS.glassCard,
@@ -120,7 +121,7 @@ export default function Info(props) {
                         pt: '1.5rem',
                         pb: '1.5rem',
                         px: '1.5rem',
-                        height: '100%',
+                        height: 'fit-content',
                         display: 'flex',
                         flexDirection: 'column',
                         minHeight: 0,
