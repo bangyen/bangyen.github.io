@@ -97,8 +97,8 @@ export default function Info(props) {
             open={open}
             onClick={toggleOpen}
             sx={{
-                ...COMPONENT_VARIANTS.card,
-                backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
+                backgroundColor: 'hsla(0, 0%, 0%, 0.75)',
+                backdropFilter: 'blur(8px)',
                 transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
                 border: 'none',
             }}
