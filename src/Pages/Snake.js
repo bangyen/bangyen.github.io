@@ -169,8 +169,8 @@ export default function Snake() {
 
             if (index in board) {
                 if (board[index] > 0)
-                    color = COLORS.primary.dark; // Snake body - dark blue
-                else color = COLORS.primary.main; // Food - much darker blue shade
+                    color = COLORS.primary.main; // Snake body - light blue
+                else color = COLORS.primary.dark; // Food - lighter blue shade
             }
 
             return {
