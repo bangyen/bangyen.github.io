@@ -71,9 +71,7 @@ function Cell({ size, children, ...rest }) {
     const radius = `${size / 4}rem`;
 
     const props = {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        ...COMPONENT_VARIANTS.flexCenter,
         borderRadius: radius,
         height: remSize,
         width: remSize,
@@ -165,10 +163,8 @@ export function Navigation({ children, ...rest }) {
                 container
                 spacing={2}
                 sx={{
-                    display: 'flex',
+                    ...COMPONENT_VARIANTS.flexCenter,
                     flexWrap: 'nowrap',
-                    justifyContent: 'center',
-                    alignItems: 'center',
                     minWidth: 0, // Allow shrinking on mobile
                 }}
             >

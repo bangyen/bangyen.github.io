@@ -196,9 +196,7 @@ export default function Interpreters() {
                                 <CardContent sx={{ padding: 0 }}>
                                     <Box
                                         sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
+                                            ...COMPONENT_VARIANTS.flexCenter,
                                             gap: 1,
                                             marginBottom: 2,
                                         }}

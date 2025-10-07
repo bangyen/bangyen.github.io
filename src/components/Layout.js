@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Box } from '@mui/material';
-import { SPACING } from '../config/theme';
+import { SPACING, COMPONENT_VARIANTS } from '../config/theme';
 
 /**
  * Section component provides consistent section layout with proper spacing
@@ -44,9 +44,7 @@ export function HeroContainer({
             maxWidth={false}
             sx={{
                 flex: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
+                ...COMPONENT_VARIANTS.flexCenter,
                 paddingTop: 0,
                 paddingBottom,
                 paddingX: {

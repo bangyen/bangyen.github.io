@@ -363,9 +363,7 @@ export default function Info(props) {
                                 <Grid
                                     size={{ xs: 12, lg: 6 }}
                                     sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
+                                        ...COMPONENT_VARIANTS.flexCenter,
                                     }}
                                 >
                                     <Box
@@ -378,9 +376,7 @@ export default function Info(props) {
                                             padding: 3,
                                             width: '100%',
                                             height: '100%',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
+                                            ...COMPONENT_VARIANTS.flexCenter,
                                             transition:
                                                 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
                                             ...COMPONENT_VARIANTS.interactiveCard,
