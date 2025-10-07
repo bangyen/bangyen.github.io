@@ -3,7 +3,12 @@ import Grid from '@mui/material/Grid2';
 import { Typography, Box, Fade } from '@mui/material';
 import { HomeButton } from '../helpers';
 import { PAGE_TITLES } from '../config/constants';
-import { COLORS, SPACING, TYPOGRAPHY } from '../config/theme';
+import {
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+    COMPONENT_VARIANTS,
+} from '../config/theme';
 
 export default function Error() {
     document.title = PAGE_TITLES.error;
@@ -37,11 +42,9 @@ export default function Error() {
             {/* Main Content */}
             <Grid
                 flex={1}
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                flexDirection="column"
                 sx={{
+                    ...COMPONENT_VARIANTS.flexCenter,
+                    flexDirection: 'column',
                     zIndex: 1,
                     padding: {
                         xs: `${SPACING.padding.xs} 0`,
@@ -110,8 +113,7 @@ export default function Error() {
 
                         <Box
                             sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
+                                ...COMPONENT_VARIANTS.flexCenter,
                                 marginTop: 4,
                             }}
                         >
