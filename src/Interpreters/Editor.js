@@ -2,7 +2,13 @@ import { Program, Output, Tape, Register } from './Display';
 import { CustomGrid } from '../helpers';
 import Grid from '@mui/material/Grid2';
 import { Toolbar } from './Toolbar';
-import { COLORS, SPACING, ANIMATIONS, TYPOGRAPHY } from '../config/theme';
+import {
+    COLORS,
+    SPACING,
+    ANIMATIONS,
+    TYPOGRAPHY,
+    COMPONENT_VARIANTS,
+} from '../config/theme';
 
 import { Typography, TextField } from '@mui/material';
 
@@ -169,13 +175,11 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
             onClick: handleClick(pos),
             children: <Text text={value} />,
             sx: {
-                cursor: 'pointer',
                 borderRadius: SPACING.borderRadius.md,
                 border: cellStyle.border,
-                transition: ANIMATIONS.transition,
+                ...COMPONENT_VARIANTS.interactiveCard,
                 '&:hover': {
                     backgroundColor: cellStyle.hover,
-                    transform: 'translateY(-0.125rem)', // -2px
                 },
             },
         };

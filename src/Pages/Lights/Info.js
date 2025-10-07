@@ -99,8 +99,8 @@ export default function Info(props) {
             open={open}
             onClick={toggleOpen}
             sx={{
+                ...COMPONENT_VARIANTS.glassCard,
                 backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
-                backdropFilter: 'blur(24px) saturate(180%)',
                 transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
             }}
         >
