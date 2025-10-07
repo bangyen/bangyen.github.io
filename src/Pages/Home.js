@@ -159,7 +159,7 @@ export default function Home() {
                     top: 0,
                     left: 0,
                     right: 0,
-                    padding: SPACING.responsive.padding,
+                    padding: { xs: '0.5rem', md: '1.5rem' },
                     zIndex: 1000,
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -182,7 +182,7 @@ export default function Home() {
             {/* Spacing between nav and hero */}
             <Box
                 sx={{
-                    height: SPACING.responsive.margin,
+                    height: { xs: '2rem', md: '5rem' },
                 }}
             />
 
@@ -215,10 +215,8 @@ export default function Home() {
                                             xs: 'clamp(2rem, 8vw, 2.5rem)', // Mobile sizing
                                             md: 'clamp(3rem, 6vw, 5rem)', // Desktop sizing
                                         },
-                                        lineHeight:
-                                            TYPOGRAPHY.lineHeight.normal,
-                                        letterSpacing:
-                                            TYPOGRAPHY.letterSpacing.normal,
+                                        lineHeight: 1.4,
+                                        letterSpacing: '0',
                                         marginBottom: 2,
                                         // Allow controlled wrapping, but prevent breaks in names
                                         wordBreak: 'keep-all', // Prevent breaking within words
@@ -238,8 +236,7 @@ export default function Home() {
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.semibold,
                                         marginBottom: 4,
-                                        lineHeight:
-                                            TYPOGRAPHY.lineHeight.normal,
+                                        lineHeight: 1.4,
                                         // Control how text breaks, allowing smart wrapping
                                         wordBreak: 'keep-all', // Prevent breaking within words
                                         hyphens: 'none', // Disable hyphenation
@@ -605,9 +602,7 @@ export default function Home() {
                                                         textTransform:
                                                             'uppercase',
                                                         letterSpacing:
-                                                            TYPOGRAPHY
-                                                                .letterSpacing
-                                                                .wider,
+                                                            '0.025em',
                                                     }}
                                                 >
                                                     Research
@@ -629,9 +624,7 @@ export default function Home() {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .subheading,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .normal,
+                                                    lineHeight: 1.4,
                                                     marginBottom: 2,
                                                 }}
                                             >
@@ -641,12 +634,15 @@ export default function Home() {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
-                                                        borderRadius: '20px',
+                                                        borderRadius:
+                                                            SPACING.borderRadius
+                                                                .full,
                                                         fontSize:
                                                             'clamp(0.7rem, 0.8vw, 0.75rem)',
                                                         fontWeight: 500,
                                                         padding: '4px 12px',
-                                                        minHeight: '24px',
+                                                        minHeight:
+                                                            SPACING.padding.sm,
                                                         display: 'inline-flex',
                                                         alignItems: 'center',
                                                         transition:
@@ -668,9 +664,7 @@ export default function Home() {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .relaxed,
+                                                    lineHeight: 1.5,
                                                     flex: 1,
                                                 }}
                                             >
@@ -730,9 +724,7 @@ export default function Home() {
                                                         textTransform:
                                                             'uppercase',
                                                         letterSpacing:
-                                                            TYPOGRAPHY
-                                                                .letterSpacing
-                                                                .wider,
+                                                            '0.025em',
                                                     }}
                                                 >
                                                     Project
@@ -754,9 +746,7 @@ export default function Home() {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .subheading,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .normal,
+                                                    lineHeight: 1.4,
                                                     marginBottom: 2,
                                                 }}
                                             >
@@ -766,12 +756,15 @@ export default function Home() {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
-                                                        borderRadius: '20px',
+                                                        borderRadius:
+                                                            SPACING.borderRadius
+                                                                .full,
                                                         fontSize:
                                                             'clamp(0.7rem, 0.8vw, 0.75rem)',
                                                         fontWeight: 500,
                                                         padding: '4px 12px',
-                                                        minHeight: '24px',
+                                                        minHeight:
+                                                            SPACING.padding.sm,
                                                         display: 'inline-flex',
                                                         alignItems: 'center',
                                                         transition:
@@ -794,9 +787,7 @@ export default function Home() {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .relaxed,
+                                                    lineHeight: 1.5,
                                                     flex: 1,
                                                 }}
                                             >
@@ -814,7 +805,7 @@ export default function Home() {
             {/* Bottom spacing */}
             <Box
                 sx={{
-                    height: SPACING.responsive.margin,
+                    height: { xs: '2rem', md: '5rem' },
                 }}
             />
         </Grid>

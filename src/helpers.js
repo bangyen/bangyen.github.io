@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
 import {
     COLORS,
+    SPACING,
     TYPOGRAPHY,
     ANIMATIONS,
     COMPONENT_VARIANTS,
@@ -168,7 +169,7 @@ export function Navigation({ children, ...rest }) {
                 backgroundColor: 'hsla(0, 0%, 3%, 0.95)',
                 backdropFilter: 'blur(24px) saturate(180%)',
                 border: `1px solid ${COLORS.border.subtle}`,
-                borderRadius: '16px',
+                borderRadius: SPACING.borderRadius.lg,
                 boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.35)',
                 padding: '16px 24px',
                 ...rest,
@@ -276,7 +277,7 @@ function Arrows({ show, setShow, handler }) {
 export const GlassCard = forwardRef(function GlassCard(
     {
         children,
-        padding = '24px',
+        padding = SPACING.padding.md,
         sx,
         className,
         interactive = false,

@@ -246,9 +246,7 @@ export default function Info(props) {
                                                 sx={{
                                                     color: COLORS.text
                                                         .secondary,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .relaxed,
+                                                    lineHeight: 1.5,
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
@@ -297,9 +295,7 @@ export default function Info(props) {
                                                 sx={{
                                                     color: COLORS.text
                                                         .secondary,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .relaxed,
+                                                    lineHeight: 1.5,
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
@@ -348,9 +344,7 @@ export default function Info(props) {
                                                 sx={{
                                                     color: COLORS.text
                                                         .secondary,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .relaxed,
+                                                    lineHeight: 1.5,
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
@@ -423,10 +417,8 @@ export default function Info(props) {
                                                 TYPOGRAPHY.fontWeight.semibold,
                                             fontSize:
                                                 TYPOGRAPHY.fontSize.subheading,
-                                            lineHeight:
-                                                TYPOGRAPHY.lineHeight.normal,
-                                            letterSpacing:
-                                                TYPOGRAPHY.letterSpacing.normal,
+                                            lineHeight: 1.4,
+                                            letterSpacing: '0',
                                             mb: 3,
                                         }}
                                     >

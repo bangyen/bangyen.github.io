@@ -133,7 +133,7 @@ export default function Interpreters() {
                             sx={{
                                 color: 'text.primary',
                                 fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                                fontSize: SPACING.responsive.fontSize,
+                                fontSize: { xs: '1.25rem', md: '2.125rem' },
                             }}
                         >
                             Esolang Interpreters
@@ -146,14 +146,14 @@ export default function Interpreters() {
                             >
                                 <GitHub
                                     sx={{
-                                        fontSize: SPACING.responsive.iconSize,
+                                        fontSize: { xs: '1.5rem', md: '2rem' },
                                     }}
                                 />
                             </IconButton>
                             <IconButton component={Link} to="/">
                                 <Home
                                     sx={{
-                                        fontSize: SPACING.responsive.iconSize,
+                                        fontSize: { xs: '1.5rem', md: '2rem' },
                                     }}
                                 />
                             </IconButton>
@@ -168,7 +168,7 @@ export default function Interpreters() {
                                 xs: '1fr',
                                 md: '1fr 1fr',
                             },
-                            gap: SPACING.responsive.gap,
+                            gap: { xs: 2, md: 3 },
                             marginTop: 4,
                         }}
                     >
