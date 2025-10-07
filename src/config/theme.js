@@ -160,10 +160,9 @@ export const ANIMATIONS = {
 // Layout Constants
 export const LAYOUT = {
     zIndex: {
-        background: -2,
+        background: -1,
         content: 1,
-        navigation: 1000,
-        modal: 1300,
-        tooltip: 1500,
+        overlay: 1000,
+        modal: 2000,
     },
 };
