@@ -311,7 +311,7 @@ const ZSharp = () => {
                     {/* Performance Chart */}
                     <GlassCard
                         sx={{
-                            marginBottom: 4,
+                            marginBottom: 3,
                             width: '100%',
                             boxSizing: 'border-box',
                             overflow: 'hidden',
@@ -321,7 +321,7 @@ const ZSharp = () => {
                             variant="subtitle1"
                             sx={{
                                 color: COLORS.text.secondary,
-                                marginBottom: 3,
+                                marginBottom: 2,
                                 textAlign: 'center',
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
                                 fontSize: TYPOGRAPHY.fontSize.subheading,
@@ -623,7 +623,7 @@ const ZSharp = () => {
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                marginBottom: 3,
+                                marginBottom: 2,
                             }}
                         >
                             <Box
@@ -659,7 +659,7 @@ const ZSharp = () => {
                                     xs: 'repeat(2, minmax(0, 1fr))',
                                     md: 'repeat(4, 1fr)',
                                 },
-                                gap: 1,
+                                gap: 1.5,
                                 width: '100%',
                                 margin: 0,
                             }}
@@ -683,9 +683,9 @@ const ZSharp = () => {
                                     borderWidth: '1px',
                                     borderStyle: 'solid',
                                     borderRadius: SPACING.borderRadius.lg,
-                                    minHeight: '40px',
-                                    padding: '0.5rem 1rem',
-                                    fontSize: '0.875rem',
+                                    minHeight: '36px',
+                                    padding: '0.4rem 0.8rem',
+                                    fontSize: '0.8rem',
                                     fontWeight: TYPOGRAPHY.fontWeight.medium,
                                     transition:
                                         'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
@@ -720,9 +720,9 @@ const ZSharp = () => {
                                     borderWidth: '1px',
                                     borderStyle: 'solid',
                                     borderRadius: SPACING.borderRadius.lg,
-                                    minHeight: '40px',
-                                    padding: '0.5rem 1rem',
-                                    fontSize: '0.875rem',
+                                    minHeight: '36px',
+                                    padding: '0.4rem 0.8rem',
+                                    fontSize: '0.8rem',
                                     fontWeight: TYPOGRAPHY.fontWeight.medium,
                                     transition:
                                         'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
@@ -757,9 +757,9 @@ const ZSharp = () => {
                                     borderWidth: '1px',
                                     borderStyle: 'solid',
                                     borderRadius: SPACING.borderRadius.lg,
-                                    minHeight: '40px',
-                                    padding: '0.5rem 1rem',
-                                    fontSize: '0.875rem',
+                                    minHeight: '36px',
+                                    padding: '0.4rem 0.8rem',
+                                    fontSize: '0.8rem',
                                     fontWeight: TYPOGRAPHY.fontWeight.medium,
                                     transition:
                                         'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
@@ -794,9 +794,9 @@ const ZSharp = () => {
                                     borderWidth: '1px',
                                     borderStyle: 'solid',
                                     borderRadius: SPACING.borderRadius.lg,
-                                    minHeight: '40px',
-                                    padding: '0.5rem 1rem',
-                                    fontSize: '0.875rem',
+                                    minHeight: '36px',
+                                    padding: '0.4rem 0.8rem',
+                                    fontSize: '0.8rem',
                                     fontWeight: TYPOGRAPHY.fontWeight.medium,
                                     transition:
                                         'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
