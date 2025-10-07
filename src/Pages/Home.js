@@ -103,11 +103,20 @@ function MenuButton({ children }) {
                 sx={{
                     marginLeft: 1,
                     marginTop: 1,
+                    '& .MuiPaper-root': {
+                        height: 'fit-content',
+                        minHeight: 'auto',
+                        maxHeight: 'fit-content',
+                    },
                 }}
                 onClose={handleClose}
                 MenuListProps={{
                     'aria-labelledby': 'basic-button',
-                    sx: { padding: 0 },
+                    sx: {
+                        padding: 0,
+                        height: 'fit-content',
+                        minHeight: 'auto',
+                    },
                 }}
             >
                 {children}
