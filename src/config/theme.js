@@ -67,8 +67,6 @@ export const TYPOGRAPHY = {
         primary:
             '"Inter", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif',
         mono: '"SF Mono", "Monaco", "Inconsolata", "Fira Code", monospace',
-        display:
-            '"SF Pro Display", -apple-system, BlinkMacSystemFont, "Inter", sans-serif',
     },
     // Simplified typography scale - 6 essential sizes with responsive scaling
     fontSize: {
