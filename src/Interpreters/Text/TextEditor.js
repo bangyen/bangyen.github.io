@@ -3,7 +3,6 @@ import Editor, { EditorContext, TextArea } from '../Editor';
 import { useTimer, useCache, useContainer } from '../../hooks';
 import { handleToolbar } from '../Toolbar';
 import { PAGE_TITLES } from '../../config/constants';
-import { TIMING } from '../../config/theme';
 
 function handleAction(state, action) {
     const { type, payload } = action;

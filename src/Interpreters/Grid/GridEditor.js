@@ -2,7 +2,6 @@ import Editor, { EditorContext, GridArea } from '../Editor';
 import { convertPixels } from '../../calculate';
 import { handleAction } from './eventHandlers';
 import { PAGE_TITLES } from '../../config/constants';
-import { TIMING } from '../../config/theme';
 
 import {
     useContainer,
