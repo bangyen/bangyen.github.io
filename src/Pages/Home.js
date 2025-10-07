@@ -136,10 +136,10 @@ function ProjectDropdown() {
                                         component={Link}
                                         to={project.path}
                                         sx={{
-                                            padding: '12px 16px',
+                                            padding: '16px 20px',
                                             borderRadius:
                                                 SPACING.borderRadius.md,
-                                            margin: '0.25rem 0.5rem',
+                                            margin: '0.125rem 0.25rem',
                                             transition: ANIMATIONS.transition,
                                             display: 'flex',
                                             flexDirection: 'column',
