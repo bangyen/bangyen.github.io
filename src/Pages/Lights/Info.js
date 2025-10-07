@@ -121,9 +121,9 @@ export default function Info(props) {
             >
                 <Box
                     sx={{
-                        pt: '1.5rem',
-                        pb: '1.5rem',
-                        px: '1.5rem',
+                        pt: '1rem',
+                        pb: '1rem',
+                        px: '1.25rem',
                         height: 'fit-content',
                         display: 'flex',
                         flexDirection: 'column',
@@ -132,14 +132,14 @@ export default function Info(props) {
                 >
                     <Grid
                         container
-                        spacing={isMobile ? 2 : 3}
+                        spacing={isMobile ? 1.5 : 2}
                         sx={{ flex: 1, minHeight: 0 }}
                     >
                         {/* Top section: Instructions on left, animations on right */}
                         <Grid
                             container
                             size={12}
-                            spacing={3}
+                            spacing={2}
                             sx={{
                                 flex: 1,
                                 minHeight: 0,
@@ -179,7 +179,7 @@ export default function Info(props) {
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
                                                         .semibold,
-                                                mb: 3,
+                                                mb: 2,
                                                 textAlign: isMobile
                                                     ? 'center'
                                                     : 'left',
@@ -192,7 +192,7 @@ export default function Info(props) {
                                             Chasing Lights Algorithm
                                         </Typography>
                                         {/* Step 1 */}
-                                        <Box sx={{ mb: 3 }}>
+                                        <Box sx={{ mb: 2 }}>
                                             <Typography
                                                 variant="subtitle1"
                                                 sx={{
@@ -239,7 +239,7 @@ export default function Info(props) {
                                         </Box>
 
                                         {/* Step 2 */}
-                                        <Box sx={{ mb: 3 }}>
+                                        <Box sx={{ mb: 2 }}>
                                             <Typography
                                                 variant="subtitle1"
                                                 sx={{
@@ -286,7 +286,7 @@ export default function Info(props) {
                                         </Box>
 
                                         {/* Step 3 */}
-                                        <Box>
+                                        <Box sx={{ mb: 1 }}>
                                             <Typography
                                                 variant="subtitle1"
                                                 sx={{
@@ -364,11 +364,12 @@ export default function Info(props) {
                         </Grid>
 
                         {/* Bottom section: Lights Out Calculator (full width) */}
-                        <Grid container size={12} spacing={3}>
+                        <Grid container size={12} spacing={2}>
                             <Grid size={12}>
                                 <GlassCard
                                     sx={{
                                         textAlign: 'center',
+                                        paddingBottom: '2rem',
                                     }}
                                 >
                                     <Typography
@@ -381,14 +382,14 @@ export default function Info(props) {
                                                 TYPOGRAPHY.fontSize.subheading,
                                             lineHeight: 1.4,
                                             letterSpacing: '0',
-                                            mb: 3,
+                                            mb: 2,
                                         }}
                                     >
                                         Interactive Calculator
                                     </Typography>
 
                                     {/* Input Pattern */}
-                                    <Box sx={{ mb: 3 }}>
+                                    <Box sx={{ mb: 2 }}>
                                         <CustomGrid
                                             space={0}
                                             rows={1}
