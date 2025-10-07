@@ -246,7 +246,7 @@ const ZSharp = () => {
                             <Typography
                                 variant="h1"
                                 sx={{
-                                    color: 'text.primary',
+                                    color: COLORS.text.primary,
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
                                     fontSize: TYPOGRAPHY.fontSize.h2,
                                 }}
@@ -288,7 +288,7 @@ const ZSharp = () => {
                     <Typography
                         variant="h5"
                         sx={{
-                            color: 'text.secondary',
+                            color: COLORS.text.secondary,
                             marginTop: 2,
                             marginBottom: 3,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
@@ -334,7 +334,7 @@ const ZSharp = () => {
                                     sx={{
                                         ...COMPONENT_VARIANTS.flexCenter,
                                         height: '100%',
-                                        color: 'text.secondary',
+                                        color: COLORS.text.secondary,
                                     }}
                                 >
                                     <Typography>

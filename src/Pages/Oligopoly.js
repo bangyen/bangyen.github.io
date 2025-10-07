@@ -265,7 +265,7 @@ const Oligopoly = () => {
                             <Typography
                                 variant="h1"
                                 sx={{
-                                    color: 'text.primary',
+                                    color: COLORS.text.primary,
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
                                     fontSize: TYPOGRAPHY.fontSize.h2,
                                 }}
@@ -304,7 +304,7 @@ const Oligopoly = () => {
                     <Typography
                         variant="h5"
                         sx={{
-                            color: 'text.secondary',
+                            color: COLORS.text.secondary,
                             marginTop: 2,
                             marginBottom: 4,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
@@ -347,7 +347,7 @@ const Oligopoly = () => {
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         height: '100%',
-                                        color: 'text.secondary',
+                                        color: COLORS.text.secondary,
                                     }}
                                 >
                                     <Typography>
@@ -480,7 +480,7 @@ const Oligopoly = () => {
                             <Typography
                                 variant="body1"
                                 sx={{
-                                    color: 'primary.light',
+                                    color: COLORS.primary.light,
                                     fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                 }}
                             >
@@ -515,7 +515,10 @@ const Oligopoly = () => {
                                 >
                                     <Typography
                                         variant="body2"
-                                        sx={{ color: 'text.secondary', mb: 1 }}
+                                        sx={{
+                                            color: COLORS.text.secondary,
+                                            mb: 1,
+                                        }}
                                     >
                                         Number of Firms
                                     </Typography>
@@ -570,7 +573,10 @@ const Oligopoly = () => {
                                 >
                                     <Typography
                                         variant="body2"
-                                        sx={{ color: 'text.secondary', mb: 1 }}
+                                        sx={{
+                                            color: COLORS.text.secondary,
+                                            mb: 1,
+                                        }}
                                     >
                                         Demand Elasticity
                                     </Typography>
@@ -594,11 +600,11 @@ const Oligopoly = () => {
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:
-                                                        'success.main',
+                                                        COLORS.data.green,
                                                     color: COLORS.text.primary,
                                                     '&:hover': {
                                                         backgroundColor:
-                                                            'success.dark',
+                                                            'hsl(141, 64%, 39%)',
                                                     },
                                                 },
                                                 '&:hover': {
@@ -630,7 +636,10 @@ const Oligopoly = () => {
                                 >
                                     <Typography
                                         variant="body2"
-                                        sx={{ color: 'text.secondary', mb: 1 }}
+                                        sx={{
+                                            color: COLORS.text.secondary,
+                                            mb: 1,
+                                        }}
                                     >
                                         Base Price
                                     </Typography>
@@ -654,11 +663,11 @@ const Oligopoly = () => {
                                                 flex: 1,
                                                 '&.Mui-selected': {
                                                     backgroundColor:
-                                                        'warning.main',
+                                                        COLORS.data.amber,
                                                     color: COLORS.text.primary,
                                                     '&:hover': {
                                                         backgroundColor:
-                                                            'warning.dark',
+                                                            'hsl(34, 95%, 48%)',
                                                     },
                                                 },
                                                 '&:hover': {

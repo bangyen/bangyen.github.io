@@ -131,9 +131,12 @@ export default function Interpreters() {
                         <Typography
                             variant="h4"
                             sx={{
-                                color: 'text.primary',
+                                color: COLORS.text.primary,
                                 fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                                fontSize: { xs: '1.25rem', md: '2.125rem' },
+                                fontSize: {
+                                    xs: TYPOGRAPHY.fontSize.subheading,
+                                    md: TYPOGRAPHY.fontSize.h2,
+                                },
                             }}
                         >
                             Esolang Interpreters
@@ -205,7 +208,7 @@ export default function Interpreters() {
                                         <Typography
                                             variant="h6"
                                             sx={{
-                                                color: 'primary.light',
+                                                color: COLORS.primary.light,
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
                                                         .semibold,
@@ -219,7 +222,7 @@ export default function Interpreters() {
                                     <Typography
                                         variant="body2"
                                         sx={{
-                                            color: 'text.secondary',
+                                            color: COLORS.text.secondary,
                                             wordWrap: 'break-word',
                                             overflowWrap: 'break-word',
                                         }}

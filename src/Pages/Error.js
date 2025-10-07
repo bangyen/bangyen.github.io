@@ -77,7 +77,7 @@ export default function Error() {
                         <Typography
                             variant="h3"
                             sx={{
-                                color: 'text.secondary',
+                                color: COLORS.text.secondary,
                                 marginBottom: 2,
                                 fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                 fontSize: {
@@ -92,7 +92,7 @@ export default function Error() {
                         <Typography
                             variant="body1"
                             sx={{
-                                color: 'text.secondary',
+                                color: COLORS.text.secondary,
                                 marginBottom: 4,
                                 fontWeight: TYPOGRAPHY.fontWeight.normal,
                                 fontSize: {
