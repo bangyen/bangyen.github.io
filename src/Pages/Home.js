@@ -43,47 +43,47 @@ import {
 // Project categories with enhanced metadata
 const PROJECT_CATEGORIES = {
     research: {
-        title: 'Research & ML',
+        title: 'Research',
         icon: Psychology,
         color: COLORS.data.green,
         projects: {
             ZSharp: {
                 path: '/ZSharp',
-                description: 'Sharpness-Aware Minimization',
+                description: 'ML optimization method',
                 technology: 'PyTorch',
+            },
+            Oligopoly: {
+                path: '/Oligopoly',
+                description: 'Market simulation model',
+                technology: 'FastAPI',
             },
         },
     },
     games: {
-        title: 'Games & Puzzles',
+        title: 'Games',
         icon: GamepadRounded,
         color: COLORS.primary.main,
         projects: {
             Snake: {
                 path: '/Snake',
-                description: 'Classic Snake Game',
+                description: 'Retro arcade gameplay',
                 technology: 'JavaScript',
             },
             Lights_Out: {
                 path: '/Lights_Out',
-                description: 'Lights Out Puzzle',
+                description: 'Grid-based logic puzzle',
                 technology: 'JavaScript',
-            },
-            Oligopoly: {
-                path: '/Oligopoly',
-                description: 'Cournot Competition',
-                technology: 'FastAPI',
             },
         },
     },
     tools: {
-        title: 'Development Tools',
+        title: 'Tools',
         icon: Code,
         color: COLORS.data.amber,
         projects: {
             Interpreters: {
                 path: '/Interpreters',
-                description: 'Esoteric Language Interpreters',
+                description: 'Esoteric language demos',
                 technology: 'JavaScript',
             },
         },
@@ -92,7 +92,7 @@ const PROJECT_CATEGORIES = {
 
 function ProjectDropdown() {
     return (
-        <Box sx={{ padding: '8px' }}>
+        <Box sx={{ padding: '16px 20px 0px 20px' }}>
             {Object.entries(PROJECT_CATEGORIES).map(
                 ([categoryKey, category]) => {
                     const IconComponent = category.icon;
@@ -154,45 +154,18 @@ function ProjectDropdown() {
                                             },
                                         }}
                                     >
-                                        <Box
+                                        <Typography
                                             sx={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'space-between',
-                                                width: '100%',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .semibold,
+                                                fontSize:
+                                                    TYPOGRAPHY.fontSize.body,
+                                                color: COLORS.text.primary,
                                             }}
                                         >
-                                            <Typography
-                                                sx={{
-                                                    fontWeight:
-                                                        TYPOGRAPHY.fontWeight
-                                                            .semibold,
-                                                    fontSize:
-                                                        TYPOGRAPHY.fontSize
-                                                            .body,
-                                                    color: COLORS.text.primary,
-                                                }}
-                                            >
-                                                {projectName.replace('_', ' ')}
-                                            </Typography>
-                                            <Box
-                                                sx={{
-                                                    backgroundColor: `${category.color}15`,
-                                                    color: category.color,
-                                                    padding: '2px 8px',
-                                                    borderRadius:
-                                                        SPACING.borderRadius.sm,
-                                                    fontSize:
-                                                        TYPOGRAPHY.fontSize
-                                                            .caption,
-                                                    fontWeight:
-                                                        TYPOGRAPHY.fontWeight
-                                                            .medium,
-                                                }}
-                                            >
-                                                {project.technology}
-                                            </Box>
-                                        </Box>
+                                            {projectName.replace('_', ' ')}
+                                        </Typography>
                                         <Typography
                                             sx={{
                                                 color: COLORS.text.secondary,
@@ -262,8 +235,7 @@ function MenuButton() {
                     marginLeft: 1,
                     marginTop: 1,
                     '& .MuiPaper-root': {
-                        minWidth: '320px',
-                        maxWidth: '400px',
+                        width: 'auto',
                         height: 'auto !important', // Override global styles
                         backgroundColor: COLORS.surface.glass,
                         backdropFilter: 'blur(24px) saturate(180%)',
