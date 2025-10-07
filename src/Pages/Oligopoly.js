@@ -219,6 +219,7 @@ const Oligopoly = () => {
             sx={{
                 position: 'relative',
                 padding: SPACING.padding.md,
+                paddingBottom: 0,
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -464,16 +465,11 @@ const Oligopoly = () => {
                     {/* Interactive Control Panel */}
                     <GlassCard
                         sx={{
-                            marginBottom: 4,
+                            marginBottom: 0,
                             width: '100%',
                             boxSizing: 'border-box',
                             overflow: 'hidden',
                             paddingBottom: SPACING.padding.md,
-                            transition: 'all 0.3s ease-in-out',
-                            '&:hover': {
-                                transform: 'translateY(-2px)',
-                                boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
-                            },
                         }}
                     >
                         <Box
