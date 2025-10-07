@@ -155,31 +155,6 @@ export const ANIMATIONS = {
         },
     },
     fast: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-    // Keyframe definitions for CSS animations
-    keyframes: {
-        fadeInUp: `@keyframes fade-in-up {
-            from { opacity: 0; transform: translate3d(0, 40px, 0); }
-            to { opacity: 1; transform: translate3d(0, 0, 0); }
-        }`,
-        slideInLeft: `@keyframes slide-in-left {
-            from { opacity: 0; transform: translate3d(-40px, 0, 0); }
-            to { opacity: 1; transform: translate3d(0, 0, 0); }
-        }`,
-        scaleIn: `@keyframes scale-in {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }`,
-    },
-    // Staggered animation delays
-    // Animation utilities for common patterns    // Keyframe definitions for CSS animations
-    fadeIn: 'fade-in-up 0.6s ease-out',
-    slideIn: 'slide-in-left 0.4s ease-out',
-    scaleIn: 'scale-in 0.3s ease-out',
-    stagger: {
-        fast: 150,
-        normal: 200,
-        slow: 300,
-    },
 };
 
 // Layout Constants
@@ -187,8 +162,6 @@ export const LAYOUT = {
     zIndex: {
         background: -1,
         content: 1,
-        overlay: 1000,
-        modal: 2000,
     },
 };
 
