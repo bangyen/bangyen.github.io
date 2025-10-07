@@ -7,7 +7,12 @@ import {
     Replay,
 } from '@mui/icons-material';
 import Grid from '@mui/material/Grid2';
-import { SPACING, COLORS, TYPOGRAPHY } from '../../config/theme';
+import {
+    SPACING,
+    COLORS,
+    TYPOGRAPHY,
+    COMPONENT_VARIANTS,
+} from '../../config/theme';
 
 import { getProduct } from './matrices';
 import { CustomGrid } from '../../helpers';
@@ -105,11 +110,8 @@ export default function Info(props) {
                     maxHeight: '95vh',
                     overflow: 'auto',
                     mx: 'auto',
-                    borderRadius: SPACING.borderRadius.lg,
-                    backgroundColor: COLORS.surface.glass,
-                    backdropFilter: 'blur(20px) saturate(180%)',
+                    ...COMPONENT_VARIANTS.glassCard,
                     border: `1px solid hsla(0, 0%, 100%, 0.1)`,
-                    boxShadow: COLORS.shadows.sm,
                     transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
             >
