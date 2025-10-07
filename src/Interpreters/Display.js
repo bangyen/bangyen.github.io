@@ -198,7 +198,7 @@ function CompactDisplay(props) {
                 border: `1px solid ${COLORS.border.subtle}`,
                 borderRadius: SPACING.borderRadius.md,
                 height: '100%',
-                minHeight: SPACING.maxWidth.medium,
+                minHeight: SPACING.maxWidth.sm,
             }}
         >
             <Box

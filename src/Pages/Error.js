@@ -57,7 +57,7 @@ export default function Error() {
                     <Box
                         sx={{
                             textAlign: 'center',
-                            maxWidth: SPACING.maxWidth.xs,
+                            maxWidth: SPACING.maxWidth.sm,
                             width: '100%',
                             padding: {
                                 xs: '0 1rem',

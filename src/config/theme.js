@@ -86,7 +86,7 @@ export const TYPOGRAPHY = {
 
 // Simplified Spacing System - Only essential values actually used
 export const SPACING = {
-    // Responsive padding - consolidated from padding/margin
+    // Consolidated Spacing System - 5 core values for consistency
     padding: {
         xs: '0.5rem',
         sm: '1rem',
@@ -94,7 +94,6 @@ export const SPACING = {
         lg: '2rem',
         xl: '3rem',
     },
-    section: '2rem',
     // Border radius - only the 3 values actually used
     borderRadius: {
         md: '12px',

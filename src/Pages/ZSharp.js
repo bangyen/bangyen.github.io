@@ -597,7 +597,7 @@ const ZSharp = () => {
                             },
                             gap: 1,
                             maxWidth: {
-                                xs: SPACING.maxWidth.xs,
+                                xs: SPACING.maxWidth.sm,
                                 md: 'none',
                             },
                             margin: {

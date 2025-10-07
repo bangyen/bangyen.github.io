@@ -511,8 +511,7 @@ const Oligopoly = () => {
                             <Grid size={{ xs: 12, md: 4 }}>
                                 <Box
                                     sx={{
-                                        marginBottom:
-                                            SPACING.padding.marginBottom,
+                                        marginBottom: SPACING.padding.md,
                                     }}
                                 >
                                     <Typography
@@ -567,8 +566,7 @@ const Oligopoly = () => {
                             <Grid size={{ xs: 12, md: 4 }}>
                                 <Box
                                     sx={{
-                                        marginBottom:
-                                            SPACING.padding.marginBottom,
+                                        marginBottom: SPACING.padding.md,
                                     }}
                                 >
                                     <Typography
@@ -628,8 +626,7 @@ const Oligopoly = () => {
                             <Grid size={{ xs: 12, md: 4 }}>
                                 <Box
                                     sx={{
-                                        marginBottom:
-                                            SPACING.padding.marginBottom,
+                                        marginBottom: SPACING.padding.md,
                                     }}
                                 >
                                     <Typography
