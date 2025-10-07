@@ -165,9 +165,9 @@ export const LAYOUT = {
     },
 };
 
-// Component Variants - Reusable styling patterns to eliminate repetitive inline styles
+// Component Variants - Only patterns used in multiple places
 export const COMPONENT_VARIANTS = {
-    // Glass morphism card styling
+    // Glass morphism card styling - used in Home.js, Lights/Info.js, index.js
     glassCard: {
         backgroundColor: COLORS.surface.glass,
         backdropFilter: 'blur(24px) saturate(180%)',
@@ -179,69 +179,7 @@ export const COMPONENT_VARIANTS = {
         flexDirection: 'column',
     },
 
-    // Primary button styling
-    primaryButton: {
-        backgroundColor: COLORS.primary.main,
-        color: COLORS.text.primary,
-        border: 'none',
-        borderRadius: SPACING.borderRadius.md,
-        padding: '12px 24px',
-        minHeight: '44px',
-        fontWeight: TYPOGRAPHY.fontWeight.semibold,
-        transition: ANIMATIONS.transition,
-        boxShadow: COLORS.shadows.xs,
-        '&:hover': {
-            backgroundColor: COLORS.primary.dark,
-            boxShadow: COLORS.shadows.sm,
-            transform: 'translateY(-1px)',
-        },
-        '&:focus': {
-            outline: 'none',
-            boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
-        },
-    },
-
-    // Secondary button styling
-    secondaryButton: {
-        backgroundColor: 'transparent',
-        color: COLORS.primary.main,
-        border: `1px solid ${COLORS.primary.main}`,
-        borderRadius: SPACING.borderRadius.md,
-        padding: '12px 24px',
-        minHeight: '44px',
-        fontWeight: TYPOGRAPHY.fontWeight.medium,
-        transition: ANIMATIONS.transition,
-        '&:hover': {
-            backgroundColor: COLORS.interactive.selected,
-            transform: 'translateY(-1px)',
-        },
-        '&:focus': {
-            outline: 'none',
-            boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
-        },
-    },
-
-    // Ghost button styling
-    ghostButton: {
-        backgroundColor: 'transparent',
-        color: COLORS.text.secondary,
-        border: 'none',
-        borderRadius: SPACING.borderRadius.md,
-        padding: '12px 24px',
-        minHeight: '44px',
-        fontWeight: TYPOGRAPHY.fontWeight.medium,
-        transition: ANIMATIONS.transition,
-        '&:hover': {
-            backgroundColor: COLORS.interactive.hover,
-            color: COLORS.text.primary,
-        },
-        '&:focus': {
-            outline: 'none',
-            boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
-        },
-    },
-
-    // Interactive card styling (for hover effects)
+    // Interactive card hover effects - used in Home.js and other components
     interactiveCard: {
         cursor: 'pointer',
         transition: ANIMATIONS.transition,
@@ -255,45 +193,14 @@ export const COMPONENT_VARIANTS = {
         },
     },
 
-    // Skill badge styling
-    skillBadge: {
-        backgroundColor: COLORS.interactive.selected,
-        border: `1px solid hsla(217, 91%, 60%, 0.2)`,
-        borderRadius: SPACING.borderRadius.md,
-        padding: {
-            xs: '12px',
-            md: '16px',
-        },
+    // Flex center utility - used 35+ times across components
+    flexCenter: {
         display: 'flex',
         alignItems: 'center',
-        gap: {
-            xs: 1,
-            md: 1.5,
-        },
-        transition: ANIMATIONS.transition,
-        cursor: 'pointer',
-        minWidth: 0,
-        overflow: 'hidden',
-        '&:hover': {
-            backgroundColor: COLORS.interactive.hover,
-            transform: 'translateY(-2px) scale(1.01)',
-            boxShadow: COLORS.shadows.sm,
-        },
+        justifyContent: 'center',
     },
 
-    // Technology tag styling
-    techTag: {
-        borderRadius: '20px',
-        fontSize: 'clamp(0.7rem, 0.8vw, 0.75rem)',
-        fontWeight: 500,
-        padding: '4px 12px',
-        minHeight: '24px',
-        display: 'inline-flex',
-        alignItems: 'center',
-        transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-    },
-
-    // Navigation container styling
+    // Navigation container - used in helpers.js Navigation component
     navigationContainer: {
         transform: 'translateX(-50%)',
         position: 'absolute',
@@ -306,48 +213,5 @@ export const COMPONENT_VARIANTS = {
         borderRadius: '16px',
         boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.35)',
         padding: '16px 24px',
-    },
-
-    // Flex center utility
-    flexCenter: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-
-    // Flex column utility
-    flexColumn: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-
-    // Responsive grid utility
-    responsiveGrid: {
-        display: 'grid',
-        gridTemplateColumns: {
-            xs: '1fr',
-            md: 'repeat(2, 1fr)',
-        },
-        gap: 4,
-    },
-
-    // Hero section styling
-    heroSection: {
-        position: 'relative',
-        background: COLORS.surface.background,
-        boxSizing: 'border-box',
-        width: '100%',
-        maxWidth: '100vw',
-        overflowX: 'hidden',
-    },
-
-    // Page container styling
-    pageContainer: {
-        position: 'relative',
-        padding: SPACING.padding.md,
-        boxSizing: 'border-box',
-        width: '100%',
-        maxWidth: '100vw',
-        overflowX: 'hidden',
     },
 };
