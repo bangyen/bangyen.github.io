@@ -2,7 +2,7 @@ import { EditorContext, Text } from './Editor';
 
 import { Box, Typography, Chip, IconButton, Grid } from '../components/mui';
 import { useContext } from 'react';
-import { SPACING, COLORS, TYPOGRAPHY } from '../config/theme';
+import { COLORS, TYPOGRAPHY } from '../config/theme';
 import { GlassCard } from '../helpers';
 
 import {

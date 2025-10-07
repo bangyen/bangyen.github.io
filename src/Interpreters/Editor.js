@@ -2,12 +2,7 @@ import { Program, Output, Tape, Register } from './Display';
 import { CustomGrid } from '../helpers';
 import { Grid, Typography, TextField } from '../components/mui';
 import { Toolbar } from './Toolbar';
-import {
-    COLORS,
-    SPACING,
-    TYPOGRAPHY,
-    COMPONENT_VARIANTS,
-} from '../config/theme';
+import { COLORS, SPACING, TYPOGRAPHY } from '../config/theme';
 
 import React, { createContext, useContext } from 'react';
 

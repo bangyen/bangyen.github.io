@@ -13,7 +13,6 @@ import {
     COMPONENT_VARIANTS,
 } from '../../config/theme';
 import { GlassCard, CustomGrid } from '../../helpers';
-
 import { getProduct } from './matrices';
 import { useGetters } from '../Board';
 import { useMobile } from '../../hooks';
