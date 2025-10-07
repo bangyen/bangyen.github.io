@@ -614,6 +614,8 @@ const ZSharp = () => {
                             width: '100%',
                             boxSizing: 'border-box',
                             overflow: 'hidden',
+                            paddingBottom: SPACING.padding.md,
+                            backgroundClip: 'padding-box',
                         }}
                     >
                         <Box
@@ -690,9 +692,9 @@ const ZSharp = () => {
                                     padding: '0.5rem 1rem',
                                     fontSize: '0.875rem',
                                     fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                    transition: 'all 0.2s ease-in-out',
+                                    transition:
+                                        'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
                                     '&:hover': {
-                                        borderColor: COLORS.primary.main,
                                         backgroundColor:
                                             viewType === 'accuracy'
                                                 ? COLORS.primary.dark
@@ -726,9 +728,9 @@ const ZSharp = () => {
                                     padding: '0.5rem 1rem',
                                     fontSize: '0.875rem',
                                     fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                    transition: 'all 0.2s ease-in-out',
+                                    transition:
+                                        'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
                                     '&:hover': {
-                                        borderColor: COLORS.primary.main,
                                         backgroundColor:
                                             viewType === 'loss'
                                                 ? COLORS.primary.dark
@@ -762,9 +764,9 @@ const ZSharp = () => {
                                     padding: '0.5rem 1rem',
                                     fontSize: '0.875rem',
                                     fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                    transition: 'all 0.2s ease-in-out',
+                                    transition:
+                                        'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
                                     '&:hover': {
-                                        borderColor: COLORS.primary.main,
                                         backgroundColor:
                                             viewType === 'learning_curve'
                                                 ? COLORS.primary.dark
@@ -798,9 +800,9 @@ const ZSharp = () => {
                                     padding: '0.5rem 1rem',
                                     fontSize: '0.875rem',
                                     fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                    transition: 'all 0.2s ease-in-out',
+                                    transition:
+                                        'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
                                     '&:hover': {
-                                        borderColor: COLORS.primary.main,
                                         backgroundColor:
                                             viewType === 'convergence'
                                                 ? COLORS.primary.dark
