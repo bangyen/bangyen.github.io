@@ -394,13 +394,15 @@ export default function Home() {
                                                             overflow: 'hidden', // Prevent text overflow
                                                             '&:hover': {
                                                                 backgroundColor:
-                                                                    'hsla(0, 0%, 80%, 0.12)',
+                                                                    COLORS
+                                                                        .interactive
+                                                                        .hover,
                                                                 transform:
                                                                     'translateY(-2px) scale(1.01)',
                                                                 boxShadow:
                                                                     COLORS
                                                                         .shadows
-                                                                        .md,
+                                                                        .sm,
                                                             },
                                                         }}
                                                     >
