@@ -154,7 +154,7 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
                 info: {
                     bg: 'hsla(0, 0%, 18%, 0.9)',
                     text: 'secondary.light',
-                    border: `1px solid ${COLORS.border.primary}`,
+                    border: `1px solid ${COLORS.border.subtle}`,
                     hover: 'hsla(0, 0%, 15%, 0.9)',
                 },
                 secondary: {
@@ -241,7 +241,7 @@ export function TextArea({
                     borderColor: COLORS.border.subtle,
                 },
                 '&:hover .MuiOutlinedInput-notchedOutline': {
-                    borderColor: COLORS.border.primary,
+                    borderColor: COLORS.border.subtle,
                 },
                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
                     borderColor: 'primary.light',

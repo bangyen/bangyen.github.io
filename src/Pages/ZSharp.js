@@ -355,7 +355,7 @@ const ZSharp = () => {
                                     <LineChart data={currentData}>
                                         <CartesianGrid
                                             strokeDasharray="3 3"
-                                            stroke={COLORS.border.primary}
+                                            stroke={COLORS.border.subtle}
                                         />
                                         <XAxis
                                             dataKey="epoch"
@@ -428,7 +428,7 @@ const ZSharp = () => {
                                             contentStyle={{
                                                 backgroundColor:
                                                     'hsla(0, 0%, 5%, 0.95)',
-                                                border: `1px solid ${COLORS.border.primary}`,
+                                                border: `1px solid ${COLORS.border.subtle}`,
                                                 borderRadius:
                                                     SPACING.borderRadius.lg,
                                                 color: COLORS.text.primary,
@@ -619,7 +619,7 @@ const ZSharp = () => {
                                     viewType === 'accuracy'
                                         ? COLORS.primary.main
                                         : 'transparent',
-                                borderColor: COLORS.border.primary,
+                                borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
                                 minHeight: '36px',
@@ -647,7 +647,7 @@ const ZSharp = () => {
                                     viewType === 'loss'
                                         ? COLORS.primary.main
                                         : 'transparent',
-                                borderColor: COLORS.border.primary,
+                                borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
                                 minHeight: '36px',
@@ -675,7 +675,7 @@ const ZSharp = () => {
                                     viewType === 'learning_curve'
                                         ? COLORS.primary.main
                                         : 'transparent',
-                                borderColor: COLORS.border.primary,
+                                borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
                                 minHeight: '36px',
@@ -703,7 +703,7 @@ const ZSharp = () => {
                                     viewType === 'convergence'
                                         ? COLORS.primary.main
                                         : 'transparent',
-                                borderColor: COLORS.border.primary,
+                                borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
                                 minHeight: '36px',

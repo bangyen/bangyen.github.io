@@ -23,16 +23,14 @@ export const COLORS = {
         elevated: 'hsl(0, 0%, 8%)',
         glass: 'hsla(0, 0%, 8%, 0.85)',
     },
-    // Text Colors - Simplified to 3 essential variants
+    // Text Colors - Simplified to 2 essential variants
     text: {
         primary: 'hsl(0, 0%, 98%)', // Main text
         secondary: 'hsl(0, 0%, 80%)', // Secondary text
-        muted: 'hsl(0, 0%, 45%)', // Muted/disabled text
     },
     // Border and Divider Colors
     border: {
         subtle: 'hsl(0, 0%, 18%)',
-        primary: 'hsl(0, 0%, 30%)',
         interactive: 'hsl(217, 91%, 60%)',
     },
     // Interactive State Colors
@@ -41,11 +39,10 @@ export const COLORS = {
         focus: `hsla(217, 91%, 60%, ${ALPHA.focus})`,
         selected: `hsla(217, 91%, 60%, 0.1)`,
     },
-    // Chart Colors
+    // Chart Colors - Essential data visualization colors
     data: {
         green: 'hsl(141, 64%, 49%)',
         amber: 'hsl(34, 95%, 58%)',
-        red: 'hsl(0, 73%, 56%)',
     },
     // Shadows for Depth and Elevation
     shadows: {

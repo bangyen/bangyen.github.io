@@ -253,13 +253,13 @@ export default function Home() {
                                 >
                                     <LocationOn
                                         sx={{
-                                            color: COLORS.text.muted,
+                                            color: COLORS.text.secondary,
                                             fontSize: '1.25rem',
                                         }}
                                     />
                                     <Typography
                                         sx={{
-                                            color: COLORS.text.muted,
+                                            color: COLORS.text.secondary,
                                             fontSize: TYPOGRAPHY.fontSize.body,
                                             fontWeight:
                                                 TYPOGRAPHY.fontWeight.medium,

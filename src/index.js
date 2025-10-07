@@ -34,7 +34,7 @@ const darkTheme = createTheme({
             dark: COLORS.primary.dark,
         },
         secondary: {
-            main: COLORS.text.muted,
+            main: COLORS.text.secondary,
             light: COLORS.text.secondary,
             dark: COLORS.border.subtle,
         },
@@ -136,7 +136,7 @@ const darkTheme = createTheme({
                     style: {
                         backgroundColor: 'transparent',
                         color: COLORS.text.secondary,
-                        border: `1px solid ${COLORS.border.primary}`,
+                        border: `1px solid ${COLORS.border.subtle}`,
                         borderRadius: SPACING.borderRadius.md,
                         padding: '12px 24px',
                         minHeight: '44px',

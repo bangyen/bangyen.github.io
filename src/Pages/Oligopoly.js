@@ -363,7 +363,7 @@ const Oligopoly = () => {
                                                 CHART_FORMATTING.lines
                                                     .strokeDashArray
                                             }
-                                            stroke={COLORS.border.primary}
+                                            stroke={COLORS.border.subtle}
                                         />
                                         <XAxis
                                             dataKey="round"
@@ -408,7 +408,7 @@ const Oligopoly = () => {
                                             contentStyle={{
                                                 backgroundColor:
                                                     'hsla(0, 0%, 5%, 0.95)',
-                                                border: `1px solid ${COLORS.border.primary}`,
+                                                border: `1px solid ${COLORS.border.subtle}`,
                                                 borderRadius:
                                                     SPACING.borderRadius.lg,
                                                 color: COLORS.text.primary,
@@ -494,7 +494,7 @@ const Oligopoly = () => {
                                 onClick={resetToDefaults}
                                 sx={{
                                     color: COLORS.text.secondary,
-                                    borderColor: COLORS.border.primary,
+                                    borderColor: COLORS.border.subtle,
                                     '&:hover': {
                                         borderColor: COLORS.border.interactive,
                                         backgroundColor:
@@ -535,7 +535,8 @@ const Oligopoly = () => {
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
                                                 color: COLORS.text.secondary,
-                                                borderColor: COLORS.text.muted,
+                                                borderColor:
+                                                    COLORS.text.secondary,
                                                 padding: '0.5rem 0.75rem',
                                                 flex: 1,
                                                 '&.Mui-selected': {
@@ -549,7 +550,7 @@ const Oligopoly = () => {
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        COLORS.text.muted
+                                                        COLORS.text.secondary
                                                             .lighter,
                                                 },
                                             },
@@ -590,7 +591,8 @@ const Oligopoly = () => {
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
                                                 color: COLORS.text.secondary,
-                                                borderColor: COLORS.text.muted,
+                                                borderColor:
+                                                    COLORS.text.secondary,
                                                 padding: '0.5rem 0.75rem',
                                                 flex: 1,
                                                 '&.Mui-selected': {
@@ -604,7 +606,7 @@ const Oligopoly = () => {
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        COLORS.text.muted
+                                                        COLORS.text.secondary
                                                             .lighter,
                                                 },
                                             },
@@ -650,7 +652,8 @@ const Oligopoly = () => {
                                             margin: '0 auto',
                                             '& .MuiToggleButton-root': {
                                                 color: COLORS.text.secondary,
-                                                borderColor: COLORS.text.muted,
+                                                borderColor:
+                                                    COLORS.text.secondary,
                                                 padding: '0.5rem 0.75rem',
                                                 flex: 1,
                                                 '&.Mui-selected': {
@@ -664,7 +667,7 @@ const Oligopoly = () => {
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        COLORS.text.muted
+                                                        COLORS.text.secondary
                                                             .lighter,
                                                 },
                                             },
