@@ -134,23 +134,23 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
         const color = chooseColor(pos);
         const value = options[pos] || ' ';
 
-        // Homepage-style color scheme
+        // Consistent glassmorphism color scheme
         const getCellStyles = color => {
             const styles = {
                 primary: {
-                    bg: 'hsla(0, 0%, 15%, 0.9)',
-                    text: COLORS.primary.light,
+                    bg: COLORS.surface.glass,
+                    text: COLORS.primary.main,
                     border: `1px solid ${COLORS.primary.main}`,
-                    hover: 'hsla(0, 0%, 18%, 0.9)',
+                    hover: COLORS.interactive.selected,
                 },
                 info: {
-                    bg: 'hsla(0, 0%, 18%, 0.9)',
-                    text: COLORS.text.secondary,
+                    bg: COLORS.surface.glass,
+                    text: COLORS.text.primary,
                     border: `1px solid ${COLORS.border.subtle}`,
-                    hover: 'hsla(0, 0%, 15%, 0.9)',
+                    hover: COLORS.interactive.hover,
                 },
                 secondary: {
-                    bg: 'hsla(0, 0%, 15%, 0.9)',
+                    bg: COLORS.surface.glass,
                     text: COLORS.text.secondary,
                     border: `1px solid ${COLORS.border.subtle}`,
                     hover: COLORS.interactive.selected,
@@ -171,6 +171,7 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
                 border: cellStyle.border,
                 cursor: 'pointer',
                 transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+                backdropFilter: 'blur(24px) saturate(180%)',
                 '&:hover': {
                     backgroundColor: cellStyle.hover,
                 },
@@ -223,8 +224,10 @@ export function TextArea({
             sx={{
                 '& .MuiInputBase-root': {
                     alignItems: 'flex-start',
-                    backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
+                    backgroundColor: COLORS.surface.glass,
+                    backdropFilter: 'blur(24px) saturate(180%)',
                     borderRadius: SPACING.borderRadius.md,
+                    border: `1px solid ${COLORS.border.subtle}`,
                 },
                 '& .MuiInputBase-input': {
                     fontFamily: 'monospace',

@@ -144,11 +144,11 @@ function Display(props) {
                     marginBottom: 1,
                 }}
             >
-                <Icon sx={{ color: 'primary.light' }} />
+                <Icon sx={{ color: COLORS.primary.main }} />
                 <Typography
                     variant="subtitle2"
                     sx={{
-                        color: 'primary.light',
+                        color: COLORS.primary.main,
                         fontWeight: TYPOGRAPHY.fontWeight.semibold,
                         fontSize: TYPOGRAPHY.fontSize.body,
                     }}
@@ -177,13 +177,17 @@ function CompactDisplay(props) {
                 sx={{
                     backgroundColor:
                         color === 'info'
-                            ? 'primary.light'
-                            : 'hsla(0, 0%, 15%, 0.9)',
+                            ? COLORS.primary.main
+                            : COLORS.surface.glass,
                     color:
-                        color === 'info' ? COLORS.text.primary : 'text.primary',
+                        color === 'info'
+                            ? COLORS.text.primary
+                            : COLORS.text.primary,
                     fontFamily: 'monospace',
                     fontSize: TYPOGRAPHY.fontSize.caption,
                     height: '32px',
+                    border: `1px solid ${COLORS.border.subtle}`,
+                    backdropFilter: 'blur(24px) saturate(180%)',
                 }}
             />
         );
@@ -206,14 +210,14 @@ function CompactDisplay(props) {
             >
                 <Icon
                     sx={{
-                        color: 'primary.light',
+                        color: COLORS.primary.main,
                         fontSize: TYPOGRAPHY.fontSize.body,
                     }}
                 />
                 <Typography
                     variant="caption"
                     sx={{
-                        color: 'primary.light',
+                        color: COLORS.primary.main,
                         fontWeight: TYPOGRAPHY.fontWeight.semibold,
                         fontSize: TYPOGRAPHY.fontSize.caption,
                     }}
