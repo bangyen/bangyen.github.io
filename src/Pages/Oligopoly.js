@@ -19,7 +19,6 @@ import {
     COLORS,
     SPACING,
     TYPOGRAPHY,
-    LAYOUT,
     COMPONENT_VARIANTS,
 } from '../config/theme';
 import { GitHub, Refresh, HomeRounded as Home } from '../components/icons';
@@ -226,7 +225,7 @@ const Oligopoly = () => {
                     right: 0,
                     bottom: 0,
                     background: COLORS.surface.background,
-                    zIndex: LAYOUT.zIndex.background,
+                    zIndex: -1,
                 }}
             />
 

@@ -12,7 +12,6 @@ import {
     COLORS,
     SPACING,
     TYPOGRAPHY,
-    LAYOUT,
     COMPONENT_VARIANTS,
 } from '../config/theme';
 import {
@@ -213,7 +212,7 @@ const ZSharp = () => {
                     right: 0,
                     bottom: 0,
                     background: COLORS.surface.background,
-                    zIndex: LAYOUT.zIndex.background,
+                    zIndex: -1,
                 }}
             />
 
@@ -224,7 +223,7 @@ const ZSharp = () => {
                 sx={{
                     ...COMPONENT_VARIANTS.flexCenter,
                     flexDirection: 'column',
-                    zIndex: LAYOUT.zIndex.content,
+                    zIndex: 1,
                     padding: 0,
                     minHeight: 0,
                 }}

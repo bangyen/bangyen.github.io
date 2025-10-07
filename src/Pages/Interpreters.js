@@ -20,7 +20,6 @@ import {
     SPACING,
     TYPOGRAPHY,
     ANIMATIONS,
-    LAYOUT,
     COMPONENT_VARIANTS,
 } from '../config/theme';
 
@@ -99,7 +98,7 @@ export default function Interpreters() {
                 alignItems="center"
                 flexDirection="column"
                 sx={{
-                    zIndex: LAYOUT.zIndex.content,
+                    zIndex: 1,
                     padding: {
                         xs: '0.5rem 0',
                         md: `${SPACING.padding.md} 0`,

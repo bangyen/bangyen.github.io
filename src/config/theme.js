@@ -4,10 +4,6 @@
  */
 
 // Alpha Values - Consolidated opacity constants for consistent transparency
-export const ALPHA = {
-    hover: 0.08,
-    focus: 0.15,
-};
 
 // Simplified Color System - Consolidated from BASE_COLORS and COLORS
 export const COLORS = {
@@ -34,8 +30,8 @@ export const COLORS = {
     },
     // Interactive State Colors
     interactive: {
-        hover: `hsla(0, 0%, 80%, ${ALPHA.hover})`,
-        focus: `hsla(217, 91%, 60%, ${ALPHA.focus})`,
+        hover: `hsla(0, 0%, 80%, 0.08)`,
+        focus: `hsla(217, 91%, 60%, 0.15)`,
         selected: `hsla(217, 91%, 60%, 0.1)`,
     },
     // Chart Colors - Essential data visualization colors
@@ -138,12 +134,6 @@ export const ANIMATIONS = {
 };
 
 // Layout Constants
-export const LAYOUT = {
-    zIndex: {
-        background: -1,
-        content: 1,
-    },
-};
 
 // Component Variants - Streamlined patterns used in multiple places
 export const COMPONENT_VARIANTS = {
