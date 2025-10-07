@@ -170,7 +170,7 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
             children: <Text text={value} />,
             sx: {
                 cursor: 'pointer',
-                borderRadius: SPACING.borderRadius.sm,
+                borderRadius: SPACING.borderRadius.md,
                 border: cellStyle.border,
                 transition: ANIMATIONS.transition,
                 '&:hover': {
@@ -227,7 +227,7 @@ export function TextArea({
                 '& .MuiInputBase-root': {
                     alignItems: 'flex-start',
                     backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
-                    borderRadius: SPACING.borderRadius.sm,
+                    borderRadius: SPACING.borderRadius.md,
                 },
                 '& .MuiInputBase-input': {
                     fontFamily: 'monospace',

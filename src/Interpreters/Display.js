@@ -196,7 +196,7 @@ function CompactDisplay(props) {
                 padding: 1.5,
                 backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
                 border: `1px solid ${COLORS.border.subtle}`,
-                borderRadius: SPACING.borderRadius.sm,
+                borderRadius: SPACING.borderRadius.md,
                 height: '100%',
                 minHeight: SPACING.maxWidth.medium,
             }}
@@ -271,7 +271,7 @@ function Scrollable(props) {
                 padding: 2,
                 backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
                 border: `1px solid ${COLORS.border.subtle}`,
-                borderRadius: SPACING.borderRadius.sm,
+                borderRadius: SPACING.borderRadius.md,
                 height: '60px',
                 display: 'flex',
                 flexDirection: 'column',

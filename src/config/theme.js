@@ -107,9 +107,8 @@ export const SPACING = {
     },
     // Section spacing
     section: '4rem',
-    // Border radius - only the 4 values actually used
+    // Border radius - only the 3 values actually used
     borderRadius: {
-        sm: '8px',
         md: '12px',
         lg: '16px',
         full: '9999px',

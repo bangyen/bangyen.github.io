@@ -179,7 +179,7 @@ export default function Interpreters() {
                                 sx={{
                                     padding: { xs: 1.5, md: 2 },
                                     backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
-                                    borderRadius: SPACING.borderRadius.sm,
+                                    borderRadius: SPACING.borderRadius.md,
                                     border: `1px solid ${COLORS.border.subtle}`,
                                     textDecoration: 'none',
                                     cursor: 'pointer',

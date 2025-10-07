@@ -304,7 +304,7 @@ const ZSharp = () => {
                         sx={{
                             padding: { xs: 1.5, md: 2 },
                             backgroundColor: COLORS.surface.elevated,
-                            borderRadius: SPACING.borderRadius.sm,
+                            borderRadius: SPACING.borderRadius.md,
                             border: `1px solid ${COLORS.border.subtle}`,
                             marginBottom: 4,
                             width: '100%',
