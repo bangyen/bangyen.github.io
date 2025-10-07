@@ -7,7 +7,6 @@
 export const ALPHA = {
     hover: 0.08,
     focus: 0.15,
-    glass: 0.85,
 };
 
 // Simplified Color System - Consolidated from BASE_COLORS and COLORS
@@ -22,7 +21,7 @@ export const COLORS = {
     surface: {
         background: 'hsl(0, 0%, 3%)',
         elevated: 'hsl(0, 0%, 8%)',
-        glass: `hsla(0, 0%, 8%, ${ALPHA.glass})`,
+        glass: 'hsla(0, 0%, 8%, 0.85)',
     },
     // Text Colors - Simplified to 3 essential variants
     text: {
