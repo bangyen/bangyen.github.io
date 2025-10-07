@@ -159,6 +159,13 @@ export default function Home() {
                 />
             </Box>
 
+            {/* Spacing between nav and hero */}
+            <Box
+                sx={{
+                    height: { xs: SPACING.padding.xs, md: SPACING.padding.md },
+                }}
+            />
+
             {/* Hero Section */}
             <HeroContainer>
                 <Grid container spacing={{ xs: 4, md: 8 }} alignItems="center">
@@ -812,6 +819,13 @@ export default function Home() {
                     </Box>
                 </Fade>
             </Section>
+
+            {/* Bottom spacing */}
+            <Box
+                sx={{
+                    height: { xs: SPACING.padding.xs, md: SPACING.padding.md },
+                }}
+            />
         </Grid>
     );
 }
