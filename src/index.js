@@ -191,7 +191,7 @@ const darkTheme = createTheme({
                     props: { variant: 'glassmorphism' },
                     style: {
                         ...COMPONENT_VARIANTS.glassCard,
-                        backdropFilter: 'blur(20px) saturate(180%)',
+                        backdropFilter: 'blur(24px) saturate(180%)',
                         padding: '24px',
                     },
                 },

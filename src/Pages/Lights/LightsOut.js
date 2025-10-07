@@ -1,8 +1,4 @@
-import {
-    RefreshRounded,
-    InfoRounded,
-    CircleRounded,
-} from '../../components/icons';
+import { Refresh, InfoRounded, CircleRounded } from '../../components/icons';
 import { useMemo, useEffect, useReducer } from 'react';
 import { Grid } from '../../components/mui';
 
@@ -117,7 +113,7 @@ export default function LightsOut() {
             <Navigation>
                 <HomeButton size="inherit" />
                 <TooltipButton
-                    Icon={RefreshRounded}
+                    Icon={Refresh}
                     title="Randomize"
                     size="inherit"
                     onClick={() =>

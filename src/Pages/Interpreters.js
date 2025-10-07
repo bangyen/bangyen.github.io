@@ -8,7 +8,12 @@ import {
     Card,
     CardContent,
 } from '../components/mui';
-import { GitHub, Home, GridView, TextFields } from '../components/icons';
+import {
+    GitHub,
+    HomeRounded as Home,
+    GridView,
+    TextFields,
+} from '../components/icons';
 import { URLS, PAGE_TITLES } from '../config/constants';
 import {
     COLORS,

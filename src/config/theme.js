@@ -92,7 +92,6 @@ export const SPACING = {
         sm: '1rem',
         md: '1.5rem',
         lg: '2rem',
-        xl: '3rem',
     },
     // Border radius - only the 3 values actually used
     borderRadius: {
@@ -144,15 +143,6 @@ export const ANIMATIONS = {
             backdropFilter: 'blur(24px) saturate(180%)',
             border: `1px solid ${COLORS.border.subtle}`,
         },
-        // Smooth fade transition
-        fade: {
-            transition: 'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1)',
-        },
-        // Border hover effect
-        borderHover: {
-            borderColor: COLORS.border.interactive,
-            transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
-        },
     },
     fast: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
 };
@@ -198,20 +188,5 @@ export const COMPONENT_VARIANTS = {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-    },
-
-    // Navigation container - used in helpers.js Navigation component
-    navigationContainer: {
-        transform: 'translateX(-50%)',
-        position: 'absolute',
-        bottom: 50,
-        left: '50%',
-        zIndex: 10,
-        backgroundColor: 'hsla(0, 0%, 3%, 0.95)',
-        backdropFilter: 'blur(24px) saturate(180%)',
-        border: '1px solid hsl(0, 0%, 18%)',
-        borderRadius: '16px',
-        boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.35)',
-        padding: '16px 24px',
     },
 };

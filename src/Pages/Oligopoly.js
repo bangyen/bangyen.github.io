@@ -22,7 +22,7 @@ import {
     LAYOUT,
     COMPONENT_VARIANTS,
 } from '../config/theme';
-import { GitHub, Refresh, Home } from '../components/icons';
+import { GitHub, Refresh, HomeRounded as Home } from '../components/icons';
 import {
     LineChart,
     Line,

@@ -4,23 +4,13 @@
  */
 
 // Navigation Icons
-export {
-    Home,
-    HomeRounded,
-    MenuRounded,
-    CloseRounded,
-} from '@mui/icons-material';
+export { HomeRounded, MenuRounded, CloseRounded } from '@mui/icons-material';
 
 // Social Icons
 export { GitHub } from '@mui/icons-material';
 
 // Action Icons
-export {
-    Refresh,
-    RefreshRounded,
-    OpenInNew,
-    ArrowForward,
-} from '@mui/icons-material';
+export { Refresh, OpenInNew, ArrowForward } from '@mui/icons-material';
 
 // Game Icons
 export {

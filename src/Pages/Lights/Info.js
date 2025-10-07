@@ -107,7 +107,7 @@ export default function Info(props) {
             sx={{
                 ...COMPONENT_VARIANTS.glassCard,
                 backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
-                transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
             }}
         >
             <Card
@@ -124,7 +124,7 @@ export default function Info(props) {
                     boxShadow: COLORS.shadows.sm,
                     display: 'flex',
                     flexDirection: 'column',
-                    transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                    transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
             >
                 <CardContent
