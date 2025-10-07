@@ -97,13 +97,13 @@ export default function Info(props) {
             open={open}
             onClick={toggleOpen}
             sx={{
-                backgroundColor: 'hsla(0, 0%, 0%, 0.75)',
+                backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
                 backdropFilter: 'blur(8px)',
                 transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
                 border: 'none',
             }}
         >
-            <GlassCard
+            <Box
                 sx={{
                     maxWidth: '80vw',
                     height: 'fit-content',
@@ -114,6 +114,9 @@ export default function Info(props) {
                     flexDirection: 'column',
                     transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
                     padding: 0,
+                    backgroundColor: 'hsl(0, 0%, 12%)',
+                    borderRadius: SPACING.borderRadius.lg,
+                    border: `1px solid ${COLORS.border.subtle}`,
                 }}
             >
                 <Box
@@ -410,7 +413,7 @@ export default function Info(props) {
                         </Grid>
                     </Grid>
                 </Box>
-            </GlassCard>
+            </Box>
         </Backdrop>
     );
 }
