@@ -180,8 +180,7 @@ export default function Home() {
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.semibold,
                                         textTransform: 'uppercase',
-                                        letterSpacing:
-                                            TYPOGRAPHY.letterSpacing.wide,
+                                        letterSpacing: '0.025em',
                                         marginBottom: 3,
                                     }}
                                 >
@@ -475,8 +474,7 @@ export default function Home() {
                                         sx={{
                                             color: COLORS.text.secondary,
                                             fontSize: TYPOGRAPHY.fontSize.body,
-                                            lineHeight:
-                                                TYPOGRAPHY.lineHeight.relaxed,
+                                            lineHeight: 1.5,
                                             marginBottom: 4,
                                         }}
                                     >

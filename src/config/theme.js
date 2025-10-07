@@ -80,12 +80,10 @@ export const TYPOGRAPHY = {
     // Improved line heights for optical balance
     lineHeight: {
         normal: 1.4,
-        relaxed: 1.5,
     },
     // Professional letter spacing for enhanced readability
     letterSpacing: {
         normal: '0',
-        wide: '0.025em',
     },
 };
 

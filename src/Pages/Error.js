@@ -100,7 +100,7 @@ export default function Error() {
                                     xs: TYPOGRAPHY.fontSize.body,
                                     md: TYPOGRAPHY.fontSize.body,
                                 },
-                                lineHeight: TYPOGRAPHY.lineHeight.relaxed,
+                                lineHeight: 1.5,
                             }}
                         >
                             This page isn&apos;t available. The link you
