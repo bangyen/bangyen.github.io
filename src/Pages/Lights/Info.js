@@ -1,12 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import {
-    Backdrop,
-    Typography,
-    Card,
-    CardContent,
-    Box,
-    Grid,
-} from '../../components/mui';
+import { Backdrop, Typography, Box, Grid } from '../../components/mui';
 import {
     CircleRounded,
     KeyboardArrowDown,
@@ -19,9 +12,8 @@ import {
     TYPOGRAPHY,
     COMPONENT_VARIANTS,
 } from '../../config/theme';
-
+import { GlassCard, CustomGrid } from '../../helpers';
 import { getProduct } from './matrices';
-import { CustomGrid } from '../../helpers';
 import { useGetters } from '../Board';
 import { useMobile } from '../../hooks';
 import Example from './Example';
@@ -108,30 +100,30 @@ export default function Info(props) {
                 ...COMPONENT_VARIANTS.card,
                 backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
                 transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+                border: 'none',
             }}
         >
-            <Card
+            <Box
                 sx={{
                     maxWidth: '80vw',
                     height: 'fit-content',
                     maxHeight: '90vh',
                     overflow: 'auto',
                     mx: 'auto',
-                    backgroundColor: COLORS.surface.glass,
-                    backdropFilter: 'blur(24px) saturate(180%)',
-                    border: `1px solid hsla(0, 0%, 100%, 0.1)`,
-                    borderRadius: SPACING.borderRadius.lg,
-                    boxShadow: COLORS.shadow.medium,
                     display: 'flex',
                     flexDirection: 'column',
                     transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+                    padding: 0,
+                    backgroundColor: 'hsl(0, 0%, 5%)',
+                    borderRadius: SPACING.borderRadius.lg,
+                    border: `1px solid ${COLORS.border.subtle}`,
                 }}
             >
-                <CardContent
+                <Box
                     sx={{
-                        pt: '1.5rem',
-                        pb: '1.5rem',
-                        px: '1.5rem',
+                        pt: '1rem',
+                        pb: '1rem',
+                        px: '1.25rem',
                         height: 'fit-content',
                         display: 'flex',
                         flexDirection: 'column',
@@ -140,14 +132,14 @@ export default function Info(props) {
                 >
                     <Grid
                         container
-                        spacing={isMobile ? 2 : 3}
+                        spacing={isMobile ? 1.5 : 2}
                         sx={{ flex: 1, minHeight: 0 }}
                     >
                         {/* Top section: Instructions on left, animations on right */}
                         <Grid
                             container
                             size={12}
-                            spacing={3}
+                            spacing={2}
                             sx={{
                                 flex: 1,
                                 minHeight: 0,
@@ -168,14 +160,8 @@ export default function Info(props) {
                                 }}
                             >
                                 <Box sx={{ flex: 1, overflow: 'auto' }}>
-                                    <Box
+                                    <GlassCard
                                         sx={{
-                                            backgroundColor:
-                                                COLORS.surface.elevated,
-                                            border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                            borderRadius:
-                                                SPACING.borderRadius.lg,
-                                            padding: 3,
                                             height: !isLargeScreen
                                                 ? '100%'
                                                 : 'auto',
@@ -183,11 +169,6 @@ export default function Info(props) {
                                             flexDirection: 'column',
                                             transition:
                                                 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                            ...COMPONENT_VARIANTS.card,
-                                            '&:hover': {
-                                                backgroundColor:
-                                                    COLORS.interactive.hover,
-                                            },
                                         }}
                                     >
                                         <Typography
@@ -198,24 +179,20 @@ export default function Info(props) {
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
                                                         .semibold,
-                                                mb: 3,
+                                                mb: 2,
                                                 textAlign: isMobile
                                                     ? 'center'
                                                     : 'left',
                                                 fontSize:
                                                     TYPOGRAPHY.fontSize.h2,
-                                                lineHeight:
-                                                    TYPOGRAPHY.lineHeight
-                                                        .normal,
-                                                letterSpacing:
-                                                    TYPOGRAPHY.letterSpacing
-                                                        .tight,
+                                                lineHeight: 1.4,
+                                                letterSpacing: '0',
                                             }}
                                         >
                                             Chasing Lights Algorithm
                                         </Typography>
                                         {/* Step 1 */}
-                                        <Box sx={{ mb: 3 }}>
+                                        <Box sx={{ mb: 2 }}>
                                             <Typography
                                                 variant="subtitle1"
                                                 sx={{
@@ -229,9 +206,7 @@ export default function Info(props) {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
-                                                    letterSpacing:
-                                                        TYPOGRAPHY.letterSpacing
-                                                            .wide,
+                                                    letterSpacing: '0',
                                                 }}
                                             >
                                                 <KeyboardArrowDown
@@ -249,9 +224,7 @@ export default function Info(props) {
                                                 sx={{
                                                     color: COLORS.text
                                                         .secondary,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .relaxed,
+                                                    lineHeight: 1.5,
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
@@ -266,7 +239,7 @@ export default function Info(props) {
                                         </Box>
 
                                         {/* Step 2 */}
-                                        <Box sx={{ mb: 3 }}>
+                                        <Box sx={{ mb: 2 }}>
                                             <Typography
                                                 variant="subtitle1"
                                                 sx={{
@@ -280,9 +253,7 @@ export default function Info(props) {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
-                                                    letterSpacing:
-                                                        TYPOGRAPHY.letterSpacing
-                                                            .wide,
+                                                    letterSpacing: '0',
                                                 }}
                                             >
                                                 <Calculate
@@ -300,9 +271,7 @@ export default function Info(props) {
                                                 sx={{
                                                     color: COLORS.text
                                                         .secondary,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .relaxed,
+                                                    lineHeight: 1.5,
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
@@ -317,7 +286,7 @@ export default function Info(props) {
                                         </Box>
 
                                         {/* Step 3 */}
-                                        <Box>
+                                        <Box sx={{ mb: 1 }}>
                                             <Typography
                                                 variant="subtitle1"
                                                 sx={{
@@ -331,9 +300,7 @@ export default function Info(props) {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
-                                                    letterSpacing:
-                                                        TYPOGRAPHY.letterSpacing
-                                                            .wide,
+                                                    letterSpacing: '0',
                                                 }}
                                             >
                                                 <Replay
@@ -351,9 +318,7 @@ export default function Info(props) {
                                                 sx={{
                                                     color: COLORS.text
                                                         .secondary,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .relaxed,
+                                                    lineHeight: 1.5,
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
@@ -366,7 +331,7 @@ export default function Info(props) {
                                                 entire puzzle.
                                             </Typography>
                                         </Box>
-                                    </Box>
+                                    </GlassCard>
                                 </Box>
                             </Grid>
 
@@ -378,24 +343,13 @@ export default function Info(props) {
                                         ...COMPONENT_VARIANTS.flexCenter,
                                     }}
                                 >
-                                    <Box
+                                    <GlassCard
                                         sx={{
-                                            backgroundColor:
-                                                COLORS.surface.elevated,
-                                            border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                            borderRadius:
-                                                SPACING.borderRadius.lg,
-                                            padding: 3,
                                             width: '100%',
                                             height: '100%',
                                             ...COMPONENT_VARIANTS.flexCenter,
                                             transition:
                                                 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                            ...COMPONENT_VARIANTS.card,
-                                            '&:hover': {
-                                                backgroundColor:
-                                                    COLORS.interactive.hover,
-                                            },
                                         }}
                                     >
                                         <Example
@@ -404,22 +358,18 @@ export default function Info(props) {
                                             start={[1, 3, 8]}
                                             palette={palette}
                                         />
-                                    </Box>
+                                    </GlassCard>
                                 </Grid>
                             )}
                         </Grid>
 
                         {/* Bottom section: Lights Out Calculator (full width) */}
-                        <Grid container size={12} spacing={3}>
+                        <Grid container size={12} spacing={2}>
                             <Grid size={12}>
-                                <Box
+                                <GlassCard
                                     sx={{
-                                        backgroundColor:
-                                            COLORS.surface.elevated,
-                                        border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                        borderRadius: SPACING.borderRadius.lg,
-                                        padding: 3,
                                         textAlign: 'center',
+                                        paddingBottom: '2rem',
                                     }}
                                 >
                                     <Typography
@@ -430,18 +380,16 @@ export default function Info(props) {
                                                 TYPOGRAPHY.fontWeight.semibold,
                                             fontSize:
                                                 TYPOGRAPHY.fontSize.subheading,
-                                            lineHeight:
-                                                TYPOGRAPHY.lineHeight.normal,
-                                            letterSpacing:
-                                                TYPOGRAPHY.letterSpacing.normal,
-                                            mb: 3,
+                                            lineHeight: 1.4,
+                                            letterSpacing: '0',
+                                            mb: 2,
                                         }}
                                     >
                                         Interactive Calculator
                                     </Typography>
 
                                     {/* Input Pattern */}
-                                    <Box sx={{ mb: 3 }}>
+                                    <Box sx={{ mb: 2 }}>
                                         <CustomGrid
                                             space={0}
                                             rows={1}
@@ -461,12 +409,12 @@ export default function Info(props) {
                                             cellProps={outputProps}
                                         />
                                     </Box>
-                                </Box>
+                                </GlassCard>
                             </Grid>
                         </Grid>
                     </Grid>
-                </CardContent>
-            </Card>
+                </Box>
+            </Box>
         </Backdrop>
     );
 }

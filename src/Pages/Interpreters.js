@@ -1,13 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import {
-    Grid,
-    Typography,
-    Box,
-    IconButton,
-    Card,
-    CardContent,
-} from '../components/mui';
+import { Grid, Typography, Box, IconButton, Fade } from '../components/mui';
 import {
     GitHub,
     HomeRounded as Home,
@@ -21,6 +14,7 @@ import {
     TYPOGRAPHY,
     COMPONENT_VARIANTS,
 } from '../config/theme';
+import { GlassCard } from '../helpers';
 
 export default function Interpreters() {
     useEffect(() => {
@@ -131,9 +125,12 @@ export default function Interpreters() {
                         <Typography
                             variant="h4"
                             sx={{
-                                color: 'text.primary',
+                                color: COLORS.text.primary,
                                 fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                                fontSize: SPACING.responsive.fontSize,
+                                fontSize: {
+                                    xs: TYPOGRAPHY.fontSize.subheading,
+                                    md: TYPOGRAPHY.fontSize.h2,
+                                },
                             }}
                         >
                             Esolang Interpreters
@@ -146,14 +143,14 @@ export default function Interpreters() {
                             >
                                 <GitHub
                                     sx={{
-                                        fontSize: SPACING.responsive.iconSize,
+                                        fontSize: { xs: '1.5rem', md: '2rem' },
                                     }}
                                 />
                             </IconButton>
                             <IconButton component={Link} to="/">
                                 <Home
                                     sx={{
-                                        fontSize: SPACING.responsive.iconSize,
+                                        fontSize: { xs: '1.5rem', md: '2rem' },
                                     }}
                                 />
                             </IconButton>
@@ -168,66 +165,78 @@ export default function Interpreters() {
                                 xs: '1fr',
                                 md: '1fr 1fr',
                             },
-                            gap: SPACING.responsive.gap,
+                            gap: { xs: 2, md: 3 },
                             marginTop: 4,
                         }}
                     >
-                        {interpreters.map(interpreter => (
-                            <Card
+                        {interpreters.map((interpreter, index) => (
+                            <Fade
+                                in
+                                timeout={800 + index * 150}
                                 key={interpreter.name}
-                                component={Link}
-                                to={interpreter.path}
-                                sx={{
-                                    padding: { xs: 1.5, md: 2 },
-                                    backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
-                                    borderRadius: SPACING.borderRadius.md,
-                                    border: `1px solid ${COLORS.border.subtle}`,
-                                    textDecoration: 'none',
-                                    width: '100%',
-                                    boxSizing: 'border-box',
-                                    overflow: 'hidden',
-                                    ...COMPONENT_VARIANTS.card,
-                                    '&:hover': {
-                                        backgroundColor:
-                                            COLORS.interactive.selected,
-                                    },
-                                }}
                             >
-                                <CardContent sx={{ padding: 0 }}>
-                                    <Box
-                                        sx={{
-                                            ...COMPONENT_VARIANTS.flexCenter,
-                                            gap: 1,
-                                            marginBottom: 2,
-                                        }}
-                                    >
-                                        {interpreter.icon}
-                                        <Typography
-                                            variant="h6"
+                                <Box
+                                    component={Link}
+                                    to={interpreter.path}
+                                    sx={{
+                                        textDecoration: 'none',
+                                        position: 'relative',
+                                        overflow: 'hidden',
+                                        height: '100%',
+                                        display: 'flex',
+                                        ...COMPONENT_VARIANTS.interactiveCard,
+                                        '&:hover .glass-card': {
+                                            backgroundColor:
+                                                COLORS.interactive.selected,
+                                        },
+                                    }}
+                                >
+                                    <GlassCard sx={{ border: 'none' }}>
+                                        <Box
                                             sx={{
-                                                color: 'primary.light',
-                                                fontWeight:
-                                                    TYPOGRAPHY.fontWeight
-                                                        .semibold,
-                                                fontSize:
-                                                    TYPOGRAPHY.fontSize.body,
+                                                ...COMPONENT_VARIANTS.flexCenter,
+                                                gap: 1,
+                                                marginBottom: 2,
                                             }}
                                         >
-                                            {interpreter.name}
+                                            <Box
+                                                sx={{
+                                                    color: COLORS.primary.main,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                {interpreter.icon}
+                                            </Box>
+                                            <Typography
+                                                variant="h6"
+                                                sx={{
+                                                    color: COLORS.primary.main,
+                                                    fontWeight:
+                                                        TYPOGRAPHY.fontWeight
+                                                            .semibold,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize
+                                                            .body,
+                                                }}
+                                            >
+                                                {interpreter.name}
+                                            </Typography>
+                                        </Box>
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: COLORS.text.secondary,
+                                                wordWrap: 'break-word',
+                                                overflowWrap: 'break-word',
+                                                lineHeight: 1.5,
+                                            }}
+                                        >
+                                            {interpreter.description}
                                         </Typography>
-                                    </Box>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            color: 'text.secondary',
-                                            wordWrap: 'break-word',
-                                            overflowWrap: 'break-word',
-                                        }}
-                                    >
-                                        {interpreter.description}
-                                    </Typography>
-                                </CardContent>
-                            </Card>
+                                    </GlassCard>
+                                </Box>
+                            </Fade>
                         ))}
                     </Box>
                 </Box>

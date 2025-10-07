@@ -21,7 +21,16 @@ import {
     TYPOGRAPHY,
     COMPONENT_VARIANTS,
 } from '../config/theme';
-import { GitHub, Refresh, HomeRounded as Home } from '../components/icons';
+import {
+    GitHub,
+    Refresh,
+    HomeRounded as Home,
+    BusinessRounded,
+    TrendingUpRounded,
+    AttachMoneyRounded,
+    SettingsRounded,
+} from '../components/icons';
+import { GlassCard } from '../helpers';
 import {
     LineChart,
     Line,
@@ -210,6 +219,10 @@ const Oligopoly = () => {
             sx={{
                 position: 'relative',
                 padding: SPACING.padding.md,
+                paddingBottom: {
+                    xs: SPACING.padding.md,
+                    md: 0,
+                },
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -265,7 +278,7 @@ const Oligopoly = () => {
                             <Typography
                                 variant="h1"
                                 sx={{
-                                    color: 'text.primary',
+                                    color: COLORS.text.primary,
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
                                     fontSize: TYPOGRAPHY.fontSize.h2,
                                 }}
@@ -304,7 +317,7 @@ const Oligopoly = () => {
                     <Typography
                         variant="h5"
                         sx={{
-                            color: 'text.secondary',
+                            color: COLORS.text.secondary,
                             marginTop: 2,
                             marginBottom: 4,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
@@ -315,13 +328,9 @@ const Oligopoly = () => {
                     </Typography>
 
                     {/* Market Dynamics Chart */}
-                    <Box
+                    <GlassCard
                         sx={{
-                            padding: { xs: 1.5, md: 2 },
-                            backgroundColor: COLORS.surface.elevated,
-                            borderRadius: SPACING.borderRadius.md,
-                            border: `1px solid ${COLORS.border.subtle}`,
-                            marginBottom: 4,
+                            marginBottom: 3,
                             width: '100%',
                             boxSizing: 'border-box',
                             overflow: 'hidden',
@@ -331,7 +340,7 @@ const Oligopoly = () => {
                             variant="subtitle1"
                             sx={{
                                 color: COLORS.text.secondary,
-                                marginBottom: 3,
+                                marginBottom: 2,
                                 textAlign: 'center',
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
                                 fontSize: TYPOGRAPHY.fontSize.subheading,
@@ -347,7 +356,7 @@ const Oligopoly = () => {
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         height: '100%',
-                                        color: 'text.secondary',
+                                        color: COLORS.text.secondary,
                                     }}
                                 >
                                     <Typography>
@@ -454,19 +463,16 @@ const Oligopoly = () => {
                                 </ResponsiveContainer>
                             )}
                         </Box>
-                    </Box>
+                    </GlassCard>
 
                     {/* Interactive Control Panel */}
-                    <Box
+                    <GlassCard
                         sx={{
-                            padding: { xs: 1.5, md: 2 },
-                            backgroundColor: COLORS.surface.elevated,
-                            borderRadius: SPACING.borderRadius.md,
-                            border: `1px solid ${COLORS.border.subtle}`,
-                            marginBottom: 4,
+                            marginBottom: 0,
                             width: '100%',
                             boxSizing: 'border-box',
                             overflow: 'hidden',
+                            paddingBottom: SPACING.padding.md,
                         }}
                     >
                         <Box
@@ -474,18 +480,33 @@ const Oligopoly = () => {
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                marginBottom: 3,
+                                marginBottom: 2,
                             }}
                         >
-                            <Typography
-                                variant="body1"
+                            <Box
                                 sx={{
-                                    color: 'primary.light',
-                                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1,
                                 }}
                             >
-                                Market Parameters
-                            </Typography>
+                                <SettingsRounded
+                                    sx={{
+                                        color: COLORS.primary.light,
+                                        fontSize: '1.25rem',
+                                    }}
+                                />
+                                <Typography
+                                    variant="body1"
+                                    sx={{
+                                        color: COLORS.primary.light,
+                                        fontWeight:
+                                            TYPOGRAPHY.fontWeight.semibold,
+                                    }}
+                                >
+                                    Market Parameters
+                                </Typography>
+                            </Box>
                             <Button
                                 variant="outlined"
                                 size="small"
@@ -494,10 +515,17 @@ const Oligopoly = () => {
                                 sx={{
                                     color: COLORS.text.secondary,
                                     borderColor: COLORS.border.subtle,
+                                    borderRadius: SPACING.borderRadius.lg,
+                                    padding: '0.25rem 1rem',
+                                    fontSize: '0.875rem',
+                                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                                    transition: 'all 0.2s ease-in-out',
                                     '&:hover': {
-                                        borderColor: COLORS.border.subtle,
+                                        borderColor: COLORS.primary.main,
                                         backgroundColor:
                                             COLORS.interactive.hover,
+                                        transform: 'translateY(-1px)',
+                                        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
                                     },
                                 }}
                             >
@@ -505,20 +533,45 @@ const Oligopoly = () => {
                             </Button>
                         </Box>
 
-                        <Grid container={true} spacing={3}>
+                        <Grid container={true} spacing={2.5}>
                             {/* Top Row - Toggle Buttons */}
                             <Grid size={{ xs: 12, md: 4 }}>
                                 <Box
                                     sx={{
-                                        marginBottom: SPACING.padding.md,
+                                        marginBottom: 0,
+                                        padding: '1rem',
+                                        backgroundColor:
+                                            'rgba(255, 255, 255, 0.02)',
+                                        borderRadius: SPACING.borderRadius.lg,
+                                        border: `1px solid ${COLORS.border.subtle}`,
                                     }}
                                 >
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary', mb: 1 }}
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 1,
+                                            mb: 2,
+                                        }}
                                     >
-                                        Number of Firms
-                                    </Typography>
+                                        <BusinessRounded
+                                            sx={{
+                                                color: COLORS.primary.light,
+                                                fontSize: '1.1rem',
+                                            }}
+                                        />
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: COLORS.text.secondary,
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .medium,
+                                            }}
+                                        >
+                                            Number of Firms
+                                        </Typography>
+                                    </Box>
                                     <ToggleButtonGroup
                                         value={numFirms}
                                         exclusive
@@ -529,27 +582,53 @@ const Oligopoly = () => {
                                         }}
                                         size="small"
                                         sx={{
-                                            width: '80%',
-                                            margin: '0 auto',
+                                            width: '100%',
+                                            borderRadius:
+                                                SPACING.borderRadius.lg,
+                                            overflow: 'hidden',
+                                            border: `1px solid ${COLORS.border.subtle}`,
+                                            '& .MuiToggleButtonGroup-grouped': {
+                                                margin: 0,
+                                                border: 0,
+                                                borderRadius: 0,
+                                                '&:not(:first-of-type)': {
+                                                    borderLeft: `1px solid ${COLORS.border.subtle}`,
+                                                },
+                                            },
                                             '& .MuiToggleButton-root': {
                                                 color: COLORS.text.secondary,
                                                 borderColor:
-                                                    COLORS.text.secondary,
-                                                padding: '0.5rem 0.75rem',
+                                                    COLORS.border.subtle,
+                                                padding: '0.6rem 0.8rem',
                                                 flex: 1,
+                                                fontSize: '0.85rem',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .medium,
+                                                borderRadius: 0,
+                                                transition:
+                                                    'all 0.2s ease-in-out',
                                                 '&.Mui-selected': {
                                                     backgroundColor:
-                                                        'primary.main',
+                                                        COLORS.primary.main,
                                                     color: COLORS.text.primary,
+                                                    borderColor:
+                                                        COLORS.primary.main,
                                                     '&:hover': {
                                                         backgroundColor:
-                                                            'primary.dark',
+                                                            COLORS.primary.dark,
+                                                        transform:
+                                                            'translateY(-1px)',
+                                                        boxShadow:
+                                                            '0 4px 8px rgba(0,0,0,0.1)',
                                                     },
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        COLORS.text.secondary
-                                                            .lighter,
+                                                        COLORS.interactive
+                                                            .hover,
+                                                    transform:
+                                                        'translateY(-1px)',
                                                 },
                                             },
                                         }}
@@ -565,15 +644,40 @@ const Oligopoly = () => {
                             <Grid size={{ xs: 12, md: 4 }}>
                                 <Box
                                     sx={{
-                                        marginBottom: SPACING.padding.md,
+                                        marginBottom: 0,
+                                        padding: '1rem',
+                                        backgroundColor:
+                                            'rgba(255, 255, 255, 0.02)',
+                                        borderRadius: SPACING.borderRadius.lg,
+                                        border: `1px solid ${COLORS.border.subtle}`,
                                     }}
                                 >
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary', mb: 1 }}
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 1,
+                                            mb: 2,
+                                        }}
                                     >
-                                        Demand Elasticity
-                                    </Typography>
+                                        <TrendingUpRounded
+                                            sx={{
+                                                color: COLORS.data.green,
+                                                fontSize: '1.1rem',
+                                            }}
+                                        />
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: COLORS.text.secondary,
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .medium,
+                                            }}
+                                        >
+                                            Demand Elasticity
+                                        </Typography>
+                                    </Box>
                                     <ToggleButtonGroup
                                         value={demandElasticity}
                                         exclusive
@@ -584,27 +688,53 @@ const Oligopoly = () => {
                                         }}
                                         size="small"
                                         sx={{
-                                            width: '80%',
-                                            margin: '0 auto',
+                                            width: '100%',
+                                            borderRadius:
+                                                SPACING.borderRadius.lg,
+                                            overflow: 'hidden',
+                                            border: `1px solid ${COLORS.border.subtle}`,
+                                            '& .MuiToggleButtonGroup-grouped': {
+                                                margin: 0,
+                                                border: 0,
+                                                borderRadius: 0,
+                                                '&:not(:first-of-type)': {
+                                                    borderLeft: `1px solid ${COLORS.border.subtle}`,
+                                                },
+                                            },
                                             '& .MuiToggleButton-root': {
                                                 color: COLORS.text.secondary,
                                                 borderColor:
-                                                    COLORS.text.secondary,
-                                                padding: '0.5rem 0.75rem',
+                                                    COLORS.border.subtle,
+                                                padding: '0.6rem 0.8rem',
                                                 flex: 1,
+                                                fontSize: '0.85rem',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .medium,
+                                                borderRadius: 0,
+                                                transition:
+                                                    'all 0.2s ease-in-out',
                                                 '&.Mui-selected': {
                                                     backgroundColor:
-                                                        'success.main',
+                                                        COLORS.data.green,
                                                     color: COLORS.text.primary,
+                                                    borderColor:
+                                                        COLORS.data.green,
                                                     '&:hover': {
                                                         backgroundColor:
-                                                            'success.dark',
+                                                            'hsl(141, 64%, 39%)',
+                                                        transform:
+                                                            'translateY(-1px)',
+                                                        boxShadow:
+                                                            '0 4px 8px rgba(0,0,0,0.1)',
                                                     },
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        COLORS.text.secondary
-                                                            .lighter,
+                                                        COLORS.interactive
+                                                            .hover,
+                                                    transform:
+                                                        'translateY(-1px)',
                                                 },
                                             },
                                         }}
@@ -625,15 +755,40 @@ const Oligopoly = () => {
                             <Grid size={{ xs: 12, md: 4 }}>
                                 <Box
                                     sx={{
-                                        marginBottom: SPACING.padding.md,
+                                        marginBottom: 0,
+                                        padding: '1rem',
+                                        backgroundColor:
+                                            'rgba(255, 255, 255, 0.02)',
+                                        borderRadius: SPACING.borderRadius.lg,
+                                        border: `1px solid ${COLORS.border.subtle}`,
                                     }}
                                 >
-                                    <Typography
-                                        variant="body2"
-                                        sx={{ color: 'text.secondary', mb: 1 }}
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 1,
+                                            mb: 2,
+                                        }}
                                     >
-                                        Base Price
-                                    </Typography>
+                                        <AttachMoneyRounded
+                                            sx={{
+                                                color: COLORS.data.amber,
+                                                fontSize: '1.1rem',
+                                            }}
+                                        />
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: COLORS.text.secondary,
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .medium,
+                                            }}
+                                        >
+                                            Base Price
+                                        </Typography>
+                                    </Box>
                                     <ToggleButtonGroup
                                         value={basePrice}
                                         exclusive
@@ -644,27 +799,53 @@ const Oligopoly = () => {
                                         }}
                                         size="small"
                                         sx={{
-                                            width: '80%',
-                                            margin: '0 auto',
+                                            width: '100%',
+                                            borderRadius:
+                                                SPACING.borderRadius.lg,
+                                            overflow: 'hidden',
+                                            border: `1px solid ${COLORS.border.subtle}`,
+                                            '& .MuiToggleButtonGroup-grouped': {
+                                                margin: 0,
+                                                border: 0,
+                                                borderRadius: 0,
+                                                '&:not(:first-of-type)': {
+                                                    borderLeft: `1px solid ${COLORS.border.subtle}`,
+                                                },
+                                            },
                                             '& .MuiToggleButton-root': {
                                                 color: COLORS.text.secondary,
                                                 borderColor:
-                                                    COLORS.text.secondary,
-                                                padding: '0.5rem 0.75rem',
+                                                    COLORS.border.subtle,
+                                                padding: '0.6rem 0.8rem',
                                                 flex: 1,
+                                                fontSize: '0.85rem',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .medium,
+                                                borderRadius: 0,
+                                                transition:
+                                                    'all 0.2s ease-in-out',
                                                 '&.Mui-selected': {
                                                     backgroundColor:
-                                                        'warning.main',
+                                                        COLORS.data.amber,
                                                     color: COLORS.text.primary,
+                                                    borderColor:
+                                                        COLORS.data.amber,
                                                     '&:hover': {
                                                         backgroundColor:
-                                                            'warning.dark',
+                                                            'hsl(34, 95%, 48%)',
+                                                        transform:
+                                                            'translateY(-1px)',
+                                                        boxShadow:
+                                                            '0 4px 8px rgba(0,0,0,0.1)',
                                                     },
                                                 },
                                                 '&:hover': {
                                                     backgroundColor:
-                                                        COLORS.text.secondary
-                                                            .lighter,
+                                                        COLORS.interactive
+                                                            .hover,
+                                                    transform:
+                                                        'translateY(-1px)',
                                                 },
                                             },
                                         }}
@@ -682,7 +863,7 @@ const Oligopoly = () => {
                                 </Box>
                             </Grid>
                         </Grid>
-                    </Box>
+                    </GlassCard>
                 </Box>
             </Grid>
         </Grid>

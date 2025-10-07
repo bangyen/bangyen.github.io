@@ -2,7 +2,8 @@ import { EditorContext, Text } from './Editor';
 
 import { Box, Typography, Chip, IconButton, Grid } from '../components/mui';
 import { useContext } from 'react';
-import { SPACING, COLORS, TYPOGRAPHY } from '../config/theme';
+import { COLORS, TYPOGRAPHY } from '../config/theme';
+import { GlassCard } from '../helpers';
 
 import {
     CodeRounded,
@@ -143,11 +144,11 @@ function Display(props) {
                     marginBottom: 1,
                 }}
             >
-                <Icon sx={{ color: 'primary.light' }} />
+                <Icon sx={{ color: COLORS.primary.main }} />
                 <Typography
                     variant="subtitle2"
                     sx={{
-                        color: 'primary.light',
+                        color: COLORS.primary.main,
                         fontWeight: TYPOGRAPHY.fontWeight.semibold,
                         fontSize: TYPOGRAPHY.fontSize.body,
                     }}
@@ -176,25 +177,25 @@ function CompactDisplay(props) {
                 sx={{
                     backgroundColor:
                         color === 'info'
-                            ? 'primary.light'
-                            : 'hsla(0, 0%, 15%, 0.9)',
+                            ? COLORS.primary.main
+                            : COLORS.surface.glass,
                     color:
-                        color === 'info' ? COLORS.text.primary : 'text.primary',
+                        color === 'info'
+                            ? COLORS.text.primary
+                            : COLORS.text.primary,
                     fontFamily: 'monospace',
                     fontSize: TYPOGRAPHY.fontSize.caption,
                     height: '32px',
+                    border: `1px solid ${COLORS.border.subtle}`,
+                    backdropFilter: 'blur(24px) saturate(180%)',
                 }}
             />
         );
     });
 
     return (
-        <Box
+        <GlassCard
             sx={{
-                padding: 1.5,
-                backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
-                border: `1px solid ${COLORS.border.subtle}`,
-                borderRadius: SPACING.borderRadius.md,
                 height: '100%',
                 minHeight: '24rem',
             }}
@@ -209,14 +210,14 @@ function CompactDisplay(props) {
             >
                 <Icon
                     sx={{
-                        color: 'primary.light',
+                        color: COLORS.primary.main,
                         fontSize: TYPOGRAPHY.fontSize.body,
                     }}
                 />
                 <Typography
                     variant="caption"
                     sx={{
-                        color: 'primary.light',
+                        color: COLORS.primary.main,
                         fontWeight: TYPOGRAPHY.fontWeight.semibold,
                         fontSize: TYPOGRAPHY.fontSize.caption,
                     }}
@@ -227,7 +228,7 @@ function CompactDisplay(props) {
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 {values}
             </Box>
-        </Box>
+        </GlassCard>
     );
 }
 
@@ -262,18 +263,15 @@ export function DisplayModeToggle({ compactMode, setCompactMode }) {
 
 function Scrollable(props) {
     return (
-        <Box
+        <GlassCard
             sx={{
                 overflowX: 'auto',
                 width: '100%',
-                padding: 2,
-                backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
-                border: `1px solid ${COLORS.border.subtle}`,
-                borderRadius: SPACING.borderRadius.md,
                 height: '60px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
+                padding: 2,
             }}
         >
             <Grid
@@ -286,6 +284,6 @@ function Scrollable(props) {
             >
                 {props.children}
             </Grid>
-        </Box>
+        </GlassCard>
     );
 }

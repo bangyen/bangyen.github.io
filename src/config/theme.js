@@ -29,14 +29,6 @@ export const COLORS = {
         subtle: 'hsl(0, 0%, 18%)',
     },
     // Interactive State Colors
-    // Semantic Color Aliases - Common patterns for consistency
-    semantic: {
-        cardHover: `hsla(217, 91%, 60%, 0.1)`,
-        buttonPrimary: `hsl(217, 91%, 60%)`,
-        buttonHover: `hsl(217, 91%, 45%)`,
-        glassBackground: `hsla(0, 0%, 8%, 0.85)`,
-        borderSubtle: `hsl(0, 0%, 18%)`,
-    },
     interactive: {
         hover: `hsla(0, 0%, 80%, 0.08)`,
         focus: `hsla(217, 91%, 60%, 0.15)`,
@@ -46,11 +38,6 @@ export const COLORS = {
     data: {
         green: 'hsl(141, 64%, 49%)',
         amber: 'hsl(34, 95%, 58%)',
-    },
-    // Shadows for Depth and Elevation
-    shadow: {
-        xs: '0 1px 2px hsla(0, 0%, 0%, 0.5)',
-        sm: '0 2px 8px hsla(0, 0%, 0%, 0.4)',
     },
 };
 
@@ -69,20 +56,12 @@ export const TYPOGRAPHY = {
         subheading: 'clamp(1.125rem, 2vw, 1.375rem)', // Subsection headers
         body: 'clamp(0.875rem, 1.5vw, 1rem)', // Body text
         caption: 'clamp(0.75rem, 1vw, 0.875rem)', // Small text
-    }, // Essential font weights - only the ones actually used
+    },
     fontWeight: {
         normal: 400,
         medium: 500,
         semibold: 600,
         bold: 700,
-    },
-    // Improved line heights for optical balance
-    lineHeight: {
-        normal: 1.4,
-    },
-    // Professional letter spacing for enhanced readability
-    letterSpacing: {
-        normal: '0',
     },
 };
 
@@ -96,40 +75,24 @@ export const SPACING = {
         lg: '2rem', // 32px - large padding
         xl: '3rem', // 48px - extra large padding
     },
-    // Border radius - systematic scale based on 4px unit
-    // Border radius - systematic scale based on 4px unit
     borderRadius: {
-        xs: '4px', // 4px - small radius
         sm: '8px', // 8px - small-medium radius
         md: '12px', // 12px - medium radius
         lg: '16px', // 16px - large radius
-        xl: '24px', // 24px - extra large radius
         full: '9999px', // full - circular
     },
-    // Container widths - simplified to 2 essential sizes
-    // Container widths - simplified to 2 essential sizes
     // Margins - systematic scale for consistent spacing
     margin: {
-        xs: '0.25rem', // 4px - tiny margin
         sm: '0.5rem', // 8px - small margin
         md: '1rem', // 16px - medium margin
         lg: '1.5rem', // 24px - large margin
-        xl: '2rem', // 32px - extra large margin
     },
     maxWidth: {
         md: '64rem',
         lg: '80rem',
     },
-    // Responsive Breakpoint Patterns - Standardized responsive values
-    responsive: {
-        padding: { xs: '0.5rem', md: '1.5rem' },
-        fontSize: { xs: '1.25rem', md: '2.125rem' },
-        gap: { xs: 2, md: 3 },
-        margin: { xs: '0.5rem 0', md: '1.5rem 0' },
-        iconSize: { xs: '1.5rem', md: '2rem' },
-        borderRadius: { xs: '12px', md: '16px' },
-    },
 };
+
 // Simplified Animation System - Consolidated for consistency
 export const ANIMATIONS = {
     // Standard transition used throughout the app
@@ -137,66 +100,44 @@ export const ANIMATIONS = {
 
     // Animation Presets - Reusable animation patterns
     presets: {
-        // Card hover effect - lift with shadow
-        cardHover: {
-            transform: 'translateY(-2px)',
-            boxShadow: COLORS.shadow.medium,
-        },
-
-        // Interactive hover - background change
-        interactiveHover: {
-            backgroundColor: COLORS.interactive.hover,
-        },
-        // Scale hover - grow slightly
-        // Button hover - consistent button interaction
-        buttonHover: {
-            backgroundColor: COLORS.semantic.buttonHover,
-            transform: `translateY(-1px)`,
-            boxShadow: COLORS.shadow.sm,
-        },
-        // Card interaction - consistent card behavior
-        cardInteraction: {
-            backgroundColor: COLORS.semantic.cardHover,
-            transform: `translateY(-2px)`,
-            boxShadow: COLORS.shadow.sm,
-        },
-        scaleHover: {
-            transform: 'scale(1.02) translateY(-1px)',
-            boxShadow: '0 4px 20px hsla(0, 0%, 0%, 0.25)',
-        },
-        // Glass effect with backdrop blur
         // Focus effect - consistent focus ring
         focus: {
             boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
         },
+        // Glass effect with backdrop blur
         glass: {
-            backgroundColor: COLORS.semantic.glassBackground,
+            backgroundColor: COLORS.surface.glass,
             backdropFilter: 'blur(24px) saturate(180%)',
-            border: `1px solid ${COLORS.semantic.borderSubtle}`,
+            border: `1px solid ${COLORS.border.subtle}`,
         },
     },
 };
 
 // Layout Constants
+// Base Card Styles - Shared properties for all card variants
+export const BASE_CARD = {
+    backgroundColor: COLORS.surface.glass,
+    backdropFilter: 'blur(24px) saturate(180%)',
+    border: `1px solid ${COLORS.border.subtle}`,
+    borderRadius: SPACING.borderRadius.lg,
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    transition: ANIMATIONS.transition,
+};
 
 // Component Variants - Streamlined patterns used in multiple places
 export const COMPONENT_VARIANTS = {
-    // Unified card variant - combines glass and interactive functionality
-    card: {
-        backgroundColor: COLORS.semantic.glassBackground,
-        backdropFilter: 'blur(24px) saturate(180%)',
-        border: `1px solid ${COLORS.semantic.borderSubtle}`,
-        borderRadius: SPACING.borderRadius.lg,
-        boxShadow: COLORS.shadow.medium,
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
+    // Base card variant - shared properties for all cards
+    card: BASE_CARD,
+
+    // Interactive card variant - extends base card with interaction
+    interactiveCard: {
+        ...BASE_CARD,
         cursor: 'pointer',
-        transition: ANIMATIONS.transition,
         '&:hover': {
-            ...ANIMATIONS.presets.cardInteraction,
+            backgroundColor: COLORS.interactive.selected,
             transform: 'translateY(-2px)',
-            boxShadow: COLORS.shadow.medium,
         },
         '&:focus': {
             outline: 'none',

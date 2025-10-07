@@ -12,7 +12,6 @@ import {
 
 import { TooltipButton, GlassCard, ICON_MAP } from '../helpers';
 import { Section, HeroContainer } from '../components/Layout';
-import { pages } from './';
 import {
     PERSONAL_INFO,
     URLS,
@@ -30,41 +29,177 @@ import {
 } from '../config/theme';
 
 import {
-    MenuRounded,
     GitHub,
     Work,
     LocationOn,
     OpenInNew,
     ArrowForward,
+    Code,
+    Psychology,
+    GamepadRounded,
+    ViewModuleRounded,
 } from '../components/icons';
 
-function dropdown(name, routes) {
+// Project categories with enhanced metadata
+const PROJECT_CATEGORIES = {
+    research: {
+        title: 'Research',
+        icon: Psychology,
+        color: COLORS.data.green,
+        projects: {
+            ZSharp: {
+                path: '/ZSharp',
+                description: 'ML optimization method',
+                technology: 'PyTorch',
+            },
+            Oligopoly: {
+                path: '/Oligopoly',
+                description: 'Market simulation model',
+                technology: 'FastAPI',
+            },
+        },
+    },
+    games: {
+        title: 'Games',
+        icon: GamepadRounded,
+        color: COLORS.primary.main,
+        projects: {
+            Snake: {
+                path: '/Snake',
+                description: 'Retro arcade gameplay',
+                technology: 'JavaScript',
+            },
+            Lights_Out: {
+                path: '/Lights_Out',
+                description: 'Grid-based logic puzzle',
+                technology: 'JavaScript',
+            },
+        },
+    },
+    tools: {
+        title: 'Tools',
+        icon: Code,
+        color: COLORS.data.amber,
+        projects: {
+            Interpreters: {
+                path: '/Interpreters',
+                description: 'Esoteric language demos',
+                technology: 'JavaScript',
+            },
+        },
+    },
+};
+
+function ProjectDropdown() {
     return (
-        <Box>
-            {Object.entries(routes).map(([routeName, routePath]) => (
-                <MenuItem
-                    sx={{
-                        padding: '12px 16px',
-                        borderRadius: SPACING.borderRadius.md,
-                        margin: '0.25rem 0.5rem',
-                        transition: ANIMATIONS.transition,
-                        '&:hover': ANIMATIONS.presets.interactiveHover,
-                    }}
-                    key={routeName}
-                    component={Link}
-                    to={routePath}
-                >
-                    <Typography
-                        sx={{
-                            fontWeight: TYPOGRAPHY.fontWeight.medium,
-                            fontSize: TYPOGRAPHY.fontSize.body,
-                            color: COLORS.text.primary,
-                        }}
-                    >
-                        {routeName.replace('_', ' ')}
-                    </Typography>
-                </MenuItem>
-            ))}
+        <Box sx={{ padding: '16px 16px 0 16px' }}>
+            {Object.entries(PROJECT_CATEGORIES).map(
+                ([categoryKey, category]) => {
+                    const IconComponent = category.icon;
+                    return (
+                        <Box key={categoryKey} sx={{ marginBottom: 2 }}>
+                            {/* Category Header */}
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                    padding: '8px 0 4px 0',
+                                    marginBottom: 0.5,
+                                    position: 'relative',
+                                    '&::after': {
+                                        content: '""',
+                                        position: 'absolute',
+                                        bottom: 0,
+                                        left: 0,
+                                        right: 0,
+                                        height: '1px',
+                                        backgroundColor:
+                                            'rgba(255, 255, 255, 0.05)',
+                                    },
+                                }}
+                            >
+                                <IconComponent
+                                    sx={{
+                                        color: '#4C78FF',
+                                        fontSize: '14px',
+                                        opacity: 0.7,
+                                    }}
+                                />
+                                <Typography
+                                    sx={{
+                                        color: 'rgba(157, 163, 174, 0.7)',
+                                        fontSize: '10px',
+                                        fontWeight: 500,
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.14em',
+                                        fontFamily:
+                                            'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
+                                    }}
+                                >
+                                    {category.title}
+                                </Typography>
+                            </Box>
+
+                            {/* Category Projects */}
+                            {Object.entries(category.projects).map(
+                                ([projectName, project]) => (
+                                    <MenuItem
+                                        key={projectName}
+                                        component={Link}
+                                        to={project.path}
+                                        sx={{
+                                            padding: '10px 12px',
+                                            borderRadius: '8px',
+                                            margin: '0',
+                                            minHeight: '40px',
+                                            transition: 'all 120ms ease',
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'flex-start',
+                                            gap: '6px',
+                                            '&:hover': {
+                                                backgroundColor:
+                                                    'rgba(255, 255, 255, 0.06)',
+                                                transform: 'translateY(-1px)',
+                                            },
+                                            '&:active': {
+                                                backgroundColor:
+                                                    'rgba(255, 255, 255, 0.08)',
+                                            },
+                                            '&:focus-visible': {
+                                                outline: 'none',
+                                                ring: '1px solid rgba(255, 255, 255, 0.2)',
+                                                ringOffset: '0',
+                                            },
+                                        }}
+                                    >
+                                        <Typography
+                                            sx={{
+                                                fontWeight: 600,
+                                                fontSize: '15px',
+                                                lineHeight: 1.6,
+                                                color: '#EDEDED',
+                                            }}
+                                        >
+                                            {projectName.replace('_', ' ')}
+                                        </Typography>
+                                        <Typography
+                                            sx={{
+                                                color: 'rgba(157, 163, 174, 0.8)',
+                                                fontSize: '12px',
+                                                lineHeight: 1.4,
+                                            }}
+                                        >
+                                            {project.description}
+                                        </Typography>
+                                    </MenuItem>
+                                )
+                            )}
+                        </Box>
+                    );
+                }
+            )}
         </Box>
     );
 }
@@ -81,7 +216,7 @@ function closeHandler(setAnchor) {
     };
 }
 
-function MenuButton({ children }) {
+function MenuButton() {
     const [anchor, setAnchor] = useState(null);
     const handleClick = clickHandler(setAnchor);
     const handleClose = closeHandler(setAnchor);
@@ -94,38 +229,57 @@ function MenuButton({ children }) {
     return (
         <Box>
             <TooltipButton
-                title="Menu"
-                id="basic-button"
-                Icon={MenuRounded}
-                aria-controls={define('basic-menu')}
+                title="Projects Menu"
+                id="projects-menu-button"
+                Icon={ViewModuleRounded}
+                aria-controls={define('projects-menu')}
                 aria-expanded={define('true')}
                 aria-haspopup="true"
                 onClick={handleClick}
+                sx={{
+                    '&:hover': {
+                        backgroundColor: COLORS.interactive.hover,
+                        transform: 'scale(1.05)',
+                    },
+                }}
             />
             <Menu
-                id="basic-menu"
+                id="projects-menu"
                 open={open}
                 anchorEl={anchor}
+                disableAutoFocusItem={true}
                 sx={{
                     marginLeft: 1,
                     marginTop: 1,
                     '& .MuiPaper-root': {
-                        height: 'fit-content',
-                        minHeight: 'auto',
-                        maxHeight: 'fit-content',
+                        width: 'auto',
+                        maxWidth: '300px',
+                        height: 'auto !important',
+                        backgroundColor: 'rgba(11, 11, 12, 0.95)',
+                        backdropFilter: 'blur(8px)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '16px',
+                        padding: 0,
+                        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.35)',
+                        transition: 'all 140ms cubic-bezier(0.2, 0.8, 0.2, 1)',
+                        transform: open
+                            ? 'translateY(0) scale(1)'
+                            : 'translateY(8px) scale(0.98)',
+                        opacity: open ? 1 : 0,
                     },
                 }}
                 onClose={handleClose}
                 MenuListProps={{
-                    'aria-labelledby': 'basic-button',
+                    'aria-labelledby': 'projects-menu-button',
                     sx: {
                         padding: 0,
-                        height: 'fit-content',
-                        minHeight: 'auto',
+                        height: 'auto',
                     },
                 }}
+                transformOrigin={{ horizontal: 'left', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
             >
-                {children}
+                <ProjectDropdown />
             </Menu>
         </Box>
     );
@@ -157,7 +311,7 @@ export default function Home() {
                     top: 0,
                     left: 0,
                     right: 0,
-                    padding: SPACING.responsive.padding,
+                    padding: { xs: '0.5rem', md: '1.5rem' },
                     zIndex: 1000,
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -166,7 +320,7 @@ export default function Home() {
                     overflowX: 'hidden', // Hide any overflow
                 }}
             >
-                <MenuButton>{dropdown('Projects', pages)}</MenuButton>
+                <MenuButton />
                 <TooltipButton
                     component="a"
                     href={URLS.githubProfile}
@@ -180,7 +334,7 @@ export default function Home() {
             {/* Spacing between nav and hero */}
             <Box
                 sx={{
-                    height: SPACING.responsive.margin,
+                    height: { xs: '2rem', md: '5rem' },
                 }}
             />
 
@@ -213,10 +367,8 @@ export default function Home() {
                                             xs: 'clamp(2rem, 8vw, 2.5rem)', // Mobile sizing
                                             md: 'clamp(3rem, 6vw, 5rem)', // Desktop sizing
                                         },
-                                        lineHeight:
-                                            TYPOGRAPHY.lineHeight.normal,
-                                        letterSpacing:
-                                            TYPOGRAPHY.letterSpacing.normal,
+                                        lineHeight: 1.4,
+                                        letterSpacing: '0',
                                         marginBottom: 2,
                                         // Allow controlled wrapping, but prevent breaks in names
                                         wordBreak: 'keep-all', // Prevent breaking within words
@@ -236,8 +388,7 @@ export default function Home() {
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.semibold,
                                         marginBottom: 4,
-                                        lineHeight:
-                                            TYPOGRAPHY.lineHeight.normal,
+                                        lineHeight: 1.4,
                                         // Control how text breaks, allowing smart wrapping
                                         wordBreak: 'keep-all', // Prevent breaking within words
                                         hyphens: 'none', // Disable hyphenation
@@ -304,8 +455,12 @@ export default function Home() {
                                                 SPACING.borderRadius.full,
                                             transition: ANIMATIONS.transition,
                                             cursor: 'pointer',
-                                            '&:hover':
-                                                ANIMATIONS.presets.scaleHover,
+                                            '&:hover': {
+                                                transform:
+                                                    'scale(1.02) translateY(-1px)',
+                                                boxShadow:
+                                                    '0 4px 20px hsla(0, 0%, 0%, 0.25)',
+                                            },
                                         }}
                                     >
                                         <Typography
@@ -572,14 +727,14 @@ export default function Home() {
                                             overflow: 'hidden',
                                             height: '100%',
                                             display: 'flex',
-                                            ...COMPONENT_VARIANTS.card,
+                                            ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
                                                 backgroundColor:
                                                     COLORS.interactive.selected,
                                             },
                                         }}
                                     >
-                                        <GlassCard>
+                                        <GlassCard sx={{ border: 'none' }}>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -603,9 +758,7 @@ export default function Home() {
                                                         textTransform:
                                                             'uppercase',
                                                         letterSpacing:
-                                                            TYPOGRAPHY
-                                                                .letterSpacing
-                                                                .wider,
+                                                            '0.025em',
                                                     }}
                                                 >
                                                     Research
@@ -627,9 +780,7 @@ export default function Home() {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .subheading,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .normal,
+                                                    lineHeight: 1.4,
                                                     marginBottom: 2,
                                                 }}
                                             >
@@ -639,12 +790,15 @@ export default function Home() {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
-                                                        borderRadius: '20px',
+                                                        borderRadius:
+                                                            SPACING.borderRadius
+                                                                .full,
                                                         fontSize:
                                                             'clamp(0.7rem, 0.8vw, 0.75rem)',
                                                         fontWeight: 500,
                                                         padding: '4px 12px',
-                                                        minHeight: '24px',
+                                                        minHeight:
+                                                            SPACING.padding.sm,
                                                         display: 'inline-flex',
                                                         alignItems: 'center',
                                                         transition:
@@ -666,9 +820,7 @@ export default function Home() {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .relaxed,
+                                                    lineHeight: 1.5,
                                                     flex: 1,
                                                 }}
                                             >
@@ -697,14 +849,14 @@ export default function Home() {
                                             overflow: 'hidden',
                                             height: '100%',
                                             display: 'flex',
-                                            ...COMPONENT_VARIANTS.card,
+                                            ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
                                                 backgroundColor:
                                                     COLORS.interactive.selected,
                                             },
                                         }}
                                     >
-                                        <GlassCard>
+                                        <GlassCard sx={{ border: 'none' }}>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -728,9 +880,7 @@ export default function Home() {
                                                         textTransform:
                                                             'uppercase',
                                                         letterSpacing:
-                                                            TYPOGRAPHY
-                                                                .letterSpacing
-                                                                .wider,
+                                                            '0.025em',
                                                     }}
                                                 >
                                                     Project
@@ -752,9 +902,7 @@ export default function Home() {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .subheading,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .normal,
+                                                    lineHeight: 1.4,
                                                     marginBottom: 2,
                                                 }}
                                             >
@@ -764,19 +912,23 @@ export default function Home() {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
-                                                        borderRadius: '20px',
+                                                        borderRadius:
+                                                            SPACING.borderRadius
+                                                                .full,
                                                         fontSize:
                                                             'clamp(0.7rem, 0.8vw, 0.75rem)',
                                                         fontWeight: 500,
                                                         padding: '4px 12px',
-                                                        minHeight: '24px',
+                                                        minHeight:
+                                                            SPACING.padding.sm,
                                                         display: 'inline-flex',
                                                         alignItems: 'center',
                                                         transition:
                                                             'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
                                                         backgroundColor:
                                                             'hsla(217, 91%, 60%, 0.1)',
-                                                        color: 'hsl(217, 91%, 60%)',
+                                                        color: COLORS.primary
+                                                            .main,
                                                         border: '1px solid hsla(217, 91%, 60%, 0.2)',
                                                     }}
                                                 >
@@ -791,9 +943,7 @@ export default function Home() {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
-                                                    lineHeight:
-                                                        TYPOGRAPHY.lineHeight
-                                                            .relaxed,
+                                                    lineHeight: 1.5,
                                                     flex: 1,
                                                 }}
                                             >
@@ -811,7 +961,7 @@ export default function Home() {
             {/* Bottom spacing */}
             <Box
                 sx={{
-                    height: SPACING.responsive.margin,
+                    height: { xs: '2rem', md: '5rem' },
                 }}
             />
         </Grid>

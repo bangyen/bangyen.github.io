@@ -1,10 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, IconButton, Button, Grid } from '../components/mui';
-import { GitHub, HomeRounded as Home } from '../components/icons';
+import {
+    GitHub,
+    HomeRounded as Home,
+    BarChartRounded,
+    TrendingUpRounded,
+    ShowChartRounded,
+    AnalyticsRounded,
+} from '../components/icons';
 import {
     URLS,
     PAGE_TITLES,
     CHART_DIMENSIONS,
+    CHART_FORMATTING,
     ZSHARP_DEFAULTS,
     PERCENTAGE,
 } from '../config/constants';
@@ -14,6 +22,7 @@ import {
     TYPOGRAPHY,
     COMPONENT_VARIANTS,
 } from '../config/theme';
+import { GlassCard } from '../helpers';
 import {
     LineChart,
     Line,
@@ -193,7 +202,11 @@ const ZSharp = () => {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: SPACING.responsive.padding,
+                padding: SPACING.padding.md,
+                paddingBottom: {
+                    xs: SPACING.padding.md,
+                    md: 0,
+                },
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -230,7 +243,10 @@ const ZSharp = () => {
                         textAlign: 'center',
                         maxWidth: SPACING.maxWidth.md,
                         width: '100%',
-                        padding: SPACING.responsive.padding,
+                        padding: {
+                            xs: '0 0.5rem',
+                            md: '0 2rem',
+                        },
                         boxSizing: 'border-box',
                         overflow: 'hidden',
                     }}
@@ -246,7 +262,7 @@ const ZSharp = () => {
                             <Typography
                                 variant="h1"
                                 sx={{
-                                    color: 'text.primary',
+                                    color: COLORS.text.primary,
                                     fontWeight: TYPOGRAPHY.fontWeight.bold,
                                     fontSize: TYPOGRAPHY.fontSize.h2,
                                 }}
@@ -254,10 +270,7 @@ const ZSharp = () => {
                                 ZSharp
                             </Typography>
                         </Grid>
-                        <Grid
-                            size="auto"
-                            sx={{ ...COMPONENT_VARIANTS.flexCenter, gap: 1 }}
-                        >
+                        <Grid size="auto" sx={{ display: 'flex', gap: 1 }}>
                             <IconButton
                                 href={URLS.zsharpRepo}
                                 target="_blank"
@@ -288,9 +301,9 @@ const ZSharp = () => {
                     <Typography
                         variant="h5"
                         sx={{
-                            color: 'text.secondary',
+                            color: COLORS.text.secondary,
                             marginTop: 2,
-                            marginBottom: 3,
+                            marginBottom: 4,
                             fontWeight: TYPOGRAPHY.fontWeight.normal,
                             fontSize: TYPOGRAPHY.fontSize.subheading,
                         }}
@@ -299,12 +312,9 @@ const ZSharp = () => {
                     </Typography>
 
                     {/* Performance Chart */}
-                    <Box
+                    <GlassCard
                         sx={{
-                            backgroundColor: COLORS.surface.elevated,
-                            borderRadius: SPACING.borderRadius.md,
-                            border: `1px solid ${COLORS.border.subtle}`,
-                            marginBottom: 4,
+                            marginBottom: 3,
                             width: '100%',
                             boxSizing: 'border-box',
                             overflow: 'hidden',
@@ -314,7 +324,7 @@ const ZSharp = () => {
                             variant="subtitle1"
                             sx={{
                                 color: COLORS.text.secondary,
-                                marginBottom: 3,
+                                marginBottom: 2,
                                 textAlign: 'center',
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
                                 fontSize: TYPOGRAPHY.fontSize.subheading,
@@ -332,9 +342,11 @@ const ZSharp = () => {
                             {loading ? (
                                 <Box
                                     sx={{
-                                        ...COMPONENT_VARIANTS.flexCenter,
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
                                         height: '100%',
-                                        color: 'text.secondary',
+                                        color: COLORS.text.secondary,
                                     }}
                                 >
                                     <Typography>
@@ -345,7 +357,10 @@ const ZSharp = () => {
                                 <ResponsiveContainer width="100%" height="100%">
                                     <LineChart data={currentData}>
                                         <CartesianGrid
-                                            strokeDasharray="3 3"
+                                            strokeDasharray={
+                                                CHART_FORMATTING.lines
+                                                    .strokeDashArray
+                                            }
                                             stroke={COLORS.border.subtle}
                                         />
                                         <XAxis
@@ -453,7 +468,10 @@ const ZSharp = () => {
                                                     dot={{
                                                         fill: COLORS.primary
                                                             .main,
-                                                        strokeWidth: 2,
+                                                        strokeWidth:
+                                                            CHART_FORMATTING
+                                                                .lines
+                                                                .defaultStrokeWidth,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
@@ -467,7 +485,10 @@ const ZSharp = () => {
                                                     name="ZSharp"
                                                     dot={{
                                                         fill: COLORS.data.green,
-                                                        strokeWidth: 2,
+                                                        strokeWidth:
+                                                            CHART_FORMATTING
+                                                                .lines
+                                                                .defaultStrokeWidth,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
@@ -486,7 +507,10 @@ const ZSharp = () => {
                                                     dot={{
                                                         fill: COLORS.primary
                                                             .main,
-                                                        strokeWidth: 2,
+                                                        strokeWidth:
+                                                            CHART_FORMATTING
+                                                                .lines
+                                                                .defaultStrokeWidth,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
@@ -500,7 +524,10 @@ const ZSharp = () => {
                                                     name="ZSharp Loss"
                                                     dot={{
                                                         fill: COLORS.data.green,
-                                                        strokeWidth: 2,
+                                                        strokeWidth:
+                                                            CHART_FORMATTING
+                                                                .lines
+                                                                .defaultStrokeWidth,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
@@ -551,7 +578,10 @@ const ZSharp = () => {
                                                     dot={{
                                                         fill: COLORS.primary
                                                             .main,
-                                                        strokeWidth: 2,
+                                                        strokeWidth:
+                                                            CHART_FORMATTING
+                                                                .lines
+                                                                .defaultStrokeWidth,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
@@ -565,7 +595,10 @@ const ZSharp = () => {
                                                     name="ZSharp Rate"
                                                     dot={{
                                                         fill: COLORS.data.green,
-                                                        strokeWidth: 2,
+                                                        strokeWidth:
+                                                            CHART_FORMATTING
+                                                                .lines
+                                                                .defaultStrokeWidth,
                                                         r: CHART_DIMENSIONS.dotRadius,
                                                     }}
                                                 />
@@ -575,145 +608,215 @@ const ZSharp = () => {
                                 </ResponsiveContainer>
                             )}
                         </Box>
-                    </Box>
+                    </GlassCard>
 
-                    {/* View Selection Buttons */}
-                    <Box
+                    {/* View Selection Control Panel */}
+                    <GlassCard
                         sx={{
                             marginTop: 3,
-                            display: 'grid',
-                            gridTemplateColumns: {
-                                xs: '1fr 1fr',
-                                md: 'repeat(4, 1fr)',
-                            },
-                            gap: 1,
-                            maxWidth: {
-                                xs: '24rem',
-                                md: 'none',
-                            },
-                            margin: {
-                                xs: '3rem auto 0',
-                                md: '3rem 0 0',
-                            },
+                            width: '100%',
+                            boxSizing: 'border-box',
+                            overflow: 'hidden',
+                            paddingBottom: SPACING.padding.md,
+                            backgroundClip: 'padding-box',
                         }}
                     >
-                        <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => setViewType('accuracy')}
+                        <Box
                             sx={{
-                                color:
-                                    viewType === 'accuracy'
-                                        ? COLORS.text.primary
-                                        : COLORS.text.secondary,
-                                backgroundColor:
-                                    viewType === 'accuracy'
-                                        ? COLORS.primary.main
-                                        : 'transparent',
-                                borderColor: COLORS.border.subtle,
-                                borderWidth: '1px',
-                                borderStyle: 'solid',
-                                borderRadius: SPACING.borderRadius.lg,
-                                minHeight: '36px',
-                                '&:hover': {
-                                    borderColor: COLORS.border.subtle,
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                marginBottom: 2,
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                }}
+                            >
+                                <BarChartRounded
+                                    sx={{
+                                        color: COLORS.primary.light,
+                                        fontSize: '1.25rem',
+                                    }}
+                                />
+                                <Typography
+                                    variant="body1"
+                                    sx={{
+                                        color: COLORS.primary.light,
+                                        fontWeight:
+                                            TYPOGRAPHY.fontWeight.semibold,
+                                    }}
+                                >
+                                    Chart Views
+                                </Typography>
+                            </Box>
+                        </Box>
+
+                        <Box
+                            sx={{
+                                display: 'grid',
+                                gridTemplateColumns: {
+                                    xs: 'repeat(2, minmax(0, 1fr))',
+                                    md: 'repeat(4, 1fr)',
+                                },
+                                gap: 1.5,
+                                width: '100%',
+                                margin: 0,
+                            }}
+                        >
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                startIcon={<BarChartRounded />}
+                                onClick={() => setViewType('accuracy')}
+                                sx={{
+                                    width: '100%',
+                                    color:
+                                        viewType === 'accuracy'
+                                            ? COLORS.text.primary
+                                            : COLORS.text.secondary,
                                     backgroundColor:
                                         viewType === 'accuracy'
-                                            ? COLORS.primary.dark
-                                            : COLORS.interactive.hover,
-                                },
-                            }}
-                        >
-                            Accuracy
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => setViewType('loss')}
-                            sx={{
-                                color:
-                                    viewType === 'loss'
-                                        ? COLORS.text.primary
-                                        : COLORS.text.secondary,
-                                backgroundColor:
-                                    viewType === 'loss'
-                                        ? COLORS.primary.main
-                                        : 'transparent',
-                                borderColor: COLORS.border.subtle,
-                                borderWidth: '1px',
-                                borderStyle: 'solid',
-                                borderRadius: SPACING.borderRadius.lg,
-                                minHeight: '36px',
-                                '&:hover': {
+                                            ? COLORS.primary.main
+                                            : 'transparent',
                                     borderColor: COLORS.border.subtle,
+                                    borderWidth: '1px',
+                                    borderStyle: 'solid',
+                                    borderRadius: SPACING.borderRadius.lg,
+                                    minHeight: '36px',
+                                    padding: '0.4rem 0.8rem',
+                                    fontSize: '0.8rem',
+                                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                                    transition:
+                                        'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
+                                    '&:hover': {
+                                        backgroundColor:
+                                            viewType === 'accuracy'
+                                                ? COLORS.primary.dark
+                                                : COLORS.interactive.hover,
+                                        transform: 'translateY(-1px)',
+                                        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                                    },
+                                }}
+                            >
+                                Accuracy
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                startIcon={<TrendingUpRounded />}
+                                onClick={() => setViewType('loss')}
+                                sx={{
+                                    width: '100%',
+                                    color:
+                                        viewType === 'loss'
+                                            ? COLORS.text.primary
+                                            : COLORS.text.secondary,
                                     backgroundColor:
                                         viewType === 'loss'
-                                            ? COLORS.primary.dark
-                                            : COLORS.interactive.hover,
-                                },
-                            }}
-                        >
-                            Loss
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => setViewType('learning_curve')}
-                            sx={{
-                                color:
-                                    viewType === 'learning_curve'
-                                        ? COLORS.text.primary
-                                        : COLORS.text.secondary,
-                                backgroundColor:
-                                    viewType === 'learning_curve'
-                                        ? COLORS.primary.main
-                                        : 'transparent',
-                                borderColor: COLORS.border.subtle,
-                                borderWidth: '1px',
-                                borderStyle: 'solid',
-                                borderRadius: SPACING.borderRadius.lg,
-                                minHeight: '36px',
-                                '&:hover': {
+                                            ? COLORS.primary.main
+                                            : 'transparent',
                                     borderColor: COLORS.border.subtle,
+                                    borderWidth: '1px',
+                                    borderStyle: 'solid',
+                                    borderRadius: SPACING.borderRadius.lg,
+                                    minHeight: '36px',
+                                    padding: '0.4rem 0.8rem',
+                                    fontSize: '0.8rem',
+                                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                                    transition:
+                                        'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
+                                    '&:hover': {
+                                        backgroundColor:
+                                            viewType === 'loss'
+                                                ? COLORS.primary.dark
+                                                : COLORS.interactive.hover,
+                                        transform: 'translateY(-1px)',
+                                        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                                    },
+                                }}
+                            >
+                                Loss
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                startIcon={<ShowChartRounded />}
+                                onClick={() => setViewType('learning_curve')}
+                                sx={{
+                                    width: '100%',
+                                    color:
+                                        viewType === 'learning_curve'
+                                            ? COLORS.text.primary
+                                            : COLORS.text.secondary,
                                     backgroundColor:
                                         viewType === 'learning_curve'
-                                            ? COLORS.primary.dark
-                                            : COLORS.interactive.hover,
-                                },
-                            }}
-                        >
-                            Learning Gap
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => setViewType('convergence')}
-                            sx={{
-                                color:
-                                    viewType === 'convergence'
-                                        ? COLORS.text.primary
-                                        : COLORS.text.secondary,
-                                backgroundColor:
-                                    viewType === 'convergence'
-                                        ? COLORS.primary.main
-                                        : 'transparent',
-                                borderColor: COLORS.border.subtle,
-                                borderWidth: '1px',
-                                borderStyle: 'solid',
-                                borderRadius: SPACING.borderRadius.lg,
-                                minHeight: '36px',
-                                '&:hover': {
+                                            ? COLORS.primary.main
+                                            : 'transparent',
                                     borderColor: COLORS.border.subtle,
+                                    borderWidth: '1px',
+                                    borderStyle: 'solid',
+                                    borderRadius: SPACING.borderRadius.lg,
+                                    minHeight: '36px',
+                                    padding: '0.4rem 0.8rem',
+                                    fontSize: '0.8rem',
+                                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                                    transition:
+                                        'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
+                                    '&:hover': {
+                                        backgroundColor:
+                                            viewType === 'learning_curve'
+                                                ? COLORS.primary.dark
+                                                : COLORS.interactive.hover,
+                                        transform: 'translateY(-1px)',
+                                        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                                    },
+                                }}
+                            >
+                                Learning Gap
+                            </Button>
+                            <Button
+                                variant="outlined"
+                                size="small"
+                                startIcon={<AnalyticsRounded />}
+                                onClick={() => setViewType('convergence')}
+                                sx={{
+                                    width: '100%',
+                                    color:
+                                        viewType === 'convergence'
+                                            ? COLORS.text.primary
+                                            : COLORS.text.secondary,
                                     backgroundColor:
                                         viewType === 'convergence'
-                                            ? COLORS.primary.dark
-                                            : COLORS.interactive.hover,
-                                },
-                            }}
-                        >
-                            Convergence
-                        </Button>
-                    </Box>
+                                            ? COLORS.primary.main
+                                            : 'transparent',
+                                    borderColor: COLORS.border.subtle,
+                                    borderWidth: '1px',
+                                    borderStyle: 'solid',
+                                    borderRadius: SPACING.borderRadius.lg,
+                                    minHeight: '36px',
+                                    padding: '0.4rem 0.8rem',
+                                    fontSize: '0.8rem',
+                                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                                    transition:
+                                        'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
+                                    '&:hover': {
+                                        backgroundColor:
+                                            viewType === 'convergence'
+                                                ? COLORS.primary.dark
+                                                : COLORS.interactive.hover,
+                                        transform: 'translateY(-1px)',
+                                        boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                                    },
+                                }}
+                            >
+                                Convergence
+                            </Button>
+                        </Box>
+                    </GlassCard>
                 </Box>
             </Grid>
         </Grid>

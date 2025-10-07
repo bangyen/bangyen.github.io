@@ -54,3 +54,14 @@ export {
     DataArrayRounded,
     PlusOneRounded,
 } from '@mui/icons-material';
+
+// Dashboard & Charts Icons
+export {
+    BarChartRounded,
+    ShowChartRounded,
+    AnalyticsRounded,
+    TrendingUpRounded,
+    AttachMoneyRounded,
+    BusinessRounded,
+    SettingsRounded,
+} from '@mui/icons-material';

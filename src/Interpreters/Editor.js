@@ -2,12 +2,7 @@ import { Program, Output, Tape, Register } from './Display';
 import { CustomGrid } from '../helpers';
 import { Grid, Typography, TextField } from '../components/mui';
 import { Toolbar } from './Toolbar';
-import {
-    COLORS,
-    SPACING,
-    TYPOGRAPHY,
-    COMPONENT_VARIANTS,
-} from '../config/theme';
+import { COLORS, SPACING, TYPOGRAPHY } from '../config/theme';
 
 import React, { createContext, useContext } from 'react';
 
@@ -137,26 +132,26 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
     const cellProps = (row, col) => {
         const pos = cols * row + col;
         const color = chooseColor(pos);
-        const value = options[pos];
+        const value = options[pos] || ' ';
 
-        // Homepage-style color scheme
+        // Consistent glassmorphism color scheme
         const getCellStyles = color => {
             const styles = {
                 primary: {
-                    bg: 'hsla(0, 0%, 15%, 0.9)',
-                    text: 'primary.light',
+                    bg: COLORS.surface.glass,
+                    text: COLORS.primary.main,
                     border: `1px solid ${COLORS.primary.main}`,
-                    hover: 'hsla(0, 0%, 18%, 0.9)',
+                    hover: COLORS.interactive.selected,
                 },
                 info: {
-                    bg: 'hsla(0, 0%, 18%, 0.9)',
-                    text: 'secondary.light',
+                    bg: COLORS.surface.glass,
+                    text: COLORS.text.primary,
                     border: `1px solid ${COLORS.border.subtle}`,
-                    hover: 'hsla(0, 0%, 15%, 0.9)',
+                    hover: COLORS.interactive.hover,
                 },
                 secondary: {
-                    bg: 'hsla(0, 0%, 15%, 0.9)',
-                    text: 'text.secondary',
+                    bg: COLORS.surface.glass,
+                    text: COLORS.text.secondary,
                     border: `1px solid ${COLORS.border.subtle}`,
                     hover: COLORS.interactive.selected,
                 },
@@ -174,7 +169,9 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
             sx: {
                 borderRadius: SPACING.borderRadius.md,
                 border: cellStyle.border,
-                ...COMPONENT_VARIANTS.card,
+                cursor: 'pointer',
+                transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+                backdropFilter: 'blur(24px) saturate(180%)',
                 '&:hover': {
                     backgroundColor: cellStyle.hover,
                 },
@@ -227,8 +224,10 @@ export function TextArea({
             sx={{
                 '& .MuiInputBase-root': {
                     alignItems: 'flex-start',
-                    backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
+                    backgroundColor: COLORS.surface.glass,
+                    backdropFilter: 'blur(24px) saturate(180%)',
                     borderRadius: SPACING.borderRadius.md,
+                    border: `1px solid ${COLORS.border.subtle}`,
                 },
                 '& .MuiInputBase-input': {
                     fontFamily: 'monospace',

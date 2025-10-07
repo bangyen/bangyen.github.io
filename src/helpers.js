@@ -3,7 +3,13 @@ import { useState, useCallback, forwardRef } from 'react';
 
 import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
-import { TYPOGRAPHY, ANIMATIONS, COMPONENT_VARIANTS } from './config/theme';
+import {
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+    ANIMATIONS,
+    COMPONENT_VARIANTS,
+} from './config/theme';
 
 import {
     HomeRounded,
@@ -162,8 +168,8 @@ export function Navigation({ children, ...rest }) {
                 zIndex: 10,
                 backgroundColor: 'hsla(0, 0%, 3%, 0.95)',
                 backdropFilter: 'blur(24px) saturate(180%)',
-                border: '1px solid hsl(0, 0%, 18%)',
-                borderRadius: '16px',
+                border: `1px solid ${COLORS.border.subtle}`,
+                borderRadius: SPACING.borderRadius.lg,
                 boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.35)',
                 padding: '16px 24px',
                 ...rest,
@@ -265,9 +271,18 @@ function Arrows({ show, setShow, handler }) {
  * with backdrop blur, subtle borders, and elevation shadows.
  * Replaces repetitive glass container styling across components.
  * Uses forwardRef to support Material-UI transitions like Fade.
+ *
+ * @param {boolean} interactive - Whether the card should have hover effects and pointer cursor
  */
 export const GlassCard = forwardRef(function GlassCard(
-    { children, padding = '24px', sx, className, ...props },
+    {
+        children,
+        padding = SPACING.padding.md,
+        sx,
+        className,
+        interactive = false,
+        ...props
+    },
     ref
 ) {
     return (
@@ -275,7 +290,9 @@ export const GlassCard = forwardRef(function GlassCard(
             ref={ref}
             className={`glass-card ${className || ''}`}
             sx={{
-                ...COMPONENT_VARIANTS.card,
+                ...(interactive
+                    ? COMPONENT_VARIANTS.interactiveCard
+                    : COMPONENT_VARIANTS.card),
                 padding,
                 ...sx,
             }}
