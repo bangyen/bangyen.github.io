@@ -1,5 +1,5 @@
 // import * as colors from '@mui/material/colors'; // Removed unused import
-import Grid from '@mui/material/Grid2';
+import { Grid } from '../components/mui';
 
 import { useMemo, useCallback } from 'react';
 import { CustomGrid } from '../helpers';

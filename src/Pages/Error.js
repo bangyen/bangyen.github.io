@@ -1,6 +1,5 @@
 import React from 'react';
-import Grid from '@mui/material/Grid2';
-import { Typography, Box, Fade } from '@mui/material';
+import { Grid, Typography, Box, Fade } from '../components/mui';
 import { HomeButton } from '../helpers';
 import { PAGE_TITLES } from '../config/constants';
 import {

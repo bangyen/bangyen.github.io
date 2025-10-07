@@ -1,4 +1,4 @@
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery } from './components/mui';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 

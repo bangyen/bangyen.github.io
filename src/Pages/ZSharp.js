@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, IconButton, Button } from '@mui/material';
-import Grid from '@mui/material/Grid2';
-import { GitHub, Home } from '@mui/icons-material';
+import { Box, Typography, IconButton, Button, Grid } from '../components/mui';
+import { GitHub, Home } from '../components/icons';
 import {
     URLS,
     PAGE_TITLES,

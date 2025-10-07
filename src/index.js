@@ -3,8 +3,7 @@ import React from 'react';
 
 import { HashRouter, Routes, Route } from 'react-router-dom';
 
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { CssBaseline } from '@mui/material';
+import { ThemeProvider, createTheme, CssBaseline } from './components/mui';
 import './styles/animations.css';
 import { ROUTES } from './config/constants';
 import {

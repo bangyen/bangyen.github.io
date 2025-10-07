@@ -1,6 +1,6 @@
-import { Tooltip, IconButton, Paper, Box } from '@mui/material';
+import { Tooltip, IconButton, Paper, Box, Grid } from './components/mui';
 import { useState, useCallback, forwardRef } from 'react';
-import Grid from '@mui/material/Grid2';
+
 import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
 import { TYPOGRAPHY, ANIMATIONS, COMPONENT_VARIANTS } from './config/theme';
@@ -17,7 +17,7 @@ import {
     Psychology,
     Cloud,
     Work,
-} from '@mui/icons-material';
+} from './components/icons';
 
 /**
  * Icon mapping utility to eliminate repetitive icon selection logic

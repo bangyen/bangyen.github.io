@@ -1,6 +1,6 @@
 import { Program, Output, Tape, Register } from './Display';
 import { CustomGrid } from '../helpers';
-import Grid from '@mui/material/Grid2';
+import { Grid, Typography, TextField } from '../components/mui';
 import { Toolbar } from './Toolbar';
 import {
     COLORS,
@@ -9,8 +9,6 @@ import {
     TYPOGRAPHY,
     COMPONENT_VARIANTS,
 } from '../config/theme';
-
-import { Typography, TextField } from '@mui/material';
 
 import React, { createContext, useContext } from 'react';
 

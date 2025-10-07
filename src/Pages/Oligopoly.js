@@ -6,8 +6,8 @@ import {
     IconButton,
     ToggleButton,
     ToggleButtonGroup,
-} from '@mui/material';
-import Grid from '@mui/material/Grid2';
+    Grid,
+} from '../components/mui';
 import {
     URLS,
     PAGE_TITLES,
@@ -22,7 +22,7 @@ import {
     LAYOUT,
     COMPONENT_VARIANTS,
 } from '../config/theme';
-import { GitHub, Refresh, Home } from '@mui/icons-material';
+import { GitHub, Refresh, Home } from '../components/icons';
 import {
     LineChart,
     Line,

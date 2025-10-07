@@ -1,12 +1,18 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Backdrop, Typography, Card, CardContent, Box } from '@mui/material';
+import {
+    Backdrop,
+    Typography,
+    Card,
+    CardContent,
+    Box,
+    Grid,
+} from '../../components/mui';
 import {
     CircleRounded,
     KeyboardArrowDown,
     Calculate,
     Replay,
-} from '@mui/icons-material';
-import Grid from '@mui/material/Grid2';
+} from '../../components/icons';
 import {
     SPACING,
     COLORS,

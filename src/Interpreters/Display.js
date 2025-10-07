@@ -1,6 +1,6 @@
 import { EditorContext, Text } from './Editor';
 
-import { Box, Typography, Chip, IconButton } from '@mui/material';
+import { Box, Typography, Chip, IconButton, Grid } from '../components/mui';
 import { useContext } from 'react';
 import { SPACING, COLORS, TYPOGRAPHY } from '../config/theme';
 
@@ -11,9 +11,7 @@ import {
     PlusOneRounded,
     ViewModuleRounded,
     ViewListRounded,
-} from '@mui/icons-material';
-
-import Grid from '@mui/material/Grid2';
+} from '../components/icons';
 
 export function Program({ compact = false }) {
     const { code, index } = useContext(EditorContext);

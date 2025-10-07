@@ -1,8 +1,14 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import Grid from '@mui/material/Grid2';
-import { Typography, Box, IconButton, Card, CardContent } from '@mui/material';
-import { GitHub, Home, GridView, TextFields } from '@mui/icons-material';
+import {
+    Grid,
+    Typography,
+    Box,
+    IconButton,
+    Card,
+    CardContent,
+} from '../components/mui';
+import { GitHub, Home, GridView, TextFields } from '../components/icons';
 import { URLS, PAGE_TITLES } from '../config/constants';
 import {
     COLORS,

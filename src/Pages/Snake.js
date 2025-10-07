@@ -1,5 +1,5 @@
 import { useMemo, useCallback, useReducer, useEffect } from 'react';
-import Grid from '@mui/material/Grid2';
+import { Grid } from '../components/mui';
 // import * as colors from '@mui/material/colors'; // Removed unused import
 
 import { convertPixels, gridMove, getDirection } from '../calculate';
