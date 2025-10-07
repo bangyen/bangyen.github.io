@@ -103,6 +103,10 @@ function MenuButton({ children }) {
                 sx={{
                     marginLeft: 1,
                     marginTop: 1,
+                    '& .MuiPaper-root': {
+                        maxHeight: '400px',
+                        overflowY: 'auto',
+                    },
                 }}
                 onClose={handleClose}
                 MenuListProps={{
