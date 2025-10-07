@@ -583,6 +583,18 @@ const Oligopoly = () => {
                                         size="small"
                                         sx={{
                                             width: '100%',
+                                            borderRadius:
+                                                SPACING.borderRadius.lg,
+                                            overflow: 'hidden',
+                                            border: `1px solid ${COLORS.border.subtle}`,
+                                            '& .MuiToggleButtonGroup-grouped': {
+                                                margin: 0,
+                                                border: 0,
+                                                borderRadius: 0,
+                                                '&:not(:first-of-type)': {
+                                                    borderLeft: `1px solid ${COLORS.border.subtle}`,
+                                                },
+                                            },
                                             '& .MuiToggleButton-root': {
                                                 color: COLORS.text.secondary,
                                                 borderColor:
@@ -593,8 +605,7 @@ const Oligopoly = () => {
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
                                                         .medium,
-                                                borderRadius:
-                                                    SPACING.borderRadius.md,
+                                                borderRadius: 0,
                                                 transition:
                                                     'all 0.2s ease-in-out',
                                                 '&.Mui-selected': {
@@ -616,8 +627,6 @@ const Oligopoly = () => {
                                                     backgroundColor:
                                                         COLORS.interactive
                                                             .hover,
-                                                    borderColor:
-                                                        COLORS.primary.main,
                                                     transform:
                                                         'translateY(-1px)',
                                                 },
@@ -680,6 +689,18 @@ const Oligopoly = () => {
                                         size="small"
                                         sx={{
                                             width: '100%',
+                                            borderRadius:
+                                                SPACING.borderRadius.lg,
+                                            overflow: 'hidden',
+                                            border: `1px solid ${COLORS.border.subtle}`,
+                                            '& .MuiToggleButtonGroup-grouped': {
+                                                margin: 0,
+                                                border: 0,
+                                                borderRadius: 0,
+                                                '&:not(:first-of-type)': {
+                                                    borderLeft: `1px solid ${COLORS.border.subtle}`,
+                                                },
+                                            },
                                             '& .MuiToggleButton-root': {
                                                 color: COLORS.text.secondary,
                                                 borderColor:
@@ -690,8 +711,7 @@ const Oligopoly = () => {
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
                                                         .medium,
-                                                borderRadius:
-                                                    SPACING.borderRadius.md,
+                                                borderRadius: 0,
                                                 transition:
                                                     'all 0.2s ease-in-out',
                                                 '&.Mui-selected': {
@@ -713,8 +733,6 @@ const Oligopoly = () => {
                                                     backgroundColor:
                                                         COLORS.interactive
                                                             .hover,
-                                                    borderColor:
-                                                        COLORS.data.green,
                                                     transform:
                                                         'translateY(-1px)',
                                                 },
@@ -782,6 +800,18 @@ const Oligopoly = () => {
                                         size="small"
                                         sx={{
                                             width: '100%',
+                                            borderRadius:
+                                                SPACING.borderRadius.lg,
+                                            overflow: 'hidden',
+                                            border: `1px solid ${COLORS.border.subtle}`,
+                                            '& .MuiToggleButtonGroup-grouped': {
+                                                margin: 0,
+                                                border: 0,
+                                                borderRadius: 0,
+                                                '&:not(:first-of-type)': {
+                                                    borderLeft: `1px solid ${COLORS.border.subtle}`,
+                                                },
+                                            },
                                             '& .MuiToggleButton-root': {
                                                 color: COLORS.text.secondary,
                                                 borderColor:
@@ -792,8 +822,7 @@ const Oligopoly = () => {
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
                                                         .medium,
-                                                borderRadius:
-                                                    SPACING.borderRadius.md,
+                                                borderRadius: 0,
                                                 transition:
                                                     'all 0.2s ease-in-out',
                                                 '&.Mui-selected': {
@@ -815,8 +844,6 @@ const Oligopoly = () => {
                                                     backgroundColor:
                                                         COLORS.interactive
                                                             .hover,
-                                                    borderColor:
-                                                        COLORS.data.amber,
                                                     transform:
                                                         'translateY(-1px)',
                                                 },
