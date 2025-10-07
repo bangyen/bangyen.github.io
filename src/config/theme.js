@@ -120,6 +120,15 @@ export const SPACING = {
         md: '64rem',
         lg: '80rem',
     },
+    // Responsive Breakpoint Patterns - Standardized responsive values
+    responsive: {
+        padding: { xs: '0.5rem', md: '1.5rem' },
+        fontSize: { xs: '1.25rem', md: '2.125rem' },
+        gap: { xs: 2, md: 3 },
+        margin: { xs: '0.5rem 0', md: '1.5rem 0' },
+        iconSize: { xs: '1.5rem', md: '2rem' },
+        borderRadius: { xs: '12px', md: '16px' },
+    },
 };
 // Simplified Animation System - Consolidated for consistency
 export const ANIMATIONS = {

@@ -193,10 +193,7 @@ const ZSharp = () => {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: {
-                    xs: '0.5rem',
-                    md: SPACING.padding.md,
-                },
+                padding: SPACING.responsive.padding,
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -233,10 +230,7 @@ const ZSharp = () => {
                         textAlign: 'center',
                         maxWidth: SPACING.maxWidth.md,
                         width: '100%',
-                        padding: {
-                            xs: '0 0.5rem',
-                            md: `0 ${SPACING.padding.md}`,
-                        },
+                        padding: SPACING.responsive.padding,
                         boxSizing: 'border-box',
                         overflow: 'hidden',
                     }}
@@ -307,7 +301,6 @@ const ZSharp = () => {
                     {/* Performance Chart */}
                     <Box
                         sx={{
-                            padding: { xs: 1.5, md: 2 },
                             backgroundColor: COLORS.surface.elevated,
                             borderRadius: SPACING.borderRadius.md,
                             border: `1px solid ${COLORS.border.subtle}`,

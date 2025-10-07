@@ -133,10 +133,7 @@ export default function Interpreters() {
                             sx={{
                                 color: 'text.primary',
                                 fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                                fontSize: {
-                                    xs: '1.25rem',
-                                    md: '2.125rem',
-                                },
+                                fontSize: SPACING.responsive.fontSize,
                             }}
                         >
                             Esolang Interpreters
@@ -149,20 +146,14 @@ export default function Interpreters() {
                             >
                                 <GitHub
                                     sx={{
-                                        fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.h2,
-                                            md: '2rem',
-                                        },
+                                        fontSize: SPACING.responsive.iconSize,
                                     }}
                                 />
                             </IconButton>
                             <IconButton component={Link} to="/">
                                 <Home
                                     sx={{
-                                        fontSize: {
-                                            xs: TYPOGRAPHY.fontSize.h2,
-                                            md: '2rem',
-                                        },
+                                        fontSize: SPACING.responsive.iconSize,
                                     }}
                                 />
                             </IconButton>
@@ -177,7 +168,7 @@ export default function Interpreters() {
                                 xs: '1fr',
                                 md: '1fr 1fr',
                             },
-                            gap: { xs: 2, md: 3 },
+                            gap: SPACING.responsive.gap,
                             marginTop: 4,
                         }}
                     >

@@ -18,10 +18,7 @@ export default function Error() {
             flexDirection="column"
             sx={{
                 position: 'relative',
-                padding: {
-                    xs: '0.5rem',
-                    md: SPACING.padding.md,
-                },
+                padding: SPACING.responsive.padding,
                 boxSizing: 'border-box',
             }}
         >

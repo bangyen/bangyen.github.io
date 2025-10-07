@@ -157,10 +157,7 @@ export default function Home() {
                     top: 0,
                     left: 0,
                     right: 0,
-                    padding: {
-                        xs: '0.5rem', // Smaller padding on mobile
-                        md: SPACING.padding.md,
-                    },
+                    padding: SPACING.responsive.padding,
                     zIndex: 1000,
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -183,7 +180,7 @@ export default function Home() {
             {/* Spacing between nav and hero */}
             <Box
                 sx={{
-                    height: { xs: '0.5rem', md: SPACING.padding.md },
+                    height: SPACING.responsive.margin,
                 }}
             />
 
@@ -814,7 +811,7 @@ export default function Home() {
             {/* Bottom spacing */}
             <Box
                 sx={{
-                    height: { xs: '0.5rem', md: SPACING.padding.md },
+                    height: SPACING.responsive.margin,
                 }}
             />
         </Grid>
