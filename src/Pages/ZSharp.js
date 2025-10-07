@@ -9,7 +9,13 @@ import {
     ZSHARP_DEFAULTS,
     PERCENTAGE,
 } from '../config/constants';
-import { COLORS, SPACING, TYPOGRAPHY, LAYOUT } from '../config/theme';
+import {
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+    LAYOUT,
+    COMPONENT_VARIANTS,
+} from '../config/theme';
 import {
     LineChart,
     Line,
@@ -216,11 +222,9 @@ const ZSharp = () => {
             <Grid
                 size={12}
                 flex={1}
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                flexDirection="column"
                 sx={{
+                    ...COMPONENT_VARIANTS.flexCenter,
+                    flexDirection: 'column',
                     zIndex: LAYOUT.zIndex.content,
                     padding: 0,
                     minHeight: 0,
@@ -258,7 +262,10 @@ const ZSharp = () => {
                                 ZSharp
                             </Typography>
                         </Grid>
-                        <Grid size="auto" sx={{ display: 'flex', gap: 1 }}>
+                        <Grid
+                            size="auto"
+                            sx={{ ...COMPONENT_VARIANTS.flexCenter, gap: 1 }}
+                        >
                             <IconButton
                                 href={URLS.zsharpRepo}
                                 target="_blank"
@@ -334,9 +341,7 @@ const ZSharp = () => {
                             {loading ? (
                                 <Box
                                     sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
+                                        ...COMPONENT_VARIANTS.flexCenter,
                                         height: '100%',
                                         color: 'text.secondary',
                                     }}
