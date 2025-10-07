@@ -15,7 +15,13 @@ import {
     CHART_FORMATTING,
     GAME_CONSTANTS,
 } from '../config/constants';
-import { COLORS, SPACING, TYPOGRAPHY, LAYOUT } from '../config/theme';
+import {
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+    LAYOUT,
+    COMPONENT_VARIANTS,
+} from '../config/theme';
 import { GitHub, Refresh, Home } from '@mui/icons-material';
 import {
     LineChart,
@@ -228,11 +234,9 @@ const Oligopoly = () => {
             <Grid
                 size={12}
                 flex={1}
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                flexDirection="column"
                 sx={{
+                    ...COMPONENT_VARIANTS.flexCenter,
+                    flexDirection: 'column',
                     zIndex: 1,
                     padding: 0,
                     minHeight: 0,
