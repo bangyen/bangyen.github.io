@@ -122,7 +122,6 @@ export default function Info(props) {
                     backdropFilter: 'blur(24px) saturate(180%)',
                     border: `1px solid hsla(0, 0%, 100%, 0.1)`,
                     borderRadius: SPACING.borderRadius.lg,
-                    boxShadow: COLORS.shadow.medium,
                     display: 'flex',
                     flexDirection: 'column',
                     transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
@@ -201,12 +200,8 @@ export default function Info(props) {
                                                     : 'left',
                                                 fontSize:
                                                     TYPOGRAPHY.fontSize.h2,
-                                                lineHeight:
-                                                    TYPOGRAPHY.lineHeight
-                                                        .normal,
-                                                letterSpacing:
-                                                    TYPOGRAPHY.letterSpacing
-                                                        .tight,
+                                                lineHeight: 1.4,
+                                                letterSpacing: '0',
                                             }}
                                         >
                                             Chasing Lights Algorithm
@@ -226,9 +221,7 @@ export default function Info(props) {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
-                                                    letterSpacing:
-                                                        TYPOGRAPHY.letterSpacing
-                                                            .wide,
+                                                    letterSpacing: '0',
                                                 }}
                                             >
                                                 <KeyboardArrowDown
@@ -275,9 +268,7 @@ export default function Info(props) {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
-                                                    letterSpacing:
-                                                        TYPOGRAPHY.letterSpacing
-                                                            .wide,
+                                                    letterSpacing: '0',
                                                 }}
                                             >
                                                 <Calculate
@@ -324,9 +315,7 @@ export default function Info(props) {
                                                     fontSize:
                                                         TYPOGRAPHY.fontSize
                                                             .body,
-                                                    letterSpacing:
-                                                        TYPOGRAPHY.letterSpacing
-                                                            .wide,
+                                                    letterSpacing: '0',
                                                 }}
                                             >
                                                 <Replay
