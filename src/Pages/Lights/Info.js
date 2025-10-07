@@ -184,10 +184,6 @@ export default function Info(props) {
                                             transition:
                                                 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
                                             ...COMPONENT_VARIANTS.card,
-                                            '&:hover': {
-                                                backgroundColor:
-                                                    COLORS.interactive.hover,
-                                            },
                                         }}
                                     >
                                         <Typography
@@ -392,10 +388,6 @@ export default function Info(props) {
                                             transition:
                                                 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
                                             ...COMPONENT_VARIANTS.card,
-                                            '&:hover': {
-                                                backgroundColor:
-                                                    COLORS.interactive.hover,
-                                            },
                                         }}
                                     >
                                         <Example

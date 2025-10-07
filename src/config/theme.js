@@ -181,8 +181,21 @@ export const ANIMATIONS = {
 
 // Component Variants - Streamlined patterns used in multiple places
 export const COMPONENT_VARIANTS = {
-    // Unified card variant - combines glass and interactive functionality
+    // Static card variant - for non-interactive containers
     card: {
+        backgroundColor: COLORS.semantic.glassBackground,
+        backdropFilter: 'blur(24px) saturate(180%)',
+        border: `1px solid ${COLORS.semantic.borderSubtle}`,
+        borderRadius: SPACING.borderRadius.lg,
+        boxShadow: COLORS.shadow.medium,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        transition: ANIMATIONS.transition,
+    },
+
+    // Interactive card variant - for clickable containers
+    interactiveCard: {
         backgroundColor: COLORS.semantic.glassBackground,
         backdropFilter: 'blur(24px) saturate(180%)',
         border: `1px solid ${COLORS.semantic.borderSubtle}`,

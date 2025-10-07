@@ -186,7 +186,7 @@ export default function Interpreters() {
                                     width: '100%',
                                     boxSizing: 'border-box',
                                     overflow: 'hidden',
-                                    ...COMPONENT_VARIANTS.card,
+                                    ...COMPONENT_VARIANTS.interactiveCard,
                                     '&:hover': {
                                         backgroundColor:
                                             COLORS.interactive.selected,

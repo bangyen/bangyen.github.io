@@ -265,9 +265,18 @@ function Arrows({ show, setShow, handler }) {
  * with backdrop blur, subtle borders, and elevation shadows.
  * Replaces repetitive glass container styling across components.
  * Uses forwardRef to support Material-UI transitions like Fade.
+ *
+ * @param {boolean} interactive - Whether the card should have hover effects and pointer cursor
  */
 export const GlassCard = forwardRef(function GlassCard(
-    { children, padding = '24px', sx, className, ...props },
+    {
+        children,
+        padding = '24px',
+        sx,
+        className,
+        interactive = false,
+        ...props
+    },
     ref
 ) {
     return (
@@ -275,7 +284,9 @@ export const GlassCard = forwardRef(function GlassCard(
             ref={ref}
             className={`glass-card ${className || ''}`}
             sx={{
-                ...COMPONENT_VARIANTS.card,
+                ...(interactive
+                    ? COMPONENT_VARIANTS.interactiveCard
+                    : COMPONENT_VARIANTS.card),
                 padding,
                 ...sx,
             }}

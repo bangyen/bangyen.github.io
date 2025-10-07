@@ -198,18 +198,8 @@ const darkTheme = createTheme({
                 {
                     props: { variant: 'interactive' },
                     style: {
-                        backgroundColor: COLORS.surface.elevated,
-                        border: `1px solid ${COLORS.border.subtle}`,
-                        borderRadius: SPACING.borderRadius.lg,
+                        ...COMPONENT_VARIANTS.interactiveCard,
                         padding: '24px',
-                        transition: ANIMATIONS.transition,
-                        boxShadow: COLORS.shadow.medium,
-                        cursor: 'pointer',
-                        '&:hover': {
-                            ...ANIMATIONS.presets.scaleHover,
-                            boxShadow: COLORS.shadow.medium,
-                        },
-                        '&:focus': ANIMATIONS.presets.focus,
                     },
                 },
             ],

@@ -572,7 +572,7 @@ export default function Home() {
                                             overflow: 'hidden',
                                             height: '100%',
                                             display: 'flex',
-                                            ...COMPONENT_VARIANTS.card,
+                                            ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
                                                 backgroundColor:
                                                     COLORS.interactive.selected,
@@ -697,7 +697,7 @@ export default function Home() {
                                             overflow: 'hidden',
                                             height: '100%',
                                             display: 'flex',
-                                            ...COMPONENT_VARIANTS.card,
+                                            ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
                                                 backgroundColor:
                                                     COLORS.interactive.selected,
