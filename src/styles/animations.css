@@ -6,41 +6,7 @@
 
 /* Essential Animation Keyframes - Only the ones actually used */
 
-@keyframes fade-in-up {
-    from {
-        opacity: 0;
-        transform: translate3d(0, 40px, 0);
-    }
-
-    to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
-}
-
-@keyframes slide-in-left {
-    from {
-        opacity: 0;
-        transform: translate3d(-40px, 0, 0);
-    }
-
-    to {
-        opacity: 1;
-        transform: translate3d(0, 0, 0);
-    }
-}
-
-@keyframes scale-in {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
-}
+/* Keyframes are now defined in theme.js as constants for better maintainability */
 
 /* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
