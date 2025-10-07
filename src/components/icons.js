@@ -4,7 +4,19 @@
  */
 
 // Navigation Icons
-export { HomeRounded, MenuRounded, CloseRounded } from '@mui/icons-material';
+export {
+    HomeRounded,
+    MenuRounded,
+    CloseRounded,
+    ViewModuleRounded,
+    ViewListRounded,
+    PlayArrowRounded,
+    PauseRounded,
+    FirstPageRounded,
+    LastPageRounded,
+    NavigateBeforeRounded,
+    NavigateNextRounded,
+} from '@mui/icons-material';
 
 // Social Icons
 export { GitHub } from '@mui/icons-material';
@@ -41,16 +53,4 @@ export {
     CodeRounded,
     DataArrayRounded,
     PlusOneRounded,
-} from '@mui/icons-material';
-
-// Navigation Icons
-export {
-    ViewModuleRounded,
-    ViewListRounded,
-    PlayArrowRounded,
-    PauseRounded,
-    FirstPageRounded,
-    LastPageRounded,
-    NavigateBeforeRounded,
-    NavigateNextRounded,
 } from '@mui/icons-material';

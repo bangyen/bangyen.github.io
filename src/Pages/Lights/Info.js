@@ -121,7 +121,7 @@ export default function Info(props) {
                     backdropFilter: 'blur(24px) saturate(180%)',
                     border: `1px solid hsla(0, 0%, 100%, 0.1)`,
                     borderRadius: SPACING.borderRadius.lg,
-                    boxShadow: COLORS.shadow.sm,
+                    boxShadow: COLORS.shadow.medium,
                     display: 'flex',
                     flexDirection: 'column',
                     transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',

@@ -108,7 +108,7 @@ export const ANIMATIONS = {
         // Card hover effect - lift with shadow
         cardHover: {
             transform: 'translateY(-2px)',
-            boxShadow: COLORS.shadow.sm,
+            boxShadow: COLORS.shadow.medium,
         },
 
         // Interactive hover - background change
@@ -143,7 +143,7 @@ export const COMPONENT_VARIANTS = {
         backdropFilter: 'blur(24px) saturate(180%)',
         border: `1px solid ${COLORS.border.subtle}`,
         borderRadius: SPACING.borderRadius.lg,
-        boxShadow: COLORS.shadow.sm,
+        boxShadow: COLORS.shadow.medium,
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
@@ -151,7 +151,7 @@ export const COMPONENT_VARIANTS = {
         transition: ANIMATIONS.transition,
         '&:hover': {
             transform: 'translateY(-2px)',
-            boxShadow: COLORS.shadow.sm,
+            boxShadow: COLORS.shadow.medium,
         },
         '&:focus': {
             outline: 'none',

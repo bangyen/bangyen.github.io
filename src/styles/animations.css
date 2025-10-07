@@ -1,13 +1,3 @@
-/* CSS Custom Properties for border radius - REMOVED */
-
-/* Border radius values are now managed in constants.js as SPACING.borderRadius */
-
-/* Use JavaScript constants instead of CSS custom properties for consistency */
-
-/* Essential Animation Keyframes - Only the ones actually used */
-
-/* Keyframes are now defined in theme.js as constants for better maintainability */
-
 /* Respect user's motion preferences */
 @media (prefers-reduced-motion: reduce) {
     *,
