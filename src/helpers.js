@@ -3,7 +3,7 @@ import { useState, useCallback, forwardRef } from 'react';
 import Grid from '@mui/material/Grid2';
 import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
-import { SPACING, TYPOGRAPHY, ANIMATIONS, COLORS } from './config/theme';
+import { TYPOGRAPHY, ANIMATIONS, COMPONENT_VARIANTS } from './config/theme';
 
 import {
     HomeRounded,
@@ -157,17 +157,7 @@ export function Navigation({ children, ...rest }) {
             role="navigation"
             aria-label="Game controls navigation"
             sx={{
-                transform: 'translateX(-50%)',
-                position: 'absolute',
-                bottom: 50,
-                left: '50%',
-                zIndex: 10,
-                backgroundColor: 'hsla(0, 0%, 3%, 0.95)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                border: '1px solid hsl(0, 0%, 18%)',
-                borderRadius: '16px',
-                boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.35)',
-                padding: '16px 24px',
+                ...COMPONENT_VARIANTS.navigationContainer,
                 ...rest,
             }}
         >
@@ -279,15 +269,8 @@ export const GlassCard = forwardRef(function GlassCard(
             ref={ref}
             className={`glass-card ${className || ''}`}
             sx={{
-                backgroundColor: COLORS.surface.glass,
-                backdropFilter: 'blur(24px) saturate(180%)',
-                border: `1px solid ${COLORS.border.subtle}`,
-                borderRadius: SPACING.borderRadius.lg,
+                ...COMPONENT_VARIANTS.glassCard,
                 padding,
-                boxShadow: COLORS.shadows.sm,
-                height: '100%',
-                display: 'flex',
-                flexDirection: 'column',
                 ...sx,
             }}
             {...props}

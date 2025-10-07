@@ -13,7 +13,13 @@ import {
     PROJECTS,
     PAGE_TITLES,
 } from '../config/constants';
-import { COLORS, SPACING, TYPOGRAPHY, ANIMATIONS } from '../config/theme';
+import {
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+    ANIMATIONS,
+    COMPONENT_VARIANTS,
+} from '../config/theme';
 
 import {
     MenuRounded,
@@ -121,12 +127,7 @@ export default function Home() {
             minHeight="100vh"
             flexDirection="column"
             sx={{
-                position: 'relative',
-                background: COLORS.surface.background,
-                boxSizing: 'border-box',
-                width: '100%',
-                maxWidth: '100vw',
-                overflowX: 'hidden',
+                ...COMPONENT_VARIANTS.heroSection,
             }}
         >
             {/* Modern Navigation */}
@@ -230,8 +231,7 @@ export default function Home() {
 
                                 <Box
                                     sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
+                                        ...COMPONENT_VARIANTS.flexCenter,
                                         gap: 2,
                                         marginBottom: 4,
                                     }}
@@ -327,8 +327,7 @@ export default function Home() {
                         <Fade in timeout={1000}>
                             <Box
                                 sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
+                                    ...COMPONENT_VARIANTS.flexColumn,
                                     gap: 4,
                                 }}
                             >
@@ -374,43 +373,7 @@ export default function Home() {
                                                 >
                                                     <Box
                                                         sx={{
-                                                            backgroundColor:
-                                                                COLORS
-                                                                    .interactive
-                                                                    .selected,
-                                                            border: `1px solid hsla(217, 91%, 60%, 0.2)`,
-                                                            borderRadius:
-                                                                SPACING
-                                                                    .borderRadius
-                                                                    .md,
-                                                            padding: {
-                                                                xs: '12px', // Smaller padding on mobile
-                                                                md: '16px',
-                                                            },
-                                                            display: 'flex',
-                                                            alignItems:
-                                                                'center',
-                                                            gap: {
-                                                                xs: 1, // Smaller gap on mobile
-                                                                md: 1.5,
-                                                            },
-                                                            transition:
-                                                                ANIMATIONS.transition,
-                                                            cursor: 'pointer',
-                                                            minWidth: 0, // Allow shrinking
-                                                            overflow: 'hidden', // Prevent text overflow
-                                                            '&:hover': {
-                                                                backgroundColor:
-                                                                    COLORS
-                                                                        .interactive
-                                                                        .hover,
-                                                                transform:
-                                                                    'translateY(-2px) scale(1.01)',
-                                                                boxShadow:
-                                                                    COLORS
-                                                                        .shadows
-                                                                        .sm,
-                                                            },
+                                                            ...COMPONENT_VARIANTS.skillBadge,
                                                         }}
                                                     >
                                                         <IconComponent
@@ -485,8 +448,7 @@ export default function Home() {
 
                                     <Box
                                         sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
+                                            ...COMPONENT_VARIANTS.flexColumn,
                                             gap: 2,
                                         }}
                                     >
@@ -541,13 +503,7 @@ export default function Home() {
 
                         <Box
                             sx={{
-                                display: 'grid',
-                                gridTemplateColumns: {
-                                    xs: '1fr',
-                                    md: 'repeat(2, 1fr)',
-                                    lg: 'repeat(2, 1fr)', // Changed from 3 to 2 columns
-                                },
-                                gap: 4,
+                                ...COMPONENT_VARIANTS.responsiveGrid,
                             }}
                         >
                             {/* Publications */}
@@ -564,22 +520,15 @@ export default function Home() {
                                         rel="noopener noreferrer"
                                         sx={{
                                             textDecoration: 'none',
-                                            cursor: 'pointer',
-                                            transition:
-                                                ANIMATIONS.transition.normal,
                                             position: 'relative',
                                             overflow: 'hidden',
                                             height: '100%',
                                             display: 'flex',
-                                            '&:hover': {
-                                                transform: 'translateY(-2px)',
-                                                boxShadow: COLORS.shadows.sm,
-                                            },
+                                            ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
                                                 backgroundColor:
                                                     COLORS.interactive.selected,
                                             },
-                                            '&:focus': ANIMATIONS.focus,
                                         }}
                                     >
                                         <GlassCard>
@@ -642,20 +591,11 @@ export default function Home() {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
+                                                        ...COMPONENT_VARIANTS.techTag,
                                                         backgroundColor:
                                                             'hsla(141, 64%, 49%, 0.1)',
                                                         color: 'hsl(141, 64%, 49%)',
                                                         border: '1px solid hsla(141, 64%, 49%, 0.2)',
-                                                        borderRadius: '20px',
-                                                        fontSize:
-                                                            'clamp(0.7rem, 0.8vw, 0.75rem)',
-                                                        fontWeight: 500,
-                                                        padding: '4px 12px',
-                                                        minHeight: '24px',
-                                                        display: 'inline-flex',
-                                                        alignItems: 'center',
-                                                        transition:
-                                                            'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
                                                     }}
                                                 >
                                                     {publication.conference}
@@ -696,22 +636,15 @@ export default function Home() {
                                         rel="noopener noreferrer"
                                         sx={{
                                             textDecoration: 'none',
-                                            cursor: 'pointer',
-                                            transition:
-                                                ANIMATIONS.transition.normal,
                                             position: 'relative',
                                             overflow: 'hidden',
                                             height: '100%',
                                             display: 'flex',
-                                            '&:hover': {
-                                                transform: 'translateY(-2px)',
-                                                boxShadow: COLORS.shadows.sm,
-                                            },
+                                            ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
                                                 backgroundColor:
                                                     COLORS.interactive.selected,
                                             },
-                                            '&:focus': ANIMATIONS.focus,
                                         }}
                                     >
                                         <GlassCard>
@@ -774,20 +707,11 @@ export default function Home() {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
+                                                        ...COMPONENT_VARIANTS.techTag,
                                                         backgroundColor:
                                                             'hsla(217, 91%, 60%, 0.1)',
                                                         color: 'hsl(217, 91%, 60%)',
                                                         border: '1px solid hsla(217, 91%, 60%, 0.2)',
-                                                        borderRadius: '20px',
-                                                        fontSize:
-                                                            'clamp(0.7rem, 0.8vw, 0.75rem)',
-                                                        fontWeight: 500,
-                                                        padding: '4px 12px',
-                                                        minHeight: '24px',
-                                                        display: 'inline-flex',
-                                                        alignItems: 'center',
-                                                        transition:
-                                                            'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
                                                     }}
                                                 >
                                                     {project.technology}
