@@ -126,12 +126,9 @@ const darkTheme = createTheme({
                         '&:hover': {
                             backgroundColor: COLORS.primary.dark,
                             boxShadow: COLORS.shadows.sm,
-                            transform: 'translateY(-1px)',
+                            ...ANIMATIONS.presets.buttonHover,
                         },
-                        '&:focus': {
-                            outline: 'none',
-                            boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
-                        },
+                        '&:focus': ANIMATIONS.presets.focus,
                     },
                 },
                 {
@@ -148,12 +145,9 @@ const darkTheme = createTheme({
                         '&:hover': {
                             backgroundColor: COLORS.interactive.hover,
                             borderColor: COLORS.primary.main,
-                            transform: 'translateY(-1px)',
+                            ...ANIMATIONS.presets.buttonHover,
                         },
-                        '&:focus': {
-                            outline: 'none',
-                            boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
-                        },
+                        '&:focus': ANIMATIONS.presets.focus,
                     },
                 },
                 {
@@ -171,10 +165,7 @@ const darkTheme = createTheme({
                             backgroundColor: COLORS.interactive.hover,
                             color: COLORS.text.primary,
                         },
-                        '&:focus': {
-                            outline: 'none',
-                            boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
-                        },
+                        '&:focus': ANIMATIONS.presets.focus,
                     },
                 },
             ],
@@ -216,13 +207,10 @@ const darkTheme = createTheme({
                         boxShadow: COLORS.shadows.sm,
                         cursor: 'pointer',
                         '&:hover': {
-                            transform: 'translateY(-2px) scale(1.01)',
+                            ...ANIMATIONS.presets.scaleHover,
                             boxShadow: COLORS.shadows.sm,
                         },
-                        '&:focus': {
-                            outline: 'none',
-                            boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
-                        },
+                        '&:focus': ANIMATIONS.presets.focus,
                     },
                 },
             ],

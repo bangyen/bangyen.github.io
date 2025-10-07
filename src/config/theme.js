@@ -116,18 +116,49 @@ export const ANIMATIONS = {
     // Standard transition used throughout the app
     transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
     // Fast transition for quick interactions
+
+    // Animation Presets - Reusable animation patterns
+    presets: {
+        // Card hover effect - lift with shadow
+        cardHover: {
+            transform: 'translateY(-2px)',
+            boxShadow: COLORS.shadows.sm,
+            transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+        // Button hover effect - subtle lift
+        buttonHover: {
+            transform: 'translateY(-1px)',
+            boxShadow: COLORS.shadows.sm,
+            transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+        // Interactive hover - background change
+        interactiveHover: {
+            backgroundColor: COLORS.interactive.hover,
+            transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+        // Scale hover - grow slightly
+        scaleHover: {
+            transform: 'scale(1.02) translateY(-1px)',
+            boxShadow: '0 4px 20px hsla(0, 0%, 0%, 0.25)',
+            transition: 'all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+        },
+        // Glass effect with backdrop blur
+        glass: {
+            backgroundColor: COLORS.surface.glass,
+            backdropFilter: 'blur(24px) saturate(180%)',
+            border: `1px solid ${COLORS.border.subtle}`,
+        },
+        // Smooth fade transition
+        fade: {
+            transition: 'opacity 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+        // Border hover effect
+        borderHover: {
+            borderColor: COLORS.border.interactive,
+            transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+        },
+    },
     fast: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-    // Hover effect used consistently across components
-    hover: {
-        transform: 'translateY(-2px)',
-        boxShadow: '0 4px 20px hsla(0, 0%, 0%, 0.25)',
-    },
-    // Focus ring for accessibility
-    focus: {
-        outline: 'none',
-        boxShadow: '0 0 0 3px hsla(217, 91%, 60%, 0.15)',
-    },
-    // Animation utilities for common patterns
     // Keyframe definitions for CSS animations
     keyframes: {
         fadeInUp: `@keyframes fade-in-up {
@@ -144,7 +175,7 @@ export const ANIMATIONS = {
         }`,
     },
     // Staggered animation delays
-    // Animation utilities for common patterns
+    // Animation utilities for common patterns    // Keyframe definitions for CSS animations
     fadeIn: 'fade-in-up 0.6s ease-out',
     slideIn: 'slide-in-left 0.4s ease-out',
     scaleIn: 'scale-in 0.3s ease-out',

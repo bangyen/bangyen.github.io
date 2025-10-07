@@ -301,16 +301,8 @@ export default function Home() {
                                                 SPACING.borderRadius.full,
                                             transition: ANIMATIONS.transition,
                                             cursor: 'pointer',
-                                            '&:hover': {
-                                                backgroundColor:
-                                                    COLORS.interactive.hover,
-                                                transform:
-                                                    'scale(1.02) translateY(-1px)',
-                                                boxShadow:
-                                                    '0 4px 20px hsla(0, 0%, 0%, 0.25)',
-                                                transition:
-                                                    'all 200ms cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-                                            },
+                                            '&:hover':
+                                                ANIMATIONS.presets.scaleHover,
                                         }}
                                     >
                                         <Typography
@@ -415,16 +407,11 @@ export default function Home() {
                                                             minWidth: 0,
                                                             overflow: 'hidden',
                                                             '&:hover': {
-                                                                backgroundColor:
-                                                                    COLORS
-                                                                        .interactive
-                                                                        .hover,
+                                                                ...ANIMATIONS
+                                                                    .presets
+                                                                    .cardHover,
                                                                 transform:
                                                                     'translateY(-2px) scale(1.01)',
-                                                                boxShadow:
-                                                                    COLORS
-                                                                        .shadows
-                                                                        .sm,
                                                             },
                                                         }}
                                                     >
