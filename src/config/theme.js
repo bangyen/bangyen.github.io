@@ -127,7 +127,6 @@ export const SPACING = {
         gap: { xs: 2, md: 3 },
         margin: { xs: '2rem', md: '5rem' },
         iconSize: { xs: '1.5rem', md: '2rem' },
-        borderRadius: { xs: '12px', md: '16px' },
     },
 };
 // Simplified Animation System - Consolidated for consistency
@@ -181,7 +180,7 @@ export const ANIMATIONS = {
 
 // Component Variants - Streamlined patterns used in multiple places
 export const COMPONENT_VARIANTS = {
-    // Static card variant - for non-interactive containers
+    // Base card variant - shared properties for all cards
     card: {
         backgroundColor: COLORS.semantic.glassBackground,
         backdropFilter: 'blur(24px) saturate(180%)',
@@ -194,7 +193,7 @@ export const COMPONENT_VARIANTS = {
         transition: ANIMATIONS.transition,
     },
 
-    // Interactive card variant - for clickable containers
+    // Interactive card variant - extends base card with interaction
     interactiveCard: {
         backgroundColor: COLORS.semantic.glassBackground,
         backdropFilter: 'blur(24px) saturate(180%)',
@@ -209,7 +208,6 @@ export const COMPONENT_VARIANTS = {
         '&:hover': {
             ...ANIMATIONS.presets.cardInteraction,
             transform: 'translateY(-2px)',
-            boxShadow: COLORS.shadow.medium,
         },
         '&:focus': {
             outline: 'none',

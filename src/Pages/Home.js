@@ -776,7 +776,8 @@ export default function Home() {
                                                             'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
                                                         backgroundColor:
                                                             'hsla(217, 91%, 60%, 0.1)',
-                                                        color: 'hsl(217, 91%, 60%)',
+                                                        color: COLORS.primary
+                                                            .main,
                                                         border: '1px solid hsla(217, 91%, 60%, 0.2)',
                                                     }}
                                                 >
