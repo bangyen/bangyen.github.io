@@ -656,18 +656,12 @@ const ZSharp = () => {
                             sx={{
                                 display: 'grid',
                                 gridTemplateColumns: {
-                                    xs: '1fr 1fr',
+                                    xs: 'repeat(2, minmax(0, 1fr))',
                                     md: 'repeat(4, 1fr)',
                                 },
                                 gap: 1,
-                                maxWidth: {
-                                    xs: '24rem',
-                                    md: 'none',
-                                },
-                                margin: {
-                                    xs: '0 auto',
-                                    md: '0',
-                                },
+                                width: '100%',
+                                margin: 0,
                             }}
                         >
                             <Button
@@ -676,6 +670,7 @@ const ZSharp = () => {
                                 startIcon={<BarChartRounded />}
                                 onClick={() => setViewType('accuracy')}
                                 sx={{
+                                    width: '100%',
                                     color:
                                         viewType === 'accuracy'
                                             ? COLORS.text.primary
@@ -712,6 +707,7 @@ const ZSharp = () => {
                                 startIcon={<TrendingUpRounded />}
                                 onClick={() => setViewType('loss')}
                                 sx={{
+                                    width: '100%',
                                     color:
                                         viewType === 'loss'
                                             ? COLORS.text.primary
@@ -748,6 +744,7 @@ const ZSharp = () => {
                                 startIcon={<ShowChartRounded />}
                                 onClick={() => setViewType('learning_curve')}
                                 sx={{
+                                    width: '100%',
                                     color:
                                         viewType === 'learning_curve'
                                             ? COLORS.text.primary
@@ -784,6 +781,7 @@ const ZSharp = () => {
                                 startIcon={<AnalyticsRounded />}
                                 onClick={() => setViewType('convergence')}
                                 sx={{
+                                    width: '100%',
                                     color:
                                         viewType === 'convergence'
                                             ? COLORS.text.primary
