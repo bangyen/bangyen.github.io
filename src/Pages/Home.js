@@ -12,7 +12,6 @@ import {
 
 import { TooltipButton, GlassCard, ICON_MAP } from '../helpers';
 import { Section, HeroContainer } from '../components/Layout';
-import { pages } from './';
 import {
     PERSONAL_INFO,
     URLS,
@@ -30,43 +29,187 @@ import {
 } from '../config/theme';
 
 import {
-    MenuRounded,
     GitHub,
     Work,
     LocationOn,
     OpenInNew,
     ArrowForward,
+    Code,
+    Psychology,
+    GamepadRounded,
+    ViewModuleRounded,
 } from '../components/icons';
 
-function dropdown(name, routes) {
+// Project categories with enhanced metadata
+const PROJECT_CATEGORIES = {
+    research: {
+        title: 'Research & ML',
+        icon: Psychology,
+        color: COLORS.data.green,
+        projects: {
+            ZSharp: {
+                path: '/ZSharp',
+                description: 'Sharpness-Aware Minimization',
+                technology: 'PyTorch',
+            },
+        },
+    },
+    games: {
+        title: 'Games & Puzzles',
+        icon: GamepadRounded,
+        color: COLORS.primary.main,
+        projects: {
+            Snake: {
+                path: '/Snake',
+                description: 'Classic Snake Game',
+                technology: 'JavaScript',
+            },
+            Lights_Out: {
+                path: '/Lights_Out',
+                description: 'Lights Out Puzzle',
+                technology: 'JavaScript',
+            },
+            Oligopoly: {
+                path: '/Oligopoly',
+                description: 'Cournot Competition',
+                technology: 'FastAPI',
+            },
+        },
+    },
+    tools: {
+        title: 'Development Tools',
+        icon: Code,
+        color: COLORS.data.amber,
+        projects: {
+            Interpreters: {
+                path: '/Interpreters',
+                description: 'Esoteric Language Interpreters',
+                technology: 'JavaScript',
+            },
+        },
+    },
+};
+
+function ProjectDropdown() {
     return (
-        <Box>
-            {Object.entries(routes).map(([routeName, routePath]) => (
-                <MenuItem
-                    sx={{
-                        padding: '12px 16px',
-                        borderRadius: SPACING.borderRadius.md,
-                        margin: '0.25rem 0.5rem',
-                        transition: ANIMATIONS.transition,
-                        '&:hover': {
-                            backgroundColor: COLORS.interactive.hover,
-                        },
-                    }}
-                    key={routeName}
-                    component={Link}
-                    to={routePath}
-                >
-                    <Typography
-                        sx={{
-                            fontWeight: TYPOGRAPHY.fontWeight.medium,
-                            fontSize: TYPOGRAPHY.fontSize.body,
-                            color: COLORS.text.primary,
-                        }}
-                    >
-                        {routeName.replace('_', ' ')}
-                    </Typography>
-                </MenuItem>
-            ))}
+        <Box sx={{ padding: '8px' }}>
+            {Object.entries(PROJECT_CATEGORIES).map(
+                ([categoryKey, category]) => {
+                    const IconComponent = category.icon;
+                    return (
+                        <Box key={categoryKey} sx={{ marginBottom: 3 }}>
+                            {/* Category Header */}
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 1,
+                                    padding: '8px 12px',
+                                    marginBottom: 1,
+                                }}
+                            >
+                                <IconComponent
+                                    sx={{
+                                        color: category.color,
+                                        fontSize: '1.1rem',
+                                    }}
+                                />
+                                <Typography
+                                    sx={{
+                                        color: COLORS.text.secondary,
+                                        fontSize: TYPOGRAPHY.fontSize.caption,
+                                        fontWeight:
+                                            TYPOGRAPHY.fontWeight.semibold,
+                                        textTransform: 'uppercase',
+                                        letterSpacing: '0.05em',
+                                    }}
+                                >
+                                    {category.title}
+                                </Typography>
+                            </Box>
+
+                            {/* Category Projects */}
+                            {Object.entries(category.projects).map(
+                                ([projectName, project]) => (
+                                    <MenuItem
+                                        key={projectName}
+                                        component={Link}
+                                        to={project.path}
+                                        sx={{
+                                            padding: '12px 16px',
+                                            borderRadius:
+                                                SPACING.borderRadius.md,
+                                            margin: '0.25rem 0.5rem',
+                                            transition: ANIMATIONS.transition,
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            alignItems: 'flex-start',
+                                            gap: 0.5,
+                                            '&:hover': {
+                                                backgroundColor:
+                                                    COLORS.interactive.selected,
+                                                transform: 'translateY(-1px)',
+                                                boxShadow:
+                                                    '0 4px 12px hsla(0, 0%, 0%, 0.15)',
+                                            },
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                width: '100%',
+                                            }}
+                                        >
+                                            <Typography
+                                                sx={{
+                                                    fontWeight:
+                                                        TYPOGRAPHY.fontWeight
+                                                            .semibold,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize
+                                                            .body,
+                                                    color: COLORS.text.primary,
+                                                }}
+                                            >
+                                                {projectName.replace('_', ' ')}
+                                            </Typography>
+                                            <Box
+                                                sx={{
+                                                    backgroundColor: `${category.color}15`,
+                                                    color: category.color,
+                                                    padding: '2px 8px',
+                                                    borderRadius:
+                                                        SPACING.borderRadius.sm,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize
+                                                            .caption,
+                                                    fontWeight:
+                                                        TYPOGRAPHY.fontWeight
+                                                            .medium,
+                                                }}
+                                            >
+                                                {project.technology}
+                                            </Box>
+                                        </Box>
+                                        <Typography
+                                            sx={{
+                                                color: COLORS.text.secondary,
+                                                fontSize:
+                                                    TYPOGRAPHY.fontSize.caption,
+                                                lineHeight: 1.3,
+                                            }}
+                                        >
+                                            {project.description}
+                                        </Typography>
+                                    </MenuItem>
+                                )
+                            )}
+                        </Box>
+                    );
+                }
+            )}
         </Box>
     );
 }
@@ -83,7 +226,7 @@ function closeHandler(setAnchor) {
     };
 }
 
-function MenuButton({ children }) {
+function MenuButton() {
     const [anchor, setAnchor] = useState(null);
     const handleClick = clickHandler(setAnchor);
     const handleClose = closeHandler(setAnchor);
@@ -96,38 +239,52 @@ function MenuButton({ children }) {
     return (
         <Box>
             <TooltipButton
-                title="Menu"
-                id="basic-button"
-                Icon={MenuRounded}
-                aria-controls={define('basic-menu')}
+                title="Projects Menu"
+                id="projects-menu-button"
+                Icon={ViewModuleRounded}
+                aria-controls={define('projects-menu')}
                 aria-expanded={define('true')}
                 aria-haspopup="true"
                 onClick={handleClick}
+                sx={{
+                    '&:hover': {
+                        backgroundColor: COLORS.interactive.hover,
+                        transform: 'scale(1.05)',
+                    },
+                }}
             />
             <Menu
-                id="basic-menu"
+                id="projects-menu"
                 open={open}
                 anchorEl={anchor}
+                disableAutoFocusItem={true}
                 sx={{
                     marginLeft: 1,
                     marginTop: 1,
                     '& .MuiPaper-root': {
-                        height: 'fit-content',
-                        minHeight: 'auto',
-                        maxHeight: 'fit-content',
+                        minWidth: '320px',
+                        maxWidth: '400px',
+                        height: 'auto !important', // Override global styles
+                        backgroundColor: COLORS.surface.glass,
+                        backdropFilter: 'blur(24px) saturate(180%)',
+                        border: `1px solid ${COLORS.border.subtle}`,
+                        borderRadius: SPACING.borderRadius.lg,
+                        padding: 0,
+                        boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.4)',
                     },
                 }}
                 onClose={handleClose}
                 MenuListProps={{
-                    'aria-labelledby': 'basic-button',
+                    'aria-labelledby': 'projects-menu-button',
                     sx: {
                         padding: 0,
-                        height: 'fit-content',
-                        minHeight: 'auto',
+                        height: 'auto',
                     },
                 }}
+                transformOrigin={{ horizontal: 'left', vertical: 'top' }}
+                anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
             >
-                {children}
+                <ProjectDropdown />
             </Menu>
         </Box>
     );
@@ -168,7 +325,7 @@ export default function Home() {
                     overflowX: 'hidden', // Hide any overflow
                 }}
             >
-                <MenuButton>{dropdown('Projects', pages)}</MenuButton>
+                <MenuButton />
                 <TooltipButton
                     component="a"
                     href={URLS.githubProfile}
