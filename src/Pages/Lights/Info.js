@@ -108,6 +108,7 @@ export default function Info(props) {
                 ...COMPONENT_VARIANTS.card,
                 backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
                 transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+                border: 'none',
             }}
         >
             <Card
