@@ -122,10 +122,6 @@ export default function Info(props) {
                 <Box
                     sx={{
                         pt: '1rem',
-                        pb: {
-                            xs: '1.5rem',
-                            md: '1rem',
-                        },
                         px: '1.25rem',
                         height: 'fit-content',
                         display: 'flex',
@@ -367,7 +363,12 @@ export default function Info(props) {
                         </Grid>
 
                         {/* Bottom section: Lights Out Calculator (full width) */}
-                        <Grid container size={12} spacing={2}>
+                        <Grid
+                            container
+                            size={12}
+                            spacing={2}
+                            sx={{ paddingBottom: '1rem' }}
+                        >
                             <Grid size={12}>
                                 <GlassCard
                                     sx={{
