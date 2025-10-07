@@ -101,7 +101,7 @@ export default function Interpreters() {
                 sx={{
                     zIndex: LAYOUT.zIndex.content,
                     padding: {
-                        xs: `${SPACING.padding.xs} 0`,
+                        xs: '0.5rem 0',
                         md: `${SPACING.padding.md} 0`,
                     },
                     minHeight: 0,

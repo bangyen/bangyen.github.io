@@ -195,7 +195,7 @@ const ZSharp = () => {
             sx={{
                 position: 'relative',
                 padding: {
-                    xs: SPACING.padding.xs,
+                    xs: '0.5rem',
                     md: SPACING.padding.md,
                 },
                 boxSizing: 'border-box',
@@ -596,7 +596,7 @@ const ZSharp = () => {
                             },
                             gap: 1,
                             maxWidth: {
-                                xs: SPACING.maxWidth.sm,
+                                xs: '24rem',
                                 md: 'none',
                             },
                             margin: {

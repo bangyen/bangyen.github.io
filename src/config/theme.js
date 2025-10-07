@@ -84,9 +84,8 @@ export const TYPOGRAPHY = {
 
 // Simplified Spacing System - Only essential values actually used
 export const SPACING = {
-    // Consolidated Spacing System - 5 core values for consistency
+    // Consolidated Spacing System - 3 core padding values for consistency
     padding: {
-        xs: '0.5rem',
         sm: '1rem',
         md: '1.5rem',
         lg: '2rem',
@@ -97,9 +96,8 @@ export const SPACING = {
         lg: '16px',
         full: '9999px',
     },
-    // Container widths - simplified to 3 essential sizes
+    // Container widths - simplified to 2 essential sizes
     maxWidth: {
-        sm: '24rem',
         md: '64rem',
         lg: '80rem',
     },

@@ -19,7 +19,7 @@ export default function Error() {
             sx={{
                 position: 'relative',
                 padding: {
-                    xs: SPACING.padding.xs,
+                    xs: '0.5rem',
                     md: SPACING.padding.md,
                 },
                 boxSizing: 'border-box',
@@ -46,7 +46,7 @@ export default function Error() {
                     flexDirection: 'column',
                     zIndex: 1,
                     padding: {
-                        xs: `${SPACING.padding.xs} 0`,
+                        xs: '0.5rem 0',
                         md: `${SPACING.padding.md} 0`,
                     },
                     minHeight: 0,
@@ -56,7 +56,7 @@ export default function Error() {
                     <Box
                         sx={{
                             textAlign: 'center',
-                            maxWidth: SPACING.maxWidth.sm,
+                            maxWidth: '24rem',
                             width: '100%',
                             padding: {
                                 xs: '0 1rem',
