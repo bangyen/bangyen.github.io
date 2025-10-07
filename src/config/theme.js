@@ -29,14 +29,6 @@ export const COLORS = {
         subtle: 'hsl(0, 0%, 18%)',
     },
     // Interactive State Colors
-    // Semantic Color Aliases - Common patterns for consistency
-    semantic: {
-        cardHover: `hsla(217, 91%, 60%, 0.1)`,
-        buttonPrimary: `hsl(217, 91%, 60%)`,
-        buttonHover: `hsl(217, 91%, 45%)`,
-        glassBackground: `hsla(0, 0%, 8%, 0.85)`,
-        borderSubtle: `hsl(0, 0%, 18%)`,
-    },
     interactive: {
         hover: `hsla(0, 0%, 80%, 0.08)`,
         focus: `hsla(217, 91%, 60%, 0.15)`,
@@ -48,10 +40,7 @@ export const COLORS = {
         amber: 'hsl(34, 95%, 58%)',
     },
     // Shadows for Depth and Elevation
-    shadow: {
-        xs: '0 1px 2px hsla(0, 0%, 0%, 0.5)',
-        sm: '0 2px 8px hsla(0, 0%, 0%, 0.4)',
-    },
+    shadow: {},
 };
 
 // Modern Typography System - Enterprise-grade with professional hierarchy
@@ -136,27 +125,11 @@ export const ANIMATIONS = {
 
     // Animation Presets - Reusable animation patterns
     presets: {
-        // Card hover effect - lift with shadow
-        cardHover: {
-            transform: 'translateY(-2px)',
-            boxShadow: COLORS.shadow.medium,
-        },
-
-        // Interactive hover - background change
-        interactiveHover: {
-            backgroundColor: COLORS.interactive.hover,
-        },
         // Scale hover - grow slightly
         // Button hover - consistent button interaction
         buttonHover: {
-            backgroundColor: COLORS.semantic.buttonHover,
+            backgroundColor: COLORS.primary.dark,
             transform: `translateY(-1px)`,
-            boxShadow: COLORS.shadow.sm,
-        },
-        // Card interaction - consistent card behavior
-        cardInteraction: {
-            backgroundColor: COLORS.semantic.cardHover,
-            transform: `translateY(-2px)`,
             boxShadow: COLORS.shadow.sm,
         },
         scaleHover: {
@@ -169,9 +142,9 @@ export const ANIMATIONS = {
             boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
         },
         glass: {
-            backgroundColor: COLORS.semantic.glassBackground,
+            backgroundColor: COLORS.surface.glass,
             backdropFilter: 'blur(24px) saturate(180%)',
-            border: `1px solid ${COLORS.semantic.borderSubtle}`,
+            border: `1px solid ${COLORS.border.subtle}`,
         },
     },
 };
@@ -180,9 +153,9 @@ export const ANIMATIONS = {
 
 // Base Card Styles - Shared properties for all card variants
 export const BASE_CARD = {
-    backgroundColor: COLORS.semantic.glassBackground,
+    backgroundColor: COLORS.surface.glass,
     backdropFilter: 'blur(24px) saturate(180%)',
-    border: `1px solid ${COLORS.semantic.borderSubtle}`,
+    border: `1px solid ${COLORS.border.subtle}`,
     borderRadius: SPACING.borderRadius.lg,
     boxShadow: COLORS.shadow.medium,
     height: '100%',
@@ -201,7 +174,7 @@ export const COMPONENT_VARIANTS = {
         ...BASE_CARD,
         cursor: 'pointer',
         '&:hover': {
-            ...ANIMATIONS.presets.cardInteraction,
+            backgroundColor: COLORS.interactive.selected,
             transform: 'translateY(-2px)',
         },
         '&:focus': {

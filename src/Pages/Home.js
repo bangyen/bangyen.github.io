@@ -48,7 +48,9 @@ function dropdown(name, routes) {
                         borderRadius: SPACING.borderRadius.md,
                         margin: '0.25rem 0.5rem',
                         transition: ANIMATIONS.transition,
-                        '&:hover': ANIMATIONS.presets.interactiveHover,
+                        '&:hover': {
+                            backgroundColor: COLORS.interactive.hover,
+                        },
                     }}
                     key={routeName}
                     component={Link}
