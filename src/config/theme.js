@@ -7,9 +7,7 @@
 export const ALPHA = {
     subtle: 0.1,
     hover: 0.08,
-    pressed: 0.12,
     focus: 0.15,
-    disabled: 0.3,
     glass: 0.85,
 };
 
