@@ -151,6 +151,16 @@ export const ANIMATIONS = {
         outline: 'none',
         boxShadow: '0 0 0 3px hsla(217, 91%, 60%, 0.15)',
     },
+    // Animation utilities for common patterns
+    fadeIn: 'fade-in-up 0.6s ease-out',
+    slideIn: 'slide-in-left 0.4s ease-out',
+    scaleIn: 'scale-in 0.3s ease-out',
+    // Staggered animation delays
+    stagger: {
+        fast: 150,
+        normal: 200,
+        slow: 300,
+    },
 };
 
 // Layout Constants
