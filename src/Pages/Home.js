@@ -236,7 +236,8 @@ export default function Home() {
 
                                 <Box
                                     sx={{
-                                        ...COMPONENT_VARIANTS.flexCenter,
+                                        display: 'flex',
+                                        alignItems: 'center',
                                         gap: 2,
                                         marginBottom: 4,
                                     }}
