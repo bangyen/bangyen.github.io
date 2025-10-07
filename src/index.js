@@ -200,7 +200,7 @@ const darkTheme = createTheme({
                         borderRadius: SPACING.borderRadius.lg,
                         padding: '24px',
                         transition: ANIMATIONS.transition,
-                        boxShadow: COLORS.shadows.md,
+                        boxShadow: COLORS.shadows.sm,
                     },
                 },
                 {
@@ -215,7 +215,7 @@ const darkTheme = createTheme({
                         cursor: 'pointer',
                         '&:hover': {
                             transform: 'translateY(-2px) scale(1.01)',
-                            boxShadow: COLORS.shadows.md,
+                            boxShadow: COLORS.shadows.sm,
                         },
                         '&:focus': {
                             outline: 'none',
@@ -232,7 +232,7 @@ const darkTheme = createTheme({
                     boxShadow: COLORS.shadows.sm,
                     transition: ANIMATIONS.transition,
                     '&:hover': {
-                        boxShadow: COLORS.shadows.md,
+                        boxShadow: COLORS.shadows.sm,
                     },
                 },
             },
@@ -259,7 +259,7 @@ const darkTheme = createTheme({
                     backgroundColor: COLORS.surface.glass,
                     border: `1px solid ${COLORS.border.subtle}`,
                     borderRadius: SPACING.borderRadius.lg,
-                    boxShadow: COLORS.shadows.lg,
+                    boxShadow: COLORS.shadows.sm,
                     padding: '8px 8px',
                 },
             },

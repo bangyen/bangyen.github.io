@@ -109,7 +109,7 @@ export default function Info(props) {
                     backgroundColor: COLORS.surface.glass,
                     backdropFilter: 'blur(20px) saturate(180%)',
                     border: `1px solid hsla(0, 0%, 100%, 0.1)`,
-                    boxShadow: COLORS.shadows.lg,
+                    boxShadow: COLORS.shadows.sm,
                     transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
             >

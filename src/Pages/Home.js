@@ -568,7 +568,7 @@ export default function Home() {
                                             display: 'flex',
                                             '&:hover': {
                                                 transform: 'translateY(-2px)',
-                                                boxShadow: COLORS.shadows.lg,
+                                                boxShadow: COLORS.shadows.sm,
                                             },
                                             '&:hover .glass-card': {
                                                 backgroundColor:
@@ -700,7 +700,7 @@ export default function Home() {
                                             display: 'flex',
                                             '&:hover': {
                                                 transform: 'translateY(-2px)',
-                                                boxShadow: COLORS.shadows.lg,
+                                                boxShadow: COLORS.shadows.sm,
                                             },
                                             '&:hover .glass-card': {
                                                 backgroundColor:

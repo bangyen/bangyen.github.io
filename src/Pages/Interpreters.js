@@ -191,7 +191,7 @@ export default function Interpreters() {
                                         backgroundColor:
                                             COLORS.interactive.selected,
                                         transform: 'translateY(-2px)', // -2px
-                                        boxShadow: COLORS.shadows.md,
+                                        boxShadow: COLORS.shadows.sm,
                                     },
                                 }}
                             >

@@ -57,8 +57,6 @@ export const COLORS = {
     shadows: {
         xs: '0 1px 2px hsla(0, 0%, 0%, 0.5)',
         sm: '0 2px 8px hsla(0, 0%, 0%, 0.4)',
-        md: '0 8px 32px hsla(0, 0%, 0%, 0.35)',
-        lg: '0 16px 64px hsla(0, 0%, 0%, 0.3)',
     },
 };
 

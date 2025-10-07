@@ -284,7 +284,7 @@ export const GlassCard = forwardRef(function GlassCard(
                 border: `1px solid ${COLORS.border.subtle}`,
                 borderRadius: SPACING.borderRadius.lg,
                 padding,
-                boxShadow: COLORS.shadows.md,
+                boxShadow: COLORS.shadows.sm,
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
