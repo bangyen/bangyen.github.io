@@ -137,26 +137,26 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
     const cellProps = (row, col) => {
         const pos = cols * row + col;
         const color = chooseColor(pos);
-        const value = options[pos];
+        const value = options[pos] || ' ';
 
         // Homepage-style color scheme
         const getCellStyles = color => {
             const styles = {
                 primary: {
                     bg: 'hsla(0, 0%, 15%, 0.9)',
-                    text: 'primary.light',
+                    text: COLORS.primary.light,
                     border: `1px solid ${COLORS.primary.main}`,
                     hover: 'hsla(0, 0%, 18%, 0.9)',
                 },
                 info: {
                     bg: 'hsla(0, 0%, 18%, 0.9)',
-                    text: 'secondary.light',
+                    text: COLORS.text.secondary,
                     border: `1px solid ${COLORS.border.subtle}`,
                     hover: 'hsla(0, 0%, 15%, 0.9)',
                 },
                 secondary: {
                     bg: 'hsla(0, 0%, 15%, 0.9)',
-                    text: 'text.secondary',
+                    text: COLORS.text.secondary,
                     border: `1px solid ${COLORS.border.subtle}`,
                     hover: COLORS.interactive.selected,
                 },
@@ -174,7 +174,8 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
             sx: {
                 borderRadius: SPACING.borderRadius.md,
                 border: cellStyle.border,
-                ...COMPONENT_VARIANTS.card,
+                cursor: 'pointer',
+                transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
                 '&:hover': {
                     backgroundColor: cellStyle.hover,
                 },

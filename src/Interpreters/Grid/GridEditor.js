@@ -95,8 +95,9 @@ export default function GridEditor(props) {
     const size = mobile ? 4 : 6;
     const hide = true;
 
-    height *= 0.8;
-    width *= 0.95;
+    // Add fallback dimensions to prevent empty grids
+    height = (height || 400) * 0.8;
+    width = (width || 600) * 0.95;
 
     if (!hide) {
         if (mobile) width /= 2;
