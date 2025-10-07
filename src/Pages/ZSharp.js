@@ -621,6 +621,7 @@ const ZSharp = () => {
                                 borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
+                                borderRadius: SPACING.borderRadius.lg,
                                 minHeight: '36px',
                                 '&:hover': {
                                     borderColor: COLORS.border.interactive,
@@ -649,6 +650,7 @@ const ZSharp = () => {
                                 borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
+                                borderRadius: SPACING.borderRadius.lg,
                                 minHeight: '36px',
                                 '&:hover': {
                                     borderColor: COLORS.border.interactive,
@@ -677,6 +679,7 @@ const ZSharp = () => {
                                 borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
+                                borderRadius: SPACING.borderRadius.lg,
                                 minHeight: '36px',
                                 '&:hover': {
                                     borderColor: COLORS.border.interactive,
@@ -705,6 +708,7 @@ const ZSharp = () => {
                                 borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
+                                borderRadius: SPACING.borderRadius.lg,
                                 minHeight: '36px',
                                 '&:hover': {
                                     borderColor: COLORS.border.interactive,
