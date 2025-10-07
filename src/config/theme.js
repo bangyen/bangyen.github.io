@@ -5,7 +5,6 @@
 
 // Alpha Values - Consolidated opacity constants for consistent transparency
 export const ALPHA = {
-    subtle: 0.1,
     hover: 0.08,
     focus: 0.15,
     glass: 0.85,
@@ -41,7 +40,7 @@ export const COLORS = {
     interactive: {
         hover: `hsla(0, 0%, 80%, ${ALPHA.hover})`,
         focus: `hsla(217, 91%, 60%, ${ALPHA.focus})`,
-        selected: `hsla(217, 91%, 60%, ${ALPHA.subtle})`,
+        selected: `hsla(217, 91%, 60%, 0.1)`,
     },
     // Chart Colors
     data: {
