@@ -97,8 +97,8 @@ export default function Info(props) {
             open={open}
             onClick={toggleOpen}
             sx={{
+                ...COMPONENT_VARIANTS.card,
                 backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
-                backdropFilter: 'blur(8px)',
                 transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
                 border: 'none',
             }}
@@ -114,7 +114,7 @@ export default function Info(props) {
                     flexDirection: 'column',
                     transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
                     padding: 0,
-                    backgroundColor: 'hsl(0, 0%, 12%)',
+                    backgroundColor: 'hsl(0, 0%, 5%)',
                     borderRadius: SPACING.borderRadius.lg,
                     border: `1px solid ${COLORS.border.subtle}`,
                 }}
