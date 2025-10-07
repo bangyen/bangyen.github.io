@@ -219,7 +219,10 @@ const Oligopoly = () => {
             sx={{
                 position: 'relative',
                 padding: SPACING.padding.md,
-                paddingBottom: 0,
+                paddingBottom: {
+                    xs: SPACING.padding.md,
+                    md: 0,
+                },
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',

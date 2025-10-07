@@ -122,7 +122,10 @@ export default function Info(props) {
                 <Box
                     sx={{
                         pt: '1rem',
-                        pb: '1rem',
+                        pb: {
+                            xs: '1.5rem',
+                            md: '1rem',
+                        },
                         px: '1.25rem',
                         height: 'fit-content',
                         display: 'flex',
