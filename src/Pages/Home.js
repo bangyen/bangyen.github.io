@@ -92,7 +92,7 @@ const PROJECT_CATEGORIES = {
 
 function ProjectDropdown() {
     return (
-        <Box sx={{ padding: '12px 12px 0px 12px', marginBottom: '-4px' }}>
+        <Box sx={{ padding: '16px 16px 0 16px' }}>
             {Object.entries(PROJECT_CATEGORIES).map(
                 ([categoryKey, category]) => {
                     const IconComponent = category.icon;
@@ -104,24 +104,37 @@ function ProjectDropdown() {
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: 1,
-                                    padding: '6px 8px',
+                                    padding: '8px 0 4px 0',
                                     marginBottom: 0.5,
+                                    position: 'relative',
+                                    '&::after': {
+                                        content: '""',
+                                        position: 'absolute',
+                                        bottom: 0,
+                                        left: 0,
+                                        right: 0,
+                                        height: '1px',
+                                        backgroundColor:
+                                            'rgba(255, 255, 255, 0.05)',
+                                    },
                                 }}
                             >
                                 <IconComponent
                                     sx={{
-                                        color: category.color,
-                                        fontSize: '1.1rem',
+                                        color: '#4C78FF',
+                                        fontSize: '14px',
+                                        opacity: 0.7,
                                     }}
                                 />
                                 <Typography
                                     sx={{
-                                        color: COLORS.text.secondary,
-                                        fontSize: TYPOGRAPHY.fontSize.caption,
-                                        fontWeight:
-                                            TYPOGRAPHY.fontWeight.semibold,
+                                        color: 'rgba(157, 163, 174, 0.7)',
+                                        fontSize: '10px',
+                                        fontWeight: 500,
                                         textTransform: 'uppercase',
-                                        letterSpacing: '0.05em',
+                                        letterSpacing: '0.14em',
+                                        fontFamily:
+                                            'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
                                     }}
                                 >
                                     {category.title}
@@ -136,42 +149,46 @@ function ProjectDropdown() {
                                         component={Link}
                                         to={project.path}
                                         sx={{
-                                            padding: '10px 24px',
-                                            borderRadius:
-                                                SPACING.borderRadius.md,
+                                            padding: '10px 12px',
+                                            borderRadius: '8px',
                                             margin: '0',
-                                            transition: ANIMATIONS.transition,
+                                            minHeight: '40px',
+                                            transition: 'all 120ms ease',
                                             display: 'flex',
                                             flexDirection: 'column',
                                             alignItems: 'flex-start',
-                                            gap: 0.25,
+                                            gap: '6px',
                                             '&:hover': {
                                                 backgroundColor:
-                                                    COLORS.interactive.selected,
+                                                    'rgba(255, 255, 255, 0.06)',
                                                 transform: 'translateY(-1px)',
-                                                boxShadow:
-                                                    '0 4px 12px hsla(0, 0%, 0%, 0.15)',
+                                            },
+                                            '&:active': {
+                                                backgroundColor:
+                                                    'rgba(255, 255, 255, 0.08)',
+                                            },
+                                            '&:focus-visible': {
+                                                outline: 'none',
+                                                ring: '1px solid rgba(255, 255, 255, 0.2)',
+                                                ringOffset: '0',
                                             },
                                         }}
                                     >
                                         <Typography
                                             sx={{
-                                                fontWeight:
-                                                    TYPOGRAPHY.fontWeight
-                                                        .semibold,
-                                                fontSize:
-                                                    TYPOGRAPHY.fontSize.body,
-                                                color: COLORS.text.primary,
+                                                fontWeight: 600,
+                                                fontSize: '15px',
+                                                lineHeight: 1.6,
+                                                color: '#EDEDED',
                                             }}
                                         >
                                             {projectName.replace('_', ' ')}
                                         </Typography>
                                         <Typography
                                             sx={{
-                                                color: COLORS.text.secondary,
-                                                fontSize:
-                                                    TYPOGRAPHY.fontSize.caption,
-                                                lineHeight: 1.3,
+                                                color: 'rgba(157, 163, 174, 0.8)',
+                                                fontSize: '12px',
+                                                lineHeight: 1.4,
                                             }}
                                         >
                                             {project.description}
@@ -236,13 +253,19 @@ function MenuButton() {
                     marginTop: 1,
                     '& .MuiPaper-root': {
                         width: 'auto',
-                        height: 'auto !important', // Override global styles
-                        backgroundColor: COLORS.surface.glass,
-                        backdropFilter: 'blur(24px) saturate(180%)',
-                        border: `1px solid ${COLORS.border.subtle}`,
-                        borderRadius: SPACING.borderRadius.lg,
+                        maxWidth: '300px',
+                        height: 'auto !important',
+                        backgroundColor: 'rgba(11, 11, 12, 0.95)',
+                        backdropFilter: 'blur(8px)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '16px',
                         padding: 0,
-                        boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.4)',
+                        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.35)',
+                        transition: 'all 140ms cubic-bezier(0.2, 0.8, 0.2, 1)',
+                        transform: open
+                            ? 'translateY(0) scale(1)'
+                            : 'translateY(8px) scale(0.98)',
+                        opacity: open ? 1 : 0,
                     },
                 }}
                 onClose={handleClose}
