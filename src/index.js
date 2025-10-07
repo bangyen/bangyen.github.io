@@ -121,7 +121,7 @@ const darkTheme = createTheme({
                         minHeight: '44px',
                         fontWeight: TYPOGRAPHY.fontWeight.semibold,
                         transition: ANIMATIONS.transition,
-                        boxShadow: COLORS.shadow.mediumall,
+                        boxShadow: COLORS.shadow.medium,
                         '&:hover': {
                             backgroundColor: COLORS.primary.dark,
                             boxShadow: COLORS.shadow.medium,
