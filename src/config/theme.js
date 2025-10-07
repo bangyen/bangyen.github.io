@@ -90,12 +90,8 @@ export const TYPOGRAPHY = {
     },
     // Improved line heights for optical balance
     lineHeight: {
-        tight: 1.1,
-        snug: 1.2,
         normal: 1.4,
         relaxed: 1.5,
-        loose: 1.625,
-        prose: 1.7,
     },
     // Professional letter spacing for enhanced readability
     letterSpacing: {

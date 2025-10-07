@@ -192,7 +192,8 @@ export default function Info(props) {
                                                 fontSize:
                                                     TYPOGRAPHY.fontSize.h2,
                                                 lineHeight:
-                                                    TYPOGRAPHY.lineHeight.tight,
+                                                    TYPOGRAPHY.lineHeight
+                                                        .normal,
                                                 letterSpacing:
                                                     TYPOGRAPHY.letterSpacing
                                                         .tight,
@@ -422,7 +423,7 @@ export default function Info(props) {
                                             fontSize:
                                                 TYPOGRAPHY.fontSize.subheading,
                                             lineHeight:
-                                                TYPOGRAPHY.lineHeight.tight,
+                                                TYPOGRAPHY.lineHeight.normal,
                                             letterSpacing:
                                                 TYPOGRAPHY.letterSpacing.normal,
                                             mb: 3,

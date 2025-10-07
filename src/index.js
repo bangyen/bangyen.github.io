@@ -48,13 +48,13 @@ const darkTheme = createTheme({
             fontWeight: TYPOGRAPHY.fontWeight.bold,
             fontSize: TYPOGRAPHY.fontSize.display,
             letterSpacing: TYPOGRAPHY.letterSpacing.normal,
-            lineHeight: TYPOGRAPHY.lineHeight.tight,
+            lineHeight: TYPOGRAPHY.lineHeight.normal,
         },
         h2: {
             fontWeight: TYPOGRAPHY.fontWeight.bold,
             fontSize: TYPOGRAPHY.fontSize.h1,
             letterSpacing: TYPOGRAPHY.letterSpacing.normal,
-            lineHeight: TYPOGRAPHY.lineHeight.snug,
+            lineHeight: TYPOGRAPHY.lineHeight.normal,
         },
         h3: {
             fontWeight: TYPOGRAPHY.fontWeight.semibold,

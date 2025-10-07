@@ -189,7 +189,8 @@ export default function Home() {
                                             xs: 'clamp(2rem, 8vw, 2.5rem)', // Mobile sizing
                                             md: 'clamp(3rem, 6vw, 5rem)', // Desktop sizing
                                         },
-                                        lineHeight: TYPOGRAPHY.lineHeight.tight,
+                                        lineHeight:
+                                            TYPOGRAPHY.lineHeight.normal,
                                         letterSpacing:
                                             TYPOGRAPHY.letterSpacing.normal,
                                         marginBottom: 2,
