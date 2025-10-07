@@ -199,7 +199,15 @@ export default function Interpreters() {
                                                 marginBottom: 2,
                                             }}
                                         >
-                                            {interpreter.icon}
+                                            <Box
+                                                sx={{
+                                                    color: COLORS.primary.main,
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                }}
+                                            >
+                                                {interpreter.icon}
+                                            </Box>
                                             <Typography
                                                 variant="h6"
                                                 sx={{
