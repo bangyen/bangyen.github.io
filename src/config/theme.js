@@ -29,6 +29,14 @@ export const COLORS = {
         subtle: 'hsl(0, 0%, 18%)',
     },
     // Interactive State Colors
+    // Semantic Color Aliases - Common patterns for consistency
+    semantic: {
+        cardHover: `hsla(217, 91%, 60%, 0.1)`,
+        buttonPrimary: `hsl(217, 91%, 60%)`,
+        buttonHover: `hsl(217, 91%, 45%)`,
+        glassBackground: `hsla(0, 0%, 8%, 0.85)`,
+        borderSubtle: `hsl(0, 0%, 18%)`,
+    },
     interactive: {
         hover: `hsla(0, 0%, 80%, 0.08)`,
         focus: `hsla(217, 91%, 60%, 0.15)`,
@@ -80,19 +88,34 @@ export const TYPOGRAPHY = {
 
 // Simplified Spacing System - Only essential values actually used
 export const SPACING = {
-    // Consolidated Spacing System - 3 core padding values for consistency
+    // Systematic Spacing Scale - 4px base unit for consistency
     padding: {
-        sm: '1rem',
-        md: '1.5rem',
-        lg: '2rem',
+        xs: '0.5rem', // 8px - mobile padding
+        sm: '1rem', // 16px - small padding
+        md: '1.5rem', // 24px - medium padding
+        lg: '2rem', // 32px - large padding
+        xl: '3rem', // 48px - extra large padding
     },
-    // Border radius - only the 3 values actually used
+    // Border radius - systematic scale based on 4px unit
+    // Border radius - systematic scale based on 4px unit
     borderRadius: {
-        md: '12px',
-        lg: '16px',
-        full: '9999px',
+        xs: '4px', // 4px - small radius
+        sm: '8px', // 8px - small-medium radius
+        md: '12px', // 12px - medium radius
+        lg: '16px', // 16px - large radius
+        xl: '24px', // 24px - extra large radius
+        full: '9999px', // full - circular
     },
     // Container widths - simplified to 2 essential sizes
+    // Container widths - simplified to 2 essential sizes
+    // Margins - systematic scale for consistent spacing
+    margin: {
+        xs: '0.25rem', // 4px - tiny margin
+        sm: '0.5rem', // 8px - small margin
+        md: '1rem', // 16px - medium margin
+        lg: '1.5rem', // 24px - large margin
+        xl: '2rem', // 32px - extra large margin
+    },
     maxWidth: {
         md: '64rem',
         lg: '80rem',
@@ -116,6 +139,18 @@ export const ANIMATIONS = {
             backgroundColor: COLORS.interactive.hover,
         },
         // Scale hover - grow slightly
+        // Button hover - consistent button interaction
+        buttonHover: {
+            backgroundColor: COLORS.semantic.buttonHover,
+            transform: `translateY(-1px)`,
+            boxShadow: COLORS.shadow.sm,
+        },
+        // Card interaction - consistent card behavior
+        cardInteraction: {
+            backgroundColor: COLORS.semantic.cardHover,
+            transform: `translateY(-2px)`,
+            boxShadow: COLORS.shadow.sm,
+        },
         scaleHover: {
             transform: 'scale(1.02) translateY(-1px)',
             boxShadow: '0 4px 20px hsla(0, 0%, 0%, 0.25)',
@@ -126,9 +161,9 @@ export const ANIMATIONS = {
             boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
         },
         glass: {
-            backgroundColor: COLORS.surface.glass,
+            backgroundColor: COLORS.semantic.glassBackground,
             backdropFilter: 'blur(24px) saturate(180%)',
-            border: `1px solid ${COLORS.border.subtle}`,
+            border: `1px solid ${COLORS.semantic.borderSubtle}`,
         },
     },
 };
@@ -139,9 +174,9 @@ export const ANIMATIONS = {
 export const COMPONENT_VARIANTS = {
     // Unified card variant - combines glass and interactive functionality
     card: {
-        backgroundColor: COLORS.surface.glass,
+        backgroundColor: COLORS.semantic.glassBackground,
         backdropFilter: 'blur(24px) saturate(180%)',
-        border: `1px solid ${COLORS.border.subtle}`,
+        border: `1px solid ${COLORS.semantic.borderSubtle}`,
         borderRadius: SPACING.borderRadius.lg,
         boxShadow: COLORS.shadow.medium,
         height: '100%',
@@ -150,6 +185,7 @@ export const COMPONENT_VARIANTS = {
         cursor: 'pointer',
         transition: ANIMATIONS.transition,
         '&:hover': {
+            ...ANIMATIONS.presets.cardInteraction,
             transform: 'translateY(-2px)',
             boxShadow: COLORS.shadow.medium,
         },
