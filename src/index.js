@@ -7,7 +7,13 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import './styles/animations.css';
 import { ROUTES } from './config/constants';
-import { COLORS, TYPOGRAPHY, SPACING, ANIMATIONS } from './config/theme';
+import {
+    COLORS,
+    TYPOGRAPHY,
+    SPACING,
+    ANIMATIONS,
+    COMPONENT_VARIANTS,
+} from './config/theme';
 
 import { Stun_Step, Suffolk, WII2D, Back } from './Interpreters';
 import {
@@ -194,13 +200,9 @@ const darkTheme = createTheme({
                 {
                     props: { variant: 'glassmorphism' },
                     style: {
-                        backgroundColor: COLORS.surface.glass,
+                        ...COMPONENT_VARIANTS.glassCard,
                         backdropFilter: 'blur(20px) saturate(180%)',
-                        border: `1px solid ${COLORS.border.subtle}`,
-                        borderRadius: SPACING.borderRadius.lg,
                         padding: '24px',
-                        transition: ANIMATIONS.transition,
-                        boxShadow: COLORS.shadows.sm,
                     },
                 },
                 {
@@ -255,11 +257,7 @@ const darkTheme = createTheme({
         MuiMenu: {
             styleOverrides: {
                 paper: {
-                    backdropFilter: 'blur(24px) saturate(180%)',
-                    backgroundColor: COLORS.surface.glass,
-                    border: `1px solid ${COLORS.border.subtle}`,
-                    borderRadius: SPACING.borderRadius.lg,
-                    boxShadow: COLORS.shadows.sm,
+                    ...COMPONENT_VARIANTS.glassCard,
                     padding: '8px 8px',
                 },
             },

@@ -171,11 +171,10 @@ export default function Info(props) {
                                             flexDirection: 'column',
                                             transition:
                                                 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                            ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover': {
                                                 backgroundColor:
                                                     COLORS.interactive.hover,
-                                                transform: 'translateY(-2px)',
-                                                boxShadow: COLORS.shadows.sm,
                                             },
                                         }}
                                     >
@@ -384,11 +383,10 @@ export default function Info(props) {
                                             justifyContent: 'center',
                                             transition:
                                                 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                            ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover': {
                                                 backgroundColor:
                                                     COLORS.interactive.hover,
-                                                transform: 'translateY(-2px)',
-                                                boxShadow: COLORS.shadows.sm,
                                             },
                                         }}
                                     >
