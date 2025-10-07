@@ -1,12 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import {
-    Backdrop,
-    Typography,
-    Card,
-    CardContent,
-    Box,
-    Grid,
-} from '../../components/mui';
+import { Backdrop, Typography, Box, Grid } from '../../components/mui';
 import {
     CircleRounded,
     KeyboardArrowDown,
@@ -19,9 +12,9 @@ import {
     TYPOGRAPHY,
     COMPONENT_VARIANTS,
 } from '../../config/theme';
+import { GlassCard, CustomGrid } from '../../helpers';
 
 import { getProduct } from './matrices';
-import { CustomGrid } from '../../helpers';
 import { useGetters } from '../Board';
 import { useMobile } from '../../hooks';
 import Example from './Example';
@@ -111,23 +104,20 @@ export default function Info(props) {
                 border: 'none',
             }}
         >
-            <Card
+            <GlassCard
                 sx={{
                     maxWidth: '80vw',
                     height: 'fit-content',
                     maxHeight: '90vh',
                     overflow: 'auto',
                     mx: 'auto',
-                    backgroundColor: COLORS.surface.glass,
-                    backdropFilter: 'blur(24px) saturate(180%)',
-                    border: `1px solid hsla(0, 0%, 100%, 0.1)`,
-                    borderRadius: SPACING.borderRadius.lg,
                     display: 'flex',
                     flexDirection: 'column',
                     transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+                    padding: 0,
                 }}
             >
-                <CardContent
+                <Box
                     sx={{
                         pt: '1.5rem',
                         pb: '1.5rem',
@@ -168,14 +158,8 @@ export default function Info(props) {
                                 }}
                             >
                                 <Box sx={{ flex: 1, overflow: 'auto' }}>
-                                    <Box
+                                    <GlassCard
                                         sx={{
-                                            backgroundColor:
-                                                COLORS.surface.elevated,
-                                            border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                            borderRadius:
-                                                SPACING.borderRadius.lg,
-                                            padding: 3,
                                             height: !isLargeScreen
                                                 ? '100%'
                                                 : 'auto',
@@ -183,7 +167,6 @@ export default function Info(props) {
                                             flexDirection: 'column',
                                             transition:
                                                 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                            ...COMPONENT_VARIANTS.card,
                                         }}
                                     >
                                         <Typography
@@ -346,7 +329,7 @@ export default function Info(props) {
                                                 entire puzzle.
                                             </Typography>
                                         </Box>
-                                    </Box>
+                                    </GlassCard>
                                 </Box>
                             </Grid>
 
@@ -358,20 +341,13 @@ export default function Info(props) {
                                         ...COMPONENT_VARIANTS.flexCenter,
                                     }}
                                 >
-                                    <Box
+                                    <GlassCard
                                         sx={{
-                                            backgroundColor:
-                                                COLORS.surface.elevated,
-                                            border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                            borderRadius:
-                                                SPACING.borderRadius.lg,
-                                            padding: 3,
                                             width: '100%',
                                             height: '100%',
                                             ...COMPONENT_VARIANTS.flexCenter,
                                             transition:
                                                 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                            ...COMPONENT_VARIANTS.card,
                                         }}
                                     >
                                         <Example
@@ -380,7 +356,7 @@ export default function Info(props) {
                                             start={[1, 3, 8]}
                                             palette={palette}
                                         />
-                                    </Box>
+                                    </GlassCard>
                                 </Grid>
                             )}
                         </Grid>
@@ -388,13 +364,8 @@ export default function Info(props) {
                         {/* Bottom section: Lights Out Calculator (full width) */}
                         <Grid container size={12} spacing={3}>
                             <Grid size={12}>
-                                <Box
+                                <GlassCard
                                     sx={{
-                                        backgroundColor:
-                                            COLORS.surface.elevated,
-                                        border: `1px solid hsla(0, 0%, 100%, 0.05)`,
-                                        borderRadius: SPACING.borderRadius.lg,
-                                        padding: 3,
                                         textAlign: 'center',
                                     }}
                                 >
@@ -435,12 +406,12 @@ export default function Info(props) {
                                             cellProps={outputProps}
                                         />
                                     </Box>
-                                </Box>
+                                </GlassCard>
                             </Grid>
                         </Grid>
                     </Grid>
-                </CardContent>
-            </Card>
+                </Box>
+            </GlassCard>
         </Backdrop>
     );
 }

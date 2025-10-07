@@ -14,6 +14,7 @@ import {
     TYPOGRAPHY,
     COMPONENT_VARIANTS,
 } from '../config/theme';
+import { GlassCard } from '../helpers';
 import {
     LineChart,
     Line,
@@ -299,11 +300,8 @@ const ZSharp = () => {
                     </Typography>
 
                     {/* Performance Chart */}
-                    <Box
+                    <GlassCard
                         sx={{
-                            backgroundColor: COLORS.surface.elevated,
-                            borderRadius: SPACING.borderRadius.md,
-                            border: `1px solid ${COLORS.border.subtle}`,
                             marginBottom: 4,
                             width: '100%',
                             boxSizing: 'border-box',
@@ -575,7 +573,7 @@ const ZSharp = () => {
                                 </ResponsiveContainer>
                             )}
                         </Box>
-                    </Box>
+                    </GlassCard>
 
                     {/* View Selection Buttons */}
                     <Box

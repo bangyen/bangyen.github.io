@@ -22,6 +22,7 @@ import {
     COMPONENT_VARIANTS,
 } from '../config/theme';
 import { GitHub, Refresh, HomeRounded as Home } from '../components/icons';
+import { GlassCard } from '../helpers';
 import {
     LineChart,
     Line,
@@ -315,12 +316,8 @@ const Oligopoly = () => {
                     </Typography>
 
                     {/* Market Dynamics Chart */}
-                    <Box
+                    <GlassCard
                         sx={{
-                            padding: { xs: 1.5, md: 2 },
-                            backgroundColor: COLORS.surface.elevated,
-                            borderRadius: SPACING.borderRadius.md,
-                            border: `1px solid ${COLORS.border.subtle}`,
                             marginBottom: 4,
                             width: '100%',
                             boxSizing: 'border-box',
@@ -454,15 +451,11 @@ const Oligopoly = () => {
                                 </ResponsiveContainer>
                             )}
                         </Box>
-                    </Box>
+                    </GlassCard>
 
                     {/* Interactive Control Panel */}
-                    <Box
+                    <GlassCard
                         sx={{
-                            padding: { xs: 1.5, md: 2 },
-                            backgroundColor: COLORS.surface.elevated,
-                            borderRadius: SPACING.borderRadius.md,
-                            border: `1px solid ${COLORS.border.subtle}`,
                             marginBottom: 4,
                             width: '100%',
                             boxSizing: 'border-box',
@@ -691,7 +684,7 @@ const Oligopoly = () => {
                                 </Box>
                             </Grid>
                         </Grid>
-                    </Box>
+                    </GlassCard>
                 </Box>
             </Grid>
         </Grid>

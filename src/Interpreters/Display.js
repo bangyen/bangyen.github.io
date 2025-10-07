@@ -3,6 +3,7 @@ import { EditorContext, Text } from './Editor';
 import { Box, Typography, Chip, IconButton, Grid } from '../components/mui';
 import { useContext } from 'react';
 import { SPACING, COLORS, TYPOGRAPHY } from '../config/theme';
+import { GlassCard } from '../helpers';
 
 import {
     CodeRounded,
@@ -189,12 +190,8 @@ function CompactDisplay(props) {
     });
 
     return (
-        <Box
+        <GlassCard
             sx={{
-                padding: 1.5,
-                backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
-                border: `1px solid ${COLORS.border.subtle}`,
-                borderRadius: SPACING.borderRadius.md,
                 height: '100%',
                 minHeight: '24rem',
             }}
@@ -227,7 +224,7 @@ function CompactDisplay(props) {
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 {values}
             </Box>
-        </Box>
+        </GlassCard>
     );
 }
 
@@ -262,18 +259,15 @@ export function DisplayModeToggle({ compactMode, setCompactMode }) {
 
 function Scrollable(props) {
     return (
-        <Box
+        <GlassCard
             sx={{
                 overflowX: 'auto',
                 width: '100%',
-                padding: 2,
-                backgroundColor: 'hsla(0, 0%, 15%, 0.9)',
-                border: `1px solid ${COLORS.border.subtle}`,
-                borderRadius: SPACING.borderRadius.md,
                 height: '60px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
+                padding: 2,
             }}
         >
             <Grid
@@ -286,6 +280,6 @@ function Scrollable(props) {
             >
                 {props.children}
             </Grid>
-        </Box>
+        </GlassCard>
     );
 }
