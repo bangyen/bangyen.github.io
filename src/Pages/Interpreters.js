@@ -10,6 +10,7 @@ import {
     TYPOGRAPHY,
     ANIMATIONS,
     LAYOUT,
+    COMPONENT_VARIANTS,
 } from '../config/theme';
 
 export default function Interpreters() {
@@ -182,16 +183,13 @@ export default function Interpreters() {
                                     borderRadius: SPACING.borderRadius.md,
                                     border: `1px solid ${COLORS.border.subtle}`,
                                     textDecoration: 'none',
-                                    cursor: 'pointer',
-                                    transition: ANIMATIONS.transition,
                                     width: '100%',
                                     boxSizing: 'border-box',
                                     overflow: 'hidden',
+                                    ...COMPONENT_VARIANTS.interactiveCard,
                                     '&:hover': {
                                         backgroundColor:
                                             COLORS.interactive.selected,
-                                        transform: 'translateY(-2px)', // -2px
-                                        boxShadow: COLORS.shadows.sm,
                                     },
                                 }}
                             >
