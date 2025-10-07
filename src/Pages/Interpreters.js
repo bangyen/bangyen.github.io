@@ -19,7 +19,6 @@ import {
     COLORS,
     SPACING,
     TYPOGRAPHY,
-    ANIMATIONS,
     COMPONENT_VARIANTS,
 } from '../config/theme';
 

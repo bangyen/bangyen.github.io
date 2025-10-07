@@ -5,7 +5,6 @@ import { Toolbar } from './Toolbar';
 import {
     COLORS,
     SPACING,
-    ANIMATIONS,
     TYPOGRAPHY,
     COMPONENT_VARIANTS,
 } from '../config/theme';
