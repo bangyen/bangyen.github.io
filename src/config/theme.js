@@ -91,26 +91,26 @@ export const TYPOGRAPHY = {
 export const SPACING = {
     // Responsive padding - consolidated from padding/margin
     padding: {
-        xs: '1rem',
-        md: '2rem',
-        lg: '3rem',
+        xs: '0.5rem',
+        sm: '1rem',
+        md: '1.5rem',
+        lg: '2rem',
+        xl: '3rem',
     },
-    // Section spacing
-    section: '4rem',
+    section: '2rem',
     // Border radius - only the 3 values actually used
     borderRadius: {
         md: '12px',
         lg: '16px',
         full: '9999px',
     },
-    // Container widths - only the 3 values actually used
+    // Container widths - simplified to 3 essential sizes
     maxWidth: {
-        xs: '24rem',
+        sm: '24rem',
         md: '64rem',
         lg: '80rem',
     },
 };
-
 // Simplified Animation System - Consolidated for consistency
 export const ANIMATIONS = {
     // Standard transition used throughout the app

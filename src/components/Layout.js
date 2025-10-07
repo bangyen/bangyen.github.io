@@ -9,8 +9,8 @@ import { SPACING } from '../config/theme';
 export function Section({
     children,
     id,
-    paddingY = SPACING.section,
-    paddingX = SPACING.padding.md,
+    paddingY = SPACING.padding.lg,
+    paddingX = SPACING.padding.lg,
     maxWidth = SPACING.maxWidth.lg,
     ...props
 }) {
@@ -50,8 +50,8 @@ export function HeroContainer({
                 paddingTop: 0,
                 paddingBottom,
                 paddingX: {
-                    xs: SPACING.padding.xs,
-                    md: SPACING.padding.md,
+                    xs: SPACING.padding.sm,
+                    md: SPACING.padding.lg,
                 },
                 maxWidth: '100%',
                 overflowX: 'hidden',
