@@ -579,7 +579,7 @@ export default function Home() {
                                             },
                                         }}
                                     >
-                                        <GlassCard>
+                                        <GlassCard sx={{ border: 'none' }}>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -704,7 +704,7 @@ export default function Home() {
                                             },
                                         }}
                                     >
-                                        <GlassCard>
+                                        <GlassCard sx={{ border: 'none' }}>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
