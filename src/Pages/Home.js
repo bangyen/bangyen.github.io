@@ -92,20 +92,20 @@ const PROJECT_CATEGORIES = {
 
 function ProjectDropdown() {
     return (
-        <Box sx={{ padding: '16px 20px 0px 20px' }}>
+        <Box sx={{ padding: '12px 12px 0px 12px', marginBottom: '-4px' }}>
             {Object.entries(PROJECT_CATEGORIES).map(
                 ([categoryKey, category]) => {
                     const IconComponent = category.icon;
                     return (
-                        <Box key={categoryKey} sx={{ marginBottom: 3 }}>
+                        <Box key={categoryKey} sx={{ marginBottom: 2 }}>
                             {/* Category Header */}
                             <Box
                                 sx={{
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: 1,
-                                    padding: '8px 12px',
-                                    marginBottom: 1,
+                                    padding: '6px 8px',
+                                    marginBottom: 0.5,
                                 }}
                             >
                                 <IconComponent
@@ -136,15 +136,15 @@ function ProjectDropdown() {
                                         component={Link}
                                         to={project.path}
                                         sx={{
-                                            padding: '16px 20px',
+                                            padding: '10px 24px',
                                             borderRadius:
                                                 SPACING.borderRadius.md,
-                                            margin: '0.125rem 0.25rem',
+                                            margin: '0',
                                             transition: ANIMATIONS.transition,
                                             display: 'flex',
                                             flexDirection: 'column',
                                             alignItems: 'flex-start',
-                                            gap: 0.5,
+                                            gap: 0.25,
                                             '&:hover': {
                                                 backgroundColor:
                                                     COLORS.interactive.selected,
