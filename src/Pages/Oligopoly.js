@@ -327,7 +327,7 @@ const Oligopoly = () => {
                     {/* Market Dynamics Chart */}
                     <GlassCard
                         sx={{
-                            marginBottom: 4,
+                            marginBottom: 3,
                             width: '100%',
                             boxSizing: 'border-box',
                             overflow: 'hidden',
@@ -337,7 +337,7 @@ const Oligopoly = () => {
                             variant="subtitle1"
                             sx={{
                                 color: COLORS.text.secondary,
-                                marginBottom: 3,
+                                marginBottom: 2,
                                 textAlign: 'center',
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
                                 fontSize: TYPOGRAPHY.fontSize.subheading,
@@ -477,7 +477,7 @@ const Oligopoly = () => {
                                 display: 'flex',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                marginBottom: 3,
+                                marginBottom: 2,
                             }}
                         >
                             <Box
@@ -513,7 +513,7 @@ const Oligopoly = () => {
                                     color: COLORS.text.secondary,
                                     borderColor: COLORS.border.subtle,
                                     borderRadius: SPACING.borderRadius.lg,
-                                    padding: '0.5rem 1rem',
+                                    padding: '0.25rem 1rem',
                                     fontSize: '0.875rem',
                                     fontWeight: TYPOGRAPHY.fontWeight.medium,
                                     transition: 'all 0.2s ease-in-out',
@@ -530,13 +530,13 @@ const Oligopoly = () => {
                             </Button>
                         </Box>
 
-                        <Grid container={true} spacing={3}>
+                        <Grid container={true} spacing={2.5}>
                             {/* Top Row - Toggle Buttons */}
                             <Grid size={{ xs: 12, md: 4 }}>
                                 <Box
                                     sx={{
                                         marginBottom: 0,
-                                        padding: SPACING.padding.md,
+                                        padding: '1rem',
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.02)',
                                         borderRadius: SPACING.borderRadius.lg,
@@ -596,9 +596,9 @@ const Oligopoly = () => {
                                                 color: COLORS.text.secondary,
                                                 borderColor:
                                                     COLORS.border.subtle,
-                                                padding: '0.75rem 1rem',
+                                                padding: '0.6rem 0.8rem',
                                                 flex: 1,
-                                                fontSize: '0.875rem',
+                                                fontSize: '0.85rem',
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
                                                         .medium,
@@ -642,7 +642,7 @@ const Oligopoly = () => {
                                 <Box
                                     sx={{
                                         marginBottom: 0,
-                                        padding: SPACING.padding.md,
+                                        padding: '1rem',
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.02)',
                                         borderRadius: SPACING.borderRadius.lg,
@@ -702,9 +702,9 @@ const Oligopoly = () => {
                                                 color: COLORS.text.secondary,
                                                 borderColor:
                                                     COLORS.border.subtle,
-                                                padding: '0.75rem 1rem',
+                                                padding: '0.6rem 0.8rem',
                                                 flex: 1,
-                                                fontSize: '0.875rem',
+                                                fontSize: '0.85rem',
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
                                                         .medium,
@@ -753,7 +753,7 @@ const Oligopoly = () => {
                                 <Box
                                     sx={{
                                         marginBottom: 0,
-                                        padding: SPACING.padding.md,
+                                        padding: '1rem',
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.02)',
                                         borderRadius: SPACING.borderRadius.lg,
@@ -813,9 +813,9 @@ const Oligopoly = () => {
                                                 color: COLORS.text.secondary,
                                                 borderColor:
                                                     COLORS.border.subtle,
-                                                padding: '0.75rem 1rem',
+                                                padding: '0.6rem 0.8rem',
                                                 flex: 1,
-                                                fontSize: '0.875rem',
+                                                fontSize: '0.85rem',
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight
                                                         .medium,
