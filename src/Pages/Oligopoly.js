@@ -468,6 +468,7 @@ const Oligopoly = () => {
                             width: '100%',
                             boxSizing: 'border-box',
                             overflow: 'hidden',
+                            paddingBottom: SPACING.padding.md,
                             transition: 'all 0.3s ease-in-out',
                             '&:hover': {
                                 transform: 'translateY(-2px)',
@@ -538,8 +539,8 @@ const Oligopoly = () => {
                             <Grid size={{ xs: 12, md: 4 }}>
                                 <Box
                                     sx={{
-                                        marginBottom: SPACING.padding.md,
-                                        padding: '1.5rem',
+                                        marginBottom: 0,
+                                        padding: SPACING.padding.md,
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.02)',
                                         borderRadius: SPACING.borderRadius.lg,
@@ -644,8 +645,8 @@ const Oligopoly = () => {
                             <Grid size={{ xs: 12, md: 4 }}>
                                 <Box
                                     sx={{
-                                        marginBottom: SPACING.padding.md,
-                                        padding: '1.5rem',
+                                        marginBottom: 0,
+                                        padding: SPACING.padding.md,
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.02)',
                                         borderRadius: SPACING.borderRadius.lg,
@@ -755,8 +756,8 @@ const Oligopoly = () => {
                             <Grid size={{ xs: 12, md: 4 }}>
                                 <Box
                                     sx={{
-                                        marginBottom: SPACING.padding.md,
-                                        padding: '1.5rem',
+                                        marginBottom: 0,
+                                        padding: SPACING.padding.md,
                                         backgroundColor:
                                             'rgba(255, 255, 255, 0.02)',
                                         borderRadius: SPACING.borderRadius.lg,
