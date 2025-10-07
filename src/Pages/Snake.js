@@ -6,7 +6,7 @@ import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
 import { CustomGrid, Controls } from '../helpers';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../config/constants';
-import { COLORS } from '../config/theme';
+import { COLORS, COMPONENT_VARIANTS } from '../config/theme';
 
 function getRandom(max) {
     return Math.floor(Math.random() * max);
@@ -224,10 +224,10 @@ export default function Snake() {
         >
             <Grid
                 flex={1}
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-                sx={{ zIndex: 1 }}
+                sx={{
+                    ...COMPONENT_VARIANTS.flexCenter,
+                    zIndex: 1,
+                }}
             >
                 <CustomGrid
                     size={size}
