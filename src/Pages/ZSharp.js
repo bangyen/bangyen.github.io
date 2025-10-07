@@ -203,6 +203,7 @@ const ZSharp = () => {
             sx={{
                 position: 'relative',
                 padding: SPACING.padding.md,
+                paddingBottom: 0,
                 boxSizing: 'border-box',
                 width: '100%',
                 maxWidth: '100vw',
@@ -613,11 +614,6 @@ const ZSharp = () => {
                             width: '100%',
                             boxSizing: 'border-box',
                             overflow: 'hidden',
-                            transition: 'all 0.3s ease-in-out',
-                            '&:hover': {
-                                transform: 'translateY(-2px)',
-                                boxShadow: '0 8px 25px rgba(0,0,0,0.15)',
-                            },
                         }}
                     >
                         <Box
