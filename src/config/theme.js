@@ -178,33 +178,28 @@ export const ANIMATIONS = {
 
 // Layout Constants
 
+// Base Card Styles - Shared properties for all card variants
+export const BASE_CARD = {
+    backgroundColor: COLORS.semantic.glassBackground,
+    backdropFilter: 'blur(24px) saturate(180%)',
+    border: `1px solid ${COLORS.semantic.borderSubtle}`,
+    borderRadius: SPACING.borderRadius.lg,
+    boxShadow: COLORS.shadow.medium,
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    transition: ANIMATIONS.transition,
+};
+
 // Component Variants - Streamlined patterns used in multiple places
 export const COMPONENT_VARIANTS = {
     // Base card variant - shared properties for all cards
-    card: {
-        backgroundColor: COLORS.semantic.glassBackground,
-        backdropFilter: 'blur(24px) saturate(180%)',
-        border: `1px solid ${COLORS.semantic.borderSubtle}`,
-        borderRadius: SPACING.borderRadius.lg,
-        boxShadow: COLORS.shadow.medium,
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        transition: ANIMATIONS.transition,
-    },
+    card: BASE_CARD,
 
     // Interactive card variant - extends base card with interaction
     interactiveCard: {
-        backgroundColor: COLORS.semantic.glassBackground,
-        backdropFilter: 'blur(24px) saturate(180%)',
-        border: `1px solid ${COLORS.semantic.borderSubtle}`,
-        borderRadius: SPACING.borderRadius.lg,
-        boxShadow: COLORS.shadow.medium,
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
+        ...BASE_CARD,
         cursor: 'pointer',
-        transition: ANIMATIONS.transition,
         '&:hover': {
             ...ANIMATIONS.presets.cardInteraction,
             transform: 'translateY(-2px)',
