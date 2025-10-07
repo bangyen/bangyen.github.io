@@ -111,8 +111,13 @@ export default function Info(props) {
                     maxHeight: '90vh',
                     overflow: 'auto',
                     mx: 'auto',
-                    ...COMPONENT_VARIANTS.glassCard,
+                    backgroundColor: COLORS.surface.glass,
+                    backdropFilter: 'blur(24px) saturate(180%)',
                     border: `1px solid hsla(0, 0%, 100%, 0.1)`,
+                    borderRadius: SPACING.borderRadius.lg,
+                    boxShadow: COLORS.shadows.sm,
+                    display: 'flex',
+                    flexDirection: 'column',
                     transition: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
                 }}
             >
