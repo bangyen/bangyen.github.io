@@ -15,7 +15,7 @@ module.exports = {
     },
     requireConfigFile: false,
     babelOptions: {
-      presets: ['@babel/preset-react']
+      presets: ['@babel/preset-env', '@babel/preset-react']
     }
   },
   env: {
