@@ -246,21 +246,28 @@ export function Controls({
     handler,
     randomMovesEnabled = false,
     onToggleRandomMoves = () => {},
+    size = 'inherit',
 }) {
     const [show, setShow] = useState(false);
     const opacity = show ? 0.8 : 1;
 
     return (
         <Navigation opacity={opacity}>
-            <HomeButton hide={show} />
+            <HomeButton hide={show} size={size} />
             <Grid container spacing={1} alignItems="center">
-                <Arrows show={show} setShow={setShow} handler={handler} />
+                <Arrows
+                    show={show}
+                    setShow={setShow}
+                    handler={handler}
+                    size={size}
+                />
                 <RandomButton
                     onClick={onToggleRandomMoves}
                     enabled={randomMovesEnabled}
                     showToggleState={true}
                     enabledTitle="Disable Random Moves"
                     disabledTitle="Enable Random Moves"
+                    size={size}
                 />
             </Grid>
         </Navigation>
@@ -271,7 +278,7 @@ export function Controls({
  * Arrows component provides accessible directional controls with
  * proper ARIA labels and keyboard navigation support.
  */
-function Arrows({ show, setShow, handler }) {
+function Arrows({ show, setShow, handler, size = 'inherit' }) {
     const flip = useCallback(() => setShow(!show), [show, setShow]);
 
     if (!show)
@@ -281,6 +288,7 @@ function Arrows({ show, setShow, handler }) {
                 Icon={GamepadRounded}
                 onClick={flip}
                 aria-label="Show game controls"
+                size={size}
             />
         );
 
@@ -292,6 +300,7 @@ function Arrows({ show, setShow, handler }) {
                     Icon={KeyboardArrowUpRounded}
                     onClick={handler('up')}
                     aria-label="Move up"
+                    size={size}
                 />
             </Grid>
             <Grid>
@@ -300,9 +309,10 @@ function Arrows({ show, setShow, handler }) {
                     Icon={KeyboardArrowLeftRounded}
                     onClick={handler('left')}
                     aria-label="Move left"
+                    size={size}
                 />
                 <IconButton
-                    size="large"
+                    size={size === 'inherit' ? 'large' : size}
                     onClick={flip}
                     aria-label="Hide controls"
                 >
@@ -313,6 +323,7 @@ function Arrows({ show, setShow, handler }) {
                     Icon={KeyboardArrowRightRounded}
                     onClick={handler('right')}
                     aria-label="Move right"
+                    size={size}
                 />
             </Grid>
             <Grid width="100%" display="flex" justifyContent="center">
@@ -321,6 +332,7 @@ function Arrows({ show, setShow, handler }) {
                     Icon={KeyboardArrowDownRounded}
                     onClick={handler('down')}
                     aria-label="Move down"
+                    size={size}
                 />
             </Grid>
         </Grid>

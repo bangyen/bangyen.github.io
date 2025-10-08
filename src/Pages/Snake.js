@@ -247,7 +247,7 @@ export default function Snake() {
     return (
         <Grid
             container
-            height="100vh"
+            minHeight="100vh"
             flexDirection="column"
             position="relative"
             sx={{
@@ -275,6 +275,7 @@ export default function Snake() {
                 onToggleRandomMoves={() =>
                     setRandomMovesEnabled(!randomMovesEnabled)
                 }
+                size="inherit"
             />
         </Grid>
     );
