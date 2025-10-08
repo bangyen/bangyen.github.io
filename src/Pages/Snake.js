@@ -208,7 +208,7 @@ export default function Snake() {
                 type: 'move',
             });
 
-            if (randomMovesRef.current) {
+            if (getRandom(2) && randomMovesRef.current) {
                 dispatch({
                     type: 'steer',
                     payload: { key },
