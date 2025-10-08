@@ -274,27 +274,17 @@ export default function Snake() {
             </Grid>
             <Controls
                 handler={controlHandler}
-                randomButton={
-                    <RandomButton
-                        onClick={() =>
-                            setRandomMovesEnabled(!randomMovesEnabled)
-                        }
-                        enabled={randomMovesEnabled}
-                        showToggleState={true}
-                        enabledTitle="Disable Random Moves"
-                        disabledTitle="Enable Random Moves"
-                    />
-                }
-                gameSpecificButton={
-                    <ArrowsButton
-                        show={showArrows}
-                        setShow={setShowArrows}
-                        handler={controlHandler}
-                    />
-                }
+                onRandom={() => setRandomMovesEnabled(!randomMovesEnabled)}
+                randomEnabled={randomMovesEnabled}
                 hide={showArrows}
                 size="inherit"
-            />
+            >
+                <ArrowsButton
+                    show={showArrows}
+                    setShow={setShowArrows}
+                    handler={controlHandler}
+                />
+            </Controls>
         </Grid>
     );
 }

@@ -112,25 +112,15 @@ export default function LightsOut() {
             />
             <Controls
                 handler={() => {}} // No directional controls for Lights Out
-                randomButton={
-                    <RandomButton
-                        title="Randomize"
-                        onClick={() =>
-                            dispatch({
-                                type: 'random',
-                            })
-                        }
-                    />
-                }
-                gameSpecificButton={
-                    <TooltipButton
-                        title="Info"
-                        Icon={InfoRounded}
-                        onClick={toggleOpen}
-                    />
-                }
+                onRandom={() => dispatch({ type: 'random' })}
                 size="inherit"
-            />
+            >
+                <TooltipButton
+                    title="Info"
+                    Icon={InfoRounded}
+                    onClick={toggleOpen}
+                />
+            </Controls>
             <Info
                 rows={rows}
                 cols={cols}

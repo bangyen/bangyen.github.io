@@ -224,18 +224,14 @@ describe('Controls', () => {
 
         render(
             <TestWrapper>
-                <Controls
-                    handler={mockHandler}
-                    randomButton={<div data-testid="random-button">Random</div>}
-                    gameSpecificButton={
-                        <div data-testid="game-specific">Game Specific</div>
-                    }
-                />
+                <Controls handler={mockHandler} onRandom={() => {}}>
+                    <div data-testid="game-specific">Game Specific</div>
+                </Controls>
             </TestWrapper>
         );
 
         expect(screen.getByTestId('home-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('random-button')).toBeInTheDocument();
+        expect(screen.getByTestId('refresh-icon')).toBeInTheDocument(); // Random button uses refresh icon
         expect(screen.getByTestId('game-specific')).toBeInTheDocument();
     });
 
@@ -244,15 +240,12 @@ describe('Controls', () => {
 
         render(
             <TestWrapper>
-                <Controls
-                    handler={mockHandler}
-                    randomButton={<div data-testid="random-button">Random</div>}
-                />
+                <Controls handler={mockHandler} onRandom={() => {}} />
             </TestWrapper>
         );
 
         expect(screen.getByTestId('home-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('random-button')).toBeInTheDocument();
+        expect(screen.getByTestId('refresh-icon')).toBeInTheDocument();
         expect(screen.queryByTestId('game-specific')).not.toBeInTheDocument();
     });
 
@@ -261,17 +254,14 @@ describe('Controls', () => {
 
         render(
             <TestWrapper>
-                <Controls
-                    handler={mockHandler}
-                    gameSpecificButton={
-                        <div data-testid="game-specific">Game Specific</div>
-                    }
-                />
+                <Controls handler={mockHandler}>
+                    <div data-testid="game-specific">Game Specific</div>
+                </Controls>
             </TestWrapper>
         );
 
         expect(screen.getByTestId('home-icon')).toBeInTheDocument();
-        expect(screen.queryByTestId('random-button')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('refresh-icon')).not.toBeInTheDocument();
         expect(screen.getByTestId('game-specific')).toBeInTheDocument();
     });
 });

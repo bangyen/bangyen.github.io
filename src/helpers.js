@@ -248,8 +248,9 @@ export function RandomButton({
  */
 export function Controls({
     handler,
-    randomButton,
-    gameSpecificButton,
+    onRandom,
+    randomEnabled,
+    children,
     size = 'inherit',
     hide = false,
 }) {
@@ -258,17 +259,18 @@ export function Controls({
     return (
         <Navigation opacity={opacity}>
             <HomeButton hide={hide} size={size} />
-            {randomButton &&
-                React.cloneElement(randomButton, {
-                    hide: hide,
-                    size: size,
-                    ...randomButton.props,
-                })}
-            {gameSpecificButton &&
-                React.cloneElement(gameSpecificButton, {
-                    size: size,
-                    ...gameSpecificButton.props,
-                })}
+            {onRandom && (
+                <RandomButton
+                    onClick={onRandom}
+                    enabled={randomEnabled}
+                    showToggleState={!!randomEnabled}
+                    enabledTitle="Disable Random Moves"
+                    disabledTitle="Enable Random Moves"
+                    hide={hide}
+                    size={size}
+                />
+            )}
+            {children}
         </Navigation>
     );
 }
