@@ -192,6 +192,38 @@ export function Navigation({ children, ...rest }) {
 }
 
 /**
+ * RandomMovesButton component provides a toggle button for enabling/disabling
+ * random moves with proper accessibility and visual feedback.
+ */
+export function RandomMovesButton({
+    randomMovesEnabled = false,
+    onToggleRandomMoves = () => {},
+}) {
+    return (
+        <TooltipButton
+            title={
+                randomMovesEnabled
+                    ? 'Disable Random Moves'
+                    : 'Enable Random Moves'
+            }
+            Icon={Refresh}
+            onClick={onToggleRandomMoves}
+            aria-label={
+                randomMovesEnabled
+                    ? 'Disable random moves'
+                    : 'Enable random moves'
+            }
+            sx={{
+                color: randomMovesEnabled ? COLORS.primary.main : 'inherit',
+                backgroundColor: randomMovesEnabled
+                    ? `${COLORS.primary.main}20`
+                    : 'transparent',
+            }}
+        />
+    );
+}
+
+/**
  * Controls component provides accessible game controls with proper
  * keyboard navigation and screen reader announcements.
  */
@@ -206,13 +238,13 @@ export function Controls({
     return (
         <Navigation opacity={opacity}>
             <HomeButton hide={show} />
-            <Arrows
-                show={show}
-                setShow={setShow}
-                handler={handler}
-                randomMovesEnabled={randomMovesEnabled}
-                onToggleRandomMoves={onToggleRandomMoves}
-            />
+            <Grid container spacing={1} alignItems="center">
+                <Arrows show={show} setShow={setShow} handler={handler} />
+                <RandomMovesButton
+                    randomMovesEnabled={randomMovesEnabled}
+                    onToggleRandomMoves={onToggleRandomMoves}
+                />
+            </Grid>
         </Navigation>
     );
 }
@@ -221,47 +253,17 @@ export function Controls({
  * Arrows component provides accessible directional controls with
  * proper ARIA labels and keyboard navigation support.
  */
-function Arrows({
-    show,
-    setShow,
-    handler,
-    randomMovesEnabled = false,
-    onToggleRandomMoves = () => {},
-}) {
+function Arrows({ show, setShow, handler }) {
     const flip = useCallback(() => setShow(!show), [show, setShow]);
 
     if (!show)
         return (
-            <Grid container spacing={1} alignItems="center">
-                <TooltipButton
-                    title="Show Game Controls"
-                    Icon={GamepadRounded}
-                    onClick={flip}
-                    aria-label="Show game controls"
-                />
-                <TooltipButton
-                    title={
-                        randomMovesEnabled
-                            ? 'Disable Random Moves'
-                            : 'Enable Random Moves'
-                    }
-                    Icon={Refresh}
-                    onClick={onToggleRandomMoves}
-                    aria-label={
-                        randomMovesEnabled
-                            ? 'Disable random moves'
-                            : 'Enable random moves'
-                    }
-                    sx={{
-                        color: randomMovesEnabled
-                            ? COLORS.primary.main
-                            : 'inherit',
-                        backgroundColor: randomMovesEnabled
-                            ? `${COLORS.primary.main}20`
-                            : 'transparent',
-                    }}
-                />
-            </Grid>
+            <TooltipButton
+                title="Show Game Controls"
+                Icon={GamepadRounded}
+                onClick={flip}
+                aria-label="Show game controls"
+            />
         );
 
     return (
@@ -301,30 +303,6 @@ function Arrows({
                     Icon={KeyboardArrowDownRounded}
                     onClick={handler('down')}
                     aria-label="Move down"
-                />
-            </Grid>
-            <Grid width="100%" display="flex" justifyContent="center" mt={1}>
-                <TooltipButton
-                    title={
-                        randomMovesEnabled
-                            ? 'Disable Random Moves'
-                            : 'Enable Random Moves'
-                    }
-                    Icon={Refresh}
-                    onClick={onToggleRandomMoves}
-                    aria-label={
-                        randomMovesEnabled
-                            ? 'Disable random moves'
-                            : 'Enable random moves'
-                    }
-                    sx={{
-                        color: randomMovesEnabled
-                            ? COLORS.primary.main
-                            : 'inherit',
-                        backgroundColor: randomMovesEnabled
-                            ? `${COLORS.primary.main}20`
-                            : 'transparent',
-                    }}
                 />
             </Grid>
         </Grid>
