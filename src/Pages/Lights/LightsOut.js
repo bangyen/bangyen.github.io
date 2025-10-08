@@ -1,8 +1,13 @@
-import { Refresh, InfoRounded, CircleRounded } from '../../components/icons';
+import { InfoRounded, CircleRounded } from '../../components/icons';
 import { useMemo, useEffect, useReducer } from 'react';
 import { Grid } from '../../components/mui';
 
-import { Navigation, HomeButton, TooltipButton } from '../../helpers';
+import {
+    Navigation,
+    HomeButton,
+    TooltipButton,
+    RandomButton,
+} from '../../helpers';
 import { Board, useHandler, usePalette } from '../Board';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../../config/constants';
 import { COLORS } from '../../config/theme';
@@ -112,8 +117,7 @@ export default function LightsOut() {
             />
             <Navigation>
                 <HomeButton size="inherit" />
-                <TooltipButton
-                    Icon={Refresh}
+                <RandomButton
                     title="Randomize"
                     size="inherit"
                     onClick={() =>

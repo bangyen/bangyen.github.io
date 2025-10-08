@@ -192,33 +192,48 @@ export function Navigation({ children, ...rest }) {
 }
 
 /**
- * RandomMovesButton component provides a toggle button for enabling/disabling
- * random moves with proper accessibility and visual feedback.
+ * RandomButton component provides a reusable random action button
+ * with consistent styling and accessibility across different games.
  */
-export function RandomMovesButton({
-    randomMovesEnabled = false,
-    onToggleRandomMoves = () => {},
+export function RandomButton({
+    title = 'Randomize',
+    onClick,
+    enabled = false,
+    enabledTitle = 'Disable Random',
+    disabledTitle = 'Enable Random',
+    showToggleState = false,
+    ...props
 }) {
+    const buttonTitle = showToggleState
+        ? enabled
+            ? enabledTitle
+            : disabledTitle
+        : title;
+
+    const ariaLabel = showToggleState
+        ? enabled
+            ? enabledTitle
+            : disabledTitle
+        : title;
+
     return (
         <TooltipButton
-            title={
-                randomMovesEnabled
-                    ? 'Disable Random Moves'
-                    : 'Enable Random Moves'
-            }
+            title={buttonTitle}
             Icon={Refresh}
-            onClick={onToggleRandomMoves}
-            aria-label={
-                randomMovesEnabled
-                    ? 'Disable random moves'
-                    : 'Enable random moves'
-            }
+            onClick={onClick}
+            aria-label={ariaLabel}
             sx={{
-                color: randomMovesEnabled ? COLORS.primary.main : 'inherit',
-                backgroundColor: randomMovesEnabled
-                    ? `${COLORS.primary.main}20`
-                    : 'transparent',
+                color:
+                    showToggleState && enabled
+                        ? COLORS.primary.main
+                        : 'inherit',
+                backgroundColor:
+                    showToggleState && enabled
+                        ? `${COLORS.primary.main}20`
+                        : 'transparent',
+                ...props.sx,
             }}
+            {...props}
         />
     );
 }
@@ -240,9 +255,12 @@ export function Controls({
             <HomeButton hide={show} />
             <Grid container spacing={1} alignItems="center">
                 <Arrows show={show} setShow={setShow} handler={handler} />
-                <RandomMovesButton
-                    randomMovesEnabled={randomMovesEnabled}
-                    onToggleRandomMoves={onToggleRandomMoves}
+                <RandomButton
+                    onClick={onToggleRandomMoves}
+                    enabled={randomMovesEnabled}
+                    showToggleState={true}
+                    enabledTitle="Disable Random Moves"
+                    disabledTitle="Enable Random Moves"
                 />
             </Grid>
         </Navigation>
