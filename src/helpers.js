@@ -23,6 +23,7 @@ import {
     Psychology,
     Cloud,
     Work,
+    ShuffleRounded,
 } from './components/icons';
 
 /**
@@ -194,14 +195,20 @@ export function Navigation({ children, ...rest }) {
  * Controls component provides accessible game controls with proper
  * keyboard navigation and screen reader announcements.
  */
-export function Controls({ handler }) {
+export function Controls({ handler, randomMovesEnabled, onToggleRandomMoves }) {
     const [show, setShow] = useState(false);
     const opacity = show ? 0.8 : 1;
 
     return (
         <Navigation opacity={opacity}>
             <HomeButton hide={show} />
-            <Arrows show={show} setShow={setShow} handler={handler} />
+            <Arrows
+                show={show}
+                setShow={setShow}
+                handler={handler}
+                randomMovesEnabled={randomMovesEnabled}
+                onToggleRandomMoves={onToggleRandomMoves}
+            />
         </Navigation>
     );
 }
@@ -210,17 +217,47 @@ export function Controls({ handler }) {
  * Arrows component provides accessible directional controls with
  * proper ARIA labels and keyboard navigation support.
  */
-function Arrows({ show, setShow, handler }) {
+function Arrows({
+    show,
+    setShow,
+    handler,
+    randomMovesEnabled,
+    onToggleRandomMoves,
+}) {
     const flip = useCallback(() => setShow(!show), [show, setShow]);
 
     if (!show)
         return (
-            <TooltipButton
-                title="Show Game Controls"
-                Icon={GamepadRounded}
-                onClick={flip}
-                aria-label="Show game controls"
-            />
+            <Grid container spacing={1} alignItems="center">
+                <TooltipButton
+                    title="Show Game Controls"
+                    Icon={GamepadRounded}
+                    onClick={flip}
+                    aria-label="Show game controls"
+                />
+                <TooltipButton
+                    title={
+                        randomMovesEnabled
+                            ? 'Disable Random Moves'
+                            : 'Enable Random Moves'
+                    }
+                    Icon={ShuffleRounded}
+                    onClick={onToggleRandomMoves}
+                    aria-label={
+                        randomMovesEnabled
+                            ? 'Disable random moves'
+                            : 'Enable random moves'
+                    }
+                    sx={{
+                        color: randomMovesEnabled
+                            ? COLORS.primary.main
+                            : 'inherit',
+                        backgroundColor: randomMovesEnabled
+                            ? `${COLORS.primary.main}20`
+                            : 'transparent',
+                    }}
+                />
+            </Grid>
         );
 
     return (
@@ -260,6 +297,30 @@ function Arrows({ show, setShow, handler }) {
                     Icon={KeyboardArrowDownRounded}
                     onClick={handler('down')}
                     aria-label="Move down"
+                />
+            </Grid>
+            <Grid width="100%" display="flex" justifyContent="center" mt={1}>
+                <TooltipButton
+                    title={
+                        randomMovesEnabled
+                            ? 'Disable Random Moves'
+                            : 'Enable Random Moves'
+                    }
+                    Icon={ShuffleRounded}
+                    onClick={onToggleRandomMoves}
+                    aria-label={
+                        randomMovesEnabled
+                            ? 'Disable random moves'
+                            : 'Enable random moves'
+                    }
+                    sx={{
+                        color: randomMovesEnabled
+                            ? COLORS.primary.main
+                            : 'inherit',
+                        backgroundColor: randomMovesEnabled
+                            ? `${COLORS.primary.main}20`
+                            : 'transparent',
+                    }}
                 />
             </Grid>
         </Grid>
