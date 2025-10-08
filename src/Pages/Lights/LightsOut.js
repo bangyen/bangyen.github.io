@@ -1,8 +1,8 @@
-import { Refresh, InfoRounded, CircleRounded } from '../../components/icons';
+import { InfoRounded, CircleRounded } from '../../components/icons';
 import { useMemo, useEffect, useReducer } from 'react';
 import { Grid } from '../../components/mui';
 
-import { Navigation, HomeButton, TooltipButton } from '../../helpers';
+import { Controls, TooltipButton, RandomButton } from '../../helpers';
 import { Board, useHandler, usePalette } from '../Board';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../../config/constants';
 import { COLORS } from '../../config/theme';
@@ -110,25 +110,17 @@ export default function LightsOut() {
                 frontProps={frontProps}
                 backProps={backProps}
             />
-            <Navigation>
-                <HomeButton size="inherit" />
-                <TooltipButton
-                    Icon={Refresh}
-                    title="Randomize"
-                    size="inherit"
-                    onClick={() =>
-                        dispatch({
-                            type: 'random',
-                        })
-                    }
-                />
+            <Controls
+                handler={() => {}} // No directional controls for Lights Out
+                onRandom={() => dispatch({ type: 'random' })}
+                size="inherit"
+            >
                 <TooltipButton
                     title="Info"
-                    size="inherit"
                     Icon={InfoRounded}
                     onClick={toggleOpen}
                 />
-            </Navigation>
+            </Controls>
             <Info
                 rows={rows}
                 cols={cols}

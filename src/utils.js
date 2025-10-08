@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider, createTheme, grey, blueGrey } from '../components/mui';
+import { ThemeProvider, createTheme, grey, blueGrey } from './components/mui';
 
 /**
  * Creates a test theme for consistent testing across all components

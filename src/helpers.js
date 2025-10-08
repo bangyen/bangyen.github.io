@@ -1,5 +1,6 @@
 import { Tooltip, IconButton, Paper, Box, Grid } from './components/mui';
-import { useState, useCallback, forwardRef } from 'react';
+import { Refresh } from '@mui/icons-material';
+import React, { useCallback, forwardRef } from 'react';
 
 import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
@@ -191,37 +192,115 @@ export function Navigation({ children, ...rest }) {
 }
 
 /**
+ * RandomButton component provides a reusable random action button
+ * with consistent styling and accessibility across different games.
+ */
+export function RandomButton({
+    title = 'Randomize',
+    onClick,
+    enabled = false,
+    enabledTitle = 'Disable Random',
+    disabledTitle = 'Enable Random',
+    showToggleState = false,
+    hide = false,
+    ...props
+}) {
+    if (hide) return null;
+
+    const buttonTitle = showToggleState
+        ? enabled
+            ? enabledTitle
+            : disabledTitle
+        : title;
+
+    const ariaLabel = showToggleState
+        ? enabled
+            ? enabledTitle
+            : disabledTitle
+        : title;
+
+    return (
+        <TooltipButton
+            title={buttonTitle}
+            Icon={Refresh}
+            onClick={onClick}
+            aria-label={ariaLabel}
+            sx={{
+                color:
+                    showToggleState && enabled
+                        ? COLORS.primary.main
+                        : 'inherit',
+                backgroundColor:
+                    showToggleState && enabled
+                        ? `${COLORS.primary.main}20`
+                        : 'transparent',
+                ...props.sx,
+            }}
+            {...props}
+        />
+    );
+}
+
+/**
  * Controls component provides accessible game controls with proper
  * keyboard navigation and screen reader announcements.
+ * Layout: [Home] [Random] [GameSpecificButton]
  */
-export function Controls({ handler }) {
-    const [show, setShow] = useState(false);
-    const opacity = show ? 0.8 : 1;
+export function Controls({
+    handler,
+    onRandom,
+    randomEnabled,
+    children,
+    size = 'inherit',
+    hide = false,
+}) {
+    const opacity = hide ? 0.8 : 1;
 
     return (
         <Navigation opacity={opacity}>
-            <HomeButton hide={show} />
-            <Arrows show={show} setShow={setShow} handler={handler} />
+            <HomeButton hide={hide} size={size} />
+            {onRandom && (
+                <RandomButton
+                    onClick={onRandom}
+                    enabled={randomEnabled}
+                    showToggleState={!!randomEnabled}
+                    enabledTitle="Disable Random Moves"
+                    disabledTitle="Enable Random Moves"
+                    hide={hide}
+                    size={size}
+                />
+            )}
+            {children}
         </Navigation>
     );
 }
 
 /**
- * Arrows component provides accessible directional controls with
- * proper ARIA labels and keyboard navigation support.
+ * ArrowsButton component provides a toggle button for showing/hiding
+ * directional controls with proper accessibility.
  */
-function Arrows({ show, setShow, handler }) {
+export function ArrowsButton({
+    show = false,
+    setShow,
+    handler,
+    size = 'inherit',
+    hide = false,
+}) {
     const flip = useCallback(() => setShow(!show), [show, setShow]);
 
-    if (!show)
+    if (hide) return null;
+
+    if (!show) {
         return (
             <TooltipButton
                 title="Show Game Controls"
                 Icon={GamepadRounded}
                 onClick={flip}
                 aria-label="Show game controls"
+                size={size}
             />
         );
+    }
 
     return (
         <Grid role="group" aria-label="Directional controls">
@@ -231,6 +310,7 @@ function Arrows({ show, setShow, handler }) {
                     Icon={KeyboardArrowUpRounded}
                     onClick={handler('up')}
                     aria-label="Move up"
+                    size={size}
                 />
             </Grid>
             <Grid>
@@ -239,9 +319,10 @@ function Arrows({ show, setShow, handler }) {
                     Icon={KeyboardArrowLeftRounded}
                     onClick={handler('left')}
                     aria-label="Move left"
+                    size={size}
                 />
                 <IconButton
-                    size="large"
+                    size={size === 'inherit' ? 'large' : size}
                     onClick={flip}
                     aria-label="Hide controls"
                 >
@@ -252,6 +333,7 @@ function Arrows({ show, setShow, handler }) {
                     Icon={KeyboardArrowRightRounded}
                     onClick={handler('right')}
                     aria-label="Move right"
+                    size={size}
                 />
             </Grid>
             <Grid width="100%" display="flex" justifyContent="center">
@@ -260,6 +342,7 @@ function Arrows({ show, setShow, handler }) {
                     Icon={KeyboardArrowDownRounded}
                     onClick={handler('down')}
                     aria-label="Move down"
+                    size={size}
                 />
             </Grid>
         </Grid>

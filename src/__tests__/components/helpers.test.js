@@ -1,7 +1,12 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider, createTheme, grey, blueGrey } from '../components/mui';
+import {
+    ThemeProvider,
+    createTheme,
+    grey,
+    blueGrey,
+} from '../../components/mui';
 import {
     TooltipButton,
     HomeButton,
@@ -39,6 +44,7 @@ jest.mock('@mui/icons-material', () => ({
     HomeRounded: () => <div data-testid="home-icon">Home</div>,
     CloseRounded: () => <div data-testid="close-icon">Close</div>,
     GamepadRounded: () => <div data-testid="gamepad-icon">Gamepad</div>,
+    Refresh: () => <div data-testid="refresh-icon">Refresh</div>,
     KeyboardArrowUpRounded: () => <div data-testid="up-icon">Up</div>,
     KeyboardArrowDownRounded: () => <div data-testid="down-icon">Down</div>,
     KeyboardArrowLeftRounded: () => <div data-testid="left-icon">Left</div>,
@@ -198,10 +204,10 @@ describe('Navigation', () => {
 
 describe('Controls', () => {
     /**
-     * Tests Controls component for proper state management and event handling
-     * to ensure interactive controls work correctly for game navigation.
+     * Tests Controls component for proper rendering of flexible button layout
+     * with consistent [Home] [Random] [GameSpecific] pattern.
      */
-    test('renders controls with home button initially', () => {
+    test('renders home button by default', () => {
         const mockHandler = jest.fn();
 
         render(
@@ -211,67 +217,51 @@ describe('Controls', () => {
         );
 
         expect(screen.getByTestId('home-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('gamepad-icon')).toBeInTheDocument();
     });
 
-    test('shows arrow controls when gamepad button is clicked', () => {
+    test('renders all provided buttons in correct order', () => {
         const mockHandler = jest.fn();
 
         render(
             <TestWrapper>
-                <Controls handler={mockHandler} />
+                <Controls handler={mockHandler} onRandom={() => {}}>
+                    <div data-testid="game-specific">Game Specific</div>
+                </Controls>
             </TestWrapper>
         );
 
-        const gamepadButton = screen.getByRole('button');
-        fireEvent.click(gamepadButton);
-
-        expect(screen.getByTestId('up-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('down-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('left-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('right-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('close-icon')).toBeInTheDocument();
-    });
-
-    test('calls handler with correct direction when arrow buttons are clicked', () => {
-        const mockHandler = jest.fn(direction => () => {
-            // Handler should return a function
-        });
-
-        render(
-            <TestWrapper>
-                <Controls handler={mockHandler} />
-            </TestWrapper>
-        );
-
-        // Click gamepad to show arrows
-        const gamepadButton = screen.getByRole('button');
-        fireEvent.click(gamepadButton);
-
-        // Click up arrow
-        const upButton = screen.getByLabelText('Move up');
-        fireEvent.click(upButton);
-
-        expect(mockHandler).toHaveBeenCalledWith('up');
-    });
-
-    test('hides home button when controls are expanded', () => {
-        const mockHandler = jest.fn();
-
-        render(
-            <TestWrapper>
-                <Controls handler={mockHandler} />
-            </TestWrapper>
-        );
-
-        // Initially home button should be visible
         expect(screen.getByTestId('home-icon')).toBeInTheDocument();
+        expect(screen.getByTestId('refresh-icon')).toBeInTheDocument(); // Random button uses refresh icon
+        expect(screen.getByTestId('game-specific')).toBeInTheDocument();
+    });
 
-        // Click gamepad to expand controls
-        const gamepadButton = screen.getByRole('button');
-        fireEvent.click(gamepadButton);
+    test('works with only random button', () => {
+        const mockHandler = jest.fn();
 
-        // Home button should be hidden
-        expect(screen.queryByTestId('home-icon')).not.toBeInTheDocument();
+        render(
+            <TestWrapper>
+                <Controls handler={mockHandler} onRandom={() => {}} />
+            </TestWrapper>
+        );
+
+        expect(screen.getByTestId('home-icon')).toBeInTheDocument();
+        expect(screen.getByTestId('refresh-icon')).toBeInTheDocument();
+        expect(screen.queryByTestId('game-specific')).not.toBeInTheDocument();
+    });
+
+    test('works with only game-specific button', () => {
+        const mockHandler = jest.fn();
+
+        render(
+            <TestWrapper>
+                <Controls handler={mockHandler}>
+                    <div data-testid="game-specific">Game Specific</div>
+                </Controls>
+            </TestWrapper>
+        );
+
+        expect(screen.getByTestId('home-icon')).toBeInTheDocument();
+        expect(screen.queryByTestId('refresh-icon')).not.toBeInTheDocument();
+        expect(screen.getByTestId('game-specific')).toBeInTheDocument();
     });
 });

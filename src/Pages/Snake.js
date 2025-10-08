@@ -1,10 +1,17 @@
-import { useMemo, useCallback, useReducer, useEffect } from 'react';
+import {
+    useMemo,
+    useCallback,
+    useReducer,
+    useEffect,
+    useState,
+    useRef,
+} from 'react';
 import { Grid } from '../components/mui';
 // import * as colors from '@mui/material/colors'; // Removed unused import
 
 import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
-import { CustomGrid, Controls } from '../helpers';
+import { CustomGrid, Controls, RandomButton, ArrowsButton } from '../helpers';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../config/constants';
 import { COLORS, COMPONENT_VARIANTS } from '../config/theme';
 
@@ -130,6 +137,13 @@ export default function Snake() {
     const length = GAME_CONSTANTS.snake.initialLength;
     const size = GAME_CONSTANTS.snake.segmentSize;
 
+    // State for random moves mode
+    const [randomMovesEnabled, setRandomMovesEnabled] = useState(false);
+    const randomMovesRef = useRef(false);
+
+    // State for arrows visibility
+    const [showArrows, setShowArrows] = useState(false);
+
     const { rows, cols } = useMemo(
         () => convertPixels(size, height, width),
         [size, height, width]
@@ -185,10 +199,22 @@ export default function Snake() {
     );
 
     useEffect(() => {
-        const wrapDispatch = () =>
+        const wrapDispatch = () => {
+            const directions = 'wasd';
+            const index = getRandom(4);
+            const key = directions[index];
+
             dispatch({
                 type: 'move',
             });
+
+            if (getRandom(2) && randomMovesRef.current) {
+                dispatch({
+                    type: 'steer',
+                    payload: { key },
+                });
+            }
+        };
 
         const wrapDirection = event =>
             dispatch({
@@ -199,6 +225,11 @@ export default function Snake() {
         createTimer({ repeat: wrapDispatch });
         createKeys(wrapDirection);
     }, [createTimer, createKeys]);
+
+    // Update the ref when the state changes
+    useEffect(() => {
+        randomMovesRef.current = randomMovesEnabled;
+    }, [randomMovesEnabled]);
 
     useEffect(() => {
         dispatch({
@@ -214,7 +245,7 @@ export default function Snake() {
     return (
         <Grid
             container
-            height="100vh"
+            minHeight="100vh"
             flexDirection="column"
             position="relative"
             sx={{
@@ -236,7 +267,19 @@ export default function Snake() {
                     cellProps={chooseColor}
                 />
             </Grid>
-            <Controls handler={controlHandler} />
+            <Controls
+                handler={controlHandler}
+                onRandom={() => setRandomMovesEnabled(!randomMovesEnabled)}
+                randomEnabled={randomMovesEnabled}
+                hide={showArrows}
+                size="inherit"
+            >
+                <ArrowsButton
+                    show={showArrows}
+                    setShow={setShowArrows}
+                    handler={controlHandler}
+                />
+            </Controls>
         </Grid>
     );
 }

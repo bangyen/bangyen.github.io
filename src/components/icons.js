@@ -31,6 +31,7 @@ export {
     KeyboardArrowDownRounded,
     KeyboardArrowLeftRounded,
     KeyboardArrowRightRounded,
+    ShuffleRounded,
 } from '@mui/icons-material';
 
 // Content Icons
