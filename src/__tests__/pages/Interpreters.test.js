@@ -1,7 +1,12 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider, createTheme, grey, blueGrey } from '../components/mui';
+import {
+    ThemeProvider,
+    createTheme,
+    grey,
+    blueGrey,
+} from '../../components/mui';
 
 // Create a test theme
 const testTheme = createTheme({

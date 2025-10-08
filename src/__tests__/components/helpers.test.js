@@ -1,7 +1,12 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider, createTheme, grey, blueGrey } from '../components/mui';
+import {
+    ThemeProvider,
+    createTheme,
+    grey,
+    blueGrey,
+} from '../../components/mui';
 import {
     TooltipButton,
     HomeButton,
