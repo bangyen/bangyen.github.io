@@ -44,6 +44,7 @@ jest.mock('@mui/icons-material', () => ({
     HomeRounded: () => <div data-testid="home-icon">Home</div>,
     CloseRounded: () => <div data-testid="close-icon">Close</div>,
     GamepadRounded: () => <div data-testid="gamepad-icon">Gamepad</div>,
+    Refresh: () => <div data-testid="refresh-icon">Refresh</div>,
     KeyboardArrowUpRounded: () => <div data-testid="up-icon">Up</div>,
     KeyboardArrowDownRounded: () => <div data-testid="down-icon">Down</div>,
     KeyboardArrowLeftRounded: () => <div data-testid="left-icon">Left</div>,
@@ -228,7 +229,7 @@ describe('Controls', () => {
             </TestWrapper>
         );
 
-        const gamepadButton = screen.getByRole('button');
+        const gamepadButton = screen.getByLabelText('Show game controls');
         fireEvent.click(gamepadButton);
 
         expect(screen.getByTestId('up-icon')).toBeInTheDocument();
@@ -250,7 +251,7 @@ describe('Controls', () => {
         );
 
         // Click gamepad to show arrows
-        const gamepadButton = screen.getByRole('button');
+        const gamepadButton = screen.getByLabelText('Show game controls');
         fireEvent.click(gamepadButton);
 
         // Click up arrow
@@ -273,7 +274,7 @@ describe('Controls', () => {
         expect(screen.getByTestId('home-icon')).toBeInTheDocument();
 
         // Click gamepad to expand controls
-        const gamepadButton = screen.getByRole('button');
+        const gamepadButton = screen.getByLabelText('Show game controls');
         fireEvent.click(gamepadButton);
 
         // Home button should be hidden

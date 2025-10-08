@@ -1,4 +1,5 @@
 import { Tooltip, IconButton, Paper, Box, Grid } from './components/mui';
+import { Refresh } from '@mui/icons-material';
 import { useState, useCallback, forwardRef } from 'react';
 
 import { Link } from 'react-router-dom';
@@ -23,7 +24,6 @@ import {
     Psychology,
     Cloud,
     Work,
-    ShuffleRounded,
 } from './components/icons';
 
 /**
@@ -195,7 +195,11 @@ export function Navigation({ children, ...rest }) {
  * Controls component provides accessible game controls with proper
  * keyboard navigation and screen reader announcements.
  */
-export function Controls({ handler, randomMovesEnabled, onToggleRandomMoves }) {
+export function Controls({
+    handler,
+    randomMovesEnabled = false,
+    onToggleRandomMoves = () => {},
+}) {
     const [show, setShow] = useState(false);
     const opacity = show ? 0.8 : 1;
 
@@ -221,8 +225,8 @@ function Arrows({
     show,
     setShow,
     handler,
-    randomMovesEnabled,
-    onToggleRandomMoves,
+    randomMovesEnabled = false,
+    onToggleRandomMoves = () => {},
 }) {
     const flip = useCallback(() => setShow(!show), [show, setShow]);
 
@@ -241,7 +245,7 @@ function Arrows({
                             ? 'Disable Random Moves'
                             : 'Enable Random Moves'
                     }
-                    Icon={ShuffleRounded}
+                    Icon={Refresh}
                     onClick={onToggleRandomMoves}
                     aria-label={
                         randomMovesEnabled
@@ -306,7 +310,7 @@ function Arrows({
                             ? 'Disable Random Moves'
                             : 'Enable Random Moves'
                     }
-                    Icon={ShuffleRounded}
+                    Icon={Refresh}
                     onClick={onToggleRandomMoves}
                     aria-label={
                         randomMovesEnabled
