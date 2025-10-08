@@ -202,8 +202,11 @@ export function RandomButton({
     enabledTitle = 'Disable Random',
     disabledTitle = 'Enable Random',
     showToggleState = false,
+    hide = false,
     ...props
 }) {
+    if (hide) return null;
+
     const buttonTitle = showToggleState
         ? enabled
             ? enabledTitle
@@ -254,22 +257,21 @@ export function Controls({
     return (
         <Navigation opacity={opacity}>
             <HomeButton hide={show} size={size} />
-            <Grid container spacing={1} alignItems="center">
-                <Arrows
-                    show={show}
-                    setShow={setShow}
-                    handler={handler}
-                    size={size}
-                />
-                <RandomButton
-                    onClick={onToggleRandomMoves}
-                    enabled={randomMovesEnabled}
-                    showToggleState={true}
-                    enabledTitle="Disable Random Moves"
-                    disabledTitle="Enable Random Moves"
-                    size={size}
-                />
-            </Grid>
+            <RandomButton
+                onClick={onToggleRandomMoves}
+                enabled={randomMovesEnabled}
+                showToggleState={true}
+                enabledTitle="Disable Random Moves"
+                disabledTitle="Enable Random Moves"
+                size={size}
+                hide={show}
+            />
+            <Arrows
+                show={show}
+                setShow={setShow}
+                handler={handler}
+                size={size}
+            />
         </Navigation>
     );
 }
