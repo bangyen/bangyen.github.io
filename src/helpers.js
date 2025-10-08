@@ -1,6 +1,6 @@
 import { Tooltip, IconButton, Paper, Box, Grid } from './components/mui';
 import { Refresh } from '@mui/icons-material';
-import { useState, useCallback, forwardRef } from 'react';
+import React, { useCallback, forwardRef } from 'react';
 
 import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
@@ -244,46 +244,51 @@ export function RandomButton({
 /**
  * Controls component provides accessible game controls with proper
  * keyboard navigation and screen reader announcements.
+ * Layout: [Home] [Random] [GameSpecificButton]
  */
 export function Controls({
     handler,
-    randomMovesEnabled = false,
-    onToggleRandomMoves = () => {},
+    randomButton,
+    gameSpecificButton,
     size = 'inherit',
+    hide = false,
 }) {
-    const [show, setShow] = useState(false);
-    const opacity = show ? 0.8 : 1;
+    const opacity = hide ? 0.8 : 1;
 
     return (
         <Navigation opacity={opacity}>
-            <HomeButton hide={show} size={size} />
-            <RandomButton
-                onClick={onToggleRandomMoves}
-                enabled={randomMovesEnabled}
-                showToggleState={true}
-                enabledTitle="Disable Random Moves"
-                disabledTitle="Enable Random Moves"
-                size={size}
-                hide={show}
-            />
-            <Arrows
-                show={show}
-                setShow={setShow}
-                handler={handler}
-                size={size}
-            />
+            <HomeButton hide={hide} size={size} />
+            {randomButton &&
+                React.cloneElement(randomButton, {
+                    hide: hide,
+                    size: size,
+                    ...randomButton.props,
+                })}
+            {gameSpecificButton &&
+                React.cloneElement(gameSpecificButton, {
+                    size: size,
+                    ...gameSpecificButton.props,
+                })}
         </Navigation>
     );
 }
 
 /**
- * Arrows component provides accessible directional controls with
- * proper ARIA labels and keyboard navigation support.
+ * ArrowsButton component provides a toggle button for showing/hiding
+ * directional controls with proper accessibility.
  */
-function Arrows({ show, setShow, handler, size = 'inherit' }) {
+export function ArrowsButton({
+    show = false,
+    setShow,
+    handler,
+    size = 'inherit',
+    hide = false,
+}) {
     const flip = useCallback(() => setShow(!show), [show, setShow]);
 
-    if (!show)
+    if (hide) return null;
+
+    if (!show) {
         return (
             <TooltipButton
                 title="Show Game Controls"
@@ -293,6 +298,7 @@ function Arrows({ show, setShow, handler, size = 'inherit' }) {
                 size={size}
             />
         );
+    }
 
     return (
         <Grid role="group" aria-label="Directional controls">

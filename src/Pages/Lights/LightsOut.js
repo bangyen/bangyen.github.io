@@ -2,12 +2,7 @@ import { InfoRounded, CircleRounded } from '../../components/icons';
 import { useMemo, useEffect, useReducer } from 'react';
 import { Grid } from '../../components/mui';
 
-import {
-    Navigation,
-    HomeButton,
-    TooltipButton,
-    RandomButton,
-} from '../../helpers';
+import { Controls, TooltipButton, RandomButton } from '../../helpers';
 import { Board, useHandler, usePalette } from '../Board';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../../config/constants';
 import { COLORS } from '../../config/theme';
@@ -115,24 +110,27 @@ export default function LightsOut() {
                 frontProps={frontProps}
                 backProps={backProps}
             />
-            <Navigation>
-                <HomeButton size="inherit" />
-                <RandomButton
-                    title="Randomize"
-                    size="inherit"
-                    onClick={() =>
-                        dispatch({
-                            type: 'random',
-                        })
-                    }
-                />
-                <TooltipButton
-                    title="Info"
-                    size="inherit"
-                    Icon={InfoRounded}
-                    onClick={toggleOpen}
-                />
-            </Navigation>
+            <Controls
+                handler={() => {}} // No directional controls for Lights Out
+                randomButton={
+                    <RandomButton
+                        title="Randomize"
+                        onClick={() =>
+                            dispatch({
+                                type: 'random',
+                            })
+                        }
+                    />
+                }
+                gameSpecificButton={
+                    <TooltipButton
+                        title="Info"
+                        Icon={InfoRounded}
+                        onClick={toggleOpen}
+                    />
+                }
+                size="inherit"
+            />
             <Info
                 rows={rows}
                 cols={cols}

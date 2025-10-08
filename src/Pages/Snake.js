@@ -11,7 +11,7 @@ import { Grid } from '../components/mui';
 
 import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
-import { CustomGrid, Controls } from '../helpers';
+import { CustomGrid, Controls, RandomButton, ArrowsButton } from '../helpers';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../config/constants';
 import { COLORS, COMPONENT_VARIANTS } from '../config/theme';
 
@@ -150,6 +150,9 @@ export default function Snake() {
     const [randomMovesEnabled, setRandomMovesEnabled] = useState(false);
     const randomMovesRef = useRef(false);
 
+    // State for arrows visibility
+    const [showArrows, setShowArrows] = useState(false);
+
     const { rows, cols } = useMemo(
         () => convertPixels(size, height, width),
         [size, height, width]
@@ -271,10 +274,25 @@ export default function Snake() {
             </Grid>
             <Controls
                 handler={controlHandler}
-                randomMovesEnabled={randomMovesEnabled}
-                onToggleRandomMoves={() =>
-                    setRandomMovesEnabled(!randomMovesEnabled)
+                randomButton={
+                    <RandomButton
+                        onClick={() =>
+                            setRandomMovesEnabled(!randomMovesEnabled)
+                        }
+                        enabled={randomMovesEnabled}
+                        showToggleState={true}
+                        enabledTitle="Disable Random Moves"
+                        disabledTitle="Enable Random Moves"
+                    />
                 }
+                gameSpecificButton={
+                    <ArrowsButton
+                        show={showArrows}
+                        setShow={setShowArrows}
+                        handler={controlHandler}
+                    />
+                }
+                hide={showArrows}
                 size="inherit"
             />
         </Grid>
