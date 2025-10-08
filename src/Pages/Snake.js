@@ -122,15 +122,6 @@ function handleAction(state, action) {
                 ...state,
                 buffer,
             };
-        case 'randomMove':
-            // Directly set a random velocity without using the buffer
-            const directions = [-2, 2, -1, 1]; // up, down, left, right (matching getDirection values)
-            const randomVelocity = directions[getRandom(directions.length)];
-
-            return {
-                ...state,
-                velocity: randomVelocity,
-            };
         case 'move':
             return reduceBoard(state);
         default:
@@ -209,14 +200,18 @@ export default function Snake() {
 
     useEffect(() => {
         const wrapDispatch = () => {
+            const directions = 'wasd';
+            const index = getRandom(4);
+            const key = directions[index];
+
             dispatch({
                 type: 'move',
             });
 
-            // Generate random move if enabled (use ref to avoid dependency issues)
             if (randomMovesRef.current) {
                 dispatch({
-                    type: 'randomMove',
+                    type: 'steer',
+                    payload: { key },
                 });
             }
         };
