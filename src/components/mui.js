@@ -25,7 +25,7 @@ export { Menu, MenuItem } from '@mui/material';
 export { Tooltip, Fade, Backdrop } from '@mui/material';
 
 // Data Display Components
-export { Card, CardContent, Chip } from '@mui/material';
+export { Chip } from '@mui/material';
 
 // Form Components
 export { TextField } from '@mui/material';
