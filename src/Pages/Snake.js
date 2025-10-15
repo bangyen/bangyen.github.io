@@ -11,7 +11,7 @@ import { Grid } from '../components/mui';
 
 import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
-import { CustomGrid, Controls, RandomButton, ArrowsButton } from '../helpers';
+import { CustomGrid, Controls, ArrowsButton } from '../helpers';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../config/constants';
 import { COLORS, COMPONENT_VARIANTS } from '../config/theme';
 

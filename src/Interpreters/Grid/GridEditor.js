@@ -52,7 +52,7 @@ function useWrappers(state, props, dispatch) {
             const { position, select } = state;
 
             if (square === select) return 'primary';
-            if (square === position) return 'info';
+            if (position !== null && square === position) return 'info';
 
             return 'secondary';
         },

@@ -76,7 +76,11 @@ export default function Editor({ container, sideProps, hide, children }) {
                     <TextArea {...sideProps} />
                 </Grid>
             </Grid>
-            <Grid container spacing={2}>
+            <Grid
+                container
+                spacing={2}
+                sx={{ width: '100%', maxWidth: '100%' }}
+            >
                 {(() => {
                     const fields = [];
                     const fieldCount = [
@@ -92,28 +96,60 @@ export default function Editor({ container, sideProps, hide, children }) {
 
                     if (code !== undefined) {
                         fields.push(
-                            <Grid key="program" size={gridSize}>
+                            <Grid
+                                key="program"
+                                size={gridSize}
+                                sx={{
+                                    width: '100%',
+                                    maxWidth: '100%',
+                                    overflow: 'hidden',
+                                }}
+                            >
                                 <Program />
                             </Grid>
                         );
                     }
                     if (tapeFlag) {
                         fields.push(
-                            <Grid key="tape" size={gridSize}>
+                            <Grid
+                                key="tape"
+                                size={gridSize}
+                                sx={{
+                                    width: '100%',
+                                    maxWidth: '100%',
+                                    overflow: 'hidden',
+                                }}
+                            >
                                 <Tape />
                             </Grid>
                         );
                     }
                     if (outFlag) {
                         fields.push(
-                            <Grid key="output" size={gridSize}>
+                            <Grid
+                                key="output"
+                                size={gridSize}
+                                sx={{
+                                    width: '100%',
+                                    maxWidth: '100%',
+                                    overflow: 'hidden',
+                                }}
+                            >
                                 <Output />
                             </Grid>
                         );
                     }
                     if (regFlag) {
                         fields.push(
-                            <Grid key="register" size={gridSize}>
+                            <Grid
+                                key="register"
+                                size={gridSize}
+                                sx={{
+                                    width: '100%',
+                                    maxWidth: '100%',
+                                    overflow: 'hidden',
+                                }}
+                            >
                                 <Register />
                             </Grid>
                         );
@@ -144,9 +180,9 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
                     hover: COLORS.interactive.selected,
                 },
                 info: {
-                    bg: COLORS.surface.glass,
+                    bg: COLORS.interactive.focus,
                     text: COLORS.text.primary,
-                    border: `1px solid ${COLORS.border.subtle}`,
+                    border: `1px solid ${COLORS.primary.main}`,
                     hover: COLORS.interactive.hover,
                 },
                 secondary: {
@@ -207,6 +243,7 @@ export function TextArea({
           }
         : {
               defaultValue: fillValue,
+              onChange: handleChange,
           };
 
     return (

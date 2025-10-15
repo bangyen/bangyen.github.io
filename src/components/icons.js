@@ -1,12 +1,12 @@
 /**
  * Material-UI Icons Barrel Export
  * Consolidates commonly used MUI icons for cleaner imports
+ * Only exports icons that are actually used in the codebase
  */
 
 // Navigation Icons
 export {
     HomeRounded,
-    MenuRounded,
     CloseRounded,
     ViewModuleRounded,
     ViewListRounded,
@@ -31,7 +31,6 @@ export {
     KeyboardArrowDownRounded,
     KeyboardArrowLeftRounded,
     KeyboardArrowRightRounded,
-    ShuffleRounded,
 } from '@mui/icons-material';
 
 // Content Icons

@@ -2,7 +2,7 @@ import { InfoRounded, CircleRounded } from '../../components/icons';
 import { useMemo, useEffect, useReducer } from 'react';
 import { Grid } from '../../components/mui';
 
-import { Controls, TooltipButton, RandomButton } from '../../helpers';
+import { Controls, TooltipButton } from '../../helpers';
 import { Board, useHandler, usePalette } from '../Board';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../../config/constants';
 import { COLORS } from '../../config/theme';

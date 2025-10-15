@@ -132,7 +132,7 @@ export function handleToolbar(state, action) {
 
     switch (type) {
         case 'run':
-            create({ repeat });
+            create({ repeat, speed: 200 }); // Always use default speed
             break;
         case 'timer':
             const newType = state.end ? 'stop' : 'next';
@@ -171,6 +171,8 @@ export function handleToolbar(state, action) {
             newState.pause = false;
             break;
         case 'stop':
+            newState.pause = true;
+            break;
         case 'reset':
         case 'prev':
             newState.pause = true;

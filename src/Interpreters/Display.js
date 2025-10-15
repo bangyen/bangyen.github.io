@@ -1,6 +1,6 @@
 import { EditorContext, Text } from './Editor';
 
-import { Box, Typography, Chip, IconButton, Grid } from '../components/mui';
+import { Box, Typography, Chip, IconButton } from '../components/mui';
 import { useContext } from 'react';
 import { COLORS, TYPOGRAPHY } from '../config/theme';
 import { GlassCard } from '../helpers';
@@ -267,6 +267,7 @@ function Scrollable(props) {
             sx={{
                 overflowX: 'auto',
                 width: '100%',
+                maxWidth: '100%',
                 height: '60px',
                 display: 'flex',
                 flexDirection: 'column',
@@ -274,16 +275,17 @@ function Scrollable(props) {
                 padding: 2,
             }}
         >
-            <Grid
-                container
-                spacing={2}
+            <Box
                 sx={{
+                    display: 'flex',
                     alignItems: 'center',
-                    minWidth: 'max-content',
+                    gap: 1,
+                    width: 'max-content',
+                    minWidth: 0,
                 }}
             >
                 {props.children}
-            </Grid>
+            </Box>
         </GlassCard>
     );
 }

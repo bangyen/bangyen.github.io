@@ -59,24 +59,43 @@ export function useMobile(size) {
     return useMediaQuery(theme => theme.breakpoints.down(size));
 }
 
+// Global timer reference to handle React StrictMode multiple instances
+let globalTimer = null;
+let globalRepeat = null;
+let globalSpeed = 200;
+
 export function useTimer(delay) {
     const repeat = useRef(null);
-    const timer = useRef(null);
     const speed = useRef(delay);
 
     const create = useCallback(({ repeat: newRepeat, speed: newSpeed }) => {
-        repeat.current = newRepeat || repeat.current;
-        speed.current = newSpeed || speed.current;
+        // Clear any existing timer first
+        if (globalTimer !== null) {
+            clearInterval(globalTimer);
+        }
 
-        timer.current = setInterval(repeat.current, speed.current);
+        globalRepeat = newRepeat || globalRepeat;
+        globalSpeed = newSpeed || globalSpeed;
+        repeat.current = globalRepeat;
+        speed.current = globalSpeed;
+
+        globalTimer = setInterval(globalRepeat, globalSpeed);
     }, []);
 
     const clear = useCallback(() => {
-        clearInterval(timer.current);
+        if (globalTimer !== null) {
+            clearInterval(globalTimer);
+            globalTimer = null;
+        }
     }, []);
 
     useEffect(() => {
-        return () => clearInterval(timer.current);
+        return () => {
+            if (globalTimer !== null) {
+                clearInterval(globalTimer);
+                globalTimer = null;
+            }
+        };
     }, []);
 
     return { create, clear };
@@ -108,6 +127,7 @@ export function useKeys() {
 export function useCache(getState) {
     const cache = useRef([]);
     const index = useRef(0);
+    const processingRef = useRef(false);
 
     return useCallback(
         ({ type, payload }) => {
@@ -115,22 +135,56 @@ export function useCache(getState) {
 
             switch (type) {
                 case 'next':
+                    // Prevent double processing in React StrictMode
+                    if (processingRef.current) {
+                        return { ...states[index.current] };
+                    }
+
+                    processingRef.current = true;
+
                     const curr = index.current;
-                    index.current++;
 
                     if (curr + 1 === states.length) {
                         const state = states[curr];
                         const next = getState(state);
 
-                        if (next === state) index.current--;
-                        else states.push(next);
+                        if (next === state) {
+                            // No change, stay at current position
+                        } else {
+                            // Add new state and move to it
+                            states.push(next);
+                            index.current++;
+                        }
+                    } else {
+                        index.current++;
                     }
 
-                    return { ...states[index.current] };
+                    const result = { ...states[index.current] };
+
+                    // Reset processing flag after a short delay
+                    setTimeout(() => {
+                        processingRef.current = false;
+                    }, 0);
+
+                    return result;
                 case 'prev':
+                    // Prevent double processing in React StrictMode
+                    if (processingRef.current) {
+                        return { ...states[index.current] };
+                    }
+
+                    processingRef.current = true;
+
                     if (index.current) index.current--;
 
-                    return states[index.current];
+                    const prevResult = { ...states[index.current] };
+
+                    // Reset processing flag after a short delay
+                    setTimeout(() => {
+                        processingRef.current = false;
+                    }, 0);
+
+                    return prevResult;
                 case 'clear':
                     cache.current = [{ ...payload }];
                     index.current = 0;

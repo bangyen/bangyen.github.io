@@ -6,25 +6,24 @@ import { PAGE_TITLES } from '../../config/constants';
 
 function handleAction(state, action) {
     const { type, payload } = action;
-    const { nextIter, clear } = payload;
+    const { nextIter, clear, create, dispatch } = payload;
     let newState = {};
 
     switch (type) {
         case 'ff':
-            action.type = 'next';
-            newState = {
-                ...state,
-                pause: true,
-            };
+            // Fast forward = increase speed or start if paused
+            const repeat = () => dispatch({ type: 'timer', payload });
 
-            do {
-                const change = handleToolbar(newState, action);
-
-                newState = {
-                    ...newState,
-                    ...change,
-                };
-            } while (!newState.end);
+            if (state.pause) {
+                // If paused, start with fast speed
+                newState = { pause: false };
+                create({ repeat, speed: 50 }); // 50ms instead of 200ms
+            } else {
+                // If running, increase speed by stopping current timer and creating faster one
+                clear();
+                newState = { pause: false };
+                create({ repeat, speed: 10 }); // Even faster: 10ms
+            }
             break;
         case 'edit':
             const { newText, clean } = payload;
