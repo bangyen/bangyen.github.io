@@ -9,12 +9,7 @@ import {
     ToggleButtonGroup,
 } from './mui';
 import { GitHub, HomeRounded as Home, Refresh, SettingsRounded } from './icons';
-import {
-    URLS,
-    CHART_DIMENSIONS,
-    CHART_FORMATTING,
-    PERCENTAGE,
-} from '../config/constants';
+import { CHART_DIMENSIONS, CHART_FORMATTING } from '../config/constants';
 import {
     COLORS,
     SPACING,
