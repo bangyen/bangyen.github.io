@@ -171,6 +171,8 @@ export function handleToolbar(state, action) {
             newState.pause = false;
             break;
         case 'stop':
+            newState.pause = true;
+            break;
         case 'reset':
         case 'prev':
             newState.pause = true;

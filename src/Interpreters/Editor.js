@@ -144,9 +144,9 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
                     hover: COLORS.interactive.selected,
                 },
                 info: {
-                    bg: COLORS.surface.glass,
+                    bg: COLORS.interactive.focus,
                     text: COLORS.text.primary,
-                    border: `1px solid ${COLORS.border.subtle}`,
+                    border: `1px solid ${COLORS.primary.main}`,
                     hover: COLORS.interactive.hover,
                 },
                 secondary: {
