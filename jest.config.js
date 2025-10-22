@@ -1,36 +1,31 @@
 module.exports = {
     testEnvironment: 'jsdom',
-    setupFilesAfterEnv: ['<rootDir>/src/setupTests.js'],
+    setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
     testMatch: [
-        '<rootDir>/tests/**/*.test.js',
-        '<rootDir>/tests/**/*.test.jsx',
-        '<rootDir>/src/**/*.test.js',
-        '<rootDir>/src/**/*.test.jsx'
+        '<rootDir>/src/**/*.test.{js,jsx,ts,tsx}',
     ],
     collectCoverageFrom: [
-        'src/**/*.{js,jsx}',
-        '!src/index.js',
-        '!src/setupTests.js',
-        '!src/**/*.test.{js,jsx}'
+        'src/**/*.{js,jsx,ts,tsx}',
+        '!src/index.tsx',
+        '!src/setupTests.ts',
+        '!src/**/*.test.{js,jsx,ts,tsx}',
+        '!src/**/*.d.ts',
     ],
     coverageDirectory: 'coverage',
     coverageReporters: ['text', 'lcov', 'html'],
-    moduleNameMapping: {
-        '^@/(.*)$': '<rootDir>/src/$1'
-    },
     moduleNameMapper: {
-        '^@/(.*)$': '<rootDir>/src/$1'
+        '^@/(.*)$': '<rootDir>/src/$1',
     },
     transform: {
-        '^.+\\.(js|jsx)$': 'babel-jest'
+        '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
     },
-    moduleFileExtensions: ['js', 'jsx', 'json'],
+    moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx', 'json'],
     testPathIgnorePatterns: [
         '/node_modules/',
         '/build/',
-        '/coverage/'
+        '/coverage/',
     ],
-    testEnvironmentOptions: {
-        url: 'http://localhost'
-    }
+    transformIgnorePatterns: [
+        'node_modules/(?!(.*\\.mjs$))',
+    ],
 };
