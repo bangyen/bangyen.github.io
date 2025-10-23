@@ -9,13 +9,15 @@ describe('Toolbar', () => {
     describe('handleToolbar', () => {
         const mockPayload = {
             dispatch: jest.fn(),
-            nextIter: jest.fn(action => {
+            nextIter: jest.fn((action: any) => {
                 // Return a proper object structure - match what the code expects
-                const result = {
-                    ...action.payload,
-                    processed: true,
+                // For reset action, nextIter is called with { type: 'clear', payload: resetPayload }
+                // resetPayload contains { ...state, ...start } which is { value: 0, pause: false }
+                const payload = action.payload || action;
+                return {
+                    value: payload.value || 0,
+                    pause: payload.pause || false,
                 };
-                return result;
             }),
             create: jest.fn(),
             clear: jest.fn(),
@@ -64,6 +66,12 @@ describe('Toolbar', () => {
                 payload: mockPayload,
             };
 
+            // Mock nextIter to return an object
+            mockPayload.nextIter.mockReturnValueOnce({
+                value: 0,
+                pause: false,
+            });
+
             const result = handleToolbar(
                 { ...initialState, pause: false },
                 action
@@ -71,9 +79,8 @@ describe('Toolbar', () => {
 
             expect(mockPayload.clear).toHaveBeenCalled();
             expect(mockPayload.nextIter).toHaveBeenCalled();
-            // The reset action should return a state with pause property
-            expect(result).toBeDefined();
-            // Don't check pause property as it depends on nextIter returning a proper object
+            // After reset, pause should be set to true
+            expect(result.pause).toBe(true);
         });
 
         test('handles next action', () => {
