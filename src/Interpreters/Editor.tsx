@@ -15,7 +15,7 @@ interface EditorContextType {
     index: number;
     tape: number[];
     pointer: number;
-    output: string[];
+    output: string[] | string;
     register: number;
     height: number;
     size: number;

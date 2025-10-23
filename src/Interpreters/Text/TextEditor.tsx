@@ -134,7 +134,7 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
         tapeFlag: tape || false,
         outFlag: output || false,
         regFlag: false,
-        code: state.code,
+        code: state.code ? [state.code] : undefined,
         dispatch: toolbarDispatch,
         fastForward: false,
         pause: state.pause || false,
@@ -149,10 +149,10 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
 
     return (
         <EditorContext.Provider value={context}>
-            <Editor container={containerRef}>
+            <Editor container={containerRef as React.RefObject<HTMLDivElement>}>
                 <TextArea
                     value={state.text}
-                    handleChange={handleChange as (event: React.ChangeEvent<HTMLInputElement>) => void}
+                    handleChange={handleChange}
                 />
                 {tape && <Tape tape={state.tape as number[]} />}
                 {output && <Output output={state.output as string} />}

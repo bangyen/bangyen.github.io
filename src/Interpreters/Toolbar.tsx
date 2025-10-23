@@ -59,14 +59,14 @@ export function Toolbar(): React.ReactElement[] {
                 <TooltipButton
                     key="Run"
                     title="Run"
-                    onClick={dispatch({ type: 'run', payload: {} })}
+                    onClick={() => dispatch('run')}
                     Icon={PlayArrowRounded}
                 />
             ) : (
                 <TooltipButton
                     key="Pause"
                     title="Pause"
-                    onClick={dispatch({ type: 'stop', payload: {} })}
+                    onClick={() => dispatch('stop')}
                     Icon={PauseRounded}
                 />
             ),
@@ -118,7 +118,7 @@ export function Toolbar(): React.ReactElement[] {
                     key={key}
                     title={key}
                     Icon={icon}
-                    onClick={dispatch({ type: action, payload: {} })}
+                    onClick={() => dispatch(action)}
                 />
             );
         else if (props)

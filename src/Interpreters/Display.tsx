@@ -130,13 +130,13 @@ export const Output = memo(function Output({ compact = false }: OutputProps) {
             <CompactDisplay
                 Icon={TextFieldsRounded}
                 title="Output"
-                data={[output]}
+                data={Array.isArray(output) ? output : [output]}
             />
         );
     }
 
     return (
-        <Display Icon={TextFieldsRounded} title="Output" data={[output]}>
+        <Display Icon={TextFieldsRounded} title="Output" data={Array.isArray(output) ? output : [output]}>
             <Text text={'\xA0'} />
         </Display>
     );
