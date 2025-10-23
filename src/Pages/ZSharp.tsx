@@ -60,8 +60,8 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
 
                     writer.write(compressedData).then(() => writer.close());
 
-                    function pump() {
-                        return reader.read().then(({ done, value }) => {
+                    function pump(): Promise<void> {
+                        return reader.read().then(({ done, value }: { done: boolean; value: Uint8Array | undefined }) => {
                             if (done) {
                                 controller.close();
                                 return;
@@ -131,7 +131,7 @@ const generateFallbackData = (): DataPoint[] => {
 const ZSharp: React.FC = () => {
     const [chartData, setChartData] = useState<DataPoint[]>([]);
     const [loading, setLoading] = useState(true);
-    const [viewType, setViewType] = useState('accuracy');
+    const [viewType, setViewType] = useState<string>('accuracy');
 
     useEffect(() => {
         document.title = PAGE_TITLES.zsharp;
