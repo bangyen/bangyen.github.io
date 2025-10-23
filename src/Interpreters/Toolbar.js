@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { TooltipButton } from '../helpers';
 import { EditorContext } from './Editor';
 import { useMobile } from '../hooks';
+import { TIMER } from '../config/constants';
 
 import {
     NavigateBeforeRounded,
@@ -140,7 +141,7 @@ export function handleToolbar(state, action) {
 
     switch (type) {
         case 'run':
-            create({ repeat, speed: 200 }); // Always use default speed
+            create({ repeat, speed: TIMER.defaultSpeed });
             newState.pause = pauseStateMap.run;
             break;
         case 'timer':

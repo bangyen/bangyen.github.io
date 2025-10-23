@@ -1,4 +1,5 @@
 import { useMediaQuery } from './components/mui';
+import { PROCESSING } from './config/constants';
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 
@@ -139,11 +140,16 @@ export function useCache(getState) {
             switch (type) {
                 case 'next':
                     // Prevent double processing in React StrictMode
-                    if (processingRef.current) {
+                    if (
+                        PROCESSING.doubleProcessingPrevention &&
+                        processingRef.current
+                    ) {
                         return { ...states[index.current] };
                     }
 
-                    processingRef.current = true;
+                    if (PROCESSING.doubleProcessingPrevention) {
+                        processingRef.current = true;
+                    }
 
                     const curr = index.current;
 
@@ -165,27 +171,36 @@ export function useCache(getState) {
                     const result = { ...states[index.current] };
 
                     // Reset processing flag after a short delay
-                    setTimeout(() => {
-                        processingRef.current = false;
-                    }, 0);
+                    if (PROCESSING.doubleProcessingPrevention) {
+                        setTimeout(() => {
+                            processingRef.current = false;
+                        }, PROCESSING.resetDelay);
+                    }
 
                     return result;
                 case 'prev':
                     // Prevent double processing in React StrictMode
-                    if (processingRef.current) {
+                    if (
+                        PROCESSING.doubleProcessingPrevention &&
+                        processingRef.current
+                    ) {
                         return { ...states[index.current] };
                     }
 
-                    processingRef.current = true;
+                    if (PROCESSING.doubleProcessingPrevention) {
+                        processingRef.current = true;
+                    }
 
                     if (index.current) index.current--;
 
                     const prevResult = { ...states[index.current] };
 
                     // Reset processing flag after a short delay
-                    setTimeout(() => {
-                        processingRef.current = false;
-                    }, 0);
+                    if (PROCESSING.doubleProcessingPrevention) {
+                        setTimeout(() => {
+                            processingRef.current = false;
+                        }, PROCESSING.resetDelay);
+                    }
 
                     return prevResult;
                 case 'clear':

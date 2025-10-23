@@ -14,6 +14,7 @@ import {
     Work,
 } from './components/icons';
 import React, { useCallback, forwardRef } from 'react';
+import PropTypes from 'prop-types';
 
 import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
@@ -24,6 +25,7 @@ import {
     ANIMATIONS,
     COMPONENT_VARIANTS,
 } from './config/theme';
+import { CELL_SIZE } from './config/constants';
 
 /**
  * Icon mapping utility to eliminate repetitive icon selection logic
@@ -52,9 +54,17 @@ export function TooltipButton(props) {
     );
 }
 
+TooltipButton.propTypes = {
+    Icon: PropTypes.elementType.isRequired,
+    title: PropTypes.string.isRequired,
+};
+
 /**
  * HomeButton component provides accessible navigation to home page
  * with proper ARIA labels and keyboard navigation support.
+ *
+ * @param {Object} props - Component props
+ * @param {boolean} props.hide - Whether to hide the button
  */
 export function HomeButton({ hide, ...rest }) {
     if (hide) return null;
@@ -72,16 +82,24 @@ export function HomeButton({ hide, ...rest }) {
     );
 }
 
+HomeButton.propTypes = {
+    hide: PropTypes.bool,
+};
+
+HomeButton.defaultProps = {
+    hide: false,
+};
+
 function Cell({ size, children, ...rest }) {
     const remSize = `${size}rem`;
-    const radius = `${size / 4}rem`;
+    const radius = `${size / CELL_SIZE.divisor}rem`;
 
     const props = {
         ...COMPONENT_VARIANTS.flexCenter,
         borderRadius: radius,
         height: remSize,
         width: remSize,
-        fontSize: `${size * 0.25}rem`,
+        fontSize: `${size * CELL_SIZE.fontSizeMultiplier}rem`,
         fontWeight: TYPOGRAPHY.fontWeight.semibold,
         fontFamily: 'monospace',
         transition: ANIMATIONS.transition,
@@ -112,6 +130,12 @@ function Row(props) {
 /**
  * CustomGrid component provides accessible grid layout with proper
  * ARIA roles and semantic structure for screen readers.
+ *
+ * @param {Object} props - Component props
+ * @param {number} props.size - Grid cell size
+ * @param {number} props.rows - Number of rows
+ * @param {number} props.cols - Number of columns
+ * @param {Function} props.cellProps - Function to generate cell properties
  */
 export function CustomGrid(props) {
     const { size, rows, cols, cellProps, ...rest } = props;
@@ -149,9 +173,24 @@ export function CustomGrid(props) {
     );
 }
 
+CustomGrid.propTypes = {
+    size: PropTypes.number.isRequired,
+    rows: PropTypes.number.isRequired,
+    cols: PropTypes.number.isRequired,
+    cellProps: PropTypes.func.isRequired,
+    space: PropTypes.number,
+};
+
+CustomGrid.defaultProps = {
+    space: undefined, // Will be computed from size
+};
+
 /**
  * Navigation component provides accessible navigation controls
  * with proper ARIA landmarks and keyboard navigation support.
+ *
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Navigation buttons
  */
 export function Navigation({ children, ...rest }) {
     return (
@@ -190,9 +229,19 @@ export function Navigation({ children, ...rest }) {
     );
 }
 
+Navigation.propTypes = {
+    children: PropTypes.node.isRequired,
+};
+
 /**
  * RandomButton component provides a reusable random action button
  * with consistent styling and accessibility across different games.
+ *
+ * @param {Object} props - Component props
+ * @param {string} props.title - Button title
+ * @param {Function} props.onClick - Click handler
+ * @param {boolean} props.enabled - Whether random mode is enabled
+ * @param {boolean} props.hide - Whether to hide the button
  */
 export function RandomButton({
     title = 'Randomize',
@@ -240,10 +289,35 @@ export function RandomButton({
     );
 }
 
+RandomButton.propTypes = {
+    title: PropTypes.string,
+    onClick: PropTypes.func.isRequired,
+    enabled: PropTypes.bool,
+    enabledTitle: PropTypes.string,
+    disabledTitle: PropTypes.string,
+    showToggleState: PropTypes.bool,
+    hide: PropTypes.bool,
+};
+
+RandomButton.defaultProps = {
+    title: 'Randomize',
+    enabled: false,
+    enabledTitle: 'Disable Random',
+    disabledTitle: 'Enable Random',
+    showToggleState: false,
+    hide: false,
+};
+
 /**
  * Controls component provides accessible game controls with proper
  * keyboard navigation and screen reader announcements.
  * Layout: [Home] [Random] [GameSpecificButton]
+ *
+ * @param {Object} props - Component props
+ * @param {Function} props.handler - Direction handler function
+ * @param {Function} props.onRandom - Random toggle handler
+ * @param {boolean} props.randomEnabled - Whether random mode is enabled
+ * @param {React.ReactNode} props.children - Additional control buttons
  */
 export function Controls({
     handler,
@@ -274,9 +348,28 @@ export function Controls({
     );
 }
 
+Controls.propTypes = {
+    handler: PropTypes.func,
+    onRandom: PropTypes.func,
+    randomEnabled: PropTypes.bool,
+    children: PropTypes.node,
+    size: PropTypes.oneOf(['small', 'medium', 'large', 'inherit']),
+    hide: PropTypes.bool,
+};
+
+Controls.defaultProps = {
+    size: 'inherit',
+    hide: false,
+};
+
 /**
  * ArrowsButton component provides a toggle button for showing/hiding
  * directional controls with proper accessibility.
+ *
+ * @param {Object} props - Component props
+ * @param {boolean} props.show - Whether controls are visible
+ * @param {Function} props.setShow - Toggle visibility function
+ * @param {Function} props.handler - Direction handler function
  */
 export function ArrowsButton({
     show = false,
@@ -348,13 +441,30 @@ export function ArrowsButton({
     );
 }
 
+ArrowsButton.propTypes = {
+    show: PropTypes.bool,
+    setShow: PropTypes.func.isRequired,
+    handler: PropTypes.func.isRequired,
+    size: PropTypes.oneOf(['small', 'medium', 'large', 'inherit']),
+    hide: PropTypes.bool,
+};
+
+ArrowsButton.defaultProps = {
+    show: false,
+    size: 'inherit',
+    hide: false,
+};
+
 /**
  * GlassCard component provides a consistent glassmorphism container
  * with backdrop blur, subtle borders, and elevation shadows.
  * Replaces repetitive glass container styling across components.
  * Uses forwardRef to support Material-UI transitions like Fade.
  *
- * @param {boolean} interactive - Whether the card should have hover effects and pointer cursor
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Card content
+ * @param {number|string} props.padding - Card padding
+ * @param {boolean} props.interactive - Whether the card should have hover effects and pointer cursor
  */
 export const GlassCard = forwardRef(function GlassCard(
     {
@@ -384,3 +494,16 @@ export const GlassCard = forwardRef(function GlassCard(
         </Box>
     );
 });
+
+GlassCard.propTypes = {
+    children: PropTypes.node.isRequired,
+    padding: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    sx: PropTypes.object,
+    className: PropTypes.string,
+    interactive: PropTypes.bool,
+};
+
+GlassCard.defaultProps = {
+    padding: SPACING.padding.md,
+    interactive: false,
+};

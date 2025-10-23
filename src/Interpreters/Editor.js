@@ -5,9 +5,20 @@ import { Toolbar } from './Toolbar';
 import { COLORS, SPACING, TYPOGRAPHY } from '../config/theme';
 
 import React, { createContext, useContext, useMemo } from 'react';
+import PropTypes from 'prop-types';
 
 export const EditorContext = createContext();
 
+/**
+ * Editor component provides a consistent layout for programming language interpreters
+ * with code editor, visual displays, and execution controls
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.container - Ref to container element
+ * @param {Object} props.sideProps - Props for the side panel (TextArea)
+ * @param {boolean} props.hide - Whether to hide the side panel
+ * @param {React.ReactNode} props.children - Main content to display
+ */
 export default function Editor({ container, sideProps, hide, children }) {
     const { name, tapeFlag, outFlag, regFlag, code } =
         useContext(EditorContext);
@@ -162,6 +173,18 @@ export default function Editor({ container, sideProps, hide, children }) {
     );
 }
 
+Editor.propTypes = {
+    container: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+    sideProps: PropTypes.object,
+    hide: PropTypes.bool,
+    children: PropTypes.node.isRequired,
+};
+
+Editor.defaultProps = {
+    hide: false,
+    sideProps: {},
+};
+
 export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
     const { size } = useContext(EditorContext);
 
@@ -226,6 +249,14 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
         <CustomGrid cellProps={cellProps} size={size} rows={rows} cols={cols} />
     );
 }
+
+GridArea.propTypes = {
+    handleClick: PropTypes.func.isRequired,
+    chooseColor: PropTypes.func.isRequired,
+    options: PropTypes.array.isRequired,
+    rows: PropTypes.number.isRequired,
+    cols: PropTypes.number.isRequired,
+};
 
 export function TextArea({
     value,
@@ -297,6 +328,20 @@ export function TextArea({
     );
 }
 
+TextArea.propTypes = {
+    value: PropTypes.string,
+    readOnly: PropTypes.bool,
+    infoLabel: PropTypes.string,
+    fillValue: PropTypes.string,
+    handleChange: PropTypes.func,
+};
+
+TextArea.defaultProps = {
+    readOnly: false,
+    infoLabel: 'Program code',
+    fillValue: 'Hello, World!',
+};
+
 export function Text({ text, ...props }) {
     return (
         <Typography
@@ -314,3 +359,7 @@ export function Text({ text, ...props }) {
         </Typography>
     );
 }
+
+Text.propTypes = {
+    text: PropTypes.string.isRequired,
+};

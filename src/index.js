@@ -4,6 +4,7 @@ import React, { Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 
 import { ThemeProvider, createTheme, CssBaseline } from './components/mui';
+import ErrorBoundary from './components/ErrorBoundary';
 import './styles/animations.css';
 import { ROUTES } from './config/constants';
 import {
@@ -331,9 +332,11 @@ const root = createRoot(container);
 
 root.render(
     <React.StrictMode>
-        <ThemeProvider theme={darkTheme}>
-            <CssBaseline />
-            <Website />
-        </ThemeProvider>
+        <ErrorBoundary>
+            <ThemeProvider theme={darkTheme}>
+                <CssBaseline />
+                <Website />
+            </ThemeProvider>
+        </ErrorBoundary>
     </React.StrictMode>
 );

@@ -214,3 +214,21 @@ export const ZSHARP_DEFAULTS = {
     lossReduction: 0.1,
     maxEpochs: 20,
 };
+
+// Timer and Animation Constants
+export const TIMER = {
+    defaultSpeed: 200, // milliseconds
+    resetDelay: 0, // milliseconds for setTimeout
+};
+
+// Cell Size Calculation Constants
+export const CELL_SIZE = {
+    divisor: 4, // For calculating border radius from size
+    fontSizeMultiplier: 0.25, // For calculating font size from size
+};
+
+// Processing Control Constants
+export const PROCESSING = {
+    doubleProcessingPrevention: true,
+    resetDelay: 0,
+};
