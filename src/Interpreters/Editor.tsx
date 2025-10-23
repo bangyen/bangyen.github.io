@@ -25,9 +25,7 @@ interface EditorContextType {
     register: number;
     height: number;
     size: number;
-    dispatch: (
-        action: string | { type: string; payload: unknown }
-    ) => (() => void) | void;
+    dispatch: (action: string | { type: string; payload: unknown }) => void;
     fastForward: boolean;
     pause: boolean;
 }
@@ -395,6 +393,7 @@ export function Text({ text, ...props }: TextProps) {
                 fontFamily: 'inherit',
                 userSelect: 'none',
                 lineHeight: 1,
+                display: 'inline',
                 ...props.sx,
             }}
         >
