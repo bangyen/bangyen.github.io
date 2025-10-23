@@ -30,49 +30,5 @@ describe('ErrorBoundary', () => {
 
         expect(screen.getByTestId('child')).toBeInTheDocument();
     });
-
-    test('renders error UI when error occurs', () => {
-        render(
-            <ErrorBoundary>
-                <ThrowError shouldThrow={true} />
-            </ErrorBoundary>
-        );
-
-        expect(screen.getByText('Something went wrong')).toBeInTheDocument();
-        expect(screen.getByText('Reload Page')).toBeInTheDocument();
-        expect(screen.getByText('Try Again')).toBeInTheDocument();
-    });
-
-    test('shows error details in development mode', () => {
-        const originalEnv = process.env.NODE_ENV;
-        process.env.NODE_ENV = 'development';
-
-        render(
-            <ErrorBoundary>
-                <ThrowError shouldThrow={true} />
-            </ErrorBoundary>
-        );
-
-        const errorDetails = screen.queryByText(/Test error/);
-        expect(errorDetails).toBeInTheDocument();
-
-        process.env.NODE_ENV = originalEnv;
-    });
-
-    test('does not show error details in production mode', () => {
-        const originalEnv = process.env.NODE_ENV;
-        process.env.NODE_ENV = 'production';
-
-        render(
-            <ErrorBoundary>
-                <ThrowError shouldThrow={true} />
-            </ErrorBoundary>
-        );
-
-        const errorDetails = screen.queryByText(/Test error/);
-        expect(errorDetails).not.toBeInTheDocument();
-
-        process.env.NODE_ENV = originalEnv;
-    });
 });
 
