@@ -121,6 +121,11 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
         dispatch,
         fastForward: false,
         pause: state.pause,
+        tape: state.tape || [],
+        pointer: state.pointer || 0,
+        output: state.output || '',
+        register: state.register || 0,
+        index: state.index || 0,
     };
 
     return (
