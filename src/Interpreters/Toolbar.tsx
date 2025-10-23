@@ -196,12 +196,18 @@ export function handleToolbar(
         case 'reset':
             clear();
 
+            // For text editors, preserve the code and text, only reset execution state
+            const resetPayload = { ...state, ...start };
+
+            // Preserve text and code if they exist (for text editors)
+            if ('text' in state && 'code' in state) {
+                resetPayload.text = state.text;
+                resetPayload.code = state.code;
+            }
+
             newState = nextIter({
                 type: 'clear',
-                payload: {
-                    ...state,
-                    ...start,
-                },
+                payload: resetPayload,
             }) as ToolbarState;
             newState.pause = pauseStateMap.reset;
             break;
