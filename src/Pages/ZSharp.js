@@ -122,6 +122,8 @@ const ZSharp = () => {
                 const data = await loadRealZSharpData();
                 setChartData(data);
             } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error('Error loading ZSharp data in component:', error);
                 setChartData(generateFallbackData());
             } finally {
                 setLoading(false);

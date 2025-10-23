@@ -8,13 +8,28 @@ import {
 } from '../components/icons';
 import ResearchDemo from '../components/ResearchDemo';
 
-// Load real simulation matrix data
+/**
+ * Loads real simulation matrix data from compressed JSON file
+ * Includes comprehensive error handling and fallback mechanisms
+ *
+ * @returns {Promise<Array>} Matrix data or empty array on error
+ */
 const loadRealSimulationMatrix = async () => {
     try {
         const response = await fetch('/oligopoly_data.json.gz');
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(
+                `HTTP error! status: ${response.status} - Failed to load Oligopoly data`
+            );
         }
+
+        // Check if browser supports DecompressionStream
+        if (typeof DecompressionStream === 'undefined') {
+            throw new Error(
+                'DecompressionStream not supported in this browser'
+            );
+        }
+
         const compressedData = await response.arrayBuffer();
         const decompressedData = await new Response(
             new ReadableStream({
@@ -40,8 +55,16 @@ const loadRealSimulationMatrix = async () => {
             })
         ).text();
         const matrixData = JSON.parse(decompressedData);
+
+        // Validate data structure
+        if (!Array.isArray(matrixData)) {
+            throw new Error('Invalid data format: expected array');
+        }
+
         return matrixData;
     } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error loading Oligopoly data:', error);
         return [];
     }
 };
@@ -141,6 +164,11 @@ const Oligopoly = () => {
                 );
                 setMarketData(initialData);
             } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error(
+                    'Error loading Oligopoly data in component:',
+                    error
+                );
                 setMarketData(generateFallbackOligopolyData());
             } finally {
                 setLoading(false);
