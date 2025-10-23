@@ -15,7 +15,7 @@ import {
 interface GridEditorProps {
     name: string;
     start: Record<string, unknown>;
-    runner: (state: Record<string, unknown>) => Record<string, unknown>;
+    runner: (state: unknown) => unknown;
     tape?: boolean;
     output?: boolean;
     register?: boolean;
@@ -33,8 +33,8 @@ interface GridState {
 
 interface WrapperPayload {
     start: Record<string, unknown>;
-    resetState: (grid: string) => Record<string, unknown>;
-    nextIter: (action: { type: string; payload: unknown }) => Record<string, unknown>;
+    resetState: (grid: string) => unknown;
+    nextIter: (action: { type: string; payload: unknown }) => unknown;
     dispatch: (action: { type: string; payload?: unknown }) => void;
     create: (config: { repeat: () => void; speed: number }) => void;
     clear: () => void;
@@ -144,7 +144,7 @@ export default function GridEditor(props: GridEditorProps): React.ReactElement {
         cols,
     };
 
-    const [state, dispatch] = useReducer(handleAction, initial);
+    const [state, dispatch] = useReducer(handleAction as any, initial);
 
     const { resetState, handleClick, chooseColor, wrapDispatch } = useWrappers(
         state,
@@ -202,11 +202,11 @@ export default function GridEditor(props: GridEditorProps): React.ReactElement {
 
     return (
         <EditorContext.Provider value={context as any}>
-            <Editor hide={hide} container={container}>
+            <Editor hide={hide} container={container as any}>
                 <GridArea
                     rows={rows}
                     cols={cols}
-                    options={state.grid}
+                    options={state.grid.split('')}
                     handleClick={handleClick}
                     chooseColor={chooseColor}
                 />
