@@ -1,4 +1,5 @@
 import React, { useContext, memo } from 'react';
+import React, { useContext, memo } from 'react';
 import { Box, Typography, Chip, IconButton } from '../components/mui';
 import { EditorContext, Text } from './Editor';
 import { COLORS, TYPOGRAPHY } from '../config/theme';
