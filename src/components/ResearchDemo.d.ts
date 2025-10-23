@@ -12,7 +12,11 @@ export interface ChartConfig {
         dataKey: string;
         name: string;
         color: string;
+        yAxisId?: string;
     }>;
+    dualYAxis?: boolean;
+    rightYAxisFormatter?: (value: number) => string;
+    rightYAxisDomain?: string[];
 }
 
 export interface ViewType {
@@ -29,16 +33,22 @@ export interface ResearchDemoProps {
     subtitle: string;
     githubUrl: string;
     chartData?: any[];
+    chartConfig?: ChartConfig;
     viewTypes?: ViewType[];
     currentViewType?: string;
     onViewTypeChange?: (value: string) => void;
+    controls?: any[];
     loading?: boolean;
     loadingMessage?: string;
+    onReset?: () => void;
+    resetLabel?: string;
+    chartTitle?: string | null;
 }
 
 declare const ResearchDemo: React.FC<ResearchDemoProps>;
 
 export default ResearchDemo;
 export { ViewType };
+
 
 
