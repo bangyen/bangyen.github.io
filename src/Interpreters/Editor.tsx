@@ -43,7 +43,7 @@ interface EditorProps {
 
 export default function Editor({
     container,
-    sideProps,
+    sideProps = {},
     hide = false,
     children,
 }: EditorProps) {
@@ -57,7 +57,7 @@ export default function Editor({
     const rightProps = { xs: 6, md: 4 };
     let display: string, leftProps: number | { xs: number; md: number };
 
-    if (hide || sideProps === undefined) {
+    if (hide) {
         display = 'none';
         leftProps = 12;
     } else {
@@ -115,11 +115,9 @@ export default function Editor({
             </Grid>
             <Grid {...contentProps}>
                 <Grid size={leftProps}>{children}</Grid>
-                {sideProps && (
-                    <Grid display={display} size={rightProps}>
-                        <TextArea {...sideProps} />
-                    </Grid>
-                )}
+                <Grid display={display} size={rightProps}>
+                    <TextArea {...sideProps} />
+                </Grid>
             </Grid>
             <Grid
                 container
@@ -382,7 +380,7 @@ export function TextArea({
 }
 
 interface TextProps {
-    text: string;
+    text: string | number;
     sx?: SxProps<Theme>;
     [key: string]: unknown;
 }
