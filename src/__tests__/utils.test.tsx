@@ -11,7 +11,7 @@ import {
 } from '../utils';
 
 // Mock component for testing
-const MockComponent = () => (
+const MockComponent: React.FC = () => (
     <div data-testid="mock-component">Test Component</div>
 );
 
@@ -260,7 +260,7 @@ describe('Test Utilities', () => {
         });
 
         test('renderWithProviders works with mock data', () => {
-            const TestComponent = () => (
+            const TestComponent: React.FC = () => (
                 <div data-testid="data-test">
                     {mockData.zsharp.train_accuracies.length} accuracy points
                 </div>
@@ -301,7 +301,7 @@ describe('Test Utilities', () => {
         });
 
         test('handles null overrides in generateUserData', () => {
-            const user = testDataGenerators.generateUserData(null);
+            const user = testDataGenerators.generateUserData(null as any);
 
             expect(user).toHaveProperty('id', 1);
             expect(user).toHaveProperty('name', 'Test User');
@@ -309,3 +309,4 @@ describe('Test Utilities', () => {
         });
     });
 });
+
