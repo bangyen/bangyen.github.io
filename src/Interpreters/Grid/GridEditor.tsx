@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useReducer, useCallback, useMemo } from 'react';
+import React, {
+    useRef,
+    useEffect,
+    useReducer,
+    useCallback,
+    useMemo,
+} from 'react';
 import Editor, { EditorContext, GridArea } from '../Editor';
 import { convertPixels } from '../../calculate';
 import { handleAction } from './eventHandlers';
@@ -40,7 +46,11 @@ interface WrapperPayload {
     clear: () => void;
 }
 
-function useWrappers(state: GridState, props: GridEditorProps, dispatch: (action: any) => void) {
+function useWrappers(
+    state: GridState,
+    props: GridEditorProps,
+    dispatch: (action: any) => void
+) {
     const { runner, start } = props;
     const { rows, cols } = state;
 
@@ -206,7 +216,7 @@ export default function GridEditor(props: GridEditorProps): React.ReactElement {
                 <GridArea
                     rows={rows}
                     cols={cols}
-                    options={state.grid.split('')}
+                    options={state.grid?.split('') || []}
                     handleClick={handleClick}
                     chooseColor={chooseColor}
                 />
@@ -214,4 +224,3 @@ export default function GridEditor(props: GridEditorProps): React.ReactElement {
         </EditorContext.Provider>
     );
 }
-

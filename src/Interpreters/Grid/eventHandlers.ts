@@ -1,5 +1,9 @@
 import { gridMove, getDirection } from '../../calculate';
-import { handleToolbar, type ToolbarState, type ToolbarAction } from '../Toolbar';
+import {
+    handleToolbar,
+    type ToolbarState,
+    type ToolbarAction,
+} from '../Toolbar';
 
 interface GridState {
     grid: string;
@@ -20,7 +24,10 @@ interface ResizePayload {
     cols?: number;
 }
 
-function handleKeys(state: GridState, payload: KeysPayload): Partial<GridState> {
+function handleKeys(
+    state: GridState,
+    payload: KeysPayload
+): Partial<GridState> {
     let { grid, select } = state;
     let value: string;
 
@@ -53,7 +60,10 @@ function handleKeys(state: GridState, payload: KeysPayload): Partial<GridState> 
     return { grid, pause: true };
 }
 
-function handleResize(state: GridState, payload: ResizePayload): Partial<GridState> {
+function handleResize(
+    state: GridState,
+    payload: ResizePayload
+): Partial<GridState> {
     const { resetState, ...rest } = payload;
     let { grid } = state;
     const { rows, cols } = state;
@@ -102,21 +112,37 @@ function handleResize(state: GridState, payload: ResizePayload): Partial<GridSta
     return { grid };
 }
 
-export function handleAction(state: GridState, action: { type: string; payload: unknown }) {
+export function handleAction(
+    state: GridState,
+    action: { type: string; payload: unknown }
+) {
     const { type, payload } = action;
+    let newState = {};
 
     switch (type) {
-        case 'keys':
-            return handleKeys(state, payload as KeysPayload);
+        case 'edit':
+            newState = handleKeys(state, payload as KeysPayload);
+            break;
         case 'resize':
-            return handleResize(state, payload as ResizePayload);
-        case 'toolbar':
-            return handleToolbar(state as unknown as ToolbarState, action as ToolbarAction);
+            newState = handleResize(state, payload as ResizePayload);
+            break;
+        case 'click':
+            const { select } = payload as { select: number };
+            newState = select === state.select ? { select: null } : { select };
+            break;
         default:
-            return {};
+            newState = handleToolbar(
+                state as unknown as ToolbarState,
+                action as ToolbarAction
+            );
+            break;
     }
+
+    return {
+        ...state,
+        ...newState,
+    };
 }
 
 // Export both for compatibility
 export { handleAction as handleGrid };
-
