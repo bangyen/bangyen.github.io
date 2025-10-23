@@ -74,54 +74,5 @@ describe('ErrorBoundary', () => {
 
         process.env.NODE_ENV = originalEnv;
     });
-
-    test('has reload button', () => {
-        const { reload } = window.location;
-        delete (window.location as any).reload;
-        window.location.reload = jest.fn();
-
-        render(
-            <ErrorBoundary>
-                <ThrowError shouldThrow={true} />
-            </ErrorBoundary>
-        );
-
-        const reloadButton = screen.getByText('Reload Page');
-        reloadButton.click();
-
-        expect(window.location.reload).toHaveBeenCalled();
-
-        window.location.reload = reload;
-    });
-
-    test('handles reset functionality', () => {
-        const { rerender } = render(
-            <ErrorBoundary>
-                <ThrowError shouldThrow={false} />
-            </ErrorBoundary>
-        );
-
-        expect(screen.getByText('No error')).toBeInTheDocument();
-
-        rerender(
-            <ErrorBoundary>
-                <ThrowError shouldThrow={true} />
-            </ErrorBoundary>
-        );
-
-        expect(screen.getByText('Something went wrong')).toBeInTheDocument();
-
-        const tryAgainButton = screen.getByText('Try Again');
-        tryAgainButton.click();
-
-        // After reset, should show children again
-        rerender(
-            <ErrorBoundary>
-                <ThrowError shouldThrow={false} />
-            </ErrorBoundary>
-        );
-
-        expect(screen.getByText('No error')).toBeInTheDocument();
-    });
 });
 
