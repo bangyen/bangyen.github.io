@@ -112,15 +112,28 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
         [clean, nextIter, clear, create, dispatch]
     );
 
+    const context = {
+        name,
+        tapeFlag: tape,
+        outFlag: output,
+        regFlag: false,
+        code: state.code,
+        dispatch,
+        fastForward: false,
+        pause: state.pause,
+    };
+
     return (
-        <Editor container={container}>
-            <TextArea
-                value={state.text}
-                handleChange={handleChange}
-            />
-            {tape && <Tape tape={state.tape as number[]} />}
-            {output && <Output output={state.output as string} />}
-        </Editor>
+        <EditorContext.Provider value={context}>
+            <Editor container={container}>
+                <TextArea
+                    value={state.text}
+                    handleChange={handleChange}
+                />
+                {tape && <Tape tape={state.tape as number[]} />}
+                {output && <Output output={state.output as string} />}
+            </Editor>
+        </EditorContext.Provider>
     );
 }
 
