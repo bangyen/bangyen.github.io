@@ -12,7 +12,7 @@ import {
     PERCENTAGE,
 } from '../config/constants';
 import { COLORS } from '../config/theme';
-import ResearchDemo, { ViewType } from '../components/ResearchDemo';
+import ResearchDemo from '../components/ResearchDemo';
 
 interface DataPoint {
     epoch: number;
@@ -37,6 +37,27 @@ interface RealData {
     'ZSharp'?: {
         train_accuracies?: number[];
         train_losses?: number[];
+    };
+}
+
+interface ViewType {
+    key: string;
+    label: string;
+    icon: React.ElementType;
+    chartTitle: string;
+    dataProcessor: (data: DataPoint[]) => ProcessedDataPoint[];
+    chartConfig: {
+        type: string;
+        xAxisKey: string;
+        yAxisFormatter: (value: number) => string;
+        yAxisDomain: string[];
+        tooltipLabelFormatter: (value: number) => string;
+        tooltipFormatter: (value: number, name: string) => [string, string];
+        lines: Array<{
+            dataKey: string;
+            name: string;
+            color: string;
+        }>;
     };
 }
 
