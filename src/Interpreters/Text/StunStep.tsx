@@ -1,6 +1,23 @@
 import TextEditor from './TextEditor';
+import React from 'react';
 
-function clean(input) {
+interface StunStepState {
+    pointer: number;
+    index: number;
+    tape: number[];
+    end: boolean;
+    code: string;
+}
+
+interface StunStepStart {
+    pointer: number;
+    index: number;
+    tape: number[];
+    end: boolean;
+    code: string;
+}
+
+function clean(input: string): string {
     let code = '';
 
     for (const char of input) if ('+-><'.includes(char)) code += char;
@@ -8,13 +25,14 @@ function clean(input) {
     return code;
 }
 
-function getState(state) {
+function getState(state: StunStepState): StunStepState {
     let { pointer, index, tape, end } = state;
     const { code } = state;
 
-    if (end)
+    if (end) {
         if (!tape[pointer]) return state;
         else end = false;
+    }
 
     if (index === code.length)
         return {
@@ -47,21 +65,15 @@ function getState(state) {
     };
 }
 
-export default function Editor() {
-    const start = {
+export default function Editor(): React.ReactElement {
+    const start: StunStepStart = {
         pointer: 0,
         index: 0,
-        tape: [1],
+        tape: [0],
         end: false,
+        code: '',
     };
 
-    return (
-        <TextEditor
-            name="Stun Step"
-            runner={getState}
-            clean={clean}
-            start={start}
-            tape
-        />
-    );
+    return <TextEditor name="Stun Step" start={start} runner={getState} clean={clean} tape />;
 }
+

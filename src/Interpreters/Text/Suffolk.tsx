@@ -1,6 +1,27 @@
 import TextEditor from './TextEditor';
+import React from 'react';
 
-function cleanInput(input) {
+interface SuffolkState {
+    register: number;
+    pointer: number;
+    output: string;
+    index: number;
+    tape: number[];
+    end: boolean;
+    code: string;
+}
+
+interface SuffolkStart {
+    register: number;
+    pointer: number;
+    output: string;
+    index: number;
+    tape: number[];
+    end: boolean;
+    code: string;
+}
+
+function cleanInput(input: string): string {
     let code = '';
 
     for (const char of input) if ('><!,.'.includes(char)) code += char;
@@ -8,7 +29,7 @@ function cleanInput(input) {
     return code;
 }
 
-function getState(state) {
+function getState(state: SuffolkState): SuffolkState {
     let { register, pointer, output, index, tape, end } = state;
     const { code } = state;
 
@@ -43,7 +64,7 @@ function getState(state) {
         case ',':
             const input = prompt('Input: ');
 
-            if (input.length) register = input.charCodeAt(0);
+            if (input && input.length) register = input.charCodeAt(0);
             else register = 0;
             break;
         case '.':
@@ -64,25 +85,17 @@ function getState(state) {
     };
 }
 
-export default function Editor() {
-    const start = {
+export default function Editor(): React.ReactElement {
+    const start: SuffolkStart = {
         register: 0,
         pointer: 0,
         output: '',
-        tape: [0],
         index: 0,
+        tape: [0],
         end: false,
+        code: '',
     };
 
-    return (
-        <TextEditor
-            name="Suffolk"
-            start={start}
-            runner={getState}
-            clean={cleanInput}
-            tape
-            output
-            register
-        />
-    );
+    return <TextEditor name="Suffolk" start={start} runner={getState} clean={cleanInput} tape output />;
 }
+
