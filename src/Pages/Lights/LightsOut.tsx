@@ -101,7 +101,7 @@ export default function LightsOut(): React.ReactElement {
             type: 'resize',
             newRows: rows,
             newCols: cols,
-        } as any);
+        });
     }, [rows, cols]);
 
     const getters = useHandler(state, palette);
@@ -131,7 +131,7 @@ export default function LightsOut(): React.ReactElement {
                 backProps={backProps}
             />
             <Controls
-                handler={() => () => {}} // No directional controls for Lights Out
+                handler={() => () => undefined} // No directional controls for Lights Out
                 onRandom={() => dispatch({ type: 'random' })}
                 size="inherit"
             >

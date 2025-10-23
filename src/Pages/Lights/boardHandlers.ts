@@ -43,6 +43,8 @@ interface BoardAction {
     type: string;
     row?: number;
     col?: number;
+    newRows?: number;
+    newCols?: number;
 }
 
 export function handleBoard(state: BoardState, action: BoardAction): BoardState {
@@ -65,8 +67,19 @@ export function handleBoard(state: BoardState, action: BoardAction): BoardState 
                 }
             }
             break;
+        case 'random':
+            grid = randomize(rows, cols);
+            break;
         case 'randomize':
             grid = randomize(rows, cols);
+            break;
+        case 'resize':
+            const { newRows, newCols } = action;
+            if (newRows !== undefined && newCols !== undefined) {
+                rows = newRows;
+                cols = newCols;
+                grid = randomize(rows, cols);
+            }
             break;
         case 'reset':
             grid = getGrid(rows, cols);

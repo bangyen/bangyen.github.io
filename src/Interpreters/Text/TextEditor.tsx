@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, useReducer } from 'react';
+import React, { useEffect, useCallback, useReducer } from 'react';
 import Editor, { EditorContext, TextArea } from '../Editor';
 import { useTimer, useCache, useContainer } from '../../hooks';
 import { handleToolbar, type ToolbarState, type ToolbarAction } from '../Toolbar';
@@ -11,6 +11,7 @@ interface TextEditorProps {
     clean: (text: string) => string;
     tape?: boolean;
     output?: boolean;
+    register?: boolean;
 }
 
 interface TextState extends ToolbarState {
@@ -25,6 +26,7 @@ interface TextActionPayload {
     clear: () => void;
     create: (config: { repeat: () => void; speed: number }) => void;
     dispatch: (action: { type: string; payload: TextActionPayload }) => void;
+    start?: Record<string, unknown>;
     newText?: string;
     clean?: (text: string) => string;
 }
@@ -76,7 +78,7 @@ function handleAction(state: TextState, action: { type: string; payload: TextAct
     } as TextState;
 }
 
-export default function TextEditor({ name, start, runner, clean, tape, output }: TextEditorProps): React.ReactElement {
+export default function TextEditor({ name, start, runner, clean, tape, output, register }: TextEditorProps): React.ReactElement {
     const containerRef = React.createRef<HTMLDivElement>();
     const container = useContainer(containerRef);
     const [state, dispatch] = useReducer(handleAction, {
@@ -88,12 +90,9 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
 
     const { create, clear } = useTimer(200);
     const nextIter = useCache(runner as (state: unknown) => unknown);
-    const textRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
-        const titleKey = name.toLowerCase().replace(' ', '_');
-        const title = (PAGE_TITLES as unknown as Record<string, string>)[titleKey];
-        document.title = title || PAGE_TITLES.interpreters;
+        document.title = PAGE_TITLES.interpreter(name);
     }, [name]);
 
     const handleChange = useCallback(
@@ -120,76 +119,72 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
         [handleChange]
     );
 
-    const toolbarDispatch = useCallback(
-        (action: string | { type: string; payload: unknown }) => {
-            if (typeof action === 'string') {
-                // Handle string action - return a function for backward compatibility
+    const wrapDispatch = useCallback(
+        (type: string | { type: string; payload: unknown }) => {
+            if (typeof type === 'string') {
                 return () => {
                     dispatch({
-                        type: action,
+                        type,
                         payload: {
+                            start,
                             nextIter: nextIter as unknown as (action: { type: string; payload: unknown }) => Record<string, unknown>,
-                            clear,
+                            dispatch,
                             create,
-                            dispatch: dispatch as unknown as (action: { type: string; payload: TextActionPayload }) => void,
+                            clear,
                         },
                     });
                 };
             } else {
-                // Handle object action - return void
                 dispatch({
-                    type: action.type,
+                    type: type.type,
                     payload: {
-                        ...(action.payload as TextActionPayload),
+                        ...(type.payload as TextActionPayload),
+                        start,
                         nextIter: nextIter as unknown as (action: { type: string; payload: unknown }) => Record<string, unknown>,
-                        clear,
-                        create,
                         dispatch,
+                        create,
+                        clear,
                     },
                 });
                 return;
             }
         },
-        [nextIter, clear, create, dispatch]
+        [start, nextIter, create, clear, dispatch]
     );
 
     const context = {
         name,
         tapeFlag: tape || false,
         outFlag: output || false,
-        regFlag: false,
+        regFlag: register || false,
         code: state.code ? [state.code] : undefined,
-        dispatch: toolbarDispatch,
-        fastForward: false,
-        pause: state.pause || false,
+        index: (state.index as number) || 0,
         tape: state.tape || [],
         pointer: (state.pointer as number) || 0,
         output: state.output || '',
         register: (state.register as number) || 0,
-        index: (state.index as number) || 0,
         height: container.height,
         size: 0,
+        dispatch: wrapDispatch,
+        fastForward: true,
+        pause: state.pause || false,
+    };
+
+    const sideProps = {
+        readOnly: true,
+        infoLabel: 'RISC-V Equivalent',
+        fillValue: 'addi x0, x0, 0',
+        value: '',
     };
 
     return (
         <EditorContext.Provider value={context}>
-            <Editor container={containerRef as React.RefObject<HTMLDivElement>}>
+            <Editor hide container={containerRef as React.RefObject<HTMLDivElement>} sideProps={sideProps}>
                 <TextArea
                     value={state.text}
                     handleChange={handleChangeWrapper}
                 />
-                {tape && <Tape tape={state.tape as number[]} />}
-                {output && <Output output={state.output as string} />}
             </Editor>
         </EditorContext.Provider>
     );
 }
-
-function Tape({ tape }: { tape: number[] }): React.ReactElement {
-    return <div>{tape ? tape.join(', ') : '[]'}</div>;
-}
-
-function Output({ output }: { output: string }): React.ReactElement {
-    return <div>{output || 'Empty'}</div>;
-}
-

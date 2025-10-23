@@ -255,6 +255,12 @@ function MenuButton(): React.ReactElement {
                 open={open}
                 anchorEl={anchor}
                 disableAutoFocusItem={true}
+                BackdropProps={{
+                    sx: {
+                        backgroundColor: 'transparent',
+                        backdropFilter: 'none',
+                    }
+                }}
                 sx={{
                     marginLeft: 1,
                     marginTop: 1,
@@ -621,6 +627,11 @@ export default function Home(): React.ReactElement {
                                             endIcon={<ArrowForward />}
                                             sx={{
                                                 textDecoration: 'none',
+                                                color: COLORS.text.secondary,
+                                                '&:hover': {
+                                                    color: COLORS.text.primary,
+                                                    backgroundColor: 'transparent',
+                                                },
                                             }}
                                         >
                                             Available for Projects

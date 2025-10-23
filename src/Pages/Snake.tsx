@@ -147,7 +147,7 @@ function handleAction(state: SnakeState, action: Action): SnakeState {
 }
 
 export default function Snake(): React.ReactElement {
-    const { create: createTimer } = useTimer(100);
+    const { create: createTimer } = useTimer(0);
     const { create: createKeys } = useKeys();
 
     const { height, width } = useWindow();
@@ -241,7 +241,7 @@ export default function Snake(): React.ReactElement {
                 payload: event,
             });
 
-        createTimer({ repeat: wrapDispatch });
+        createTimer({ repeat: wrapDispatch, speed: 100 });
         createKeys(wrapDirection);
     }, [createTimer, createKeys]);
 

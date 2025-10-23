@@ -4,7 +4,7 @@ import { CustomGrid } from '../helpers';
 import { Grid, Typography, TextField } from '../components/mui';
 import { Toolbar } from './Toolbar';
 import { COLORS, SPACING, TYPOGRAPHY } from '../config/theme';
-import { SxProps, Theme } from '@mui/material/styles';
+import { SxProps, Theme } from '@mui/material';
 
 interface EditorContextType {
     name: string;
@@ -44,7 +44,7 @@ export default function Editor({ container, sideProps, hide = false, children }:
     const rightProps = { xs: 6, md: 4 };
     let display: string, leftProps: number | { xs: number; md: number };
 
-    if (hide) {
+    if (hide || sideProps === undefined) {
         display = 'none';
         leftProps = 12;
     } else {
@@ -100,9 +100,11 @@ export default function Editor({ container, sideProps, hide = false, children }:
             </Grid>
             <Grid {...contentProps}>
                 <Grid size={leftProps}>{children}</Grid>
-                <Grid display={display} size={rightProps}>
-                    <TextArea {...sideProps} />
-                </Grid>
+                {sideProps && (
+                    <Grid display={display} size={rightProps}>
+                        <TextArea {...sideProps} />
+                    </Grid>
+                )}
             </Grid>
             <Grid
                 container

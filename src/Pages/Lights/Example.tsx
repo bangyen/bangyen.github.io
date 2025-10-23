@@ -28,7 +28,7 @@ function getFrames(states: unknown[], palette: Palette): Record<string, Frame> {
         const state = newStates[k];
         const next = newStates[k + 1];
 
-        const value = state !== -1 ? state : next;
+        const value = (state as number) + 1 ? state : next;
         const color = value ? palette.primary : palette.secondary;
 
         const percent = (100 * k) / length;
@@ -50,7 +50,7 @@ function propHandler(
 ) {
     return (row: number, col: number): Record<string, unknown> => {
         const state = getter(states, row, col);
-        const frames = getFrames(state, palette);
+        const frames = getFrames(state as unknown[], palette);
         const length = states.length;
 
         const name = `${id}-${row}-${col}`;
@@ -68,7 +68,7 @@ function propHandler(
             animation,
         };
 
-        return style;
+        return { sx: style };
     };
 }
 
@@ -84,55 +84,108 @@ interface ExampleProps {
     start?: unknown[];
 }
 
-export default function Example({
-    states = [],
-    getter = (states: unknown[], row: number, col: number) => [],
-    palette,
-    id = 'default',
-    rows = 3,
-    cols = 3,
-    size,
-}: ExampleProps): React.ReactElement {
-    const mobile = useMobile('md');
+function getRange(dims: number): number[] {
+    const keys = Array(dims).keys();
+    return [...keys];
+}
 
-    const height = mobile ? 200 : 300;
-    const width = mobile ? 200 : 300;
+function gridTiles(states: number[][][], dims: number): number[][][] {
+    const length = states.length;
+    const dRange = getRange(dims);
+    const lRange = getRange(length);
+    
+    return dRange.map(r => dRange.map(c => lRange.map(k => states[k][r][c])));
+}
 
-    const cellProps = propHandler(states, getter, palette, id);
+function rowTiles(states: number[][], dims: number): number[][] {
+    const length = states.length;
+    const dRange = getRange(dims);
+    const lRange = getRange(length);
+    
+    return dRange.map(r => lRange.map(k => states[k][r]));
+}
 
+function Bifold({ children }: { children: React.ReactNode }) {
+    return <Grid size={6}>{children}</Grid>;
+}
+
+function Title({ children }: { children: React.ReactNode }) {
     return (
-        <Grid
-            container
-            spacing={2}
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-            }}
-        >
+        <Bifold>
             <Typography
-                variant="caption"
+                variant="h6"
                 sx={{
-                    fontSize: TYPOGRAPHY.fontSize.caption,
-                    color: 'text.secondary',
-                    marginBottom: 1,
+                    textAlign: 'center',
+                    fontWeight: 'semibold',
+                    fontSize: TYPOGRAPHY.fontSize.body,
+                    lineHeight: '1.2',
+                    letterSpacing: '-0.025em',
                 }}
             >
-                Example Animation
+                {children}
             </Typography>
-            <Grid
-                sx={{
-                    width: `${width}px`,
-                    height: `${height}px`,
-                    position: 'relative',
-                }}
-            >
-                <CustomGrid
-                    cellProps={cellProps}
-                    size={size}
-                    rows={rows}
-                    cols={cols}
-                />
+        </Bifold>
+    );
+}
+
+export default function Example({
+    start = [],
+    dims = 3,
+    size,
+    palette,
+}: ExampleProps): React.ReactElement {
+    const mobile = useMobile('lg');
+    const states = getStates(start as number[], dims);
+    const width = mobile ? size / 2 : size;
+    
+    const { boardStates, inputStates, outputStates } = states;
+    
+    const boardTiles = gridTiles(boardStates, dims);
+    const inputTiles = rowTiles(inputStates, dims);
+    const outputTiles = rowTiles(outputStates, dims);
+    
+    const getGrid = (s: unknown[], r: number, c: number) => {
+        const states = s as number[][][];
+        return states.map(state => state[r][c]);
+    };
+    const getRow = (s: unknown[], r: number, c: number) => {
+        const states = s as number[][];
+        return states.map(state => state[c]);
+    };
+    
+    const getBoard = propHandler(boardTiles as unknown[], getGrid, palette, 'board');
+    const getInput = propHandler(inputTiles as unknown[], getRow, palette, 'input');
+    const getOutput = propHandler(outputTiles as unknown[], getRow, palette, 'output');
+    
+    return (
+        <Grid container size={12} spacing={4}>
+            <Grid container size={12}>
+                <Bifold>
+                    <CustomGrid
+                        size={width}
+                        rows={dims}
+                        cols={dims}
+                        cellProps={getBoard}
+                    />
+                </Bifold>
+                <Grid container size={6}>
+                    <CustomGrid
+                        rows={1}
+                        cols={dims}
+                        size={width}
+                        cellProps={getInput}
+                    />
+                    <CustomGrid
+                        rows={1}
+                        cols={dims}
+                        size={width}
+                        cellProps={getOutput}
+                    />
+                </Grid>
+            </Grid>
+            <Grid container size={12}>
+                <Title>Animation Demo</Title>
+                <Title>Pattern Input</Title>
             </Grid>
         </Grid>
     );

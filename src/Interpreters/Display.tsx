@@ -179,7 +179,7 @@ function Display({ Icon, title, data, pointer, children }: DisplayProps) {
                 color={color}
                 text={String(val)}
                 sx={{
-                    fontSize: TYPOGRAPHY.fontSize.body,
+                    fontSize: '1.25rem',
                     fontWeight: TYPOGRAPHY.fontWeight.semibold,
                     fontFamily: 'monospace',
                 }}
@@ -203,7 +203,7 @@ function Display({ Icon, title, data, pointer, children }: DisplayProps) {
                     sx={{
                         color: COLORS.primary.main,
                         fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                        fontSize: TYPOGRAPHY.fontSize.body,
+                        fontSize: '1.125rem',
                     }}
                 >
                     {title}
@@ -235,8 +235,8 @@ function CompactDisplay({ Icon, title, data, pointer }: CompactDisplayProps) {
                             ? COLORS.text.primary
                             : COLORS.text.primary,
                     fontFamily: 'monospace',
-                    fontSize: TYPOGRAPHY.fontSize.caption,
-                    height: '32px',
+                    fontSize: '1rem',
+                    height: '36px',
                     border: `1px solid ${COLORS.border.subtle}`,
                     backdropFilter: 'blur(24px) saturate(180%)',
                 }}
