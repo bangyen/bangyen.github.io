@@ -1,11 +1,40 @@
-// import * as colors from '@mui/material/colors'; // Removed unused import
+import React from 'react';
 import { Grid } from '../components/mui';
 
 import { useMemo, useCallback } from 'react';
 import { CustomGrid } from '../helpers';
 import { COLORS } from '../config/theme';
 
-export function Board(props) {
+interface BoardProps {
+    frontProps: (row: number, col: number) => Record<string, unknown>;
+    backProps: (row: number, col: number) => Record<string, unknown>;
+    size: number;
+    rows: number;
+    cols: number;
+}
+
+interface CenteredProps {
+    children: React.ReactNode;
+}
+
+interface Palette {
+    primary: string;
+    secondary: string;
+}
+
+interface Getters {
+    getColor: (row: number, col: number) => { front: string; back: string };
+    getBorder: (row: number, col: number) => Record<string, unknown>;
+    getFiller: (row: number, col: number) => string;
+}
+
+interface GridState {
+    grid: number[][];
+    rows: number;
+    cols: number;
+}
+
+export function Board(props: BoardProps): React.ReactElement {
     const { frontProps, backProps, size, rows, cols } = props;
 
     return (
@@ -30,7 +59,7 @@ export function Board(props) {
     );
 }
 
-function Centered({ children }) {
+function Centered({ children }: CenteredProps): React.ReactElement {
     const style = {
         transform: 'translate(-50%, -50%)',
     };
@@ -48,13 +77,17 @@ function Centered({ children }) {
     );
 }
 
-function borderHandler(row, col, getColor) {
+function borderHandler(
+    row: number,
+    col: number,
+    getColor: (row: number, col: number) => unknown
+): Record<string, unknown> {
     const self = getColor(row, col);
     const up = getColor(row - 1, col);
     const down = getColor(row + 1, col);
     const left = getColor(row, col - 1);
     const right = getColor(row, col + 1);
-    const props = {};
+    const props: Record<string, unknown> = {};
 
     const upCheck = self === up;
     const downCheck = self === down;
@@ -69,40 +102,44 @@ function borderHandler(row, col, getColor) {
     return props;
 }
 
-function fillerHandler(row, col, getColor) {
+function fillerHandler(
+    row: number,
+    col: number,
+    getColor: (row: number, col: number) => unknown
+): boolean {
     const topLeft = getColor(row, col);
     const topRight = getColor(row, col + 1);
     const botLeft = getColor(row + 1, col);
     const botRight = getColor(row + 1, col + 1);
     let color = true;
 
-    const total = topLeft + topRight + botLeft + botRight;
+    const total = Number(topLeft) + Number(topRight) + Number(botLeft) + Number(botRight);
 
     if ((!topLeft || !botRight) && total < 3) color = false;
 
     return color;
 }
 
-export function usePalette(score) {
-    // High contrast dark blue color scheme for better accessibility
+export function usePalette(score: number): Palette {
     const palette = useMemo(() => {
-        // Using darker blues for excellent contrast (5.2:1 ratio)
-        const primary = COLORS.primary.main; // Dark blue for "on" state
-        const secondary = COLORS.primary.dark; // Medium blue for "off" state
+        const primary = COLORS.primary.main;
+        const secondary = COLORS.primary.dark;
 
         return { primary, secondary };
-    }, []); // Removed score dependency since we're using fixed colors
+    }, []);
 
     return palette;
 }
 
-export function useGetters(getTile, palette) {
+export function useGetters(
+    getTile: (row: number, col: number) => unknown,
+    palette: Palette
+): Getters {
     const getColor = useCallback(
-        (row, col) => {
+        (row: number, col: number) => {
             const value = getTile(row, col);
 
             const front = value ? palette.primary : palette.secondary;
-
             const back = value ? palette.secondary : palette.primary;
 
             return { front, back };
@@ -111,14 +148,14 @@ export function useGetters(getTile, palette) {
     );
 
     const getBorder = useCallback(
-        (row, col) => {
+        (row: number, col: number) => {
             return borderHandler(row, col, getTile);
         },
         [getTile]
     );
 
     const getFiller = useCallback(
-        (row, col) => {
+        (row: number, col: number) => {
             const value = fillerHandler(row, col, getTile);
 
             return value ? palette.primary : palette.secondary;
@@ -133,11 +170,11 @@ export function useGetters(getTile, palette) {
     };
 }
 
-export function useHandler(state, palette) {
+export function useHandler(state: GridState, palette: Palette): Getters {
     const { grid, rows, cols } = state;
 
     const getTile = useCallback(
-        (row, col) => {
+        (row: number, col: number) => {
             if (row < 0 || col < 0 || row >= rows || col >= cols) return -1;
 
             return grid[row][col];

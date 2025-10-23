@@ -7,7 +7,7 @@ import '@testing-library/jest-dom';
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: jest.fn().mockImplementation(query => ({
+    value: jest.fn().mockImplementation((query: string) => ({
         matches: false,
         media: query,
         onchange: null,
@@ -35,15 +35,16 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 
 // Mock TextEncoder for Node.js environment
 global.TextEncoder = class TextEncoder {
-    encode(str) {
+    encode(str: string): Uint8Array {
         return new Uint8Array(str.split('').map(c => c.charCodeAt(0)));
     }
 };
 
 global.TextDecoder = class TextDecoder {
-    decode(bytes) {
+    decode(bytes: Uint8Array): string {
         return String.fromCharCode(...bytes);
     }
 };
 
 // All warnings have been fixed at the root cause - no suppressions needed!
+

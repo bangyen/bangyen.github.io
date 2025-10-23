@@ -16,12 +16,20 @@ import {
 } from '../config/theme';
 import { GlassCard } from '../helpers';
 
-export default function Interpreters() {
+interface Interpreter {
+    name: string;
+    path: string;
+    description: string;
+    icon: React.ReactElement;
+    category: string;
+}
+
+export default function Interpreters(): React.ReactElement {
     useEffect(() => {
         document.title = PAGE_TITLES.interpreters;
     }, []);
 
-    const interpreters = [
+    const interpreters: Interpreter[] = [
         {
             name: 'Stun Step',
             path: '/Stun_Step',
@@ -244,3 +252,4 @@ export default function Interpreters() {
         </Grid>
     );
 }
+
