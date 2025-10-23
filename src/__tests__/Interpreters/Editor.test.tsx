@@ -40,6 +40,13 @@ const EditorProvider = ({ children }: { children: React.ReactNode }) => (
 describe('Editor Components', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+
+        // Mock ResizeObserver
+        global.ResizeObserver = class ResizeObserver {
+            observe = jest.fn();
+            unobserve = jest.fn();
+            disconnect = jest.fn();
+        };
     });
 
     describe('Editor', () => {
