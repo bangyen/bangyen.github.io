@@ -9,3 +9,4 @@ export { default as Oligopoly } from './Oligopoly';
 export { default as Interpreters } from './Interpreters';
 
 export const pages = ROUTES.pages;
+
