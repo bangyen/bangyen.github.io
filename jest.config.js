@@ -28,4 +28,7 @@ module.exports = {
     transformIgnorePatterns: [
         'node_modules/(?!(.*\\.mjs$))',
     ],
+    testEnvironmentOptions: {
+        url: 'http://localhost',
+    },
 };
