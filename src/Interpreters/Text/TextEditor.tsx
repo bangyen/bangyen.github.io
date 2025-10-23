@@ -123,16 +123,18 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
     const toolbarDispatch = useCallback(
         (action: string | { type: string; payload: unknown }) => {
             if (typeof action === 'string') {
-                // Handle string action
-                dispatch({
-                    type: action,
-                    payload: {
-                        nextIter: nextIter as unknown as (action: { type: string; payload: unknown }) => Record<string, unknown>,
-                        clear,
-                        create,
-                        dispatch: dispatch as unknown as (action: { type: string; payload: TextActionPayload }) => void,
-                    },
-                });
+                // Handle string action - return a function for backward compatibility
+                return () => {
+                    dispatch({
+                        type: action,
+                        payload: {
+                            nextIter: nextIter as unknown as (action: { type: string; payload: unknown }) => Record<string, unknown>,
+                            clear,
+                            create,
+                            dispatch: dispatch as unknown as (action: { type: string; payload: TextActionPayload }) => void,
+                        },
+                    });
+                };
             } else {
                 // Handle object action
                 dispatch({
