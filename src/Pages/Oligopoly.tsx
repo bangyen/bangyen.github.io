@@ -8,13 +8,40 @@ import {
 } from '../components/icons';
 import ResearchDemo from '../components/ResearchDemo';
 
-/**
- * Loads real simulation matrix data from compressed JSON file
- * Includes comprehensive error handling and fallback mechanisms
- *
- * @returns {Promise<Array>} Matrix data or empty array on error
- */
-const loadRealSimulationMatrix = async () => {
+interface MatrixItem {
+    round: number;
+    price: number;
+    hhi: number;
+    collusion?: boolean;
+    num_firms?: number;
+    model_type?: string;
+    demand_elasticity?: number;
+    base_price?: number;
+    collusion_enabled?: boolean;
+}
+
+interface MarketDataPoint {
+    round: number;
+    price: number;
+    hhi: number;
+    collusion?: boolean;
+}
+
+interface ControlOption {
+    value: number;
+    label: string;
+}
+
+interface Control {
+    label: string;
+    icon: React.ElementType;
+    color: string;
+    value: number;
+    onChange: (value: number) => void;
+    options: ControlOption[];
+}
+
+const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
     try {
         const response = await fetch('/oligopoly_data.json.gz');
         if (!response.ok) {
@@ -23,7 +50,6 @@ const loadRealSimulationMatrix = async () => {
             );
         }
 
-        // Check if browser supports DecompressionStream
         if (typeof DecompressionStream === 'undefined') {
             throw new Error(
                 'DecompressionStream not supported in this browser'
@@ -40,8 +66,8 @@ const loadRealSimulationMatrix = async () => {
 
                     writer.write(compressedData).then(() => writer.close());
 
-                    function pump() {
-                        return reader.read().then(({ done, value }) => {
+                    function pump(): Promise<void> {
+                        return reader.read().then(({ done, value }: { done: boolean; value: Uint8Array | undefined }) => {
                             if (done) {
                                 controller.close();
                                 return;
@@ -54,35 +80,31 @@ const loadRealSimulationMatrix = async () => {
                 },
             })
         ).text();
-        const matrixData = JSON.parse(decompressedData);
+        const matrixData: MatrixItem[] = JSON.parse(decompressedData);
 
-        // Validate data structure
         if (!Array.isArray(matrixData)) {
             throw new Error('Invalid data format: expected array');
         }
 
         return matrixData;
     } catch (error) {
-        // eslint-disable-next-line no-console
         console.error('Error loading Oligopoly data:', error);
         return [];
     }
 };
 
-// Filter matrix data based on current parameters
 const filterMatrixData = (
-    matrixData,
-    numFirms,
-    modelType,
-    demandElasticity,
-    basePrice,
-    collusionEnabled
-) => {
+    matrixData: MatrixItem[],
+    numFirms: number,
+    modelType: string,
+    demandElasticity: number,
+    basePrice: number,
+    collusionEnabled: boolean
+): MarketDataPoint[] => {
     if (!matrixData || matrixData.length === 0) {
         return generateFallbackOligopolyData();
     }
 
-    // Find exact matching parameters
     const filtered = matrixData.filter(
         item =>
             item.num_firms === numFirms &&
@@ -93,23 +115,19 @@ const filterMatrixData = (
     );
 
     if (filtered.length === 0) {
-        // Fallback to closest match by num_firms and model_type
         const closest = matrixData.filter(
             item => item.num_firms === numFirms && item.model_type === modelType
         );
-        // Sort by round to ensure proper order
         const sorted = closest.sort((a, b) => a.round - b.round);
         return sorted.slice(0, GAME_CONSTANTS.oligopoly.maxRounds);
     }
 
-    // Sort by round to ensure proper order
     const sorted = filtered.sort((a, b) => a.round - b.round);
     return sorted.slice(0, 15);
 };
 
-// Fallback data generation if real data fails to load
-const generateFallbackOligopolyData = () => {
-    const data = [];
+const generateFallbackOligopolyData = (): MarketDataPoint[] => {
+    const data: MarketDataPoint[] = [];
     for (let i = 1; i <= GAME_CONSTANTS.oligopoly.maxRounds; i++) {
         const sim = GAME_CONSTANTS.oligopoly.simulation;
         data.push({
@@ -126,7 +144,7 @@ const generateFallbackOligopolyData = () => {
     return data;
 };
 
-const Oligopoly = () => {
+const Oligopoly: React.FC = () => {
     const [numFirms, setNumFirms] = useState(
         GAME_CONSTANTS.oligopoly.defaultFirms
     );
@@ -136,24 +154,21 @@ const Oligopoly = () => {
     const [basePrice, setBasePrice] = useState(
         GAME_CONSTANTS.oligopoly.defaultBasePrice
     );
-    const [marketData, setMarketData] = useState([]);
-    const [matrixData, setMatrixData] = useState([]);
+    const [marketData, setMarketData] = useState<MarketDataPoint[]>([]);
+    const [matrixData, setMatrixData] = useState<MatrixItem[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // Fixed parameters - Cournot model with no collusion
     const modelType = GAME_CONSTANTS.modelTypes.cournot;
     const collusionEnabled = false;
 
     useEffect(() => {
         document.title = PAGE_TITLES.oligopoly;
 
-        // Load real simulation matrix on component mount
         const loadData = async () => {
             setLoading(true);
             try {
                 const data = await loadRealSimulationMatrix();
                 setMatrixData(data);
-                // Set initial data
                 const initialData = filterMatrixData(
                     data,
                     numFirms,
@@ -164,7 +179,6 @@ const Oligopoly = () => {
                 );
                 setMarketData(initialData);
             } catch (error) {
-                // eslint-disable-next-line no-console
                 console.error(
                     'Error loading Oligopoly data in component:',
                     error
@@ -178,7 +192,6 @@ const Oligopoly = () => {
         loadData();
     }, [numFirms, demandElasticity, basePrice, collusionEnabled, modelType]);
 
-    // Update data when parameters change
     useEffect(() => {
         if (matrixData.length > 0) {
             const filteredData = filterMatrixData(
@@ -206,8 +219,7 @@ const Oligopoly = () => {
         setBasePrice(GAME_CONSTANTS.oligopoly.defaultBasePrice);
     };
 
-    // Define controls for the ResearchDemo component
-    const controls = [
+    const controls: Control[] = [
         {
             label: 'Number of Firms',
             icon: BusinessRounded,
@@ -247,18 +259,16 @@ const Oligopoly = () => {
         },
     ];
 
-    // Define chart configuration
     const chartConfig = {
         type: 'line',
         xAxisKey: 'round',
-        yAxisFormatter: value => `$${value.toFixed(2)}`,
+        yAxisFormatter: (value: number) => `$${value.toFixed(2)}`,
         yAxisDomain: ['dataMin - 5', 'dataMax + 5'],
-        // Dual Y-axis support
         dualYAxis: true,
-        rightYAxisFormatter: value => value.toFixed(2),
+        rightYAxisFormatter: (value: number) => value.toFixed(2),
         rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
-        tooltipLabelFormatter: value => `Round ${value}`,
-        tooltipFormatter: (value, name) => [
+        tooltipLabelFormatter: (value: number) => `Round ${value}`,
+        tooltipFormatter: (value: number, name: string) => [
             name === 'Market Price' ? `$${value.toFixed(2)}` : value.toFixed(2),
             name,
         ],
@@ -283,10 +293,10 @@ const Oligopoly = () => {
             title="Oligopoly"
             subtitle="Agent-Based Economic Competition Analysis"
             githubUrl={URLS.oligopolyRepo}
-            chartData={marketData}
-            chartConfig={chartConfig}
+            chartData={marketData as any}
+            chartConfig={chartConfig as any}
             chartTitle="Market Dynamics"
-            controls={controls}
+            controls={controls as any}
             loading={loading}
             loadingMessage="Loading Cournot simulation data..."
             onReset={resetToDefaults}
@@ -296,3 +306,4 @@ const Oligopoly = () => {
 };
 
 export default Oligopoly;
+
