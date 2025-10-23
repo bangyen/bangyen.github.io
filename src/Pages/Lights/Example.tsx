@@ -85,15 +85,13 @@ interface ExampleProps {
 }
 
 export default function Example({
-    states,
-    getter,
+    states = [],
+    getter = (states: unknown[], row: number, col: number) => [],
     palette,
-    id,
-    rows,
-    cols,
+    id = 'default',
+    rows = 3,
+    cols = 3,
     size,
-    dims,
-    start,
 }: ExampleProps): React.ReactElement {
     const mobile = useMobile('md');
 

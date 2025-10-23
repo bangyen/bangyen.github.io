@@ -24,6 +24,12 @@ interface Interpreter {
     category: string;
 }
 
+// Type assertion for GlassCard component
+const TypedGlassCard = GlassCard as React.ComponentType<{
+    children?: React.ReactNode;
+    sx?: Record<string, unknown>;
+}>;
+
 export default function Interpreters(): React.ReactElement {
     useEffect(() => {
         document.title = PAGE_TITLES.interpreters;
@@ -197,7 +203,7 @@ export default function Interpreters(): React.ReactElement {
                                         },
                                     }}
                                 >
-                                    <GlassCard sx={{ border: 'none' }}>
+                                    <TypedGlassCard sx={{ border: 'none' }}>
                                         <Box
                                             sx={{
                                                 ...COMPONENT_VARIANTS.flexCenter,

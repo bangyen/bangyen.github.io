@@ -18,6 +18,12 @@ import { useGetters } from '../Board';
 import { useMobile } from '../../hooks';
 import Example from './Example';
 
+// Type assertion for GlassCard component
+const TypedGlassCard = GlassCard as React.ComponentType<{
+    children?: React.ReactNode;
+    sx?: Record<string, unknown>;
+}>;
+
 interface Getters {
     getColor: (row: number, col: number) => { front: string; back: string };
     getBorder: (row: number, col: number) => Record<string, unknown>;
@@ -179,7 +185,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                                 }}
                             >
                                 <Box sx={{ flex: 1, overflow: 'auto' }}>
-                                    <GlassCard
+                                    <TypedGlassCard
                                         sx={{
                                             height: !isLargeScreen
                                                 ? '100%'
@@ -360,17 +366,17 @@ export default function Info(props: InfoProps): React.ReactElement {
                                     size={{ xs: 12, lg: 6 }}
                                     sx={{
                                         ...COMPONENT_VARIANTS.flexCenter,
-                                    }}
-                                >
-                                    <GlassCard
-                                        sx={{
-                                            width: '100%',
-                                            height: '100%',
-                                            ...COMPONENT_VARIANTS.flexCenter,
-                                            transition:
-                                                'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
                                         }}
                                     >
+                                        <TypedGlassCard
+                                            sx={{
+                                                width: '100%',
+                                                height: '100%',
+                                                ...COMPONENT_VARIANTS.flexCenter,
+                                                transition:
+                                                    'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                            }}
+                                        >
                                         <Example
                                             dims={3}
                                             size={size * 0.6}
@@ -385,7 +391,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                         {/* Bottom section: Lights Out Calculator (full width) */}
                         <Grid container size={12} spacing={2}>
                             <Grid size={12}>
-                                <GlassCard
+                                <TypedGlassCard
                                     sx={{
                                         textAlign: 'center',
                                         paddingBottom: '2rem',
