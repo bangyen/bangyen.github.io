@@ -39,4 +39,6 @@ export interface ResearchDemoProps {
 declare const ResearchDemo: React.FC<ResearchDemoProps>;
 
 export default ResearchDemo;
+export { ViewType };
+
 
