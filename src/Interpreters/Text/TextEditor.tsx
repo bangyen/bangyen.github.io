@@ -112,13 +112,29 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
         [clean, nextIter, clear, create, dispatch]
     );
 
+    const toolbarDispatch = useCallback(
+        (action: { type: string; payload: unknown }) => {
+            dispatch({
+                type: action.type,
+                payload: {
+                    ...(action.payload as TextActionPayload),
+                    nextIter: nextIter as unknown as (action: { type: string; payload: unknown }) => Record<string, unknown>,
+                    clear,
+                    create,
+                    dispatch,
+                },
+            });
+        },
+        [nextIter, clear, create, dispatch]
+    );
+
     const context = {
         name,
         tapeFlag: tape,
         outFlag: output,
         regFlag: false,
         code: state.code,
-        dispatch,
+        dispatch: toolbarDispatch,
         fastForward: false,
         pause: state.pause,
         tape: state.tape || [],
