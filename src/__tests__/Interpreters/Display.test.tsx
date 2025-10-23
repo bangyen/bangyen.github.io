@@ -1,7 +1,10 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { EditorContext } from '../Interpreters/Editor';
-import { Program, Tape, Output, Register } from '../Interpreters/Display';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { EditorContext } from '../../Interpreters/Editor';
+import { Program, Tape, Output, Register } from '../../Interpreters/Display';
+
+const theme = createTheme();
 
 interface EditorContextType {
     name: string;
@@ -41,9 +44,11 @@ const mockEditorContext: EditorContextType = {
 };
 
 const EditorProvider = ({ children }: { children: React.ReactNode }) => (
-    <EditorContext.Provider value={mockEditorContext}>
-        {children}
-    </EditorContext.Provider>
+    <ThemeProvider theme={theme}>
+        <EditorContext.Provider value={mockEditorContext}>
+            {children}
+        </EditorContext.Provider>
+    </ThemeProvider>
 );
 
 describe('Display Components', () => {

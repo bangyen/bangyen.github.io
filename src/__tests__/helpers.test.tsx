@@ -1,5 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { BrowserRouter } from 'react-router-dom';
 import {
     TooltipButton,
     GlassCard,
@@ -11,6 +13,14 @@ import {
     Navigation,
 } from '../helpers';
 
+const theme = createTheme();
+
+const TestWrapper = ({ children }: { children: React.ReactNode }) => (
+    <ThemeProvider theme={theme}>
+        <BrowserRouter>{children}</BrowserRouter>
+    </ThemeProvider>
+);
+
 describe('Helper Components', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -19,7 +29,11 @@ describe('Helper Components', () => {
     describe('TooltipButton', () => {
         test('renders with icon and title', () => {
             const MockIcon = () => <div>Icon</div>;
-            render(<TooltipButton Icon={MockIcon} title="Test Button" />);
+            render(
+                <TestWrapper>
+                    <TooltipButton Icon={MockIcon} title="Test Button" />
+                </TestWrapper>
+            );
 
             expect(screen.getByLabelText('Test Button')).toBeInTheDocument();
         });

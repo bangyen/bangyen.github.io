@@ -1,7 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import { EditorContext } from '../Interpreters/Editor';
-import { Toolbar, handleToolbar } from '../Interpreters/Toolbar';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { EditorContext } from '../../Interpreters/Editor';
+import { Toolbar, handleToolbar } from '../../Interpreters/Toolbar';
+
+const theme = createTheme();
 
 interface EditorContextType {
     name: string;
@@ -41,9 +44,11 @@ const mockEditorContext: EditorContextType = {
 };
 
 const EditorProvider = ({ children }: { children: React.ReactNode }) => (
-    <EditorContext.Provider value={mockEditorContext}>
-        {children}
-    </EditorContext.Provider>
+    <ThemeProvider theme={theme}>
+        <EditorContext.Provider value={mockEditorContext}>
+            {children}
+        </EditorContext.Provider>
+    </ThemeProvider>
 );
 
 describe('Toolbar', () => {
