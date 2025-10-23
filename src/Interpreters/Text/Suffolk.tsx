@@ -96,6 +96,6 @@ export default function Editor(): React.ReactElement {
         code: '',
     };
 
-    return <TextEditor name="Suffolk" start={start} runner={getState} clean={cleanInput} tape output />;
+    return <TextEditor name="Suffolk" start={start as Record<string, unknown>} runner={getState as (state: Record<string, unknown>) => Record<string, unknown>} clean={cleanInput} tape output />;
 }
 
