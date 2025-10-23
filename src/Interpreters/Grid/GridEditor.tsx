@@ -14,8 +14,8 @@ import {
 
 interface GridEditorProps {
     name: string;
-    start: Record<string, unknown>;
-    runner: (state: unknown) => unknown;
+    start: any;
+    runner: (state: any) => any;
     tape?: boolean;
     output?: boolean;
     register?: boolean;
@@ -32,9 +32,9 @@ interface GridState {
 }
 
 interface WrapperPayload {
-    start: Record<string, unknown>;
-    resetState: (grid: string) => unknown;
-    nextIter: (action: { type: string; payload: unknown }) => unknown;
+    start: any;
+    resetState: (grid: string) => any;
+    nextIter: (action: any) => any;
     dispatch: (action: { type: string; payload?: unknown }) => void;
     create: (config: { repeat: () => void; speed: number }) => void;
     clear: () => void;
