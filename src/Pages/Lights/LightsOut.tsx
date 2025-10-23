@@ -141,15 +141,15 @@ export default function LightsOut(): React.ReactElement {
                     onClick={toggleOpen}
                 />
             </Controls>
-            <Info
-                rows={rows}
-                cols={cols}
-                size={size}
-                open={open}
-                palette={palette}
-                score={state.score}
-                toggleOpen={toggleOpen as any}
-            /> as any
+            {(Info as any)({
+                rows,
+                cols,
+                size,
+                open,
+                palette,
+                score: state.score,
+                toggleOpen,
+            })}
         </Grid>
     );
 }
