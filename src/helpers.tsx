@@ -1,3 +1,4 @@
+import React, { useCallback, forwardRef, ReactNode } from 'react';
 import { Tooltip, IconButton, Paper, Box, Grid } from './components/mui';
 import {
     Refresh,
@@ -13,9 +14,6 @@ import {
     Cloud,
     Work,
 } from './components/icons';
-import React, { useCallback, forwardRef } from 'react';
-import PropTypes from 'prop-types';
-
 import { Link } from 'react-router-dom';
 import { getSpace } from './calculate';
 import {
@@ -26,25 +24,28 @@ import {
     COMPONENT_VARIANTS,
 } from './config/theme';
 import { CELL_SIZE } from './config/constants';
+import { SxProps, Theme } from '@mui/material/styles';
 
-/**
- * Icon mapping utility to eliminate repetitive icon selection logic
- * Maps skill icon names to their corresponding Material-UI icon components
- */
-export const ICON_MAP = {
+type IconComponent = React.ElementType;
+
+interface IconMap {
+    [key: string]: IconComponent;
+}
+
+export const ICON_MAP: IconMap = {
     Code: Code,
     Psychology: Psychology,
     Cloud: Cloud,
     Work: Work,
 };
 
-/**
- * TooltipButton component provides accessible icon buttons with tooltips
- * for improved user experience and screen reader support.
- */
-export function TooltipButton(props) {
-    const { Icon, title, ...rest } = props;
+interface TooltipButtonProps {
+    Icon: IconComponent;
+    title: string;
+    [key: string]: any;
+}
 
+export function TooltipButton({ Icon, title, ...rest }: TooltipButtonProps) {
     return (
         <Tooltip title={title}>
             <IconButton size="large" aria-label={title} {...rest}>
@@ -54,19 +55,12 @@ export function TooltipButton(props) {
     );
 }
 
-TooltipButton.propTypes = {
-    Icon: PropTypes.elementType.isRequired,
-    title: PropTypes.string.isRequired,
-};
+interface HomeButtonProps {
+    hide?: boolean;
+    [key: string]: any;
+}
 
-/**
- * HomeButton component provides accessible navigation to home page
- * with proper ARIA labels and keyboard navigation support.
- *
- * @param {Object} props - Component props
- * @param {boolean} props.hide - Whether to hide the button
- */
-export function HomeButton({ hide, ...rest }) {
+export function HomeButton({ hide = false, ...rest }: HomeButtonProps) {
     if (hide) return null;
 
     return (
@@ -82,15 +76,13 @@ export function HomeButton({ hide, ...rest }) {
     );
 }
 
-HomeButton.propTypes = {
-    hide: PropTypes.bool,
-};
+interface CellProps {
+    size: number;
+    children: ReactNode;
+    [key: string]: any;
+}
 
-HomeButton.defaultProps = {
-    hide: false,
-};
-
-function Cell({ size, children, ...rest }) {
+function Cell({ size, children, ...rest }: CellProps) {
     const remSize = `${size}rem`;
     const radius = `${size / CELL_SIZE.divisor}rem`;
 
@@ -113,10 +105,16 @@ function Cell({ size, children, ...rest }) {
     return <Box {...combined}>{children}</Box>;
 }
 
-function Row(props) {
-    const { cols, size, index, spacing, cellProps } = props;
+interface RowProps {
+    cols: number;
+    size: number;
+    index: number;
+    spacing: string;
+    cellProps: (row: number, col: number) => any;
+}
 
-    const WrappedCell = (_, j) => (
+function Row({ cols, size, index, spacing, cellProps }: RowProps) {
+    const WrappedCell = (_: any, j: number) => (
         <Cell {...cellProps(index, j)} key={`${index}_${j}`} size={size} />
     );
 
@@ -127,25 +125,22 @@ function Row(props) {
     );
 }
 
-/**
- * CustomGrid component provides accessible grid layout with proper
- * ARIA roles and semantic structure for screen readers.
- *
- * @param {Object} props - Component props
- * @param {number} props.size - Grid cell size
- * @param {number} props.rows - Number of rows
- * @param {number} props.cols - Number of columns
- * @param {Function} props.cellProps - Function to generate cell properties
- */
-export function CustomGrid(props) {
-    const { size, rows, cols, cellProps, ...rest } = props;
+interface CustomGridProps {
+    size: number;
+    rows: number;
+    cols: number;
+    cellProps: (row: number, col: number) => any;
+    space?: number;
+    [key: string]: any;
+}
 
+export function CustomGrid({ size, rows, cols, cellProps, ...rest }: CustomGridProps) {
     const auto = getSpace(size);
-    const { space = auto } = props;
+    const { space = auto } = rest;
     const rem = `${space}rem`;
 
     const getRow = useCallback(
-        (_, i) => (
+        (_: any, i: number) => (
             <Row
                 index={i}
                 cols={cols}
@@ -173,26 +168,12 @@ export function CustomGrid(props) {
     );
 }
 
-CustomGrid.propTypes = {
-    size: PropTypes.number.isRequired,
-    rows: PropTypes.number.isRequired,
-    cols: PropTypes.number.isRequired,
-    cellProps: PropTypes.func.isRequired,
-    space: PropTypes.number,
-};
+interface NavigationProps {
+    children: ReactNode;
+    [key: string]: any;
+}
 
-CustomGrid.defaultProps = {
-    space: undefined, // Will be computed from size
-};
-
-/**
- * Navigation component provides accessible navigation controls
- * with proper ARIA landmarks and keyboard navigation support.
- *
- * @param {Object} props - Component props
- * @param {React.ReactNode} props.children - Navigation buttons
- */
-export function Navigation({ children, ...rest }) {
+export function Navigation({ children, ...rest }: NavigationProps) {
     return (
         <Paper
             elevation={0}
@@ -220,7 +201,7 @@ export function Navigation({ children, ...rest }) {
                 sx={{
                     ...COMPONENT_VARIANTS.flexCenter,
                     flexWrap: 'nowrap',
-                    minWidth: 0, // Allow shrinking on mobile
+                    minWidth: 0,
                 }}
             >
                 {children}
@@ -229,20 +210,18 @@ export function Navigation({ children, ...rest }) {
     );
 }
 
-Navigation.propTypes = {
-    children: PropTypes.node.isRequired,
-};
+interface RandomButtonProps {
+    title?: string;
+    onClick: () => void;
+    enabled?: boolean;
+    enabledTitle?: string;
+    disabledTitle?: string;
+    showToggleState?: boolean;
+    hide?: boolean;
+    sx?: SxProps<Theme>;
+    [key: string]: any;
+}
 
-/**
- * RandomButton component provides a reusable random action button
- * with consistent styling and accessibility across different games.
- *
- * @param {Object} props - Component props
- * @param {string} props.title - Button title
- * @param {Function} props.onClick - Click handler
- * @param {boolean} props.enabled - Whether random mode is enabled
- * @param {boolean} props.hide - Whether to hide the button
- */
 export function RandomButton({
     title = 'Randomize',
     onClick,
@@ -252,7 +231,7 @@ export function RandomButton({
     showToggleState = false,
     hide = false,
     ...props
-}) {
+}: RandomButtonProps) {
     if (hide) return null;
 
     const buttonTitle = showToggleState
@@ -289,36 +268,15 @@ export function RandomButton({
     );
 }
 
-RandomButton.propTypes = {
-    title: PropTypes.string,
-    onClick: PropTypes.func.isRequired,
-    enabled: PropTypes.bool,
-    enabledTitle: PropTypes.string,
-    disabledTitle: PropTypes.string,
-    showToggleState: PropTypes.bool,
-    hide: PropTypes.bool,
-};
+interface ControlsProps {
+    handler?: (direction: string) => () => void;
+    onRandom?: () => void;
+    randomEnabled?: boolean;
+    children?: ReactNode;
+    size?: 'small' | 'medium' | 'large' | 'inherit';
+    hide?: boolean;
+}
 
-RandomButton.defaultProps = {
-    title: 'Randomize',
-    enabled: false,
-    enabledTitle: 'Disable Random',
-    disabledTitle: 'Enable Random',
-    showToggleState: false,
-    hide: false,
-};
-
-/**
- * Controls component provides accessible game controls with proper
- * keyboard navigation and screen reader announcements.
- * Layout: [Home] [Random] [GameSpecificButton]
- *
- * @param {Object} props - Component props
- * @param {Function} props.handler - Direction handler function
- * @param {Function} props.onRandom - Random toggle handler
- * @param {boolean} props.randomEnabled - Whether random mode is enabled
- * @param {React.ReactNode} props.children - Additional control buttons
- */
 export function Controls({
     handler,
     onRandom,
@@ -326,7 +284,7 @@ export function Controls({
     children,
     size = 'inherit',
     hide = false,
-}) {
+}: ControlsProps) {
     const opacity = hide ? 0.8 : 1;
 
     return (
@@ -348,36 +306,21 @@ export function Controls({
     );
 }
 
-Controls.propTypes = {
-    handler: PropTypes.func,
-    onRandom: PropTypes.func,
-    randomEnabled: PropTypes.bool,
-    children: PropTypes.node,
-    size: PropTypes.oneOf(['small', 'medium', 'large', 'inherit']),
-    hide: PropTypes.bool,
-};
+interface ArrowsButtonProps {
+    show?: boolean;
+    setShow: (show: boolean) => void;
+    handler: (direction: string) => () => void;
+    size?: 'small' | 'medium' | 'large' | 'inherit';
+    hide?: boolean;
+}
 
-Controls.defaultProps = {
-    size: 'inherit',
-    hide: false,
-};
-
-/**
- * ArrowsButton component provides a toggle button for showing/hiding
- * directional controls with proper accessibility.
- *
- * @param {Object} props - Component props
- * @param {boolean} props.show - Whether controls are visible
- * @param {Function} props.setShow - Toggle visibility function
- * @param {Function} props.handler - Direction handler function
- */
 export function ArrowsButton({
     show = false,
     setShow,
     handler,
     size = 'inherit',
     hide = false,
-}) {
+}: ArrowsButtonProps) {
     const flip = useCallback(() => setShow(!show), [show, setShow]);
 
     if (hide) return null;
@@ -441,69 +384,43 @@ export function ArrowsButton({
     );
 }
 
-ArrowsButton.propTypes = {
-    show: PropTypes.bool,
-    setShow: PropTypes.func.isRequired,
-    handler: PropTypes.func.isRequired,
-    size: PropTypes.oneOf(['small', 'medium', 'large', 'inherit']),
-    hide: PropTypes.bool,
-};
+interface GlassCardProps {
+    children: ReactNode;
+    padding?: number | string;
+    sx?: SxProps<Theme>;
+    className?: string;
+    interactive?: boolean;
+    [key: string]: any;
+}
 
-ArrowsButton.defaultProps = {
-    show: false,
-    size: 'inherit',
-    hide: false,
-};
+export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
+    function GlassCard(
+        {
+            children,
+            padding = SPACING.padding.md,
+            sx,
+            className,
+            interactive = false,
+            ...props
+        },
+        ref
+    ) {
+        return (
+            <Box
+                ref={ref}
+                className={`glass-card ${className || ''}`}
+                sx={{
+                    ...(interactive
+                        ? COMPONENT_VARIANTS.interactiveCard
+                        : COMPONENT_VARIANTS.card),
+                    padding,
+                    ...sx,
+                }}
+                {...props}
+            >
+                {children}
+            </Box>
+        );
+    }
+);
 
-/**
- * GlassCard component provides a consistent glassmorphism container
- * with backdrop blur, subtle borders, and elevation shadows.
- * Replaces repetitive glass container styling across components.
- * Uses forwardRef to support Material-UI transitions like Fade.
- *
- * @param {Object} props - Component props
- * @param {React.ReactNode} props.children - Card content
- * @param {number|string} props.padding - Card padding
- * @param {boolean} props.interactive - Whether the card should have hover effects and pointer cursor
- */
-export const GlassCard = forwardRef(function GlassCard(
-    {
-        children,
-        padding = SPACING.padding.md,
-        sx,
-        className,
-        interactive = false,
-        ...props
-    },
-    ref
-) {
-    return (
-        <Box
-            ref={ref}
-            className={`glass-card ${className || ''}`}
-            sx={{
-                ...(interactive
-                    ? COMPONENT_VARIANTS.interactiveCard
-                    : COMPONENT_VARIANTS.card),
-                padding,
-                ...sx,
-            }}
-            {...props}
-        >
-            {children}
-        </Box>
-    );
-});
-
-GlassCard.propTypes = {
-    children: PropTypes.node.isRequired,
-    padding: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-    sx: PropTypes.object,
-    className: PropTypes.string,
-    interactive: PropTypes.bool,
-};
-
-GlassCard.defaultProps = {
-    padding: SPACING.padding.md,
-    interactive: false,
-};
