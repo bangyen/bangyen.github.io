@@ -673,7 +673,6 @@ export default function Home(): React.ReactElement {
                                             textDecoration: 'none',
                                             position: 'relative',
                                             overflow: 'hidden',
-                                            display: 'flex',
                                             ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
                                                 backgroundColor: COLORS.interactive.selected,
@@ -769,7 +768,6 @@ export default function Home(): React.ReactElement {
                                             textDecoration: 'none',
                                             position: 'relative',
                                             overflow: 'hidden',
-                                            display: 'flex',
                                             ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
                                                 backgroundColor: COLORS.interactive.selected,
