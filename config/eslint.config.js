@@ -4,9 +4,10 @@ module.exports = {
     'react-app/jest',
     'plugin:react/recommended',
     'plugin:jsx-a11y/recommended',
-    'plugin:import/recommended'
+    'plugin:import/recommended',
+    'plugin:@typescript-eslint/recommended'
   ],
-  parser: '@babel/eslint-parser',
+  parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
@@ -18,6 +19,7 @@ module.exports = {
       presets: ['@babel/preset-env', '@babel/preset-react']
     }
   },
+  plugins: ['@typescript-eslint'],
   env: {
     browser: true,
     es6: true,
@@ -25,12 +27,14 @@ module.exports = {
     jest: true
   },
   rules: {
+    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-unused-vars': 'warn',
     'react/prop-types': 'off', // Since you're not using PropTypes
     'react/react-in-jsx-scope': 'off', // Not needed in React 17+
     'import/no-unresolved': 'off', // CRA handles this
     'jsx-a11y/anchor-is-valid': 'off', // For react-router Link components
     'react-hooks/exhaustive-deps': 'warn', // Warn about missing dependencies
-    'no-unused-vars': 'warn', // Warn about unused variables
+    'no-unused-vars': 'off', // Use TypeScript version instead
     'no-console': 'warn', // Warn about console statements
     'prefer-const': 'error', // Enforce const for variables that aren't reassigned
     'no-var': 'error', // Disallow var declarations
@@ -38,7 +42,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['**/*.test.js', '**/*.test.jsx', '**/setupTests.js'],
+      files: ['**/*.test.js', '**/*.test.jsx', '**/*.test.ts', '**/*.test.tsx', '**/setupTests.js'],
       rules: {
         'no-console': 'off' // Allow console statements in test files
       }
