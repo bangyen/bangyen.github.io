@@ -73,13 +73,15 @@ function propHandler(
 }
 
 interface ExampleProps {
-    states: unknown[];
-    getter: (states: unknown[], row: number, col: number) => unknown[];
+    states?: unknown[];
+    getter?: (states: unknown[], row: number, col: number) => unknown[];
     palette: Palette;
-    id: string;
-    rows: number;
-    cols: number;
+    id?: string;
+    rows?: number;
+    cols?: number;
     size: number;
+    dims?: number;
+    start?: unknown[];
 }
 
 export default function Example({
@@ -90,6 +92,8 @@ export default function Example({
     rows,
     cols,
     size,
+    dims,
+    start,
 }: ExampleProps): React.ReactElement {
     const mobile = useMobile('md');
 

@@ -190,8 +190,6 @@ export default function Interpreters(): React.ReactElement {
                                         textDecoration: 'none',
                                         position: 'relative',
                                         overflow: 'hidden',
-                                        height: '100%',
-                                        display: 'flex',
                                         ...COMPONENT_VARIANTS.interactiveCard,
                                         '&:hover .glass-card': {
                                             backgroundColor:

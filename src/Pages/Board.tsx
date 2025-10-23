@@ -40,7 +40,6 @@ export function Board(props: BoardProps): React.ReactElement {
     return (
         <Centered>
             <CustomGrid
-                space={0}
                 size={size}
                 rows={rows - 1}
                 cols={cols - 1}
@@ -48,7 +47,6 @@ export function Board(props: BoardProps): React.ReactElement {
             />
             <Centered>
                 <CustomGrid
-                    space={0}
                     size={size}
                     rows={rows}
                     cols={cols}
