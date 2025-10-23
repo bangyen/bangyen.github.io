@@ -27,65 +27,102 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 
-/**
- * Reusable ResearchDemo component for consistent research project visualizations
- * Provides standardized layout, charts, and interactive controls for research demos
- */
-const ResearchDemo = ({
-    // Basic info
+interface ChartConfig {
+    type: string;
+    lines: Array<{
+        dataKey: string;
+        name: string;
+        color: string;
+        yAxisId?: string;
+    }>;
+    xAxisKey: string;
+    yAxisFormatter: (value: number) => string;
+    yAxisDomain: string[];
+    dualYAxis?: boolean;
+    rightYAxisFormatter?: (value: number) => string;
+    rightYAxisDomain?: string[];
+    tooltipLabelFormatter: (value: number) => string;
+    tooltipFormatter: (value: number, name: string) => [string, string];
+}
+
+interface ViewType {
+    key: string;
+    label: string;
+    icon: React.ElementType;
+    chartTitle: string;
+    dataProcessor: (data: any[]) => any[];
+    chartConfig: ChartConfig;
+}
+
+interface ControlOption {
+    value: number;
+    label: string;
+}
+
+interface Control {
+    label: string;
+    icon?: React.ElementType;
+    color?: string;
+    hoverColor?: string;
+    value: number;
+    onChange: (value: number) => void;
+    options: ControlOption[];
+}
+
+interface ResearchDemoProps {
+    title: string;
+    subtitle: string;
+    githubUrl: string;
+    chartData?: any[];
+    chartConfig?: ChartConfig;
+    viewTypes?: ViewType[];
+    currentViewType?: string;
+    onViewTypeChange?: (value: string) => void;
+    controls?: Control[];
+    loading?: boolean;
+    loadingMessage?: string;
+    onReset?: () => void;
+    resetLabel?: string;
+    chartTitle?: string | null;
+}
+
+const ResearchDemo: React.FC<ResearchDemoProps> = ({
     title,
     subtitle,
     githubUrl,
-
-    // Chart configuration
     chartData = [],
     chartConfig = {
         type: 'line',
         lines: [],
         xAxisKey: 'x',
-        yAxisFormatter: value => value.toFixed(2),
+        yAxisFormatter: (value: number) => value.toFixed(2),
         yAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
-        // Dual Y-axis support
         dualYAxis: false,
-        rightYAxisFormatter: value => value.toFixed(2),
+        rightYAxisFormatter: (value: number) => value.toFixed(2),
         rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
-        tooltipLabelFormatter: value => `Round ${value}`,
-        tooltipFormatter: (value, name) => [value.toFixed(2), name],
+        tooltipLabelFormatter: (value: number) => `Round ${value}`,
+        tooltipFormatter: (value: number, name: string) => [value.toFixed(2), name],
     },
-
-    // View types (for switching between different chart views)
     viewTypes = [],
     currentViewType = 'default',
     onViewTypeChange = () => {},
-
-    // Interactive controls
     controls = [],
-
-    // Loading state
     loading = false,
     loadingMessage = 'Loading data...',
-
-    // Reset functionality
     onReset = null,
     resetLabel = 'Reset',
-
-    // Custom chart title
     chartTitle = null,
 }) => {
-    // Get current chart data based on view type
     const getCurrentChartData = () => {
         if (!chartData || chartData.length === 0) return [];
 
-        // If no view types, return data as-is
         if (!viewTypes.length) return chartData;
 
-        // Find current view type configuration
         const currentView = viewTypes.find(
             view => view.key === currentViewType
         );
         if (!currentView || !currentView.dataProcessor) return chartData;
 
-        // Process data using the view's data processor
         return currentView.dataProcessor(chartData);
     };
 
@@ -112,7 +149,6 @@ const ResearchDemo = ({
                 overflowX: 'hidden',
             }}
         >
-            {/* Background Elements */}
             <Box
                 sx={{
                     position: 'absolute',
@@ -125,7 +161,6 @@ const ResearchDemo = ({
                 }}
             />
 
-            {/* Main Content */}
             <Grid
                 size={12}
                 flex={1}
@@ -150,7 +185,6 @@ const ResearchDemo = ({
                         overflow: 'hidden',
                     }}
                 >
-                    {/* Header */}
                     <Grid
                         container={true}
                         alignItems="center"
@@ -210,7 +244,6 @@ const ResearchDemo = ({
                         {subtitle}
                     </Typography>
 
-                    {/* Main Chart */}
                     <GlassCard
                         sx={{
                             marginBottom: 3,
@@ -310,7 +343,7 @@ const ResearchDemo = ({
                                                 currentChartConfig.tooltipLabelFormatter
                                             }
                                             formatter={
-                                                currentChartConfig.tooltipFormatter
+                                                currentChartConfig.tooltipFormatter as any
                                             }
                                         />
                                         {currentChartConfig.lines.map(
@@ -344,7 +377,6 @@ const ResearchDemo = ({
                         </Box>
                     </GlassCard>
 
-                    {/* View Type Selection (if multiple view types) */}
                     {viewTypes.length > 1 && (
                         <GlassCard
                             sx={{
@@ -465,7 +497,6 @@ const ResearchDemo = ({
                         </GlassCard>
                     )}
 
-                    {/* Interactive Controls */}
                     {controls.length > 0 && (
                         <GlassCard
                             sx={{
@@ -643,7 +674,6 @@ const ResearchDemo = ({
                                                                 COLORS.primary
                                                                     .main,
                                                             '&:hover': {
-                                                                // Use a darker shade on hover for visual feedback
                                                                 backgroundColor:
                                                                     control.hoverColor ||
                                                                     (control.color ===
@@ -729,3 +759,4 @@ const ResearchDemo = ({
 };
 
 export default ResearchDemo;
+
