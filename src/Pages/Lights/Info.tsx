@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Backdrop, Typography, Box, Grid } from '../../components/mui';
 import {
     CircleRounded,
@@ -18,10 +18,29 @@ import { useGetters } from '../Board';
 import { useMobile } from '../../hooks';
 import Example from './Example';
 
-function getInput(getters, toggleTile) {
+interface Getters {
+    getColor: (row: number, col: number) => { front: string; back: string };
+    getBorder: (row: number, col: number) => Record<string, unknown>;
+}
+
+interface Palette {
+    primary: string;
+    secondary: string;
+}
+
+interface InfoProps {
+    rows: number;
+    cols: number;
+    size: number;
+    open: boolean;
+    palette: Palette;
+    toggleOpen: () => void;
+}
+
+function getInput(getters: Getters, toggleTile: (col: number) => (event: React.MouseEvent) => void) {
     const { getColor, getBorder } = getters;
 
-    return (r, c) => {
+    return (r: number, c: number) => {
         const { front, back } = getColor(r, c);
 
         return {
@@ -40,8 +59,8 @@ function getInput(getters, toggleTile) {
     };
 }
 
-function getOutput({ getColor, getBorder }) {
-    return (r, c) => {
+function getOutput({ getColor, getBorder }: Getters) {
+    return (r: number, c: number) => {
         const { front } = getColor(r, c);
 
         return {
@@ -51,9 +70,9 @@ function getOutput({ getColor, getBorder }) {
     };
 }
 
-function useHandler(row, size, palette) {
+function useHandler(row: number[], size: number, palette: Palette) {
     const getTile = useCallback(
-        (r, c) => {
+        (r: number, c: number) => {
             if (r !== 0 || c < 0 || c >= size) return -1;
 
             return row[c];
@@ -64,12 +83,12 @@ function useHandler(row, size, palette) {
     return useGetters(getTile, palette);
 }
 
-export default function Info(props) {
+export default function Info(props: InfoProps): React.ReactElement {
     const { rows, cols, size, open, palette, toggleOpen } = props;
     const isMobile = useMobile('md');
     const isLargeScreen = useMobile('lg');
 
-    const [row, setRow] = useState(Array(cols).fill(0));
+    const [row, setRow] = useState<number[]>(Array(cols).fill(0));
 
     useEffect(() => {
         const newRow = Array(cols).fill(0);
@@ -79,7 +98,7 @@ export default function Info(props) {
 
     const res = getProduct(row, rows, cols);
 
-    const toggleTile = col => event => {
+    const toggleTile = (col: number) => (event: React.MouseEvent) => {
         event.stopPropagation();
 
         const newRow = [...row];
@@ -418,3 +437,4 @@ export default function Info(props) {
         </Backdrop>
     );
 }
+
