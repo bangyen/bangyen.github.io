@@ -1,5 +1,4 @@
 import React, { useContext, memo } from 'react';
-import React, { useContext, memo } from 'react';
 import { Box, Typography, Chip, IconButton } from '../components/mui';
 import { EditorContext, Text } from './Editor';
 import { COLORS, TYPOGRAPHY } from '../config/theme';
@@ -13,6 +12,12 @@ import {
     ViewModuleRounded,
     ViewListRounded,
 } from '../components/icons';
+
+// Type assertion for GlassCard component
+const TypedGlassCard = GlassCard as React.ComponentType<{
+    children?: React.ReactNode;
+    sx?: Record<string, unknown>;
+}>;
 
 interface DisplayProps {
     Icon: React.ElementType;
@@ -228,7 +233,7 @@ function CompactDisplay({ Icon, title, data, pointer }: CompactDisplayProps) {
     });
 
     return (
-        <GlassCard
+        <TypedGlassCard
             sx={{
                 height: '100%',
                 minHeight: '24rem',
@@ -262,7 +267,7 @@ function CompactDisplay({ Icon, title, data, pointer }: CompactDisplayProps) {
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
                 {values}
             </Box>
-        </GlassCard>
+        </TypedGlassCard>
     );
 }
 
