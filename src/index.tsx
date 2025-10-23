@@ -209,11 +209,19 @@ function App(): React.ReactElement {
         <ErrorBoundary>
             <ThemeProvider theme={darkTheme}>
                 <CssBaseline />
-                <HashRouter>
+                <HashRouter
+                    future={{
+                        v7_startTransition: true,
+                        v7_relativeSplatPath: true,
+                    }}
+                >
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/error" element={<Error />} />
-                        <Route path="/interpreters" element={<Interpreters />} />
+                        <Route
+                            path="/interpreters"
+                            element={<Interpreters />}
+                        />
                         <Route path="/Stun_Step" element={<Stun_Step />} />
                         <Route path="/Suffolk" element={<Suffolk />} />
                         <Route path="/WII2D" element={<WII2D />} />
@@ -238,4 +246,3 @@ root.render(
         </Suspense>
     </React.StrictMode>
 );
-
