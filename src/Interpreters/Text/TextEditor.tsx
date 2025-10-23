@@ -113,6 +113,13 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
         [clean, nextIter, clear, create, dispatch]
     );
 
+    const handleChangeWrapper = useCallback(
+        (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+            handleChange(event as React.ChangeEvent<HTMLTextAreaElement>);
+        },
+        [handleChange]
+    );
+
     const toolbarDispatch = useCallback(
         (action: { type: string; payload: unknown }) => {
             dispatch({
@@ -152,7 +159,7 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
             <Editor container={containerRef as React.RefObject<HTMLDivElement>}>
                 <TextArea
                     value={state.text}
-                    handleChange={handleChange}
+                    handleChange={handleChangeWrapper}
                 />
                 {tape && <Tape tape={state.tape as number[]} />}
                 {output && <Output output={state.output as string} />}
