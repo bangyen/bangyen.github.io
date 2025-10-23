@@ -100,7 +100,10 @@ export function useTimer(delay: number) {
         repeat.current = globalRepeat;
         speed.current = globalSpeed;
 
-        globalTimer = setInterval(globalRepeat, globalSpeed);
+        // Only create timer if we have a valid repeat function
+        if (globalRepeat) {
+            globalTimer = setInterval(globalRepeat, globalSpeed);
+        }
     }, []);
 
     const clear = useCallback(() => {
