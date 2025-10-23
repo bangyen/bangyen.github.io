@@ -1,3 +1,4 @@
+import React, { useRef, useEffect, useReducer, useCallback, useMemo } from 'react';
 import Editor, { EditorContext, GridArea } from '../Editor';
 import { convertPixels } from '../../calculate';
 import { handleAction } from './eventHandlers';
@@ -11,9 +12,35 @@ import {
     useMobile,
 } from '../../hooks';
 
-import { useRef, useEffect, useReducer, useCallback, useMemo } from 'react';
+interface GridEditorProps {
+    name: string;
+    start: Record<string, unknown>;
+    runner: (state: Record<string, unknown>) => Record<string, unknown>;
+    tape?: boolean;
+    output?: boolean;
+    register?: boolean;
+}
 
-function useWrappers(state, props, dispatch) {
+interface GridState {
+    grid: string;
+    select: number | null;
+    pause: boolean;
+    rows: number;
+    cols: number;
+    position?: number | null;
+    [key: string]: unknown;
+}
+
+interface WrapperPayload {
+    start: Record<string, unknown>;
+    resetState: (grid: string) => Record<string, unknown>;
+    nextIter: (action: { type: string; payload: unknown }) => Record<string, unknown>;
+    dispatch: (action: { type: string; payload?: unknown }) => void;
+    create: (config: { repeat: () => void; speed: number }) => void;
+    clear: () => void;
+}
+
+function useWrappers(state: GridState, props: GridEditorProps, dispatch: (action: any) => void) {
     const { runner, start } = props;
     const { rows, cols } = state;
 
@@ -21,7 +48,7 @@ function useWrappers(state, props, dispatch) {
     const nextIter = useCache(runner);
 
     const resetState = useCallback(
-        grid => {
+        (grid: string) => {
             clear();
 
             return nextIter({
@@ -38,7 +65,7 @@ function useWrappers(state, props, dispatch) {
     );
 
     const handleClick = useCallback(
-        select => () => {
+        (select: number) => () => {
             dispatch({
                 type: 'click',
                 payload: { select },
@@ -48,7 +75,7 @@ function useWrappers(state, props, dispatch) {
     );
 
     const chooseColor = useCallback(
-        square => {
+        (square: number) => {
             const { position, select } = state;
 
             if (square === select) return 'primary';
@@ -60,8 +87,8 @@ function useWrappers(state, props, dispatch) {
     );
 
     const wrapDispatch = useCallback(
-        type => () => {
-            const payload = {
+        (type: string) => () => {
+            const payload: WrapperPayload = {
                 start,
                 resetState,
                 nextIter,
@@ -83,19 +110,18 @@ function useWrappers(state, props, dispatch) {
     };
 }
 
-export default function GridEditor(props) {
+export default function GridEditor(props: GridEditorProps): React.ReactElement {
     const { create: createKeys, clear: clearKeys } = useKeys();
 
     const { name, start, tape, output, register } = props;
 
-    const container = useRef(null);
+    const container = useRef<HTMLDivElement>(null);
     let { height, width } = useContainer(container);
 
     const mobile = useMobile('sm');
     const size = mobile ? 4 : 6;
     const hide = true;
 
-    // Add fallback dimensions to prevent empty grids
     height = (height || 400) * 0.8;
     width = (width || 600) * 0.95;
 
@@ -109,7 +135,7 @@ export default function GridEditor(props) {
         [size, height, width]
     );
 
-    const initial = {
+    const initial: GridState = {
         ...start,
         grid: ' '.repeat(rows * cols),
         select: null,
@@ -140,7 +166,7 @@ export default function GridEditor(props) {
     useEffect(() => {
         document.title = PAGE_TITLES.interpreter(name);
 
-        const wrapper = event => {
+        const wrapper = (event: KeyboardEvent) => {
             dispatch({
                 type: 'edit',
                 payload: {
@@ -160,14 +186,22 @@ export default function GridEditor(props) {
         size,
         ...state,
         dispatch: wrapDispatch,
-        tapeFlag: tape,
-        outFlag: output,
-        regFlag: register,
+        tapeFlag: tape || false,
+        outFlag: output || false,
+        regFlag: register || false,
         height: height / 0.8,
+        index: 0,
+        tape: [],
+        pointer: 0,
+        output: '',
+        register: 0,
+        code: undefined,
+        fastForward: false,
+        pause: state.pause || false,
     };
 
     return (
-        <EditorContext.Provider value={context}>
+        <EditorContext.Provider value={context as any}>
             <Editor hide={hide} container={container}>
                 <GridArea
                     rows={rows}
@@ -180,3 +214,4 @@ export default function GridEditor(props) {
         </EditorContext.Provider>
     );
 }
+
