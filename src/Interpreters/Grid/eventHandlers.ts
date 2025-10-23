@@ -1,5 +1,5 @@
 import { gridMove, getDirection } from '../../calculate';
-import { handleToolbar } from '../Toolbar';
+import { handleToolbar, type ToolbarState, type ToolbarAction } from '../Toolbar';
 
 interface GridState {
     grid: string;
@@ -111,7 +111,7 @@ export function handleAction(state: GridState, action: { type: string; payload: 
         case 'resize':
             return handleResize(state, payload as ResizePayload);
         case 'toolbar':
-            return handleToolbar(state as unknown as ToolbarState, action);
+            return handleToolbar(state as unknown as ToolbarState, action as ToolbarAction);
         default:
             return {};
     }

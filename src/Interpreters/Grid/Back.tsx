@@ -25,7 +25,7 @@ function getState(state: BackState): BackState {
     let { velocity, position, pointer, tape, end } = state;
     const { grid, rows, cols } = state;
 
-    if (end) return state;
+    if (end || position === null) return state;
 
     const sum = velocity > 0 ? 3 : -3;
     const char = grid[position];
