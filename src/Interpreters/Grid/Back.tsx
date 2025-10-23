@@ -4,7 +4,7 @@ import React from 'react';
 
 interface BackState {
     velocity: number;
-    position: number;
+    position: number | null;
     pointer: number;
     tape: number[];
     end: boolean;
@@ -69,7 +69,7 @@ function getState(state: BackState): BackState {
 
     return {
         velocity,
-        position,
+        position: position ?? 0,
         pointer,
         grid,
         tape,

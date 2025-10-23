@@ -102,7 +102,7 @@ function handleResize(state: GridState, payload: ResizePayload): Partial<GridSta
     return { grid };
 }
 
-export function handleGrid(state: GridState, action: { type: string; payload: unknown }) {
+export function handleAction(state: GridState, action: { type: string; payload: unknown }) {
     const { type, payload } = action;
 
     switch (type) {
@@ -111,9 +111,12 @@ export function handleGrid(state: GridState, action: { type: string; payload: un
         case 'resize':
             return handleResize(state, payload as ResizePayload);
         case 'toolbar':
-            return handleToolbar(state, action);
+            return handleToolbar(state as unknown as ToolbarState, action);
         default:
             return {};
     }
 }
+
+// Export both for compatibility
+export { handleAction as handleGrid };
 
