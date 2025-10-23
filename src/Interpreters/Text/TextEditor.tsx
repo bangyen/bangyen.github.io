@@ -146,10 +146,10 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
         fastForward: false,
         pause: state.pause || false,
         tape: state.tape || [],
-        pointer: state.pointer || 0,
+        pointer: (state.pointer as number) || 0,
         output: state.output || '',
-        register: state.register || 0,
-        index: state.index || 0,
+        register: (state.register as number) || 0,
+        index: (state.index as number) || 0,
         height: container.height,
         size: 0,
     };
