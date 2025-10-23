@@ -165,7 +165,7 @@ class ErrorBoundary extends React.Component<
                                             {this.state.error.toString()}
                                             {this.state.errorInfo &&
                                                 this.state.errorInfo.componentStack
-                                                    .split('\n')
+                                                    ?.split('\n')
                                                     .slice(0, 5)
                                                     .join('\n')}
                                         </Typography>
@@ -181,14 +181,16 @@ class ErrorBoundary extends React.Component<
                                 }}
                             >
                                 <Button
-                                    variant="primary"
+                                    variant="contained"
+                                    color="primary"
                                     startIcon={<Refresh />}
                                     onClick={this.handleReload}
                                 >
                                     Reload Page
                                 </Button>
                                 <Button
-                                    variant="secondary"
+                                    variant="outlined"
+                                    color="secondary"
                                     onClick={this.handleReset}
                                 >
                                     Try Again
