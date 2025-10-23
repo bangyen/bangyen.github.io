@@ -125,7 +125,8 @@ function ProjectDropdown(): React.ReactElement {
                                         left: 0,
                                         right: 0,
                                         height: '1px',
-                                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                        backgroundColor:
+                                            'rgba(255, 255, 255, 0.05)',
                                     },
                                 }}
                             >
@@ -168,11 +169,13 @@ function ProjectDropdown(): React.ReactElement {
                                             alignItems: 'flex-start',
                                             gap: '6px',
                                             '&:hover': {
-                                                backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                                                backgroundColor:
+                                                    'rgba(255, 255, 255, 0.06)',
                                                 transform: 'translateY(-1px)',
                                             },
                                             '&:active': {
-                                                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                                                backgroundColor:
+                                                    'rgba(255, 255, 255, 0.08)',
                                             },
                                             '&:focus-visible': {
                                                 outline: 'none',
@@ -259,7 +262,7 @@ function MenuButton(): React.ReactElement {
                     sx: {
                         backgroundColor: 'transparent',
                         backdropFilter: 'none',
-                    }
+                    },
                 }}
                 sx={{
                     marginLeft: 1,
@@ -358,7 +361,8 @@ export default function Home(): React.ReactElement {
                                     sx={{
                                         color: COLORS.primary.main,
                                         fontSize: TYPOGRAPHY.fontSize.body,
-                                        fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                                        fontWeight:
+                                            TYPOGRAPHY.fontWeight.semibold,
                                         textTransform: 'uppercase',
                                         letterSpacing: '0.025em',
                                         marginBottom: 3,
@@ -392,7 +396,8 @@ export default function Home(): React.ReactElement {
                                             xs: 'clamp(0.875rem, 4vw, 1.125rem)',
                                             md: 'clamp(1.125rem, 2.5vw, 1.5rem)',
                                         },
-                                        fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                                        fontWeight:
+                                            TYPOGRAPHY.fontWeight.semibold,
                                         marginBottom: 4,
                                         lineHeight: 1.4,
                                         wordBreak: 'keep-all',
@@ -420,7 +425,8 @@ export default function Home(): React.ReactElement {
                                         sx={{
                                             color: COLORS.text.secondary,
                                             fontSize: TYPOGRAPHY.fontSize.body,
-                                            fontWeight: TYPOGRAPHY.fontWeight.medium,
+                                            fontWeight:
+                                                TYPOGRAPHY.fontWeight.medium,
                                         }}
                                     >
                                         {PERSONAL_INFO.location}
@@ -436,7 +442,10 @@ export default function Home(): React.ReactElement {
                                 >
                                     <Box
                                         onClick={() => {
-                                            const element = document.getElementById('featured-work');
+                                            const element =
+                                                document.getElementById(
+                                                    'featured-work'
+                                                );
                                             if (element) {
                                                 element.scrollIntoView({
                                                     behavior: 'smooth',
@@ -450,21 +459,30 @@ export default function Home(): React.ReactElement {
                                             alignItems: 'center',
                                             gap: 1,
                                             padding: '12px 20px',
-                                            backgroundColor: COLORS.interactive.selected,
-                                            borderRadius: SPACING.borderRadius.full,
+                                            backgroundColor:
+                                                COLORS.interactive.selected,
+                                            borderRadius:
+                                                SPACING.borderRadius.full,
                                             transition: ANIMATIONS.transition,
                                             cursor: 'pointer',
                                             '&:hover': {
-                                                transform: 'scale(1.02) translateY(-1px)',
-                                                boxShadow: '0 4px 20px hsla(0, 0%, 0%, 0.25)',
+                                                backgroundColor:
+                                                    'hsla(217, 91%, 60%, 0.15)',
+                                                transform:
+                                                    'scale(1.02) translateY(-1px)',
+                                                boxShadow:
+                                                    '0 4px 20px hsla(0, 0%, 0%, 0.25)',
                                             },
                                         }}
                                     >
                                         <Typography
                                             sx={{
                                                 color: COLORS.primary.main,
-                                                fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                                                fontSize: TYPOGRAPHY.fontSize.body,
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .semibold,
+                                                fontSize:
+                                                    TYPOGRAPHY.fontSize.body,
                                             }}
                                         >
                                             View Work
@@ -494,8 +512,10 @@ export default function Home(): React.ReactElement {
                                     <Typography
                                         sx={{
                                             color: COLORS.primary.main,
-                                            fontSize: TYPOGRAPHY.fontSize.subheading,
-                                            fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                                            fontSize:
+                                                TYPOGRAPHY.fontSize.subheading,
+                                            fontWeight:
+                                                TYPOGRAPHY.fontWeight.semibold,
                                             marginBottom: 3,
                                         }}
                                     >
@@ -517,7 +537,8 @@ export default function Home(): React.ReactElement {
                                         }}
                                     >
                                         {SKILLS.map((skill, index) => {
-                                            const IconComponent = ICON_MAP[skill.icon] || Work;
+                                            const IconComponent =
+                                                ICON_MAP[skill.icon] || Work;
 
                                             return (
                                                 <Fade
@@ -527,43 +548,71 @@ export default function Home(): React.ReactElement {
                                                 >
                                                     <Box
                                                         sx={{
-                                                            backgroundColor: COLORS.interactive.selected,
+                                                            backgroundColor:
+                                                                COLORS
+                                                                    .interactive
+                                                                    .selected,
                                                             border: `1px solid hsla(217, 91%, 60%, 0.2)`,
-                                                            borderRadius: SPACING.borderRadius.md,
+                                                            borderRadius:
+                                                                SPACING
+                                                                    .borderRadius
+                                                                    .md,
                                                             padding: {
                                                                 xs: '12px',
                                                                 md: '16px',
                                                             },
                                                             display: 'flex',
-                                                            alignItems: 'center',
+                                                            alignItems:
+                                                                'center',
                                                             gap: {
                                                                 xs: 1,
                                                                 md: 1.5,
                                                             },
-                                                            transition: ANIMATIONS.transition,
+                                                            transition:
+                                                                ANIMATIONS.transition,
                                                             cursor: 'pointer',
                                                             minWidth: 0,
                                                             overflow: 'hidden',
                                                             '&:hover': {
-                                                                backgroundColor: COLORS.interactive.hover,
-                                                                transform: 'translateY(-2px) scale(1.01)',
+                                                                backgroundColor:
+                                                                    COLORS
+                                                                        .interactive
+                                                                        .hover,
+                                                                transform:
+                                                                    'translateY(-2px) scale(1.01)',
                                                             },
                                                         }}
                                                     >
                                                         <IconComponent
                                                             sx={{
-                                                                color: COLORS.primary.main,
-                                                                fontSize: TYPOGRAPHY.fontSize.body,
+                                                                color: COLORS
+                                                                    .primary
+                                                                    .main,
+                                                                fontSize:
+                                                                    TYPOGRAPHY
+                                                                        .fontSize
+                                                                        .body,
                                                             }}
                                                         />
                                                         <Typography
                                                             sx={{
-                                                                color: COLORS.primary.main,
-                                                                fontSize: TYPOGRAPHY.fontSize.body,
-                                                                fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                                                whiteSpace: 'nowrap',
-                                                                overflow: 'hidden',
-                                                                textOverflow: 'ellipsis',
+                                                                color: COLORS
+                                                                    .primary
+                                                                    .main,
+                                                                fontSize:
+                                                                    TYPOGRAPHY
+                                                                        .fontSize
+                                                                        .body,
+                                                                fontWeight:
+                                                                    TYPOGRAPHY
+                                                                        .fontWeight
+                                                                        .medium,
+                                                                whiteSpace:
+                                                                    'nowrap',
+                                                                overflow:
+                                                                    'hidden',
+                                                                textOverflow:
+                                                                    'ellipsis',
                                                                 flexShrink: 1,
                                                             }}
                                                         >
@@ -580,8 +629,10 @@ export default function Home(): React.ReactElement {
                                     <Typography
                                         sx={{
                                             color: COLORS.primary.main,
-                                            fontSize: TYPOGRAPHY.fontSize.subheading,
-                                            fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                                            fontSize:
+                                                TYPOGRAPHY.fontSize.subheading,
+                                            fontWeight:
+                                                TYPOGRAPHY.fontWeight.semibold,
                                             marginBottom: 3,
                                         }}
                                     >
@@ -596,7 +647,9 @@ export default function Home(): React.ReactElement {
                                             marginBottom: 4,
                                         }}
                                     >
-                                        Open to opportunities in backend development, ML engineering, and research collaboration.
+                                        Open to opportunities in backend
+                                        development, ML engineering, and
+                                        research collaboration.
                                     </Typography>
 
                                     <Box
@@ -630,7 +683,9 @@ export default function Home(): React.ReactElement {
                                                 color: COLORS.text.secondary,
                                                 '&:hover': {
                                                     color: COLORS.text.primary,
-                                                    backgroundColor: 'transparent',
+                                                    backgroundColor:
+                                                        COLORS.interactive
+                                                            .hover,
                                                 },
                                             }}
                                         >
@@ -686,33 +741,49 @@ export default function Home(): React.ReactElement {
                                             overflow: 'hidden',
                                             ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
-                                                backgroundColor: COLORS.interactive.selected,
+                                                backgroundColor:
+                                                    COLORS.interactive.selected,
                                             },
                                         }}
                                     >
-                                        <GlassCard sx={{ border: 'none', height: '100%' }}>
+                                        <GlassCard
+                                            sx={{
+                                                border: 'none',
+                                                height: '100%',
+                                            }}
+                                        >
                                             <Box
                                                 sx={{
                                                     display: 'flex',
                                                     alignItems: 'center',
-                                                    justifyContent: 'space-between',
+                                                    justifyContent:
+                                                        'space-between',
                                                     marginBottom: 3,
                                                 }}
                                             >
                                                 <Typography
                                                     sx={{
-                                                        color: COLORS.primary.main,
-                                                        fontSize: TYPOGRAPHY.fontSize.caption,
-                                                        fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                                        textTransform: 'uppercase',
-                                                        letterSpacing: '0.025em',
+                                                        color: COLORS.primary
+                                                            .main,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .caption,
+                                                        fontWeight:
+                                                            TYPOGRAPHY
+                                                                .fontWeight
+                                                                .medium,
+                                                        textTransform:
+                                                            'uppercase',
+                                                        letterSpacing:
+                                                            '0.025em',
                                                     }}
                                                 >
                                                     Research
                                                 </Typography>
                                                 <OpenInNew
                                                     sx={{
-                                                        color: COLORS.primary.main,
+                                                        color: COLORS.primary
+                                                            .main,
                                                     }}
                                                 />
                                             </Box>
@@ -720,8 +791,12 @@ export default function Home(): React.ReactElement {
                                             <Typography
                                                 sx={{
                                                     color: COLORS.text.primary,
-                                                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                                                    fontSize: TYPOGRAPHY.fontSize.subheading,
+                                                    fontWeight:
+                                                        TYPOGRAPHY.fontWeight
+                                                            .semibold,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize
+                                                            .subheading,
                                                     lineHeight: 1.4,
                                                     marginBottom: 2,
                                                 }}
@@ -732,15 +807,21 @@ export default function Home(): React.ReactElement {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
-                                                        borderRadius: SPACING.borderRadius.full,
-                                                        fontSize: 'clamp(0.7rem, 0.8vw, 0.75rem)',
+                                                        borderRadius:
+                                                            SPACING.borderRadius
+                                                                .full,
+                                                        fontSize:
+                                                            'clamp(0.7rem, 0.8vw, 0.75rem)',
                                                         fontWeight: 500,
                                                         padding: '4px 12px',
-                                                        minHeight: SPACING.padding.sm,
+                                                        minHeight:
+                                                            SPACING.padding.sm,
                                                         display: 'inline-flex',
                                                         alignItems: 'center',
-                                                        transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                                        backgroundColor: 'hsla(141, 64%, 49%, 0.1)',
+                                                        transition:
+                                                            'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                                        backgroundColor:
+                                                            'hsla(141, 64%, 49%, 0.1)',
                                                         color: 'hsl(141, 64%, 49%)',
                                                         border: '1px solid hsla(141, 64%, 49%, 0.2)',
                                                     }}
@@ -751,8 +832,11 @@ export default function Home(): React.ReactElement {
 
                                             <Typography
                                                 sx={{
-                                                    color: COLORS.text.secondary,
-                                                    fontSize: TYPOGRAPHY.fontSize.body,
+                                                    color: COLORS.text
+                                                        .secondary,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize
+                                                            .body,
                                                     lineHeight: 1.5,
                                                     flex: 1,
                                                 }}
@@ -781,33 +865,49 @@ export default function Home(): React.ReactElement {
                                             overflow: 'hidden',
                                             ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
-                                                backgroundColor: COLORS.interactive.selected,
+                                                backgroundColor:
+                                                    COLORS.interactive.selected,
                                             },
                                         }}
                                     >
-                                        <GlassCard sx={{ border: 'none', height: '100%' }}>
+                                        <GlassCard
+                                            sx={{
+                                                border: 'none',
+                                                height: '100%',
+                                            }}
+                                        >
                                             <Box
                                                 sx={{
                                                     display: 'flex',
                                                     alignItems: 'center',
-                                                    justifyContent: 'space-between',
+                                                    justifyContent:
+                                                        'space-between',
                                                     marginBottom: 3,
                                                 }}
                                             >
                                                 <Typography
                                                     sx={{
-                                                        color: COLORS.primary.main,
-                                                        fontSize: TYPOGRAPHY.fontSize.caption,
-                                                        fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                                        textTransform: 'uppercase',
-                                                        letterSpacing: '0.025em',
+                                                        color: COLORS.primary
+                                                            .main,
+                                                        fontSize:
+                                                            TYPOGRAPHY.fontSize
+                                                                .caption,
+                                                        fontWeight:
+                                                            TYPOGRAPHY
+                                                                .fontWeight
+                                                                .medium,
+                                                        textTransform:
+                                                            'uppercase',
+                                                        letterSpacing:
+                                                            '0.025em',
                                                     }}
                                                 >
                                                     Project
                                                 </Typography>
                                                 <GitHub
                                                     sx={{
-                                                        color: COLORS.primary.main,
+                                                        color: COLORS.primary
+                                                            .main,
                                                     }}
                                                 />
                                             </Box>
@@ -815,8 +915,12 @@ export default function Home(): React.ReactElement {
                                             <Typography
                                                 sx={{
                                                     color: COLORS.text.primary,
-                                                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                                                    fontSize: TYPOGRAPHY.fontSize.subheading,
+                                                    fontWeight:
+                                                        TYPOGRAPHY.fontWeight
+                                                            .semibold,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize
+                                                            .subheading,
                                                     lineHeight: 1.4,
                                                     marginBottom: 2,
                                                 }}
@@ -827,16 +931,23 @@ export default function Home(): React.ReactElement {
                                             <Box sx={{ marginBottom: 3 }}>
                                                 <Box
                                                     sx={{
-                                                        borderRadius: SPACING.borderRadius.full,
-                                                        fontSize: 'clamp(0.7rem, 0.8vw, 0.75rem)',
+                                                        borderRadius:
+                                                            SPACING.borderRadius
+                                                                .full,
+                                                        fontSize:
+                                                            'clamp(0.7rem, 0.8vw, 0.75rem)',
                                                         fontWeight: 500,
                                                         padding: '4px 12px',
-                                                        minHeight: SPACING.padding.sm,
+                                                        minHeight:
+                                                            SPACING.padding.sm,
                                                         display: 'inline-flex',
                                                         alignItems: 'center',
-                                                        transition: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                                        backgroundColor: 'hsla(217, 91%, 60%, 0.1)',
-                                                        color: COLORS.primary.main,
+                                                        transition:
+                                                            'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                                        backgroundColor:
+                                                            'hsla(217, 91%, 60%, 0.1)',
+                                                        color: COLORS.primary
+                                                            .main,
                                                         border: '1px solid hsla(217, 91%, 60%, 0.2)',
                                                     }}
                                                 >
@@ -846,8 +957,11 @@ export default function Home(): React.ReactElement {
 
                                             <Typography
                                                 sx={{
-                                                    color: COLORS.text.secondary,
-                                                    fontSize: TYPOGRAPHY.fontSize.body,
+                                                    color: COLORS.text
+                                                        .secondary,
+                                                    fontSize:
+                                                        TYPOGRAPHY.fontSize
+                                                            .body,
                                                     lineHeight: 1.5,
                                                     flex: 1,
                                                 }}
@@ -871,4 +985,3 @@ export default function Home(): React.ReactElement {
         </Grid>
     );
 }
-
