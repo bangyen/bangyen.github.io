@@ -2,26 +2,47 @@ import { gridMove } from '../../calculate';
 import GridEditor from './GridEditor';
 import React from 'react';
 
-function getDistance(x, y, cols) {
-    const xWidth = x % cols;
-    const yWidth = y % cols;
-    x -= xWidth;
-    y -= yWidth;
+interface WII2DState {
+    position: number | null;
+    velocity: number;
+    output: string;
+    register: number;
+    end: boolean;
+    grid: string;
+    rows: number;
+    cols: number;
+}
 
-    const differ = Math.abs(x - y);
+interface WII2DStart {
+    position: null;
+    velocity: number;
+    end: boolean;
+    output: string;
+    register: number;
+}
+
+function getDistance(x: number, y: number, cols: number): number {
+    let xPos = x;
+    let yPos = y;
+    const xWidth = xPos % cols;
+    const yWidth = yPos % cols;
+    xPos -= xWidth;
+    yPos -= yWidth;
+
+    const differ = Math.abs(xPos - yPos);
     const height = Math.floor(differ / cols);
     const width = Math.abs(xWidth - yWidth);
 
     return height + width;
 }
 
-function getComparison(position, cols) {
-    return (x, y) =>
+function getComparison(position: number, cols: number) {
+    return (x: number, y: number) =>
         getDistance(position, x, cols) - getDistance(position, y, cols);
 }
 
-function getClosest(position, grid, cols) {
-    const warp = [];
+function getClosest(position: number, grid: string, cols: number): number {
+    const warp: number[] = [];
 
     for (let k = 0; k < grid.length; k++) if (grid[k] === '@') warp.push(k);
 
@@ -33,7 +54,7 @@ function getClosest(position, grid, cols) {
     return warp[1];
 }
 
-function getState(state) {
+function getState(state: WII2DState): WII2DState {
     const arrows = '^<>v';
 
     let { position, velocity, output, register, end } = state;
@@ -92,7 +113,7 @@ function getState(state) {
         case '?':
             const rand = Math.random() * 4;
             const floor = Math.floor(rand);
-            velocity = floor - 2 + (floor > 1);
+            velocity = floor - 2 + (floor > 1 ? 1 : 0);
             break;
         case '.':
             position = null;
@@ -117,8 +138,8 @@ function getState(state) {
     };
 }
 
-export default function Editor() {
-    const start = {
+export default function Editor(): React.ReactElement {
+    const start: WII2DStart = {
         position: null,
         velocity: -2,
         end: false,
@@ -136,3 +157,4 @@ export default function Editor() {
         />
     );
 }
+

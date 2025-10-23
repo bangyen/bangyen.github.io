@@ -1,7 +1,27 @@
 import { gridMove } from '../../calculate';
 import GridEditor from './GridEditor';
+import React from 'react';
 
-function getState(state) {
+interface BackState {
+    velocity: number;
+    position: number;
+    pointer: number;
+    tape: number[];
+    end: boolean;
+    grid: string;
+    rows: number;
+    cols: number;
+}
+
+interface BackStart {
+    velocity: number;
+    pointer: number;
+    position: number;
+    tape: number[];
+    end: boolean;
+}
+
+function getState(state: BackState): BackState {
     let { velocity, position, pointer, tape, end } = state;
     const { grid, rows, cols } = state;
 
@@ -28,7 +48,7 @@ function getState(state) {
             tape[pointer] ^= 1;
             break;
         case '+':
-            let next;
+            let next: string;
 
             if (!tape[pointer])
                 do {
@@ -59,8 +79,8 @@ function getState(state) {
     };
 }
 
-export default function Editor() {
-    const start = {
+export default function Editor(): React.ReactElement {
+    const start: BackStart = {
         velocity: 1,
         pointer: 0,
         position: 0,
@@ -70,3 +90,4 @@ export default function Editor() {
 
     return <GridEditor name="Back" start={start} runner={getState} tape />;
 }
+
