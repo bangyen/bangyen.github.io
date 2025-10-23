@@ -539,7 +539,7 @@ export default function Home(): React.ReactElement {
                                                             minWidth: 0,
                                                             overflow: 'hidden',
                                                             '&:hover': {
-                                                                ...ANIMATIONS.presets.cardHover,
+                                                                backgroundColor: COLORS.interactive.hover,
                                                                 transform: 'translateY(-2px) scale(1.01)',
                                                             },
                                                         }}
@@ -605,7 +605,7 @@ export default function Home(): React.ReactElement {
                                             href={URLS.githubProfile}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            variant="secondary"
+                                            variant="outlined"
                                             startIcon={<GitHub />}
                                             sx={{
                                                 textDecoration: 'none',
@@ -617,7 +617,7 @@ export default function Home(): React.ReactElement {
                                         <Button
                                             component="a"
                                             href="mailto:bangyenp@gmail.com?subject=Project%20Collaboration"
-                                            variant="ghost"
+                                            variant="text"
                                             endIcon={<ArrowForward />}
                                             sx={{
                                                 textDecoration: 'none',
@@ -673,7 +673,6 @@ export default function Home(): React.ReactElement {
                                             textDecoration: 'none',
                                             position: 'relative',
                                             overflow: 'hidden',
-                                            height: '100%',
                                             display: 'flex',
                                             ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
@@ -681,7 +680,7 @@ export default function Home(): React.ReactElement {
                                             },
                                         }}
                                     >
-                                        <GlassCard sx={{ border: 'none' }}>
+                                        <GlassCard sx={{ border: 'none', height: '100%' }}>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -770,7 +769,6 @@ export default function Home(): React.ReactElement {
                                             textDecoration: 'none',
                                             position: 'relative',
                                             overflow: 'hidden',
-                                            height: '100%',
                                             display: 'flex',
                                             ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
@@ -778,7 +776,7 @@ export default function Home(): React.ReactElement {
                                             },
                                         }}
                                     >
-                                        <GlassCard sx={{ border: 'none' }}>
+                                        <GlassCard sx={{ border: 'none', height: '100%' }}>
                                             <Box
                                                 sx={{
                                                     display: 'flex',
