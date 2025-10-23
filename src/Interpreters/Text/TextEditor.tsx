@@ -91,7 +91,7 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
 
     useEffect(() => {
         const titleKey = name.toLowerCase().replace(' ', '_');
-        const title = (PAGE_TITLES as Record<string, string>)[titleKey];
+        const title = (PAGE_TITLES as unknown as Record<string, string>)[titleKey];
         document.title = title || PAGE_TITLES.interpreters;
     }, [name]);
 
