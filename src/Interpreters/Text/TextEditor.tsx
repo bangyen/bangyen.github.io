@@ -77,7 +77,7 @@ function handleAction(state: TextState, action: { type: string; payload: TextAct
 }
 
 export default function TextEditor({ name, start, runner, clean, tape, output }: TextEditorProps): React.ReactElement {
-    const container = useContainer({});
+    const container = useContainer(React.createRef<HTMLElement>());
     const [state, dispatch] = useReducer(handleAction, {
         ...start,
         pause: true,
@@ -90,8 +90,9 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
     const textRef = useRef<HTMLTextAreaElement>(null);
 
     useEffect(() => {
-        const titleKey = name.toLowerCase().replace(' ', '_') as keyof typeof PAGE_TITLES;
-        document.title = PAGE_TITLES[titleKey] || PAGE_TITLES.interpreters;
+        const titleKey = name.toLowerCase().replace(' ', '_');
+        const title = typeof PAGE_TITLES === 'function' ? PAGE_TITLES(titleKey) : (PAGE_TITLES as Record<string, string>)[titleKey];
+        document.title = title || (typeof PAGE_TITLES === 'function' ? PAGE_TITLES('interpreters') : PAGE_TITLES.interpreters);
     }, [name]);
 
     const handleChange = useCallback(
@@ -116,7 +117,6 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
             <TextArea
                 value={state.text}
                 handleChange={handleChange}
-                ref={textRef}
             />
             {tape && <Tape tape={state.tape as number[]} />}
             {output && <Output output={state.output as string} />}

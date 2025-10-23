@@ -74,6 +74,6 @@ export default function Editor(): React.ReactElement {
         code: '',
     };
 
-    return <TextEditor name="Stun Step" start={start as Record<string, unknown>} runner={getState as (state: Record<string, unknown>) => Record<string, unknown>} clean={clean} tape />;
+    return <TextEditor name="Stun Step" start={start as unknown as Record<string, unknown>} runner={getState as unknown as (state: Record<string, unknown>) => Record<string, unknown>} clean={clean} tape />;
 }
 
