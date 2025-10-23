@@ -32,13 +32,13 @@ interface ToolbarPayload {
     start: Record<string, unknown>;
 }
 
-interface ToolbarState {
+export interface ToolbarState {
     end?: boolean;
     pause?: boolean;
     [key: string]: unknown;
 }
 
-interface ToolbarAction {
+export interface ToolbarAction {
     type: string;
     payload: ToolbarPayload;
 }
