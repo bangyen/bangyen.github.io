@@ -311,10 +311,10 @@ const ZSharp: React.FC = () => {
             title="ZSharp"
             subtitle="Neural Network Optimization Research"
             githubUrl={URLS.zsharpRepo}
-            chartData={chartData}
-            viewTypes={viewTypes}
+            chartData={chartData as any}
+            viewTypes={viewTypes as any}
             currentViewType={viewType}
-            onViewTypeChange={setViewType}
+            onViewTypeChange={setViewType as any}
             loading={loading}
             loadingMessage="Loading real experiment data..."
         />
