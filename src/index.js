@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 
 import { HashRouter, Routes, Route } from 'react-router-dom';
 
@@ -14,16 +14,34 @@ import {
     COMPONENT_VARIANTS,
 } from './config/theme';
 
-import { Stun_Step, Suffolk, WII2D, Back } from './Interpreters';
-import {
-    Home,
-    Error,
-    Snake,
-    Lights_Out,
-    ZSharp,
-    Oligopoly,
-    Interpreters,
-} from './Pages';
+// Lazy load interpreters for better performance
+const Stun_Step = lazy(() =>
+    import('./Interpreters').then(m => ({ default: m.Stun_Step }))
+);
+const Suffolk = lazy(() =>
+    import('./Interpreters').then(m => ({ default: m.Suffolk }))
+);
+const WII2D = lazy(() =>
+    import('./Interpreters').then(m => ({ default: m.WII2D }))
+);
+const Back = lazy(() =>
+    import('./Interpreters').then(m => ({ default: m.Back }))
+);
+
+// Lazy load pages
+const Home = lazy(() => import('./Pages').then(m => ({ default: m.Home })));
+const Error = lazy(() => import('./Pages').then(m => ({ default: m.Error })));
+const Snake = lazy(() => import('./Pages').then(m => ({ default: m.Snake })));
+const Lights_Out = lazy(() =>
+    import('./Pages').then(m => ({ default: m.Lights_Out }))
+);
+const ZSharp = lazy(() => import('./Pages').then(m => ({ default: m.ZSharp })));
+const Oligopoly = lazy(() =>
+    import('./Pages').then(m => ({ default: m.Oligopoly }))
+);
+const Interpreters = lazy(() =>
+    import('./Pages').then(m => ({ default: m.Interpreters }))
+);
 
 const darkTheme = createTheme({
     palette: {
@@ -279,13 +297,31 @@ function Website() {
                 v7_relativeSplatPath: true,
             }}
         >
-            <Routes>
-                {interpreters.map(({ Component, url }) =>
-                    getRoute(Component, url)
-                )}
-                {pages.map(({ Component, url }) => getRoute(Component, url))}
-                <Route path="*" element={<Error />} />
-            </Routes>
+            <Suspense
+                fallback={
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100vh',
+                            color: COLORS.text.primary,
+                        }}
+                    >
+                        Loading...
+                    </div>
+                }
+            >
+                <Routes>
+                    {interpreters.map(({ Component, url }) =>
+                        getRoute(Component, url)
+                    )}
+                    {pages.map(({ Component, url }) =>
+                        getRoute(Component, url)
+                    )}
+                    <Route path="*" element={<Error />} />
+                </Routes>
+            </Suspense>
         </HashRouter>
     );
 }

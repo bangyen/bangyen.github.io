@@ -1,7 +1,7 @@
 import { EditorContext, Text } from './Editor';
 
 import { Box, Typography, Chip, IconButton } from '../components/mui';
-import { useContext } from 'react';
+import { useContext, memo } from 'react';
 import { COLORS, TYPOGRAPHY } from '../config/theme';
 import { GlassCard } from '../helpers';
 
@@ -14,7 +14,7 @@ import {
     ViewListRounded,
 } from '../components/icons';
 
-export function Program({ compact = false }) {
+export const Program = memo(function Program({ compact = false }) {
     const { code, index } = useContext(EditorContext);
 
     if (code === undefined) return null;
@@ -40,9 +40,9 @@ export function Program({ compact = false }) {
             <Text text={'\xA0'} />
         </Display>
     );
-}
+});
 
-export function Tape({ compact = false }) {
+export const Tape = memo(function Tape({ compact = false }) {
     const { tape, pointer, tapeFlag } = useContext(EditorContext);
 
     if (!tapeFlag) return null;
@@ -68,9 +68,9 @@ export function Tape({ compact = false }) {
             <Text text={'\xA0'} />
         </Display>
     );
-}
+});
 
-export function Output({ compact = false }) {
+export const Output = memo(function Output({ compact = false }) {
     const { output, outFlag } = useContext(EditorContext);
 
     if (!outFlag) return null;
@@ -90,9 +90,9 @@ export function Output({ compact = false }) {
             <Text text={'\xA0'} />
         </Display>
     );
-}
+});
 
-export function Register({ compact = false }) {
+export const Register = memo(function Register({ compact = false }) {
     const { register, regFlag } = useContext(EditorContext);
 
     if (!regFlag) return null;
@@ -112,7 +112,7 @@ export function Register({ compact = false }) {
             <Text text={'\xA0'} />
         </Display>
     );
-}
+});
 
 function Display(props) {
     const { Icon, title, data, pointer, children } = props;

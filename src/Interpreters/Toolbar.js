@@ -130,9 +130,18 @@ export function handleToolbar(state, action) {
         });
     };
 
+    // Consolidated pause state management
+    const pauseStateMap = {
+        run: false,
+        stop: true,
+        reset: true,
+        prev: true,
+    };
+
     switch (type) {
         case 'run':
             create({ repeat, speed: 200 }); // Always use default speed
+            newState.pause = pauseStateMap.run;
             break;
         case 'timer':
             const newType = state.end ? 'stop' : 'next';
@@ -144,6 +153,7 @@ export function handleToolbar(state, action) {
             break;
         case 'stop':
             clear();
+            newState.pause = pauseStateMap.stop;
             break;
         case 'reset':
             clear();
@@ -155,27 +165,14 @@ export function handleToolbar(state, action) {
                     ...start,
                 },
             });
+            newState.pause = pauseStateMap.reset;
             break;
         case 'prev':
             newState = update('prev', true);
+            newState.pause = pauseStateMap.prev;
             break;
         case 'next':
             newState = update('next', false);
-            break;
-        default:
-            break;
-    }
-
-    switch (type) {
-        case 'run':
-            newState.pause = false;
-            break;
-        case 'stop':
-            newState.pause = true;
-            break;
-        case 'reset':
-        case 'prev':
-            newState.pause = true;
             break;
         default:
             break;

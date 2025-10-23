@@ -4,7 +4,7 @@ import { Grid, Typography, TextField } from '../components/mui';
 import { Toolbar } from './Toolbar';
 import { COLORS, SPACING, TYPOGRAPHY } from '../config/theme';
 
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 
 export const EditorContext = createContext();
 
@@ -165,35 +165,42 @@ export default function Editor({ container, sideProps, hide, children }) {
 export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
     const { size } = useContext(EditorContext);
 
+    // Memoize cell styles to prevent recalculation on every render
+    const cellStyles = useMemo(
+        () => ({
+            primary: {
+                bg: COLORS.surface.glass,
+                text: COLORS.primary.main,
+                border: `1px solid ${COLORS.primary.main}`,
+                hover: COLORS.interactive.selected,
+            },
+            info: {
+                bg: COLORS.interactive.focus,
+                text: COLORS.text.primary,
+                border: `1px solid ${COLORS.primary.main}`,
+                hover: COLORS.interactive.hover,
+            },
+            secondary: {
+                bg: COLORS.surface.glass,
+                text: COLORS.text.secondary,
+                border: `1px solid ${COLORS.border.subtle}`,
+                hover: COLORS.interactive.selected,
+            },
+        }),
+        []
+    );
+
+    const getCellStyles = useMemo(
+        () => color => {
+            return cellStyles[color] || cellStyles.secondary;
+        },
+        [cellStyles]
+    );
+
     const cellProps = (row, col) => {
         const pos = cols * row + col;
         const color = chooseColor(pos);
         const value = options[pos] || ' ';
-
-        // Consistent glassmorphism color scheme
-        const getCellStyles = color => {
-            const styles = {
-                primary: {
-                    bg: COLORS.surface.glass,
-                    text: COLORS.primary.main,
-                    border: `1px solid ${COLORS.primary.main}`,
-                    hover: COLORS.interactive.selected,
-                },
-                info: {
-                    bg: COLORS.interactive.focus,
-                    text: COLORS.text.primary,
-                    border: `1px solid ${COLORS.primary.main}`,
-                    hover: COLORS.interactive.hover,
-                },
-                secondary: {
-                    bg: COLORS.surface.glass,
-                    text: COLORS.text.secondary,
-                    border: `1px solid ${COLORS.border.subtle}`,
-                    hover: COLORS.interactive.selected,
-                },
-            };
-            return styles[color] || styles.secondary;
-        };
 
         const cellStyle = getCellStyles(color);
 

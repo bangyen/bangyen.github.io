@@ -117,8 +117,11 @@ export function useKeys() {
     }, []);
 
     useEffect(() => {
-        return () =>
-            document.removeEventListener('keydown', oldHandler.current);
+        return () => {
+            if (oldHandler.current) {
+                document.removeEventListener('keydown', oldHandler.current);
+            }
+        };
     }, []);
 
     return { create, clear };
