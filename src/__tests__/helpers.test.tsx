@@ -103,7 +103,11 @@ describe('Helper Components', () => {
 
     describe('HomeButton', () => {
         test('renders when not hidden', () => {
-            render(<HomeButton />);
+            render(
+                <TestWrapper>
+                    <HomeButton />
+                </TestWrapper>
+            );
 
             expect(
                 screen.getByLabelText('Navigate to Home page')
@@ -111,7 +115,11 @@ describe('Helper Components', () => {
         });
 
         test('does not render when hidden', () => {
-            render(<HomeButton hide={true} />);
+            render(
+                <TestWrapper>
+                    <HomeButton hide={true} />
+                </TestWrapper>
+            );
 
             expect(
                 screen.queryByLabelText('Navigate to Home page')
@@ -191,16 +199,22 @@ describe('Helper Components', () => {
     describe('Controls', () => {
         test('renders with children', () => {
             render(
-                <Controls>
-                    <button>Test Button</button>
-                </Controls>
+                <TestWrapper>
+                    <Controls>
+                        <button>Test Button</button>
+                    </Controls>
+                </TestWrapper>
             );
 
             expect(screen.getByText('Test Button')).toBeInTheDocument();
         });
 
         test('includes HomeButton', () => {
-            render(<Controls />);
+            render(
+                <TestWrapper>
+                    <Controls />
+                </TestWrapper>
+            );
 
             expect(
                 screen.getByLabelText('Navigate to Home page')
@@ -210,13 +224,21 @@ describe('Helper Components', () => {
         test('includes RandomButton when onRandom provided', () => {
             const handleRandom = jest.fn();
 
-            render(<Controls onRandom={handleRandom} />);
+            render(
+                <TestWrapper>
+                    <Controls onRandom={handleRandom} />
+                </TestWrapper>
+            );
 
             expect(screen.getByLabelText('Randomize')).toBeInTheDocument();
         });
 
         test('does not include RandomButton when onRandom not provided', () => {
-            render(<Controls />);
+            render(
+                <TestWrapper>
+                    <Controls />
+                </TestWrapper>
+            );
 
             expect(
                 screen.queryByLabelText('Randomize')
@@ -224,7 +246,11 @@ describe('Helper Components', () => {
         });
 
         test('does not render when hidden', () => {
-            render(<Controls hide={true} />);
+            render(
+                <TestWrapper>
+                    <Controls hide={true} />
+                </TestWrapper>
+            );
 
             expect(
                 screen.queryByLabelText('Navigate to Home page')
