@@ -9,7 +9,7 @@ import {
     COMPONENT_VARIANTS,
 } from '../config/theme';
 
-export default function Error() {
+export default function Error(): React.ReactElement {
     document.title = PAGE_TITLES.error;
     return (
         <Grid
@@ -78,46 +78,40 @@ export default function Error() {
                             variant="h3"
                             sx={{
                                 color: COLORS.text.secondary,
-                                marginBottom: 2,
-                                fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                                fontSize: {
-                                    xs: TYPOGRAPHY.fontSize.h2,
-                                    md: TYPOGRAPHY.fontSize.h2,
-                                },
+                                fontWeight: TYPOGRAPHY.fontWeight.medium,
+                                marginBottom: 4,
+                                fontSize: TYPOGRAPHY.fontSize.h2,
                             }}
                         >
                             Page Not Found
                         </Typography>
 
                         <Typography
-                            variant="body1"
                             sx={{
                                 color: COLORS.text.secondary,
-                                marginBottom: 4,
-                                fontWeight: TYPOGRAPHY.fontWeight.normal,
-                                fontSize: {
-                                    xs: TYPOGRAPHY.fontSize.body,
-                                    md: TYPOGRAPHY.fontSize.body,
-                                },
+                                fontSize: TYPOGRAPHY.fontSize.body,
                                 lineHeight: 1.5,
+                                marginBottom: 4,
                             }}
                         >
-                            This page isn&apos;t available. The link you
-                            followed may be broken, or the page may have been
-                            removed.
+                            The page you&apos;re looking for doesn&apos;t exist
+                            or has been moved.
                         </Typography>
-
-                        <Box
-                            sx={{
-                                ...COMPONENT_VARIANTS.flexCenter,
-                                marginTop: 4,
-                            }}
-                        >
-                            <HomeButton />
-                        </Box>
                     </Box>
                 </Fade>
             </Grid>
+
+            {/* Navigation */}
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: { xs: '0.5rem', md: '1.5rem' },
+                    left: { xs: '0.5rem', md: '1.5rem' },
+                }}
+            >
+                <HomeButton />
+            </Box>
         </Grid>
     );
 }
+
