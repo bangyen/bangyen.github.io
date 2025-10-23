@@ -1,30 +1,48 @@
+import React, { createContext, useContext, useMemo, ReactNode, RefObject } from 'react';
 import { Program, Output, Tape, Register } from './Display';
 import { CustomGrid } from '../helpers';
 import { Grid, Typography, TextField } from '../components/mui';
 import { Toolbar } from './Toolbar';
 import { COLORS, SPACING, TYPOGRAPHY } from '../config/theme';
+import { SxProps, Theme } from '@mui/material/styles';
 
-import React, { createContext, useContext, useMemo } from 'react';
-import PropTypes from 'prop-types';
+interface EditorContextType {
+    name: string;
+    tapeFlag: boolean;
+    outFlag: boolean;
+    regFlag: boolean;
+    code: string[] | undefined;
+    index: number;
+    tape: number[];
+    pointer: number;
+    output: string[];
+    register: number;
+    height: number;
+    size: number;
+    dispatch: (action: string) => () => void;
+    fastForward: boolean;
+    pause: boolean;
+}
 
-export const EditorContext = createContext();
+export const EditorContext = createContext<EditorContextType | null>(null);
 
-/**
- * Editor component provides a consistent layout for programming language interpreters
- * with code editor, visual displays, and execution controls
- *
- * @param {Object} props - Component props
- * @param {Object} props.container - Ref to container element
- * @param {Object} props.sideProps - Props for the side panel (TextArea)
- * @param {boolean} props.hide - Whether to hide the side panel
- * @param {React.ReactNode} props.children - Main content to display
- */
-export default function Editor({ container, sideProps, hide, children }) {
-    const { name, tapeFlag, outFlag, regFlag, code } =
-        useContext(EditorContext);
+interface EditorProps {
+    container?: RefObject<HTMLDivElement>;
+    sideProps?: TextAreaProps;
+    hide?: boolean;
+    children: ReactNode;
+}
+
+export default function Editor({ container, sideProps, hide = false, children }: EditorProps) {
+    const editorContext = useContext(EditorContext);
+    if (!editorContext) {
+        throw new Error('Editor must be used within EditorContext.Provider');
+    }
+    
+    const { name, tapeFlag, outFlag, regFlag, code } = editorContext;
 
     const rightProps = { xs: 6, md: 4 };
-    let display, leftProps;
+    let display: string, leftProps: number | { xs: number; md: number };
 
     if (hide) {
         display = 'none';
@@ -93,7 +111,7 @@ export default function Editor({ container, sideProps, hide, children }) {
                 sx={{ width: '100%', maxWidth: '100%' }}
             >
                 {(() => {
-                    const fields = [];
+                    const fields: ReactNode[] = [];
                     const fieldCount = [
                         code !== undefined,
                         tapeFlag,
@@ -173,22 +191,22 @@ export default function Editor({ container, sideProps, hide, children }) {
     );
 }
 
-Editor.propTypes = {
-    container: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
-    sideProps: PropTypes.object,
-    hide: PropTypes.bool,
-    children: PropTypes.node.isRequired,
-};
+interface GridAreaProps {
+    handleClick: (pos: number) => () => void;
+    chooseColor: (pos: number) => string;
+    options: string[];
+    rows: number;
+    cols: number;
+}
 
-Editor.defaultProps = {
-    hide: false,
-    sideProps: {},
-};
+export function GridArea({ handleClick, chooseColor, options, rows, cols }: GridAreaProps) {
+    const editorContext = useContext(EditorContext);
+    if (!editorContext) {
+        throw new Error('GridArea must be used within EditorContext.Provider');
+    }
+    
+    const { size } = editorContext;
 
-export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
-    const { size } = useContext(EditorContext);
-
-    // Memoize cell styles to prevent recalculation on every render
     const cellStyles = useMemo(
         () => ({
             primary: {
@@ -214,13 +232,13 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
     );
 
     const getCellStyles = useMemo(
-        () => color => {
-            return cellStyles[color] || cellStyles.secondary;
+        () => (color: string) => {
+            return (cellStyles as any)[color] || cellStyles.secondary;
         },
         [cellStyles]
     );
 
-    const cellProps = (row, col) => {
+    const cellProps = (row: number, col: number) => {
         const pos = cols * row + col;
         const color = chooseColor(pos);
         const value = options[pos] || ' ';
@@ -250,29 +268,29 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }) {
     );
 }
 
-GridArea.propTypes = {
-    handleClick: PropTypes.func.isRequired,
-    chooseColor: PropTypes.func.isRequired,
-    options: PropTypes.array.isRequired,
-    rows: PropTypes.number.isRequired,
-    cols: PropTypes.number.isRequired,
-};
+interface TextAreaProps {
+    value?: string;
+    readOnly?: boolean;
+    infoLabel?: string;
+    fillValue?: string;
+    handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
 
 export function TextArea({
     value,
-    readOnly,
-    infoLabel,
-    fillValue,
+    readOnly = false,
+    infoLabel = 'Program code',
+    fillValue = 'Hello, World!',
     handleChange,
-}) {
-    const { height } = useContext(EditorContext);
+}: TextAreaProps) {
+    const editorContext = useContext(EditorContext);
+    if (!editorContext) {
+        throw new Error('TextArea must be used within EditorContext.Provider');
+    }
+    
+    const { height } = editorContext;
     const rows = Math.floor(height / 32);
 
-    fillValue = fillValue || 'Hello, World!';
-    infoLabel = infoLabel || 'Program code';
-    readOnly = readOnly || false;
-
-    // Use controlled component if value is provided, otherwise use uncontrolled
     const isControlled = value !== undefined && value !== null;
     const textFieldProps = isControlled
         ? {
@@ -328,21 +346,13 @@ export function TextArea({
     );
 }
 
-TextArea.propTypes = {
-    value: PropTypes.string,
-    readOnly: PropTypes.bool,
-    infoLabel: PropTypes.string,
-    fillValue: PropTypes.string,
-    handleChange: PropTypes.func,
-};
+interface TextProps {
+    text: string;
+    sx?: SxProps<Theme>;
+    [key: string]: any;
+}
 
-TextArea.defaultProps = {
-    readOnly: false,
-    infoLabel: 'Program code',
-    fillValue: 'Hello, World!',
-};
-
-export function Text({ text, ...props }) {
+export function Text({ text, ...props }: TextProps) {
     return (
         <Typography
             {...props}
@@ -360,6 +370,3 @@ export function Text({ text, ...props }) {
     );
 }
 
-Text.propTypes = {
-    text: PropTypes.string.isRequired,
-};
