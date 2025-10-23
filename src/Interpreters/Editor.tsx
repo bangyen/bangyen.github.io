@@ -19,7 +19,7 @@ interface EditorContextType {
     register: number;
     height: number;
     size: number;
-    dispatch: ((action: string) => () => void) | ((action: { type: string; payload: unknown }) => void);
+    dispatch: (action: string | { type: string; payload: unknown }) => () => void | void;
     fastForward: boolean;
     pause: boolean;
 }
