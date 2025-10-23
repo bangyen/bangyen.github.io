@@ -17,9 +17,7 @@ function getWindow(): Size {
     return { width, height };
 }
 
-function getContainer(
-    container: RefObject<HTMLElement> | null
-): Size {
+function getContainer(container: RefObject<HTMLElement> | null): Size {
     if (!container || !container.current) return getWindow();
 
     const { offsetHeight: height, offsetWidth: width } = container.current;
@@ -46,18 +44,41 @@ function useSize(getSize: () => Size) {
     return { size, setSize };
 }
 
-export function useContainer(
-    container: RefObject<HTMLElement> | null
-): Size {
-    const wrapper = () => getContainer(container);
-
-    const { size, setSize } = useSize(wrapper);
+export function useContainer(container: RefObject<HTMLElement> | null): Size {
+    const initialSize = getContainer(container);
+    const [size, setSize] = useState<Size>(initialSize);
+    const prevSizeRef = useRef<Size>(initialSize);
 
     useEffect(() => {
         const newSize = getContainer(container);
+        // Only update if values actually changed
+        if (
+            newSize.width !== prevSizeRef.current.width ||
+            newSize.height !== prevSizeRef.current.height
+        ) {
+            prevSizeRef.current = newSize;
+            setSize(newSize);
+        }
+    }, [container]);
 
-        setSize(newSize);
-    }, [container, setSize]);
+    useEffect(() => {
+        function handleResize() {
+            const newSize = getContainer(container);
+            setSize(prevSize => {
+                // Only update if values actually changed
+                if (
+                    newSize.width !== prevSize.width ||
+                    newSize.height !== prevSize.height
+                ) {
+                    return newSize;
+                }
+                return prevSize;
+            });
+        }
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [container]);
 
     return size;
 }
@@ -70,7 +91,9 @@ export function useWindow(): Size {
 
 export function useMobile(size: string): boolean {
     return useMediaQuery((theme: unknown) => {
-        const muiTheme = theme as { breakpoints: { down: (size: string) => string } };
+        const muiTheme = theme as {
+            breakpoints: { down: (size: string) => string };
+        };
         return muiTheme.breakpoints.down(size);
     });
 }
@@ -89,22 +112,25 @@ export function useTimer(delay: number) {
     const repeat = useRef<(() => void) | null>(null);
     const speed = useRef<number>(delay);
 
-    const create = useCallback(({ repeat: newRepeat, speed: newSpeed }: TimerConfig) => {
-        // Clear any existing timer first
-        if (globalTimer !== null) {
-            clearInterval(globalTimer);
-        }
+    const create = useCallback(
+        ({ repeat: newRepeat, speed: newSpeed }: TimerConfig) => {
+            // Clear any existing timer first
+            if (globalTimer !== null) {
+                clearInterval(globalTimer);
+            }
 
-        globalRepeat = newRepeat || globalRepeat;
-        globalSpeed = newSpeed || globalSpeed;
-        repeat.current = globalRepeat;
-        speed.current = globalSpeed;
+            globalRepeat = newRepeat || globalRepeat;
+            globalSpeed = newSpeed || globalSpeed;
+            repeat.current = globalRepeat;
+            speed.current = globalSpeed;
 
-        // Only create timer if we have a valid repeat function
-        if (globalRepeat) {
-            globalTimer = setInterval(globalRepeat, globalSpeed);
-        }
-    }, []);
+            // Only create timer if we have a valid repeat function
+            if (globalRepeat) {
+                globalTimer = setInterval(globalRepeat, globalSpeed);
+            }
+        },
+        []
+    );
 
     const clear = useCallback(() => {
         if (globalTimer !== null) {
@@ -162,89 +188,91 @@ export function useCache(getState: (state: unknown) => unknown) {
     const cache = useRef<unknown[]>([]);
     const index = useRef<number>(0);
     const processingRef = useRef<boolean>(false);
+    const getStateRef = useRef(getState);
 
-    return useCallback(
-        ({ type, payload }: CacheAction): unknown => {
-            const states = cache.current;
+    // Update the ref whenever getState changes
+    useEffect(() => {
+        getStateRef.current = getState;
+    }, [getState]);
 
-            switch (type) {
-                case 'next':
-                    // Prevent double processing in React StrictMode
-                    if (
-                        PROCESSING.doubleProcessingPrevention &&
-                        processingRef.current
-                    ) {
-                        return { ...(states[index.current] as object) };
-                    }
+    return useCallback(({ type, payload }: CacheAction): unknown => {
+        const states = cache.current;
 
-                    if (PROCESSING.doubleProcessingPrevention) {
-                        processingRef.current = true;
-                    }
+        switch (type) {
+            case 'next':
+                // Prevent double processing in React StrictMode
+                if (
+                    PROCESSING.doubleProcessingPrevention &&
+                    processingRef.current
+                ) {
+                    return { ...(states[index.current] as object) };
+                }
 
-                    const curr = index.current;
+                if (PROCESSING.doubleProcessingPrevention) {
+                    processingRef.current = true;
+                }
 
-                    if (curr + 1 === states.length) {
-                        const state = states[curr];
-                        const next = getState(state);
+                const curr = index.current;
 
-                        if (next === state) {
-                            // No change, stay at current position
-                        } else {
-                            // Add new state and move to it
-                            states.push(next);
-                            index.current++;
-                        }
+                if (curr + 1 === states.length) {
+                    const state = states[curr];
+                    const next = getStateRef.current(state);
+
+                    if (next === state) {
+                        // No change, stay at current position
                     } else {
+                        // Add new state and move to it
+                        states.push(next);
                         index.current++;
                     }
+                } else {
+                    index.current++;
+                }
 
-                    const result = { ...(states[index.current] as object) };
+                const result = { ...(states[index.current] as object) };
 
-                    // Reset processing flag after a short delay
-                    if (PROCESSING.doubleProcessingPrevention) {
-                        setTimeout(() => {
-                            processingRef.current = false;
-                        }, PROCESSING.resetDelay);
-                    }
+                // Reset processing flag after a short delay
+                if (PROCESSING.doubleProcessingPrevention) {
+                    setTimeout(() => {
+                        processingRef.current = false;
+                    }, PROCESSING.resetDelay);
+                }
 
-                    return result;
-                case 'prev':
-                    // Prevent double processing in React StrictMode
-                    if (
-                        PROCESSING.doubleProcessingPrevention &&
-                        processingRef.current
-                    ) {
-                        return { ...(states[index.current] as object) };
-                    }
+                return result;
+            case 'prev':
+                // Prevent double processing in React StrictMode
+                if (
+                    PROCESSING.doubleProcessingPrevention &&
+                    processingRef.current
+                ) {
+                    return { ...(states[index.current] as object) };
+                }
 
-                    if (PROCESSING.doubleProcessingPrevention) {
-                        processingRef.current = true;
-                    }
+                if (PROCESSING.doubleProcessingPrevention) {
+                    processingRef.current = true;
+                }
 
-                    if (index.current) index.current--;
+                if (index.current) index.current--;
 
-                    const prevResult = { ...(states[index.current] as object) };
+                const prevResult = { ...(states[index.current] as object) };
 
-                    // Reset processing flag after a short delay
-                    if (PROCESSING.doubleProcessingPrevention) {
-                        setTimeout(() => {
-                            processingRef.current = false;
-                        }, PROCESSING.resetDelay);
-                    }
+                // Reset processing flag after a short delay
+                if (PROCESSING.doubleProcessingPrevention) {
+                    setTimeout(() => {
+                        processingRef.current = false;
+                    }, PROCESSING.resetDelay);
+                }
 
-                    return prevResult;
-                case 'clear':
-                    cache.current = [{ ...(payload as object) }];
-                    index.current = 0;
+                return prevResult;
+            case 'clear':
+                cache.current = [{ ...(payload as object) }];
+                index.current = 0;
 
-                    break;
-                default:
-                    break;
-            }
+                break;
+            default:
+                break;
+        }
 
-            return payload;
-        },
-        [getState]
-    );
+        return payload;
+    }, []);
 }
-

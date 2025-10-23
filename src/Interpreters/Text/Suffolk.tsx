@@ -1,5 +1,5 @@
 import TextEditor from './TextEditor';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 interface SuffolkState {
     register: number;
@@ -96,6 +96,26 @@ export default function Editor(): React.ReactElement {
         code: '',
     };
 
-    return <TextEditor name="Suffolk" start={start as unknown as Record<string, unknown>} runner={getState as unknown as (state: Record<string, unknown>) => Record<string, unknown>} clean={cleanInput} tape output />;
-}
+    const memoizedRunner = useCallback(
+        (state: Record<string, unknown>) =>
+            getState(state as unknown as SuffolkState) as unknown as Record<
+                string,
+                unknown
+            >,
+        []
+    );
 
+    const memoizedClean = useCallback((text: string) => cleanInput(text), []);
+
+    return (
+        <TextEditor
+            name="Suffolk"
+            start={start as unknown as Record<string, unknown>}
+            runner={memoizedRunner}
+            clean={memoizedClean}
+            tape
+            output
+            register
+        />
+    );
+}

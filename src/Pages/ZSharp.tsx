@@ -14,10 +14,55 @@ import {
 import { COLORS } from '../config/theme';
 import ResearchDemo from '../components/ResearchDemo';
 
-// Load real ZSharp experiment data
-const loadRealZSharpData = async () => {
+interface DataPoint {
+    epoch: number;
+    sgd: number;
+    zsharp: number;
+    sgdLoss: number;
+    zsharpLoss: number;
+}
+
+interface ProcessedDataPoint {
+    epoch: number;
+    sgd?: number;
+    zsharp?: number;
+    gap?: number;
+}
+
+interface RealData {
+    'SGD Baseline'?: {
+        train_accuracies?: number[];
+        train_losses?: number[];
+    };
+    'ZSharp'?: {
+        train_accuracies?: number[];
+        train_losses?: number[];
+    };
+}
+
+interface ViewType {
+    key: string;
+    label: string;
+    icon: React.ElementType;
+    chartTitle: string;
+    dataProcessor: (data: DataPoint[]) => ProcessedDataPoint[];
+    chartConfig: {
+        type: string;
+        xAxisKey: string;
+        yAxisFormatter: (value: number) => string;
+        yAxisDomain: string[];
+        tooltipLabelFormatter: (value: number) => string;
+        tooltipFormatter: (value: number, name: string) => [string, string];
+        lines: Array<{
+            dataKey: string;
+            name: string;
+            color: string;
+        }>;
+    };
+}
+
+const loadRealZSharpData = async (): Promise<DataPoint[]> => {
     try {
-        // Check if browser supports DecompressionStream
         if (typeof DecompressionStream === 'undefined') {
             throw new Error('DecompressionStream not supported');
         }
@@ -36,8 +81,8 @@ const loadRealZSharpData = async () => {
 
                     writer.write(compressedData).then(() => writer.close());
 
-                    function pump() {
-                        return reader.read().then(({ done, value }) => {
+                    function pump(): Promise<void> {
+                        return reader.read().then(({ done, value }: { done: boolean; value: Uint8Array | undefined }) => {
                             if (done) {
                                 controller.close();
                                 return;
@@ -50,10 +95,9 @@ const loadRealZSharpData = async () => {
                 },
             })
         ).text();
-        const realData = JSON.parse(decompressedData);
+        const realData: RealData = JSON.parse(decompressedData);
 
-        // Convert real results to chart data format with per-epoch data
-        const data = [];
+        const data: DataPoint[] = [];
         const sgdAccuracies = realData['SGD Baseline']?.train_accuracies || [];
         const zsharpAccuracies = realData['ZSharp']?.train_accuracies || [];
         const sgdLosses = realData['SGD Baseline']?.train_losses || [];
@@ -67,7 +111,7 @@ const loadRealZSharpData = async () => {
         for (let i = 0; i < maxEpochs; i++) {
             data.push({
                 epoch: i + 1,
-                sgd: (sgdAccuracies[i] || 0) / PERCENTAGE.divisor, // Convert to 0-1 range
+                sgd: (sgdAccuracies[i] || 0) / PERCENTAGE.divisor,
                 zsharp: (zsharpAccuracies[i] || 0) / PERCENTAGE.divisor,
                 sgdLoss: sgdLosses[i] || 0,
                 zsharpLoss: zsharpLosses[i] || 0,
@@ -76,14 +120,12 @@ const loadRealZSharpData = async () => {
 
         return data;
     } catch (error) {
-        // Silently fall back to generated data if real data fails to load
         return generateFallbackData();
     }
 };
 
-// Fallback data generation if real data fails to load
-const generateFallbackData = () => {
-    const data = [];
+const generateFallbackData = (): DataPoint[] => {
+    const data: DataPoint[] = [];
     for (let i = 0; i <= ZSHARP_DEFAULTS.maxEpochs; i++) {
         const sgdAccuracy =
             ZSHARP_DEFAULTS.baseAccuracy +
@@ -107,22 +149,20 @@ const generateFallbackData = () => {
     return data;
 };
 
-const ZSharp = () => {
-    const [chartData, setChartData] = useState([]);
+const ZSharp: React.FC = () => {
+    const [chartData, setChartData] = useState<DataPoint[]>([]);
     const [loading, setLoading] = useState(true);
-    const [viewType, setViewType] = useState('accuracy');
+    const [viewType, setViewType] = useState<string>('accuracy');
 
     useEffect(() => {
         document.title = PAGE_TITLES.zsharp;
 
-        // Load real data on component mount
         const loadData = async () => {
             setLoading(true);
             try {
                 const data = await loadRealZSharpData();
                 setChartData(data);
             } catch (error) {
-                // eslint-disable-next-line no-console
                 console.error('Error loading ZSharp data in component:', error);
                 setChartData(generateFallbackData());
             } finally {
@@ -133,22 +173,21 @@ const ZSharp = () => {
         loadData();
     }, []);
 
-    // Define view types for the ResearchDemo component
-    const viewTypes = [
+    const viewTypes: ViewType[] = [
         {
             key: 'accuracy',
             label: 'Accuracy',
             icon: BarChartRounded,
             chartTitle: 'Performance Comparison',
-            dataProcessor: data => data,
+            dataProcessor: (data: DataPoint[]) => data,
             chartConfig: {
                 type: 'line',
                 xAxisKey: 'epoch',
-                yAxisFormatter: value =>
+                yAxisFormatter: (value: number) =>
                     `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
                 yAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
-                tooltipLabelFormatter: value => `Epoch ${value}`,
-                tooltipFormatter: (value, name) => [
+                tooltipLabelFormatter: (value: number) => `Epoch ${value}`,
+                tooltipFormatter: (value: number, name: string) => [
                     `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
                     name,
                 ],
@@ -167,8 +206,8 @@ const ZSharp = () => {
             label: 'Loss',
             icon: TrendingUpRounded,
             chartTitle: 'Loss Evaluation',
-            dataProcessor: data =>
-                data.map(point => ({
+            dataProcessor: (data: DataPoint[]) =>
+                data.map((point): ProcessedDataPoint => ({
                     epoch: point.epoch,
                     sgd: point.sgdLoss,
                     zsharp: point.zsharpLoss,
@@ -176,10 +215,10 @@ const ZSharp = () => {
             chartConfig: {
                 type: 'line',
                 xAxisKey: 'epoch',
-                yAxisFormatter: value => value.toFixed(3),
+                yAxisFormatter: (value: number) => value.toFixed(3),
                 yAxisDomain: ['dataMin - 0.1', 'dataMax + 0.1'],
-                tooltipLabelFormatter: value => `Epoch ${value}`,
-                tooltipFormatter: (value, name) => [value.toFixed(3), name],
+                tooltipLabelFormatter: (value: number) => `Epoch ${value}`,
+                tooltipFormatter: (value: number, name: string) => [value.toFixed(3), name],
                 lines: [
                     {
                         dataKey: 'sgd',
@@ -199,19 +238,19 @@ const ZSharp = () => {
             label: 'Learning Gap',
             icon: ShowChartRounded,
             chartTitle: 'Learning Progress',
-            dataProcessor: data =>
-                data.map(point => ({
+            dataProcessor: (data: DataPoint[]) =>
+                data.map((point): ProcessedDataPoint => ({
                     epoch: point.epoch,
                     gap: point.zsharp - point.sgd,
                 })),
             chartConfig: {
                 type: 'line',
                 xAxisKey: 'epoch',
-                yAxisFormatter: value =>
+                yAxisFormatter: (value: number) =>
                     `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
                 yAxisDomain: ['dataMin - 0.005', 'dataMax + 0.005'],
-                tooltipLabelFormatter: value => `Epoch ${value}`,
-                tooltipFormatter: (value, name) => [
+                tooltipLabelFormatter: (value: number) => `Epoch ${value}`,
+                tooltipFormatter: (value: number, name: string) => [
                     `${(value * PERCENTAGE.multiplier).toFixed(2)}%`,
                     name,
                 ],
@@ -229,8 +268,8 @@ const ZSharp = () => {
             label: 'Convergence',
             icon: AnalyticsRounded,
             chartTitle: 'Convergence Analysis',
-            dataProcessor: data =>
-                data.map((point, index) => {
+            dataProcessor: (data: DataPoint[]) =>
+                data.map((point, index): ProcessedDataPoint => {
                     if (index === 0)
                         return { epoch: point.epoch, sgd: 0, zsharp: 0 };
                     const prevPoint = data[index - 1];
@@ -243,11 +282,11 @@ const ZSharp = () => {
             chartConfig: {
                 type: 'line',
                 xAxisKey: 'epoch',
-                yAxisFormatter: value =>
+                yAxisFormatter: (value: number) =>
                     `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
                 yAxisDomain: ['dataMin - 0.005', 'dataMax + 0.005'],
-                tooltipLabelFormatter: value => `Epoch ${value}`,
-                tooltipFormatter: (value, name) => [
+                tooltipLabelFormatter: (value: number) => `Epoch ${value}`,
+                tooltipFormatter: (value: number, name: string) => [
                     `${(value * PERCENTAGE.multiplier).toFixed(3)}%`,
                     name,
                 ],
@@ -272,10 +311,10 @@ const ZSharp = () => {
             title="ZSharp"
             subtitle="Neural Network Optimization Research"
             githubUrl={URLS.zsharpRepo}
-            chartData={chartData}
-            viewTypes={viewTypes}
+            chartData={chartData as any}
+            viewTypes={viewTypes as any}
             currentViewType={viewType}
-            onViewTypeChange={setViewType}
+            onViewTypeChange={setViewType as any}
             loading={loading}
             loadingMessage="Loading real experiment data..."
         />
@@ -283,3 +322,4 @@ const ZSharp = () => {
 };
 
 export default ZSharp;
+

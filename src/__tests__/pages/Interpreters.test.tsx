@@ -21,7 +21,7 @@ const testTheme = createTheme({
 });
 
 // Test wrapper component
-const TestWrapper = ({ children }) => (
+const TestWrapper = ({ children }: { children: React.ReactNode }) => (
     <BrowserRouter
         future={{
             v7_startTransition: true,
@@ -36,35 +36,37 @@ const TestWrapper = ({ children }) => (
 jest.mock('@mui/icons-material', () => ({
     GitHub: () => <div data-testid="github-icon">GitHub</div>,
     Home: () => <div data-testid="home-icon">Home</div>,
-    Refresh: () => <div data-testid="refresh-icon">Refresh</div>,
+    GridView: () => <div data-testid="grid-icon">Grid</div>,
+    TextFields: () => <div data-testid="text-icon">Text</div>,
 }));
 
-// Mock fetch for data loading
-global.fetch = jest.fn();
-
-// Mock the Oligopoly component with a simple version for testing
-const MockOligopoly = () => {
+// Mock the Interpreters component with a simple version for testing
+const MockInterpreters = () => {
     React.useEffect(() => {
-        document.title = 'Oligopoly - Cournot Competition';
+        document.title = 'Interpreters - Bangyen Pham';
     }, []);
 
     return (
         <div>
-            <h1>Oligopoly</h1>
-            <p>Cournot Competition Simulation</p>
+            <h1>Esolang Interpreters</h1>
             <div data-testid="github-icon">GitHub</div>
             <div data-testid="home-icon">Home</div>
-            <div>Number of Firms</div>
-            <div>Demand Elasticity</div>
-            <div>Base Price</div>
+            <div>Stun Step</div>
+            <div>Suffolk</div>
+            <div>WII2D</div>
+            <div>Back</div>
+            <div data-testid="text-icon">Text</div>
+            <div data-testid="text-icon">Text</div>
+            <div data-testid="grid-icon">Grid</div>
+            <div data-testid="grid-icon">Grid</div>
         </div>
     );
 };
 
-describe('Oligopoly Component', () => {
+describe('Interpreters Component', () => {
     /**
-     * Tests the Oligopoly page component for proper rendering and functionality
-     * to ensure the economic simulation demo displays correctly.
+     * Tests the Interpreters page component for proper rendering and functionality
+     * to ensure the esolang interpreters showcase displays correctly.
      */
     beforeEach(() => {
         // Mock document.title
@@ -72,24 +74,17 @@ describe('Oligopoly Component', () => {
             writable: true,
             value: '',
         });
-
-        // Reset fetch mock
-        fetch.mockClear();
-    });
-
-    afterEach(() => {
-        jest.clearAllMocks();
     });
 
     test('renders main title and navigation', () => {
         render(
             <TestWrapper>
-                <MockOligopoly />
+                <MockInterpreters />
             </TestWrapper>
         );
 
         // Check main title
-        expect(screen.getByText('Oligopoly')).toBeInTheDocument();
+        expect(screen.getByText('Esolang Interpreters')).toBeInTheDocument();
 
         // Check navigation buttons
         expect(screen.getByTestId('github-icon')).toBeInTheDocument();
@@ -99,47 +94,51 @@ describe('Oligopoly Component', () => {
     test('sets document title on mount', () => {
         render(
             <TestWrapper>
-                <MockOligopoly />
+                <MockInterpreters />
             </TestWrapper>
         );
 
-        expect(document.title).toBe('Oligopoly - Cournot Competition');
+        expect(document.title).toBe('Interpreters - Bangyen Pham');
     });
 
-    test('renders description text', () => {
+    test('renders all interpreter cards', () => {
         render(
             <TestWrapper>
-                <MockOligopoly />
+                <MockInterpreters />
             </TestWrapper>
         );
 
-        // Check description
-        expect(
-            screen.getByText(/Cournot Competition Simulation/)
-        ).toBeInTheDocument();
+        // Check that all 4 interpreters are rendered
+        expect(screen.getByText('Stun Step')).toBeInTheDocument();
+        expect(screen.getByText('Suffolk')).toBeInTheDocument();
+        expect(screen.getByText('WII2D')).toBeInTheDocument();
+        expect(screen.getByText('Back')).toBeInTheDocument();
     });
 
-    test('renders parameter controls', () => {
+    test('renders correct icons for each interpreter type', () => {
         render(
             <TestWrapper>
-                <MockOligopoly />
+                <MockInterpreters />
             </TestWrapper>
         );
 
-        // Check parameter controls
-        expect(screen.getByText('Number of Firms')).toBeInTheDocument();
-        expect(screen.getByText('Demand Elasticity')).toBeInTheDocument();
-        expect(screen.getByText('Base Price')).toBeInTheDocument();
+        // Check that text-based interpreters have text icons
+        const textIcons = screen.getAllByTestId('text-icon');
+        expect(textIcons).toHaveLength(2); // Stun Step and Suffolk
+
+        // Check that grid-based interpreters have grid icons
+        const gridIcons = screen.getAllByTestId('grid-icon');
+        expect(gridIcons).toHaveLength(2); // WII2D and Back
     });
 
     test('renders with proper accessibility attributes', () => {
         render(
             <TestWrapper>
-                <MockOligopoly />
+                <MockInterpreters />
             </TestWrapper>
         );
 
         // Check that the component renders
-        expect(screen.getByText('Oligopoly')).toBeInTheDocument();
+        expect(screen.getByText('Esolang Interpreters')).toBeInTheDocument();
     });
 });

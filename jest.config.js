@@ -15,6 +15,7 @@ module.exports = {
     coverageReporters: ['text', 'lcov', 'html'],
     moduleNameMapper: {
         '^@/(.*)$': '<rootDir>/src/$1',
+        '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
     },
     transform: {
         '^.+\\.(js|jsx|ts|tsx)$': 'babel-jest',
@@ -28,4 +29,8 @@ module.exports = {
     transformIgnorePatterns: [
         'node_modules/(?!(.*\\.mjs$))',
     ],
+    testEnvironmentOptions: {
+        url: 'http://localhost',
+        customExportConditions: [''],
+    },
 };

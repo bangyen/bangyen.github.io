@@ -1,4 +1,4 @@
-import {
+import React, {
     useMemo,
     useCallback,
     useReducer,
@@ -7,7 +7,6 @@ import {
     useRef,
 } from 'react';
 import { Grid } from '../components/mui';
-// import * as colors from '@mui/material/colors'; // Removed unused import
 
 import { convertPixels, gridMove, getDirection } from '../calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
@@ -15,11 +14,30 @@ import { CustomGrid, Controls, ArrowsButton } from '../helpers';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../config/constants';
 import { COLORS, COMPONENT_VARIANTS } from '../config/theme';
 
-function getRandom(max) {
+interface Board {
+    [key: number]: number;
+}
+
+interface SnakeState {
+    velocity: number;
+    buffer: number[];
+    length: number;
+    rows: number;
+    cols: number;
+    head: number;
+    board: Board;
+}
+
+interface Action {
+    type: string;
+    payload?: any;
+}
+
+function getRandom(max: number): number {
     return Math.floor(Math.random() * max);
 }
 
-function addNext(max, exclude) {
+function addNext(max: number, exclude: Board): Board {
     let pos = getRandom(max);
 
     while (pos in exclude) if (++pos >= max) pos = 0;
@@ -30,8 +48,8 @@ function addNext(max, exclude) {
     };
 }
 
-function mapBoard(board, change) {
-    const newBoard = {};
+function mapBoard(board: Board, change: number): Board {
+    const newBoard: Board = {};
 
     for (const cell in board) {
         const value = board[cell];
@@ -43,7 +61,7 @@ function mapBoard(board, change) {
     return newBoard;
 }
 
-function handleResize(state, rows, cols) {
+function handleResize(state: SnakeState, rows: number, cols: number): SnakeState {
     const max = rows * cols;
     const head = getRandom(max);
     let next = getRandom(max);
@@ -62,7 +80,7 @@ function handleResize(state, rows, cols) {
     };
 }
 
-function reduceBoard(state) {
+function reduceBoard(state: SnakeState): SnakeState {
     let { board, length, head, velocity, buffer } = state;
     const { rows, cols } = state;
 
@@ -104,13 +122,12 @@ function reduceBoard(state) {
     };
 }
 
-function handleAction(state, action) {
+function handleAction(state: SnakeState, action: Action): SnakeState {
     const { type, payload } = action;
 
     switch (type) {
         case 'resize':
             const { rows, cols } = payload;
-
             return handleResize(state, rows, cols);
         case 'steer':
             const velocity = getDirection(payload.key);
@@ -129,19 +146,17 @@ function handleAction(state, action) {
     }
 }
 
-export default function Snake() {
-    const { create: createTimer } = useTimer(100);
+export default function Snake(): React.ReactElement {
+    const { create: createTimer } = useTimer(0);
     const { create: createKeys } = useKeys();
 
     const { height, width } = useWindow();
     const length = GAME_CONSTANTS.snake.initialLength;
     const size = GAME_CONSTANTS.snake.segmentSize;
 
-    // State for random moves mode
     const [randomMovesEnabled, setRandomMovesEnabled] = useState(false);
     const randomMovesRef = useRef(false);
 
-    // State for arrows visibility
     const [showArrows, setShowArrows] = useState(false);
 
     const { rows, cols } = useMemo(
@@ -154,6 +169,10 @@ export default function Snake() {
             velocity: GAME_CONSTANTS.snake.initialVelocity,
             buffer: [],
             length,
+            rows: 0,
+            cols: 0,
+            head: 0,
+            board: {},
         }),
         [length]
     );
@@ -164,7 +183,7 @@ export default function Snake() {
     );
 
     const controlHandler = useCallback(
-        event => () => {
+        (event: string) => () => {
             const key = GAME_CONSTANTS.controls.arrowPrefix + event;
 
             dispatch({
@@ -176,23 +195,23 @@ export default function Snake() {
     );
 
     const chooseColor = useCallback(
-        (row, col) => {
+        (row: number, col: number) => {
             const index = row * cols + col;
             const board = state.board;
             let color = 'inherit';
 
             if (index in board) {
                 if (board[index] > 0)
-                    color = COLORS.primary.main; // Snake body - light blue
-                else color = COLORS.primary.dark; // Food - lighter blue shade
+                    color = COLORS.primary.main;
+                else color = COLORS.primary.dark;
             }
 
             return {
                 backgroundColor: color,
                 boxShadow:
-                    color !== 'inherit' ? `0 0 1.25rem ${color}40` : 'none', // 20px
+                    color !== 'inherit' ? `0 0 1.25rem ${color}40` : 'none',
                 border:
-                    color !== 'inherit' ? `0.0625rem solid ${color}` : 'none', // 1px
+                    color !== 'inherit' ? `0.0625rem solid ${color}` : 'none',
             };
         },
         [state, cols]
@@ -216,17 +235,16 @@ export default function Snake() {
             }
         };
 
-        const wrapDirection = event =>
+        const wrapDirection = (event: any) =>
             dispatch({
                 type: 'steer',
                 payload: event,
             });
 
-        createTimer({ repeat: wrapDispatch });
+        createTimer({ repeat: wrapDispatch, speed: 100 });
         createKeys(wrapDirection);
     }, [createTimer, createKeys]);
 
-    // Update the ref when the state changes
     useEffect(() => {
         randomMovesRef.current = randomMovesEnabled;
     }, [randomMovesEnabled]);
@@ -283,3 +301,4 @@ export default function Snake() {
         </Grid>
     );
 }
+

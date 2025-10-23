@@ -55,10 +55,12 @@ interface RegisterProps {
     compact?: boolean;
 }
 
-export const Program = memo(function Program({ compact = false }: ProgramProps) {
+export const Program = memo(function Program({
+    compact = false,
+}: ProgramProps) {
     const editorContext = useContext(EditorContext);
     if (!editorContext) return null;
-    
+
     const { code, index } = editorContext;
 
     if (code === undefined) return null;
@@ -89,7 +91,7 @@ export const Program = memo(function Program({ compact = false }: ProgramProps) 
 export const Tape = memo(function Tape({ compact = false }: TapeProps) {
     const editorContext = useContext(EditorContext);
     if (!editorContext) return null;
-    
+
     const { tape, pointer, tapeFlag } = editorContext;
 
     if (!tapeFlag) return null;
@@ -120,23 +122,26 @@ export const Tape = memo(function Tape({ compact = false }: TapeProps) {
 export const Output = memo(function Output({ compact = false }: OutputProps) {
     const editorContext = useContext(EditorContext);
     if (!editorContext) return null;
-    
+
     const { output, outFlag } = editorContext;
 
     if (!outFlag) return null;
+
+    // Normalize output to array of strings or numbers
+    const outputArray = Array.isArray(output) ? output : [output];
 
     if (compact) {
         return (
             <CompactDisplay
                 Icon={TextFieldsRounded}
                 title="Output"
-                data={Array.isArray(output) ? output : [output]}
+                data={outputArray}
             />
         );
     }
 
     return (
-        <Display Icon={TextFieldsRounded} title="Output" data={Array.isArray(output) ? output : [output]}>
+        <Display Icon={TextFieldsRounded} title="Output" data={outputArray}>
             <Text text={'\xA0'} />
         </Display>
     );
@@ -147,7 +152,7 @@ export const Register = memo(function Register({
 }: RegisterProps) {
     const editorContext = useContext(EditorContext);
     if (!editorContext) return null;
-    
+
     const { register, regFlag } = editorContext;
 
     if (!regFlag) return null;
@@ -177,7 +182,7 @@ function Display({ Icon, title, data, pointer, children }: DisplayProps) {
             <Text
                 key={title + ind}
                 color={color}
-                text={String(val)}
+                text={val}
                 sx={{
                     fontSize: TYPOGRAPHY.fontSize.body,
                     fontWeight: TYPOGRAPHY.fontWeight.semibold,
@@ -308,29 +313,29 @@ export function DisplayModeToggle({
 
 function Scrollable({ children }: { children: React.ReactNode }) {
     return (
-        <Box
+        <GlassCard
             sx={{
-                overflowY: 'auto',
-                height: '100%',
-                paddingRight: 1,
-                '&::-webkit-scrollbar': {
-                    width: '8px',
-                },
-                '&::-webkit-scrollbar-track': {
-                    background: COLORS.surface.elevated,
-                    borderRadius: '4px',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                    background: COLORS.border.subtle,
-                    borderRadius: '4px',
-                    '&:hover': {
-                        background: COLORS.text.secondary,
-                    },
-                },
+                overflowX: 'auto',
+                width: '100%',
+                maxWidth: '100%',
+                height: '60px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                padding: 2,
             }}
         >
-            {children}
-        </Box>
+            <Box
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1,
+                    width: 'max-content',
+                    minWidth: 0,
+                }}
+            >
+                {children}
+            </Box>
+        </GlassCard>
     );
 }
-

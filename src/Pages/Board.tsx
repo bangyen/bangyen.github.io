@@ -40,6 +40,7 @@ export function Board(props: BoardProps): React.ReactElement {
     return (
         <Centered>
             <CustomGrid
+                space={0}
                 size={size}
                 rows={rows - 1}
                 cols={cols - 1}
@@ -47,6 +48,7 @@ export function Board(props: BoardProps): React.ReactElement {
             />
             <Centered>
                 <CustomGrid
+                    space={0}
                     size={size}
                     rows={rows}
                     cols={cols}
@@ -64,11 +66,13 @@ function Centered({ children }: CenteredProps): React.ReactElement {
 
     return (
         <Grid
-            top="50%"
-            left="50%"
-            width="100%"
-            position="absolute"
-            style={style}
+            sx={{
+                top: '50%',
+                left: '50%',
+                width: '100%',
+                position: 'absolute',
+                ...style,
+            }}
         >
             {children}
         </Grid>

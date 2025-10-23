@@ -226,14 +226,14 @@ describe('Calculate Utilities', () => {
 
         test('handles negative start positions', () => {
             // Negative start position should be handled by modulo
-            expect(gridMove(-1, 2, 3, 3)).toBe(2); // (-1 + 9) % 9 = 8, then +3 = 11, then 11 % 9 = 2
-            expect(gridMove(-3, 1, 3, 3)).toBe(7); // (-3 + 9) % 9 = 6, then +1 = 7, then 7 % 9 = 7
+            expect(gridMove(-1, 2, 3, 3)).toBe(2);
+            expect(gridMove(-3, 1, 3, 3)).toBe(7);
         });
 
         test('handles start positions larger than grid', () => {
             // Start position larger than grid should be handled by modulo
-            expect(gridMove(10, 2, 3, 3)).toBe(4); // 10 % 9 = 1, then +3 = 4, then 4 % 9 = 4
-            expect(gridMove(15, -1, 3, 3)).toBe(8); // 15 % 9 = 6, then -1 = 5, then 5 % 9 = 5
+            expect(gridMove(10, 2, 3, 3)).toBe(4);
+            expect(gridMove(15, -1, 3, 3)).toBe(8);
         });
     });
 
@@ -311,10 +311,11 @@ describe('Calculate Utilities', () => {
         });
 
         test('handles undefined/null inputs gracefully', () => {
-            expect(() => getDirection(undefined)).toThrow();
-            expect(() => getDirection(null)).toThrow();
-            expect(() => getSpace(undefined)).not.toThrow();
-            expect(() => getSpace(null)).not.toThrow();
+            expect(() => getDirection(undefined as any)).toThrow();
+            expect(() => getDirection(null as any)).toThrow();
+            expect(() => getSpace(undefined as any)).not.toThrow();
+            expect(() => getSpace(null as any)).not.toThrow();
         });
     });
 });
+

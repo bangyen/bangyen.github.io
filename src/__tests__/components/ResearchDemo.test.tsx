@@ -13,7 +13,7 @@ jest.mock('../../components/icons', () => ({
 
 // Mock the helpers
 jest.mock('../../helpers', () => ({
-    GlassCard: ({ children, ...props }) => (
+    GlassCard: ({ children, ...props }: any) => (
         <div data-testid="glass-card" {...props}>
             {children}
         </div>
@@ -22,17 +22,17 @@ jest.mock('../../helpers', () => ({
 
 // Mock recharts
 jest.mock('recharts', () => ({
-    LineChart: ({ children, data }) => (
+    LineChart: ({ children, data }: any) => (
         <div data-testid="line-chart" data-chart-data={JSON.stringify(data)}>
             {children}
         </div>
     ),
-    Line: ({ dataKey, name }) => (
+    Line: ({ dataKey, name }: any) => (
         <div data-testid={`line-${dataKey}`} data-name={name}>
             Line
         </div>
     ),
-    XAxis: ({ dataKey }) => (
+    XAxis: ({ dataKey }: any) => (
         <div data-testid="x-axis" data-key={dataKey}>
             XAxis
         </div>
@@ -40,7 +40,7 @@ jest.mock('recharts', () => ({
     YAxis: () => <div data-testid="y-axis">YAxis</div>,
     CartesianGrid: () => <div data-testid="cartesian-grid">Grid</div>,
     Tooltip: () => <div data-testid="tooltip">Tooltip</div>,
-    ResponsiveContainer: ({ children }) => (
+    ResponsiveContainer: ({ children }: any) => (
         <div data-testid="responsive-container">{children}</div>
     ),
 }));
@@ -58,12 +58,12 @@ describe('ResearchDemo', () => {
         githubUrl: URLS.zsharpRepo,
         chartData: mockChartData,
         chartConfig: {
-            type: 'line',
+            type: 'line' as const,
             xAxisKey: 'x',
-            yAxisFormatter: value => `${value}%`,
+            yAxisFormatter: (value: number) => `${value}%`,
             yAxisDomain: ['dataMin - 1', 'dataMax + 1'],
-            tooltipLabelFormatter: value => `Round ${value}`,
-            tooltipFormatter: (value, name) => [value, name],
+            tooltipLabelFormatter: (value: number) => `Round ${value}`,
+            tooltipFormatter: (value: number, name: string): [string, string] => [String(value), name],
             lines: [
                 { dataKey: 'y', name: 'Metric Y', color: '#4C78FF' },
                 { dataKey: 'z', name: 'Metric Z', color: '#2E7D32' },
@@ -125,8 +125,22 @@ describe('ResearchDemo', () => {
 
     it('renders view type buttons when viewTypes are provided', () => {
         const viewTypes = [
-            { key: 'view1', label: 'View 1', icon: () => <div>Icon1</div> },
-            { key: 'view2', label: 'View 2', icon: () => <div>Icon2</div> },
+            { 
+                key: 'view1', 
+                label: 'View 1', 
+                icon: () => <div>Icon1</div>,
+                chartTitle: 'View 1 Chart',
+                dataProcessor: (data: any[]) => data,
+                chartConfig: defaultProps.chartConfig,
+            },
+            { 
+                key: 'view2', 
+                label: 'View 2', 
+                icon: () => <div>Icon2</div>,
+                chartTitle: 'View 2 Chart',
+                dataProcessor: (data: any[]) => data,
+                chartConfig: defaultProps.chartConfig,
+            },
         ];
 
         render(
@@ -148,11 +162,11 @@ describe('ResearchDemo', () => {
                 label: 'Test Control',
                 icon: () => <div>ControlIcon</div>,
                 color: '#4C78FF',
-                value: 'option1',
+                value: 1,
                 onChange: () => {},
                 options: [
-                    { value: 'option1', label: 'Option 1' },
-                    { value: 'option2', label: 'Option 2' },
+                    { value: 1, label: 'Option 1' },
+                    { value: 2, label: 'Option 2' },
                 ],
             },
         ];
@@ -171,11 +185,11 @@ describe('ResearchDemo', () => {
                 label: 'Test Control',
                 icon: () => <div>ControlIcon</div>,
                 color: '#4C78FF',
-                value: 'option1',
+                value: 1,
                 onChange: () => {},
                 options: [
-                    { value: 'option1', label: 'Option 1' },
-                    { value: 'option2', label: 'Option 2' },
+                    { value: 1, label: 'Option 1' },
+                    { value: 2, label: 'Option 2' },
                 ],
             },
         ];
@@ -197,7 +211,7 @@ describe('ResearchDemo', () => {
         const dualAxisConfig = {
             ...defaultProps.chartConfig,
             dualYAxis: true,
-            rightYAxisFormatter: value => `${value}%`,
+            rightYAxisFormatter: (value: number) => `${value}%`,
             rightYAxisDomain: ['dataMin - 1', 'dataMax + 1'],
             lines: [
                 {
@@ -213,6 +227,7 @@ describe('ResearchDemo', () => {
                     yAxisId: 'right',
                 },
             ],
+            tooltipFormatter: (value: number, name: string): [string, string] => [String(value), name],
         };
 
         render(<ResearchDemo {...defaultProps} chartConfig={dualAxisConfig} />);
@@ -222,3 +237,4 @@ describe('ResearchDemo', () => {
         expect(yAxes).toHaveLength(2);
     });
 });
+

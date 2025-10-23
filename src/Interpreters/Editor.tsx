@@ -1,10 +1,16 @@
-import React, { createContext, useContext, useMemo, ReactNode, RefObject } from 'react';
+import React, {
+    createContext,
+    useContext,
+    useMemo,
+    ReactNode,
+    RefObject,
+} from 'react';
 import { Program, Output, Tape, Register } from './Display';
 import { CustomGrid } from '../helpers';
 import { Grid, Typography, TextField } from '../components/mui';
 import { Toolbar } from './Toolbar';
 import { COLORS, SPACING, TYPOGRAPHY } from '../config/theme';
-import { SxProps, Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
 
 interface EditorContextType {
     name: string;
@@ -19,7 +25,7 @@ interface EditorContextType {
     register: number;
     height: number;
     size: number;
-    dispatch: (action: string) => () => void;
+    dispatch: (action: string | { type: string; payload: unknown }) => void;
     fastForward: boolean;
     pause: boolean;
 }
@@ -33,12 +39,17 @@ interface EditorProps {
     children: ReactNode;
 }
 
-export default function Editor({ container, sideProps, hide = false, children }: EditorProps) {
+export default function Editor({
+    container,
+    sideProps = {},
+    hide = false,
+    children,
+}: EditorProps) {
     const editorContext = useContext(EditorContext);
     if (!editorContext) {
         throw new Error('Editor must be used within EditorContext.Provider');
     }
-    
+
     const { name, tapeFlag, outFlag, regFlag, code } = editorContext;
 
     const rightProps = { xs: 6, md: 4 };
@@ -96,7 +107,9 @@ export default function Editor({ container, sideProps, hide = false, children }:
                         {name}
                     </Typography>
                 </Grid>
-                <Toolbar />
+                <Grid display="flex" alignItems="center" gap={1}>
+                    <Toolbar />
+                </Grid>
             </Grid>
             <Grid {...contentProps}>
                 <Grid size={leftProps}>{children}</Grid>
@@ -198,12 +211,18 @@ interface GridAreaProps {
     cols: number;
 }
 
-export function GridArea({ handleClick, chooseColor, options, rows, cols }: GridAreaProps) {
+export function GridArea({
+    handleClick,
+    chooseColor,
+    options,
+    rows,
+    cols,
+}: GridAreaProps) {
     const editorContext = useContext(EditorContext);
     if (!editorContext) {
         throw new Error('GridArea must be used within EditorContext.Provider');
     }
-    
+
     const { size } = editorContext;
 
     const cellStyles = useMemo(
@@ -232,7 +251,11 @@ export function GridArea({ handleClick, chooseColor, options, rows, cols }: Grid
 
     const getCellStyles = useMemo(
         () => (color: string) => {
-            return (cellStyles as any)[color] || cellStyles.secondary;
+            return (
+                (cellStyles as Record<string, typeof cellStyles.secondary>)[
+                    color
+                ] || cellStyles.secondary
+            );
         },
         [cellStyles]
     );
@@ -272,7 +295,10 @@ interface TextAreaProps {
     readOnly?: boolean;
     infoLabel?: string;
     fillValue?: string;
-    handleChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+    placeholder?: string;
+    handleChange?: (
+        event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => void;
 }
 
 export function TextArea({
@@ -280,13 +306,14 @@ export function TextArea({
     readOnly = false,
     infoLabel = 'Program code',
     fillValue = 'Hello, World!',
+    placeholder,
     handleChange,
 }: TextAreaProps) {
     const editorContext = useContext(EditorContext);
     if (!editorContext) {
         throw new Error('TextArea must be used within EditorContext.Provider');
     }
-    
+
     const { height } = editorContext;
     const rows = Math.floor(height / 32);
 
@@ -305,6 +332,7 @@ export function TextArea({
         <TextField
             variant="outlined"
             label={infoLabel}
+            placeholder={placeholder}
             slotProps={{
                 inputLabel: { shrink: true },
                 htmlInput: { readOnly },
@@ -324,6 +352,10 @@ export function TextArea({
                 '& .MuiInputBase-input': {
                     fontFamily: 'monospace',
                     color: 'text.primary',
+                    '&::placeholder': {
+                        opacity: 0.6,
+                        color: 'text.secondary',
+                    },
                 },
                 '& .MuiOutlinedInput-notchedOutline': {
                     borderColor: COLORS.border.subtle,
@@ -346,9 +378,9 @@ export function TextArea({
 }
 
 interface TextProps {
-    text: string;
+    text: string | number;
     sx?: SxProps<Theme>;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export function Text({ text, ...props }: TextProps) {
@@ -361,6 +393,7 @@ export function Text({ text, ...props }: TextProps) {
                 fontFamily: 'inherit',
                 userSelect: 'none',
                 lineHeight: 1,
+                display: 'inline',
                 ...props.sx,
             }}
         >
@@ -368,4 +401,3 @@ export function Text({ text, ...props }: TextProps) {
         </Typography>
     );
 }
-

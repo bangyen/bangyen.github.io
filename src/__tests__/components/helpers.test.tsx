@@ -28,7 +28,7 @@ const testTheme = createTheme({
 });
 
 // Test wrapper component
-const TestWrapper = ({ children }) => (
+const TestWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
     <BrowserRouter
         future={{
             v7_startTransition: true,
@@ -57,11 +57,11 @@ describe('TooltipButton', () => {
      * and tooltip functionality for improved user experience.
      */
     test('renders with tooltip and icon', () => {
-        const mockIcon = () => <div data-testid="test-icon">Test</div>;
+        const MockIcon: React.FC = () => <div data-testid="test-icon">Test</div>;
 
         render(
             <TestWrapper>
-                <TooltipButton Icon={mockIcon} title="Test Tooltip" />
+                <TooltipButton Icon={MockIcon} title="Test Tooltip" />
             </TestWrapper>
         );
 
@@ -70,13 +70,13 @@ describe('TooltipButton', () => {
     });
 
     test('applies custom props correctly', () => {
-        const mockIcon = () => <div data-testid="test-icon">Test</div>;
+        const MockIcon: React.FC = () => <div data-testid="test-icon">Test</div>;
         const handleClick = jest.fn();
 
         render(
             <TestWrapper>
                 <TooltipButton
-                    Icon={mockIcon}
+                    Icon={MockIcon}
                     title="Test Tooltip"
                     onClick={handleClick}
                     data-testid="custom-button"
@@ -265,3 +265,4 @@ describe('Controls', () => {
         expect(screen.getByTestId('game-specific')).toBeInTheDocument();
     });
 });
+

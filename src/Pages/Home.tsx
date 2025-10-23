@@ -40,8 +40,20 @@ import {
     ViewModuleRounded,
 } from '../components/icons';
 
-// Project categories with enhanced metadata
-const PROJECT_CATEGORIES = {
+interface ProjectInfo {
+    path: string;
+    description: string;
+    technology: string;
+}
+
+interface ProjectCategory {
+    title: string;
+    icon: React.ElementType;
+    color: string;
+    projects: Record<string, ProjectInfo>;
+}
+
+const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
     research: {
         title: 'Research',
         icon: Psychology,
@@ -90,7 +102,7 @@ const PROJECT_CATEGORIES = {
     },
 };
 
-function ProjectDropdown() {
+function ProjectDropdown(): React.ReactElement {
     return (
         <Box sx={{ padding: '16px 16px 0 16px' }}>
             {Object.entries(PROJECT_CATEGORIES).map(
@@ -98,7 +110,6 @@ function ProjectDropdown() {
                     const IconComponent = category.icon;
                     return (
                         <Box key={categoryKey} sx={{ marginBottom: 2 }}>
-                            {/* Category Header */}
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -141,7 +152,6 @@ function ProjectDropdown() {
                                 </Typography>
                             </Box>
 
-                            {/* Category Projects */}
                             {Object.entries(category.projects).map(
                                 ([projectName, project]) => (
                                     <MenuItem
@@ -204,25 +214,25 @@ function ProjectDropdown() {
     );
 }
 
-function clickHandler(setAnchor) {
-    return event => {
+function clickHandler(setAnchor: (anchor: HTMLElement | null) => void) {
+    return (event: React.MouseEvent<HTMLElement>) => {
         setAnchor(event.currentTarget);
     };
 }
 
-function closeHandler(setAnchor) {
+function closeHandler(setAnchor: (anchor: null) => void) {
     return () => {
         setAnchor(null);
     };
 }
 
-function MenuButton() {
-    const [anchor, setAnchor] = useState(null);
+function MenuButton(): React.ReactElement {
+    const [anchor, setAnchor] = useState<HTMLElement | null>(null);
     const handleClick = clickHandler(setAnchor);
     const handleClose = closeHandler(setAnchor);
     const open = Boolean(anchor);
 
-    const define = value => {
+    const define = (value: string | undefined) => {
         return open ? value : undefined;
     };
 
@@ -248,6 +258,12 @@ function MenuButton() {
                 open={open}
                 anchorEl={anchor}
                 disableAutoFocusItem={true}
+                BackdropProps={{
+                    sx: {
+                        backgroundColor: 'transparent',
+                        backdropFilter: 'none',
+                    },
+                }}
                 sx={{
                     marginLeft: 1,
                     marginTop: 1,
@@ -285,7 +301,7 @@ function MenuButton() {
     );
 }
 
-export default function Home() {
+export default function Home(): React.ReactElement {
     useEffect(() => {
         document.title = PAGE_TITLES.home;
     }, []);
@@ -304,7 +320,6 @@ export default function Home() {
                 overflowX: 'hidden',
             }}
         >
-            {/* Modern Navigation */}
             <Box
                 sx={{
                     position: 'relative',
@@ -316,8 +331,8 @@ export default function Home() {
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    maxWidth: '100%', // Prevent overflow
-                    overflowX: 'hidden', // Hide any overflow
+                    maxWidth: '100%',
+                    overflowX: 'hidden',
                 }}
             >
                 <MenuButton />
@@ -331,17 +346,14 @@ export default function Home() {
                 />
             </Box>
 
-            {/* Spacing between nav and hero */}
             <Box
                 sx={{
                     height: { xs: '2rem', md: '5rem' },
                 }}
             />
 
-            {/* Hero Section */}
             <HeroContainer>
                 <Grid container spacing={{ xs: 4, md: 8 }} alignItems="center">
-                    {/* Left Side - Introduction */}
                     <Grid size={{ xs: 12, md: 6 }}>
                         <Fade in timeout={800}>
                             <Box>
@@ -364,15 +376,14 @@ export default function Home() {
                                         color: COLORS.text.primary,
                                         fontWeight: TYPOGRAPHY.fontWeight.bold,
                                         fontSize: {
-                                            xs: 'clamp(2rem, 8vw, 2.5rem)', // Mobile sizing
-                                            md: 'clamp(3rem, 6vw, 5rem)', // Desktop sizing
+                                            xs: 'clamp(2rem, 8vw, 2.5rem)',
+                                            md: 'clamp(3rem, 6vw, 5rem)',
                                         },
                                         lineHeight: 1.4,
                                         letterSpacing: '0',
                                         marginBottom: 2,
-                                        // Allow controlled wrapping, but prevent breaks in names
-                                        wordBreak: 'keep-all', // Prevent breaking within words
-                                        hyphens: 'none', // Disable hyphenation
+                                        wordBreak: 'keep-all',
+                                        hyphens: 'none',
                                     }}
                                 >
                                     {PERSONAL_INFO.name}
@@ -382,16 +393,15 @@ export default function Home() {
                                     sx={{
                                         color: COLORS.text.secondary,
                                         fontSize: {
-                                            xs: 'clamp(0.875rem, 4vw, 1.125rem)', // Mobile sizing
-                                            md: 'clamp(1.125rem, 2.5vw, 1.5rem)', // Desktop sizing
+                                            xs: 'clamp(0.875rem, 4vw, 1.125rem)',
+                                            md: 'clamp(1.125rem, 2.5vw, 1.5rem)',
                                         },
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.semibold,
                                         marginBottom: 4,
                                         lineHeight: 1.4,
-                                        // Control how text breaks, allowing smart wrapping
-                                        wordBreak: 'keep-all', // Prevent breaking within words
-                                        hyphens: 'none', // Disable hyphenation
+                                        wordBreak: 'keep-all',
+                                        hyphens: 'none',
                                     }}
                                 >
                                     {PERSONAL_INFO.title}
@@ -456,6 +466,8 @@ export default function Home() {
                                             transition: ANIMATIONS.transition,
                                             cursor: 'pointer',
                                             '&:hover': {
+                                                backgroundColor:
+                                                    'hsla(217, 91%, 60%, 0.15)',
                                                 transform:
                                                     'scale(1.02) translateY(-1px)',
                                                 boxShadow:
@@ -487,7 +499,6 @@ export default function Home() {
                         </Fade>
                     </Grid>
 
-                    {/* Right Side - Skills & Contact */}
                     <Grid size={{ xs: 12, md: 6 }}>
                         <Fade in timeout={1000}>
                             <Box
@@ -497,7 +508,6 @@ export default function Home() {
                                     gap: 4,
                                 }}
                             >
-                                {/* Compact Skills Section */}
                                 <GlassCard>
                                     <Typography
                                         sx={{
@@ -512,16 +522,15 @@ export default function Home() {
                                         Tech Stack
                                     </Typography>
 
-                                    {/* Responsive Skills Grid */}
                                     <Box
                                         sx={{
                                             display: 'grid',
                                             gridTemplateColumns: {
-                                                xs: '1fr', // Single column on mobile
-                                                md: 'repeat(3, 1fr)', // 3 columns on desktop
+                                                xs: '1fr',
+                                                md: 'repeat(3, 1fr)',
                                             },
                                             gap: {
-                                                xs: 1.5, // Smaller gap on mobile
+                                                xs: 1.5,
                                                 md: 2,
                                             },
                                             marginBottom: 3,
@@ -565,9 +574,10 @@ export default function Home() {
                                                             minWidth: 0,
                                                             overflow: 'hidden',
                                                             '&:hover': {
-                                                                ...ANIMATIONS
-                                                                    .presets
-                                                                    .cardHover,
+                                                                backgroundColor:
+                                                                    COLORS
+                                                                        .interactive
+                                                                        .hover,
                                                                 transform:
                                                                     'translateY(-2px) scale(1.01)',
                                                             },
@@ -598,12 +608,12 @@ export default function Home() {
                                                                         .fontWeight
                                                                         .medium,
                                                                 whiteSpace:
-                                                                    'nowrap', // Prevent wrapping
+                                                                    'nowrap',
                                                                 overflow:
-                                                                    'hidden', // Hide overflow
+                                                                    'hidden',
                                                                 textOverflow:
-                                                                    'ellipsis', // Show ellipsis if too long
-                                                                flexShrink: 1, // Allow text to shrink
+                                                                    'ellipsis',
+                                                                flexShrink: 1,
                                                             }}
                                                         >
                                                             {skill.name}
@@ -615,7 +625,6 @@ export default function Home() {
                                     </Box>
                                 </GlassCard>
 
-                                {/* Contact & Action Section */}
                                 <GlassCard>
                                     <Typography
                                         sx={{
@@ -655,7 +664,7 @@ export default function Home() {
                                             href={URLS.githubProfile}
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            variant="secondary"
+                                            variant="outlined"
                                             startIcon={<GitHub />}
                                             sx={{
                                                 textDecoration: 'none',
@@ -667,10 +676,17 @@ export default function Home() {
                                         <Button
                                             component="a"
                                             href="mailto:bangyenp@gmail.com?subject=Project%20Collaboration"
-                                            variant="ghost"
+                                            variant="text"
                                             endIcon={<ArrowForward />}
                                             sx={{
                                                 textDecoration: 'none',
+                                                color: COLORS.text.secondary,
+                                                '&:hover': {
+                                                    color: COLORS.text.primary,
+                                                    backgroundColor:
+                                                        COLORS.interactive
+                                                            .hover,
+                                                },
                                             }}
                                         >
                                             Available for Projects
@@ -683,7 +699,6 @@ export default function Home() {
                 </Grid>
             </HeroContainer>
 
-            {/* Featured Work Section */}
             <Section id="featured-work">
                 <Fade in timeout={1400}>
                     <Box>
@@ -709,7 +724,6 @@ export default function Home() {
                                 gap: 4,
                             }}
                         >
-                            {/* Publications */}
                             {PUBLICATIONS.map((publication, index) => (
                                 <Fade
                                     in
@@ -725,8 +739,6 @@ export default function Home() {
                                             textDecoration: 'none',
                                             position: 'relative',
                                             overflow: 'hidden',
-                                            height: '100%',
-                                            display: 'flex',
                                             ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
                                                 backgroundColor:
@@ -734,7 +746,12 @@ export default function Home() {
                                             },
                                         }}
                                     >
-                                        <GlassCard sx={{ border: 'none' }}>
+                                        <GlassCard
+                                            sx={{
+                                                border: 'none',
+                                                height: '100%',
+                                            }}
+                                        >
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -831,7 +848,6 @@ export default function Home() {
                                 </Fade>
                             ))}
 
-                            {/* Projects */}
                             {PROJECTS.map((project, index) => (
                                 <Fade
                                     in
@@ -847,8 +863,6 @@ export default function Home() {
                                             textDecoration: 'none',
                                             position: 'relative',
                                             overflow: 'hidden',
-                                            height: '100%',
-                                            display: 'flex',
                                             ...COMPONENT_VARIANTS.interactiveCard,
                                             '&:hover .glass-card': {
                                                 backgroundColor:
@@ -856,7 +870,12 @@ export default function Home() {
                                             },
                                         }}
                                     >
-                                        <GlassCard sx={{ border: 'none' }}>
+                                        <GlassCard
+                                            sx={{
+                                                border: 'none',
+                                                height: '100%',
+                                            }}
+                                        >
                                             <Box
                                                 sx={{
                                                     display: 'flex',
@@ -958,7 +977,6 @@ export default function Home() {
                 </Fade>
             </Section>
 
-            {/* Bottom spacing */}
             <Box
                 sx={{
                     height: { xs: '2rem', md: '5rem' },

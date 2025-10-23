@@ -416,6 +416,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                                     {/* Input Pattern */}
                                     <Box sx={{ mb: 2 }}>
                                         <CustomGrid
+                                            space={0}
                                             rows={1}
                                             cols={cols}
                                             size={size * 0.7}
@@ -426,6 +427,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                                     {/* Solution Pattern */}
                                     <Box>
                                         <CustomGrid
+                                            space={0}
                                             rows={1}
                                             cols={cols}
                                             size={size * 0.7}

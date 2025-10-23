@@ -38,13 +38,13 @@ global.TextEncoder = class TextEncoder {
     encode(str: string): Uint8Array {
         return new Uint8Array(str.split('').map(c => c.charCodeAt(0)));
     }
-};
+} as any;
 
 global.TextDecoder = class TextDecoder {
     decode(bytes: Uint8Array): string {
         return String.fromCharCode(...bytes);
     }
-};
+} as any;
 
 // All warnings have been fixed at the root cause - no suppressions needed!
 

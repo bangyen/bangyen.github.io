@@ -19,35 +19,35 @@ describe('Custom Hooks', () => {
             expect(typeof result.current.height).toBe('number');
         });
 
-        test('returns container dimensions when container provided', () => {
-            const mockContainer = {
-                current: {
-                    offsetWidth: 500,
-                    offsetHeight: 300,
-                },
-            };
+    test('returns container dimensions when container provided', () => {
+        const mockContainer = {
+            current: {
+                offsetWidth: 500,
+                offsetHeight: 300,
+            } as HTMLElement,
+        };
 
-            const { result } = renderHook(() => useContainer(mockContainer));
+        const { result } = renderHook(() => useContainer(mockContainer as any));
 
-            expect(result.current).toEqual({ width: 500, height: 300 });
-        });
+        expect(result.current).toEqual({ width: 500, height: 300 });
+    });
 
-        test('updates when container ref changes', () => {
-            const mockContainer = {
-                current: {
-                    offsetWidth: 500,
-                    offsetHeight: 300,
-                },
-            };
+    test('updates when container ref changes', () => {
+        const mockContainer = {
+            current: {
+                offsetWidth: 500,
+                offsetHeight: 300,
+            } as HTMLElement,
+        };
 
-            const { result, rerender } = renderHook(
-                ({ container }) => useContainer(container),
-                { initialProps: { container: mockContainer } }
-            );
+        const { result, rerender } = renderHook(
+            ({ container }) => useContainer(container as any),
+            { initialProps: { container: mockContainer } }
+        );
 
-            expect(result.current.width).toBeGreaterThanOrEqual(0);
-            expect(result.current.height).toBeGreaterThanOrEqual(0);
-        });
+        expect(result.current.width).toBeGreaterThanOrEqual(0);
+        expect(result.current.height).toBeGreaterThanOrEqual(0);
+    });
     });
 
     describe('useWindow', () => {

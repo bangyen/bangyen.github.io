@@ -69,7 +69,7 @@ function getState(state: BackState): BackState {
 
     return {
         velocity,
-        position: position ?? 0,
+        position,
         pointer,
         grid,
         tape,
@@ -90,4 +90,3 @@ export default function Editor(): React.ReactElement {
 
     return <GridEditor name="Back" start={start} runner={getState} tape />;
 }
-

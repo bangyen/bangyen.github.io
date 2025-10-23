@@ -26,7 +26,10 @@ interface ButtonData {
 
 interface ToolbarPayload {
     dispatch: (action: { type: string; payload: unknown }) => void;
-    nextIter: (action: { type: string; payload: unknown }) => Record<string, unknown>;
+    nextIter: (action: {
+        type: string;
+        payload: unknown;
+    }) => Record<string, unknown>;
     create: (config: { repeat: () => void; speed: number }) => void;
     clear: () => void;
     start: Record<string, unknown>;
@@ -45,13 +48,14 @@ export interface ToolbarAction {
 
 export function Toolbar(): React.ReactElement[] {
     const editorContext = useContext(EditorContext);
-    if (!editorContext) return [];
-    
-    const { name, dispatch, fastForward, pause } = editorContext;
-
     const notMobile = !useMobile('sm');
 
-    const link = 'https://esolangs.org/wiki/' + name.replace(' ', '_');
+    const link = editorContext
+        ? 'https://esolangs.org/wiki/' + editorContext.name.replace(' ', '_')
+        : '';
+    const pause = editorContext?.pause || false;
+    const dispatch = editorContext?.dispatch || (() => undefined);
+    const fastForward = editorContext?.fastForward || false;
 
     const TimerButton = useMemo(
         () =>
@@ -59,19 +63,21 @@ export function Toolbar(): React.ReactElement[] {
                 <TooltipButton
                     key="Run"
                     title="Run"
-                    onClick={() => dispatch('run')}
+                    onClick={dispatch('run')}
                     Icon={PlayArrowRounded}
                 />
             ) : (
                 <TooltipButton
                     key="Pause"
                     title="Pause"
-                    onClick={() => dispatch('stop')}
+                    onClick={dispatch('stop')}
                     Icon={PauseRounded}
                 />
             ),
         [dispatch, pause]
     );
+
+    if (!editorContext) return [];
 
     const buttonData: Record<string, ButtonData> = {
         Reset: {
@@ -118,7 +124,7 @@ export function Toolbar(): React.ReactElement[] {
                     key={key}
                     title={key}
                     Icon={icon}
-                    onClick={() => dispatch(action)}
+                    onClick={dispatch(action)}
                 />
             );
         else if (props)
@@ -190,12 +196,18 @@ export function handleToolbar(
         case 'reset':
             clear();
 
+            // For text editors, preserve the code and text, only reset execution state
+            const resetPayload = { ...state, ...start };
+
+            // Preserve text and code if they exist (for text editors)
+            if ('text' in state && 'code' in state) {
+                resetPayload.text = state.text;
+                resetPayload.code = state.code;
+            }
+
             newState = nextIter({
                 type: 'clear',
-                payload: {
-                    ...state,
-                    ...start,
-                },
+                payload: resetPayload,
             }) as ToolbarState;
             newState.pause = pauseStateMap.reset;
             break;
@@ -212,4 +224,3 @@ export function handleToolbar(
 
     return newState;
 }
-

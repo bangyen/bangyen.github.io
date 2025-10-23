@@ -1,6 +1,6 @@
-import { InfoRounded, CircleRounded } from '../../components/icons';
-import { useMemo, useEffect, useReducer } from 'react';
+import React, { useMemo, useEffect, useReducer } from 'react';
 import { Grid } from '../../components/mui';
+import { InfoRounded, CircleRounded } from '../../components/icons';
 
 import { Controls, TooltipButton } from '../../helpers';
 import { Board, useHandler, usePalette } from '../Board';
@@ -11,10 +11,30 @@ import { useWindow, useMobile } from '../../hooks';
 import { convertPixels } from '../../calculate';
 import Info from './Info';
 
-function getFrontProps(getters, dispatch) {
+interface Getters {
+    getColor: (row: number, col: number) => { front: string; back: string };
+    getBorder: (row: number, col: number) => React.CSSProperties;
+    getFiller: (row: number, col: number) => string;
+}
+
+interface FrontProps {
+    onClick: () => void;
+    children: React.ReactElement;
+    backgroundColor: string;
+    color: string;
+    style: React.CSSProperties;
+    sx: {
+        '&:hover': {
+            cursor: string;
+            color: string;
+        };
+    };
+}
+
+function getFrontProps(getters: Getters, dispatch: (action: any) => void) {
     const { getColor, getBorder } = getters;
 
-    const flipAdj = (row, col) => {
+    const flipAdj = (row: number, col: number) => {
         dispatch({
             type: 'adjacent',
             row,
@@ -22,7 +42,7 @@ function getFrontProps(getters, dispatch) {
         });
     };
 
-    return (row, col) => {
+    return (row: number, col: number): FrontProps => {
         const style = getBorder(row, col);
         const { front, back } = getColor(row, col);
 
@@ -42,7 +62,7 @@ function getFrontProps(getters, dispatch) {
     };
 }
 
-export default function LightsOut() {
+export default function LightsOut(): React.ReactElement {
     const { height, width } = useWindow();
     const mobile = useMobile('sm');
     const size = mobile
@@ -68,7 +88,7 @@ export default function LightsOut() {
 
     const [state, dispatch] = useReducer(handleBoard, initial);
 
-    const [open, toggleOpen] = useReducer(open => !open, false);
+    const [open, toggleOpen] = useReducer((open: boolean) => !open, false);
 
     const palette = usePalette(state.score);
 
@@ -88,7 +108,7 @@ export default function LightsOut() {
 
     const frontProps = getFrontProps(getters, dispatch);
 
-    const backProps = (row, col) => {
+    const backProps = (row: number, col: number) => {
         return {
             backgroundColor: getters.getFiller(row, col),
         };
@@ -107,11 +127,11 @@ export default function LightsOut() {
                 size={size}
                 rows={rows}
                 cols={cols}
-                frontProps={frontProps}
+                frontProps={frontProps as any}
                 backProps={backProps}
             />
             <Controls
-                handler={() => {}} // No directional controls for Lights Out
+                handler={() => () => undefined} // No directional controls for Lights Out
                 onRandom={() => dispatch({ type: 'random' })}
                 size="inherit"
             >
@@ -121,15 +141,16 @@ export default function LightsOut() {
                     onClick={toggleOpen}
                 />
             </Controls>
-            <Info
-                rows={rows}
-                cols={cols}
-                size={size}
-                open={open}
-                palette={palette}
-                score={state.score}
-                toggleOpen={toggleOpen}
-            />
+            {(Info as any)({
+                rows,
+                cols,
+                size,
+                open,
+                palette,
+                score: state.score,
+                toggleOpen,
+            })}
         </Grid>
     );
 }
+

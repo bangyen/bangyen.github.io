@@ -49,7 +49,7 @@
     "endOfLine": "lf"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx}": [
+    "src/**/*.{js,jsx,ts,tsx}": [
       "eslint --fix --config config/eslint.config.js",
       "prettier --write"
     ],
