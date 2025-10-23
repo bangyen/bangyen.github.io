@@ -21,7 +21,7 @@ const testTheme = createTheme({
 });
 
 // Test wrapper component
-const TestWrapper = ({ children }) => (
+const TestWrapper = ({ children }: { children: React.ReactNode }) => (
     <BrowserRouter
         future={{
             v7_startTransition: true,
@@ -74,7 +74,7 @@ describe('Oligopoly Component', () => {
         });
 
         // Reset fetch mock
-        fetch.mockClear();
+        (fetch as jest.Mock).mockClear();
     });
 
     afterEach(() => {

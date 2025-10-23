@@ -63,7 +63,7 @@ describe('ResearchDemo', () => {
             yAxisFormatter: (value: number) => `${value}%`,
             yAxisDomain: ['dataMin - 1', 'dataMax + 1'],
             tooltipLabelFormatter: (value: number) => `Round ${value}`,
-            tooltipFormatter: (value: number, name: string) => [value, name],
+            tooltipFormatter: (value: number, name: string): [string, string] => [String(value), name],
             lines: [
                 { dataKey: 'y', name: 'Metric Y', color: '#4C78FF' },
                 { dataKey: 'z', name: 'Metric Z', color: '#2E7D32' },
@@ -125,8 +125,22 @@ describe('ResearchDemo', () => {
 
     it('renders view type buttons when viewTypes are provided', () => {
         const viewTypes = [
-            { key: 'view1', label: 'View 1', icon: () => <div>Icon1</div> },
-            { key: 'view2', label: 'View 2', icon: () => <div>Icon2</div> },
+            { 
+                key: 'view1', 
+                label: 'View 1', 
+                icon: () => <div>Icon1</div>,
+                chartTitle: 'View 1 Chart',
+                dataProcessor: (data: any[]) => data,
+                chartConfig: defaultProps.chartConfig,
+            },
+            { 
+                key: 'view2', 
+                label: 'View 2', 
+                icon: () => <div>Icon2</div>,
+                chartTitle: 'View 2 Chart',
+                dataProcessor: (data: any[]) => data,
+                chartConfig: defaultProps.chartConfig,
+            },
         ];
 
         render(
@@ -148,11 +162,11 @@ describe('ResearchDemo', () => {
                 label: 'Test Control',
                 icon: () => <div>ControlIcon</div>,
                 color: '#4C78FF',
-                value: 'option1',
+                value: 1,
                 onChange: () => {},
                 options: [
-                    { value: 'option1', label: 'Option 1' },
-                    { value: 'option2', label: 'Option 2' },
+                    { value: 1, label: 'Option 1' },
+                    { value: 2, label: 'Option 2' },
                 ],
             },
         ];
@@ -171,11 +185,11 @@ describe('ResearchDemo', () => {
                 label: 'Test Control',
                 icon: () => <div>ControlIcon</div>,
                 color: '#4C78FF',
-                value: 'option1',
+                value: 1,
                 onChange: () => {},
                 options: [
-                    { value: 'option1', label: 'Option 1' },
-                    { value: 'option2', label: 'Option 2' },
+                    { value: 1, label: 'Option 1' },
+                    { value: 2, label: 'Option 2' },
                 ],
             },
         ];
@@ -213,6 +227,7 @@ describe('ResearchDemo', () => {
                     yAxisId: 'right',
                 },
             ],
+            tooltipFormatter: (value: number, name: string): [string, string] => [String(value), name],
         };
 
         render(<ResearchDemo {...defaultProps} chartConfig={dualAxisConfig} />);
