@@ -13,6 +13,7 @@ import {
 } from '../config/constants';
 import { COLORS } from '../config/theme';
 import ResearchDemo from '../components/ResearchDemo';
+import type { ViewType } from '../components/ResearchDemo';
 
 interface DataPoint {
     epoch: number;
@@ -152,7 +153,7 @@ const ZSharp: React.FC = () => {
         loadData();
     }, []);
 
-    const viewTypes = [
+    const viewTypes: ViewType[] = [
         {
             key: 'accuracy',
             label: 'Accuracy',
