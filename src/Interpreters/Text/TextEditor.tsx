@@ -136,7 +136,7 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
                     });
                 };
             } else {
-                // Handle object action
+                // Handle object action - return void
                 dispatch({
                     type: action.type,
                     payload: {
@@ -147,6 +147,7 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
                         dispatch,
                     },
                 });
+                return;
             }
         },
         [nextIter, clear, create, dispatch]
