@@ -53,7 +53,6 @@ export default function Editor({ container, sideProps, hide = false, children }:
     }
 
     const titleProps = {
-        size: 'grow',
         sx: {
             display: {
                 xs: 'none',
@@ -273,7 +272,7 @@ interface TextAreaProps {
     readOnly?: boolean;
     infoLabel?: string;
     fillValue?: string;
-    handleChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    handleChange?: (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
 }
 
 export function TextArea({

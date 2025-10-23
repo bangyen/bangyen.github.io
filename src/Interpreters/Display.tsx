@@ -56,7 +56,10 @@ interface RegisterProps {
 }
 
 export const Program = memo(function Program({ compact = false }: ProgramProps) {
-    const { code, index } = useContext(EditorContext);
+    const editorContext = useContext(EditorContext);
+    if (!editorContext) return null;
+    
+    const { code, index } = editorContext;
 
     if (code === undefined) return null;
 
@@ -84,7 +87,10 @@ export const Program = memo(function Program({ compact = false }: ProgramProps) 
 });
 
 export const Tape = memo(function Tape({ compact = false }: TapeProps) {
-    const { tape, pointer, tapeFlag } = useContext(EditorContext);
+    const editorContext = useContext(EditorContext);
+    if (!editorContext) return null;
+    
+    const { tape, pointer, tapeFlag } = editorContext;
 
     if (!tapeFlag) return null;
 
@@ -112,7 +118,10 @@ export const Tape = memo(function Tape({ compact = false }: TapeProps) {
 });
 
 export const Output = memo(function Output({ compact = false }: OutputProps) {
-    const { output, outFlag } = useContext(EditorContext);
+    const editorContext = useContext(EditorContext);
+    if (!editorContext) return null;
+    
+    const { output, outFlag } = editorContext;
 
     if (!outFlag) return null;
 
@@ -136,7 +145,10 @@ export const Output = memo(function Output({ compact = false }: OutputProps) {
 export const Register = memo(function Register({
     compact = false,
 }: RegisterProps) {
-    const { register, regFlag } = useContext(EditorContext);
+    const editorContext = useContext(EditorContext);
+    if (!editorContext) return null;
+    
+    const { register, regFlag } = editorContext;
 
     if (!regFlag) return null;
 

@@ -77,7 +77,8 @@ function handleAction(state: TextState, action: { type: string; payload: TextAct
 }
 
 export default function TextEditor({ name, start, runner, clean, tape, output }: TextEditorProps): React.ReactElement {
-    const container = useContainer(React.createRef<HTMLElement>());
+    const containerRef = React.createRef<HTMLDivElement>();
+    const container = useContainer(containerRef);
     const [state, dispatch] = useReducer(handleAction, {
         ...start,
         pause: true,
@@ -130,26 +131,28 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
 
     const context = {
         name,
-        tapeFlag: tape,
-        outFlag: output,
+        tapeFlag: tape || false,
+        outFlag: output || false,
         regFlag: false,
         code: state.code,
         dispatch: toolbarDispatch,
         fastForward: false,
-        pause: state.pause,
+        pause: state.pause || false,
         tape: state.tape || [],
         pointer: state.pointer || 0,
         output: state.output || '',
         register: state.register || 0,
         index: state.index || 0,
+        height: container.height,
+        size: 0,
     };
 
     return (
         <EditorContext.Provider value={context}>
-            <Editor container={container}>
+            <Editor container={containerRef}>
                 <TextArea
                     value={state.text}
-                    handleChange={handleChange}
+                    handleChange={handleChange as (event: React.ChangeEvent<HTMLInputElement>) => void}
                 />
                 {tape && <Tape tape={state.tape as number[]} />}
                 {output && <Output output={state.output as string} />}

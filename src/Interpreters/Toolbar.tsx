@@ -44,7 +44,10 @@ export interface ToolbarAction {
 }
 
 export function Toolbar(): React.ReactElement[] {
-    const { name, dispatch, fastForward, pause } = useContext(EditorContext);
+    const editorContext = useContext(EditorContext);
+    if (!editorContext) return [];
+    
+    const { name, dispatch, fastForward, pause } = editorContext;
 
     const notMobile = !useMobile('sm');
 
