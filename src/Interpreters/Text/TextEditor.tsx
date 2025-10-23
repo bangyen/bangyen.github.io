@@ -188,7 +188,7 @@ export default function TextEditor({
             tapeFlag: tape || false,
             outFlag: output || false,
             regFlag: register || false,
-            code: state.code ? [state.code] : undefined,
+            code: state.code ? [state.code] : [],
             index: (state.index as number) || 0,
             tape: state.tape || [],
             pointer: (state.pointer as number) || 0,
@@ -233,6 +233,7 @@ export default function TextEditor({
             >
                 <TextArea
                     value={state.text}
+                    placeholder="Enter your code here..."
                     handleChange={handleChangeWrapper}
                 />
             </Editor>

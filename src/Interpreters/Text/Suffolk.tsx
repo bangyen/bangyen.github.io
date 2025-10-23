@@ -115,6 +115,7 @@ export default function Editor(): React.ReactElement {
             clean={memoizedClean}
             tape
             output
+            register
         />
     );
 }
