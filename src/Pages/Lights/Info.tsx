@@ -356,7 +356,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                                                 entire puzzle.
                                             </Typography>
                                         </Box>
-                                    </GlassCard>
+                                    </TypedGlassCard>
                                 </Box>
                             </Grid>
 
@@ -383,7 +383,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                                             start={[1, 3, 8]}
                                             palette={palette}
                                         />
-                                    </GlassCard>
+                                    </TypedGlassCard>
                                 </Grid>
                             )}
                         </Grid>
@@ -432,7 +432,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                                             cellProps={outputProps}
                                         />
                                     </Box>
-                                </GlassCard>
+                                </TypedGlassCard>
                             </Grid>
                         </Grid>
                     </Grid>

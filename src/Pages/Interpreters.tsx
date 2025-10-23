@@ -246,7 +246,7 @@ export default function Interpreters(): React.ReactElement {
                                         >
                                             {interpreter.description}
                                         </Typography>
-                                    </GlassCard>
+                                    </TypedGlassCard>
                                 </Box>
                             </Fade>
                         ))}
