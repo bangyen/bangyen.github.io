@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback, useReducer } from 'react';
+import React, { useEffect, useRef, useCallback, useReducer } from 'react';
 import Editor, { EditorContext, TextArea } from '../Editor';
 import { useTimer, useCache, useContainer } from '../../hooks';
 import { handleToolbar, type ToolbarState, type ToolbarAction } from '../Toolbar';
@@ -91,8 +91,8 @@ export default function TextEditor({ name, start, runner, clean, tape, output }:
 
     useEffect(() => {
         const titleKey = name.toLowerCase().replace(' ', '_');
-        const title = typeof PAGE_TITLES === 'function' ? PAGE_TITLES(titleKey) : (PAGE_TITLES as Record<string, string>)[titleKey];
-        document.title = title || (typeof PAGE_TITLES === 'function' ? PAGE_TITLES('interpreters') : PAGE_TITLES.interpreters);
+        const title = (PAGE_TITLES as Record<string, string>)[titleKey];
+        document.title = title || PAGE_TITLES.interpreters;
     }, [name]);
 
     const handleChange = useCallback(
