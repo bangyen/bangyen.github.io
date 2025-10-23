@@ -146,19 +146,21 @@ export default function TextEditor({
     const wrapDispatch = useCallback(
         (type: string | { type: string; payload: unknown }) => {
             if (typeof type === 'string') {
-                dispatch({
-                    type,
-                    payload: {
-                        start,
-                        nextIter: nextIter as unknown as (action: {
-                            type: string;
-                            payload: unknown;
-                        }) => Record<string, unknown>,
-                        dispatch,
-                        create,
-                        clear,
-                    },
-                });
+                return () => {
+                    dispatch({
+                        type,
+                        payload: {
+                            start,
+                            nextIter: nextIter as unknown as (action: {
+                                type: string;
+                                payload: unknown;
+                            }) => Record<string, unknown>,
+                            dispatch,
+                            create,
+                            clear,
+                        },
+                    });
+                };
             } else {
                 dispatch({
                     type: type.type,
