@@ -1,7 +1,11 @@
-import React, { useEffect, useCallback, useReducer } from 'react';
+import React, { useEffect, useCallback, useReducer, useMemo } from 'react';
 import Editor, { EditorContext, TextArea } from '../Editor';
 import { useTimer, useCache, useContainer } from '../../hooks';
-import { handleToolbar, type ToolbarState, type ToolbarAction } from '../Toolbar';
+import {
+    handleToolbar,
+    type ToolbarState,
+    type ToolbarAction,
+} from '../Toolbar';
 import { PAGE_TITLES } from '../../config/constants';
 
 interface TextEditorProps {
@@ -22,7 +26,10 @@ interface TextState extends ToolbarState {
 }
 
 interface TextActionPayload {
-    nextIter: (action: { type: string; payload: unknown }) => Record<string, unknown>;
+    nextIter: (action: {
+        type: string;
+        payload: unknown;
+    }) => Record<string, unknown>;
     clear: () => void;
     create: (config: { repeat: () => void; speed: number }) => void;
     dispatch: (action: { type: string; payload: TextActionPayload }) => void;
@@ -31,7 +38,10 @@ interface TextActionPayload {
     clean?: (text: string) => string;
 }
 
-function handleAction(state: TextState, action: { type: string; payload: TextActionPayload }): TextState {
+function handleAction(
+    state: TextState,
+    action: { type: string; payload: TextActionPayload }
+): TextState {
     const { type, payload } = action;
     const { nextIter, clear, create, dispatch } = payload;
     let newState: Partial<TextState> = {};
@@ -78,7 +88,15 @@ function handleAction(state: TextState, action: { type: string; payload: TextAct
     } as TextState;
 }
 
-export default function TextEditor({ name, start, runner, clean, tape, output, register }: TextEditorProps): React.ReactElement {
+export default function TextEditor({
+    name,
+    start,
+    runner,
+    clean,
+    tape,
+    output,
+    register,
+}: TextEditorProps): React.ReactElement {
     const containerRef = React.createRef<HTMLDivElement>();
     const container = useContainer(containerRef);
     const [state, dispatch] = useReducer(handleAction, {
@@ -102,10 +120,16 @@ export default function TextEditor({ name, start, runner, clean, tape, output, r
                 payload: {
                     newText: event.target.value,
                     clean,
-                    nextIter: nextIter as unknown as (action: { type: string; payload: unknown }) => Record<string, unknown>,
+                    nextIter: nextIter as unknown as (action: {
+                        type: string;
+                        payload: unknown;
+                    }) => Record<string, unknown>,
                     clear,
                     create,
-                    dispatch: dispatch as unknown as (action: { type: string; payload: TextActionPayload }) => void,
+                    dispatch: dispatch as unknown as (action: {
+                        type: string;
+                        payload: TextActionPayload;
+                    }) => void,
                 },
             });
         },
@@ -127,7 +151,10 @@ export default function TextEditor({ name, start, runner, clean, tape, output, r
                         type,
                         payload: {
                             start,
-                            nextIter: nextIter as unknown as (action: { type: string; payload: unknown }) => Record<string, unknown>,
+                            nextIter: nextIter as unknown as (action: {
+                                type: string;
+                                payload: unknown;
+                            }) => Record<string, unknown>,
                             dispatch,
                             create,
                             clear,
@@ -140,7 +167,10 @@ export default function TextEditor({ name, start, runner, clean, tape, output, r
                     payload: {
                         ...(type.payload as TextActionPayload),
                         start,
-                        nextIter: nextIter as unknown as (action: { type: string; payload: unknown }) => Record<string, unknown>,
+                        nextIter: nextIter as unknown as (action: {
+                            type: string;
+                            payload: unknown;
+                        }) => Record<string, unknown>,
                         dispatch,
                         create,
                         clear,
@@ -152,23 +182,40 @@ export default function TextEditor({ name, start, runner, clean, tape, output, r
         [start, nextIter, create, clear, dispatch]
     );
 
-    const context = {
-        name,
-        tapeFlag: tape || false,
-        outFlag: output || false,
-        regFlag: register || false,
-        code: state.code ? [state.code] : undefined,
-        index: (state.index as number) || 0,
-        tape: state.tape || [],
-        pointer: (state.pointer as number) || 0,
-        output: state.output || '',
-        register: (state.register as number) || 0,
-        height: container.height,
-        size: 0,
-        dispatch: wrapDispatch,
-        fastForward: true,
-        pause: state.pause || false,
-    };
+    const context = useMemo(
+        () => ({
+            name,
+            tapeFlag: tape || false,
+            outFlag: output || false,
+            regFlag: register || false,
+            code: state.code ? [state.code] : undefined,
+            index: (state.index as number) || 0,
+            tape: state.tape || [],
+            pointer: (state.pointer as number) || 0,
+            output: state.output || '',
+            register: (state.register as number) || 0,
+            height: container.height,
+            size: 0,
+            dispatch: wrapDispatch,
+            fastForward: true,
+            pause: state.pause || false,
+        }),
+        [
+            name,
+            tape,
+            output,
+            register,
+            state.code,
+            state.index,
+            state.tape,
+            state.pointer,
+            state.output,
+            state.register,
+            state.pause,
+            container.height,
+            wrapDispatch,
+        ]
+    );
 
     const sideProps = {
         readOnly: true,
@@ -179,7 +226,11 @@ export default function TextEditor({ name, start, runner, clean, tape, output, r
 
     return (
         <EditorContext.Provider value={context}>
-            <Editor hide container={containerRef as React.RefObject<HTMLDivElement>} sideProps={sideProps}>
+            <Editor
+                hide
+                container={containerRef as React.RefObject<HTMLDivElement>}
+                sideProps={sideProps}
+            >
                 <TextArea
                     value={state.text}
                     handleChange={handleChangeWrapper}

@@ -1,5 +1,5 @@
 import TextEditor from './TextEditor';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 interface StunStepState {
     pointer: number;
@@ -74,6 +74,24 @@ export default function Editor(): React.ReactElement {
         code: '',
     };
 
-    return <TextEditor name="Stun Step" start={start as unknown as Record<string, unknown>} runner={getState as unknown as (state: Record<string, unknown>) => Record<string, unknown>} clean={clean} tape />;
-}
+    const memoizedRunner = useCallback(
+        (state: Record<string, unknown>) =>
+            getState(state as unknown as StunStepState) as unknown as Record<
+                string,
+                unknown
+            >,
+        []
+    );
 
+    const memoizedClean = useCallback((text: string) => clean(text), []);
+
+    return (
+        <TextEditor
+            name="Stun Step"
+            start={start as unknown as Record<string, unknown>}
+            runner={memoizedRunner}
+            clean={memoizedClean}
+            tape
+        />
+    );
+}
