@@ -149,7 +149,7 @@ export default function LightsOut(): React.ReactElement {
                 palette={palette}
                 score={state.score}
                 toggleOpen={toggleOpen as any}
-            />
+            /> as any
         </Grid>
     );
 }
