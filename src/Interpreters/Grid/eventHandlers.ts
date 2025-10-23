@@ -43,7 +43,9 @@ function handleKeys(
         return { select };
     }
 
-    if (key.length === 1) {
+    if (key === 'Backslash' || key === '\\') {
+        value = '\\';
+    } else if (key.length === 1) {
         value = key;
     } else if (key === 'Backspace' || key === 'Delete') {
         value = ' ';
@@ -76,40 +78,28 @@ function handleResize(
         const prod = diff * cols;
 
         grid += ' '.repeat(prod);
-    } else if (newRows !== undefined && newRows < rows) {
-        const diff = rows - newRows;
-        const prod = diff * cols;
-
-        grid = grid.slice(0, -prod);
     }
 
-    if (newCols !== undefined && newCols > cols) {
-        const diff = newCols - cols;
+    const finalRows = newRows !== undefined ? newRows : rows;
+    const finalCols = newCols !== undefined ? newCols : cols;
 
-        for (let r = 0; r < rows; r++) {
-            const start = r * cols;
-            const end = start + cols;
+    for (let k = 0; k < finalRows; k++) {
+        const start = k * cols;
+        let end = start;
 
-            resize += grid.slice(start, end) + ' '.repeat(diff);
-        }
+        if (newCols !== undefined && newCols > cols) end += cols;
+        else end += newCols !== undefined ? newCols : cols;
 
-        grid = resize;
-    } else if (newCols !== undefined && newCols < cols) {
-        const diff = cols - newCols;
-
-        for (let r = 0; r < rows; r++) {
-            const start = r * cols;
-            const end = start + newCols;
-
-            resize += grid.slice(start, end);
-        }
-
-        grid = resize;
+        resize += grid.substring(start, end).padEnd(finalCols, ' ');
     }
 
-    resetState(grid);
+    resetState(resize);
 
-    return { grid };
+    return {
+        ...rest,
+        grid: resize,
+        pause: true,
+    };
 }
 
 export function handleAction(
