@@ -49,7 +49,7 @@ function fillRow(row: number[], dims: number): {
     };
 }
 
-function extendBack(states: number[][][], size: number): number[][][] {
+function extendBack(states: number[][], size: number): number[][] {
     const back = states.at(-1);
     if (!back) return states;
 
@@ -79,7 +79,7 @@ export function handleChase(state: unknown, action: unknown): unknown {
 }
 
 export function getCalculator(rows: number, cols: number, dims: number) {
-    return (row: number[]) => {
+    return (row: number[]): number[][][] => {
         const { input, output } = fillRow(row, dims);
 
         const inputStates = extendBack(input, rows);
