@@ -1,12 +1,17 @@
 import React, { useMemo, useEffect, useReducer } from 'react';
 import { Grid } from '../../components/mui';
-import { InfoRounded, CircleRounded } from '../../components/icons';
+import {
+    InfoRounded,
+    CircleRounded,
+    PlayArrowRounded,
+    PauseRounded,
+} from '../../components/icons';
 
-import { Controls, TooltipButton } from '../../helpers';
+import { Controls, TooltipButton, RandomButton } from '../../helpers';
 import { Board, useHandler, usePalette } from '../Board';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../../config/constants';
 import { COLORS } from '../../config/theme';
-import { getGrid, handleBoard } from './boardHandlers';
+import { getGrid, handleBoard, getNextMove } from './boardHandlers';
 import { useWindow, useMobile } from '../../hooks';
 import { convertPixels } from '../../calculate';
 import Info from './Info';
@@ -84,6 +89,7 @@ export default function LightsOut(): React.ReactElement {
         score: 0,
         rows,
         cols,
+        auto: false,
     };
 
     const [state, dispatch] = useReducer(handleBoard, initial);
@@ -103,6 +109,45 @@ export default function LightsOut(): React.ReactElement {
             newCols: cols,
         });
     }, [rows, cols]);
+
+    const [moveQueue, setMoveQueue] = React.useState<
+        { row: number; col: number }[]
+    >([]);
+
+    useEffect(() => {
+        if (!state.auto) {
+            if (moveQueue.length > 0) setMoveQueue([]);
+            return;
+        }
+
+        const timeout = setTimeout(() => {
+            if (moveQueue.length > 0) {
+                const [nextMove, ...remaining] = moveQueue;
+                dispatch({
+                    type: 'adjacent',
+                    row: nextMove.row,
+                    col: nextMove.col,
+                });
+                setMoveQueue(remaining);
+            } else {
+                const moves = getNextMove(state.grid);
+                if (moves && moves.length > 0) {
+                    if (moves.length === 1) {
+                        dispatch({
+                            type: 'adjacent',
+                            row: moves[0].row,
+                            col: moves[0].col,
+                        });
+                    } else {
+                        setMoveQueue(moves);
+                    }
+                } else {
+                    dispatch({ type: 'auto' });
+                }
+            }
+        }, 300);
+        return () => clearTimeout(timeout);
+    }, [state.auto, state.grid, moveQueue]);
 
     const getters = useHandler(state, palette);
 
@@ -132,9 +177,18 @@ export default function LightsOut(): React.ReactElement {
             />
             <Controls
                 handler={() => () => undefined} // No directional controls for Lights Out
-                onRandom={() => dispatch({ type: 'random' })}
                 size="inherit"
             >
+                <TooltipButton
+                    title={state.auto ? 'Pause' : 'Auto Play'}
+                    Icon={state.auto ? PauseRounded : PlayArrowRounded}
+                    onClick={() => dispatch({ type: 'auto' })}
+                />
+                <RandomButton
+                    title="New Game"
+                    onClick={() => dispatch({ type: 'random' })}
+                    size="inherit"
+                />
                 <TooltipButton
                     title="Info"
                     Icon={InfoRounded}
@@ -153,4 +207,3 @@ export default function LightsOut(): React.ReactElement {
         </Grid>
     );
 }
-

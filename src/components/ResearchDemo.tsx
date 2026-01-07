@@ -101,11 +101,14 @@ const ResearchDemo: React.FC<ResearchDemoProps> = ({
         rightYAxisFormatter: (value: number) => value.toFixed(2),
         rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
         tooltipLabelFormatter: (value: number) => `Round ${value}`,
-        tooltipFormatter: (value: number, name: string) => [value.toFixed(2), name],
+        tooltipFormatter: (value: number, name: string) => [
+            value.toFixed(2),
+            name,
+        ],
     },
     viewTypes = [],
     currentViewType = 'default',
-    onViewTypeChange = () => {},
+    onViewTypeChange = () => undefined,
     controls = [],
     loading = false,
     loadingMessage = 'Loading data...',
@@ -759,4 +762,3 @@ const ResearchDemo: React.FC<ResearchDemoProps> = ({
 };
 
 export default ResearchDemo;
-
