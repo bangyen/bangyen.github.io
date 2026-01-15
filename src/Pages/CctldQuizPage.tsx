@@ -712,7 +712,7 @@ const QuizGame = ({
     );
 };
 
-const CCTLDQuiz: React.FC = () => {
+const CctldQuizPage: React.FC = () => {
     const [gameState, setGameState] = useState<GameState>('menu');
     const [settings, setSettings] = useState<QuizSettings>({
         mode: 'toCountry',
@@ -959,4 +959,4 @@ const CCTLDQuiz: React.FC = () => {
     );
 };
 
-export default CCTLDQuiz;
+export default CctldQuizPage;
