@@ -7,6 +7,6 @@ export { default as Lights_Out } from './Lights/LightsOut';
 export { default as ZSharp } from './ZSharp';
 export { default as Oligopoly } from './Oligopoly';
 export { default as Interpreters } from './Interpreters';
+export { default as CCTLDQuiz } from './CctldQuizPage';
 
 export const pages = ROUTES.pages;
-

@@ -43,6 +43,9 @@ const Oligopoly = lazy(() =>
 const Interpreters = lazy(() =>
     import('./Pages').then(m => ({ default: m.Interpreters }))
 );
+const CCTLDQuiz = lazy(() =>
+    import('./Pages').then(m => ({ default: m.CCTLDQuiz }))
+);
 
 const darkTheme = createTheme({
     palette: {
@@ -213,14 +216,25 @@ function App(): React.ReactElement {
                 v7_relativeSplatPath: true,
             }}
         >
-            <Suspense fallback={<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: COLORS.text.primary }}>Loading...</div>}>
+            <Suspense
+                fallback={
+                    <div
+                        style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            height: '100vh',
+                            color: COLORS.text.primary,
+                        }}
+                    >
+                        Loading...
+                    </div>
+                }
+            >
                 <Routes>
                     <Route path="/" element={<Home />} />
                     <Route path="/error" element={<Error />} />
-                    <Route
-                        path="/interpreters"
-                        element={<Interpreters />}
-                    />
+                    <Route path="/interpreters" element={<Interpreters />} />
                     <Route path="/Stun_Step" element={<Stun_Step />} />
                     <Route path="/Suffolk" element={<Suffolk />} />
                     <Route path="/WII2D" element={<WII2D />} />
@@ -229,6 +243,7 @@ function App(): React.ReactElement {
                     <Route path="/lights_out" element={<Lights_Out />} />
                     <Route path="/zsharp" element={<ZSharp />} />
                     <Route path="/oligopoly" element={<Oligopoly />} />
+                    <Route path="/cctld_quiz" element={<CCTLDQuiz />} />
                     <Route path="*" element={<Error />} />
                 </Routes>
             </Suspense>
