@@ -97,6 +97,7 @@ interface Routes {
         Snake: string;
         Lights_Out: string;
         Interpreters: string;
+        CCTLD_Quiz: string;
     };
     interpreters: {
         Stun_Step: string;
@@ -181,6 +182,7 @@ interface PageTitles {
     oligopoly: string;
     error: string;
     interpreters: string;
+    cctldQuiz: string;
     interpreter: (name: string) => string;
 }
 
@@ -275,6 +277,7 @@ export const PAGE_TITLES: PageTitles = {
     error: 'Page Not Found | Bangyen',
     interpreters: `Interpreters - ${PERSONAL_INFO.name}`,
     interpreter: (name: string) => `${name} Interpreter | Bangyen`,
+    cctldQuiz: 'ccTLD Quiz | Bangyen',
 };
 
 // ============================================================================
@@ -325,6 +328,7 @@ export const ROUTES: Routes = {
         Snake: '/Snake',
         Lights_Out: '/Lights_Out',
         Interpreters: '/Interpreters',
+        CCTLD_Quiz: '/cctld_quiz',
     },
     interpreters: {
         Stun_Step: '/Stun_Step',
@@ -393,4 +397,3 @@ export const PROCESSING: Processing = {
     doubleProcessingPrevention: true,
     resetDelay: 0,
 };
-
