@@ -281,8 +281,21 @@ const QuizGame = ({
     const [feedbackMessage, setFeedbackMessage] = useState('');
     const [feedbackColor, setFeedbackColor] = useState('');
     const [pool, setPool] = useState<CCTLD[]>([]);
+    const [totalQuestions, setTotalQuestions] = useState(0);
     const [showHint, setShowHint] = useState(false);
     const [score, setScore] = useState(0);
+
+    // Refs for real-time access during callbacks (prevents stale closure issues)
+    const historyRef = React.useRef(history);
+    const scoreRef = React.useRef(score);
+
+    useEffect(() => {
+        historyRef.current = history;
+    }, [history]);
+
+    useEffect(() => {
+        scoreRef.current = score;
+    }, [score]);
 
     // Initialize Pool
     useEffect(() => {
@@ -313,26 +326,16 @@ const QuizGame = ({
             }
         }
         // Shuffle
-        filtered = [...filtered].sort(() => Math.random() - 0.5);
-        setPool(filtered);
+        const shuffled = [...filtered].sort(() => Math.random() - 0.5);
+        setPool(shuffled);
+        setTotalQuestions(shuffled.length);
     }, [settings]);
 
     const nextQuestion = useCallback(() => {
         setPool(prevPool => {
             if (prevPool.length === 0) {
-                if (!settings.allowRepeats) {
-                    onEndGame(history, score);
-                    return [];
-                } else {
-                    // If repeats allowed, we basically need to rely on the initial full set again?
-                    // Or just don't pop?
-                    // For simplicity, let's just end the game if pool is exhausted even in repeats mode,
-                    // OR re-fill pool.
-                    // To make it truly infinite, we should handle this differently.
-                    // But for now: End Game.
-                    onEndGame(history, score);
-                    return [];
-                }
+                onEndGame(historyRef.current, scoreRef.current);
+                return [];
             }
 
             const next = prevPool[0];
@@ -342,7 +345,7 @@ const QuizGame = ({
             setShowHint(false);
             return prevPool.slice(1);
         });
-    }, [settings.allowRepeats, history, score, onEndGame]);
+    }, [onEndGame]);
 
     // Initial Start
     useEffect(() => {
@@ -469,9 +472,23 @@ const QuizGame = ({
                             textTransform: 'uppercase',
                         }}
                     >
-                        Question {history.length + 1} of{' '}
-                        {history.length + pool.length + 1}
+                        Question {history.length + 1} of {totalQuestions}
                     </Typography>
+                    <Box sx={{ width: '100%', maxWidth: 300, my: 1 }}>
+                        <LinearProgress
+                            variant="determinate"
+                            value={(history.length / totalQuestions) * 100}
+                            sx={{
+                                height: 6,
+                                borderRadius: 3,
+                                backgroundColor: COLORS.interactive.hover,
+                                '& .MuiLinearProgress-bar': {
+                                    borderRadius: 3,
+                                    background: `linear-gradient(90deg, ${COLORS.primary.main}, ${COLORS.primary.light})`,
+                                },
+                            }}
+                        />
+                    </Box>
                     <Chip
                         label={
                             settings.mode === 'toCountry'
@@ -700,13 +717,6 @@ const QuizGame = ({
                         </Fade>
                     )}
                 </Card>
-                <Typography
-                    variant="caption"
-                    color="textSecondary"
-                    sx={{ mt: 2, display: 'block', textAlign: 'center' }}
-                >
-                    {pool.length} questions remaining
-                </Typography>
             </Box>
         </Box>
     );
