@@ -455,58 +455,80 @@ const QuizGame = ({
             <Box sx={{ width: '100%', maxWidth: 660, mx: 'auto' }}>
                 <Box
                     sx={{
-                        mb: 6,
+                        mb: 4,
                         display: 'flex',
                         flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: 2,
+                        width: '100%',
+                        maxWidth: 450,
+                        mx: 'auto',
                     }}
                 >
-                    <Typography
-                        variant="h6"
-                        color="textSecondary"
+                    <Box
                         sx={{
-                            opacity: 0.8,
-                            fontSize: '0.9rem',
-                            letterSpacing: '0.1em',
-                            textTransform: 'uppercase',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'baseline',
+                            mb: 1.5,
                         }}
                     >
-                        Question {history.length + 1} of {totalQuestions}
-                    </Typography>
-                    <Box sx={{ width: '100%', maxWidth: 300, my: 1 }}>
-                        <LinearProgress
-                            variant="determinate"
-                            value={(history.length / totalQuestions) * 100}
-                            sx={{
-                                height: 6,
-                                borderRadius: 3,
-                                backgroundColor: COLORS.interactive.hover,
-                                '& .MuiLinearProgress-bar': {
-                                    borderRadius: 3,
-                                    background: `linear-gradient(90deg, ${COLORS.primary.main}, ${COLORS.primary.light})`,
-                                },
-                            }}
-                        />
+                        <Box sx={{ textAlign: 'left' }}>
+                            <Typography
+                                variant="caption"
+                                color="textSecondary"
+                                sx={{
+                                    letterSpacing: '0.1em',
+                                    textTransform: 'uppercase',
+                                    fontWeight: 'bold',
+                                    opacity: 0.6,
+                                    display: 'block',
+                                    mb: 0.5,
+                                }}
+                            >
+                                {settings.mode === 'toCountry'
+                                    ? 'Guessing Country'
+                                    : 'Guessing Code'}
+                            </Typography>
+                            <Typography
+                                variant="h6"
+                                sx={{ fontWeight: 'medium' }}
+                            >
+                                Question {history.length + 1} of{' '}
+                                {totalQuestions}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ textAlign: 'right' }}>
+                            <Typography
+                                variant="h5"
+                                sx={{
+                                    fontWeight: 'bold',
+                                    color: COLORS.primary.main,
+                                }}
+                            >
+                                {score}{' '}
+                                <Typography
+                                    component="span"
+                                    variant="caption"
+                                    color="textSecondary"
+                                    sx={{ fontWeight: 'normal' }}
+                                >
+                                    PTS
+                                </Typography>
+                            </Typography>
+                        </Box>
                     </Box>
-                    <Chip
-                        label={
-                            settings.mode === 'toCountry'
-                                ? 'Guess Country'
-                                : 'Guess Code'
-                        }
+                    <LinearProgress
+                        variant="determinate"
+                        value={(history.length / totalQuestions) * 100}
                         sx={{
-                            backgroundColor: COLORS.interactive.selected,
-                            color: COLORS.primary.main,
-                            fontWeight: 'bold',
-                            border: `1px solid ${COLORS.primary.main}40`,
-                            px: 2,
-                            py: 1,
+                            height: 4,
+                            borderRadius: 2,
+                            backgroundColor: COLORS.interactive.hover,
+                            '& .MuiLinearProgress-bar': {
+                                borderRadius: 2,
+                                background: `linear-gradient(90deg, ${COLORS.primary.main}, ${COLORS.primary.light})`,
+                            },
                         }}
                     />
-                    <Typography variant="body2" color="textSecondary">
-                        Score: {score}
-                    </Typography>
                 </Box>
 
                 <Card
