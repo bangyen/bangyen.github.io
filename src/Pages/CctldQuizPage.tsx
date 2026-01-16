@@ -19,12 +19,12 @@ import {
     CardContent,
 } from '@mui/material';
 import {
-    Settings as SettingsIcon,
-    ArrowBack as ArrowBackIcon,
-    Refresh as RefreshIcon,
-    CheckCircle as CheckCircleIcon,
-    Cancel as CancelIcon,
-    PlayArrow as PlayArrowIcon,
+    ArrowBackRounded as ArrowBackIcon,
+    RefreshRounded as RefreshIcon,
+    CheckCircleRounded as CheckCircleIcon,
+    CancelRounded as CancelIcon,
+    InfoRounded as InfoIcon,
+    HomeRounded as HomeIcon,
 } from '@mui/icons-material';
 import {
     COLORS,
@@ -34,6 +34,8 @@ import {
     COMPONENT_VARIANTS,
 } from '../config/theme';
 import cctldsData from '../data/cctlds.json';
+
+import { Grid as MuiGrid } from '../components/mui';
 
 // --- Types ---
 
@@ -52,6 +54,7 @@ interface QuizSettings {
     allowRepeats: boolean;
     filterLetter: string;
     filterLanguage: string;
+    maxQuestions: number | 'All';
 }
 
 interface Question {
@@ -131,10 +134,20 @@ const isSmartMatch = (input: string, expected: string) => {
 const SettingsPanel = ({
     settings,
     onUpdate,
+    onStart,
 }: {
     settings: QuizSettings;
     onUpdate: (s: QuizSettings) => void;
+    onStart: () => void;
 }) => {
+    const commonSelectProps = {
+        MenuProps: {
+            BackdropProps: {
+                sx: { backdropFilter: 'none', backgroundColor: 'transparent' },
+            },
+        },
+    };
+
     return (
         <Card
             sx={{
@@ -168,6 +181,7 @@ const SettingsPanel = ({
                                     borderColor: COLORS.border.subtle,
                                 },
                             }}
+                            {...commonSelectProps}
                         >
                             <MenuItem value="toCountry">
                                 Guess Country (from Code)
@@ -196,6 +210,7 @@ const SettingsPanel = ({
                                     borderColor: COLORS.border.subtle,
                                 },
                             }}
+                            {...commonSelectProps}
                         >
                             <MenuItem value="All">All Origins</MenuItem>
                             <MenuItem value="Non-English">
@@ -224,6 +239,11 @@ const SettingsPanel = ({
                         InputLabelProps={{
                             style: { color: COLORS.text.secondary },
                         }}
+                        onKeyDown={e => {
+                            if (e.key === 'Enter') {
+                                onStart();
+                            }
+                        }}
                         sx={{
                             input: { color: COLORS.text.primary },
                             label: { color: COLORS.text.secondary },
@@ -240,14 +260,16 @@ const SettingsPanel = ({
                 </Grid>
                 <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
-                        <InputLabel>Repetition</InputLabel>
+                        <InputLabel>Question Limit</InputLabel>
                         <Select
-                            value={settings.allowRepeats ? 'yes' : 'no'}
-                            label="Repetition"
+                            value={settings.maxQuestions}
+                            label="Question Limit"
                             onChange={e =>
                                 onUpdate({
                                     ...settings,
-                                    allowRepeats: e.target.value === 'yes',
+                                    maxQuestions: e.target.value as
+                                        | number
+                                        | 'All',
                                 })
                             }
                             sx={{
@@ -256,9 +278,13 @@ const SettingsPanel = ({
                                     borderColor: COLORS.border.subtle,
                                 },
                             }}
+                            {...commonSelectProps}
                         >
-                            <MenuItem value="yes">Allow Repeats</MenuItem>
-                            <MenuItem value="no">No Repeats</MenuItem>
+                            <MenuItem value="All">All Questions</MenuItem>
+                            <MenuItem value={5}>5 Questions</MenuItem>
+                            <MenuItem value={10}>10 Questions</MenuItem>
+                            <MenuItem value={20}>20 Questions</MenuItem>
+                            <MenuItem value={50}>50 Questions</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>
@@ -328,7 +354,13 @@ const QuizGame = ({
             }
         }
         // Shuffle
-        const shuffled = [...filtered].sort(() => Math.random() - 0.5);
+        let shuffled = [...filtered].sort(() => Math.random() - 0.5);
+
+        // Apply Question Limit
+        if (settings.maxQuestions !== 'All') {
+            shuffled = shuffled.slice(0, settings.maxQuestions);
+        }
+
         setPool(shuffled);
         setTotalQuestions(shuffled.length);
     }, [settings]);
@@ -542,7 +574,7 @@ const QuizGame = ({
                     <LinearProgress
                         variant="determinate"
                         value={
-                            (Math.min(history.length + 1, totalQuestions) /
+                            (Math.min(history.length, totalQuestions) /
                                 totalQuestions) *
                             100
                         }
@@ -777,6 +809,7 @@ const CctldQuizPage: React.FC = () => {
         allowRepeats: false,
         filterLetter: '',
         filterLanguage: 'All',
+        maxQuestions: 'All',
     });
     const [lastScore, setLastScore] = useState(0);
     const [lastHistory, setLastHistory] = useState<Question[]>([]);
@@ -813,24 +846,67 @@ const CctldQuizPage: React.FC = () => {
                     mb: 6,
                     textAlign: 'center',
                     width: '100%',
-                    maxWidth: 600,
+                    maxWidth: 800,
                     mx: 'auto',
+                    marginBottom: 0,
                 }}
             >
+                <MuiGrid
+                    container={true}
+                    alignItems="center"
+                    justifyContent="space-between"
+                    sx={{ marginBottom: 4 }}
+                >
+                    <MuiGrid size="auto">
+                        <Typography
+                            variant="h1"
+                            sx={{
+                                color: COLORS.text.primary,
+                                fontWeight: TYPOGRAPHY.fontWeight.bold,
+                                fontSize: TYPOGRAPHY.fontSize.h2,
+                            }}
+                        >
+                            ccTLD Mastery
+                        </Typography>
+                    </MuiGrid>
+                    <MuiGrid size="auto" sx={{ display: 'flex', gap: 1 }}>
+                        <IconButton
+                            href="https://en.wikipedia.org/wiki/Country_code_top-level_domain"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <InfoIcon
+                                sx={{
+                                    fontSize: {
+                                        xs: TYPOGRAPHY.fontSize.h2,
+                                        md: '2rem',
+                                    },
+                                }}
+                            />
+                        </IconButton>
+                        <IconButton component="a" href="/">
+                            <HomeIcon
+                                sx={{
+                                    fontSize: {
+                                        xs: TYPOGRAPHY.fontSize.h2,
+                                        md: '2rem',
+                                    },
+                                }}
+                            />
+                        </IconButton>
+                    </MuiGrid>
+                </MuiGrid>
+
                 <Typography
-                    variant="h2"
+                    variant="h5"
                     sx={{
-                        mb: 2,
-                        background: `linear-gradient(45deg, ${COLORS.primary.main}, ${COLORS.primary.light})`,
-                        backgroundClip: 'text',
-                        textFillColor: 'transparent',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
+                        color: COLORS.text.secondary,
+                        marginTop: 2,
+                        marginBottom: 4,
+                        fontWeight: TYPOGRAPHY.fontWeight.normal,
+                        fontSize: TYPOGRAPHY.fontSize.subheading,
                     }}
                 >
-                    ccTLD Mastery
-                </Typography>
-                <Typography variant="h5" color="textSecondary">
                     Test your knowledge of Internet country codes
                 </Typography>
             </Box>
@@ -848,6 +924,7 @@ const CctldQuizPage: React.FC = () => {
                         <SettingsPanel
                             settings={settings}
                             onUpdate={setSettings}
+                            onStart={handleStart}
                         />
                         <Box
                             sx={{
@@ -862,7 +939,7 @@ const CctldQuizPage: React.FC = () => {
                                 onClick={handleStart}
                                 sx={{
                                     px: 8,
-                                    py: 2.2,
+                                    py: 1.5,
                                     fontSize: '1.2rem',
                                     borderRadius: SPACING.borderRadius.full,
                                     fontWeight: 'bold',
