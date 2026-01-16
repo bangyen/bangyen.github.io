@@ -517,7 +517,9 @@ const QuizGame = ({
                         }}
                     >
                         <Typography variant="h6" sx={{ fontWeight: 'medium' }}>
-                            Question {history.length + 1} of {totalQuestions}
+                            Question{' '}
+                            {Math.min(history.length + 1, totalQuestions)} of{' '}
+                            {totalQuestions}
                         </Typography>
                         <Typography
                             variant="h5"
