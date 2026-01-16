@@ -68,10 +68,7 @@ interface Question {
 
 // --- Constants ---
 
-const LANGUAGES = Array.from(
-    new Set(cctldsData.map(item => item.language))
-).sort();
-const NON_ENGLISH_LANGUAGES = LANGUAGES.filter(l => l !== 'English');
+const LANGUAGES = ['All', 'English', 'Non-English'];
 
 // --- Helper Functions ---
 
@@ -158,7 +155,7 @@ const SettingsPanel = ({
                 p: 3,
                 mb: 4,
                 width: '100%',
-                maxWidth: 800,
+                maxWidth: SPACING.maxWidth.sm,
                 mx: 'auto',
             }}
         >
@@ -215,10 +212,6 @@ const SettingsPanel = ({
                             }}
                             {...commonSelectProps}
                         >
-                            <MenuItem value="All">All Origins</MenuItem>
-                            <MenuItem value="Non-English">
-                                Non-English Origins
-                            </MenuItem>
                             {LANGUAGES.map(lang => (
                                 <MenuItem key={lang} value={lang}>
                                     {lang}
@@ -478,14 +471,20 @@ const QuizGame = ({
                 mt: 4,
             }}
         >
-            <Box sx={{ width: '100%', maxWidth: 600, mx: 'auto' }}>
+            <Box
+                sx={{
+                    width: '100%',
+                    maxWidth: SPACING.maxWidth.sm,
+                    mx: 'auto',
+                }}
+            >
                 <Box
                     sx={{
                         mb: 4,
                         display: 'flex',
                         flexDirection: 'column',
                         width: '100%',
-                        maxWidth: 600,
+                        maxWidth: SPACING.maxWidth.sm,
                         mx: 'auto',
                     }}
                 >
@@ -1062,7 +1061,7 @@ const CctldQuizPage: React.FC = () => {
                     <Box
                         sx={{
                             width: '100%',
-                            maxWidth: 600,
+                            maxWidth: SPACING.maxWidth.sm,
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
@@ -1122,7 +1121,7 @@ const CctldQuizPage: React.FC = () => {
 
                         <Typography
                             variant="h6"
-                            align="left"
+                            align="center"
                             sx={{ mb: 2, width: '100%' }}
                         >
                             History
@@ -1246,6 +1245,11 @@ const CctldQuizPage: React.FC = () => {
                                                     q.pointsEarned > 0
                                                         ? 'bold'
                                                         : 'normal',
+                                                maxWidth: '150px',
+                                                whiteSpace: 'nowrap',
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                display: 'block',
                                             }}
                                         >
                                             {q.userAnswer || '(skipped)'}

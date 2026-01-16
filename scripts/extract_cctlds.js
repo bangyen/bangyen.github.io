@@ -2,13 +2,13 @@ const fs = require('fs');
 const { JSDOM } = require('jsdom');
 
 // Read old data for language mapping
-const oldData = JSON.parse(fs.readFileSync('src/data/cctlds.json', 'utf8'));
+const oldData = JSON.parse(fs.readFileSync('../src/data/cctlds.json', 'utf8'));
 const langMap = {};
 oldData.forEach(item => {
     langMap[item.code] = item.language;
 });
 
-const html = fs.readFileSync('cctlds_wiki.html', 'utf8');
+const html = fs.readFileSync('../cctlds_wiki.html', 'utf8');
 const dom = new JSDOM(html);
 const document = dom.window.document;
 
@@ -26,6 +26,13 @@ if (!targetTable) {
 const rows = Array.from(targetTable.querySelectorAll('tr')).slice(1);
 const results = [];
 
+const toTitleCase = (str) => {
+    return str.replace(
+        /\w\S*/g,
+        text => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase()
+    );
+};
+
 rows.forEach(row => {
     const cells = Array.from(row.querySelectorAll('td, th'));
     if (cells.length < 4) return;
@@ -34,7 +41,7 @@ rows.forEach(row => {
     if (!code.startsWith('.') || code.length > 5 || code.includes(' ')) return;
 
     const entityCell = cells[1];
-    const country = entityCell.textContent.trim();
+    const country = entityCell.textContent.replace(/\[.*?\]/g, '').trim();
 
     let flag = '';
     const flagImg = entityCell.querySelector('img');
@@ -52,15 +59,18 @@ rows.forEach(row => {
 
     const notes = cells[3].textContent.trim();
 
+    let language = langMap[code] || 'English';
+    language = toTitleCase(language);
+
     results.push({
         code,
         country,
         flag,
         explanation,
         notes,
-        language: langMap[code] || 'English'
+        language
     });
 });
 
-fs.writeFileSync('src/data/cctlds_enhanced.json', JSON.stringify(results, null, 2));
+fs.writeFileSync('../src/data/cctlds_enhanced.json', JSON.stringify(results));
 console.log(`Successfully extracted ${results.length} entries to src/data/cctlds_enhanced.json`);

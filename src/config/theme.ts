@@ -93,6 +93,7 @@ interface Margin {
 }
 
 interface MaxWidth {
+    sm: string;
     md: string;
     lg: string;
 }
@@ -229,6 +230,7 @@ export const SPACING: Spacing = {
         lg: '1.5rem',
     },
     maxWidth: {
+        sm: '50rem',
         md: '64rem',
         lg: '80rem',
     },

@@ -29,3 +29,6 @@ yarn-error.log*
 /public/*.csv
 !/public/manifest.json
 !/public/robots.txt
+
+# Temporary files
+cctlds_wiki.html
