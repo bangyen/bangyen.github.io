@@ -463,6 +463,23 @@ const QuizGame = ({
                         mx: 'auto',
                     }}
                 >
+                    <Typography
+                        variant="caption"
+                        color="textSecondary"
+                        sx={{
+                            letterSpacing: '0.1em',
+                            textTransform: 'uppercase',
+                            fontWeight: 'bold',
+                            opacity: 0.6,
+                            display: 'block',
+                            mb: 1,
+                            textAlign: 'left',
+                        }}
+                    >
+                        {settings.mode === 'toCountry'
+                            ? 'Guessing Country'
+                            : 'Guessing Code'}
+                    </Typography>
                     <Box
                         sx={{
                             display: 'flex',
@@ -471,50 +488,26 @@ const QuizGame = ({
                             mb: 1.5,
                         }}
                     >
-                        <Box sx={{ textAlign: 'left' }}>
+                        <Typography variant="h6" sx={{ fontWeight: 'medium' }}>
+                            Question {history.length + 1} of {totalQuestions}
+                        </Typography>
+                        <Typography
+                            variant="h5"
+                            sx={{
+                                fontWeight: 'bold',
+                                color: COLORS.primary.main,
+                            }}
+                        >
+                            {score}{' '}
                             <Typography
+                                component="span"
                                 variant="caption"
                                 color="textSecondary"
-                                sx={{
-                                    letterSpacing: '0.1em',
-                                    textTransform: 'uppercase',
-                                    fontWeight: 'bold',
-                                    opacity: 0.6,
-                                    display: 'block',
-                                    mb: 0.5,
-                                }}
+                                sx={{ fontWeight: 'normal' }}
                             >
-                                {settings.mode === 'toCountry'
-                                    ? 'Guessing Country'
-                                    : 'Guessing Code'}
+                                PTS
                             </Typography>
-                            <Typography
-                                variant="h6"
-                                sx={{ fontWeight: 'medium' }}
-                            >
-                                Question {history.length + 1} of{' '}
-                                {totalQuestions}
-                            </Typography>
-                        </Box>
-                        <Box sx={{ textAlign: 'right' }}>
-                            <Typography
-                                variant="h5"
-                                sx={{
-                                    fontWeight: 'bold',
-                                    color: COLORS.primary.main,
-                                }}
-                            >
-                                {score}{' '}
-                                <Typography
-                                    component="span"
-                                    variant="caption"
-                                    color="textSecondary"
-                                    sx={{ fontWeight: 'normal' }}
-                                >
-                                    PTS
-                                </Typography>
-                            </Typography>
-                        </Box>
+                        </Typography>
                     </Box>
                     <LinearProgress
                         variant="determinate"
