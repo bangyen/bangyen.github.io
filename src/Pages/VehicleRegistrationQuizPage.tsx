@@ -1,10 +1,4 @@
-import React, {
-    useState,
-    useEffect,
-    useMemo,
-    useCallback,
-    useRef,
-} from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
     Box,
     Typography,
@@ -13,26 +7,19 @@ import {
     Fade,
     TextField,
     Chip,
-    Stack,
+    Card,
     MenuItem,
     Select,
     FormControl,
     InputLabel,
-    Card,
 } from '@mui/material';
 import {
-    ArrowBackRounded as ArrowBackIcon,
-    RefreshRounded as RefreshIcon,
     CheckCircleRounded as CheckCircleIcon,
     CancelRounded as CancelIcon,
 } from '@mui/icons-material';
-import { COLORS, SPACING, COMPONENT_VARIANTS } from '../config/theme';
-import {
-    CCTLD_ALIASES,
-    CCTLD_LANGUAGES,
-    GAME_CONSTANTS,
-} from '../config/constants';
-import { normalize, isSmartMatch } from '../utils/quizUtils';
+import { COLORS, SPACING } from '../config/theme';
+import { GAME_CONSTANTS, CCTLD_ALIASES } from '../config/constants';
+import { isSmartMatch } from '../utils/quizUtils';
 import {
     GameState,
     QuizSettings,
@@ -46,26 +33,19 @@ import {
     QuizSummaryView,
     SkippedBadge,
 } from '../components/Quiz';
-import cctldsData from '../data/cctlds_enhanced.json';
+import vehicleData from '../data/vehicle_registration_codes.json';
 
 // --- Types ---
 
-interface CCTLD {
+interface VehicleCode {
     code: string;
     country: string;
-    explanation: string;
-    notes: string;
     flag: string;
-    language: string;
 }
 
 export type GameMode = 'toCountry' | 'toCode';
 
-type Question = GenericQuestion<CCTLD>;
-
-// --- Constants ---
-
-// Helper functions moved to src/utils/quizUtils.ts
+type Question = GenericQuestion<VehicleCode>;
 
 // --- Components ---
 
@@ -84,15 +64,19 @@ const QuizGame = ({
     onBackToMenu,
 }: {
     settings: QuizSettings;
-    initialPool: CCTLD[];
+    initialPool: VehicleCode[];
     onEndGame: (history: Question[], score: number) => void;
     onBackToMenu: () => void;
 }) => {
-    const { state, actions } = useQuizEngine<CCTLD>({
+    const { state, actions } = useQuizEngine<VehicleCode>({
         initialPool,
         settings,
         onEndGame,
-        checkAnswer: (input: string, item: CCTLD, settings: QuizSettings) => {
+        checkAnswer: (
+            input: string,
+            item: VehicleCode,
+            settings: QuizSettings
+        ) => {
             let correct = false;
             let expected = '';
 
@@ -101,27 +85,19 @@ const QuizGame = ({
                 correct = isSmartMatch(input, expected, CCTLD_ALIASES);
             } else {
                 expected = item.code;
-                let normalizedInput = input.trim();
-                if (!normalizedInput.startsWith('.'))
-                    normalizedInput = '.' + normalizedInput;
-                correct = normalize(normalizedInput) === normalize(expected);
+                const norm = (s: string) =>
+                    s
+                        .trim()
+                        .toUpperCase()
+                        .replace(/[^A-Z0-9]/g, '');
+                correct = norm(input) === norm(expected);
             }
 
             return { isCorrect: correct, expected, points: correct ? 1 : 0 };
         },
     });
 
-    const {
-        history,
-        currentQuestion,
-        inputValue,
-        showFeedback,
-        feedbackMessage,
-        isCorrect,
-        totalQuestions,
-        showHint,
-        score,
-    } = state;
+    const { currentQuestion, showFeedback } = state;
 
     const { setInputValue, handleSubmit, handleSkip, toggleHint } = actions;
 
@@ -153,12 +129,12 @@ const QuizGame = ({
             inputPlaceholder={
                 settings.mode === 'toCountry'
                     ? 'Type country name...'
-                    : 'Type code (e.g. .us)...'
+                    : 'Type code (e.g. A, AFG)...'
             }
             renderQuestionPrompt={() =>
                 settings.mode === 'toCountry'
                     ? 'What country belongs to:'
-                    : 'What is the ccTLD for:'
+                    : 'What is the vehicle registration code for:'
             }
             renderQuestionContent={item => (
                 <Typography
@@ -166,24 +142,19 @@ const QuizGame = ({
                     sx={{
                         fontWeight: 'bold',
                         textAlign: 'center',
-                        fontSize: { xs: '3rem', sm: '4rem' },
+                        fontSize: { xs: '2.5rem', sm: '3.5rem' },
+                        wordBreak: 'break-word',
                     }}
                 >
                     {settings.mode === 'toCountry' ? item.code : item.country}
                 </Typography>
             )}
-            renderHint={item => (
-                <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    sx={{
-                        textAlign: 'center',
-                        fontStyle: 'italic',
-                    }}
-                >
-                    Hint: {item.language} origin
+            renderHint={() => (
+                <Typography variant="body2" color="textSecondary">
+                    Hint functionality coming soon...
                 </Typography>
             )}
+            hideHint={true}
             renderFeedbackFlag={item =>
                 item.flag && (
                     <img
@@ -198,78 +169,36 @@ const QuizGame = ({
                     />
                 )
             }
-            renderFeedbackOrigin={item => (
-                <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    sx={{
-                        fontStyle: 'italic',
-                        textAlign: 'center',
-                    }}
-                >
-                    Origin:{' '}
-                    <Box
-                        component="span"
-                        dangerouslySetInnerHTML={{
-                            __html: item.explanation,
-                        }}
-                    />
-                </Typography>
-            )}
         />
     );
 };
 
-const CctldQuizPage: React.FC = () => {
+const VehicleRegistrationQuizPage: React.FC = () => {
     const [gameState, setGameState] = useState<GameState>('menu');
     const [settings, setSettings] = useState<QuizSettings>({
         mode: 'toCountry',
         allowRepeats: false,
         filterLetter: '',
-        filterLanguage: 'All',
         maxQuestions: 'All',
     });
     const [lastScore, setLastScore] = useState(0);
     const [lastHistory, setLastHistory] = useState<Question[]>([]);
 
     const filteredPool = useMemo(() => {
-        let filtered = cctldsData;
-        if (settings.filterLanguage !== 'All') {
-            if (settings.filterLanguage === 'Non-English') {
-                filtered = filtered.filter(item => item.language !== 'English');
-            } else {
-                filtered = filtered.filter(
-                    item => item.language === settings.filterLanguage
-                );
-            }
-        }
+        let filtered = vehicleData as VehicleCode[];
+
         if (settings.filterLetter) {
-            let letters = settings.filterLetter
+            const letters = settings.filterLetter
                 .toLowerCase()
                 .split(',')
                 .map((l: string) => l.trim())
                 .filter((l: string) => l);
 
-            if (letters.length <= 1 && !settings.filterLetter.includes(',')) {
-                const spaceSplit = settings.filterLetter
-                    .toLowerCase()
-                    .split(/\s+/)
-                    .filter((l: string) => l);
-                if (spaceSplit.length > 1) {
-                    letters = spaceSplit;
-                } else {
-                    letters = settings.filterLetter
-                        .toLowerCase()
-                        .split('')
-                        .filter((l: string) => l.trim());
-                }
-            }
-
             if (letters.length > 0) {
-                filtered = filtered.filter((item: CCTLD) => {
+                filtered = filtered.filter((item: VehicleCode) => {
                     const text =
                         settings.mode === 'toCountry'
-                            ? item.code.toLowerCase().replace('.', '')
+                            ? item.code.toLowerCase()
                             : item.country.toLowerCase();
                     return letters.some((l: string) => text.startsWith(l));
                 });
@@ -277,10 +206,9 @@ const CctldQuizPage: React.FC = () => {
         }
 
         if (settings.maxQuestions !== 'All') {
-            // Shuffle BEFORE slicing to ensure random sample
             return [...filtered]
                 .sort(() => Math.random() - 0.5)
-                .slice(0, settings.maxQuestions);
+                .slice(0, settings.maxQuestions as number);
         }
         return filtered;
     }, [settings]);
@@ -303,9 +231,9 @@ const CctldQuizPage: React.FC = () => {
 
     return (
         <QuizLayout
-            title="ccTLD Mastery"
-            subtitle="Test your knowledge of Internet country codes"
-            infoUrl="https://en.wikipedia.org/wiki/Country_code_top-level_domain"
+            title="Vehicle Registration Quiz"
+            subtitle="Identify international vehicle registration codes"
+            infoUrl="https://en.wikipedia.org/wiki/International_vehicle_registration_code"
         >
             {gameState === 'menu' && (
                 <Fade in>
@@ -322,7 +250,8 @@ const CctldQuizPage: React.FC = () => {
                             onUpdate={setSettings}
                             onStart={handleStart}
                             maxQuestionOptions={
-                                GAME_CONSTANTS.cctld.questionOptions
+                                GAME_CONSTANTS.vehicleRegistration
+                                    .questionOptions
                             }
                         >
                             <Grid item xs={12} md={6}>
@@ -358,36 +287,6 @@ const CctldQuizPage: React.FC = () => {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} md={6}>
-                                <FormControl fullWidth>
-                                    <InputLabel>Language Filter</InputLabel>
-                                    <Select
-                                        value={settings.filterLanguage}
-                                        label="Language Filter"
-                                        onChange={e =>
-                                            setSettings({
-                                                ...settings,
-                                                filterLanguage: e.target.value,
-                                            })
-                                        }
-                                        sx={{
-                                            color: COLORS.text.primary,
-                                            '.MuiOutlinedInput-notchedOutline':
-                                                {
-                                                    borderColor:
-                                                        COLORS.border.subtle,
-                                                },
-                                        }}
-                                        {...commonSelectProps}
-                                    >
-                                        {CCTLD_LANGUAGES.map(lang => (
-                                            <MenuItem key={lang} value={lang}>
-                                                {lang}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
                                 <TextField
                                     fullWidth
                                     label="Filter by Letter(s)"
@@ -398,7 +297,7 @@ const CctldQuizPage: React.FC = () => {
                                             filterLetter: e.target.value,
                                         })
                                     }
-                                    helperText="Comma separated (e.g. a, b)"
+                                    helperText="e.g. A, B or F, GB"
                                     InputLabelProps={{
                                         style: { color: COLORS.text.secondary },
                                     }}
@@ -443,11 +342,6 @@ const CctldQuizPage: React.FC = () => {
                                     borderRadius: SPACING.borderRadius.full,
                                     fontWeight: 'bold',
                                     letterSpacing: '0.05em',
-                                    '&.Mui-disabled': {
-                                        backgroundColor:
-                                            'rgba(255, 255, 255, 0.05)',
-                                        color: 'rgba(255, 255, 255, 0.3)',
-                                    },
                                 }}
                             >
                                 {filteredPool.length === 0
@@ -469,7 +363,7 @@ const CctldQuizPage: React.FC = () => {
             )}
 
             {gameState === 'summary' && (
-                <QuizSummaryView<CCTLD>
+                <QuizSummaryView<VehicleCode>
                     score={lastScore}
                     history={lastHistory}
                     onRestart={handleStart}
@@ -485,19 +379,13 @@ const CctldQuizPage: React.FC = () => {
                                 bgcolor:
                                     q.pointsEarned === 1
                                         ? 'rgba(76, 175, 80, 0.05)'
-                                        : q.pointsEarned === 0.5
-                                          ? 'rgba(255, 193, 7, 0.05)'
-                                          : 'rgba(239, 83, 80, 0.05)',
-                                border: `1px solid ${COLORS.border.subtle}`,
+                                        : 'rgba(239, 83, 80, 0.05)',
+                                border: `1px solid hsla(0, 0%, 100%, 0.1)`,
                                 flexShrink: 0,
                             }}
                         >
                             <Box
-                                sx={{
-                                    textAlign: 'left',
-                                    flex: 1,
-                                    minWidth: 0,
-                                }}
+                                sx={{ textAlign: 'left', flex: 1, minWidth: 0 }}
                             >
                                 <Box
                                     sx={{
@@ -510,11 +398,11 @@ const CctldQuizPage: React.FC = () => {
                                     {q.item.flag && (
                                         <img
                                             src={q.item.flag}
-                                            alt={`Flag of ${q.item.country}`}
+                                            alt=""
                                             style={{
-                                                height: '16px',
+                                                height: 16,
                                                 width: 'auto',
-                                                borderRadius: '1px',
+                                                borderRadius: 1,
                                             }}
                                         />
                                     )}
@@ -522,10 +410,6 @@ const CctldQuizPage: React.FC = () => {
                                         variant="body1"
                                         fontWeight="bold"
                                         noWrap
-                                        sx={{
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                        }}
                                     >
                                         {settings.mode === 'toCountry'
                                             ? q.item.code
@@ -536,10 +420,6 @@ const CctldQuizPage: React.FC = () => {
                                     variant="body2"
                                     color="textSecondary"
                                     noWrap
-                                    sx={{
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                    }}
                                 >
                                     Answer:{' '}
                                     {settings.mode === 'toCountry'
@@ -555,82 +435,41 @@ const CctldQuizPage: React.FC = () => {
                                         opacity: 0.8,
                                     }}
                                 >
-                                    Origin:{' '}
-                                    <Box
-                                        component="span"
-                                        dangerouslySetInnerHTML={{
-                                            __html: q.item.explanation,
-                                        }}
-                                    />
+                                    {'\u00A0'}
                                 </Typography>
                             </Box>
                             <Box
                                 sx={{
                                     display: 'flex',
                                     alignItems: 'center',
-                                    justifyContent: 'flex-end',
                                     gap: 1,
-                                    flexShrink: 0,
                                     ml: 2,
+                                    flexShrink: 0,
                                 }}
                             >
-                                <Typography
-                                    variant="body2"
-                                    sx={{
-                                        color:
-                                            q.pointsEarned === 1
-                                                ? COLORS.data.green
-                                                : q.pointsEarned === 0.5
-                                                  ? COLORS.data.amber
-                                                  : COLORS.data.red,
-                                        fontWeight:
-                                            q.pointsEarned > 0
-                                                ? 'bold'
-                                                : 'normal',
-                                        textTransform:
-                                            settings.mode === 'toCountry'
-                                                ? 'uppercase'
-                                                : 'lowercase',
-                                        maxWidth: '150px',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        display: 'block',
-                                        fontSize: '0.75rem',
-                                    }}
-                                >
-                                    {q.userAnswer?.trim() ? (
-                                        <Typography
-                                            component="span"
-                                            variant="inherit"
-                                        >
-                                            {q.userAnswer.trim()}
-                                            {q.pointsEarned === 0.5 &&
-                                                ' (0.5 pts)'}
-                                        </Typography>
-                                    ) : (
-                                        <SkippedBadge />
-                                    )}
-                                </Typography>
-                                {q.pointsEarned === 1 ? (
-                                    <CheckCircleIcon
-                                        fontSize="small"
-                                        color="success"
-                                    />
-                                ) : q.pointsEarned === 0.5 ? (
-                                    <CheckCircleIcon
-                                        fontSize="small"
+                                {q.userAnswer?.trim() ? (
+                                    <Chip
+                                        label={q.userAnswer.trim()}
+                                        size="small"
+                                        variant="outlined"
                                         sx={{
-                                            color: COLORS.data.amber,
+                                            fontWeight: 'medium',
+                                            width: 100,
+                                            height: 20,
+                                            fontSize: '0.75rem',
+                                            borderColor:
+                                                q.pointsEarned === 1
+                                                    ? 'rgba(76, 175, 80, 0.3)'
+                                                    : 'rgba(239, 83, 80, 0.3)',
+                                            color:
+                                                q.pointsEarned === 1
+                                                    ? COLORS.data.green
+                                                    : COLORS.data.red,
+                                            '& .MuiChip-label': { px: 1 },
                                         }}
                                     />
                                 ) : (
-                                    q.userAnswer?.trim() && (
-                                        <CancelIcon
-                                            fontSize="small"
-                                            color="error"
-                                        />
-                                    )
+                                    <SkippedBadge />
                                 )}
                             </Box>
                         </Card>
@@ -641,4 +480,4 @@ const CctldQuizPage: React.FC = () => {
     );
 };
 
-export default CctldQuizPage;
+export default VehicleRegistrationQuizPage;

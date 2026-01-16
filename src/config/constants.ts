@@ -78,6 +78,18 @@ interface GameConstants {
     lightsOut: {
         defaultSize: number;
     };
+    cctld: {
+        defaultQuestionCount: number;
+        questionOptions: number[];
+    };
+    telephone: {
+        defaultQuestionCount: number;
+        questionOptions: number[];
+    };
+    vehicleRegistration: {
+        defaultQuestionCount: number;
+        questionOptions: number[];
+    };
     gridSizes: {
         mobile: number;
         desktop: number;
@@ -98,6 +110,9 @@ interface Routes {
         Lights_Out: string;
         Interpreters: string;
         CCTLD_Quiz: string;
+        Driving_Side_Quiz: string;
+        Telephone_Quiz: string;
+        Vehicle_Registration_Quiz: string;
     };
     interpreters: {
         Stun_Step: string;
@@ -183,6 +198,9 @@ interface PageTitles {
     error: string;
     interpreters: string;
     cctldQuiz: string;
+    drivingSideQuiz: string;
+    telephoneQuiz: string;
+    vehicleRegistrationQuiz: string;
     interpreter: (name: string) => string;
 }
 
@@ -278,6 +296,9 @@ export const PAGE_TITLES: PageTitles = {
     interpreters: `Interpreters - ${PERSONAL_INFO.name}`,
     interpreter: (name: string) => `${name} Interpreter | Bangyen`,
     cctldQuiz: 'ccTLD Quiz | Bangyen',
+    drivingSideQuiz: 'Driving Side Quiz | Bangyen',
+    telephoneQuiz: 'Telephone Code Quiz | Bangyen',
+    vehicleRegistrationQuiz: 'Vehicle Registration Quiz | Bangyen',
 };
 
 // ============================================================================
@@ -309,6 +330,18 @@ export const GAME_CONSTANTS: GameConstants = {
     lightsOut: {
         defaultSize: 5,
     },
+    cctld: {
+        defaultQuestionCount: 10,
+        questionOptions: [5, 10, 20, 50],
+    },
+    telephone: {
+        defaultQuestionCount: 10,
+        questionOptions: [5, 10, 20, 50, 100],
+    },
+    vehicleRegistration: {
+        defaultQuestionCount: 10,
+        questionOptions: [5, 10, 20, 50, 100, 186],
+    },
     gridSizes: {
         mobile: 3,
         desktop: 5,
@@ -329,6 +362,9 @@ export const ROUTES: Routes = {
         Lights_Out: '/Lights_Out',
         Interpreters: '/Interpreters',
         CCTLD_Quiz: '/cctld_quiz',
+        Driving_Side_Quiz: '/driving_side_quiz',
+        Telephone_Quiz: '/telephone_quiz',
+        Vehicle_Registration_Quiz: '/vehicle_registration_quiz',
     },
     interpreters: {
         Stun_Step: '/Stun_Step',
@@ -396,4 +432,23 @@ export const CELL_SIZE: CellSize = {
 export const PROCESSING: Processing = {
     doubleProcessingPrevention: true,
     resetDelay: 0,
+};
+
+export const CCTLD_LANGUAGES = ['All', 'English', 'Non-English'];
+
+export const CCTLD_ALIASES: Record<string, string[]> = {
+    'united arab emirates': ['uae'],
+    'united states': ['us', 'usa'],
+    'united kingdom': ['uk'],
+    'democratic republic of the congo': ['drc', 'congo dr'],
+    'republic of the congo': ['congo'],
+    'central african republic': ['car'],
+    'british indian ocean territory': ['biot'],
+    'saint vincent and the grenadines': ['st vincent'],
+    'saint kitts and nevis': ['st kitts'],
+    'antigua and barbuda': ['antigua'],
+    'trinidad and tobago': ['trinidad'],
+    'bosnia and herzegovina': ['bosnia'],
+    'sao tome and principe': ['sao tome'],
+    'turks and caicos islands': ['turks and caicos'],
 };

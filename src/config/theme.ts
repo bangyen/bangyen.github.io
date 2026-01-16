@@ -33,6 +33,7 @@ interface InteractiveColors {
 interface DataColors {
     green: string;
     amber: string;
+    red: string;
 }
 
 interface Colors {
@@ -92,6 +93,7 @@ interface Margin {
 }
 
 interface MaxWidth {
+    sm: string;
     md: string;
     lg: string;
 }
@@ -183,6 +185,7 @@ export const COLORS: Colors = {
     data: {
         green: 'hsl(141, 64%, 49%)',
         amber: 'hsl(34, 95%, 58%)',
+        red: 'hsl(0, 78%, 62%)',
     },
 };
 
@@ -227,6 +230,7 @@ export const SPACING: Spacing = {
         lg: '1.5rem',
     },
     maxWidth: {
+        sm: '50rem',
         md: '64rem',
         lg: '80rem',
     },
@@ -277,4 +281,3 @@ export const COMPONENT_VARIANTS: ComponentVariants = {
         justifyContent: 'center',
     },
 };
-

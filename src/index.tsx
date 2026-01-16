@@ -43,8 +43,15 @@ const Oligopoly = lazy(() =>
 const Interpreters = lazy(() =>
     import('./Pages').then(m => ({ default: m.Interpreters }))
 );
-const CCTLDQuiz = lazy(() =>
-    import('./Pages').then(m => ({ default: m.CCTLDQuiz }))
+const CCTLD = lazy(() => import('./Pages').then(m => ({ default: m.CCTLD })));
+const DrivingSide = lazy(() =>
+    import('./Pages').then(m => ({ default: m.DrivingSide }))
+);
+const TelephoneQuiz = lazy(() =>
+    import('./Pages').then(m => ({ default: m.TelephoneQuiz }))
+);
+const VehicleRegistrationQuiz = lazy(() =>
+    import('./Pages').then(m => ({ default: m.VehicleRegistrationQuiz }))
 );
 
 const darkTheme = createTheme({
@@ -243,7 +250,13 @@ function App(): React.ReactElement {
                     <Route path="/lights_out" element={<Lights_Out />} />
                     <Route path="/zsharp" element={<ZSharp />} />
                     <Route path="/oligopoly" element={<Oligopoly />} />
-                    <Route path="/cctld_quiz" element={<CCTLDQuiz />} />
+                    <Route path="/cctld" element={<CCTLD />} />
+                    <Route path="/driving_side" element={<DrivingSide />} />
+                    <Route path="/telephone_quiz" element={<TelephoneQuiz />} />
+                    <Route
+                        path={ROUTES.pages.Vehicle_Registration_Quiz}
+                        element={<VehicleRegistrationQuiz />}
+                    />
                     <Route path="*" element={<Error />} />
                 </Routes>
             </Suspense>

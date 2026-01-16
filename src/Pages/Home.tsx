@@ -86,9 +86,24 @@ const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
                 description: 'Grid-based logic puzzle',
                 technology: 'JavaScript',
             },
-            CCTLD_Quiz: {
-                path: '/CCTLD_Quiz',
+            CCTLD: {
+                path: '/cctld',
                 description: 'Country Code Mastery',
+                technology: 'React',
+            },
+            Driving_Side: {
+                path: '/driving_side',
+                description: 'Left or Right?',
+                technology: 'React',
+            },
+            Telephone_Code: {
+                path: '/telephone_quiz',
+                description: 'Calling code master',
+                technology: 'React',
+            },
+            Vehicle_Registration: {
+                path: '/vehicle_registration_quiz',
+                description: 'Car code identifier',
                 technology: 'React',
             },
         },
