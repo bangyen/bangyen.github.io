@@ -699,7 +699,7 @@ const QuizGame = ({
                                 onClick={handleSkip}
                                 disabled={showFeedback}
                             >
-                                I Don&apos;t Know
+                                Skip
                             </Button>
                             <Button
                                 variant="outlined"
@@ -716,7 +716,7 @@ const QuizGame = ({
                                     },
                                 }}
                             >
-                                {showHint ? 'Hide Hint' : 'Hint'}
+                                {showHint ? 'Hide Hint' : 'Show Hint'}
                             </Button>
                             <Button
                                 type="submit"
