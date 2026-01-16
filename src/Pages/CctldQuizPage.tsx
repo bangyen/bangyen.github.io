@@ -264,10 +264,10 @@ const SettingsPanel = ({
                             }}
                             {...commonSelectProps}
                         >
-                            <MenuItem value="All">All Questions</MenuItem>
+                            <MenuItem value="All">All</MenuItem>
                             {GAME_CONSTANTS.cctld.questionOptions.map(opt => (
                                 <MenuItem key={opt} value={opt}>
-                                    {opt} Questions
+                                    {opt}
                                 </MenuItem>
                             ))}
                         </Select>
@@ -304,6 +304,19 @@ const QuizGame = ({
     const historyRef = React.useRef(history);
     const scoreRef = React.useRef(score);
     const advanceTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    const nextButtonRef = React.useRef<HTMLButtonElement>(null);
+
+    useEffect(() => {
+        if (showFeedback) {
+            nextButtonRef.current?.focus();
+        } else {
+            // Slight delay to ensure DOM is ready/transitions complete
+            requestAnimationFrame(() => {
+                inputRef.current?.focus();
+            });
+        }
+    }, [showFeedback, currentQuestion]);
 
     useEffect(() => {
         historyRef.current = history;
@@ -629,6 +642,7 @@ const QuizGame = ({
                         }}
                     >
                         <TextField
+                            inputRef={inputRef}
                             value={inputValue}
                             onChange={e => setInputValue(e.target.value)}
                             placeholder={
@@ -673,6 +687,7 @@ const QuizGame = ({
                             }}
                         >
                             <Button
+                                ref={nextButtonRef}
                                 variant="outlined"
                                 sx={{
                                     py: 1.5,
@@ -1191,7 +1206,7 @@ const CctldQuizPage: React.FC = () => {
                                                 textOverflow: 'ellipsis',
                                             }}
                                         >
-                                            Ans:{' '}
+                                            Answer:{' '}
                                             {settings.mode === 'toCountry'
                                                 ? q.cctld.country
                                                 : q.cctld.code}
@@ -1216,7 +1231,10 @@ const CctldQuizPage: React.FC = () => {
                                     </Box>
                                     <Box
                                         sx={{
-                                            textAlign: 'right',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'flex-end',
+                                            gap: 1,
                                             flexShrink: 0,
                                             ml: 2,
                                         }}
@@ -1234,37 +1252,64 @@ const CctldQuizPage: React.FC = () => {
                                                     q.pointsEarned > 0
                                                         ? 'bold'
                                                         : 'normal',
+                                                textTransform:
+                                                    settings.mode ===
+                                                    'toCountry'
+                                                        ? 'uppercase'
+                                                        : 'lowercase',
                                                 maxWidth: '150px',
                                                 whiteSpace: 'nowrap',
                                                 overflow: 'hidden',
                                                 textOverflow: 'ellipsis',
                                                 display: 'block',
+                                                fontSize: '0.75rem',
                                             }}
                                         >
-                                            {q.userAnswer || '(skipped)'}
-                                            {q.pointsEarned === 0.5 &&
-                                                ' (0.5 pts)'}
+                                            {q.userAnswer?.trim() ? (
+                                                <Typography
+                                                    component="span"
+                                                    variant="inherit"
+                                                >
+                                                    {q.userAnswer.trim()}
+                                                    {q.pointsEarned === 0.5 &&
+                                                        ' (0.5 pts)'}
+                                                </Typography>
+                                            ) : (
+                                                <Chip
+                                                    label="Skipped"
+                                                    size="small"
+                                                    variant="outlined"
+                                                    color="error"
+                                                    sx={{
+                                                        height: 20,
+                                                        fontSize: '0.75rem',
+                                                        borderColor:
+                                                            'rgba(239, 83, 80, 0.3)',
+                                                        color: COLORS.data.red,
+                                                        fontWeight: 'medium',
+                                                    }}
+                                                />
+                                            )}
                                         </Typography>
                                         {q.pointsEarned === 1 ? (
                                             <CheckCircleIcon
                                                 fontSize="small"
                                                 color="success"
-                                                sx={{ mt: 0.5 }}
                                             />
                                         ) : q.pointsEarned === 0.5 ? (
                                             <CheckCircleIcon
                                                 fontSize="small"
                                                 sx={{
-                                                    mt: 0.5,
                                                     color: COLORS.data.amber,
                                                 }}
                                             />
                                         ) : (
-                                            <CancelIcon
-                                                fontSize="small"
-                                                color="error"
-                                                sx={{ mt: 0.5 }}
-                                            />
+                                            q.userAnswer?.trim() && (
+                                                <CancelIcon
+                                                    fontSize="small"
+                                                    color="error"
+                                                />
+                                            )
                                         )}
                                     </Box>
                                 </Card>
