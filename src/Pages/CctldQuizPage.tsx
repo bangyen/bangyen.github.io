@@ -892,7 +892,14 @@ const CctldQuizPage: React.FC = () => {
                             mx: 'auto',
                         }}
                     >
-                        <Card sx={{ ...COMPONENT_VARIANTS.card, p: 4, mb: 4 }}>
+                        <Card
+                            sx={{
+                                ...COMPONENT_VARIANTS.card,
+                                p: 4,
+                                mb: 4,
+                                width: '100%',
+                            }}
+                        >
                             <Typography variant="h4" sx={{ mb: 2 }}>
                                 Quiz Complete!
                             </Typography>
@@ -927,12 +934,21 @@ const CctldQuizPage: React.FC = () => {
                             </Box>
                         </Card>
 
-                        <Typography variant="h6" align="left" sx={{ mb: 2 }}>
+                        <Typography
+                            variant="h6"
+                            align="left"
+                            sx={{ mb: 2, width: '100%' }}
+                        >
                             History
                         </Typography>
                         <Stack
                             spacing={2}
-                            sx={{ maxHeight: 400, overflow: 'auto', pr: 1 }}
+                            sx={{
+                                maxHeight: 400,
+                                overflow: 'auto',
+                                pr: 1,
+                                width: '100%',
+                            }}
                         >
                             {lastHistory.map((q, i) => (
                                 <Card
