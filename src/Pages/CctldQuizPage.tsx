@@ -33,7 +33,7 @@ import {
     ANIMATIONS,
     COMPONENT_VARIANTS,
 } from '../config/theme';
-import cctldsData from '../data/cctlds.json';
+import cctldsData from '../data/cctlds_enhanced.json';
 
 import { Grid as MuiGrid } from '../components/mui';
 
@@ -42,7 +42,9 @@ import { Grid as MuiGrid } from '../components/mui';
 interface CCTLD {
     code: string;
     country: string;
-    origin_explanation: string;
+    explanation: string;
+    notes: string;
+    flag: string;
     language: string;
 }
 
@@ -61,6 +63,7 @@ interface Question {
     cctld: CCTLD;
     userAnswer: string;
     isCorrect: boolean | null;
+    pointsEarned: number;
 }
 
 // --- Constants ---
@@ -295,10 +298,12 @@ const SettingsPanel = ({
 
 const QuizGame = ({
     settings,
+    initialPool,
     onEndGame,
     onBackToMenu,
 }: {
     settings: QuizSettings;
+    initialPool: CCTLD[];
     onEndGame: (history: Question[], score: number) => void;
     onBackToMenu: () => void;
 }) => {
@@ -308,14 +313,15 @@ const QuizGame = ({
     const [showFeedback, setShowFeedback] = useState(false);
     const [feedbackMessage, setFeedbackMessage] = useState('');
     const [feedbackColor, setFeedbackColor] = useState('');
-    const [pool, setPool] = useState<CCTLD[]>([]);
-    const [totalQuestions, setTotalQuestions] = useState(0);
+    const [pool, setPool] = useState<CCTLD[]>(initialPool);
+    const [totalQuestions, setTotalQuestions] = useState(initialPool.length);
     const [showHint, setShowHint] = useState(false);
     const [score, setScore] = useState(0);
 
     // Refs for real-time access during callbacks (prevents stale closure issues)
     const historyRef = React.useRef(history);
     const scoreRef = React.useRef(score);
+    const advanceTimerRef = React.useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         historyRef.current = history;
@@ -325,51 +331,30 @@ const QuizGame = ({
         scoreRef.current = score;
     }, [score]);
 
-    // Initialize Pool
+    // Initialize Game State
     useEffect(() => {
-        let filtered = cctldsData;
-        if (settings.filterLanguage !== 'All') {
-            if (settings.filterLanguage === 'Non-English') {
-                filtered = filtered.filter(item => item.language !== 'English');
-            } else {
-                filtered = filtered.filter(
-                    item => item.language === settings.filterLanguage
-                );
-            }
+        // Shuffle the initial pool once at the start
+        const shuffled = [...initialPool].sort(() => Math.random() - 0.5);
+        if (shuffled.length > 0) {
+            setCurrentQuestion(shuffled[0]);
+            setPool(shuffled.slice(1));
+        } else {
+            setCurrentQuestion(null);
+            setPool([]);
         }
-        if (settings.filterLetter) {
-            const letters = settings.filterLetter
-                .toLowerCase()
-                .split(',')
-                .map(l => l.trim())
-                .filter(l => l);
-            if (letters.length > 0) {
-                filtered = filtered.filter(item => {
-                    const text =
-                        settings.mode === 'toCountry'
-                            ? item.code.toLowerCase().replace('.', '')
-                            : item.country.toLowerCase();
-                    return letters.some(l => text.startsWith(l));
-                });
-            }
-        }
-        // Shuffle
-        let shuffled = [...filtered].sort(() => Math.random() - 0.5);
-
-        // Apply Question Limit
-        if (settings.maxQuestions !== 'All') {
-            shuffled = shuffled.slice(0, settings.maxQuestions);
-        }
-
-        setPool(shuffled);
         setTotalQuestions(shuffled.length);
-    }, [settings]);
+    }, [initialPool]);
 
     const nextQuestion = useCallback(() => {
         setPool(prevPool => {
             if (prevPool.length === 0) {
                 onEndGame(historyRef.current, scoreRef.current);
                 return [];
+            }
+
+            if (advanceTimerRef.current) {
+                clearTimeout(advanceTimerRef.current);
+                advanceTimerRef.current = null;
             }
 
             const next = prevPool[0];
@@ -381,29 +366,19 @@ const QuizGame = ({
         });
     }, [onEndGame]);
 
-    // Initial Start
-    useEffect(() => {
-        if (!currentQuestion && pool.length > 0) {
-            // First question
-            const next = pool[0];
-            setCurrentQuestion(next);
-            setPool(p => p.slice(1));
-        } else if (
-            !currentQuestion &&
-            pool.length === 0 &&
-            history.length > 0
-        ) {
-            // Game over trigger from within render cycle? better to handle in nextQuestion logic or effect
-            // but nextQuestion logic above handles it via storage
-        }
-    }, [pool, currentQuestion, history.length]);
+    // Removed redundant initial start effect
 
     const handleHint = () => {
         setShowHint(!showHint);
     };
 
     const handleSkip = () => {
-        if (!currentQuestion || showFeedback) return;
+        if (!currentQuestion) return;
+
+        if (showFeedback) {
+            nextQuestion();
+            return;
+        }
 
         const expected =
             settings.mode === 'toCountry'
@@ -412,14 +387,19 @@ const QuizGame = ({
 
         const newHistory = [
             ...history,
-            { cctld: currentQuestion, userAnswer: '', isCorrect: false },
+            {
+                cctld: currentQuestion,
+                userAnswer: '',
+                isCorrect: false,
+                pointsEarned: 0,
+            },
         ];
         setHistory(newHistory);
 
         setFeedbackMessage(`${expected}`);
         setFeedbackColor(COLORS.data.amber);
         setShowFeedback(true);
-        setTimeout(() => {
+        advanceTimerRef.current = setTimeout(() => {
             nextQuestion();
         }, 3000);
     };
@@ -441,33 +421,45 @@ const QuizGame = ({
             correct = normalize(input) === normalize(expected);
         }
 
-        const newHistory = [
-            ...history,
-            {
-                cctld: currentQuestion,
-                userAnswer: inputValue,
-                isCorrect: correct,
-            },
-        ];
-        setHistory(newHistory);
-
-        const newScore = correct ? score + 1 : score;
-        setScore(newScore);
+        const pts = correct ? 1 : 0;
 
         if (correct) {
+            const newHistory = [
+                ...history,
+                {
+                    cctld: currentQuestion,
+                    userAnswer: inputValue,
+                    isCorrect: true,
+                    pointsEarned: 1,
+                },
+            ];
+            setHistory(newHistory);
+            setScore(score + 1);
+
             setFeedbackMessage('Correct!');
             setFeedbackColor(COLORS.data.green);
             setShowFeedback(true);
-            setTimeout(() => {
+            advanceTimerRef.current = setTimeout(() => {
                 nextQuestion();
             }, 1000);
         } else {
+            const newHistory = [
+                ...history,
+                {
+                    cctld: currentQuestion,
+                    userAnswer: inputValue,
+                    isCorrect: false,
+                    pointsEarned: 0,
+                },
+            ];
+            setHistory(newHistory);
+
             setFeedbackMessage(`${expected}`);
             setFeedbackColor(COLORS.data.amber);
             setShowFeedback(true);
-            setTimeout(() => {
+            advanceTimerRef.current = setTimeout(() => {
                 nextQuestion();
-            }, 3000); // More time to read explanation if incorrect
+            }, 3000);
         }
     };
 
@@ -615,18 +607,27 @@ const QuizGame = ({
                     </Typography>
 
                     <Fade in key={currentQuestion.code}>
-                        <Typography
-                            variant="h1"
+                        <Box
                             sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                alignItems: 'center',
                                 mb: 4,
-                                fontWeight: 'bold',
-                                textAlign: 'center',
                             }}
                         >
-                            {settings.mode === 'toCountry'
-                                ? currentQuestion.code
-                                : currentQuestion.country}
-                        </Typography>
+                            <Typography
+                                variant="h1"
+                                sx={{
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                    fontSize: { xs: '3rem', sm: '4rem' },
+                                }}
+                            >
+                                {settings.mode === 'toCountry'
+                                    ? currentQuestion.code
+                                    : currentQuestion.country}
+                            </Typography>
+                        </Box>
                     </Fade>
 
                     <Box
@@ -697,9 +698,8 @@ const QuizGame = ({
                                     },
                                 }}
                                 onClick={handleSkip}
-                                disabled={showFeedback}
                             >
-                                Skip
+                                {showFeedback ? 'Next' : 'Skip'}
                             </Button>
                             <Button
                                 variant="outlined"
@@ -768,19 +768,46 @@ const QuizGame = ({
                     {showFeedback && (
                         <Fade in={showFeedback}>
                             <Box sx={{ mt: 3, width: '100%' }}>
-                                <Typography
-                                    variant="h5"
+                                <Box
                                     sx={{
-                                        color: feedbackColor,
-                                        fontWeight: 'bold',
-                                        textShadow: '0 0 20px rgba(0,0,0,0.5)',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        gap: 1.5,
                                         mb: 1,
-                                        textAlign: 'center',
                                     }}
                                 >
-                                    {feedbackMessage}
-                                </Typography>
-                                {!history[history.length - 1]?.isCorrect && (
+                                    {currentQuestion.flag && (
+                                        <img
+                                            src={currentQuestion.flag}
+                                            alt={`Flag of ${currentQuestion.country}`}
+                                            style={{
+                                                height: '24px',
+                                                width: 'auto',
+                                                borderRadius: '2px',
+                                                boxShadow:
+                                                    '0 1px 4px rgba(0,0,0,0.2)',
+                                            }}
+                                        />
+                                    )}
+                                    <Typography
+                                        variant="h5"
+                                        noWrap
+                                        sx={{
+                                            color: feedbackColor,
+                                            fontWeight: 'bold',
+                                            textShadow:
+                                                '0 0 20px rgba(0,0,0,0.5)',
+                                            maxWidth: '100%',
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                        }}
+                                    >
+                                        {feedbackMessage}
+                                    </Typography>
+                                </Box>
+                                {history[history.length - 1]?.isCorrect ===
+                                    false && (
                                     <Typography
                                         variant="body2"
                                         color="textSecondary"
@@ -790,7 +817,12 @@ const QuizGame = ({
                                         }}
                                     >
                                         Origin:{' '}
-                                        {currentQuestion.origin_explanation}
+                                        <Box
+                                            component="span"
+                                            dangerouslySetInnerHTML={{
+                                                __html: currentQuestion.explanation,
+                                            }}
+                                        />
                                     </Typography>
                                 )}
                             </Box>
@@ -814,8 +846,63 @@ const CctldQuizPage: React.FC = () => {
     const [lastScore, setLastScore] = useState(0);
     const [lastHistory, setLastHistory] = useState<Question[]>([]);
 
+    const filteredPool = useMemo(() => {
+        let filtered = cctldsData;
+        if (settings.filterLanguage !== 'All') {
+            if (settings.filterLanguage === 'Non-English') {
+                filtered = filtered.filter(item => item.language !== 'English');
+            } else {
+                filtered = filtered.filter(
+                    item => item.language === settings.filterLanguage
+                );
+            }
+        }
+        if (settings.filterLetter) {
+            let letters = settings.filterLetter
+                .toLowerCase()
+                .split(',')
+                .map(l => l.trim())
+                .filter(l => l);
+
+            if (letters.length <= 1 && !settings.filterLetter.includes(',')) {
+                const spaceSplit = settings.filterLetter
+                    .toLowerCase()
+                    .split(/\s+/)
+                    .filter(l => l);
+                if (spaceSplit.length > 1) {
+                    letters = spaceSplit;
+                } else {
+                    letters = settings.filterLetter
+                        .toLowerCase()
+                        .split('')
+                        .filter(l => l.trim());
+                }
+            }
+
+            if (letters.length > 0) {
+                filtered = filtered.filter(item => {
+                    const text =
+                        settings.mode === 'toCountry'
+                            ? item.code.toLowerCase().replace('.', '')
+                            : item.country.toLowerCase();
+                    return letters.some(l => text.startsWith(l));
+                });
+            }
+        }
+
+        if (settings.maxQuestions !== 'All') {
+            // Shuffle BEFORE slicing to ensure random sample
+            return [...filtered]
+                .sort(() => Math.random() - 0.5)
+                .slice(0, settings.maxQuestions);
+        }
+        return filtered;
+    }, [settings]);
+
     const handleStart = () => {
-        setGameState('playing');
+        if (filteredPool.length > 0) {
+            setGameState('playing');
+        }
     };
 
     const handleEndGame = (history: Question[], score: number) => {
@@ -937,6 +1024,7 @@ const CctldQuizPage: React.FC = () => {
                                 variant="contained"
                                 size="large"
                                 onClick={handleStart}
+                                disabled={filteredPool.length === 0}
                                 sx={{
                                     px: 8,
                                     py: 1.5,
@@ -944,9 +1032,16 @@ const CctldQuizPage: React.FC = () => {
                                     borderRadius: SPACING.borderRadius.full,
                                     fontWeight: 'bold',
                                     letterSpacing: '0.05em',
+                                    '&.Mui-disabled': {
+                                        backgroundColor:
+                                            'rgba(255, 255, 255, 0.05)',
+                                        color: 'rgba(255, 255, 255, 0.3)',
+                                    },
                                 }}
                             >
-                                Start Quiz
+                                {filteredPool.length === 0
+                                    ? 'No Questions Found'
+                                    : `Start Quiz (${filteredPool.length})`}
                             </Button>
                         </Box>
                     </Box>
@@ -956,6 +1051,7 @@ const CctldQuizPage: React.FC = () => {
             {gameState === 'playing' && (
                 <QuizGame
                     settings={settings}
+                    initialPool={filteredPool}
                     onEndGame={handleEndGame}
                     onBackToMenu={handleBackToMenu}
                 />
@@ -981,12 +1077,19 @@ const CctldQuizPage: React.FC = () => {
                                 width: '100%',
                             }}
                         >
-                            <Typography variant="h4" sx={{ mb: 2 }}>
+                            <Typography
+                                variant="h4"
+                                sx={{ mb: 2, textAlign: 'center' }}
+                            >
                                 Quiz Complete!
                             </Typography>
                             <Typography
                                 variant="h2"
-                                sx={{ color: COLORS.primary.main, mb: 4 }}
+                                sx={{
+                                    color: COLORS.primary.main,
+                                    mb: 4,
+                                    textAlign: 'center',
+                                }}
                             >
                                 {lastScore} / {lastHistory.length}
                             </Typography>
@@ -999,16 +1102,18 @@ const CctldQuizPage: React.FC = () => {
                                 }}
                             >
                                 <Button
-                                    variant="outlined"
+                                    variant="contained"
                                     startIcon={<RefreshIcon />}
                                     onClick={handleStart}
+                                    sx={{ flex: 1 }}
                                 >
                                     Play Again
                                 </Button>
                                 <Button
-                                    variant="text"
+                                    variant="outlined"
                                     startIcon={<ArrowBackIcon />}
                                     onClick={handleBackToMenu}
+                                    sx={{ flex: 1 }}
                                 >
                                     Menu
                                 </Button>
@@ -1038,64 +1143,128 @@ const CctldQuizPage: React.FC = () => {
                                         p: 2,
                                         display: 'flex',
                                         justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                        bgcolor: q.isCorrect
-                                            ? 'rgba(76, 175, 80, 0.05)'
-                                            : 'rgba(239, 83, 80, 0.05)',
+                                        alignItems: 'flex-start',
+                                        bgcolor:
+                                            q.pointsEarned === 1
+                                                ? 'rgba(76, 175, 80, 0.05)'
+                                                : q.pointsEarned === 0.5
+                                                  ? 'rgba(255, 193, 7, 0.05)'
+                                                  : 'rgba(239, 83, 80, 0.05)',
+                                        border: `1px solid ${COLORS.border.subtle}`,
+                                        flexShrink: 0,
                                     }}
                                 >
-                                    <Box textAlign="left">
-                                        <Typography
-                                            variant="body1"
-                                            fontWeight="bold"
+                                    <Box
+                                        sx={{
+                                            textAlign: 'left',
+                                            flex: 1,
+                                            minWidth: 0,
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: 1,
+                                                mb: 0.5,
+                                            }}
                                         >
-                                            {settings.mode === 'toCountry'
-                                                ? q.cctld.code
-                                                : q.cctld.country}
-                                        </Typography>
+                                            {q.cctld.flag && (
+                                                <img
+                                                    src={q.cctld.flag}
+                                                    alt={`Flag of ${q.cctld.country}`}
+                                                    style={{
+                                                        height: '16px',
+                                                        width: 'auto',
+                                                        borderRadius: '1px',
+                                                    }}
+                                                />
+                                            )}
+                                            <Typography
+                                                variant="body1"
+                                                fontWeight="bold"
+                                                noWrap
+                                                sx={{
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                }}
+                                            >
+                                                {settings.mode === 'toCountry'
+                                                    ? q.cctld.code
+                                                    : q.cctld.country}
+                                            </Typography>
+                                        </Box>
                                         <Typography
                                             variant="body2"
                                             color="textSecondary"
+                                            noWrap
+                                            sx={{
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                            }}
                                         >
                                             Ans:{' '}
                                             {settings.mode === 'toCountry'
                                                 ? q.cctld.country
                                                 : q.cctld.code}
                                         </Typography>
-                                        {!q.isCorrect && (
-                                            <Typography
-                                                variant="caption"
-                                                sx={{
-                                                    fontStyle: 'italic',
-                                                    display: 'block',
-                                                    mt: 0.5,
-                                                    opacity: 0.8,
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                fontStyle: 'italic',
+                                                display: 'block',
+                                                mt: 0.5,
+                                                opacity: 0.8,
+                                            }}
+                                        >
+                                            Origin:{' '}
+                                            <Box
+                                                component="span"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: q.cctld.explanation,
                                                 }}
-                                            >
-                                                Origin:{' '}
-                                                {q.cctld.origin_explanation}
-                                            </Typography>
-                                        )}
+                                            />
+                                        </Typography>
                                     </Box>
-                                    <Box textAlign="right">
+                                    <Box
+                                        sx={{
+                                            textAlign: 'right',
+                                            flexShrink: 0,
+                                            ml: 2,
+                                        }}
+                                    >
                                         <Typography
                                             variant="body2"
                                             sx={{
-                                                color: q.isCorrect
-                                                    ? COLORS.data.green
-                                                    : COLORS.data.amber,
-                                                fontWeight: q.isCorrect
-                                                    ? 'normal'
-                                                    : 'bold',
+                                                color:
+                                                    q.pointsEarned === 1
+                                                        ? COLORS.data.green
+                                                        : q.pointsEarned === 0.5
+                                                          ? COLORS.data.amber
+                                                          : COLORS.data.red,
+                                                fontWeight:
+                                                    q.pointsEarned > 0
+                                                        ? 'bold'
+                                                        : 'normal',
                                             }}
                                         >
                                             {q.userAnswer || '(skipped)'}
+                                            {q.pointsEarned === 0.5 &&
+                                                ' (0.5 pts)'}
                                         </Typography>
-                                        {q.isCorrect ? (
+                                        {q.pointsEarned === 1 ? (
                                             <CheckCircleIcon
                                                 fontSize="small"
                                                 color="success"
                                                 sx={{ mt: 0.5 }}
+                                            />
+                                        ) : q.pointsEarned === 0.5 ? (
+                                            <CheckCircleIcon
+                                                fontSize="small"
+                                                sx={{
+                                                    mt: 0.5,
+                                                    color: COLORS.data.amber,
+                                                }}
                                             />
                                         ) : (
                                             <CancelIcon

@@ -33,6 +33,7 @@ interface InteractiveColors {
 interface DataColors {
     green: string;
     amber: string;
+    red: string;
 }
 
 interface Colors {
@@ -183,6 +184,7 @@ export const COLORS: Colors = {
     data: {
         green: 'hsl(141, 64%, 49%)',
         amber: 'hsl(34, 95%, 58%)',
+        red: 'hsl(0, 78%, 62%)',
     },
 };
 
@@ -277,4 +279,3 @@ export const COMPONENT_VARIANTS: ComponentVariants = {
         justifyContent: 'center',
     },
 };
-
