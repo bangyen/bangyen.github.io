@@ -541,7 +541,11 @@ const QuizGame = ({
                     </Box>
                     <LinearProgress
                         variant="determinate"
-                        value={(history.length / totalQuestions) * 100}
+                        value={
+                            (Math.min(history.length + 1, totalQuestions) /
+                                totalQuestions) *
+                            100
+                        }
                         sx={{
                             height: 4,
                             borderRadius: 2,
