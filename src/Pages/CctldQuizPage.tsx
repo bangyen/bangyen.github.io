@@ -454,14 +454,14 @@ const QuizGame = ({
                 mt: 4,
             }}
         >
-            <Box sx={{ width: '100%', maxWidth: 660, mx: 'auto' }}>
+            <Box sx={{ width: '100%', maxWidth: 600, mx: 'auto' }}>
                 <Box
                     sx={{
                         mb: 4,
                         display: 'flex',
                         flexDirection: 'column',
                         width: '100%',
-                        maxWidth: 450,
+                        maxWidth: 600,
                         mx: 'auto',
                     }}
                 >
@@ -810,7 +810,7 @@ const CctldQuizPage: React.FC = () => {
                     mb: 6,
                     textAlign: 'center',
                     width: '100%',
-                    maxWidth: 800,
+                    maxWidth: 600,
                     mx: 'auto',
                 }}
             >
