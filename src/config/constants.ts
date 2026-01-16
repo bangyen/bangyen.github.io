@@ -78,6 +78,10 @@ interface GameConstants {
     lightsOut: {
         defaultSize: number;
     };
+    cctld: {
+        defaultQuestionCount: number;
+        questionOptions: number[];
+    };
     gridSizes: {
         mobile: number;
         desktop: number;
@@ -309,6 +313,10 @@ export const GAME_CONSTANTS: GameConstants = {
     lightsOut: {
         defaultSize: 5,
     },
+    cctld: {
+        defaultQuestionCount: 10,
+        questionOptions: [5, 10, 20, 50],
+    },
     gridSizes: {
         mobile: 3,
         desktop: 5,
@@ -396,4 +404,23 @@ export const CELL_SIZE: CellSize = {
 export const PROCESSING: Processing = {
     doubleProcessingPrevention: true,
     resetDelay: 0,
+};
+
+export const CCTLD_LANGUAGES = ['All', 'English', 'Non-English'];
+
+export const CCTLD_ALIASES: Record<string, string[]> = {
+    'united arab emirates': ['uae'],
+    'united states': ['us', 'usa'],
+    'united kingdom': ['uk'],
+    'democratic republic of the congo': ['drc', 'congo dr'],
+    'republic of the congo': ['congo'],
+    'central african republic': ['car'],
+    'british indian ocean territory': ['biot'],
+    'saint vincent and the grenadines': ['st vincent'],
+    'saint kitts and nevis': ['st kitts'],
+    'antigua and barbuda': ['antigua'],
+    'trinidad and tobago': ['trinidad'],
+    'bosnia and herzegovina': ['bosnia'],
+    'sao tome and principe': ['sao tome'],
+    'turks and caicos islands': ['turks and caicos'],
 };

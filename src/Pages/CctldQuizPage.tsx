@@ -33,6 +33,11 @@ import {
     ANIMATIONS,
     COMPONENT_VARIANTS,
 } from '../config/theme';
+import {
+    CCTLD_ALIASES,
+    CCTLD_LANGUAGES,
+    GAME_CONSTANTS,
+} from '../config/constants';
 import cctldsData from '../data/cctlds_enhanced.json';
 
 import { Grid as MuiGrid } from '../components/mui';
@@ -68,8 +73,6 @@ interface Question {
 
 // --- Constants ---
 
-const LANGUAGES = ['All', 'English', 'Non-English'];
-
 // --- Helper Functions ---
 
 const normalize = (str: string) => {
@@ -91,22 +94,7 @@ const isSmartMatch = (input: string, expected: string) => {
     if (ni === ne) return true;
 
     // 2. Predefined Aliases
-    const aliases: Record<string, string[]> = {
-        'united arab emirates': ['uae'],
-        'united states': ['us', 'usa'],
-        'united kingdom': ['uk'],
-        'democratic republic of the congo': ['drc', 'congo dr'],
-        'republic of the congo': ['congo'],
-        'central african republic': ['car'],
-        'british indian ocean territory': ['biot'],
-        'saint vincent and the grenadines': ['st vincent'],
-        'saint kitts and nevis': ['st kitts'],
-        'antigua and barbuda': ['antigua'],
-        'trinidad and tobago': ['trinidad'],
-        'bosnia and herzegovina': ['bosnia'],
-        'sao tome and principe': ['sao tome'],
-        'turks and caicos islands': ['turks and caicos'],
-    };
+    const aliases: Record<string, string[]> = CCTLD_ALIASES;
 
     if (aliases[ne]?.map(a => normalize(a)).includes(ni)) return true;
 
@@ -212,7 +200,7 @@ const SettingsPanel = ({
                             }}
                             {...commonSelectProps}
                         >
-                            {LANGUAGES.map(lang => (
+                            {CCTLD_LANGUAGES.map(lang => (
                                 <MenuItem key={lang} value={lang}>
                                     {lang}
                                 </MenuItem>
@@ -277,10 +265,11 @@ const SettingsPanel = ({
                             {...commonSelectProps}
                         >
                             <MenuItem value="All">All Questions</MenuItem>
-                            <MenuItem value={5}>5 Questions</MenuItem>
-                            <MenuItem value={10}>10 Questions</MenuItem>
-                            <MenuItem value={20}>20 Questions</MenuItem>
-                            <MenuItem value={50}>50 Questions</MenuItem>
+                            {GAME_CONSTANTS.cctld.questionOptions.map(opt => (
+                                <MenuItem key={opt} value={opt}>
+                                    {opt} Questions
+                                </MenuItem>
+                            ))}
                         </Select>
                     </FormControl>
                 </Grid>
