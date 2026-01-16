@@ -270,9 +270,11 @@ const SettingsPanel = ({
 const QuizGame = ({
     settings,
     onEndGame,
+    onBackToMenu,
 }: {
     settings: QuizSettings;
     onEndGame: (history: Question[], score: number) => void;
+    onBackToMenu: () => void;
 }) => {
     const [history, setHistory] = useState<Question[]>([]);
     const [currentQuestion, setCurrentQuestion] = useState<CCTLD | null>(null);
@@ -463,23 +465,49 @@ const QuizGame = ({
                         mx: 'auto',
                     }}
                 >
-                    <Typography
-                        variant="caption"
-                        color="textSecondary"
+                    <Box
                         sx={{
-                            letterSpacing: '0.1em',
-                            textTransform: 'uppercase',
-                            fontWeight: 'bold',
-                            opacity: 0.6,
-                            display: 'block',
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
                             mb: 1,
-                            textAlign: 'left',
                         }}
                     >
-                        {settings.mode === 'toCountry'
-                            ? 'Guessing Country'
-                            : 'Guessing Code'}
-                    </Typography>
+                        <Typography
+                            variant="caption"
+                            color="textSecondary"
+                            sx={{
+                                letterSpacing: '0.1em',
+                                textTransform: 'uppercase',
+                                fontWeight: 'bold',
+                                opacity: 0.6,
+                            }}
+                        >
+                            {settings.mode === 'toCountry'
+                                ? 'Guessing Country'
+                                : 'Guessing Code'}
+                        </Typography>
+                        <Button
+                            size="small"
+                            variant="text"
+                            startIcon={<ArrowBackIcon />}
+                            onClick={onBackToMenu}
+                            sx={{
+                                color: COLORS.text.secondary,
+                                opacity: 0.6,
+                                '&:hover': {
+                                    opacity: 1,
+                                    backgroundColor: 'transparent',
+                                    color: COLORS.primary.main,
+                                },
+                                fontSize: '0.75rem',
+                                textTransform: 'none',
+                                p: 0,
+                            }}
+                        >
+                            Quit Quiz
+                        </Button>
+                    </Box>
                     <Box
                         sx={{
                             display: 'flex',
@@ -843,7 +871,11 @@ const CctldQuizPage: React.FC = () => {
             )}
 
             {gameState === 'playing' && (
-                <QuizGame settings={settings} onEndGame={handleEndGame} />
+                <QuizGame
+                    settings={settings}
+                    onEndGame={handleEndGame}
+                    onBackToMenu={handleBackToMenu}
+                />
             )}
 
             {gameState === 'summary' && (
