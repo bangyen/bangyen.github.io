@@ -724,7 +724,6 @@ const QuizGame = ({
                                     }}
                                 >
                                     Hint: {currentQuestion.language} origin
-                                    &mdash; {currentQuestion.origin_explanation}
                                 </Typography>
                             </Box>
                         </Fade>
