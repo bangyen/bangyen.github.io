@@ -859,13 +859,14 @@ const CctldQuizPage: React.FC = () => {
                             <Button
                                 variant="contained"
                                 size="large"
-                                startIcon={<PlayArrowIcon />}
                                 onClick={handleStart}
                                 sx={{
-                                    px: 6,
-                                    py: 2,
+                                    px: 8,
+                                    py: 2.2,
                                     fontSize: '1.2rem',
                                     borderRadius: SPACING.borderRadius.full,
+                                    fontWeight: 'bold',
+                                    letterSpacing: '0.05em',
                                 }}
                             >
                                 Start Quiz
