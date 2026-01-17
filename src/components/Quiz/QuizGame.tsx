@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Button, Typography } from '@mui/material';
-import { useQuizEngine } from '../../hooks/useQuizEngine';
+import { useQuizEngine } from '../../hooks';
 import QuizGameView from './QuizGameView';
 import { CCTLD, QuizType, QuizSettings, Question } from '../../types/quiz';
 import { QUIZ_CONFIGS } from '../../config/quizConfig';

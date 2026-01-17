@@ -12,6 +12,8 @@ module.exports = {
       {
         ignoreProperties: ['composes']
       }
-    ]
+    ],
+    'color-named': 'never',
+    'declaration-no-important': true
   }
 };

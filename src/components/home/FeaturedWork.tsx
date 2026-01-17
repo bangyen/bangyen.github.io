@@ -6,6 +6,24 @@ import { COLORS, TYPOGRAPHY } from '../../config/theme';
 import { PublicationCard } from './FeaturedWork/PublicationCard';
 import { ProjectCard } from './FeaturedWork/ProjectCard';
 
+interface AnimatedCardProps {
+    index: number;
+    baseTimeout: number;
+    children: React.ReactNode;
+}
+
+function AnimatedCard({
+    index,
+    baseTimeout,
+    children,
+}: AnimatedCardProps): React.ReactElement {
+    return (
+        <Fade in timeout={baseTimeout + index * 200}>
+            <div>{children}</div>
+        </Fade>
+    );
+}
+
 export function FeaturedWork(): React.ReactElement {
     return (
         <Section id="featured-work">
@@ -34,28 +52,22 @@ export function FeaturedWork(): React.ReactElement {
                         }}
                     >
                         {PUBLICATIONS.map((publication, index) => (
-                            <Fade
-                                in
-                                timeout={1600 + index * 200}
+                            <AnimatedCard
                                 key={publication.title}
+                                index={index}
+                                baseTimeout={1600}
                             >
-                                <div>
-                                    <PublicationCard
-                                        publication={publication}
-                                    />
-                                </div>
-                            </Fade>
+                                <PublicationCard publication={publication} />
+                            </AnimatedCard>
                         ))}
                         {PROJECTS.map((project, index) => (
-                            <Fade
-                                in
-                                timeout={2000 + index * 200}
+                            <AnimatedCard
                                 key={project.title}
+                                index={index}
+                                baseTimeout={2000}
                             >
-                                <div>
-                                    <ProjectCard project={project} />
-                                </div>
-                            </Fade>
+                                <ProjectCard project={project} />
+                            </AnimatedCard>
                         ))}
                     </Box>
                 </Box>

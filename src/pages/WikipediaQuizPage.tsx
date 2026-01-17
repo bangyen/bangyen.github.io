@@ -39,7 +39,7 @@ import {
     QuizItem,
     CCTLD,
 } from '../types/quiz';
-import { useQuizFilter } from '../hooks/useQuizFilter';
+import { useQuizFilter } from '../hooks';
 import QuizLayout from '../components/Quiz/QuizLayout';
 import QuizSettingsView from '../components/Quiz/QuizSettingsView';
 import QuizGameView from '../components/Quiz/QuizGameView';

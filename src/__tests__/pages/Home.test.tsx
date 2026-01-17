@@ -33,77 +33,8 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => (
     </BrowserRouter>
 );
 
-// Mock Material-UI icons
-jest.mock('@mui/icons-material', () => ({
-    MenuRounded: () => <div data-testid="menu-icon">Menu</div>,
-    GitHub: () => <div data-testid="github-icon">GitHub</div>,
-    Code: () => <div data-testid="code-icon">Code</div>,
-    Cloud: () => <div data-testid="cloud-icon">Cloud</div>,
-    Psychology: () => <div data-testid="psychology-icon">Psychology</div>,
-    Work: () => <div data-testid="work-icon">Work</div>,
-    Email: () => <div data-testid="email-icon">Email</div>,
-    Phone: () => <div data-testid="phone-icon">Phone</div>,
-    LocationOn: () => <div data-testid="location-icon">Location</div>,
-    OpenInNew: () => <div data-testid="open-icon">Open</div>,
-    ArrowForward: () => (
-        <div data-testid="arrow-forward-icon">ArrowForward</div>
-    ),
-    HomeRounded: () => <div data-testid="home-icon">Home</div>,
-    CloseRounded: () => <div data-testid="close-icon">Close</div>,
-    GamepadRounded: () => <div data-testid="gamepad-icon">Gamepad</div>,
-    ViewModuleRounded: () => (
-        <div data-testid="view-module-icon">ViewModule</div>
-    ),
-    Refresh: () => <div data-testid="refresh-icon">Refresh</div>,
-    NavigateBeforeRounded: () => (
-        <div data-testid="navigate-before-icon">NavigateBefore</div>
-    ),
-    NavigateNextRounded: () => (
-        <div data-testid="navigate-next-icon">NavigateNext</div>
-    ),
-    PlayArrowRounded: () => <div data-testid="play-arrow-icon">PlayArrow</div>,
-    PauseRounded: () => <div data-testid="pause-icon">Pause</div>,
-    FirstPageRounded: () => <div data-testid="first-page-icon">FirstPage</div>,
-    LastPageRounded: () => <div data-testid="last-page-icon">LastPage</div>,
-    KeyboardArrowUpRounded: () => (
-        <div data-testid="keyboard-arrow-up-icon">KeyboardArrowUp</div>
-    ),
-    KeyboardArrowDownRounded: () => (
-        <div data-testid="keyboard-arrow-down-icon">KeyboardArrowDown</div>
-    ),
-    KeyboardArrowLeftRounded: () => (
-        <div data-testid="keyboard-arrow-left-icon">KeyboardArrowLeft</div>
-    ),
-    KeyboardArrowRightRounded: () => (
-        <div data-testid="keyboard-arrow-right-icon">KeyboardArrowRight</div>
-    ),
-    CircleRounded: () => <div data-testid="circle-icon">Circle</div>,
-    KeyboardArrowDown: () => (
-        <div data-testid="keyboard-arrow-down-icon">KeyboardArrowDown</div>
-    ),
-    Calculate: () => <div data-testid="calculate-icon">Calculate</div>,
-    Replay: () => <div data-testid="replay-icon">Replay</div>,
-    InfoRounded: () => <div data-testid="info-icon">Info</div>,
-    GridView: () => <div data-testid="grid-view-icon">GridView</div>,
-    TextFields: () => <div data-testid="text-fields-icon">TextFields</div>,
-    TextFieldsRounded: () => (
-        <div data-testid="text-fields-rounded-icon">TextFieldsRounded</div>
-    ),
-    CodeRounded: () => <div data-testid="code-rounded-icon">CodeRounded</div>,
-    DataArrayRounded: () => <div data-testid="data-array-icon">DataArray</div>,
-    PlusOneRounded: () => <div data-testid="plus-one-icon">PlusOne</div>,
-    BarChartRounded: () => <div data-testid="bar-chart-icon">BarChart</div>,
-    ShowChartRounded: () => <div data-testid="show-chart-icon">ShowChart</div>,
-    AnalyticsRounded: () => <div data-testid="analytics-icon">Analytics</div>,
-    TrendingUpRounded: () => (
-        <div data-testid="trending-up-icon">TrendingUp</div>
-    ),
-    AttachMoneyRounded: () => (
-        <div data-testid="attach-money-icon">AttachMoney</div>
-    ),
-    BusinessRounded: () => <div data-testid="business-icon">Business</div>,
-    SettingsRounded: () => <div data-testid="settings-icon">Settings</div>,
-}));
+// Mock Material-UI icons using the centralized mock
+jest.mock('@mui/icons-material');
 
 // Mock the Pages module
 jest.mock('../../pages', () => ({

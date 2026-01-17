@@ -1,6 +1,7 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { PROCESSING } from '../config/constants';
 
+// Cache Hook
 export interface CacheAction {
     type: 'next' | 'prev' | 'clear';
     payload: unknown;
@@ -12,7 +13,6 @@ export function useCache<T>(getState: (state: T) => T) {
     const processingRef = useRef<boolean>(false);
     const getStateRef = useRef(getState);
 
-    // Update the ref whenever getState changes
     useEffect(() => {
         getStateRef.current = getState;
     }, [getState]);
@@ -22,7 +22,6 @@ export function useCache<T>(getState: (state: T) => T) {
 
         switch (type) {
             case 'next':
-                // Prevent double processing in React StrictMode
                 if (
                     PROCESSING.doubleProcessingPrevention &&
                     processingRef.current
@@ -41,9 +40,7 @@ export function useCache<T>(getState: (state: T) => T) {
                     const next = getStateRef.current(state);
 
                     if (next === state) {
-                        // No change, stay at current position
                     } else {
-                        // Add new state and move to it
                         states.push(next);
                         index.current++;
                     }
@@ -53,7 +50,6 @@ export function useCache<T>(getState: (state: T) => T) {
 
                 const result = { ...(states[index.current] as T) };
 
-                // Reset processing flag after a short delay
                 if (PROCESSING.doubleProcessingPrevention) {
                     setTimeout(() => {
                         processingRef.current = false;
@@ -62,7 +58,6 @@ export function useCache<T>(getState: (state: T) => T) {
 
                 return result;
             case 'prev':
-                // Prevent double processing in React StrictMode
                 if (
                     PROCESSING.doubleProcessingPrevention &&
                     processingRef.current
@@ -78,7 +73,6 @@ export function useCache<T>(getState: (state: T) => T) {
 
                 const prevResult = { ...(states[index.current] as T) };
 
-                // Reset processing flag after a short delay
                 if (PROCESSING.doubleProcessingPrevention) {
                     setTimeout(() => {
                         processingRef.current = false;
@@ -89,7 +83,6 @@ export function useCache<T>(getState: (state: T) => T) {
             case 'clear':
                 cache.current = [{ ...(payload as T) }];
                 index.current = 0;
-
                 break;
             default:
                 break;
@@ -97,4 +90,82 @@ export function useCache<T>(getState: (state: T) => T) {
 
         return payload as T;
     }, []);
+}
+
+// Keyboard Keys Hook
+export function useKeys() {
+    const oldHandler = useRef<((event: KeyboardEvent) => void) | null>(null);
+
+    const create = useCallback((handler: (event: KeyboardEvent) => void) => {
+        oldHandler.current = handler;
+        document.addEventListener('keydown', handler);
+    }, []);
+
+    const clear = useCallback((handler?: (event: KeyboardEvent) => void) => {
+        const targetHandler = handler || oldHandler.current;
+        if (targetHandler) {
+            document.removeEventListener('keydown', targetHandler);
+        }
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            if (oldHandler.current) {
+                document.removeEventListener('keydown', oldHandler.current);
+            }
+        };
+    }, []);
+
+    return { create, clear };
+}
+
+// Timer Hook
+let globalTimer: NodeJS.Timeout | null = null;
+let globalRepeat: (() => void) | null = null;
+let globalSpeed = 200;
+
+interface TimerConfig {
+    repeat?: (() => void) | null;
+    speed?: number;
+}
+
+export function useTimer(delay: number) {
+    const repeat = useRef<(() => void) | null>(null);
+    const speed = useRef<number>(delay);
+
+    const create = useCallback(
+        ({ repeat: newRepeat, speed: newSpeed }: TimerConfig) => {
+            if (globalTimer !== null) {
+                clearInterval(globalTimer);
+            }
+
+            globalRepeat = newRepeat || globalRepeat;
+            globalSpeed = newSpeed || globalSpeed;
+            repeat.current = globalRepeat;
+            speed.current = globalSpeed;
+
+            if (globalRepeat) {
+                globalTimer = setInterval(globalRepeat, globalSpeed);
+            }
+        },
+        []
+    );
+
+    const clear = useCallback(() => {
+        if (globalTimer !== null) {
+            clearInterval(globalTimer);
+            globalTimer = null;
+        }
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            if (globalTimer !== null) {
+                clearInterval(globalTimer);
+                globalTimer = null;
+            }
+        };
+    }, []);
+
+    return { create, clear };
 }
