@@ -53,7 +53,6 @@ const QuizSettingsView = <S extends QuizSettings>({
                 {title}
             </Typography>
             <Grid container spacing={3}>
-                {children}
                 <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                         <InputLabel>Question Limit</InputLabel>
@@ -66,6 +65,7 @@ const QuizSettingsView = <S extends QuizSettings>({
                                     maxQuestions: e.target.value as
                                         | number
                                         | 'All',
+                                    Aminated: false,
                                 })
                             }
                             sx={{
@@ -85,6 +85,7 @@ const QuizSettingsView = <S extends QuizSettings>({
                         </Select>
                     </FormControl>
                 </Grid>
+                {children}
             </Grid>
         </Card>
     );

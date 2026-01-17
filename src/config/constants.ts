@@ -109,10 +109,7 @@ interface Routes {
         Snake: string;
         Lights_Out: string;
         Interpreters: string;
-        CCTLD_Quiz: string;
-        Driving_Side_Quiz: string;
-        Telephone_Quiz: string;
-        Vehicle_Registration_Quiz: string;
+        Wikipedia_Quiz: string;
     };
     interpreters: {
         Stun_Step: string;
@@ -197,10 +194,7 @@ interface PageTitles {
     oligopoly: string;
     error: string;
     interpreters: string;
-    cctldQuiz: string;
-    drivingSideQuiz: string;
-    telephoneQuiz: string;
-    vehicleRegistrationQuiz: string;
+    wikipediaQuiz: string;
     interpreter: (name: string) => string;
 }
 
@@ -295,10 +289,7 @@ export const PAGE_TITLES: PageTitles = {
     error: 'Page Not Found | Bangyen',
     interpreters: `Interpreters - ${PERSONAL_INFO.name}`,
     interpreter: (name: string) => `${name} Interpreter | Bangyen`,
-    cctldQuiz: 'ccTLD Quiz | Bangyen',
-    drivingSideQuiz: 'Driving Side Quiz | Bangyen',
-    telephoneQuiz: 'Telephone Code Quiz | Bangyen',
-    vehicleRegistrationQuiz: 'Vehicle Registration Quiz | Bangyen',
+    wikipediaQuiz: 'Wikipedia Quizzes | Bangyen',
 };
 
 // ============================================================================
@@ -361,10 +352,7 @@ export const ROUTES: Routes = {
         Snake: '/Snake',
         Lights_Out: '/Lights_Out',
         Interpreters: '/Interpreters',
-        CCTLD_Quiz: '/cctld_quiz',
-        Driving_Side_Quiz: '/driving_side_quiz',
-        Telephone_Quiz: '/telephone_quiz',
-        Vehicle_Registration_Quiz: '/vehicle_registration_quiz',
+        Wikipedia_Quiz: '/wikipedia',
     },
     interpreters: {
         Stun_Step: '/Stun_Step',

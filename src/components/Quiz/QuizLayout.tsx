@@ -9,7 +9,7 @@ import { COLORS, TYPOGRAPHY } from '../../config/theme';
 
 interface QuizLayoutProps {
     title: string;
-    subtitle: string;
+    subtitle?: string;
     infoUrl: string;
     children: React.ReactNode;
 }
@@ -89,18 +89,20 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                     </MuiGrid>
                 </MuiGrid>
 
-                <Typography
-                    variant="h5"
-                    sx={{
-                        color: COLORS.text.secondary,
-                        marginTop: 2,
-                        marginBottom: 4,
-                        fontWeight: TYPOGRAPHY.fontWeight.normal,
-                        fontSize: TYPOGRAPHY.fontSize.subheading,
-                    }}
-                >
-                    {subtitle}
-                </Typography>
+                {subtitle && (
+                    <Typography
+                        variant="h5"
+                        sx={{
+                            color: COLORS.text.secondary,
+                            marginTop: 2,
+                            marginBottom: 4,
+                            fontWeight: TYPOGRAPHY.fontWeight.normal,
+                            fontSize: TYPOGRAPHY.fontSize.subheading,
+                        }}
+                    >
+                        {subtitle}
+                    </Typography>
+                )}
             </Box>
 
             {children}
