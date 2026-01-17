@@ -86,15 +86,10 @@ const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
                 description: 'Grid-based logic puzzle',
                 technology: 'JavaScript',
             },
-            Wikipedia_Quizzes: {
-                path: '/wikipedia',
-                description: 'Geography and trivia hub',
-                technology: 'React',
-            },
         },
     },
-    tools: {
-        title: 'Tools',
+    collections: {
+        title: 'Collections',
         icon: Code,
         color: COLORS.data.amber,
         projects: {
@@ -102,6 +97,11 @@ const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
                 path: '/Interpreters',
                 description: 'Esoteric language demos',
                 technology: 'JavaScript',
+            },
+            Wikipedia: {
+                path: '/wikipedia',
+                description: 'Geography and trivia hub',
+                technology: 'React',
             },
         },
     },
