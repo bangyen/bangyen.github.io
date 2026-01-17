@@ -101,7 +101,7 @@ export default function TextEditor({
     register,
     navigation,
 }: TextEditorProps): React.ReactElement {
-    const containerRef = React.createRef<HTMLDivElement>();
+    const containerRef = React.useRef<HTMLDivElement>(null);
     const container = useContainer(containerRef);
     const [state, dispatch] = useReducer(handleAction, {
         ...start,
@@ -242,7 +242,7 @@ export default function TextEditor({
         <EditorContext.Provider value={context}>
             <Editor
                 hide
-                container={containerRef as React.RefObject<HTMLDivElement>}
+                container={containerRef}
                 sideProps={sideProps}
                 navigation={navigation}
             >

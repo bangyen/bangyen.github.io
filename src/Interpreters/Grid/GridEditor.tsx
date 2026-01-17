@@ -226,11 +226,7 @@ export default function GridEditor(props: GridEditorProps): React.ReactElement {
 
     return (
         <EditorContext.Provider value={context as any}>
-            <Editor
-                hide={hide}
-                container={container as any}
-                navigation={navigation}
-            >
+            <Editor hide={hide} container={container} navigation={navigation}>
                 <GridArea
                     rows={rows}
                     cols={cols}

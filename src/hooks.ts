@@ -18,7 +18,7 @@ function getWindow(): Size {
 }
 
 function getContainer(container: RefObject<HTMLElement> | null): Size {
-    if (!container || !container.current) return getWindow();
+    if (!container || !container.current) return { width: 0, height: 0 };
 
     const { offsetHeight: height, offsetWidth: width } = container.current;
 

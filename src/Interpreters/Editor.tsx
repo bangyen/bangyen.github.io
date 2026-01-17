@@ -33,7 +33,7 @@ interface EditorContextType {
 export const EditorContext = createContext<EditorContextType | null>(null);
 
 interface EditorProps {
-    container?: RefObject<HTMLDivElement>;
+    container?: RefObject<HTMLDivElement | null>;
     sideProps?: TextAreaProps;
     hide?: boolean;
     navigation?: ReactNode;
