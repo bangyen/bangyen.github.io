@@ -116,7 +116,7 @@ export default function Editor({
                 </Grid>
                 {navigation && (
                     <Grid
-                        size={{ xs: 12, sm: 'auto' }}
+                        size={{ xs: 12, md: 'auto' }}
                         display="flex"
                         justifyContent="center"
                     >
@@ -127,8 +127,8 @@ export default function Editor({
                     display="flex"
                     alignItems="center"
                     gap={1}
-                    size={{ xs: 12, sm: 'auto' }}
-                    justifyContent={{ xs: 'center', sm: 'flex-end' }}
+                    size={{ xs: 12, md: 'auto' }}
+                    justifyContent={{ xs: 'center', md: 'flex-end' }}
                 >
                     <Toolbar />
                 </Grid>
