@@ -1241,23 +1241,88 @@ const WikipediaQuizPage: React.FC = () => {
                                         if (!answer) return <SkippedBadge />;
 
                                         let normalizedAnswer = answer;
-                                        if (
-                                            selectedQuiz === 'cctld' &&
-                                            settings.mode === 'toCode' &&
-                                            !normalizedAnswer.startsWith('.')
-                                        ) {
-                                            normalizedAnswer =
-                                                '.' + normalizedAnswer;
+                                        if (selectedQuiz === 'cctld') {
+                                            if (settings.mode === 'toCode') {
+                                                normalizedAnswer = (
+                                                    normalizedAnswer.startsWith(
+                                                        '.'
+                                                    )
+                                                        ? normalizedAnswer
+                                                        : '.' + normalizedAnswer
+                                                ).toLowerCase();
+                                            } else {
+                                                normalizedAnswer =
+                                                    normalizedAnswer
+                                                        .split(' ')
+                                                        .map(
+                                                            w =>
+                                                                w
+                                                                    .charAt(0)
+                                                                    .toUpperCase() +
+                                                                w
+                                                                    .slice(1)
+                                                                    .toLowerCase()
+                                                        )
+                                                        .join(' ');
+                                            }
                                         } else if (
-                                            selectedQuiz === 'telephone' &&
-                                            settings.mode === 'toCode' &&
-                                            !normalizedAnswer.startsWith('+')
+                                            selectedQuiz === 'telephone'
+                                        ) {
+                                            if (settings.mode === 'toCode') {
+                                                normalizedAnswer =
+                                                    normalizedAnswer.startsWith(
+                                                        '+'
+                                                    )
+                                                        ? normalizedAnswer
+                                                        : '+' +
+                                                          normalizedAnswer;
+                                            } else {
+                                                normalizedAnswer =
+                                                    normalizedAnswer
+                                                        .split(' ')
+                                                        .map(
+                                                            w =>
+                                                                w
+                                                                    .charAt(0)
+                                                                    .toUpperCase() +
+                                                                w
+                                                                    .slice(1)
+                                                                    .toLowerCase()
+                                                        )
+                                                        .join(' ');
+                                            }
+                                        } else if (selectedQuiz === 'vehicle') {
+                                            if (
+                                                settings.mode === 'toCode' ||
+                                                settings.mode === 'toCodeRegexp'
+                                            ) {
+                                                normalizedAnswer =
+                                                    normalizedAnswer.toUpperCase();
+                                            } else {
+                                                normalizedAnswer =
+                                                    normalizedAnswer
+                                                        .split(' ')
+                                                        .map(
+                                                            w =>
+                                                                w
+                                                                    .charAt(0)
+                                                                    .toUpperCase() +
+                                                                w
+                                                                    .slice(1)
+                                                                    .toLowerCase()
+                                                        )
+                                                        .join(' ');
+                                            }
+                                        } else if (
+                                            selectedQuiz === 'driving_side'
                                         ) {
                                             normalizedAnswer =
-                                                '+' + normalizedAnswer;
-                                        } else if (selectedQuiz === 'vehicle') {
-                                            normalizedAnswer =
-                                                normalizedAnswer.toUpperCase();
+                                                normalizedAnswer
+                                                    .charAt(0)
+                                                    .toUpperCase() +
+                                                normalizedAnswer
+                                                    .slice(1)
+                                                    .toLowerCase();
                                         }
 
                                         return (
