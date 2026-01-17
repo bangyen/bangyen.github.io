@@ -102,6 +102,7 @@ interface Routes {
         Lights_Out: string;
         Interpreters: string;
         CCTLD_Quiz: string;
+        Driving_Side_Quiz: string;
     };
     interpreters: {
         Stun_Step: string;
@@ -187,6 +188,7 @@ interface PageTitles {
     error: string;
     interpreters: string;
     cctldQuiz: string;
+    drivingSideQuiz: string;
     interpreter: (name: string) => string;
 }
 
@@ -282,6 +284,7 @@ export const PAGE_TITLES: PageTitles = {
     interpreters: `Interpreters - ${PERSONAL_INFO.name}`,
     interpreter: (name: string) => `${name} Interpreter | Bangyen`,
     cctldQuiz: 'ccTLD Quiz | Bangyen',
+    drivingSideQuiz: 'Driving Side Quiz | Bangyen',
 };
 
 // ============================================================================
@@ -337,6 +340,7 @@ export const ROUTES: Routes = {
         Lights_Out: '/Lights_Out',
         Interpreters: '/Interpreters',
         CCTLD_Quiz: '/cctld_quiz',
+        Driving_Side_Quiz: '/driving_side_quiz',
     },
     interpreters: {
         Stun_Step: '/Stun_Step',

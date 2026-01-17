@@ -46,6 +46,9 @@ const Interpreters = lazy(() =>
 const CCTLDQuiz = lazy(() =>
     import('./Pages').then(m => ({ default: m.CCTLDQuiz }))
 );
+const DrivingSideQuiz = lazy(() =>
+    import('./Pages').then(m => ({ default: m.DrivingSideQuiz }))
+);
 
 const darkTheme = createTheme({
     palette: {
@@ -244,6 +247,10 @@ function App(): React.ReactElement {
                     <Route path="/zsharp" element={<ZSharp />} />
                     <Route path="/oligopoly" element={<Oligopoly />} />
                     <Route path="/cctld_quiz" element={<CCTLDQuiz />} />
+                    <Route
+                        path="/driving_side_quiz"
+                        element={<DrivingSideQuiz />}
+                    />
                     <Route path="*" element={<Error />} />
                 </Routes>
             </Suspense>

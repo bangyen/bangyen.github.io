@@ -41,6 +41,9 @@ interface QuizGameViewProps {
     inputRef?: React.RefObject<HTMLInputElement | null>;
     nextButtonRef?: React.RefObject<HTMLButtonElement | null>;
     modeLabel: string;
+    hideInput?: boolean;
+    hideHint?: boolean;
+    renderCustomActions?: (gameState: any, actions: any) => React.ReactNode;
 }
 
 const QuizGameView: React.FC<QuizGameViewProps> = ({
@@ -56,6 +59,9 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
     inputRef,
     nextButtonRef,
     modeLabel,
+    hideInput = false,
+    hideHint = false,
+    renderCustomActions,
 }) => {
     const {
         history,
@@ -249,37 +255,39 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
                             alignItems: 'center',
                         }}
                     >
-                        <TextField
-                            inputRef={inputRef}
-                            value={inputValue}
-                            onChange={e => setInputValue(e.target.value)}
-                            placeholder={inputPlaceholder}
-                            disabled={showFeedback}
-                            autoComplete="off"
-                            sx={{
-                                input: {
-                                    textAlign: 'center',
-                                    fontSize: '1.2rem',
-                                },
-                                width: '100%',
-                                maxWidth: 450,
-                                '& .MuiOutlinedInput-root': {
-                                    '& fieldset': {
-                                        borderColor: COLORS.border.subtle,
+                        {!hideInput && (
+                            <TextField
+                                inputRef={inputRef}
+                                value={inputValue}
+                                onChange={e => setInputValue(e.target.value)}
+                                placeholder={inputPlaceholder}
+                                disabled={showFeedback}
+                                autoComplete="off"
+                                sx={{
+                                    input: {
+                                        textAlign: 'center',
+                                        fontSize: '1.2rem',
                                     },
-                                    '&:hover fieldset': {
-                                        borderColor: COLORS.primary.main,
+                                    width: '100%',
+                                    maxWidth: 450,
+                                    '& .MuiOutlinedInput-root': {
+                                        '& fieldset': {
+                                            borderColor: COLORS.border.subtle,
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: COLORS.primary.main,
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: COLORS.primary.main,
+                                        },
+                                        '&.Mui-disabled fieldset': {
+                                            borderColor: `${COLORS.border.subtle} !important`,
+                                        },
                                     },
-                                    '&.Mui-focused fieldset': {
-                                        borderColor: COLORS.primary.main,
-                                    },
-                                    '&.Mui-disabled fieldset': {
-                                        borderColor: `${COLORS.border.subtle} !important`,
-                                    },
-                                },
-                            }}
-                            variant="outlined"
-                        />
+                                }}
+                                variant="outlined"
+                            />
+                        )}
                         <Stack
                             direction="row"
                             spacing={2}
@@ -308,41 +316,46 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
                             >
                                 {showFeedback ? 'Next' : 'Skip'}
                             </Button>
-                            <Button
-                                variant="outlined"
-                                onClick={toggleHint}
-                                disabled={showFeedback}
-                                sx={{
-                                    py: 1.5,
-                                    flex: 1,
-                                    borderColor: COLORS.border.subtle,
-                                    whiteSpace: 'nowrap',
-                                    '&.Mui-disabled': {
+                            {renderCustomActions?.(gameState, actions)}
+                            {!hideHint && (
+                                <Button
+                                    variant="outlined"
+                                    onClick={toggleHint}
+                                    disabled={showFeedback}
+                                    sx={{
+                                        py: 1.5,
+                                        flex: 1,
                                         borderColor: COLORS.border.subtle,
-                                        opacity: 0.6,
-                                    },
-                                }}
-                            >
-                                {showHint ? 'Hide Hint' : 'Show Hint'}
-                            </Button>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                sx={{
-                                    py: 1.5,
-                                    flex: 1,
-                                    whiteSpace: 'nowrap',
-                                    '&.Mui-disabled': {
-                                        backgroundColor:
-                                            'rgba(255, 255, 255, 0.05)',
-                                        color: 'rgba(255, 255, 255, 0.3)',
-                                        borderColor: 'transparent',
-                                    },
-                                }}
-                                disabled={!inputValue || showFeedback}
-                            >
-                                Submit
-                            </Button>
+                                        whiteSpace: 'nowrap',
+                                        '&.Mui-disabled': {
+                                            borderColor: COLORS.border.subtle,
+                                            opacity: 0.6,
+                                        },
+                                    }}
+                                >
+                                    {showHint ? 'Hide Hint' : 'Show Hint'}
+                                </Button>
+                            )}
+                            {!hideInput && (
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    sx={{
+                                        py: 1.5,
+                                        flex: 1,
+                                        whiteSpace: 'nowrap',
+                                        '&.Mui-disabled': {
+                                            backgroundColor:
+                                                'rgba(255, 255, 255, 0.05)',
+                                            color: 'rgba(255, 255, 255, 0.3)',
+                                            borderColor: 'transparent',
+                                        },
+                                    }}
+                                    disabled={!inputValue || showFeedback}
+                                >
+                                    Submit
+                                </Button>
+                            )}
                         </Stack>
                     </Box>
 
@@ -372,7 +385,7 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         gap: 1.5,
-                                        mb: 1,
+                                        mb: isCorrect === false ? 1 : 0,
                                     }}
                                 >
                                     {currentQuestion &&

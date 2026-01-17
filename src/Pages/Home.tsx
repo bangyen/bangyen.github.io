@@ -91,6 +91,11 @@ const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
                 description: 'Country Code Mastery',
                 technology: 'React',
             },
+            Driving_Side_Quiz: {
+                path: '/driving_side_quiz',
+                description: 'Left or Right?',
+                technology: 'React',
+            },
         },
     },
     tools: {

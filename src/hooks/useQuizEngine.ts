@@ -27,20 +27,7 @@ export const useQuizEngine = <T>({
     checkAnswer,
     advanceDelay = { correct: 1000, incorrect: 3000 },
 }: QuizEngineProps<T>) => {
-    // Helper to compute initial values
-    const initialize = useCallback((pool: T[]) => {
-        const shuffled = [...pool].sort(() => Math.random() - 0.5);
-        return {
-            currentQuestion: shuffled.length > 0 ? shuffled[0] : null,
-            pool: shuffled.length > 0 ? shuffled.slice(1) : [],
-            totalQuestions: shuffled.length,
-        };
-    }, []);
-
-    // State initialization
-    // We use a lazy initializer for the first mount
     const [hasInitialized, setHasInitialized] = useState(false);
-
     const [history, setHistory] = useState<Question<T>[]>([]);
     const [pool, setPool] = useState<T[]>([]);
     const [currentQuestion, setCurrentQuestion] = useState<T | null>(null);
@@ -56,7 +43,6 @@ export const useQuizEngine = <T>({
     const scoreRef = useRef(score);
     const advanceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Sync refs
     useEffect(() => {
         historyRef.current = history;
     }, [history]);
@@ -64,7 +50,15 @@ export const useQuizEngine = <T>({
         scoreRef.current = score;
     }, [score]);
 
-    // Handle initial mount and changes to initialPool
+    const initialize = useCallback((newPool: T[]) => {
+        const shuffled = [...newPool].sort(() => Math.random() - 0.5);
+        return {
+            currentQuestion: shuffled.length > 0 ? shuffled[0] : null,
+            pool: shuffled.length > 0 ? shuffled.slice(1) : [],
+            totalQuestions: shuffled.length,
+        };
+    }, []);
+
     useEffect(() => {
         const init = initialize(initialPool);
         setCurrentQuestion(init.currentQuestion);
@@ -100,6 +94,49 @@ export const useQuizEngine = <T>({
             return prevPool.slice(1);
         });
     }, [onEndGame]);
+
+    const submitAnswer = useCallback(
+        (value: string) => {
+            if (!currentQuestion || showFeedback) return;
+
+            const {
+                isCorrect: correct,
+                expected,
+                points,
+            } = checkAnswer(value, currentQuestion, settings);
+
+            const newQuestion: Question<T> = {
+                item: currentQuestion,
+                userAnswer: value,
+                isCorrect: correct,
+                pointsEarned: points,
+            };
+
+            setHistory(prev => [...prev, newQuestion]);
+            if (correct) {
+                setScore(prev => prev + points);
+                setFeedbackMessage('Correct!');
+                setIsCorrect(true);
+            } else {
+                setFeedbackMessage(expected);
+                setIsCorrect(false);
+            }
+
+            setShowFeedback(true);
+            advanceTimerRef.current = setTimeout(
+                nextQuestion,
+                correct ? advanceDelay.correct : advanceDelay.incorrect
+            );
+        },
+        [
+            currentQuestion,
+            showFeedback,
+            checkAnswer,
+            settings,
+            nextQuestion,
+            advanceDelay,
+        ]
+    );
 
     const handleSkip = useCallback(() => {
         if (!currentQuestion) return;
@@ -139,46 +176,9 @@ export const useQuizEngine = <T>({
     const handleSubmit = useCallback(
         (e?: React.FormEvent) => {
             e?.preventDefault();
-            if (!currentQuestion || showFeedback) return;
-
-            const {
-                isCorrect: correct,
-                expected,
-                points,
-            } = checkAnswer(inputValue, currentQuestion, settings);
-
-            const newQuestion: Question<T> = {
-                item: currentQuestion,
-                userAnswer: inputValue,
-                isCorrect: correct,
-                pointsEarned: points,
-            };
-
-            setHistory(prev => [...prev, newQuestion]);
-            if (correct) {
-                setScore(prev => prev + points);
-                setFeedbackMessage('Correct!');
-                setIsCorrect(true);
-            } else {
-                setFeedbackMessage(expected);
-                setIsCorrect(false);
-            }
-
-            setShowFeedback(true);
-            advanceTimerRef.current = setTimeout(
-                nextQuestion,
-                correct ? advanceDelay.correct : advanceDelay.incorrect
-            );
+            submitAnswer(inputValue);
         },
-        [
-            currentQuestion,
-            showFeedback,
-            inputValue,
-            checkAnswer,
-            settings,
-            nextQuestion,
-            advanceDelay,
-        ]
+        [inputValue, submitAnswer]
     );
 
     const toggleHint = useCallback(() => {
@@ -205,6 +205,7 @@ export const useQuizEngine = <T>({
             handleSkip,
             toggleHint,
             nextQuestion,
+            submitAnswer,
         },
     };
 };
