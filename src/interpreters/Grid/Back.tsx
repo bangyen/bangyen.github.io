@@ -2,30 +2,21 @@ import { gridMove } from '../../utils/gridUtils';
 import GridEditor from './GridEditor';
 import React from 'react';
 
-interface BackState {
-    velocity: number;
-    position: number | null;
-    pointer: number;
-    tape: number[];
-    end: boolean;
-    grid: string;
-    rows: number;
-    cols: number;
-}
+import { GridState } from './eventHandlers';
 
-interface BackStart {
+interface BackState extends GridState {
     velocity: number;
     pointer: number;
-    position: number;
     tape: number[];
     end: boolean;
+    // position, grid, rows, cols are inherited from GridState
 }
 
 function getState(state: BackState): BackState {
     let { velocity, position, pointer, tape, end } = state;
     const { grid, rows, cols } = state;
 
-    if (end || position === null) return state;
+    if (end || position == null) return state;
 
     const sum = velocity > 0 ? 3 : -3;
     const char = grid[position];
@@ -54,7 +45,8 @@ function getState(state: BackState): BackState {
                 do {
                     position = gridMove(position, velocity, rows, cols);
 
-                    next = grid[position];
+                    if (position != null) next = grid[position];
+                    else next = '';
                 } while (!'\\/<>-+*'.includes(next));
             break;
         case '*':
@@ -68,6 +60,7 @@ function getState(state: BackState): BackState {
     if (position !== null) position = gridMove(position, velocity, rows, cols);
 
     return {
+        ...state,
         velocity,
         position,
         pointer,
@@ -84,7 +77,7 @@ export default function Editor({
 }: {
     navigation?: React.ReactNode;
 }): React.ReactElement {
-    const start: BackStart = {
+    const start: Partial<BackState> = {
         velocity: 1,
         pointer: 0,
         position: 0,
@@ -93,7 +86,7 @@ export default function Editor({
     };
 
     return (
-        <GridEditor
+        <GridEditor<BackState>
             name="Back"
             start={start}
             runner={getState}

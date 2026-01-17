@@ -6,10 +6,10 @@ import React, {
     useMemo,
 } from 'react';
 import Editor from '../Editor';
-import { EditorContext } from '../EditorContext';
+import { EditorContext, EditorContextType } from '../EditorContext';
 import { GridArea } from '../components/GridArea';
 import { convertPixels } from '../../utils/gridUtils';
-import { handleAction } from './eventHandlers';
+import { handleAction, GridState } from './eventHandlers';
 import { PAGE_TITLES } from '../../config/constants';
 
 import {
@@ -17,50 +17,44 @@ import {
     useTimer,
     useKeys,
     useCache,
+    CacheAction,
     useMobile,
 } from '../../hooks';
 
+// gridCache stores { rows, cols } for different interpreters
+// Using a map to store cache per interpreter name if needed, or just a single cache
+// as simpler interpreters might share dimensions.
 let gridCache: { rows: number; cols: number } | null = null;
 
-interface GridEditorProps {
+interface GridEditorProps<T extends GridState> {
     name: string;
-    start: any;
-    runner: (state: any) => any;
+    start: Partial<T>;
+    runner: (state: T) => T;
     tape?: boolean;
     output?: boolean;
     register?: boolean;
     navigation?: React.ReactNode;
 }
 
-interface GridState {
-    grid: string;
-    select: number | null;
-    pause: boolean;
-    rows: number;
-    cols: number;
-    position?: number | null;
-    [key: string]: unknown;
-}
-
-interface WrapperPayload {
-    start: any;
-    resetState: (grid: string) => any;
-    nextIter: (action: any) => any;
-    dispatch: (action: { type: string; payload?: unknown }) => void;
+interface WrapperPayload<T> {
+    start: Partial<T>;
+    resetState: (grid: string) => void;
+    nextIter: (action: CacheAction) => T;
+    dispatch: React.Dispatch<any>;
     create: (config: { repeat: () => void; speed: number }) => void;
     clear: () => void;
 }
 
-function useWrappers(
-    state: GridState,
-    props: GridEditorProps,
-    dispatch: (action: any) => void
+function useWrappers<T extends GridState>(
+    state: T,
+    props: GridEditorProps<T>,
+    dispatch: React.Dispatch<any>
 ) {
     const { runner, start } = props;
     const { rows, cols } = state;
 
     const { create, clear } = useTimer(200);
-    const nextIter = useCache(runner);
+    const nextIter = useCache<T>(runner);
 
     const resetState = useCallback(
         (grid: string) => {
@@ -103,7 +97,7 @@ function useWrappers(
 
     const wrapDispatch = useCallback(
         (type: string) => () => {
-            const payload: WrapperPayload = {
+            const payload: WrapperPayload<T> = {
                 start,
                 resetState,
                 nextIter,
@@ -125,7 +119,9 @@ function useWrappers(
     };
 }
 
-export default function GridEditor(props: GridEditorProps): React.ReactElement {
+export default function GridEditor<T extends GridState>(
+    props: GridEditorProps<T>
+): React.ReactElement {
     const { create: createKeys, clear: clearKeys } = useKeys();
 
     const { name, start, tape, output, register, navigation } = props;
@@ -161,19 +157,19 @@ export default function GridEditor(props: GridEditorProps): React.ReactElement {
         }
     }, [rows, cols]);
 
-    const initial: GridState = {
+    const initial: T = {
         ...start,
         grid: ' '.repeat(rows * cols),
         select: null,
         pause: true,
         rows,
         cols,
-    };
+    } as T;
 
-    const [state, dispatch] = useReducer(handleAction as any, initial);
+    const [state, dispatch] = useReducer(handleAction, initial);
 
     const { resetState, handleClick, chooseColor, wrapDispatch } = useWrappers(
-        state,
+        state as T,
         props,
         dispatch
     );
@@ -219,7 +215,7 @@ export default function GridEditor(props: GridEditorProps): React.ReactElement {
         index: 0,
         tape: [],
         pointer: 0,
-        output: '',
+        output: ((state as any).output as string) || '',
         register: 0,
         code: undefined,
         fastForward: false,
@@ -227,7 +223,7 @@ export default function GridEditor(props: GridEditorProps): React.ReactElement {
     };
 
     return (
-        <EditorContext.Provider value={context as any}>
+        <EditorContext.Provider value={context as unknown as EditorContextType}>
             <Editor hide={hide} container={container} navigation={navigation}>
                 <GridArea
                     rows={rows}

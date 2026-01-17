@@ -2,23 +2,14 @@ import { gridMove } from '../../utils/gridUtils';
 import GridEditor from './GridEditor';
 import React from 'react';
 
-interface WII2DState {
-    position: number | null;
-    velocity: number;
-    output: string;
-    register: number;
-    end: boolean;
-    grid: string;
-    rows: number;
-    cols: number;
-}
+import { GridState } from './eventHandlers';
 
-interface WII2DStart {
-    position: null;
+interface WII2DState extends GridState {
     velocity: number;
-    end: boolean;
     output: string;
     register: number;
+    end: boolean;
+    // position, grid, rows, cols are inherited
 }
 
 function getDistance(x: number, y: number, cols: number): number {
@@ -62,7 +53,7 @@ function getState(state: WII2DState): WII2DState {
 
     if (end) return state;
 
-    if (position === null) {
+    if (position == null) {
         const index = grid.indexOf('!');
         const double = grid.lastIndexOf('!');
 
@@ -127,6 +118,7 @@ function getState(state: WII2DState): WII2DState {
         position = gridMove(position, velocity, rows, cols);
 
     return {
+        ...state,
         position,
         velocity,
         grid,
@@ -143,7 +135,7 @@ export default function Editor({
 }: {
     navigation?: React.ReactNode;
 }): React.ReactElement {
-    const start: WII2DStart = {
+    const start: Partial<WII2DState> = {
         position: null,
         velocity: -2,
         end: false,
@@ -152,7 +144,7 @@ export default function Editor({
     };
 
     return (
-        <GridEditor
+        <GridEditor<WII2DState>
             name="WII2D"
             start={start}
             runner={getState}

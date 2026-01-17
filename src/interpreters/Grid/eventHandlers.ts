@@ -5,12 +5,14 @@ import {
     type ToolbarAction,
 } from '../Toolbar';
 
-interface GridState {
+export interface GridState {
     grid: string;
     select: number | null;
     rows: number;
     cols: number;
-    pause?: boolean;
+    pause: boolean;
+    position?: number | null;
+    [key: string]: unknown;
 }
 
 interface KeysPayload {

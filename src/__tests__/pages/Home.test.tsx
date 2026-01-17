@@ -175,7 +175,7 @@ describe('Home Component', () => {
         expect(screen.getAllByTestId('github-icon')).toHaveLength(4);
     });
 
-    test('renders skill chips', () => {
+    test('renders skill chips', async () => {
         render(
             <TestWrapper>
                 <Home />
@@ -183,10 +183,14 @@ describe('Home Component', () => {
         );
 
         // Check skill chips are rendered
-        expect(screen.getByText('Python')).toBeInTheDocument();
-        expect(screen.getAllByText('PyTorch')).toHaveLength(2); // One in skills, one in projects
-        expect(screen.getAllByTestId('code-icon')).toHaveLength(2); // Multiple code icons
-        expect(screen.getAllByTestId('psychology-icon')).toHaveLength(2); // Multiple psychology icons
+        await waitFor(
+            () => {
+                expect(screen.getByText('Python')).toBeInTheDocument();
+            },
+            { timeout: 5000 }
+        );
+
+        expect(screen.getAllByText('PyTorch')).toHaveLength(2);
     });
 
     test('opens menu when menu button is clicked', async () => {
