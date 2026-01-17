@@ -544,17 +544,15 @@ const QuizGame = ({
 const WikipediaQuizPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
 
-    // Determine initial quiz from URL or default to 'cctld'
-    const getInitialQuiz = (): QuizType => {
+    // Derive selected quiz from URL
+    const selectedQuiz = useMemo((): QuizType => {
         const type = searchParams.get('type');
         if (type && QUIZ_CONFIGS[type as QuizType]) {
             return type as QuizType;
         }
         return 'cctld';
-    };
+    }, [searchParams]);
 
-    const [selectedQuiz, setSelectedQuiz] =
-        useState<QuizType>(getInitialQuiz());
     const [gameState, setGameState] = useState<GameState>('menu');
 
     // Initialize settings based on selected quiz
@@ -565,16 +563,19 @@ const WikipediaQuizPage: React.FC = () => {
     const [lastScore, setLastScore] = useState(0);
     const [lastHistory, setLastHistory] = useState<Question[]>([]);
 
+    // Reset settings and game state when quiz type changes (via URL)
+    useEffect(() => {
+        setGameState('menu');
+        setSettings(QUIZ_CONFIGS[selectedQuiz].defaultSettings);
+    }, [selectedQuiz]);
+
     // URL sync
     const handleQuizChange = (
         _event: React.MouseEvent<HTMLElement>,
         newQuiz: QuizType | null
     ) => {
         if (newQuiz !== null) {
-            setSelectedQuiz(newQuiz);
             setSearchParams({ type: newQuiz });
-            setGameState('menu');
-            setSettings(QUIZ_CONFIGS[newQuiz].defaultSettings);
         }
     };
 

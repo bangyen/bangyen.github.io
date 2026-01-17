@@ -1,6 +1,8 @@
 import React from 'react';
-import { Grid, Typography, Box, Fade } from '../components/mui';
+import { Grid, Typography, Box, Fade, Button } from '../components/mui';
 import { HomeButton } from '../helpers';
+import { HomeRounded } from '../components/icons';
+import { Link } from 'react-router-dom';
 import { PAGE_TITLES } from '../config/constants';
 import {
     COLORS,
@@ -97,21 +99,31 @@ export default function Error(): React.ReactElement {
                             The page you&apos;re looking for doesn&apos;t exist
                             or has been moved.
                         </Typography>
+
+                        <Button
+                            component={Link}
+                            to="/"
+                            variant="outlined"
+                            startIcon={<HomeRounded />}
+                            sx={{
+                                borderRadius: SPACING.borderRadius.full,
+                                padding: '10px 24px',
+                                textTransform: 'none',
+                                fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                                fontSize: TYPOGRAPHY.fontSize.body,
+                                border: `1px solid ${COLORS.primary.main}`,
+                                color: COLORS.primary.main,
+                                '&:hover': {
+                                    backgroundColor: `${COLORS.primary.main}10`,
+                                    border: `1px solid ${COLORS.primary.main}`,
+                                },
+                            }}
+                        >
+                            Back to Home
+                        </Button>
                     </Box>
                 </Fade>
             </Grid>
-
-            {/* Navigation */}
-            <Box
-                sx={{
-                    position: 'absolute',
-                    top: { xs: '0.5rem', md: '1.5rem' },
-                    left: { xs: '0.5rem', md: '1.5rem' },
-                }}
-            >
-                <HomeButton />
-            </Box>
         </Grid>
     );
 }
-
