@@ -68,7 +68,7 @@ def extract_data(file_path):
     return data
 
 if __name__ == "__main__":
-    extracted_data = extract_data('vehicle_codes.html')
+    extracted_data = extract_data('src/data/raw/vehicle_codes.html')
     with open('src/data/vehicle_registration_codes.json', 'w', encoding='utf-8') as f:
         json.dump(extracted_data, f, indent=2)
     print(f"Extracted {len(extracted_data)} entries.")

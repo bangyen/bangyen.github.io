@@ -8,9 +8,10 @@ import React, {
 } from 'react';
 import { Grid } from '../components/mui';
 
-import { convertPixels, gridMove, getDirection } from '../calculate';
+import { convertPixels, gridMove, getDirection } from '../utils/calculate';
 import { useWindow, useTimer, useKeys } from '../hooks';
-import { CustomGrid, Controls, ArrowsButton } from '../helpers';
+import { CustomGrid } from '../components/common/CustomGrid';
+import { Controls, ArrowsButton } from '../components/common/Controls';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../config/constants';
 import { COLORS, COMPONENT_VARIANTS } from '../config/theme';
 
@@ -61,7 +62,11 @@ function mapBoard(board: Board, change: number): Board {
     return newBoard;
 }
 
-function handleResize(state: SnakeState, rows: number, cols: number): SnakeState {
+function handleResize(
+    state: SnakeState,
+    rows: number,
+    cols: number
+): SnakeState {
     const max = rows * cols;
     const head = getRandom(max);
     let next = getRandom(max);
@@ -201,8 +206,7 @@ export default function Snake(): React.ReactElement {
             let color = 'inherit';
 
             if (index in board) {
-                if (board[index] > 0)
-                    color = COLORS.primary.main;
+                if (board[index] > 0) color = COLORS.primary.main;
                 else color = COLORS.primary.dark;
             }
 
@@ -301,4 +305,3 @@ export default function Snake(): React.ReactElement {
         </Grid>
     );
 }
-

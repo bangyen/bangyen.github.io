@@ -1,4 +1,4 @@
-import { gridMove } from '../../calculate';
+import { gridMove } from '../../utils/calculate';
 import GridEditor from './GridEditor';
 import React from 'react';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Grid, Typography, Box, Button } from './mui';
-import { HomeButton } from '../helpers';
+import { HomeButton } from './common/Controls';
 import {
     COLORS,
     TYPOGRAPHY,
@@ -133,8 +133,8 @@ class ErrorBoundary extends React.Component<
                                     fontSize: TYPOGRAPHY.fontSize.h2,
                                 }}
                             >
-                                An unexpected error occurred while rendering this
-                                page.
+                                An unexpected error occurred while rendering
+                                this page.
                             </Typography>
 
                             {process.env.NODE_ENV === 'development' &&
@@ -156,8 +156,8 @@ class ErrorBoundary extends React.Component<
                                         <Typography
                                             sx={{
                                                 color: COLORS.text.secondary,
-                                                fontSize: TYPOGRAPHY.fontSize
-                                                    .caption,
+                                                fontSize:
+                                                    TYPOGRAPHY.fontSize.caption,
                                                 fontFamily: 'monospace',
                                                 whiteSpace: 'pre-wrap',
                                             }}
@@ -218,4 +218,3 @@ class ErrorBoundary extends React.Component<
 }
 
 export default ErrorBoundary;
-

@@ -7,13 +7,17 @@ import {
     PauseRounded,
 } from '../../components/icons';
 
-import { Controls, TooltipButton, RandomButton } from '../../helpers';
+import {
+    Controls,
+    TooltipButton,
+    RandomButton,
+} from '../../components/common/Controls';
 import { Board, useHandler, usePalette } from '../Board';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../../config/constants';
 import { COLORS } from '../../config/theme';
 import { getGrid, handleBoard, getNextMove } from './boardHandlers';
 import { useWindow, useMobile } from '../../hooks';
-import { convertPixels } from '../../calculate';
+import { convertPixels } from '../../utils/calculate';
 import Info from './Info';
 
 interface Getters {

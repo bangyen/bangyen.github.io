@@ -10,7 +10,12 @@ import {
     Card,
 } from '@mui/material';
 import { ArrowBackRounded as ArrowBackIcon } from '@mui/icons-material';
-import { COLORS, SPACING, COMPONENT_VARIANTS } from '../../config/theme';
+import {
+    COLORS,
+    SPACING,
+    COMPONENT_VARIANTS,
+    SHADOWS,
+} from '../../config/theme';
 
 interface QuizGameViewProps {
     gameState: {
@@ -384,8 +389,9 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
                                         fontSize: '0.8rem',
                                         '&.Mui-disabled': {
                                             backgroundColor:
-                                                'rgba(255, 255, 255, 0.05)',
-                                            color: 'rgba(255, 255, 255, 0.3)',
+                                                COLORS.interactive.disabled,
+                                            color: COLORS.interactive
+                                                .disabledText,
                                             borderColor: 'transparent',
                                         },
                                     }}
@@ -433,8 +439,7 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
                                         sx={{
                                             color: feedbackColor,
                                             fontWeight: 'bold',
-                                            textShadow:
-                                                '0 0 20px rgba(0,0,0,0.5)',
+                                            textShadow: SHADOWS.text,
                                             maxWidth: '100%',
                                             overflow: 'hidden',
                                             textOverflow: 'ellipsis',

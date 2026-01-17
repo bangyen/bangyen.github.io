@@ -3,7 +3,7 @@ import { Box, Typography, Chip, IconButton } from '../components/mui';
 import { EditorContext } from './EditorContext';
 import { Text } from './components/Text';
 import { COLORS, TYPOGRAPHY } from '../config/theme';
-import { GlassCard } from '../helpers';
+import { GlassCard } from '../components/common/GlassCard';
 
 import {
     CodeRounded,

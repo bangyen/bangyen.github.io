@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { Grid } from '../components/mui';
 
-import { useMemo, useCallback } from 'react';
-import { CustomGrid } from '../helpers';
+import { CustomGrid } from '../components/common/CustomGrid';
 import { COLORS } from '../config/theme';
 
 interface BoardProps {
@@ -115,7 +114,8 @@ function fillerHandler(
     const botRight = getColor(row + 1, col + 1);
     let color = true;
 
-    const total = Number(topLeft) + Number(topRight) + Number(botLeft) + Number(botRight);
+    const total =
+        Number(topLeft) + Number(topRight) + Number(botLeft) + Number(botRight);
 
     if ((!topLeft || !botRight) && total < 3) color = false;
 

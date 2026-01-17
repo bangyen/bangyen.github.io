@@ -15,8 +15,9 @@ import {
     SPACING,
     TYPOGRAPHY,
     COMPONENT_VARIANTS,
+    SHADOWS,
 } from '../config/theme';
-import { GlassCard } from '../helpers';
+import { GlassCard } from './common/GlassCard';
 import {
     LineChart,
     Line,
@@ -336,7 +337,7 @@ const ResearchDemo: React.FC<ResearchDemoProps> = ({
                                         <RechartsTooltip
                                             contentStyle={{
                                                 backgroundColor:
-                                                    'hsla(0, 0%, 5%, 0.95)',
+                                                    COLORS.surface.elevated,
                                                 border: `1px solid ${COLORS.border.subtle}`,
                                                 borderRadius:
                                                     SPACING.borderRadius.lg,
@@ -487,8 +488,7 @@ const ResearchDemo: React.FC<ResearchDemoProps> = ({
                                                                   .hover,
                                                     transform:
                                                         'translateY(-1px)',
-                                                    boxShadow:
-                                                        '0 4px 8px rgba(0,0,0,0.1)',
+                                                    boxShadow: SHADOWS.sm,
                                                 },
                                             }}
                                         >
@@ -564,8 +564,7 @@ const ResearchDemo: React.FC<ResearchDemoProps> = ({
                                                 backgroundColor:
                                                     COLORS.interactive.hover,
                                                 transform: 'translateY(-1px)',
-                                                boxShadow:
-                                                    '0 4px 8px rgba(0,0,0,0.1)',
+                                                boxShadow: SHADOWS.sm,
                                             },
                                         }}
                                     >
@@ -582,7 +581,7 @@ const ResearchDemo: React.FC<ResearchDemoProps> = ({
                                                 marginBottom: 0,
                                                 padding: '1rem',
                                                 backgroundColor:
-                                                    'rgba(255, 255, 255, 0.02)',
+                                                    COLORS.interactive.disabled,
                                                 borderRadius:
                                                     SPACING.borderRadius.lg,
                                                 border: `1px solid ${COLORS.border.subtle}`,
@@ -726,7 +725,7 @@ const ResearchDemo: React.FC<ResearchDemoProps> = ({
                                                                 transform:
                                                                     'translateY(-1px)',
                                                                 boxShadow:
-                                                                    '0 4px 8px rgba(0,0,0,0.1)',
+                                                                    SHADOWS.sm,
                                                             },
                                                         },
                                                         '&:hover': {

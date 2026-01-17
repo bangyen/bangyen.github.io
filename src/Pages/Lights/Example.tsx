@@ -2,7 +2,7 @@ import React from 'react';
 import { Typography, Grid } from '../../components/mui';
 
 import { getStates } from './chaseHandlers';
-import { CustomGrid } from '../../helpers';
+import { CustomGrid } from '../../components/common/CustomGrid';
 import { useMobile } from '../../hooks';
 import { TYPOGRAPHY } from '../../config/theme';
 
@@ -93,7 +93,7 @@ function gridTiles(states: number[][][], dims: number): number[][][] {
     const length = states.length;
     const dRange = getRange(dims);
     const lRange = getRange(length);
-    
+
     return dRange.map(r => dRange.map(c => lRange.map(k => states[k][r][c])));
 }
 
@@ -101,7 +101,7 @@ function rowTiles(states: number[][], dims: number): number[][] {
     const length = states.length;
     const dRange = getRange(dims);
     const lRange = getRange(length);
-    
+
     return dRange.map(r => lRange.map(k => states[k][r]));
 }
 
@@ -137,13 +137,13 @@ export default function Example({
     const mobile = useMobile('lg');
     const states = getStates(start as number[], dims);
     const width = mobile ? size / 2 : size;
-    
+
     const { boardStates, inputStates, outputStates } = states;
-    
+
     const boardTiles = gridTiles(boardStates, dims);
     const inputTiles = rowTiles(inputStates, dims);
     const outputTiles = rowTiles(outputStates, dims);
-    
+
     const getGrid = (s: unknown[], r: number, c: number) => {
         const states = s as number[][][];
         return states.map(state => state[r][c]);
@@ -152,11 +152,26 @@ export default function Example({
         const states = s as number[][];
         return states.map(state => state[c]);
     };
-    
-    const getBoard = propHandler(boardTiles as unknown[], getGrid, palette, 'board');
-    const getInput = propHandler(inputTiles as unknown[], getRow, palette, 'input');
-    const getOutput = propHandler(outputTiles as unknown[], getRow, palette, 'output');
-    
+
+    const getBoard = propHandler(
+        boardTiles as unknown[],
+        getGrid,
+        palette,
+        'board'
+    );
+    const getInput = propHandler(
+        inputTiles as unknown[],
+        getRow,
+        palette,
+        'input'
+    );
+    const getOutput = propHandler(
+        outputTiles as unknown[],
+        getRow,
+        palette,
+        'output'
+    );
+
     return (
         <Grid container size={12} spacing={4}>
             <Grid container size={12}>
@@ -190,4 +205,3 @@ export default function Example({
         </Grid>
     );
 }
-

@@ -24,7 +24,7 @@ import {
     CancelRounded as CancelIcon,
     ArrowBackRounded as ArrowBackIcon,
 } from '@mui/icons-material';
-import { COLORS, SPACING } from '../config/theme';
+import { COLORS, SPACING, SHADOWS } from '../config/theme';
 import {
     CCTLD_LANGUAGES,
     TELEPHONE_ZONES,
@@ -157,6 +157,8 @@ const WikipediaQuizPage: React.FC = () => {
                                 width: '100%',
                                 display: 'flex',
                                 justifyContent: 'center',
+                                overflowX: 'auto',
+                                pb: 1, // Add padding for scrollbar spacing if needed
                             }}
                         >
                             <ToggleButtonGroup
@@ -166,24 +168,27 @@ const WikipediaQuizPage: React.FC = () => {
                                 aria-label="quiz selection"
                                 sx={{
                                     backgroundColor:
-                                        'rgba(255, 255, 255, 0.03)',
+                                        COLORS.interactive.disabled,
                                     borderRadius: SPACING.borderRadius.full,
                                     p: 0.5,
                                     '& .MuiToggleButton-root': {
                                         borderRadius: SPACING.borderRadius.full,
-                                        px: 3,
+                                        px: { xs: 2, sm: 3 },
                                         py: 1,
                                         border: 'none',
                                         color: COLORS.text.secondary,
-                                        fontSize: '0.9rem',
+                                        fontSize: {
+                                            xs: '0.8rem',
+                                            sm: '0.9rem',
+                                        },
+                                        whiteSpace: 'nowrap',
                                         fontWeight: 'medium',
                                         textTransform: 'none',
                                         '&.Mui-selected': {
                                             backgroundColor:
                                                 COLORS.primary.main,
                                             color: COLORS.text.primary,
-                                            boxShadow:
-                                                '0 4px 12px rgba(0,0,0,0.2)',
+                                            boxShadow: SHADOWS.md,
                                             '&:hover': {
                                                 backgroundColor:
                                                     COLORS.primary.light,
@@ -191,7 +196,7 @@ const WikipediaQuizPage: React.FC = () => {
                                         },
                                         '&:hover': {
                                             backgroundColor:
-                                                'rgba(255, 255, 255, 0.05)',
+                                                COLORS.interactive.disabled,
                                         },
                                     },
                                 }}
@@ -525,8 +530,8 @@ const WikipediaQuizPage: React.FC = () => {
                                     whiteSpace: 'nowrap',
                                     '&.Mui-disabled': {
                                         backgroundColor:
-                                            'rgba(255, 255, 255, 0.05)',
-                                        color: 'rgba(255, 255, 255, 0.3)',
+                                            COLORS.interactive.disabled,
+                                        color: COLORS.interactive.disabledText,
                                     },
                                 }}
                             >
@@ -565,10 +570,10 @@ const WikipediaQuizPage: React.FC = () => {
                                 alignItems: 'flex-start',
                                 bgcolor:
                                     q.pointsEarned === 1
-                                        ? 'rgba(76, 175, 80, 0.05)'
+                                        ? COLORS.surface.success
                                         : q.pointsEarned === 0.5
-                                          ? 'rgba(255, 193, 7, 0.05)'
-                                          : 'rgba(239, 83, 80, 0.05)',
+                                          ? COLORS.surface.warning
+                                          : COLORS.surface.error,
                                 border: `1px solid ${COLORS.border.subtle} `,
                                 flexShrink: 0,
                             }}

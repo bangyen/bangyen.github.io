@@ -1,6 +1,6 @@
 import React from 'react';
 import { ToggleButton, ToggleButtonGroup } from './mui';
-import { COLORS, SPACING } from '../config/theme';
+import { COLORS, SPACING, SHADOWS } from '../config/theme';
 
 interface InterpreterNavigationProps {
     active: string;
@@ -27,7 +27,7 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
             onChange={handleChange}
             aria-label="interpreter selector"
             sx={{
-                backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                backgroundColor: COLORS.interactive.disabled,
                 borderRadius: SPACING.borderRadius.full,
                 p: 0.5,
                 '& .MuiToggleButton-root': {
@@ -42,13 +42,13 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
                     '&.Mui-selected': {
                         backgroundColor: COLORS.primary.main,
                         color: COLORS.text.primary,
-                        boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
+                        boxShadow: SHADOWS.md,
                         '&:hover': {
                             backgroundColor: COLORS.primary.light,
                         },
                     },
                     '&:hover': {
-                        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                        backgroundColor: COLORS.interactive.hover,
                     },
                 },
             }}

@@ -2,11 +2,7 @@
   {
     "code": "A",
     "country": "Austria",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_Austria.svg/40px-Flag_of_Austria.svg.png",
-    "conventions": [
-      1909,
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_Austria.svg/40px-Flag_of_Austria.svg.png"
   },
   {
     "code": "AFG",
@@ -46,11 +42,7 @@
   {
     "code": "B",
     "country": "Belgium",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_Belgium_%28civil%29.svg/40px-Flag_of_Belgium_%28civil%29.svg.png",
-    "conventions": [
-      1909,
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_Belgium_%28civil%29.svg/40px-Flag_of_Belgium_%28civil%29.svg.png"
   },
   {
     "code": "BD",
@@ -70,10 +62,7 @@
   {
     "code": "BG",
     "country": "Bulgaria",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Bulgaria.svg/40px-Flag_of_Bulgaria.svg.png",
-    "conventions": [
-      1909
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Bulgaria.svg/40px-Flag_of_Bulgaria.svg.png"
   },
   {
     "code": "BH",
@@ -93,10 +82,7 @@
   {
     "code": "BR",
     "country": "Brazil",
-    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/0/05/Flag_of_Brazil.svg/40px-Flag_of_Brazil.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/0/05/Flag_of_Brazil.svg/40px-Flag_of_Brazil.svg.png"
   },
   {
     "code": "BRN",
@@ -146,11 +132,7 @@
   {
     "code": "CH",
     "country": "Switzerland",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Flag_of_Switzerland_%28Pantone%29.svg/20px-Flag_of_Switzerland_%28Pantone%29.svg.png",
-    "conventions": [
-      1909,
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Flag_of_Switzerland_%28Pantone%29.svg/20px-Flag_of_Switzerland_%28Pantone%29.svg.png"
   },
   {
     "code": "CI",
@@ -165,10 +147,7 @@
   {
     "code": "CO",
     "country": "Colombia",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/40px-Flag_of_Colombia.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Flag_of_Colombia.svg/40px-Flag_of_Colombia.svg.png"
   },
   {
     "code": "CR",
@@ -193,19 +172,12 @@
   {
     "code": "D",
     "country": "Germany",
-    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/b/ba/Flag_of_Germany.svg/40px-Flag_of_Germany.svg.png",
-    "conventions": [
-      1909,
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/b/ba/Flag_of_Germany.svg/40px-Flag_of_Germany.svg.png"
   },
   {
     "code": "DK",
     "country": "Denmark",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Flag_of_Denmark.svg/20px-Flag_of_Denmark.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Flag_of_Denmark.svg/20px-Flag_of_Denmark.svg.png"
   },
   {
     "code": "DOM",
@@ -225,11 +197,7 @@
   {
     "code": "E",
     "country": "Spain",
-    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/9/9a/Flag_of_Spain.svg/40px-Flag_of_Spain.svg.png",
-    "conventions": [
-      1909,
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/9/9a/Flag_of_Spain.svg/40px-Flag_of_Spain.svg.png"
   },
   {
     "code": "EAK",
@@ -274,10 +242,7 @@
   {
     "code": "EST",
     "country": "Estonia",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Flag_of_Estonia.svg/40px-Flag_of_Estonia.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Flag_of_Estonia.svg/40px-Flag_of_Estonia.svg.png"
   },
   {
     "code": "ETH",
@@ -287,11 +252,7 @@
   {
     "code": "F",
     "country": "France",
-    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/40px-Flag_of_France.svg.png",
-    "conventions": [
-      1909,
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/40px-Flag_of_France.svg.png"
   },
   {
     "code": "FIN",
@@ -306,10 +267,7 @@
   {
     "code": "FL",
     "country": "Liechtenstein",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Flag_of_Liechtenstein.svg/40px-Flag_of_Liechtenstein.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Flag_of_Liechtenstein.svg/40px-Flag_of_Liechtenstein.svg.png"
   },
   {
     "code": "FO",
@@ -319,34 +277,22 @@
   {
     "code": "G",
     "country": "Gabon",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Flag_of_Gabon.svg/20px-Flag_of_Gabon.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Flag_of_Gabon.svg/20px-Flag_of_Gabon.svg.png"
   },
   {
     "code": "GBA",
     "country": "Alderney",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Alderney.svg/40px-Flag_of_Alderney.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Flag_of_Alderney.svg/40px-Flag_of_Alderney.svg.png"
   },
   {
     "code": "GBG",
     "country": "Guernsey",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_Guernsey.svg/40px-Flag_of_Guernsey.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Flag_of_Guernsey.svg/40px-Flag_of_Guernsey.svg.png"
   },
   {
     "code": "GBJ",
     "country": "Jersey",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Flag_of_Jersey.svg/40px-Flag_of_Jersey.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Flag_of_Jersey.svg/40px-Flag_of_Jersey.svg.png"
   },
   {
     "code": "GBM",
@@ -356,10 +302,7 @@
   {
     "code": "GBZ",
     "country": "Gibraltar",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Flag_of_Gibraltar.svg/40px-Flag_of_Gibraltar.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Flag_of_Gibraltar.svg/40px-Flag_of_Gibraltar.svg.png"
   },
   {
     "code": "GCA",
@@ -379,11 +322,7 @@
   {
     "code": "GR",
     "country": "Greece",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Greece.svg/40px-Flag_of_Greece.svg.png",
-    "conventions": [
-      1909,
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_Greece.svg/40px-Flag_of_Greece.svg.png"
   },
   {
     "code": "GUY",
@@ -393,11 +332,7 @@
   {
     "code": "H",
     "country": "Hungary",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Flag_of_Hungary.svg/40px-Flag_of_Hungary.svg.png",
-    "conventions": [
-      1909,
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Flag_of_Hungary.svg/40px-Flag_of_Hungary.svg.png"
   },
   {
     "code": "HK",
@@ -422,11 +357,7 @@
   {
     "code": "I",
     "country": "Italy",
-    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Flag_of_Italy.svg/40px-Flag_of_Italy.svg.png",
-    "conventions": [
-      1909,
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/0/03/Flag_of_Italy.svg/40px-Flag_of_Italy.svg.png"
   },
   {
     "code": "IL",
@@ -526,18 +457,12 @@
   {
     "code": "LT",
     "country": "Lithuania",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Lithuania.svg/40px-Flag_of_Lithuania.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Flag_of_Lithuania.svg/40px-Flag_of_Lithuania.svg.png"
   },
   {
     "code": "LV",
     "country": "Latvia",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Flag_of_Latvia.svg/40px-Flag_of_Latvia.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/84/Flag_of_Latvia.svg/40px-Flag_of_Latvia.svg.png"
   },
   {
     "code": "M",
@@ -557,11 +482,7 @@
   {
     "code": "MC",
     "country": "Monaco",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Flag_of_Monaco.svg/20px-Flag_of_Monaco.svg.png",
-    "conventions": [
-      1909,
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ea/Flag_of_Monaco.svg/20px-Flag_of_Monaco.svg.png"
   },
   {
     "code": "MD",
@@ -571,10 +492,7 @@
   {
     "code": "MEX",
     "country": "Mexico",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/40px-Flag_of_Mexico.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Flag_of_Mexico.svg/40px-Flag_of_Mexico.svg.png"
   },
   {
     "code": "MNE",
@@ -639,11 +557,7 @@
   {
     "code": "NL",
     "country": "Netherlands",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/40px-Flag_of_the_Netherlands.svg.png",
-    "conventions": [
-      1909,
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/40px-Flag_of_the_Netherlands.svg.png"
   },
   {
     "code": "NMK",
@@ -663,27 +577,17 @@
   {
     "code": "P",
     "country": "Portugal",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Flag_of_Portugal_%28official%29.svg/40px-Flag_of_Portugal_%28official%29.svg.png",
-    "conventions": [
-      1909,
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Flag_of_Portugal_%28official%29.svg/40px-Flag_of_Portugal_%28official%29.svg.png"
   },
   {
     "code": "PA",
     "country": "Panama",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Flag_of_Panama.svg/40px-Flag_of_Panama.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Flag_of_Panama.svg/40px-Flag_of_Panama.svg.png"
   },
   {
     "code": "PE",
     "country": "Peru",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Flag_of_Peru.svg/40px-Flag_of_Peru.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Flag_of_Peru.svg/40px-Flag_of_Peru.svg.png"
   },
   {
     "code": "PK",
@@ -693,10 +597,7 @@
   {
     "code": "PL",
     "country": "Poland",
-    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/1/12/Flag_of_Poland.svg/40px-Flag_of_Poland.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/1/12/Flag_of_Poland.svg/40px-Flag_of_Poland.svg.png"
   },
   {
     "code": "PNG",
@@ -706,10 +607,7 @@
   {
     "code": "PY",
     "country": "Paraguay",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Paraguay.svg/40px-Flag_of_Paraguay.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Flag_of_Paraguay.svg/40px-Flag_of_Paraguay.svg.png"
   },
   {
     "code": "Q",
@@ -724,10 +622,7 @@
   {
     "code": "RC",
     "country": "Taiwan",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Flag_of_the_Republic_of_China.svg/40px-Flag_of_the_Republic_of_China.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/72/Flag_of_the_Republic_of_China.svg/40px-Flag_of_the_Republic_of_China.svg.png"
   },
   {
     "code": "RCA",
@@ -742,10 +637,7 @@
   {
     "code": "RCH",
     "country": "Chile",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Flag_of_Chile.svg/40px-Flag_of_Chile.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Flag_of_Chile.svg/40px-Flag_of_Chile.svg.png"
   },
   {
     "code": "RG",
@@ -755,10 +647,7 @@
   {
     "code": "RH",
     "country": "Haiti",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Flag_of_Haiti.svg/40px-Flag_of_Haiti.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/56/Flag_of_Haiti.svg/40px-Flag_of_Haiti.svg.png"
   },
   {
     "code": "RI",
@@ -798,10 +687,7 @@
   {
     "code": "RO",
     "country": "Romania",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flag_of_Romania.svg/40px-Flag_of_Romania.svg.png",
-    "conventions": [
-      1909
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Flag_of_Romania.svg/40px-Flag_of_Romania.svg.png"
   },
   {
     "code": "ROK",
@@ -841,11 +727,7 @@
   {
     "code": "S",
     "country": "Sweden",
-    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Flag_of_Sweden.svg/40px-Flag_of_Sweden.svg.png",
-    "conventions": [
-      1909,
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/4/4c/Flag_of_Sweden.svg/40px-Flag_of_Sweden.svg.png"
   },
   {
     "code": "SD",
@@ -940,10 +822,7 @@
   {
     "code": "TR",
     "country": "Turkey",
-    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Flag_of_Turkey.svg/40px-Flag_of_Turkey.svg.png",
-    "conventions": [
-      1924
-    ]
+    "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Flag_of_Turkey.svg/40px-Flag_of_Turkey.svg.png"
   },
   {
     "code": "TT",

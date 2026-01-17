@@ -12,7 +12,8 @@ import {
     TYPOGRAPHY,
     COMPONENT_VARIANTS,
 } from '../../config/theme';
-import { GlassCard, CustomGrid } from '../../helpers';
+import { GlassCard } from '../../components/common/GlassCard';
+import { CustomGrid } from '../../components/common/CustomGrid';
 import { getProduct } from './matrices';
 import { useGetters } from '../Board';
 import { useMobile } from '../../hooks';
@@ -43,7 +44,10 @@ interface InfoProps {
     toggleOpen: () => void;
 }
 
-function getInput(getters: Getters, toggleTile: (col: number) => (event: React.MouseEvent) => void) {
+function getInput(
+    getters: Getters,
+    toggleTile: (col: number) => (event: React.MouseEvent) => void
+) {
     const { getColor, getBorder } = getters;
 
     return (r: number, c: number) => {
@@ -139,7 +143,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                     flexDirection: 'column',
                     transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
                     padding: 0,
-                    backgroundColor: 'hsl(0, 0%, 5%)',
+                    backgroundColor: COLORS.surface.elevated,
                     borderRadius: SPACING.borderRadius.lg,
                     border: `1px solid ${COLORS.border.subtle}`,
                 }}
@@ -366,17 +370,17 @@ export default function Info(props: InfoProps): React.ReactElement {
                                     size={{ xs: 12, lg: 6 }}
                                     sx={{
                                         ...COMPONENT_VARIANTS.flexCenter,
+                                    }}
+                                >
+                                    <TypedGlassCard
+                                        sx={{
+                                            width: '100%',
+                                            height: '100%',
+                                            ...COMPONENT_VARIANTS.flexCenter,
+                                            transition:
+                                                'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
                                         }}
                                     >
-                                        <TypedGlassCard
-                                            sx={{
-                                                width: '100%',
-                                                height: '100%',
-                                                ...COMPONENT_VARIANTS.flexCenter,
-                                                transition:
-                                                    'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                            }}
-                                        >
                                         <Example
                                             dims={3}
                                             size={size * 0.6}
@@ -443,4 +447,3 @@ export default function Info(props: InfoProps): React.ReactElement {
         </Backdrop>
     );
 }
-

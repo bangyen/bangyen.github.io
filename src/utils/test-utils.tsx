@@ -1,8 +1,8 @@
 import React from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import { render, type RenderOptions } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider, createTheme, grey, blueGrey } from './components/mui';
-import { Theme } from '@mui/material/styles';
+import { ThemeProvider, createTheme, grey, blueGrey } from '../components/mui';
+import type { Theme } from '@mui/material/styles';
 
 /**
  * Creates a test theme for consistent testing across all components
@@ -173,4 +173,3 @@ const testUtilsExport = {
 };
 
 export default testUtilsExport;
-

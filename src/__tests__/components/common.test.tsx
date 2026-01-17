@@ -4,14 +4,14 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { BrowserRouter } from 'react-router-dom';
 import {
     TooltipButton,
-    GlassCard,
     HomeButton,
     RandomButton,
     Controls,
     ArrowsButton,
-    CustomGrid,
-    Navigation,
-} from '../helpers';
+} from '../../components/common/Controls';
+import { GlassCard } from '../../components/common/GlassCard';
+import { CustomGrid } from '../../components/common/CustomGrid';
+import { Navigation } from '../../components/common/Navigation';
 
 const theme = createTheme();
 

@@ -10,7 +10,7 @@ const SkippedBadge: React.FC = () => (
         sx={{
             height: 20,
             fontSize: '0.75rem',
-            borderColor: 'rgba(239, 83, 80, 0.3)',
+            borderColor: COLORS.surface.error,
             color: COLORS.data.red,
             fontWeight: 'medium',
             '& .MuiChip-label': { px: 1 },

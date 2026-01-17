@@ -10,7 +10,8 @@ import {
     Button,
 } from '../components/mui';
 
-import { TooltipButton, GlassCard, ICON_MAP } from '../helpers';
+import { GlassCard } from '../components/common/GlassCard';
+import { TooltipButton, ICON_MAP } from '../components/common/Controls';
 import { Section, HeroContainer } from '../components/Layout';
 import {
     PERSONAL_INFO,
@@ -26,6 +27,7 @@ import {
     TYPOGRAPHY,
     ANIMATIONS,
     COMPONENT_VARIANTS,
+    SHADOWS,
 } from '../config/theme';
 
 import {
@@ -131,20 +133,20 @@ function ProjectDropdown(): React.ReactElement {
                                         right: 0,
                                         height: '1px',
                                         backgroundColor:
-                                            'rgba(255, 255, 255, 0.05)',
+                                            COLORS.interactive.disabled,
                                     },
                                 }}
                             >
                                 <IconComponent
                                     sx={{
-                                        color: '#4C78FF',
+                                        color: COLORS.primary.main,
                                         fontSize: '14px',
                                         opacity: 0.7,
                                     }}
                                 />
                                 <Typography
                                     sx={{
-                                        color: 'rgba(157, 163, 174, 0.7)',
+                                        color: COLORS.text.secondary,
                                         fontSize: '10px',
                                         fontWeight: 500,
                                         textTransform: 'uppercase',
@@ -175,16 +177,16 @@ function ProjectDropdown(): React.ReactElement {
                                             gap: '6px',
                                             '&:hover': {
                                                 backgroundColor:
-                                                    'rgba(255, 255, 255, 0.06)',
+                                                    COLORS.interactive.hover,
                                                 transform: 'translateY(-1px)',
                                             },
                                             '&:active': {
                                                 backgroundColor:
-                                                    'rgba(255, 255, 255, 0.08)',
+                                                    COLORS.interactive.selected,
                                             },
                                             '&:focus-visible': {
                                                 outline: 'none',
-                                                ring: '1px solid rgba(255, 255, 255, 0.2)',
+                                                ring: `1px solid ${COLORS.interactive.focus}`,
                                                 ringOffset: '0',
                                             },
                                         }}
@@ -194,14 +196,14 @@ function ProjectDropdown(): React.ReactElement {
                                                 fontWeight: 600,
                                                 fontSize: '15px',
                                                 lineHeight: 1.6,
-                                                color: '#EDEDED',
+                                                color: COLORS.text.primary,
                                             }}
                                         >
                                             {projectName.replace('_', ' ')}
                                         </Typography>
                                         <Typography
                                             sx={{
-                                                color: 'rgba(157, 163, 174, 0.8)',
+                                                color: COLORS.text.secondary,
                                                 fontSize: '12px',
                                                 lineHeight: 1.4,
                                             }}
@@ -276,12 +278,12 @@ function MenuButton(): React.ReactElement {
                         width: 'auto',
                         maxWidth: '300px',
                         height: 'auto !important',
-                        backgroundColor: 'rgba(11, 11, 12, 0.95)',
+                        backgroundColor: COLORS.surface.glass,
                         backdropFilter: 'blur(8px)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        border: `1px solid ${COLORS.border.subtle}`,
                         borderRadius: '16px',
                         padding: 0,
-                        boxShadow: '0 8px 30px rgba(0, 0, 0, 0.35)',
+                        boxShadow: SHADOWS.lg,
                         transition: 'all 140ms cubic-bezier(0.2, 0.8, 0.2, 1)',
                         transform: open
                             ? 'translateY(0) scale(1)'
@@ -472,11 +474,10 @@ export default function Home(): React.ReactElement {
                                             cursor: 'pointer',
                                             '&:hover': {
                                                 backgroundColor:
-                                                    'hsla(217, 91%, 60%, 0.15)',
+                                                    COLORS.interactive.focus,
                                                 transform:
                                                     'scale(1.02) translateY(-1px)',
-                                                boxShadow:
-                                                    '0 4px 20px hsla(0, 0%, 0%, 0.25)',
+                                                boxShadow: SHADOWS.text,
                                             },
                                         }}
                                     >
@@ -557,7 +558,7 @@ export default function Home(): React.ReactElement {
                                                                 COLORS
                                                                     .interactive
                                                                     .selected,
-                                                            border: `1px solid hsla(217, 91%, 60%, 0.2)`,
+                                                            border: `1px solid ${COLORS.interactive.selected}`,
                                                             borderRadius:
                                                                 SPACING
                                                                     .borderRadius

@@ -1,4 +1,9 @@
-import { getSpace, convertPixels, getDirection, gridMove } from '../calculate';
+import {
+    getSpace,
+    convertPixels,
+    getDirection,
+    gridMove,
+} from '../utils/calculate';
 
 describe('Calculate Utilities', () => {
     /**
@@ -318,4 +323,3 @@ describe('Calculate Utilities', () => {
         });
     });
 });
-

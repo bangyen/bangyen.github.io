@@ -4,6 +4,7 @@ import { useQuizEngine } from '../../hooks/useQuizEngine';
 import QuizGameView from './QuizGameView';
 import { CCTLD, QuizType, QuizSettings, Question } from '../../types/quiz';
 import { QUIZ_CONFIGS } from '../../config/quizConfig';
+import { COLORS, SHADOWS } from '../../config/theme';
 
 interface QuizGameProps {
     quizType: QuizType;
@@ -81,8 +82,8 @@ const QuizGame: React.FC<QuizGameProps> = ({
                                 whiteSpace: 'nowrap',
                                 '&.Mui-disabled': {
                                     backgroundColor:
-                                        'rgba(255, 255, 255, 0.05)',
-                                    color: 'rgba(255, 255, 255, 0.3)',
+                                        COLORS.interactive.disabled,
+                                    color: COLORS.interactive.disabledText,
                                     borderColor: 'transparent',
                                 },
                             }}
@@ -99,8 +100,8 @@ const QuizGame: React.FC<QuizGameProps> = ({
                                 whiteSpace: 'nowrap',
                                 '&.Mui-disabled': {
                                     backgroundColor:
-                                        'rgba(255, 255, 255, 0.05)',
-                                    color: 'rgba(255, 255, 255, 0.3)',
+                                        COLORS.interactive.disabled,
+                                    color: COLORS.interactive.disabledText,
                                     borderColor: 'transparent',
                                 },
                             }}
@@ -170,7 +171,7 @@ const QuizGame: React.FC<QuizGameProps> = ({
                             height: '24px',
                             width: 'auto',
                             borderRadius: '2px',
-                            boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
+                            boxShadow: SHADOWS.sm,
                         }}
                     />
                 )

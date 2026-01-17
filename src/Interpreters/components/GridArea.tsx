@@ -1,6 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 import { EditorContext } from '../EditorContext';
-import { CustomGrid } from '../../helpers';
+import { CustomGrid } from '../../components/common/CustomGrid';
 import { Text } from './Text';
 import { COLORS, SPACING } from '../../config/theme';
 

@@ -1,5 +1,5 @@
-import React, { useCallback, forwardRef, ReactNode } from 'react';
-import { Tooltip, IconButton, Paper, Box, Grid } from './components/mui';
+import React, { useCallback } from 'react';
+import { Tooltip, IconButton, Grid } from '../mui';
 import {
     Refresh,
     HomeRounded,
@@ -13,18 +13,11 @@ import {
     Psychology,
     Cloud,
     Work,
-} from './components/icons';
+} from '../icons';
 import { Link } from 'react-router-dom';
-import { getSpace } from './calculate';
-import {
-    COLORS,
-    SPACING,
-    TYPOGRAPHY,
-    ANIMATIONS,
-    COMPONENT_VARIANTS,
-} from './config/theme';
-import { CELL_SIZE } from './config/constants';
-import { SxProps, Theme } from '@mui/material/styles';
+import type { SxProps, Theme } from '@mui/material/styles';
+import { Navigation } from './Navigation';
+import { COLORS } from '../../config/theme';
 
 type IconComponent = React.ElementType;
 
@@ -73,140 +66,6 @@ export function HomeButton({ hide = false, ...rest }: HomeButtonProps) {
             aria-label="Navigate to Home page"
             {...rest}
         />
-    );
-}
-
-interface CellProps {
-    size: number;
-    children: ReactNode;
-    [key: string]: any;
-}
-
-function Cell({ size, children, ...rest }: CellProps) {
-    const remSize = `${size}rem`;
-    const radius = `${size / CELL_SIZE.divisor}rem`;
-
-    const props = {
-        ...COMPONENT_VARIANTS.flexCenter,
-        borderRadius: radius,
-        height: remSize,
-        width: remSize,
-        fontSize: `${size * CELL_SIZE.fontSizeMultiplier}rem`,
-        fontWeight: TYPOGRAPHY.fontWeight.semibold,
-        fontFamily: 'monospace',
-        transition: ANIMATIONS.transition,
-    };
-
-    const combined = {
-        ...props,
-        ...rest,
-    };
-
-    return <Box {...combined}>{children}</Box>;
-}
-
-interface RowProps {
-    cols: number;
-    size: number;
-    index: number;
-    spacing: string;
-    cellProps: (row: number, col: number) => any;
-}
-
-function Row({ cols, size, index, spacing, cellProps }: RowProps) {
-    const WrappedCell = (_: any, j: number) => (
-        <Cell {...cellProps(index, j)} key={`${index}_${j}`} size={size} />
-    );
-
-    return (
-        <Grid container size={12} spacing={spacing} justifyContent="center">
-            {Array.from({ length: cols }, WrappedCell)}
-        </Grid>
-    );
-}
-
-interface CustomGridProps {
-    size: number;
-    rows: number;
-    cols: number;
-    cellProps: (row: number, col: number) => any;
-    space?: number;
-    [key: string]: any;
-}
-
-export function CustomGrid({ size, rows, cols, cellProps, ...rest }: CustomGridProps) {
-    const auto = getSpace(size);
-    const { space = auto } = rest;
-    const rem = `${space}rem`;
-
-    const getRow = useCallback(
-        (_: any, i: number) => (
-            <Row
-                index={i}
-                cols={cols}
-                size={size}
-                spacing={rem}
-                key={`row_${i}`}
-                cellProps={cellProps}
-            />
-        ),
-        [cols, size, rem, cellProps]
-    );
-
-    return (
-        <Grid
-            container
-            size={12}
-            spacing={rem}
-            alignItems="center"
-            role="grid"
-            aria-label={`Grid with ${rows} rows and ${cols} columns`}
-            {...rest}
-        >
-            {Array.from({ length: rows }, getRow)}
-        </Grid>
-    );
-}
-
-interface NavigationProps {
-    children: ReactNode;
-    [key: string]: any;
-}
-
-export function Navigation({ children, ...rest }: NavigationProps) {
-    return (
-        <Paper
-            elevation={0}
-            component="nav"
-            role="navigation"
-            aria-label="Game controls navigation"
-            sx={{
-                transform: 'translateX(-50%)',
-                position: 'absolute',
-                bottom: 50,
-                left: '50%',
-                zIndex: 10,
-                backgroundColor: 'hsla(0, 0%, 3%, 0.95)',
-                backdropFilter: 'blur(24px) saturate(180%)',
-                border: `1px solid ${COLORS.border.subtle}`,
-                borderRadius: SPACING.borderRadius.lg,
-                boxShadow: '0 8px 32px hsla(0, 0%, 0%, 0.35)',
-                padding: '16px 24px',
-                ...rest,
-            }}
-        >
-            <Grid
-                container
-                spacing={2}
-                sx={{
-                    ...COMPONENT_VARIANTS.flexCenter,
-                    flexWrap: 'nowrap',
-                    minWidth: 0,
-                }}
-            >
-                {children}
-            </Grid>
-        </Paper>
     );
 }
 
@@ -272,7 +131,7 @@ interface ControlsProps {
     handler?: (direction: string) => () => void;
     onRandom?: () => void;
     randomEnabled?: boolean;
-    children?: ReactNode;
+    children?: React.ReactNode;
     size?: 'small' | 'medium' | 'large' | 'inherit';
     hide?: boolean;
 }
@@ -383,44 +242,3 @@ export function ArrowsButton({
         </Grid>
     );
 }
-
-interface GlassCardProps {
-    children: ReactNode;
-    padding?: number | string;
-    sx?: SxProps<Theme>;
-    className?: string;
-    interactive?: boolean;
-    [key: string]: any;
-}
-
-export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
-    function GlassCard(
-        {
-            children,
-            padding = SPACING.padding.md,
-            sx,
-            className,
-            interactive = false,
-            ...props
-        },
-        ref
-    ) {
-        return (
-            <Box
-                ref={ref}
-                className={`glass-card ${className || ''}`}
-                sx={{
-                    ...(interactive
-                        ? COMPONENT_VARIANTS.interactiveCard
-                        : COMPONENT_VARIANTS.card),
-                    padding,
-                    ...sx,
-                }}
-                {...props}
-            >
-                {children}
-            </Box>
-        );
-    }
-);
-
