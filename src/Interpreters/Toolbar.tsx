@@ -114,8 +114,21 @@ export function Toolbar(): React.ReactElement[] {
     };
 
     const buttons: React.ReactElement[] = [TimerButton];
+    const ffData = buttonData['Fast Forward'];
+
+    buttons.push(
+        <TooltipButton
+            key="Fast Forward"
+            title="Fast Forward"
+            Icon={ffData.icon}
+            onClick={ffData.flag ? dispatch('ff') : undefined}
+            disabled={!ffData.flag}
+        />
+    );
 
     for (const key in buttonData) {
+        if (key === 'Fast Forward') continue;
+
         const { icon, flag, action, props } = buttonData[key];
 
         if (action && flag)
