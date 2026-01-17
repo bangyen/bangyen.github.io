@@ -80,12 +80,14 @@ export default function Editor({
         ref: container,
         container: true,
         display: 'flex',
+        alignItems: 'center',
         sx: { overflowY: 'hidden' },
     };
 
     return (
         <Grid
             container
+            spacing={2}
             height="100vh"
             display="flex"
             flexDirection="column"
@@ -95,8 +97,13 @@ export default function Editor({
                 position: 'relative',
             }}
         >
-            <Grid container alignItems="center" justifyContent="space-between">
-                <Grid {...titleProps}>
+            <Grid
+                container
+                alignItems="center"
+                justifyContent="space-between"
+                sx={{ mb: { xs: 2, md: 0 } }}
+            >
+                <Grid {...titleProps} size={{ md: 'auto' }}>
                     <Typography
                         variant="h4"
                         sx={{
@@ -107,16 +114,25 @@ export default function Editor({
                         {name}
                     </Typography>
                 </Grid>
-                <Grid display="flex" alignItems="center" gap={1}>
+                {navigation && (
+                    <Grid
+                        size={{ xs: 12, md: 'auto' }}
+                        display="flex"
+                        justifyContent="center"
+                    >
+                        {navigation}
+                    </Grid>
+                )}
+                <Grid
+                    display="flex"
+                    alignItems="center"
+                    gap={1}
+                    size={{ md: 'auto' }}
+                >
                     <Toolbar />
                 </Grid>
             </Grid>
-            {navigation && (
-                <Grid container justifyContent="center" sx={{ mt: 2, mb: 0 }}>
-                    {navigation}
-                </Grid>
-            )}
-            <Grid {...contentProps} sx={{ ...contentProps.sx, mt: 0 }}>
+            <Grid {...contentProps}>
                 <Grid size={leftProps}>{children}</Grid>
                 <Grid display={display} size={rightProps}>
                     <TextArea {...sideProps} />

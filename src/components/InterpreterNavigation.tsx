@@ -32,13 +32,13 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
                 p: 0.5,
                 '& .MuiToggleButton-root': {
                     borderRadius: SPACING.borderRadius.full,
-                    px: 3,
-                    py: 1,
                     border: 'none',
                     color: COLORS.text.secondary,
-                    fontSize: '0.9rem',
+                    fontSize: '0.85rem',
                     fontWeight: 'medium',
                     textTransform: 'none',
+                    px: { xs: 1.5, sm: 3 },
+                    py: 0.5,
                     '&.Mui-selected': {
                         backgroundColor: COLORS.primary.main,
                         color: COLORS.text.primary,
