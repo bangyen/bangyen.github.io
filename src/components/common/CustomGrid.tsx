@@ -6,7 +6,7 @@ import { TYPOGRAPHY, ANIMATIONS, COMPONENT_VARIANTS } from '../../config/theme';
 
 interface CellProps {
     size: number;
-    children: ReactNode;
+    children?: ReactNode;
     [key: string]: unknown;
 }
 
@@ -34,7 +34,7 @@ function Cell({ size, children, ...rest }: CellProps) {
 }
 
 interface CellOptions {
-    children: ReactNode;
+    children?: ReactNode;
     [key: string]: unknown;
 }
 
