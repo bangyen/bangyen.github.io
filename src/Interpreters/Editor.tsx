@@ -127,7 +127,8 @@ export default function Editor({
                     display="flex"
                     alignItems="center"
                     gap={1}
-                    size={{ md: 'auto' }}
+                    size={{ xs: 12, md: 'auto' }}
+                    justifyContent={{ xs: 'center', md: 'flex-end' }}
                 >
                     <Toolbar />
                 </Grid>
