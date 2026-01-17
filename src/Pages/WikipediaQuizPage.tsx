@@ -1158,7 +1158,7 @@ const WikipediaQuizPage: React.FC = () => {
                                         display: 'flex',
                                         alignItems: 'center',
                                         gap: 1,
-                                        mb: 0.5,
+                                        mb: 1,
                                     }}
                                 >
                                     {q.item.flag && (
@@ -1236,18 +1236,41 @@ const WikipediaQuizPage: React.FC = () => {
                                         fontSize: '0.75rem',
                                     }}
                                 >
-                                    {q.userAnswer?.trim() ? (
-                                        <Typography
-                                            component="span"
-                                            variant="inherit"
-                                        >
-                                            {q.userAnswer.trim()}
-                                            {q.pointsEarned === 0.5 &&
-                                                ' (0.5 pts)'}
-                                        </Typography>
-                                    ) : (
-                                        <SkippedBadge />
-                                    )}
+                                    {(() => {
+                                        const answer = q.userAnswer?.trim();
+                                        if (!answer) return <SkippedBadge />;
+
+                                        let normalizedAnswer = answer;
+                                        if (
+                                            selectedQuiz === 'cctld' &&
+                                            settings.mode === 'toCode' &&
+                                            !normalizedAnswer.startsWith('.')
+                                        ) {
+                                            normalizedAnswer =
+                                                '.' + normalizedAnswer;
+                                        } else if (
+                                            selectedQuiz === 'telephone' &&
+                                            settings.mode === 'toCode' &&
+                                            !normalizedAnswer.startsWith('+')
+                                        ) {
+                                            normalizedAnswer =
+                                                '+' + normalizedAnswer;
+                                        } else if (selectedQuiz === 'vehicle') {
+                                            normalizedAnswer =
+                                                normalizedAnswer.toUpperCase();
+                                        }
+
+                                        return (
+                                            <Typography
+                                                component="span"
+                                                variant="inherit"
+                                            >
+                                                {normalizedAnswer}
+                                                {q.pointsEarned === 0.5 &&
+                                                    ' (0.5 pts)'}
+                                            </Typography>
+                                        );
+                                    })()}
                                 </Typography>
                                 {q.pointsEarned === 1 ? (
                                     <CheckCircleIcon

@@ -243,6 +243,7 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
                         ...COMPONENT_VARIANTS.card,
                         p: 4,
                         pt: 6,
+                        pb: 3,
                         mb: 4,
                         minHeight: 360,
                         width: '100%',
@@ -419,7 +420,6 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
                                         justifyContent: 'center',
                                         alignItems: 'center',
                                         gap: 1.5,
-                                        mb: isCorrect === false ? 1 : 0,
                                     }}
                                 >
                                     {currentQuestion &&
@@ -440,13 +440,23 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
                                         {feedbackMessage}
                                     </Typography>
                                 </Box>
-                                {isCorrect === false && currentQuestion && (
-                                    <Box sx={{ textAlign: 'center' }}>
-                                        {renderFeedbackOrigin?.(
-                                            currentQuestion
-                                        )}
-                                    </Box>
-                                )}
+                                {(() => {
+                                    const feedbackContent =
+                                        isCorrect === false &&
+                                        currentQuestion &&
+                                        renderFeedbackOrigin?.(currentQuestion);
+
+                                    return feedbackContent ? (
+                                        <Box
+                                            sx={{
+                                                textAlign: 'center',
+                                                mt: 1,
+                                            }}
+                                        >
+                                            {feedbackContent}
+                                        </Box>
+                                    ) : null;
+                                })()}
                             </Box>
                         </Fade>
                     )}

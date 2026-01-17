@@ -105,9 +105,6 @@ const QuizSummaryView = <T,>({
                 <Stack
                     spacing={2}
                     sx={{
-                        maxHeight: 400,
-                        overflow: 'auto',
-                        pr: 1,
                         width: '100%',
                     }}
                 >
