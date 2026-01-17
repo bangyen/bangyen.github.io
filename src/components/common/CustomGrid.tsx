@@ -7,7 +7,7 @@ import { TYPOGRAPHY, ANIMATIONS, COMPONENT_VARIANTS } from '../../config/theme';
 interface CellProps {
     size: number;
     children: ReactNode;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 function Cell({ size, children, ...rest }: CellProps) {
@@ -33,16 +33,21 @@ function Cell({ size, children, ...rest }: CellProps) {
     return <Box {...combined}>{children}</Box>;
 }
 
+interface CellOptions {
+    children: ReactNode;
+    [key: string]: unknown;
+}
+
 interface RowProps {
     cols: number;
     size: number;
     index: number;
     spacing: string;
-    cellProps: (row: number, col: number) => any;
+    cellProps: (row: number, col: number) => CellOptions;
 }
 
 function Row({ cols, size, index, spacing, cellProps }: RowProps) {
-    const WrappedCell = (_: any, j: number) => (
+    const WrappedCell = (_: unknown, j: number) => (
         <Cell {...cellProps(index, j)} key={`${index}_${j}`} size={size} />
     );
 
@@ -57,9 +62,9 @@ interface CustomGridProps {
     size: number;
     rows: number;
     cols: number;
-    cellProps: (row: number, col: number) => any;
+    cellProps: (row: number, col: number) => CellOptions;
     space?: number;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export function CustomGrid({
@@ -74,7 +79,7 @@ export function CustomGrid({
     const rem = `${space}rem`;
 
     const getRow = useCallback(
-        (_: any, i: number) => (
+        (_: unknown, i: number) => (
             <Row
                 index={i}
                 cols={cols}
