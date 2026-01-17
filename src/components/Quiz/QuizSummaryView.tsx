@@ -82,7 +82,7 @@ const QuizSummaryView = <T,>({
                             onClick={onRestart}
                             sx={{ flex: 1 }}
                         >
-                            Play Again
+                            Replay
                         </Button>
                         <Button
                             variant="outlined"

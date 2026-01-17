@@ -342,6 +342,7 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
                                     borderColor: COLORS.border.subtle,
                                     color: COLORS.text.secondary,
                                     whiteSpace: 'nowrap',
+                                    fontSize: '0.8rem',
                                     '&.Mui-disabled': {
                                         borderColor: COLORS.border.subtle,
                                         opacity: 0.6,
@@ -362,6 +363,7 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
                                         flex: 1,
                                         borderColor: COLORS.border.subtle,
                                         whiteSpace: 'nowrap',
+                                        fontSize: '0.8rem',
                                         '&.Mui-disabled': {
                                             borderColor: COLORS.border.subtle,
                                             opacity: 0.6,
@@ -377,8 +379,9 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
                                     variant="contained"
                                     sx={{
                                         py: 1.5,
-                                        flex: 1,
+                                        flex: 2,
                                         whiteSpace: 'nowrap',
+                                        fontSize: '0.8rem',
                                         '&.Mui-disabled': {
                                             backgroundColor:
                                                 'rgba(255, 255, 255, 0.05)',
