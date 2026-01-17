@@ -795,45 +795,7 @@ const WikipediaQuizPage: React.FC = () => {
                             maxQuestionOptions={activeConfig.maxQuestionOptions}
                             title="Quiz Settings"
                         >
-                            {/* Slot 1: Letter Filter (Next to Question Limit in top row) */}
-                            <Grid item xs={12} md={6}>
-                                <TextField
-                                    fullWidth
-                                    label="Filter by Letter(s)"
-                                    value={settings.filterLetter}
-                                    onChange={e =>
-                                        setSettings({
-                                            ...settings,
-                                            filterLetter: e.target.value,
-                                        })
-                                    }
-                                    helperText="Comma separated (e.g. a, b)"
-                                    InputLabelProps={{
-                                        style: { color: COLORS.text.secondary },
-                                    }}
-                                    onKeyDown={e => {
-                                        if (e.key === 'Enter') {
-                                            handleStart();
-                                        }
-                                    }}
-                                    sx={{
-                                        input: { color: COLORS.text.primary },
-                                        label: { color: COLORS.text.secondary },
-                                        '& .MuiOutlinedInput-root': {
-                                            '& fieldset': {
-                                                borderColor:
-                                                    COLORS.border.subtle,
-                                            },
-                                            '&:hover fieldset': {
-                                                borderColor:
-                                                    COLORS.primary.main,
-                                            },
-                                        },
-                                    }}
-                                />
-                            </Grid>
-
-                            {/* Slot 3: Specialized Filters (Row 2 Left) */}
+                            {/* Slot 1: Specialized Filters (Row 1 Left) */}
                             {selectedQuiz === 'cctld' && (
                                 <Grid item xs={12} md={6}>
                                     <FormControl fullWidth>
@@ -992,7 +954,82 @@ const WikipediaQuizPage: React.FC = () => {
                                 </Grid>
                             )}
 
-                            {/* Slot 2: Game Mode (Row 2 Right) */}
+                            {/* Slot 2: Question Limit (Row 1 Right) */}
+                            <Grid item xs={12} md={6}>
+                                <FormControl fullWidth>
+                                    <InputLabel>Question Limit</InputLabel>
+                                    <Select
+                                        value={settings.maxQuestions}
+                                        label="Question Limit"
+                                        onChange={e =>
+                                            setSettings({
+                                                ...settings,
+                                                maxQuestions: e.target.value as
+                                                    | number
+                                                    | 'All',
+                                            })
+                                        }
+                                        sx={{
+                                            color: COLORS.text.primary,
+                                            '.MuiOutlinedInput-notchedOutline':
+                                                {
+                                                    borderColor:
+                                                        COLORS.border.subtle,
+                                                },
+                                        }}
+                                        {...commonSelectProps}
+                                    >
+                                        <MenuItem value="All">All</MenuItem>
+                                        {activeConfig.maxQuestionOptions.map(
+                                            opt => (
+                                                <MenuItem key={opt} value={opt}>
+                                                    {opt}
+                                                </MenuItem>
+                                            )
+                                        )}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+
+                            {/* Slot 3: Letter Filter (Row 2 Left) */}
+                            <Grid item xs={12} md={6}>
+                                <TextField
+                                    fullWidth
+                                    label="Filter by Letter(s)"
+                                    value={settings.filterLetter}
+                                    onChange={e =>
+                                        setSettings({
+                                            ...settings,
+                                            filterLetter: e.target.value,
+                                        })
+                                    }
+                                    helperText="Comma separated (e.g. a, b)"
+                                    InputLabelProps={{
+                                        style: { color: COLORS.text.secondary },
+                                    }}
+                                    onKeyDown={e => {
+                                        if (e.key === 'Enter') {
+                                            handleStart();
+                                        }
+                                    }}
+                                    sx={{
+                                        input: { color: COLORS.text.primary },
+                                        label: { color: COLORS.text.secondary },
+                                        '& .MuiOutlinedInput-root': {
+                                            '& fieldset': {
+                                                borderColor:
+                                                    COLORS.border.subtle,
+                                            },
+                                            '&:hover fieldset': {
+                                                borderColor:
+                                                    COLORS.primary.main,
+                                            },
+                                        },
+                                    }}
+                                />
+                            </Grid>
+
+                            {/* Slot 4: Game Mode (Row 2 Right - Optional) */}
                             {activeConfig.hasModeSelect &&
                             activeConfig.modes ? (
                                 <Grid item xs={12} md={6}>
@@ -1041,26 +1078,6 @@ const WikipediaQuizPage: React.FC = () => {
                                     <Box sx={{ height: 56 }} />
                                 </Grid>
                             )}
-
-                            {selectedQuiz !== 'cctld' &&
-                                selectedQuiz !== 'telephone' &&
-                                selectedQuiz !== 'vehicle' &&
-                                selectedQuiz !== 'driving_side' && (
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        md={6}
-                                        sx={{
-                                            display: {
-                                                xs: 'none',
-                                                md: 'block',
-                                            },
-                                        }}
-                                    >
-                                        <Box sx={{ height: 56 }} />
-                                    </Grid>
-                                )}
-                            {/* Slot 4 (Question Limit) is handled by QuizSettingsView */}
                         </QuizSettingsView>
                         <Box
                             sx={{
