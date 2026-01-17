@@ -111,7 +111,7 @@ export default function Editor({
                             fontWeight: TYPOGRAPHY.fontWeight.semibold,
                         }}
                     >
-                        {name}
+                        Interpreters
                     </Typography>
                 </Grid>
                 {navigation && (
