@@ -1,5 +1,7 @@
 import React, { useEffect, useCallback, useReducer, useMemo } from 'react';
-import Editor, { EditorContext, TextArea } from '../Editor';
+import Editor from '../Editor';
+import { EditorContext } from '../EditorContext';
+import { TextArea } from '../components/TextArea';
 import { useTimer, useCache, useContainer } from '../../hooks';
 import {
     handleToolbar,
@@ -65,7 +67,7 @@ function handleAction(
         case 'edit':
             const { newText, clean } = payload;
 
-            if (newText && clean) {
+            if (newText !== undefined && clean) {
                 newState = {
                     ...state,
                     text: newText,

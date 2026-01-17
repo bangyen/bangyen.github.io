@@ -5,7 +5,9 @@ import React, {
     useCallback,
     useMemo,
 } from 'react';
-import Editor, { EditorContext, GridArea } from '../Editor';
+import Editor from '../Editor';
+import { EditorContext } from '../EditorContext';
+import { GridArea } from '../components/GridArea';
 import { convertPixels } from '../../calculate';
 import { handleAction } from './eventHandlers';
 import { PAGE_TITLES } from '../../config/constants';

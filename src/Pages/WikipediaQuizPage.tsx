@@ -24,34 +24,28 @@ import {
     CancelRounded as CancelIcon,
     ArrowBackRounded as ArrowBackIcon,
 } from '@mui/icons-material';
-import { COLORS, SPACING, COMPONENT_VARIANTS } from '../config/theme';
+import { COLORS, SPACING } from '../config/theme';
 import {
-    CCTLD_ALIASES,
     CCTLD_LANGUAGES,
     TELEPHONE_ZONES,
     VEHICLE_CONVENTIONS,
     DRIVING_SIDE_FILTERS,
-    GAME_CONSTANTS,
 } from '../config/constants';
-import { normalize, isSmartMatch } from '../utils/quizUtils';
 import {
     GameState,
     QuizSettings,
     Question as GenericQuestion,
     QuizType,
-    GameMode,
     QuizItem,
     CCTLD,
-    DrivingSide,
-    TelephoneCode,
-    VehicleCode,
 } from '../types/quiz';
-import { useQuizEngine } from '../hooks/useQuizEngine';
+import { useQuizFilter } from '../hooks/useQuizFilter';
 import QuizLayout from '../components/Quiz/QuizLayout';
 import QuizSettingsView from '../components/Quiz/QuizSettingsView';
 import QuizGameView from '../components/Quiz/QuizGameView';
 import QuizSummaryView from '../components/Quiz/QuizSummaryView';
 import { SkippedBadge } from '../components/Quiz';
+import QuizGame from '../components/Quiz/QuizGame';
 
 // Config import
 import { QUIZ_CONFIGS } from '../config/quizConfig';
@@ -75,191 +69,6 @@ const commonSelectProps = {
             sx: { backdropFilter: 'none', backgroundColor: 'transparent' },
         },
     },
-};
-
-const QuizGame = ({
-    quizType,
-    settings,
-    initialPool,
-    onEndGame,
-    onBackToMenu,
-}: {
-    quizType: QuizType;
-    settings: QuizSettings;
-    initialPool: any[];
-    onEndGame: (history: Question[], score: number) => void;
-    onBackToMenu: () => void;
-}) => {
-    const config = QUIZ_CONFIGS[quizType];
-    const { state, actions } = useQuizEngine<any>({
-        initialPool,
-        settings,
-        onEndGame,
-        checkAnswer: config.checkAnswer,
-    });
-
-    const {
-        history,
-        currentQuestion,
-        inputValue,
-        showFeedback,
-        feedbackMessage,
-        isCorrect,
-        totalQuestions,
-        showHint,
-        score,
-    } = state;
-
-    const { setInputValue, handleSubmit, handleSkip, toggleHint } = actions;
-
-    const inputRef = useRef<HTMLInputElement>(null);
-    const nextButtonRef = useRef<HTMLButtonElement>(null);
-
-    useEffect(() => {
-        if (showFeedback) {
-            nextButtonRef.current?.focus();
-        } else {
-            requestAnimationFrame(() => {
-                inputRef.current?.focus();
-            });
-        }
-    }, [showFeedback, currentQuestion]);
-
-    // Special handling for Driving Side which uses custom component inputs
-    if (quizType === 'driving_side') {
-        return (
-            <QuizGameView
-                gameState={state}
-                actions={actions}
-                onBackToMenu={onBackToMenu}
-                modeLabel="Which Side?"
-                hideInput={true}
-                hideHint={true}
-                renderQuestionPrompt={() =>
-                    config.renderQuestionPrompt(settings.mode)
-                }
-                onKeyDown={e => {
-                    if (state.showFeedback) return;
-                    if (e.key === 'ArrowLeft') {
-                        e.preventDefault();
-                        actions.submitAnswer('Left');
-                    } else if (e.key === 'ArrowRight') {
-                        e.preventDefault();
-                        actions.submitAnswer('Right');
-                    }
-                }}
-                renderQuestionContent={item =>
-                    config.renderQuestionContent(item, settings.mode)
-                }
-                renderCustomActions={(state, actions) => (
-                    <>
-                        <Button
-                            variant="contained"
-                            onClick={() => actions.submitAnswer('Left')}
-                            disabled={state.showFeedback}
-                            sx={{
-                                flex: 1,
-                                py: 1.5,
-                                whiteSpace: 'nowrap',
-                                '&.Mui-disabled': {
-                                    backgroundColor:
-                                        'rgba(255, 255, 255, 0.05)',
-                                    color: 'rgba(255, 255, 255, 0.3)',
-                                    borderColor: 'transparent',
-                                },
-                            }}
-                        >
-                            Left
-                        </Button>
-                        <Button
-                            variant="contained"
-                            onClick={() => actions.submitAnswer('Right')}
-                            disabled={state.showFeedback}
-                            sx={{
-                                flex: 1,
-                                py: 1.5,
-                                whiteSpace: 'nowrap',
-                                '&.Mui-disabled': {
-                                    backgroundColor:
-                                        'rgba(255, 255, 255, 0.05)',
-                                    color: 'rgba(255, 255, 255, 0.3)',
-                                    borderColor: 'transparent',
-                                },
-                            }}
-                        >
-                            Right
-                        </Button>
-                    </>
-                )}
-                renderHint={() => (
-                    <Typography variant="body2">
-                        Think about the region and historical influences.
-                    </Typography>
-                )}
-                renderFeedbackOrigin={config.renderFeedbackOrigin}
-            />
-        );
-    }
-
-    return (
-        <QuizGameView
-            gameState={state}
-            actions={actions}
-            onBackToMenu={onBackToMenu}
-            inputRef={inputRef}
-            nextButtonRef={nextButtonRef}
-            modeLabel={
-                settings.mode === 'toCountry'
-                    ? 'Guessing Country'
-                    : 'Guessing Code'
-            }
-            inputPlaceholder={
-                settings.mode === 'toCountry'
-                    ? 'Type country name...'
-                    : 'Type answer...'
-            }
-            renderQuestionPrompt={() =>
-                config.renderQuestionPrompt(settings.mode)
-            }
-            renderQuestionContent={item =>
-                config.renderQuestionContent(item, settings.mode)
-            }
-            renderHint={item =>
-                quizType === 'cctld' ? (
-                    <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        sx={{
-                            textAlign: 'center',
-                            fontStyle: 'italic',
-                        }}
-                    >
-                        Hint: {(item as CCTLD).language} origin
-                    </Typography>
-                ) : (
-                    <Typography variant="body2" color="textSecondary">
-                        Hint functionality coming soon...
-                    </Typography>
-                )
-            }
-            hideHint={quizType !== 'cctld'}
-            renderFeedbackFlag={item =>
-                item.flag && (
-                    <img
-                        src={item.flag}
-                        alt={`Flag of ${item.country} `}
-                        style={{
-                            height: '24px',
-                            width: 'auto',
-                            borderRadius: '2px',
-                            boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
-                        }}
-                    />
-                )
-            }
-            renderFeedbackOrigin={config.renderFeedbackOrigin}
-        />
-    );
 };
 
 const WikipediaQuizPage: React.FC = () => {
@@ -307,119 +116,11 @@ const WikipediaQuizPage: React.FC = () => {
         document.title = `${activeConfig.title} | Bangyen`;
     }, [activeConfig.title]);
 
-    const filteredPool = useMemo(() => {
-        let filtered = activeConfig.data;
-        const config = activeConfig;
-
-        // Language Filter (only valid for cctld really, but generic check)
-        if (
-            settings.filterLanguage &&
-            settings.filterLanguage !== 'All' &&
-            selectedQuiz === 'cctld'
-        ) {
-            if (settings.filterLanguage === 'Non-English') {
-                filtered = filtered.filter(
-                    (item: any) => item.language !== 'English'
-                );
-            } else {
-                filtered = filtered.filter(
-                    (item: any) => item.language === settings.filterLanguage
-                );
-            }
-        }
-
-        // Zone Filter (Telephone only)
-        if (
-            settings.filterZone &&
-            settings.filterZone !== 'All' &&
-            selectedQuiz === 'telephone'
-        ) {
-            const zones = settings.filterZone.split(',');
-            filtered = filtered.filter((item: any) =>
-                zones.some((z: string) => item.code.startsWith(`+${z}`))
-            );
-        }
-
-        // Vehicle Convention Filter
-        if (
-            settings.filterConvention &&
-            settings.filterConvention !== 'All' &&
-            selectedQuiz === 'vehicle'
-        ) {
-            filtered = filtered.filter(
-                (item: any) =>
-                    item.conventions &&
-                    item.conventions.includes(Number(settings.filterConvention))
-            );
-        }
-
-        // Driving Side Switch Filter
-        if (
-            settings.filterSwitch &&
-            settings.filterSwitch !== 'All' &&
-            selectedQuiz === 'driving_side'
-        ) {
-            filtered = filtered.filter((item: any) =>
-                settings.filterSwitch === 'Switched'
-                    ? item.switched
-                    : !item.switched
-            );
-        }
-
-        // Letter Filter
-        if (settings.filterLetter) {
-            let letters = settings.filterLetter
-                .toLowerCase()
-                .split(',')
-                .map((l: string) => l.trim())
-                .filter((l: string) => l);
-
-            // Special handling for legacy split (spaces) if singular comma usage
-            if (letters.length <= 1 && !settings.filterLetter.includes(',')) {
-                const spaceSplit = settings.filterLetter
-                    .toLowerCase()
-                    .split(/\s+/)
-                    .filter((l: string) => l);
-                if (spaceSplit.length > 1) {
-                    letters = spaceSplit;
-                } else {
-                    letters = settings.filterLetter
-                        .toLowerCase()
-                        .split('')
-                        .filter((l: string) => l.trim());
-                }
-            }
-
-            if (letters.length > 0) {
-                filtered = filtered.filter((item: any) => {
-                    let text = '';
-                    if (selectedQuiz === 'cctld') {
-                        text =
-                            settings.mode === 'toCountry'
-                                ? item.code.toLowerCase().replace('.', '')
-                                : item.country.toLowerCase();
-                    } else if (selectedQuiz === 'driving_side') {
-                        text = item.country.toLowerCase();
-                    } else if (selectedQuiz === 'telephone') {
-                        text = item.country.toLowerCase();
-                    } else if (selectedQuiz === 'vehicle') {
-                        text =
-                            settings.mode === 'toCountry'
-                                ? item.code.toLowerCase()
-                                : item.country.toLowerCase();
-                    }
-                    return letters.some((l: string) => text.startsWith(l));
-                });
-            }
-        }
-
-        if (settings.maxQuestions !== 'All') {
-            return [...filtered]
-                .sort(() => Math.random() - 0.5)
-                .slice(0, settings.maxQuestions as number);
-        }
-        return filtered;
-    }, [settings, selectedQuiz, activeConfig]);
+    const filteredPool = useQuizFilter({
+        data: activeConfig.data,
+        quizType: selectedQuiz,
+        settings,
+    });
 
     const handleStart = () => {
         if (filteredPool.length > 0) {

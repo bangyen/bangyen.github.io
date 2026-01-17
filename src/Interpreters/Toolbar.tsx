@@ -2,7 +2,7 @@ import React, { useContext, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 
 import { TooltipButton } from '../helpers';
-import { EditorContext } from './Editor';
+import { EditorContext } from './EditorContext';
 import { useMobile } from '../hooks';
 import { TIMER } from '../config/constants';
 

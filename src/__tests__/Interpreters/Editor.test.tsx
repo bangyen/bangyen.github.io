@@ -1,12 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Editor, {
-    EditorContext,
-    GridArea,
-    TextArea,
-    Text,
-} from '../../Interpreters/Editor';
+import Editor from '../../Interpreters/Editor';
+import { EditorContext } from '../../Interpreters/EditorContext';
+import { GridArea } from '../../Interpreters/components/GridArea';
+import { TextArea } from '../../Interpreters/components/TextArea';
+import { Text } from '../../Interpreters/components/Text';
 
 const theme = createTheme();
 

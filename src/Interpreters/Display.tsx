@@ -1,6 +1,7 @@
 import React, { useContext, memo } from 'react';
 import { Box, Typography, Chip, IconButton } from '../components/mui';
-import { EditorContext, Text } from './Editor';
+import { EditorContext } from './EditorContext';
+import { Text } from './components/Text';
 import { COLORS, TYPOGRAPHY } from '../config/theme';
 import { GlassCard } from '../helpers';
 
