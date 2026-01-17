@@ -65,7 +65,11 @@ function getState(state: StunStepState): StunStepState {
     };
 }
 
-export default function Editor(): React.ReactElement {
+export default function Editor({
+    navigation,
+}: {
+    navigation?: React.ReactNode;
+}): React.ReactElement {
     const start: StunStepStart = {
         pointer: 0,
         index: 0,
@@ -92,6 +96,7 @@ export default function Editor(): React.ReactElement {
             runner={memoizedRunner}
             clean={memoizedClean}
             tape
+            navigation={navigation}
         />
     );
 }

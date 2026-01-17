@@ -18,6 +18,8 @@ import {
     useMobile,
 } from '../../hooks';
 
+let gridCache: { rows: number; cols: number } | null = null;
+
 interface GridEditorProps {
     name: string;
     start: any;
@@ -25,6 +27,7 @@ interface GridEditorProps {
     tape?: boolean;
     output?: boolean;
     register?: boolean;
+    navigation?: React.ReactNode;
 }
 
 interface GridState {
@@ -123,7 +126,7 @@ function useWrappers(
 export default function GridEditor(props: GridEditorProps): React.ReactElement {
     const { create: createKeys, clear: clearKeys } = useKeys();
 
-    const { name, start, tape, output, register } = props;
+    const { name, start, tape, output, register, navigation } = props;
 
     const container = useRef<HTMLDivElement>(null);
     let { height, width } = useContainer(container);
@@ -140,10 +143,21 @@ export default function GridEditor(props: GridEditorProps): React.ReactElement {
         else width /= 1.5;
     }
 
-    const { rows, cols } = useMemo(
-        () => convertPixels(size, height, width),
-        [size, height, width]
-    );
+    // Module-level cache for grid dimensions to prevent flash triggers
+    // on interpreter switch. This assumes the layout size for grid editors
+    // is consistent across different interpreters.
+    const { rows, cols } = useMemo(() => {
+        if (!container.current && gridCache) {
+            return gridCache;
+        }
+        return convertPixels(size, height, width);
+    }, [size, height, width]);
+
+    useEffect(() => {
+        if (container.current && rows > 0 && cols > 0) {
+            gridCache = { rows, cols };
+        }
+    }, [rows, cols]);
 
     const initial: GridState = {
         ...start,
@@ -212,7 +226,11 @@ export default function GridEditor(props: GridEditorProps): React.ReactElement {
 
     return (
         <EditorContext.Provider value={context as any}>
-            <Editor hide={hide} container={container as any}>
+            <Editor
+                hide={hide}
+                container={container as any}
+                navigation={navigation}
+            >
                 <GridArea
                     rows={rows}
                     cols={cols}

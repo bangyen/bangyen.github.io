@@ -79,7 +79,11 @@ function getState(state: BackState): BackState {
     };
 }
 
-export default function Editor(): React.ReactElement {
+export default function Editor({
+    navigation,
+}: {
+    navigation?: React.ReactNode;
+}): React.ReactElement {
     const start: BackStart = {
         velocity: 1,
         pointer: 0,
@@ -88,5 +92,13 @@ export default function Editor(): React.ReactElement {
         end: false,
     };
 
-    return <GridEditor name="Back" start={start} runner={getState} tape />;
+    return (
+        <GridEditor
+            name="Back"
+            start={start}
+            runner={getState}
+            tape
+            navigation={navigation}
+        />
+    );
 }

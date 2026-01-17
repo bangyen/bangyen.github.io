@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { Program, Output, Tape, Register } from './Display';
 import { CustomGrid } from '../helpers';
-import { Grid, Typography, TextField } from '../components/mui';
+import { Grid, Typography, TextField, Box } from '../components/mui';
 import { Toolbar } from './Toolbar';
 import { COLORS, SPACING, TYPOGRAPHY } from '../config/theme';
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -36,6 +36,7 @@ interface EditorProps {
     container?: RefObject<HTMLDivElement>;
     sideProps?: TextAreaProps;
     hide?: boolean;
+    navigation?: ReactNode;
     children: ReactNode;
 }
 
@@ -43,6 +44,7 @@ export default function Editor({
     container,
     sideProps = {},
     hide = false,
+    navigation,
     children,
 }: EditorProps) {
     const editorContext = useContext(EditorContext);
@@ -79,7 +81,7 @@ export default function Editor({
         container: true,
         display: 'flex',
         alignItems: 'center',
-        sx: { overflowY: 'auto' },
+        sx: { overflowY: 'hidden' },
     };
 
     return (
@@ -111,94 +113,110 @@ export default function Editor({
                     <Toolbar />
                 </Grid>
             </Grid>
+            {navigation && (
+                <Grid container justifyContent="center" sx={{ mb: 2 }}>
+                    {navigation}
+                </Grid>
+            )}
             <Grid {...contentProps}>
                 <Grid size={leftProps}>{children}</Grid>
                 <Grid display={display} size={rightProps}>
                     <TextArea {...sideProps} />
                 </Grid>
             </Grid>
-            <Grid
-                container
-                spacing={2}
-                sx={{ width: '100%', maxWidth: '100%' }}
+            <Box
+                sx={{
+                    width: '100%',
+                    // Ensure space for up to 2 rows of fields to prevent layout shift
+                    // when switching between interpreters with 1-2 vs 3-4 fields.
+                    minHeight:
+                        [code !== undefined, tapeFlag, outFlag, regFlag].filter(
+                            Boolean
+                        ).length > 0
+                            ? { xs: 'auto', md: '210px' }
+                            : 0,
+                }}
             >
-                {(() => {
-                    const fields: ReactNode[] = [];
-                    const fieldCount = [
-                        code !== undefined,
-                        tapeFlag,
-                        outFlag,
-                        regFlag,
-                    ].filter(Boolean).length;
-                    const gridSize =
-                        fieldCount === 1
-                            ? { xs: 12, md: 12 }
-                            : { xs: 12, md: 6 };
+                <Grid
+                    container
+                    spacing={2}
+                    sx={{ width: '100%', maxWidth: '100%' }}
+                >
+                    {(() => {
+                        const fields: ReactNode[] = [];
+                        const fieldCount = [
+                            code !== undefined,
+                            tapeFlag,
+                            outFlag,
+                            regFlag,
+                        ].filter(Boolean).length;
+                        const gridSize = { xs: 12, md: 6 };
 
-                    if (code !== undefined) {
-                        fields.push(
-                            <Grid
-                                key="program"
-                                size={gridSize}
-                                sx={{
-                                    width: '100%',
-                                    maxWidth: '100%',
-                                    overflow: 'hidden',
-                                }}
-                            >
-                                <Program />
-                            </Grid>
-                        );
-                    }
-                    if (tapeFlag) {
-                        fields.push(
-                            <Grid
-                                key="tape"
-                                size={gridSize}
-                                sx={{
-                                    width: '100%',
-                                    maxWidth: '100%',
-                                    overflow: 'hidden',
-                                }}
-                            >
-                                <Tape />
-                            </Grid>
-                        );
-                    }
-                    if (outFlag) {
-                        fields.push(
-                            <Grid
-                                key="output"
-                                size={gridSize}
-                                sx={{
-                                    width: '100%',
-                                    maxWidth: '100%',
-                                    overflow: 'hidden',
-                                }}
-                            >
-                                <Output />
-                            </Grid>
-                        );
-                    }
-                    if (regFlag) {
-                        fields.push(
-                            <Grid
-                                key="register"
-                                size={gridSize}
-                                sx={{
-                                    width: '100%',
-                                    maxWidth: '100%',
-                                    overflow: 'hidden',
-                                }}
-                            >
-                                <Register />
-                            </Grid>
-                        );
-                    }
+                        if (code !== undefined) {
+                            fields.push(
+                                <Grid
+                                    key="program"
+                                    size={gridSize}
+                                    sx={{
+                                        width: '100%',
+                                        maxWidth: '100%',
+                                        overflow: 'hidden',
+                                    }}
+                                >
+                                    <Program />
+                                </Grid>
+                            );
+                        }
+                        if (tapeFlag) {
+                            fields.push(
+                                <Grid
+                                    key="tape"
+                                    size={gridSize}
+                                    sx={{
+                                        width: '100%',
+                                        maxWidth: '100%',
+                                        overflow: 'hidden',
+                                    }}
+                                >
+                                    <Tape />
+                                </Grid>
+                            );
+                        }
+                        if (outFlag) {
+                            fields.push(
+                                <Grid
+                                    key="output"
+                                    size={gridSize}
+                                    sx={{
+                                        width: '100%',
+                                        maxWidth: '100%',
+                                        overflow: 'hidden',
+                                    }}
+                                >
+                                    <Output />
+                                </Grid>
+                            );
+                        }
+                        if (regFlag) {
+                            fields.push(
+                                <Grid
+                                    key="register"
+                                    size={gridSize}
+                                    sx={{
+                                        width: '100%',
+                                        maxWidth: '100%',
+                                        overflow: 'hidden',
+                                    }}
+                                >
+                                    <Register />
+                                </Grid>
+                            );
+                        }
 
-                    return fields;
-                })()}
-            </Grid>
+                        return fields;
+                    })()}
+                </Grid>
+            </Box>
         </Grid>
     );
 }

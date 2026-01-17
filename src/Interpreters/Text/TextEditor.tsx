@@ -8,6 +8,8 @@ import {
 } from '../Toolbar';
 import { PAGE_TITLES } from '../../config/constants';
 
+let textCache: { height: number } | null = null;
+
 interface TextEditorProps {
     name: string;
     start: Record<string, unknown>;
@@ -16,6 +18,7 @@ interface TextEditorProps {
     tape?: boolean;
     output?: boolean;
     register?: boolean;
+    navigation?: React.ReactNode;
 }
 
 interface TextState extends ToolbarState {
@@ -96,6 +99,7 @@ export default function TextEditor({
     tape,
     output,
     register,
+    navigation,
 }: TextEditorProps): React.ReactElement {
     const containerRef = React.createRef<HTMLDivElement>();
     const container = useContainer(containerRef);
@@ -181,8 +185,14 @@ export default function TextEditor({
         [start, nextIter, create, clear, dispatch]
     );
 
-    const context = useMemo(
-        () => ({
+    const context = useMemo(() => {
+        let { height } = container;
+
+        if (height === 0 && textCache !== null) {
+            height = textCache.height;
+        }
+
+        return {
             name,
             tapeFlag: tape || false,
             outFlag: output || false,
@@ -193,28 +203,33 @@ export default function TextEditor({
             pointer: (state.pointer as number) || 0,
             output: state.output || '',
             register: (state.register as number) || 0,
-            height: container.height,
+            height,
             size: 0,
             dispatch: wrapDispatch,
             fastForward: true,
             pause: state.pause || false,
-        }),
-        [
-            name,
-            tape,
-            output,
-            register,
-            state.code,
-            state.index,
-            state.tape,
-            state.pointer,
-            state.output,
-            state.register,
-            state.pause,
-            container.height,
-            wrapDispatch,
-        ]
-    );
+        };
+    }, [
+        name,
+        tape,
+        output,
+        register,
+        state.code,
+        state.index,
+        state.tape,
+        state.pointer,
+        state.output,
+        state.register,
+        state.pause,
+        container.height,
+        wrapDispatch,
+    ]);
+
+    useEffect(() => {
+        if (container.height > 0) {
+            textCache = { height: container.height };
+        }
+    }, [container.height]);
 
     const sideProps = {
         readOnly: true,
@@ -229,6 +244,7 @@ export default function TextEditor({
                 hide
                 container={containerRef as React.RefObject<HTMLDivElement>}
                 sideProps={sideProps}
+                navigation={navigation}
             >
                 <TextArea
                     value={state.text}

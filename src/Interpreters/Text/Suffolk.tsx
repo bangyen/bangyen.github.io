@@ -85,7 +85,11 @@ function getState(state: SuffolkState): SuffolkState {
     };
 }
 
-export default function Editor(): React.ReactElement {
+export default function Editor({
+    navigation,
+}: {
+    navigation?: React.ReactNode;
+}): React.ReactElement {
     const start: SuffolkStart = {
         register: 0,
         pointer: 0,
@@ -116,6 +120,7 @@ export default function Editor(): React.ReactElement {
             tape
             output
             register
+            navigation={navigation}
         />
     );
 }

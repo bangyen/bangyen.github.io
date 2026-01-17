@@ -15,20 +15,6 @@ import {
     COMPONENT_VARIANTS,
 } from './config/theme';
 
-// Lazy load interpreters for better performance
-const Stun_Step = lazy(() =>
-    import('./Interpreters').then(m => ({ default: m.Stun_Step }))
-);
-const Suffolk = lazy(() =>
-    import('./Interpreters').then(m => ({ default: m.Suffolk }))
-);
-const WII2D = lazy(() =>
-    import('./Interpreters').then(m => ({ default: m.WII2D }))
-);
-const Back = lazy(() =>
-    import('./Interpreters').then(m => ({ default: m.Back }))
-);
-
 // Lazy load pages
 const Home = lazy(() => import('./Pages').then(m => ({ default: m.Home })));
 const Error = lazy(() => import('./Pages').then(m => ({ default: m.Error })));
@@ -235,10 +221,6 @@ function App(): React.ReactElement {
                     <Route path="/" element={<Home />} />
                     <Route path="/error" element={<Error />} />
                     <Route path="/interpreters" element={<Interpreters />} />
-                    <Route path="/Stun_Step" element={<Stun_Step />} />
-                    <Route path="/Suffolk" element={<Suffolk />} />
-                    <Route path="/WII2D" element={<WII2D />} />
-                    <Route path="/Back" element={<Back />} />
                     <Route path="/snake" element={<Snake />} />
                     <Route path="/lights_out" element={<Lights_Out />} />
                     <Route path="/zsharp" element={<ZSharp />} />

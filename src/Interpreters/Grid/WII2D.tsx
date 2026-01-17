@@ -138,7 +138,11 @@ function getState(state: WII2DState): WII2DState {
     };
 }
 
-export default function Editor(): React.ReactElement {
+export default function Editor({
+    navigation,
+}: {
+    navigation?: React.ReactNode;
+}): React.ReactElement {
     const start: WII2DStart = {
         position: null,
         velocity: -2,
@@ -154,7 +158,7 @@ export default function Editor(): React.ReactElement {
             runner={getState}
             output
             register
+            navigation={navigation}
         />
     );
 }
-
