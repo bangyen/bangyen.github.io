@@ -1257,11 +1257,18 @@ const WikipediaQuizPage: React.FC = () => {
                                         } else if (
                                             selectedQuiz === 'telephone'
                                         ) {
-                                            normalizedAnswer =
-                                                normalizedAnswer.startsWith('+')
-                                                    ? normalizedAnswer.toUpperCase()
-                                                    : '+' +
-                                                      normalizedAnswer.toUpperCase();
+                                            if (settings.mode === 'toCode') {
+                                                normalizedAnswer =
+                                                    normalizedAnswer.startsWith(
+                                                        '+'
+                                                    )
+                                                        ? normalizedAnswer.toUpperCase()
+                                                        : '+' +
+                                                          normalizedAnswer.toUpperCase();
+                                            } else {
+                                                normalizedAnswer =
+                                                    normalizedAnswer.toUpperCase();
+                                            }
                                         } else if (selectedQuiz === 'vehicle') {
                                             normalizedAnswer =
                                                 normalizedAnswer.toUpperCase();
