@@ -65,15 +65,6 @@ export default function Editor({
         display = 'flex';
     }
 
-    const titleProps = {
-        sx: {
-            display: {
-                xs: 'none',
-                md: 'block',
-            },
-        },
-    };
-
     const contentProps = {
         flex: 1,
         spacing: 2,
@@ -100,10 +91,19 @@ export default function Editor({
             <Grid
                 container
                 alignItems="center"
-                justifyContent="space-between"
-                sx={{ mb: { xs: 2, md: 0 } }}
+                justifyContent={{ xs: 'center', lg: 'space-between' }}
+                sx={{ mb: { xs: 2, lg: 0 } }}
+                spacing={{ xs: 2, lg: 0 }}
             >
-                <Grid {...titleProps} size={{ md: 'auto' }}>
+                <Grid
+                    size={{ xs: 12, lg: 'auto' }}
+                    sx={{
+                        display: {
+                            xs: 'none',
+                            lg: 'block',
+                        },
+                    }}
+                >
                     <Typography
                         variant="h4"
                         sx={{
@@ -116,7 +116,7 @@ export default function Editor({
                 </Grid>
                 {navigation && (
                     <Grid
-                        size={{ xs: 12, md: 'auto' }}
+                        size={{ xs: 12, lg: 'auto' }}
                         display="flex"
                         justifyContent="center"
                     >
@@ -127,8 +127,8 @@ export default function Editor({
                     display="flex"
                     alignItems="center"
                     gap={1}
-                    size={{ xs: 12, md: 'auto' }}
-                    justifyContent={{ xs: 'center', md: 'flex-end' }}
+                    size={{ xs: 12, lg: 'auto' }}
+                    justifyContent="center"
                 >
                     <Toolbar />
                 </Grid>
