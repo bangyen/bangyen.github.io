@@ -28,6 +28,9 @@ import { COLORS, SPACING, COMPONENT_VARIANTS } from '../config/theme';
 import {
     CCTLD_ALIASES,
     CCTLD_LANGUAGES,
+    TELEPHONE_ZONES,
+    VEHICLE_CONVENTIONS,
+    DRIVING_SIDE_FILTERS,
     GAME_CONSTANTS,
 } from '../config/constants';
 import { normalize, isSmartMatch } from '../utils/quizUtils';
@@ -178,6 +181,7 @@ const QUIZ_CONFIGS: Record<
             mode: 'guessing',
             allowRepeats: false,
             filterLetter: '',
+            filterSwitch: 'All',
             maxQuestions: 'All',
         },
         hasModeSelect: false,
@@ -243,6 +247,7 @@ const QUIZ_CONFIGS: Record<
             mode: 'toCountry',
             allowRepeats: false,
             filterLetter: '',
+            filterZone: 'All',
             maxQuestions: 'All',
         },
         hasModeSelect: true,
@@ -295,6 +300,7 @@ const QUIZ_CONFIGS: Record<
             mode: 'toCountry',
             allowRepeats: false,
             filterLetter: '',
+            filterConvention: 'All',
             maxQuestions: 'All',
         },
         hasModeSelect: true,
@@ -600,6 +606,44 @@ const WikipediaQuizPage: React.FC = () => {
             }
         }
 
+        // Zone Filter (Telephone only)
+        if (
+            settings.filterZone &&
+            settings.filterZone !== 'All' &&
+            selectedQuiz === 'telephone'
+        ) {
+            const zones = settings.filterZone.split(',');
+            filtered = filtered.filter((item: any) =>
+                zones.some((z: string) => item.code.startsWith(`+${z}`))
+            );
+        }
+
+        // Vehicle Convention Filter
+        if (
+            settings.filterConvention &&
+            settings.filterConvention !== 'All' &&
+            selectedQuiz === 'vehicle'
+        ) {
+            filtered = filtered.filter(
+                (item: any) =>
+                    item.conventions &&
+                    item.conventions.includes(Number(settings.filterConvention))
+            );
+        }
+
+        // Driving Side Switch Filter
+        if (
+            settings.filterSwitch &&
+            settings.filterSwitch !== 'All' &&
+            selectedQuiz === 'driving_side'
+        ) {
+            filtered = filtered.filter((item: any) =>
+                settings.filterSwitch === 'Switched'
+                    ? item.switched
+                    : !item.switched
+            );
+        }
+
         // Letter Filter
         if (settings.filterLetter) {
             let letters = settings.filterLetter
@@ -635,10 +679,7 @@ const WikipediaQuizPage: React.FC = () => {
                     } else if (selectedQuiz === 'driving_side') {
                         text = item.country.toLowerCase();
                     } else if (selectedQuiz === 'telephone') {
-                        text =
-                            settings.mode === 'toCountry'
-                                ? item.code.replace('+', '')
-                                : item.country.toLowerCase();
+                        text = item.country.toLowerCase();
                     } else if (selectedQuiz === 'vehicle') {
                         text =
                             settings.mode === 'toCountry'
@@ -792,7 +833,166 @@ const WikipediaQuizPage: React.FC = () => {
                                 />
                             </Grid>
 
-                            {/* Slot 2: Game Mode (Row 2 Left) */}
+                            {/* Slot 3: Specialized Filters (Row 2 Left) */}
+                            {selectedQuiz === 'cctld' && (
+                                <Grid item xs={12} md={6}>
+                                    <FormControl fullWidth>
+                                        <InputLabel>Language Filter</InputLabel>
+                                        <Select
+                                            value={settings.filterLanguage}
+                                            label="Language Filter"
+                                            onChange={e =>
+                                                setSettings({
+                                                    ...settings,
+                                                    filterLanguage:
+                                                        e.target.value,
+                                                })
+                                            }
+                                            sx={{
+                                                color: COLORS.text.primary,
+                                                '.MuiOutlinedInput-notchedOutline':
+                                                    {
+                                                        borderColor:
+                                                            COLORS.border
+                                                                .subtle,
+                                                    },
+                                            }}
+                                            {...commonSelectProps}
+                                        >
+                                            {CCTLD_LANGUAGES.map(lang => (
+                                                <MenuItem
+                                                    key={lang}
+                                                    value={lang}
+                                                >
+                                                    {lang}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            )}
+
+                            {selectedQuiz === 'telephone' && (
+                                <Grid item xs={12} md={6}>
+                                    <FormControl fullWidth>
+                                        <InputLabel>Zone Filter</InputLabel>
+                                        <Select
+                                            value={settings.filterZone || 'All'}
+                                            label="Zone Filter"
+                                            onChange={e =>
+                                                setSettings({
+                                                    ...settings,
+                                                    filterZone: e.target.value,
+                                                })
+                                            }
+                                            sx={{
+                                                color: COLORS.text.primary,
+                                                '.MuiOutlinedInput-notchedOutline':
+                                                    {
+                                                        borderColor:
+                                                            COLORS.border
+                                                                .subtle,
+                                                    },
+                                            }}
+                                            {...commonSelectProps}
+                                        >
+                                            {TELEPHONE_ZONES.map(zone => (
+                                                <MenuItem
+                                                    key={zone.value}
+                                                    value={zone.value}
+                                                >
+                                                    {zone.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            )}
+
+                            {selectedQuiz === 'vehicle' && (
+                                <Grid item xs={12} md={6}>
+                                    <FormControl fullWidth>
+                                        <InputLabel>
+                                            Convention Filter
+                                        </InputLabel>
+                                        <Select
+                                            value={
+                                                settings.filterConvention ||
+                                                'All'
+                                            }
+                                            label="Convention Filter"
+                                            onChange={e =>
+                                                setSettings({
+                                                    ...settings,
+                                                    filterConvention:
+                                                        e.target.value,
+                                                })
+                                            }
+                                            sx={{
+                                                color: COLORS.text.primary,
+                                                '.MuiOutlinedInput-notchedOutline':
+                                                    {
+                                                        borderColor:
+                                                            COLORS.border
+                                                                .subtle,
+                                                    },
+                                            }}
+                                            {...commonSelectProps}
+                                        >
+                                            {VEHICLE_CONVENTIONS.map(conv => (
+                                                <MenuItem
+                                                    key={conv.value}
+                                                    value={conv.value}
+                                                >
+                                                    {conv.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            )}
+
+                            {selectedQuiz === 'driving_side' && (
+                                <Grid item xs={12} md={6}>
+                                    <FormControl fullWidth>
+                                        <InputLabel>Switch Filter</InputLabel>
+                                        <Select
+                                            value={
+                                                settings.filterSwitch || 'All'
+                                            }
+                                            label="Switch Filter"
+                                            onChange={e =>
+                                                setSettings({
+                                                    ...settings,
+                                                    filterSwitch:
+                                                        e.target.value,
+                                                })
+                                            }
+                                            sx={{
+                                                color: COLORS.text.primary,
+                                                '.MuiOutlinedInput-notchedOutline':
+                                                    {
+                                                        borderColor:
+                                                            COLORS.border
+                                                                .subtle,
+                                                    },
+                                            }}
+                                            {...commonSelectProps}
+                                        >
+                                            {DRIVING_SIDE_FILTERS.map(f => (
+                                                <MenuItem
+                                                    key={f.value}
+                                                    value={f.value}
+                                                >
+                                                    {f.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            )}
+
+                            {/* Slot 2: Game Mode (Row 2 Right) */}
                             {activeConfig.hasModeSelect &&
                             activeConfig.modes ? (
                                 <Grid item xs={12} md={6}>
@@ -842,55 +1042,24 @@ const WikipediaQuizPage: React.FC = () => {
                                 </Grid>
                             )}
 
-                            {/* Slot 3: Language Filter (Row 2 Right) */}
-                            {selectedQuiz === 'cctld' ? (
-                                <Grid item xs={12} md={6}>
-                                    <FormControl fullWidth>
-                                        <InputLabel>Language Filter</InputLabel>
-                                        <Select
-                                            value={settings.filterLanguage}
-                                            label="Language Filter"
-                                            onChange={e =>
-                                                setSettings({
-                                                    ...settings,
-                                                    filterLanguage:
-                                                        e.target.value,
-                                                })
-                                            }
-                                            sx={{
-                                                color: COLORS.text.primary,
-                                                '.MuiOutlinedInput-notchedOutline':
-                                                    {
-                                                        borderColor:
-                                                            COLORS.border
-                                                                .subtle,
-                                                    },
-                                            }}
-                                            {...commonSelectProps}
-                                        >
-                                            {CCTLD_LANGUAGES.map(lang => (
-                                                <MenuItem
-                                                    key={lang}
-                                                    value={lang}
-                                                >
-                                                    {lang}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                            ) : (
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={6}
-                                    sx={{
-                                        display: { xs: 'none', md: 'block' },
-                                    }}
-                                >
-                                    <Box sx={{ height: 56 }} />
-                                </Grid>
-                            )}
+                            {selectedQuiz !== 'cctld' &&
+                                selectedQuiz !== 'telephone' &&
+                                selectedQuiz !== 'vehicle' &&
+                                selectedQuiz !== 'driving_side' && (
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        md={6}
+                                        sx={{
+                                            display: {
+                                                xs: 'none',
+                                                md: 'block',
+                                            },
+                                        }}
+                                    >
+                                        <Box sx={{ height: 56 }} />
+                                    </Grid>
+                                )}
                             {/* Slot 4 (Question Limit) is handled by QuizSettingsView */}
                         </QuizSettingsView>
                         <Box

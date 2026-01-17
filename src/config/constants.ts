@@ -440,3 +440,30 @@ export const CCTLD_ALIASES: Record<string, string[]> = {
     'sao tome and principe': ['sao tome'],
     'turks and caicos islands': ['turks and caicos'],
 };
+export const TELEPHONE_ZONES = [
+    { label: 'All', value: 'All' },
+    { label: 'Zone 1: North American Numbering Plan (NANP)', value: '1' },
+    { label: 'Zone 2: Mostly Africa', value: '2' },
+    { label: 'Zone 3: Mostly Europe', value: '3' },
+    { label: 'Zone 4: Mostly Europe', value: '4' },
+    { label: 'Zone 5: South and Central Americas', value: '5' },
+    { label: 'Zone 6: Southeast Asia and Oceania', value: '6' },
+    { label: 'Zone 7: Russia and neighboring regions', value: '7' },
+    {
+        label: 'Zone 8: East Asia, Southeast Asia, and special services',
+        value: '8',
+    },
+    { label: 'Zone 9: West, Central, and South Asia', value: '9' },
+];
+
+export const VEHICLE_CONVENTIONS = [
+    { label: 'All', value: 'All' },
+    { label: '1909 Paris Convention', value: '1909' },
+    { label: '1924 Paris Convention', value: '1924' },
+];
+
+export const DRIVING_SIDE_FILTERS = [
+    { label: 'All', value: 'All' },
+    { label: 'Switched historically', value: 'Switched' },
+    { label: 'Never switched', value: 'Never switched' },
+];
