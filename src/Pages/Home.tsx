@@ -101,6 +101,11 @@ const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
                 description: 'Calling code master',
                 technology: 'React',
             },
+            Vehicle_Registration: {
+                path: '/vehicle_registration_quiz',
+                description: 'Car code identifier',
+                technology: 'React',
+            },
         },
     },
     tools: {

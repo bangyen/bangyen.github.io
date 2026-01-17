@@ -50,6 +50,9 @@ const DrivingSide = lazy(() =>
 const TelephoneQuiz = lazy(() =>
     import('./Pages').then(m => ({ default: m.TelephoneQuiz }))
 );
+const VehicleRegistrationQuiz = lazy(() =>
+    import('./Pages').then(m => ({ default: m.VehicleRegistrationQuiz }))
+);
 
 const darkTheme = createTheme({
     palette: {
@@ -250,6 +253,10 @@ function App(): React.ReactElement {
                     <Route path="/cctld" element={<CCTLD />} />
                     <Route path="/driving_side" element={<DrivingSide />} />
                     <Route path="/telephone_quiz" element={<TelephoneQuiz />} />
+                    <Route
+                        path={ROUTES.pages.Vehicle_Registration_Quiz}
+                        element={<VehicleRegistrationQuiz />}
+                    />
                     <Route path="*" element={<Error />} />
                 </Routes>
             </Suspense>

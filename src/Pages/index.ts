@@ -10,5 +10,6 @@ export { default as Interpreters } from './Interpreters';
 export { default as CCTLD } from './CctldQuizPage';
 export { default as DrivingSide } from './DrivingSideQuizPage';
 export { default as TelephoneQuiz } from './TelephoneQuizPage';
+export { default as VehicleRegistrationQuiz } from './VehicleRegistrationQuizPage';
 
 export const pages = ROUTES.pages;
