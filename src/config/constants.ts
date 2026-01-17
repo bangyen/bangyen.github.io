@@ -82,6 +82,10 @@ interface GameConstants {
         defaultQuestionCount: number;
         questionOptions: number[];
     };
+    telephone: {
+        defaultQuestionCount: number;
+        questionOptions: number[];
+    };
     gridSizes: {
         mobile: number;
         desktop: number;
@@ -103,6 +107,7 @@ interface Routes {
         Interpreters: string;
         CCTLD_Quiz: string;
         Driving_Side_Quiz: string;
+        Telephone_Quiz: string;
     };
     interpreters: {
         Stun_Step: string;
@@ -189,6 +194,7 @@ interface PageTitles {
     interpreters: string;
     cctldQuiz: string;
     drivingSideQuiz: string;
+    telephoneQuiz: string;
     interpreter: (name: string) => string;
 }
 
@@ -285,6 +291,7 @@ export const PAGE_TITLES: PageTitles = {
     interpreter: (name: string) => `${name} Interpreter | Bangyen`,
     cctldQuiz: 'ccTLD Quiz | Bangyen',
     drivingSideQuiz: 'Driving Side Quiz | Bangyen',
+    telephoneQuiz: 'Telephone Code Quiz | Bangyen',
 };
 
 // ============================================================================
@@ -320,6 +327,10 @@ export const GAME_CONSTANTS: GameConstants = {
         defaultQuestionCount: 10,
         questionOptions: [5, 10, 20, 50],
     },
+    telephone: {
+        defaultQuestionCount: 10,
+        questionOptions: [5, 10, 20, 50, 100],
+    },
     gridSizes: {
         mobile: 3,
         desktop: 5,
@@ -341,6 +352,7 @@ export const ROUTES: Routes = {
         Interpreters: '/Interpreters',
         CCTLD_Quiz: '/cctld_quiz',
         Driving_Side_Quiz: '/driving_side_quiz',
+        Telephone_Quiz: '/telephone_quiz',
     },
     interpreters: {
         Stun_Step: '/Stun_Step',

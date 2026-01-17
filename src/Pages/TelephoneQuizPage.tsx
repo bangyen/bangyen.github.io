@@ -1,10 +1,4 @@
-import React, {
-    useState,
-    useEffect,
-    useMemo,
-    useCallback,
-    useRef,
-} from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import {
     Box,
     Typography,
@@ -13,25 +7,18 @@ import {
     Fade,
     TextField,
     Chip,
-    Stack,
+    Card,
     MenuItem,
     Select,
     FormControl,
     InputLabel,
-    Card,
 } from '@mui/material';
 import {
-    ArrowBackRounded as ArrowBackIcon,
-    RefreshRounded as RefreshIcon,
     CheckCircleRounded as CheckCircleIcon,
     CancelRounded as CancelIcon,
 } from '@mui/icons-material';
-import { COLORS, SPACING, COMPONENT_VARIANTS } from '../config/theme';
-import {
-    CCTLD_ALIASES,
-    CCTLD_LANGUAGES,
-    GAME_CONSTANTS,
-} from '../config/constants';
+import { COLORS, SPACING } from '../config/theme';
+import { GAME_CONSTANTS, CCTLD_ALIASES } from '../config/constants';
 import { normalize, isSmartMatch } from '../utils/quizUtils';
 import {
     GameState,
@@ -46,26 +33,19 @@ import {
     QuizSummaryView,
     SkippedBadge,
 } from '../components/Quiz';
-import cctldsData from '../data/cctlds_enhanced.json';
+import telephoneData from '../data/telephone_codes.json';
 
 // --- Types ---
 
-interface CCTLD {
+interface TelephoneCode {
     code: string;
     country: string;
-    explanation: string;
-    notes: string;
     flag: string;
-    language: string;
 }
 
 export type GameMode = 'toCountry' | 'toCode';
 
-type Question = GenericQuestion<CCTLD>;
-
-// --- Constants ---
-
-// Helper functions moved to src/utils/quizUtils.ts
+type Question = GenericQuestion<TelephoneCode>;
 
 // --- Components ---
 
@@ -84,15 +64,19 @@ const QuizGame = ({
     onBackToMenu,
 }: {
     settings: QuizSettings;
-    initialPool: CCTLD[];
+    initialPool: TelephoneCode[];
     onEndGame: (history: Question[], score: number) => void;
     onBackToMenu: () => void;
 }) => {
-    const { state, actions } = useQuizEngine<CCTLD>({
+    const { state, actions } = useQuizEngine<TelephoneCode>({
         initialPool,
         settings,
         onEndGame,
-        checkAnswer: (input: string, item: CCTLD, settings: QuizSettings) => {
+        checkAnswer: (
+            input: string,
+            item: TelephoneCode,
+            settings: QuizSettings
+        ) => {
             let correct = false;
             let expected = '';
 
@@ -102,26 +86,19 @@ const QuizGame = ({
             } else {
                 expected = item.code;
                 let normalizedInput = input.trim();
-                if (!normalizedInput.startsWith('.'))
-                    normalizedInput = '.' + normalizedInput;
-                correct = normalize(normalizedInput) === normalize(expected);
+                if (!normalizedInput.startsWith('+'))
+                    normalizedInput = '+' + normalizedInput;
+
+                // For telephone codes, normalization might involve removing spaces/parens
+                const norm = (s: string) => s.replace(/[^0-9+]/g, '');
+                correct = norm(normalizedInput) === norm(expected);
             }
 
             return { isCorrect: correct, expected, points: correct ? 1 : 0 };
         },
     });
 
-    const {
-        history,
-        currentQuestion,
-        inputValue,
-        showFeedback,
-        feedbackMessage,
-        isCorrect,
-        totalQuestions,
-        showHint,
-        score,
-    } = state;
+    const { currentQuestion, showFeedback } = state;
 
     const { setInputValue, handleSubmit, handleSkip, toggleHint } = actions;
 
@@ -153,12 +130,12 @@ const QuizGame = ({
             inputPlaceholder={
                 settings.mode === 'toCountry'
                     ? 'Type country name...'
-                    : 'Type code (e.g. .us)...'
+                    : 'Type code (e.g. +1)...'
             }
             renderQuestionPrompt={() =>
                 settings.mode === 'toCountry'
                     ? 'What country belongs to:'
-                    : 'What is the ccTLD for:'
+                    : 'What is the telephone code for:'
             }
             renderQuestionContent={item => (
                 <Typography
@@ -166,24 +143,19 @@ const QuizGame = ({
                     sx={{
                         fontWeight: 'bold',
                         textAlign: 'center',
-                        fontSize: { xs: '3rem', sm: '4rem' },
+                        fontSize: { xs: '2.5rem', sm: '3.5rem' },
+                        wordBreak: 'break-word',
                     }}
                 >
                     {settings.mode === 'toCountry' ? item.code : item.country}
                 </Typography>
             )}
-            renderHint={item => (
-                <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    sx={{
-                        textAlign: 'center',
-                        fontStyle: 'italic',
-                    }}
-                >
-                    Hint: {item.language} origin
+            renderHint={() => (
+                <Typography variant="body2" color="textSecondary">
+                    Hint functionality coming soon...
                 </Typography>
             )}
+            hideHint={true}
             renderFeedbackFlag={item =>
                 item.flag && (
                     <img
@@ -198,89 +170,48 @@ const QuizGame = ({
                     />
                 )
             }
-            renderFeedbackOrigin={item => (
-                <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    sx={{
-                        fontStyle: 'italic',
-                        textAlign: 'center',
-                    }}
-                >
-                    Origin:{' '}
-                    <Box
-                        component="span"
-                        dangerouslySetInnerHTML={{
-                            __html: item.explanation,
-                        }}
-                    />
-                </Typography>
-            )}
         />
     );
 };
 
-const CctldQuizPage: React.FC = () => {
+const TelephoneQuizPage: React.FC = () => {
     const [gameState, setGameState] = useState<GameState>('menu');
     const [settings, setSettings] = useState<QuizSettings>({
         mode: 'toCountry',
         allowRepeats: false,
         filterLetter: '',
-        filterLanguage: 'All',
         maxQuestions: 'All',
     });
     const [lastScore, setLastScore] = useState(0);
     const [lastHistory, setLastHistory] = useState<Question[]>([]);
 
     const filteredPool = useMemo(() => {
-        let filtered = cctldsData;
-        if (settings.filterLanguage !== 'All') {
-            if (settings.filterLanguage === 'Non-English') {
-                filtered = filtered.filter(item => item.language !== 'English');
-            } else {
-                filtered = filtered.filter(
-                    item => item.language === settings.filterLanguage
-                );
-            }
-        }
+        let filtered = telephoneData as TelephoneCode[];
+
         if (settings.filterLetter) {
-            let letters = settings.filterLetter
+            const letters = settings.filterLetter
                 .toLowerCase()
                 .split(',')
                 .map((l: string) => l.trim())
                 .filter((l: string) => l);
 
-            if (letters.length <= 1 && !settings.filterLetter.includes(',')) {
-                const spaceSplit = settings.filterLetter
-                    .toLowerCase()
-                    .split(/\s+/)
-                    .filter((l: string) => l);
-                if (spaceSplit.length > 1) {
-                    letters = spaceSplit;
-                } else {
-                    letters = settings.filterLetter
-                        .toLowerCase()
-                        .split('')
-                        .filter((l: string) => l.trim());
-                }
-            }
-
             if (letters.length > 0) {
-                filtered = filtered.filter((item: CCTLD) => {
+                filtered = filtered.filter((item: TelephoneCode) => {
                     const text =
                         settings.mode === 'toCountry'
-                            ? item.code.toLowerCase().replace('.', '')
+                            ? item.code.replace('+', '')
                             : item.country.toLowerCase();
-                    return letters.some((l: string) => text.startsWith(l));
+                    return letters.some((l: string) =>
+                        text.toLowerCase().startsWith(l)
+                    );
                 });
             }
         }
 
         if (settings.maxQuestions !== 'All') {
-            // Shuffle BEFORE slicing to ensure random sample
             return [...filtered]
                 .sort(() => Math.random() - 0.5)
-                .slice(0, settings.maxQuestions);
+                .slice(0, settings.maxQuestions as number);
         }
         return filtered;
     }, [settings]);
@@ -303,9 +234,9 @@ const CctldQuizPage: React.FC = () => {
 
     return (
         <QuizLayout
-            title="ccTLD Mastery"
-            subtitle="Test your knowledge of Internet country codes"
-            infoUrl="https://en.wikipedia.org/wiki/Country_code_top-level_domain"
+            title="Telephone Code Quiz"
+            subtitle="Master the world's calling codes"
+            infoUrl="https://en.wikipedia.org/wiki/List_of_telephone_country_codes"
         >
             {gameState === 'menu' && (
                 <Fade in>
@@ -322,7 +253,7 @@ const CctldQuizPage: React.FC = () => {
                             onUpdate={setSettings}
                             onStart={handleStart}
                             maxQuestionOptions={
-                                GAME_CONSTANTS.cctld.questionOptions
+                                GAME_CONSTANTS.telephone.questionOptions
                             }
                         >
                             <Grid item xs={12} md={6}>
@@ -358,36 +289,6 @@ const CctldQuizPage: React.FC = () => {
                                 </FormControl>
                             </Grid>
                             <Grid item xs={12} md={6}>
-                                <FormControl fullWidth>
-                                    <InputLabel>Language Filter</InputLabel>
-                                    <Select
-                                        value={settings.filterLanguage}
-                                        label="Language Filter"
-                                        onChange={e =>
-                                            setSettings({
-                                                ...settings,
-                                                filterLanguage: e.target.value,
-                                            })
-                                        }
-                                        sx={{
-                                            color: COLORS.text.primary,
-                                            '.MuiOutlinedInput-notchedOutline':
-                                                {
-                                                    borderColor:
-                                                        COLORS.border.subtle,
-                                                },
-                                        }}
-                                        {...commonSelectProps}
-                                    >
-                                        {CCTLD_LANGUAGES.map(lang => (
-                                            <MenuItem key={lang} value={lang}>
-                                                {lang}
-                                            </MenuItem>
-                                        ))}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} md={6}>
                                 <TextField
                                     fullWidth
                                     label="Filter by Letter(s)"
@@ -398,7 +299,7 @@ const CctldQuizPage: React.FC = () => {
                                             filterLetter: e.target.value,
                                         })
                                     }
-                                    helperText="Comma separated (e.g. a, b)"
+                                    helperText="e.g. 1, 44 or A, B"
                                     InputLabelProps={{
                                         style: { color: COLORS.text.secondary },
                                     }}
@@ -443,11 +344,6 @@ const CctldQuizPage: React.FC = () => {
                                     borderRadius: SPACING.borderRadius.full,
                                     fontWeight: 'bold',
                                     letterSpacing: '0.05em',
-                                    '&.Mui-disabled': {
-                                        backgroundColor:
-                                            'rgba(255, 255, 255, 0.05)',
-                                        color: 'rgba(255, 255, 255, 0.3)',
-                                    },
                                 }}
                             >
                                 {filteredPool.length === 0
@@ -469,7 +365,7 @@ const CctldQuizPage: React.FC = () => {
             )}
 
             {gameState === 'summary' && (
-                <QuizSummaryView<CCTLD>
+                <QuizSummaryView<TelephoneCode>
                     score={lastScore}
                     history={lastHistory}
                     onRestart={handleStart}
@@ -481,23 +377,16 @@ const CctldQuizPage: React.FC = () => {
                                 p: 2,
                                 display: 'flex',
                                 justifyContent: 'space-between',
-                                alignItems: 'flex-start',
+                                alignItems: 'center',
                                 bgcolor:
                                     q.pointsEarned === 1
                                         ? 'rgba(76, 175, 80, 0.05)'
-                                        : q.pointsEarned === 0.5
-                                          ? 'rgba(255, 193, 7, 0.05)'
-                                          : 'rgba(239, 83, 80, 0.05)',
+                                        : 'rgba(239, 83, 80, 0.05)',
                                 border: `1px solid ${COLORS.border.subtle}`,
-                                flexShrink: 0,
                             }}
                         >
                             <Box
-                                sx={{
-                                    textAlign: 'left',
-                                    flex: 1,
-                                    minWidth: 0,
-                                }}
+                                sx={{ textAlign: 'left', flex: 1, minWidth: 0 }}
                             >
                                 <Box
                                     sx={{
@@ -522,10 +411,6 @@ const CctldQuizPage: React.FC = () => {
                                         variant="body1"
                                         fontWeight="bold"
                                         noWrap
-                                        sx={{
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                        }}
                                     >
                                         {settings.mode === 'toCountry'
                                             ? q.item.code
@@ -535,43 +420,20 @@ const CctldQuizPage: React.FC = () => {
                                 <Typography
                                     variant="body2"
                                     color="textSecondary"
-                                    noWrap
-                                    sx={{
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                    }}
                                 >
                                     Answer:{' '}
                                     {settings.mode === 'toCountry'
                                         ? q.item.country
                                         : q.item.code}
                                 </Typography>
-                                <Typography
-                                    variant="caption"
-                                    sx={{
-                                        fontStyle: 'italic',
-                                        display: 'block',
-                                        mt: 0.5,
-                                        opacity: 0.8,
-                                    }}
-                                >
-                                    Origin:{' '}
-                                    <Box
-                                        component="span"
-                                        dangerouslySetInnerHTML={{
-                                            __html: q.item.explanation,
-                                        }}
-                                    />
-                                </Typography>
                             </Box>
                             <Box
                                 sx={{
                                     display: 'flex',
                                     alignItems: 'center',
-                                    justifyContent: 'flex-end',
-                                    gap: 1,
-                                    flexShrink: 0,
+                                    gap: 1.5,
                                     ml: 2,
+                                    flexShrink: 0,
                                 }}
                             >
                                 <Typography
@@ -580,34 +442,20 @@ const CctldQuizPage: React.FC = () => {
                                         color:
                                             q.pointsEarned === 1
                                                 ? COLORS.data.green
-                                                : q.pointsEarned === 0.5
-                                                  ? COLORS.data.amber
-                                                  : COLORS.data.red,
+                                                : COLORS.data.red,
                                         fontWeight:
-                                            q.pointsEarned > 0
+                                            q.pointsEarned === 1
                                                 ? 'bold'
                                                 : 'normal',
-                                        textTransform:
-                                            settings.mode === 'toCountry'
-                                                ? 'uppercase'
-                                                : 'lowercase',
-                                        maxWidth: '150px',
+                                        fontSize: '0.75rem',
+                                        maxWidth: '120px',
                                         whiteSpace: 'nowrap',
                                         overflow: 'hidden',
                                         textOverflow: 'ellipsis',
-                                        display: 'block',
-                                        fontSize: '0.75rem',
                                     }}
                                 >
                                     {q.userAnswer?.trim() ? (
-                                        <Typography
-                                            component="span"
-                                            variant="inherit"
-                                        >
-                                            {q.userAnswer.trim()}
-                                            {q.pointsEarned === 0.5 &&
-                                                ' (0.5 pts)'}
-                                        </Typography>
+                                        q.userAnswer.trim()
                                     ) : (
                                         <SkippedBadge />
                                     )}
@@ -616,13 +464,6 @@ const CctldQuizPage: React.FC = () => {
                                     <CheckCircleIcon
                                         fontSize="small"
                                         color="success"
-                                    />
-                                ) : q.pointsEarned === 0.5 ? (
-                                    <CheckCircleIcon
-                                        fontSize="small"
-                                        sx={{
-                                            color: COLORS.data.amber,
-                                        }}
                                     />
                                 ) : (
                                     q.userAnswer?.trim() && (
@@ -641,4 +482,4 @@ const CctldQuizPage: React.FC = () => {
     );
 };
 
-export default CctldQuizPage;
+export default TelephoneQuizPage;

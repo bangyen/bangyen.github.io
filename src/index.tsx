@@ -47,6 +47,9 @@ const CCTLD = lazy(() => import('./Pages').then(m => ({ default: m.CCTLD })));
 const DrivingSide = lazy(() =>
     import('./Pages').then(m => ({ default: m.DrivingSide }))
 );
+const TelephoneQuiz = lazy(() =>
+    import('./Pages').then(m => ({ default: m.TelephoneQuiz }))
+);
 
 const darkTheme = createTheme({
     palette: {
@@ -246,6 +249,7 @@ function App(): React.ReactElement {
                     <Route path="/oligopoly" element={<Oligopoly />} />
                     <Route path="/cctld" element={<CCTLD />} />
                     <Route path="/driving_side" element={<DrivingSide />} />
+                    <Route path="/telephone_quiz" element={<TelephoneQuiz />} />
                     <Route path="*" element={<Error />} />
                 </Routes>
             </Suspense>

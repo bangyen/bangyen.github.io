@@ -23,6 +23,7 @@ import {
     QuizSettingsView,
     QuizGameView,
     QuizSummaryView,
+    SkippedBadge,
 } from '../components/Quiz';
 import drivingSideData from '../data/driving_sides.json';
 
@@ -435,22 +436,7 @@ const DrivingSideQuizPage: React.FC = () => {
                                             }}
                                         />
                                     ) : (
-                                        <Chip
-                                            label="Skipped"
-                                            size="small"
-                                            variant="outlined"
-                                            sx={{
-                                                fontWeight: 'medium',
-                                                width: 100,
-                                                height: 20,
-                                                fontSize: '0.75rem',
-                                                borderColor:
-                                                    'rgba(239, 83, 80, 0.3)',
-                                                color: COLORS.data.red,
-                                                '& .MuiChip-label': { px: 1 },
-                                                opacity: 0.8,
-                                            }}
-                                        />
+                                        <SkippedBadge />
                                     )}
                                 </Box>
                             </Card>
