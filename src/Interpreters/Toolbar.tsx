@@ -113,9 +113,19 @@ export function Toolbar(): React.ReactElement[] {
         },
     };
 
-    const buttons: React.ReactElement[] = [TimerButton];
+    const buttons: React.ReactElement[] = [];
     const ffData = buttonData['Fast Forward'];
 
+    // Primary Playback Controls: Reset, Run/Pause, Fast Forward
+    buttons.push(
+        <TooltipButton
+            key="Reset"
+            title="Reset"
+            Icon={FirstPageRounded}
+            onClick={dispatch('reset')}
+        />
+    );
+    buttons.push(TimerButton);
     buttons.push(
         <TooltipButton
             key="Fast Forward"
@@ -123,15 +133,23 @@ export function Toolbar(): React.ReactElement[] {
             Icon={ffData.icon}
             onClick={ffData.flag ? dispatch('ff') : undefined}
             disabled={!ffData.flag}
+            sx={{
+                opacity: ffData.flag ? 1 : 0.3,
+                // Ensure visibility even when disabled
+                '&.Mui-disabled': {
+                    color: 'inherit',
+                    opacity: 0.3,
+                },
+            }}
         />
     );
 
-    for (const key in buttonData) {
-        if (key === 'Fast Forward') continue;
-
+    // Secondary Controls: Previous, Next, Info, Home
+    const secondaryKeys = ['Previous', 'Next', 'Info', 'Home'];
+    secondaryKeys.forEach(key => {
         const { icon, flag, action, props } = buttonData[key];
 
-        if (action && flag)
+        if (action && flag) {
             buttons.push(
                 <TooltipButton
                     key={key}
@@ -140,11 +158,12 @@ export function Toolbar(): React.ReactElement[] {
                     onClick={dispatch(action)}
                 />
             );
-        else if (props)
+        } else if (props) {
             buttons.push(
                 <TooltipButton key={key} title={key} Icon={icon} {...props} />
             );
-    }
+        }
+    });
 
     return buttons;
 }
