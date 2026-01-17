@@ -1,0 +1,142 @@
+import React from 'react';
+import { Container, Box } from '../mui';
+import { SPACING, COMPONENT_VARIANTS, COLORS } from '../../config/theme';
+
+interface SectionProps {
+    children: React.ReactNode;
+    id?: string;
+    paddingY?: string;
+    paddingX?: string;
+    maxWidth?: string;
+    sx?: Record<string, unknown>;
+    [key: string]: unknown;
+}
+
+interface BackgroundBoxProps {
+    children: React.ReactNode;
+    sx?: Record<string, unknown>;
+    [key: string]: unknown;
+}
+
+interface HeroContainerProps {
+    children: React.ReactNode;
+    paddingBottom?: string;
+    maxWidth?: string;
+    sx?: Record<string, unknown>;
+    [key: string]: unknown;
+}
+
+interface PageLayoutProps {
+    children: React.ReactNode;
+    sx?: Record<string, unknown>;
+    [key: string]: unknown;
+}
+
+/**
+ * Section component provides consistent section layout with proper spacing
+ * and responsive padding for improved maintainability.
+ */
+export function Section({
+    children,
+    id,
+    paddingY = SPACING.padding.lg,
+    paddingX = SPACING.padding.lg,
+    maxWidth = SPACING.maxWidth.lg,
+    ...props
+}: SectionProps) {
+    return (
+        <Container
+            maxWidth={false}
+            id={id}
+            sx={{
+                paddingY,
+                paddingX,
+                ...(props.sx as Record<string, unknown>),
+            }}
+            {...props}
+        >
+            <Box sx={{ maxWidth, margin: '0 auto' }}>{children}</Box>
+        </Container>
+    );
+}
+
+/**
+ * BackgroundBox component provides consistent background positioning
+ * for page background elements.
+ */
+export function BackgroundBox({ children, ...props }: BackgroundBoxProps) {
+    return (
+        <Box
+            sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: COLORS.surface.background,
+                zIndex: -1,
+                ...(props.sx as Record<string, unknown>),
+            }}
+            {...props}
+        >
+            {children}
+        </Box>
+    );
+}
+
+/**
+ * HeroContainer component provides consistent hero section layout
+ * with centered content and responsive padding.
+ */
+export function HeroContainer({
+    children,
+    paddingBottom = '4rem',
+    maxWidth = SPACING.maxWidth.lg,
+    ...props
+}: HeroContainerProps) {
+    return (
+        <Container
+            maxWidth={false}
+            sx={{
+                flex: 1,
+                ...COMPONENT_VARIANTS.flexCenter,
+                paddingTop: 0,
+                paddingBottom,
+                paddingX: {
+                    xs: SPACING.padding.sm,
+                    md: SPACING.padding.lg,
+                },
+                maxWidth: '100%',
+                overflowX: 'hidden',
+                ...(props.sx as Record<string, unknown>),
+            }}
+            {...props}
+        >
+            <Box sx={{ maxWidth, margin: '0 auto' }}>{children}</Box>
+        </Container>
+    );
+}
+
+/**
+ * PageLayout component provides consistent page layout with background,
+ * full height, and proper positioning for improved maintainability.
+ */
+export function PageLayout({ children, ...props }: PageLayoutProps) {
+    return (
+        <Box
+            sx={{
+                minHeight: '100vh',
+                position: 'relative',
+                background: COLORS.surface.background,
+                boxSizing: 'border-box',
+                width: '100%',
+                maxWidth: '100vw',
+                overflowX: 'hidden',
+                ...(props.sx as Record<string, unknown>),
+            }}
+            {...props}
+        >
+            {children}
+        </Box>
+    );
+}

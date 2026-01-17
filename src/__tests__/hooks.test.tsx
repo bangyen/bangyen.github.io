@@ -1,12 +1,5 @@
-import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import {
-    useContainer,
-    useWindow,
-    useTimer,
-    useKeys,
-    useCache,
-} from '../hooks';
+import { useContainer, useWindow, useTimer, useKeys, useCache } from '../hooks';
 
 describe('Custom Hooks', () => {
     describe('useContainer', () => {
@@ -19,35 +12,38 @@ describe('Custom Hooks', () => {
             expect(typeof result.current.height).toBe('number');
         });
 
-    test('returns container dimensions when container provided', () => {
-        const mockContainer = {
-            current: {
-                offsetWidth: 500,
-                offsetHeight: 300,
-            } as HTMLElement,
-        };
+        test('returns container dimensions when container provided', () => {
+            const mockContainer = {
+                current: {
+                    offsetWidth: 500,
+                    offsetHeight: 300,
+                } as HTMLElement,
+            };
 
-        const { result } = renderHook(() => useContainer(mockContainer as any));
+            const { result } = renderHook(() =>
+                useContainer(mockContainer as React.RefObject<HTMLElement>)
+            );
 
-        expect(result.current).toEqual({ width: 500, height: 300 });
-    });
+            expect(result.current).toEqual({ width: 500, height: 300 });
+        });
 
-    test('updates when container ref changes', () => {
-        const mockContainer = {
-            current: {
-                offsetWidth: 500,
-                offsetHeight: 300,
-            } as HTMLElement,
-        };
+        test('updates when container ref changes', () => {
+            const mockContainer = {
+                current: {
+                    offsetWidth: 500,
+                    offsetHeight: 300,
+                } as HTMLElement,
+            };
 
-        const { result, rerender } = renderHook(
-            ({ container }) => useContainer(container as any),
-            { initialProps: { container: mockContainer } }
-        );
+            const { result } = renderHook(
+                ({ container }) =>
+                    useContainer(container as React.RefObject<HTMLElement>),
+                { initialProps: { container: mockContainer } }
+            );
 
-        expect(result.current.width).toBeGreaterThanOrEqual(0);
-        expect(result.current.height).toBeGreaterThanOrEqual(0);
-    });
+            expect(result.current.width).toBeGreaterThanOrEqual(0);
+            expect(result.current.height).toBeGreaterThanOrEqual(0);
+        });
     });
 
     describe('useWindow', () => {
@@ -191,7 +187,10 @@ describe('Custom Hooks', () => {
         });
 
         test('advances to next state', () => {
-            const getState = jest.fn(state => ({ ...state, value: state.value + 1 }));
+            const getState = jest.fn(state => ({
+                ...state,
+                value: state.value + 1,
+            }));
             const initialState = { value: 0 };
 
             const { result } = renderHook(() => useCache(getState));
@@ -209,7 +208,10 @@ describe('Custom Hooks', () => {
         });
 
         test('moves to previous state', () => {
-            const getState = jest.fn(state => ({ ...state, value: state.value + 1 }));
+            const getState = jest.fn(state => ({
+                ...state,
+                value: state.value + 1,
+            }));
             const initialState = { value: 0 };
 
             const { result } = renderHook(() => useCache(getState));
@@ -243,4 +245,3 @@ describe('Custom Hooks', () => {
         });
     });
 });
-

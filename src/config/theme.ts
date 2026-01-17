@@ -13,6 +13,9 @@ interface SurfaceColors {
     background: string;
     elevated: string;
     glass: string;
+    success: string;
+    warning: string;
+    error: string;
 }
 
 interface TextColors {
@@ -28,6 +31,8 @@ interface InteractiveColors {
     hover: string;
     focus: string;
     selected: string;
+    disabled: string;
+    disabledText: string;
 }
 
 interface DataColors {
@@ -105,6 +110,13 @@ interface Spacing {
     maxWidth: MaxWidth;
 }
 
+interface Shadows {
+    sm: string;
+    md: string;
+    lg: string;
+    text: string;
+}
+
 interface AnimationPresets {
     focus: {
         boxShadow: string;
@@ -169,6 +181,9 @@ export const COLORS: Colors = {
         background: 'hsl(0, 0%, 3%)',
         elevated: 'hsl(0, 0%, 8%)',
         glass: 'hsla(0, 0%, 8%, 0.85)',
+        success: 'rgba(76, 175, 80, 0.05)',
+        warning: 'rgba(255, 193, 7, 0.05)',
+        error: 'rgba(239, 83, 80, 0.05)',
     },
     text: {
         primary: 'hsl(0, 0%, 98%)',
@@ -181,6 +196,8 @@ export const COLORS: Colors = {
         hover: `hsla(0, 0%, 80%, 0.08)`,
         focus: `hsla(217, 91%, 60%, 0.15)`,
         selected: `hsla(217, 91%, 60%, 0.1)`,
+        disabled: `hsla(0, 0%, 100%, 0.05)`,
+        disabledText: `hsla(0, 0%, 100%, 0.3)`,
     },
     data: {
         green: 'hsl(141, 64%, 49%)',
@@ -236,6 +253,13 @@ export const SPACING: Spacing = {
     },
 };
 
+export const SHADOWS: Shadows = {
+    sm: '0 1px 4px rgba(0,0,0,0.2)',
+    md: '0 4px 12px rgba(0,0,0,0.2)',
+    lg: '0 8px 24px rgba(0,0,0,0.2)',
+    text: '0 0 20px rgba(0,0,0,0.5)',
+};
+
 export const ANIMATIONS: Animations = {
     transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
     presets: {
@@ -281,3 +305,172 @@ export const COMPONENT_VARIANTS: ComponentVariants = {
         justifyContent: 'center',
     },
 };
+
+/**
+ * Creates the MUI theme for the application
+ */
+export function createAppTheme() {
+    // Using require to avoid circular dependency issues
+    // eslint-disable-next-line
+    const { createTheme } = require('../components/mui');
+
+    return createTheme({
+        palette: {
+            primary: {
+                main: COLORS.primary.main,
+                light: COLORS.primary.light,
+                dark: COLORS.primary.dark,
+            },
+            secondary: {
+                main: COLORS.text.secondary,
+            },
+            background: {
+                default: COLORS.surface.background,
+                paper: COLORS.surface.elevated,
+            },
+            text: {
+                primary: COLORS.text.primary,
+                secondary: COLORS.text.secondary,
+            },
+        },
+        typography: {
+            fontFamily: TYPOGRAPHY.fontFamily.primary,
+            h1: {
+                fontSize: TYPOGRAPHY.fontSize.h1,
+                fontWeight: TYPOGRAPHY.fontWeight.bold,
+            },
+            h2: {
+                fontSize: TYPOGRAPHY.fontSize.h2,
+                fontWeight: TYPOGRAPHY.fontWeight.semibold,
+            },
+            h3: {
+                fontSize: TYPOGRAPHY.fontSize.subheading,
+                fontWeight: TYPOGRAPHY.fontWeight.semibold,
+            },
+            body1: {
+                fontSize: TYPOGRAPHY.fontSize.body,
+                fontWeight: TYPOGRAPHY.fontWeight.normal,
+            },
+            body2: {
+                fontSize: TYPOGRAPHY.fontSize.body,
+                fontWeight: TYPOGRAPHY.fontWeight.normal,
+            },
+            caption: {
+                fontSize: TYPOGRAPHY.fontSize.caption,
+                fontWeight: TYPOGRAPHY.fontWeight.normal,
+            },
+        },
+        shape: {
+            borderRadius: parseInt(SPACING.borderRadius.md),
+        },
+        components: {
+            MuiButton: {
+                styleOverrides: {
+                    root: {
+                        textTransform: 'none',
+                        fontWeight: TYPOGRAPHY.fontWeight.medium,
+                        borderRadius: SPACING.borderRadius.md,
+                        padding: `${SPACING.padding.xs} ${SPACING.padding.md}`,
+                        transition: ANIMATIONS.transition,
+                    },
+                    contained: {
+                        backgroundColor: COLORS.primary.main,
+                        color: COLORS.text.primary,
+                        '&:hover': {
+                            backgroundColor: COLORS.primary.light,
+                            transform: 'translateY(-2px)',
+                        },
+                    },
+                    outlined: {
+                        borderColor: COLORS.border.subtle,
+                        color: COLORS.text.primary,
+                        '&:hover': {
+                            borderColor: COLORS.primary.main,
+                            backgroundColor: COLORS.interactive.hover,
+                        },
+                    },
+                },
+            },
+            MuiIconButton: {
+                styleOverrides: {
+                    root: {
+                        color: COLORS.text.primary,
+                        '&:hover': {
+                            backgroundColor: COLORS.interactive.hover,
+                        },
+                    },
+                },
+            },
+            MuiTooltip: {
+                styleOverrides: {
+                    tooltip: {
+                        backgroundColor: COLORS.surface.glass,
+                        backdropFilter: 'blur(24px) saturate(180%)',
+                        border: `1px solid ${COLORS.border.subtle}`,
+                        borderRadius: SPACING.borderRadius.md,
+                        color: COLORS.text.primary,
+                        fontSize: TYPOGRAPHY.fontSize.caption,
+                        padding: SPACING.padding.xs,
+                    },
+                },
+            },
+            MuiChip: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: COLORS.surface.glass,
+                        backdropFilter: 'blur(24px) saturate(180%)',
+                        border: `1px solid ${COLORS.border.subtle}`,
+                        borderRadius: SPACING.borderRadius.sm,
+                        color: COLORS.text.primary,
+                        fontSize: TYPOGRAPHY.fontSize.caption,
+                        height: 'auto',
+                        padding: `0 ${SPACING.padding.sm}`,
+                    },
+                },
+            },
+            MuiTextField: {
+                styleOverrides: {
+                    root: {
+                        '& .MuiOutlinedInput-root': {
+                            backgroundColor: COLORS.surface.glass,
+                            backdropFilter: 'blur(24px) saturate(180%)',
+                            borderRadius: SPACING.borderRadius.md,
+                            '& fieldset': {
+                                borderColor: COLORS.border.subtle,
+                            },
+                            '&:hover fieldset': {
+                                borderColor: COLORS.primary.main,
+                            },
+                            '&.Mui-focused fieldset': {
+                                borderColor: COLORS.primary.main,
+                            },
+                        },
+                    },
+                },
+            },
+            MuiToggleButton: {
+                styleOverrides: {
+                    root: {
+                        color: COLORS.text.secondary,
+                        borderColor: COLORS.border.subtle,
+                        '&.Mui-selected': {
+                            backgroundColor: COLORS.interactive.selected,
+                            color: COLORS.text.primary,
+                            '&:hover': {
+                                backgroundColor: COLORS.interactive.selected,
+                            },
+                        },
+                    },
+                },
+            },
+            MuiBackdrop: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
+                        backdropFilter: 'blur(24px) saturate(180%)',
+                    },
+                },
+            },
+        },
+    });
+}
