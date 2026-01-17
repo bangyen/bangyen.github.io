@@ -106,34 +106,34 @@ const DrivingSideGame: React.FC<{
             renderCustomActions={(state, actions) => (
                 <>
                     <Button
-                        variant="outlined"
+                        variant="contained"
                         onClick={() => actions.submitAnswer('Left')}
                         disabled={state.showFeedback}
                         sx={{
                             flex: 1,
-                            borderColor: COLORS.border.subtle,
-                            color: COLORS.text.primary,
                             py: 1.5,
+                            whiteSpace: 'nowrap',
                             '&.Mui-disabled': {
-                                borderColor: COLORS.border.subtle,
-                                opacity: 0.6,
+                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                color: 'rgba(255, 255, 255, 0.3)',
+                                borderColor: 'transparent',
                             },
                         }}
                     >
                         Left
                     </Button>
                     <Button
-                        variant="outlined"
+                        variant="contained"
                         onClick={() => actions.submitAnswer('Right')}
                         disabled={state.showFeedback}
                         sx={{
                             flex: 1,
-                            borderColor: COLORS.border.subtle,
-                            color: COLORS.text.primary,
                             py: 1.5,
+                            whiteSpace: 'nowrap',
                             '&.Mui-disabled': {
-                                borderColor: COLORS.border.subtle,
-                                opacity: 0.6,
+                                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                                color: 'rgba(255, 255, 255, 0.3)',
+                                borderColor: 'transparent',
                             },
                         }}
                     >
