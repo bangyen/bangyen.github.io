@@ -162,7 +162,7 @@ const QUIZ_CONFIGS: Record<
             <Typography
                 variant="body2"
                 color="textSecondary"
-                sx={{ fontStyle: 'italic', textAlign: 'center' }}
+                sx={{ fontStyle: 'italic' }}
             >
                 Origin:{' '}
                 <Box
@@ -227,7 +227,7 @@ const QUIZ_CONFIGS: Record<
                 <Typography
                     variant="body2"
                     color="textSecondary"
-                    sx={{ fontStyle: 'italic', textAlign: 'center' }}
+                    sx={{ fontStyle: 'italic' }}
                 >
                     <Box
                         component="span"

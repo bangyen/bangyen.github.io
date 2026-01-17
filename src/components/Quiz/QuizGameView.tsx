@@ -440,9 +440,13 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
                                         {feedbackMessage}
                                     </Typography>
                                 </Box>
-                                {isCorrect === false &&
-                                    currentQuestion &&
-                                    renderFeedbackOrigin?.(currentQuestion)}
+                                {isCorrect === false && currentQuestion && (
+                                    <Box sx={{ textAlign: 'center' }}>
+                                        {renderFeedbackOrigin?.(
+                                            currentQuestion
+                                        )}
+                                    </Box>
+                                )}
                             </Box>
                         </Fade>
                     )}
