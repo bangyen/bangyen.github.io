@@ -43,11 +43,9 @@ const Oligopoly = lazy(() =>
 const Interpreters = lazy(() =>
     import('./Pages').then(m => ({ default: m.Interpreters }))
 );
-const CCTLDQuiz = lazy(() =>
-    import('./Pages').then(m => ({ default: m.CCTLDQuiz }))
-);
-const DrivingSideQuiz = lazy(() =>
-    import('./Pages').then(m => ({ default: m.DrivingSideQuiz }))
+const CCTLD = lazy(() => import('./Pages').then(m => ({ default: m.CCTLD })));
+const DrivingSide = lazy(() =>
+    import('./Pages').then(m => ({ default: m.DrivingSide }))
 );
 
 const darkTheme = createTheme({
@@ -246,11 +244,8 @@ function App(): React.ReactElement {
                     <Route path="/lights_out" element={<Lights_Out />} />
                     <Route path="/zsharp" element={<ZSharp />} />
                     <Route path="/oligopoly" element={<Oligopoly />} />
-                    <Route path="/cctld_quiz" element={<CCTLDQuiz />} />
-                    <Route
-                        path="/driving_side_quiz"
-                        element={<DrivingSideQuiz />}
-                    />
+                    <Route path="/cctld" element={<CCTLD />} />
+                    <Route path="/driving_side" element={<DrivingSide />} />
                     <Route path="*" element={<Error />} />
                 </Routes>
             </Suspense>

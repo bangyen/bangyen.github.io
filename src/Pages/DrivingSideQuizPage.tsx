@@ -7,6 +7,7 @@ import {
     Card,
     Grid,
     TextField,
+    Chip,
 } from '@mui/material';
 import { COLORS, SPACING } from '../config/theme';
 import { GAME_CONSTANTS } from '../config/constants';
@@ -66,10 +67,10 @@ const DrivingSideGame: React.FC<{
             gameState={state}
             actions={actions}
             onBackToMenu={onBackToMenu}
-            modeLabel="Which side do they drive on?"
+            modeLabel="Which Side?"
             hideInput={true}
             hideHint={true}
-            renderQuestionPrompt={() => 'Drive on the...'}
+            renderQuestionPrompt={() => 'They drive on the...'}
             onKeyDown={e => {
                 if (state.showFeedback) return;
 
@@ -226,8 +227,8 @@ const DrivingSideQuizPage: React.FC = () => {
 
     return (
         <QuizLayout
-            title="Driving Side Quiz"
-            subtitle="Left or Right? Test your knowledge of global road rules"
+            title="Driving Side"
+            subtitle="Test your knowledge of global road rules"
             infoUrl="https://en.wikipedia.org/wiki/Left-_and_right-hand_traffic"
         >
             {gameState === 'menu' && (
@@ -329,64 +330,132 @@ const DrivingSideQuizPage: React.FC = () => {
                     history={lastHistory}
                     onRestart={handleStart}
                     onBackToMenu={handleBackToMenu}
-                    renderHistoryItem={(q, i) => (
-                        <Card
-                            key={i}
-                            sx={{
-                                p: 2,
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                bgcolor:
-                                    q.pointsEarned === 1
-                                        ? 'rgba(76, 175, 80, 0.05)'
-                                        : 'rgba(239, 83, 80, 0.05)',
-                                border: `1px solid hsla(0, 0%, 100%, 0.1)`,
-                            }}
-                        >
-                            <Box
+                    renderHistoryItem={(q, i) => {
+                        const switchInfo = q.item.explanation
+                            .replace(/Drives on the <b>.*?<\/b>\.?\s*/i, '')
+                            .trim();
+
+                        return (
+                            <Card
+                                key={i}
                                 sx={{
+                                    p: 2,
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    gap: 2,
+                                    justifyContent: 'space-between',
+                                    alignItems: 'flex-start',
+                                    bgcolor:
+                                        q.pointsEarned === 1
+                                            ? 'rgba(76, 175, 80, 0.05)'
+                                            : 'rgba(239, 83, 80, 0.05)',
+                                    border: `1px solid hsla(0, 0%, 100%, 0.1)`,
+                                    flexShrink: 0,
                                 }}
                             >
-                                {q.item.flag && (
-                                    <img
-                                        src={q.item.flag}
-                                        alt=""
-                                        style={{ height: 20, borderRadius: 2 }}
-                                    />
-                                )}
-                                <Box>
-                                    <Typography
-                                        variant="body1"
-                                        fontWeight="bold"
+                                <Box
+                                    sx={{
+                                        textAlign: 'left',
+                                        flex: 1,
+                                        minWidth: 0,
+                                    }}
+                                >
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 1,
+                                            mb: 0.5,
+                                        }}
                                     >
-                                        {q.item.country}
-                                    </Typography>
+                                        {q.item.flag && (
+                                            <img
+                                                src={q.item.flag}
+                                                alt=""
+                                                style={{
+                                                    height: 16,
+                                                    width: 'auto',
+                                                    borderRadius: 1,
+                                                }}
+                                            />
+                                        )}
+                                        <Typography
+                                            variant="body1"
+                                            fontWeight="bold"
+                                            noWrap
+                                        >
+                                            {q.item.country}
+                                        </Typography>
+                                    </Box>
                                     <Typography
                                         variant="body2"
                                         color="textSecondary"
+                                        noWrap
                                     >
                                         Answer: {q.item.side}
                                     </Typography>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            fontStyle: 'italic',
+                                            display: 'block',
+                                            mt: 0.5,
+                                            opacity: 0.8,
+                                        }}
+                                    >
+                                        {switchInfo || '\u00A0'}
+                                    </Typography>
                                 </Box>
-                            </Box>
-                            <Typography
-                                variant="body2"
-                                sx={{
-                                    color:
-                                        q.pointsEarned === 1
-                                            ? 'rgb(76, 175, 80)'
-                                            : 'rgb(239, 83, 80)',
-                                    fontWeight: 'bold',
-                                }}
-                            >
-                                {q.userAnswer || 'Skipped'}
-                            </Typography>
-                        </Card>
-                    )}
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        gap: 1,
+                                        ml: 2,
+                                        flexShrink: 0,
+                                    }}
+                                >
+                                    {q.userAnswer ? (
+                                        <Chip
+                                            label={q.userAnswer}
+                                            size="small"
+                                            variant="outlined"
+                                            sx={{
+                                                fontWeight: 'medium',
+                                                width: 100,
+                                                height: 20,
+                                                fontSize: '0.75rem',
+                                                borderColor:
+                                                    q.pointsEarned === 1
+                                                        ? 'rgba(76, 175, 80, 0.3)'
+                                                        : 'rgba(239, 83, 80, 0.3)',
+                                                color:
+                                                    q.pointsEarned === 1
+                                                        ? COLORS.data.green
+                                                        : COLORS.data.red,
+                                                '& .MuiChip-label': { px: 1 },
+                                            }}
+                                        />
+                                    ) : (
+                                        <Chip
+                                            label="Skipped"
+                                            size="small"
+                                            variant="outlined"
+                                            sx={{
+                                                fontWeight: 'medium',
+                                                width: 100,
+                                                height: 20,
+                                                fontSize: '0.75rem',
+                                                borderColor:
+                                                    'rgba(239, 83, 80, 0.3)',
+                                                color: COLORS.data.red,
+                                                '& .MuiChip-label': { px: 1 },
+                                                opacity: 0.8,
+                                            }}
+                                        />
+                                    )}
+                                </Box>
+                            </Card>
+                        );
+                    }}
                 />
             )}
         </QuizLayout>
