@@ -116,7 +116,8 @@ export function Toolbar(): React.ReactElement[] {
     const buttons: React.ReactElement[] = [];
     const ffData = buttonData['Fast Forward'];
 
-    // Primary Playback Controls: Reset, Run/Pause, Fast Forward
+    // Primary Playback Controls: Run/Pause, Reset, Fast Forward
+    buttons.push(TimerButton);
     buttons.push(
         <TooltipButton
             key="Reset"
@@ -125,7 +126,6 @@ export function Toolbar(): React.ReactElement[] {
             onClick={dispatch('reset')}
         />
     );
-    buttons.push(TimerButton);
     buttons.push(
         <TooltipButton
             key="Fast Forward"
