@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { Grid } from '../components/mui';
 
-import { convertPixels, gridMove, getDirection } from '../utils/calculate';
+import { convertPixels, gridMove, getDirection } from '../utils/gridUtils';
 import { useWindow, useTimer, useKeys } from '../hooks';
 import { CustomGrid } from '../components/common/CustomGrid';
 import { Controls, ArrowsButton } from '../components/common/Controls';

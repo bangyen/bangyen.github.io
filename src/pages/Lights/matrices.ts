@@ -110,7 +110,10 @@ function evalPolynomial(matrix: number[], poly: number): number[] {
     return output;
 }
 
-function sortMatrices(matrix: number[], identity: number[]): [number[], number[]] {
+function sortMatrices(
+    matrix: number[],
+    identity: number[]
+): [number[], number[]] {
     const size = matrix.length;
     const sorted = [...Array(size).keys()].sort(
         (a, b) => matrix[b] - matrix[a]
@@ -154,7 +157,11 @@ function invertMatrix(matrix: number[]): number[] {
     https://en.wikipedia.org/wiki/Fibonacci_polynomials
     https://graphics.stanford.edu/~seander/bithacks.html#:~:text=Brian%20Kernighan
 */
-export function getProduct(input: number[], rows: number, cols: number): number[] {
+export function getProduct(
+    input: number[],
+    rows: number,
+    cols: number
+): number[] {
     const matrix = getMatrix(cols);
     const weights = getPolynomial(rows + 1);
     const product = evalPolynomial(matrix, weights);
@@ -170,4 +177,3 @@ export function getProduct(input: number[], rows: number, cols: number): number[
 
     return inverse.map(getParity);
 }
-

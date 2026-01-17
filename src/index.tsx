@@ -16,21 +16,21 @@ import {
 } from './config/theme';
 
 // Lazy load pages
-const Home = lazy(() => import('./Pages').then(m => ({ default: m.Home })));
-const Error = lazy(() => import('./Pages').then(m => ({ default: m.Error })));
-const Snake = lazy(() => import('./Pages').then(m => ({ default: m.Snake })));
+const Home = lazy(() => import('./pages').then(m => ({ default: m.Home })));
+const Error = lazy(() => import('./pages').then(m => ({ default: m.Error })));
+const Snake = lazy(() => import('./pages').then(m => ({ default: m.Snake })));
 const Lights_Out = lazy(() =>
-    import('./Pages').then(m => ({ default: m.Lights_Out }))
+    import('./pages').then(m => ({ default: m.Lights_Out }))
 );
-const ZSharp = lazy(() => import('./Pages').then(m => ({ default: m.ZSharp })));
+const ZSharp = lazy(() => import('./pages').then(m => ({ default: m.ZSharp })));
 const Oligopoly = lazy(() =>
-    import('./Pages').then(m => ({ default: m.Oligopoly }))
+    import('./pages').then(m => ({ default: m.Oligopoly }))
 );
 const Interpreters = lazy(() =>
-    import('./Pages').then(m => ({ default: m.Interpreters }))
+    import('./pages').then(m => ({ default: m.Interpreters }))
 );
 const WikipediaQuiz = lazy(() =>
-    import('./Pages').then(m => ({ default: m.WikipediaQuiz }))
+    import('./pages').then(m => ({ default: m.WikipediaQuiz }))
 );
 
 const darkTheme = createTheme({
@@ -222,7 +222,7 @@ function App(): React.ReactElement {
                     <Route path="/error" element={<Error />} />
                     <Route path="/interpreters" element={<Interpreters />} />
                     <Route path="/snake" element={<Snake />} />
-                    <Route path="/lights_out" element={<Lights_Out />} />
+                    <Route path="/lights-out" element={<Lights_Out />} />
                     <Route path="/zsharp" element={<ZSharp />} />
                     <Route path="/oligopoly" element={<Oligopoly />} />
                     <Route

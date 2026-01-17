@@ -1,4 +1,4 @@
-import { gridMove, getDirection } from '../../utils/calculate';
+import { gridMove, getDirection } from '../../utils/gridUtils';
 import {
     handleToolbar,
     type ToolbarState,

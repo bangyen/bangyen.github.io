@@ -3,7 +3,7 @@ import {
     convertPixels,
     getDirection,
     gridMove,
-} from '../utils/calculate';
+} from '../utils/gridUtils';
 
 describe('Calculate Utilities', () => {
     /**

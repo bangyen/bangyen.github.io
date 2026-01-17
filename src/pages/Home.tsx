@@ -20,6 +20,7 @@ import {
     PUBLICATIONS,
     PROJECTS,
     PAGE_TITLES,
+    ROUTES,
 } from '../config/constants';
 import {
     COLORS,
@@ -62,12 +63,12 @@ const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
         color: COLORS.data.green,
         projects: {
             ZSharp: {
-                path: '/ZSharp',
+                path: ROUTES.pages.ZSharp,
                 description: 'ML optimization method',
                 technology: 'PyTorch',
             },
             Oligopoly: {
-                path: '/Oligopoly',
+                path: ROUTES.pages.Oligopoly,
                 description: 'Market simulation model',
                 technology: 'FastAPI',
             },
@@ -79,12 +80,12 @@ const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
         color: COLORS.primary.main,
         projects: {
             Snake: {
-                path: '/Snake',
+                path: ROUTES.pages.Snake,
                 description: 'Retro arcade gameplay',
                 technology: 'JavaScript',
             },
             Lights_Out: {
-                path: '/Lights_Out',
+                path: ROUTES.pages.Lights_Out,
                 description: 'Grid-based logic puzzle',
                 technology: 'JavaScript',
             },
@@ -96,12 +97,12 @@ const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
         color: COLORS.data.amber,
         projects: {
             Interpreters: {
-                path: '/Interpreters',
+                path: ROUTES.pages.Interpreters,
                 description: 'Esoteric language demos',
                 technology: 'JavaScript',
             },
             Wikipedia: {
-                path: '/wikipedia',
+                path: ROUTES.pages.Wikipedia_Quiz,
                 description: 'Geography and trivia hub',
                 technology: 'React',
             },

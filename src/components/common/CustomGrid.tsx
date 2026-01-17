@@ -1,6 +1,6 @@
 import React, { useCallback, ReactNode } from 'react';
 import { Box, Grid } from '../mui';
-import { getSpace } from '../../utils/calculate';
+import { getSpace } from '../../utils/gridUtils';
 import { CELL_SIZE } from '../../config/constants';
 import { TYPOGRAPHY, ANIMATIONS, COMPONENT_VARIANTS } from '../../config/theme';
 

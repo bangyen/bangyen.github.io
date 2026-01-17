@@ -53,10 +53,10 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
                 },
             }}
         >
-            <ToggleButton value="Stun_Step">Stun Step</ToggleButton>
-            <ToggleButton value="Suffolk">Suffolk</ToggleButton>
-            <ToggleButton value="WII2D">WII2D</ToggleButton>
-            <ToggleButton value="Back">Back</ToggleButton>
+            <ToggleButton value="stun-step">Stun Step</ToggleButton>
+            <ToggleButton value="suffolk">Suffolk</ToggleButton>
+            <ToggleButton value="wii2d">WII2D</ToggleButton>
+            <ToggleButton value="back">Back</ToggleButton>
         </ToggleButtonGroup>
     );
 };

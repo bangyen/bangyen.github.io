@@ -347,18 +347,18 @@ export const GAME_CONSTANTS: GameConstants = {
 
 export const ROUTES: Routes = {
     pages: {
-        Oligopoly: '/Oligopoly',
-        ZSharp: '/ZSharp',
-        Snake: '/Snake',
-        Lights_Out: '/Lights_Out',
-        Interpreters: '/Interpreters',
+        Oligopoly: '/oligopoly',
+        ZSharp: '/zsharp',
+        Snake: '/snake',
+        Lights_Out: '/lights-out',
+        Interpreters: '/interpreters',
         Wikipedia_Quiz: '/wikipedia',
     },
     interpreters: {
-        Stun_Step: '/Stun_Step',
-        Suffolk: '/Suffolk',
-        WII2D: '/WII2D',
-        Back: '/Back',
+        Stun_Step: '/stun-step',
+        Suffolk: '/suffolk',
+        WII2D: '/wii2d',
+        Back: '/back',
     },
 };
 

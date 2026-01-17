@@ -67,14 +67,24 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
                     writer.write(compressedData).then(() => writer.close());
 
                     function pump(): Promise<void> {
-                        return reader.read().then(({ done, value }: { done: boolean; value: Uint8Array | undefined }) => {
-                            if (done) {
-                                controller.close();
-                                return;
-                            }
-                            controller.enqueue(value);
-                            return pump();
-                        });
+                        return reader
+                            .read()
+                            .then(
+                                ({
+                                    done,
+                                    value,
+                                }: {
+                                    done: boolean;
+                                    value: Uint8Array | undefined;
+                                }) => {
+                                    if (done) {
+                                        controller.close();
+                                        return;
+                                    }
+                                    controller.enqueue(value);
+                                    return pump();
+                                }
+                            );
                     }
                     return pump();
                 },
@@ -306,4 +316,3 @@ const Oligopoly: React.FC = () => {
 };
 
 export default Oligopoly;
-

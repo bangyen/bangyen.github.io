@@ -34,7 +34,7 @@ interface RealData {
         train_accuracies?: number[];
         train_losses?: number[];
     };
-    'ZSharp'?: {
+    ZSharp?: {
         train_accuracies?: number[];
         train_losses?: number[];
     };
@@ -82,14 +82,24 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
                     writer.write(compressedData).then(() => writer.close());
 
                     function pump(): Promise<void> {
-                        return reader.read().then(({ done, value }: { done: boolean; value: Uint8Array | undefined }) => {
-                            if (done) {
-                                controller.close();
-                                return;
-                            }
-                            controller.enqueue(value);
-                            return pump();
-                        });
+                        return reader
+                            .read()
+                            .then(
+                                ({
+                                    done,
+                                    value,
+                                }: {
+                                    done: boolean;
+                                    value: Uint8Array | undefined;
+                                }) => {
+                                    if (done) {
+                                        controller.close();
+                                        return;
+                                    }
+                                    controller.enqueue(value);
+                                    return pump();
+                                }
+                            );
                     }
                     return pump();
                 },
@@ -207,18 +217,23 @@ const ZSharp: React.FC = () => {
             icon: TrendingUpRounded,
             chartTitle: 'Loss Evaluation',
             dataProcessor: (data: DataPoint[]) =>
-                data.map((point): ProcessedDataPoint => ({
-                    epoch: point.epoch,
-                    sgd: point.sgdLoss,
-                    zsharp: point.zsharpLoss,
-                })),
+                data.map(
+                    (point): ProcessedDataPoint => ({
+                        epoch: point.epoch,
+                        sgd: point.sgdLoss,
+                        zsharp: point.zsharpLoss,
+                    })
+                ),
             chartConfig: {
                 type: 'line',
                 xAxisKey: 'epoch',
                 yAxisFormatter: (value: number) => value.toFixed(3),
                 yAxisDomain: ['dataMin - 0.1', 'dataMax + 0.1'],
                 tooltipLabelFormatter: (value: number) => `Epoch ${value}`,
-                tooltipFormatter: (value: number, name: string) => [value.toFixed(3), name],
+                tooltipFormatter: (value: number, name: string) => [
+                    value.toFixed(3),
+                    name,
+                ],
                 lines: [
                     {
                         dataKey: 'sgd',
@@ -239,10 +254,12 @@ const ZSharp: React.FC = () => {
             icon: ShowChartRounded,
             chartTitle: 'Learning Progress',
             dataProcessor: (data: DataPoint[]) =>
-                data.map((point): ProcessedDataPoint => ({
-                    epoch: point.epoch,
-                    gap: point.zsharp - point.sgd,
-                })),
+                data.map(
+                    (point): ProcessedDataPoint => ({
+                        epoch: point.epoch,
+                        gap: point.zsharp - point.sgd,
+                    })
+                ),
             chartConfig: {
                 type: 'line',
                 xAxisKey: 'epoch',
@@ -322,4 +339,3 @@ const ZSharp: React.FC = () => {
 };
 
 export default ZSharp;
-

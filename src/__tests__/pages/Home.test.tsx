@@ -7,7 +7,7 @@ import {
     grey,
     blueGrey,
 } from '../../components/mui';
-import Home from '../../Pages/Home';
+import Home from '../../pages/Home';
 
 // Create a test theme
 const testTheme = createTheme({
@@ -106,13 +106,13 @@ jest.mock('@mui/icons-material', () => ({
 }));
 
 // Mock the Pages module
-jest.mock('../../Pages', () => ({
+jest.mock('../../pages', () => ({
     pages: {
-        Oligopoly: '/Oligopoly',
-        ZSharp: '/ZSharp',
-        Snake: '/Snake',
-        Lights_Out: '/Lights_Out',
-        Interpreters: '/Interpreters',
+        Oligopoly: '/oligopoly',
+        ZSharp: '/zsharp',
+        Snake: '/snake',
+        Lights_Out: '/lights-out',
+        Interpreters: '/interpreters',
     },
 }));
 
