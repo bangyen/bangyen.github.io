@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
     Box,
     Typography,
@@ -8,10 +8,6 @@ import {
     Grid,
     TextField,
 } from '@mui/material';
-import {
-    WestRounded as LeftIcon,
-    EastRounded as RightIcon,
-} from '@mui/icons-material';
 import { COLORS, SPACING } from '../config/theme';
 import { GAME_CONSTANTS } from '../config/constants';
 import { normalize } from '../utils/quizUtils';
@@ -74,6 +70,17 @@ const DrivingSideGame: React.FC<{
             hideInput={true}
             hideHint={true}
             renderQuestionPrompt={() => 'Drive on the...'}
+            onKeyDown={e => {
+                if (state.showFeedback) return;
+
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    actions.submitAnswer('Left');
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    actions.submitAnswer('Right');
+                }
+            }}
             renderQuestionContent={item => (
                 <Box sx={{ textAlign: 'center' }}>
                     <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 2 }}>
@@ -98,29 +105,35 @@ const DrivingSideGame: React.FC<{
             renderCustomActions={(state, actions) => (
                 <>
                     <Button
-                        variant="contained"
-                        startIcon={<LeftIcon />}
+                        variant="outlined"
                         onClick={() => actions.submitAnswer('Left')}
                         disabled={state.showFeedback}
                         sx={{
                             flex: 1,
-                            bgcolor: COLORS.primary.main,
-                            '&:hover': { bgcolor: COLORS.primary.dark },
+                            borderColor: COLORS.border.subtle,
+                            color: COLORS.text.primary,
                             py: 1.5,
+                            '&.Mui-disabled': {
+                                borderColor: COLORS.border.subtle,
+                                opacity: 0.6,
+                            },
                         }}
                     >
                         Left
                     </Button>
                     <Button
-                        variant="contained"
-                        endIcon={<RightIcon />}
+                        variant="outlined"
                         onClick={() => actions.submitAnswer('Right')}
                         disabled={state.showFeedback}
                         sx={{
                             flex: 1,
-                            bgcolor: COLORS.primary.main,
-                            '&:hover': { bgcolor: COLORS.primary.dark },
+                            borderColor: COLORS.border.subtle,
+                            color: COLORS.text.primary,
                             py: 1.5,
+                            '&.Mui-disabled': {
+                                borderColor: COLORS.border.subtle,
+                                opacity: 0.6,
+                            },
                         }}
                     >
                         Right

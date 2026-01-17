@@ -44,6 +44,7 @@ interface QuizGameViewProps {
     hideInput?: boolean;
     hideHint?: boolean;
     renderCustomActions?: (gameState: any, actions: any) => React.ReactNode;
+    onKeyDown?: (e: KeyboardEvent) => void;
 }
 
 const QuizGameView: React.FC<QuizGameViewProps> = ({
@@ -62,6 +63,7 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
     hideInput = false,
     hideHint = false,
     renderCustomActions,
+    onKeyDown,
 }) => {
     const {
         history,
@@ -76,6 +78,38 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
     } = gameState;
 
     const { setInputValue, handleSubmit, handleSkip, toggleHint } = actions;
+
+    React.useEffect(() => {
+        const handleGlobalKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+
+                if (showFeedback) {
+                    handleSkip();
+                } else if (hideInput || !inputValue.trim()) {
+                    handleSkip();
+                } else {
+                    handleSubmit();
+                }
+                return;
+            }
+
+            // Quiz-specific handlers
+            if (onKeyDown) {
+                onKeyDown(e);
+            }
+        };
+
+        window.addEventListener('keydown', handleGlobalKeyDown);
+        return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+    }, [
+        showFeedback,
+        hideInput,
+        inputValue,
+        handleSkip,
+        handleSubmit,
+        onKeyDown,
+    ]);
 
     const feedbackColor = isCorrect ? COLORS.data.green : COLORS.data.amber;
 
