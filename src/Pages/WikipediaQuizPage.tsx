@@ -1252,77 +1252,24 @@ const WikipediaQuizPage: React.FC = () => {
                                                 ).toLowerCase();
                                             } else {
                                                 normalizedAnswer =
-                                                    normalizedAnswer
-                                                        .split(' ')
-                                                        .map(
-                                                            w =>
-                                                                w
-                                                                    .charAt(0)
-                                                                    .toUpperCase() +
-                                                                w
-                                                                    .slice(1)
-                                                                    .toLowerCase()
-                                                        )
-                                                        .join(' ');
+                                                    normalizedAnswer.toUpperCase();
                                             }
                                         } else if (
                                             selectedQuiz === 'telephone'
                                         ) {
-                                            if (settings.mode === 'toCode') {
-                                                normalizedAnswer =
-                                                    normalizedAnswer.startsWith(
-                                                        '+'
-                                                    )
-                                                        ? normalizedAnswer
-                                                        : '+' +
-                                                          normalizedAnswer;
-                                            } else {
-                                                normalizedAnswer =
-                                                    normalizedAnswer
-                                                        .split(' ')
-                                                        .map(
-                                                            w =>
-                                                                w
-                                                                    .charAt(0)
-                                                                    .toUpperCase() +
-                                                                w
-                                                                    .slice(1)
-                                                                    .toLowerCase()
-                                                        )
-                                                        .join(' ');
-                                            }
+                                            normalizedAnswer =
+                                                normalizedAnswer.startsWith('+')
+                                                    ? normalizedAnswer.toUpperCase()
+                                                    : '+' +
+                                                      normalizedAnswer.toUpperCase();
                                         } else if (selectedQuiz === 'vehicle') {
-                                            if (
-                                                settings.mode === 'toCode' ||
-                                                settings.mode === 'toCodeRegexp'
-                                            ) {
-                                                normalizedAnswer =
-                                                    normalizedAnswer.toUpperCase();
-                                            } else {
-                                                normalizedAnswer =
-                                                    normalizedAnswer
-                                                        .split(' ')
-                                                        .map(
-                                                            w =>
-                                                                w
-                                                                    .charAt(0)
-                                                                    .toUpperCase() +
-                                                                w
-                                                                    .slice(1)
-                                                                    .toLowerCase()
-                                                        )
-                                                        .join(' ');
-                                            }
+                                            normalizedAnswer =
+                                                normalizedAnswer.toUpperCase();
                                         } else if (
                                             selectedQuiz === 'driving_side'
                                         ) {
                                             normalizedAnswer =
-                                                normalizedAnswer
-                                                    .charAt(0)
-                                                    .toUpperCase() +
-                                                normalizedAnswer
-                                                    .slice(1)
-                                                    .toLowerCase();
+                                                normalizedAnswer.toUpperCase();
                                         }
 
                                         return (
