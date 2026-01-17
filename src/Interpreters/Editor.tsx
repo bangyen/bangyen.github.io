@@ -80,14 +80,12 @@ export default function Editor({
         ref: container,
         container: true,
         display: 'flex',
-        alignItems: 'center',
         sx: { overflowY: 'hidden' },
     };
 
     return (
         <Grid
             container
-            spacing={2}
             height="100vh"
             display="flex"
             flexDirection="column"
@@ -114,11 +112,11 @@ export default function Editor({
                 </Grid>
             </Grid>
             {navigation && (
-                <Grid container justifyContent="center" sx={{ mb: 2 }}>
+                <Grid container justifyContent="center" sx={{ mt: 2, mb: 0 }}>
                     {navigation}
                 </Grid>
             )}
-            <Grid {...contentProps}>
+            <Grid {...contentProps} sx={{ ...contentProps.sx, mt: 0 }}>
                 <Grid size={leftProps}>{children}</Grid>
                 <Grid display={display} size={rightProps}>
                     <TextArea {...sideProps} />
