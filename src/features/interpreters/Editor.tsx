@@ -26,7 +26,7 @@ export default function Editor({
         throw new Error('Editor must be used within EditorContext.Provider');
     }
 
-    const { name: _name, tapeFlag, outFlag, regFlag, code } = editorContext;
+    const { tapeFlag, outFlag, regFlag, code } = editorContext;
 
     const rightProps = { xs: 6, md: 4 };
     let display: string, leftProps: number | { xs: number; md: number };
