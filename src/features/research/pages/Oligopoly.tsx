@@ -99,7 +99,7 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
 
         return matrixData;
     } catch (error) {
-        console.error('Error loading Oligopoly data:', error);
+        // Error loading data, return empty array
         return [];
     }
 };
@@ -190,10 +190,7 @@ const Oligopoly: React.FC = () => {
                 );
                 setMarketData(initialData);
             } catch (error) {
-                console.error(
-                    'Error loading Oligopoly data in component:',
-                    error
-                );
+                // Error loading data, use fallback
                 setMarketData(generateFallbackOligopolyData());
             } finally {
                 setLoading(false);

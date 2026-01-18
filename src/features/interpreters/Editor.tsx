@@ -133,7 +133,7 @@ export default function Editor({
                 >
                     {(() => {
                         const fields: ReactNode[] = [];
-                        const fieldCount = [
+                        const _fieldCount = [
                             code !== undefined,
                             tapeFlag,
                             outFlag,
