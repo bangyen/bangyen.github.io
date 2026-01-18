@@ -33,6 +33,7 @@ import {
     Question,
     GameState,
     QuizItem,
+    GameMode,
 } from '../types/quiz';
 import { useQuizFilter } from '../hooks/quiz';
 
@@ -451,7 +452,8 @@ const WikipediaQuizPage: React.FC = () => {
                                             onChange={e =>
                                                 setSettings({
                                                     ...settings,
-                                                    mode: e.target.value as any,
+                                                    mode: e.target
+                                                        .value as GameMode,
                                                 })
                                             }
                                             sx={{
