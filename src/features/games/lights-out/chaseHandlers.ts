@@ -150,7 +150,7 @@ export function getCalculator(rows: number, cols: number, dims: number) {
     } => {
         const { input, output } = fillRow(row, dims);
 
-        const inputStates = extendBack(input, rows);
+        const _inputStates = extendBack(input, rows);
         const outputStates = extendBack(output, rows);
 
         const states = getStates(outputStates.flat(), dims);
