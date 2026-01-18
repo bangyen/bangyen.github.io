@@ -63,15 +63,6 @@ function extendBack(states: number[][], size: number): number[][] {
     return extend;
 }
 
-function extendFront(states: number[][], size: number): number[][] {
-    const extend = [...states];
-    const front = states[0];
-
-    while (extend.length < size) extend.unshift([...front]);
-
-    return extend;
-}
-
 export function getStates(
     grid: number[],
     dims: number
