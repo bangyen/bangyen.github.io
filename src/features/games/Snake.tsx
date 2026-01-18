@@ -8,7 +8,12 @@ import React, {
 } from 'react';
 import { Grid } from '../../components/mui';
 
-import { convertPixels, gridMove, getDirection } from '../../utils/gridUtils';
+import {
+    convertPixels,
+    gridMove,
+    getDirection,
+} from '../interpreters/utils/gridUtils';
+import { normalize, isSmartMatch } from '../quiz/utils/quizUtils';
 import { useWindow, useTimer, useKeys } from '../../hooks';
 import { CustomGrid } from '../../components/ui/CustomGrid';
 import { Controls, ArrowsButton } from '../../components/ui/Controls';

@@ -15,7 +15,7 @@ import {
     CancelRounded as CancelIcon,
 } from '@mui/icons-material';
 import { COLORS, SPACING, COMPONENT_VARIANTS } from '../../../config/theme';
-import { Question } from '../../../types/quiz';
+import { Question } from '../types/quiz';
 
 interface QuizSummaryViewProps<T> {
     score: number;

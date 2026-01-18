@@ -1,13 +1,8 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { EditorContext } from '../../features/interpreters/EditorContext';
-import {
-    Program,
-    Tape,
-    Output,
-    Register,
-} from '../../features/interpreters/Display';
+import { EditorContext } from '../EditorContext';
+import { Program, Tape, Output, Register } from '../Display';
 
 const theme = createTheme();
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import ResearchDemo from '../../features/research/ResearchDemo';
-import { URLS } from '../../config/constants';
+import ResearchDemo from '../ResearchDemo';
+import { URLS } from '../../../config/constants';
 
 // Mock the icons
 jest.mock('../../components/icons', () => ({
@@ -28,7 +28,7 @@ jest.mock('recharts', () => ({
         </div>
     ),
     Line: ({ dataKey, name }: any) => (
-        <div data-testid={`line-${dataKey}`} data-name={name}>
+        <div data-testid={`line - ${dataKey} `} data-name={name}>
             Line
         </div>
     ),
@@ -60,9 +60,9 @@ describe('ResearchDemo', () => {
         chartConfig: {
             type: 'line' as const,
             xAxisKey: 'x',
-            yAxisFormatter: (value: number) => `${value}%`,
+            yAxisFormatter: (value: number) => `${value}% `,
             yAxisDomain: ['dataMin - 1', 'dataMax + 1'],
-            tooltipLabelFormatter: (value: number) => `Round ${value}`,
+            tooltipLabelFormatter: (value: number) => `Round ${value} `,
             tooltipFormatter: (
                 value: number,
                 name: string
@@ -220,7 +220,7 @@ describe('ResearchDemo', () => {
         const dualAxisConfig = {
             ...defaultProps.chartConfig,
             dualYAxis: true,
-            rightYAxisFormatter: (value: number) => `${value}%`,
+            rightYAxisFormatter: (value: number) => `${value}% `,
             rightYAxisDomain: ['dataMin - 1', 'dataMax + 1'],
             lines: [
                 {

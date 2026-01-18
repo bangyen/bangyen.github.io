@@ -1,5 +1,5 @@
 import React from 'react';
-import { handleToolbar } from '../../features/interpreters/Toolbar';
+import { handleToolbar } from '../Toolbar';
 
 describe('Toolbar', () => {
     beforeEach(() => {

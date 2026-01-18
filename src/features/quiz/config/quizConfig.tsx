@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
-import { CCTLD_ALIASES, GAME_CONSTANTS } from './constants';
+import { CCTLD_ALIASES, GAME_CONSTANTS } from '../../../config/constants';
 import { normalize, isSmartMatch } from '../utils/quizUtils';
 import {
     QuizType,

@@ -32,14 +32,17 @@ import {
     DRIVING_SIDE_FILTERS,
 } from '../../../config/constants';
 import {
-    GameState,
     QuizSettings,
-    Question as GenericQuestion,
     QuizType,
+    Question,
+    GameState,
     QuizItem,
-    CCTLD,
-} from '../../../types/quiz';
-import { useQuizFilter } from '../../../hooks';
+} from '../types/quiz';
+import { useQuizFilter, useQuizEngine } from '../hooks/quiz';
+import CCTLD_DATA from '../data/cctlds_enhanced.json';
+import DRIVING_SIDE_DATA from '../data/driving_sides.json';
+import TELEPHONE_DATA from '../data/telephone_codes.json';
+import VEHICLE_REG_DATA from '../data/vehicle_registration_codes.json';
 import QuizLayout from '../components/QuizLayout';
 import QuizSettingsView from '../components/QuizSettingsView';
 import QuizGameView from '../components/QuizGameView';
@@ -48,18 +51,7 @@ import { SkippedBadge } from '../components';
 import QuizGame from '../components/QuizGame';
 
 // Config import
-import { QUIZ_CONFIGS } from '../../../config/quizConfig';
-
-// --- Types ---
-type Question = GenericQuestion<QuizItem>;
-
-// --- Types ---
-
-// Types moved to ../types/quiz.ts
-
-// --- Constants ---
-
-// QUIZ_CONFIGS moved to ../config/quizConfig.ts
+import { QUIZ_CONFIGS } from '../config/quizConfig';
 
 // --- Components ---
 
@@ -91,7 +83,7 @@ const WikipediaQuizPage: React.FC = () => {
     );
 
     const [lastScore, setLastScore] = useState(0);
-    const [lastHistory, setLastHistory] = useState<Question[]>([]);
+    const [lastHistory, setLastHistory] = useState<Question<QuizItem>[]>([]);
 
     // Reset settings and game state when quiz type changes (via URL)
     useEffect(() => {
@@ -128,7 +120,7 @@ const WikipediaQuizPage: React.FC = () => {
         }
     };
 
-    const handleEndGame = (history: Question[], score: number) => {
+    const handleEndGame = (history: Question<QuizItem>[], score: number) => {
         setLastHistory(history);
         setLastScore(score);
         setGameState('summary');

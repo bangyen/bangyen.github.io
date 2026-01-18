@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import { Button, Typography } from '@mui/material';
-import { useQuizEngine } from '../../../hooks';
+import { useQuizEngine } from '../hooks/quiz';
 import QuizGameView from './QuizGameView';
-import { CCTLD, QuizType, QuizSettings, Question } from '../../../types/quiz';
-import { QUIZ_CONFIGS } from '../../../config/quizConfig';
+import { CCTLD, QuizType, QuizSettings, Question } from '../types/quiz';
+import { QUIZ_CONFIGS } from '../config/quizConfig';
 import { COLORS, SHADOWS } from '../../../config/theme';
 
 interface QuizGameProps {
@@ -166,7 +166,7 @@ const QuizGame: React.FC<QuizGameProps> = ({
                 item.flag && (
                     <img
                         src={item.flag}
-                        alt={`Flag of ${item.country} `}
+                        alt={`Flag of ${item.country}`}
                         style={{
                             height: '24px',
                             width: 'auto',

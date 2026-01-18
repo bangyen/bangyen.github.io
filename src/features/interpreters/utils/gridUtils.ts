@@ -1,4 +1,4 @@
-import { CALCULATION } from '../config/constants';
+import { CALCULATION } from '../../../config/constants';
 
 /**
  * Calculates space value from size using a divisor constant

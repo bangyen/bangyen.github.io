@@ -11,7 +11,7 @@ import {
     Card,
 } from '@mui/material';
 import { COLORS, SPACING, COMPONENT_VARIANTS } from '../../../config/theme';
-import { QuizSettings } from '../../../types/quiz';
+import { QuizSettings } from '../types/quiz';
 
 interface QuizSettingsProps<S extends QuizSettings> {
     settings: S;

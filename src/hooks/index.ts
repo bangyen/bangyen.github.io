@@ -1,3 +1,3 @@
 export * from './layout';
-export * from './quiz';
+export * from '../features/quiz/hooks/quiz';
 export * from './utils';

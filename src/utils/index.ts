@@ -1,3 +1,3 @@
 export * from './test-utils';
-export * from './gridUtils';
-export * from './quizUtils';
+export * from '../features/interpreters/utils/gridUtils';
+export * from '../features/quiz/utils/quizUtils';
