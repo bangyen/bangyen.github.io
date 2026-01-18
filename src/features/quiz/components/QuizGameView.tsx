@@ -390,7 +390,7 @@ const QuizGameView = <T,>({
                                     variant="contained"
                                     sx={{
                                         py: 1.5,
-                                        flex: 2,
+                                        flex: 1,
                                         whiteSpace: 'nowrap',
                                         fontSize: '0.8rem',
                                         '&.Mui-disabled': {
