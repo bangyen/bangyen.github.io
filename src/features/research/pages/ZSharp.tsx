@@ -172,7 +172,7 @@ const ZSharp: React.FC = () => {
                 const data = await loadRealZSharpData();
                 setChartData(data);
             } catch (error) {
-                console.error('Error loading ZSharp data in component:', error);
+                // Error loading data, use fallback
                 setChartData(generateFallbackData());
             } finally {
                 setLoading(false);

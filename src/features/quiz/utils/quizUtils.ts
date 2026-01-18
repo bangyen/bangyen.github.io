@@ -10,7 +10,7 @@ export const normalize = (str: string) => {
         .replace(/[\u0300-\u036f]/g, '') // Remove accents/diacritics
         .replace(/\bst\.(?=\s|$)/g, 'saint')
         .replace(/^the\s+/g, '')
-        .replace(/[^\w\s\.]/g, '') // Keep dots for .codes
+        .replace(/[^\w\s.]/g, '') // Keep dots for .codes
         .trim();
 };
 
