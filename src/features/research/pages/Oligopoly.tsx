@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { URLS, PAGE_TITLES, GAME_CONSTANTS } from '../config/constants';
-import { COLORS } from '../config/theme';
+import { URLS, PAGE_TITLES, GAME_CONSTANTS } from '../../../config/constants';
+import { COLORS } from '../../../config/theme';
 import {
     BusinessRounded,
     TrendingUpRounded,
     AttachMoneyRounded,
-} from '../components/icons';
-import ResearchDemo from '../features/research/ResearchDemo';
+} from '../../../components/icons';
+import ResearchDemo from '../ResearchDemo';
 
 interface MatrixItem {
     round: number;

@@ -15,7 +15,7 @@ import {
 import { GlassCard } from '../../../components/ui/GlassCard';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { getProduct } from './matrices';
-import { useGetters } from '../../../pages/Board';
+import { useGetters } from '../components/Board';
 import { useMobile } from '../../../hooks';
 import Example from './Example';
 

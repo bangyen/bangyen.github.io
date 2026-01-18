@@ -1,8 +1,8 @@
 import React, { useMemo, useCallback } from 'react';
-import { Grid } from '../components/mui';
+import { Grid } from '../../../components/mui';
 
-import { CustomGrid } from '../components/ui/CustomGrid';
-import { COLORS } from '../config/theme';
+import { CustomGrid } from '../../../components/ui/CustomGrid';
+import { COLORS } from '../../../config/theme';
 
 interface BoardProps {
     frontProps: (row: number, col: number) => Record<string, unknown>;

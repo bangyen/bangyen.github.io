@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Box } from '../components/mui';
-import { Stun_Step, Suffolk, WII2D, Back } from '../features/interpreters';
-import { InterpreterNavigation } from '../features/interpreters/components/InterpreterNavigation';
-import { PAGE_TITLES } from '../config/constants';
-import { COLORS } from '../config/theme';
+import { Box } from '../../../components/mui';
+import { Stun_Step, Suffolk, WII2D, Back } from '..';
+import { InterpreterNavigation } from '../components/InterpreterNavigation';
+import { PAGE_TITLES } from '../../../config/constants';
+import { COLORS } from '../../../config/theme';
 
 export default function Interpreters(): React.ReactElement {
     const [searchParams, setSearchParams] = useSearchParams();

@@ -4,15 +4,15 @@ import {
     TrendingUpRounded,
     ShowChartRounded,
     AnalyticsRounded,
-} from '../components/icons';
+} from '../../../components/icons';
 import {
     URLS,
     PAGE_TITLES,
     ZSHARP_DEFAULTS,
     PERCENTAGE,
-} from '../config/constants';
-import { COLORS } from '../config/theme';
-import ResearchDemo from '../features/research/ResearchDemo';
+} from '../../../config/constants';
+import { COLORS } from '../../../config/theme';
+import ResearchDemo from '../ResearchDemo';
 
 interface DataPoint {
     epoch: number;

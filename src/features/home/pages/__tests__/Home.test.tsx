@@ -6,8 +6,8 @@ import {
     createTheme,
     grey,
     blueGrey,
-} from '../../components/mui';
-import Home from '../../pages/Home';
+} from '../../../../components/mui';
+import Home from '../Home';
 
 // Create a test theme
 const testTheme = createTheme({
@@ -37,7 +37,7 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => (
 jest.mock('@mui/icons-material');
 
 // Mock the Pages module
-jest.mock('../../pages', () => ({
+jest.mock('../../../../pages', () => ({
     pages: {
         Oligopoly: '/oligopoly',
         ZSharp: '/zsharp',

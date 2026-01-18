@@ -12,7 +12,7 @@ import {
     TooltipButton,
     RandomButton,
 } from '../../../components/ui/Controls';
-import { Board, useHandler, usePalette } from '../../../pages/Board';
+import { Board, useHandler, usePalette } from '../components/Board';
 import { PAGE_TITLES, GAME_CONSTANTS } from '../../../config/constants';
 import { COLORS } from '../../../config/theme';
 import { getGrid, handleBoard, getNextMove } from './boardHandlers';
