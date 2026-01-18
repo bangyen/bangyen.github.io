@@ -37,6 +37,7 @@ export interface QuizSettings {
 }
 
 export interface Question<T> {
+    id: string;
     item: T;
     userAnswer: string;
     isCorrect: boolean | null;

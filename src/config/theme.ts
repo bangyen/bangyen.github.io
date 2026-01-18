@@ -1,3 +1,4 @@
+import { createTheme } from '@mui/material/styles';
 /**
  * Theme configuration for the website
  * Centralizes colors, typography, spacing, and animations for consistent design
@@ -310,10 +311,6 @@ export const COMPONENT_VARIANTS: ComponentVariants = {
  * Creates the MUI theme for the application
  */
 export function createAppTheme() {
-    // Using require to avoid circular dependency issues
-    // eslint-disable-next-line
-    const { createTheme } = require('../components/mui');
-
     return createTheme({
         palette: {
             primary: {

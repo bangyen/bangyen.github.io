@@ -107,6 +107,7 @@ export const useQuizEngine = <T>({
             } = checkAnswer(value, currentQuestion, settings);
 
             const newQuestion: Question<T> = {
+                id: crypto.randomUUID(),
                 item: currentQuestion,
                 userAnswer: value,
                 isCorrect: correct,
@@ -150,6 +151,7 @@ export const useQuizEngine = <T>({
         const { expected } = checkAnswer('', currentQuestion, settings);
 
         const newQuestion: Question<T> = {
+            id: crypto.randomUUID(),
             item: currentQuestion,
             userAnswer: '',
             isCorrect: false,

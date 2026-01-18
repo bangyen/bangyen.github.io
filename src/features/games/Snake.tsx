@@ -34,11 +34,10 @@ interface SnakeState {
     board: Board;
 }
 
-interface Action {
-    type: string;
-    // eslint-disable-next-line
-    payload?: any;
-}
+type Action =
+    | { type: 'resize'; payload: { rows: number; cols: number } }
+    | { type: 'steer'; payload: { key: string } | KeyboardEvent }
+    | { type: 'move'; payload?: never };
 
 function getRandom(max: number): number {
     return Math.floor(Math.random() * max);
@@ -134,13 +133,12 @@ function reduceBoard(state: SnakeState): SnakeState {
 }
 
 function handleAction(state: SnakeState, action: Action): SnakeState {
-    const { type, payload } = action;
-
-    switch (type) {
+    switch (action.type) {
         case 'resize':
-            const { rows, cols } = payload;
+            const { rows, cols } = action.payload;
             return handleResize(state, rows, cols);
         case 'steer':
+            const { payload } = action;
             const velocity = getDirection(payload.key);
             let { buffer } = state;
 

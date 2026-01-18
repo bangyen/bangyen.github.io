@@ -107,21 +107,16 @@ export const testUtils = {
      * Mocks console methods to suppress expected warnings in tests
      */
     suppressConsoleWarnings: () => {
-        // eslint-disable-next-line no-console
-        const originalWarn = console.warn;
-        // eslint-disable-next-line no-console
-        const originalError = console.error;
-
-        // eslint-disable-next-line no-console
-        console.warn = jest.fn();
-        // eslint-disable-next-line no-console
-        console.error = jest.fn();
+        const warnSpy = jest
+            .spyOn(console, 'warn')
+            .mockImplementation(() => undefined);
+        const errorSpy = jest
+            .spyOn(console, 'error')
+            .mockImplementation(() => undefined);
 
         return () => {
-            // eslint-disable-next-line no-console
-            console.warn = originalWarn;
-            // eslint-disable-next-line no-console
-            console.error = originalError;
+            warnSpy.mockRestore();
+            errorSpy.mockRestore();
         };
     },
 };
