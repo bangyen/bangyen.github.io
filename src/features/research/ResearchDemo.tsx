@@ -14,7 +14,7 @@ import {
     Refresh,
     SettingsRounded,
 } from '../../components/icons';
-import { CHART_DIMENSIONS, CHART_FORMATTING } from '../../config/constants';
+import { CHART_DIMENSIONS, CHART_FORMATTING } from './config/researchConfig';
 import {
     COLORS,
     SPACING,

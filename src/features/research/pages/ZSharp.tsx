@@ -5,12 +5,8 @@ import {
     ShowChartRounded,
     AnalyticsRounded,
 } from '../../../components/icons';
-import {
-    URLS,
-    PAGE_TITLES,
-    ZSHARP_DEFAULTS,
-    PERCENTAGE,
-} from '../../../config/constants';
+import { URLS, PAGE_TITLES } from '../../../config/constants';
+import { RESEARCH_CONSTANTS, PERCENTAGE } from '../config/researchConfig';
 import { COLORS } from '../../../config/theme';
 import ResearchDemo from '../ResearchDemo';
 
@@ -136,17 +132,20 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
 
 const generateFallbackData = (): DataPoint[] => {
     const data: DataPoint[] = [];
-    for (let i = 0; i <= ZSHARP_DEFAULTS.maxEpochs; i++) {
+    for (let i = 0; i <= RESEARCH_CONSTANTS.zsharp.maxEpochs; i++) {
         const sgdAccuracy =
-            ZSHARP_DEFAULTS.baseAccuracy +
-            (i / ZSHARP_DEFAULTS.maxEpochs) *
-                (ZSHARP_DEFAULTS.maxAccuracy - ZSHARP_DEFAULTS.baseAccuracy);
-        const zsharpAccuracy = sgdAccuracy + ZSHARP_DEFAULTS.improvement;
+            RESEARCH_CONSTANTS.zsharp.baseAccuracy +
+            (i / RESEARCH_CONSTANTS.zsharp.maxEpochs) *
+                (RESEARCH_CONSTANTS.zsharp.maxAccuracy -
+                    RESEARCH_CONSTANTS.zsharp.baseAccuracy);
+        const zsharpAccuracy =
+            sgdAccuracy + RESEARCH_CONSTANTS.zsharp.improvement;
         const sgdLoss =
-            ZSHARP_DEFAULTS.baseLoss -
-            (i / ZSHARP_DEFAULTS.maxEpochs) *
-                (ZSHARP_DEFAULTS.baseLoss - ZSHARP_DEFAULTS.minLoss);
-        const zsharpLoss = sgdLoss - ZSHARP_DEFAULTS.lossReduction;
+            RESEARCH_CONSTANTS.zsharp.baseLoss -
+            (i / RESEARCH_CONSTANTS.zsharp.maxEpochs) *
+                (RESEARCH_CONSTANTS.zsharp.baseLoss -
+                    RESEARCH_CONSTANTS.zsharp.minLoss);
+        const zsharpLoss = sgdLoss - RESEARCH_CONSTANTS.zsharp.lossReduction;
 
         data.push({
             epoch: i + 1,

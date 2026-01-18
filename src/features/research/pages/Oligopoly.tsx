@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { URLS, PAGE_TITLES, GAME_CONSTANTS } from '../../../config/constants';
+import { URLS, PAGE_TITLES } from '../../../config/constants';
+import { RESEARCH_CONSTANTS } from '../config/researchConfig';
 import { COLORS } from '../../../config/theme';
 import {
     BusinessRounded,
@@ -129,7 +130,7 @@ const filterMatrixData = (
             item => item.num_firms === numFirms && item.model_type === modelType
         );
         const sorted = closest.sort((a, b) => a.round - b.round);
-        return sorted.slice(0, GAME_CONSTANTS.oligopoly.maxRounds);
+        return sorted.slice(0, RESEARCH_CONSTANTS.oligopoly.maxRounds);
     }
 
     const sorted = filtered.sort((a, b) => a.round - b.round);
@@ -138,8 +139,8 @@ const filterMatrixData = (
 
 const generateFallbackOligopolyData = (): MarketDataPoint[] => {
     const data: MarketDataPoint[] = [];
-    for (let i = 1; i <= GAME_CONSTANTS.oligopoly.maxRounds; i++) {
-        const sim = GAME_CONSTANTS.oligopoly.simulation;
+    for (let i = 1; i <= RESEARCH_CONSTANTS.oligopoly.maxRounds; i++) {
+        const sim = RESEARCH_CONSTANTS.oligopoly.simulation;
         data.push({
             round: i,
             price:
@@ -156,19 +157,19 @@ const generateFallbackOligopolyData = (): MarketDataPoint[] => {
 
 const Oligopoly: React.FC = () => {
     const [numFirms, setNumFirms] = useState(
-        GAME_CONSTANTS.oligopoly.defaultFirms
+        RESEARCH_CONSTANTS.oligopoly.defaultFirms
     );
     const [demandElasticity, setDemandElasticity] = useState(
-        GAME_CONSTANTS.oligopoly.defaultElasticity
+        RESEARCH_CONSTANTS.oligopoly.defaultElasticity
     );
     const [basePrice, setBasePrice] = useState(
-        GAME_CONSTANTS.oligopoly.defaultBasePrice
+        RESEARCH_CONSTANTS.oligopoly.defaultBasePrice
     );
     const [marketData, setMarketData] = useState<MarketDataPoint[]>([]);
     const [matrixData, setMatrixData] = useState<MatrixItem[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const modelType = GAME_CONSTANTS.modelTypes.cournot;
+    const modelType = RESEARCH_CONSTANTS.modelTypes.cournot;
     const collusionEnabled = false;
 
     useEffect(() => {
@@ -224,9 +225,9 @@ const Oligopoly: React.FC = () => {
     ]);
 
     const resetToDefaults = () => {
-        setNumFirms(GAME_CONSTANTS.oligopoly.defaultFirms);
-        setDemandElasticity(GAME_CONSTANTS.oligopoly.defaultElasticity);
-        setBasePrice(GAME_CONSTANTS.oligopoly.defaultBasePrice);
+        setNumFirms(RESEARCH_CONSTANTS.oligopoly.defaultFirms);
+        setDemandElasticity(RESEARCH_CONSTANTS.oligopoly.defaultElasticity);
+        setBasePrice(RESEARCH_CONSTANTS.oligopoly.defaultBasePrice);
     };
 
     const controls: Control[] = [

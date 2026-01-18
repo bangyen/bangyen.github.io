@@ -1,5 +1,5 @@
 import { useRef, useEffect, useCallback } from 'react';
-import { PROCESSING } from '../config/constants';
+import { GLOBAL_CONFIG } from '../config/constants';
 
 // Cache Hook
 export interface CacheAction {
@@ -23,13 +23,13 @@ export function useCache<T>(getState: (state: T) => T) {
         switch (type) {
             case 'next':
                 if (
-                    PROCESSING.doubleProcessingPrevention &&
+                    GLOBAL_CONFIG.processing.doubleProcessingPrevention &&
                     processingRef.current
                 ) {
                     return { ...(states[index.current] as T) };
                 }
 
-                if (PROCESSING.doubleProcessingPrevention) {
+                if (GLOBAL_CONFIG.processing.doubleProcessingPrevention) {
                     processingRef.current = true;
                 }
 
@@ -50,22 +50,22 @@ export function useCache<T>(getState: (state: T) => T) {
 
                 const result = { ...(states[index.current] as T) };
 
-                if (PROCESSING.doubleProcessingPrevention) {
+                if (GLOBAL_CONFIG.processing.doubleProcessingPrevention) {
                     setTimeout(() => {
                         processingRef.current = false;
-                    }, PROCESSING.resetDelay);
+                    }, GLOBAL_CONFIG.processing.resetDelay);
                 }
 
                 return result;
             case 'prev':
                 if (
-                    PROCESSING.doubleProcessingPrevention &&
+                    GLOBAL_CONFIG.processing.doubleProcessingPrevention &&
                     processingRef.current
                 ) {
                     return { ...(states[index.current] as T) };
                 }
 
-                if (PROCESSING.doubleProcessingPrevention) {
+                if (GLOBAL_CONFIG.processing.doubleProcessingPrevention) {
                     processingRef.current = true;
                 }
 
@@ -73,10 +73,10 @@ export function useCache<T>(getState: (state: T) => T) {
 
                 const prevResult = { ...(states[index.current] as T) };
 
-                if (PROCESSING.doubleProcessingPrevention) {
+                if (GLOBAL_CONFIG.processing.doubleProcessingPrevention) {
                     setTimeout(() => {
                         processingRef.current = false;
-                    }, PROCESSING.resetDelay);
+                    }, GLOBAL_CONFIG.processing.resetDelay);
                 }
 
                 return prevResult;

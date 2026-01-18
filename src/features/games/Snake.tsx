@@ -17,7 +17,8 @@ import { normalize, isSmartMatch } from '../quiz/utils/quizUtils';
 import { useWindow, useTimer, useKeys } from '../../hooks';
 import { CustomGrid } from '../../components/ui/CustomGrid';
 import { Controls, ArrowsButton } from '../../components/ui/Controls';
-import { PAGE_TITLES, GAME_CONSTANTS } from '../../config/constants';
+import { PAGE_TITLES } from '../../config/constants';
+import { GAME_CONSTANTS } from './config/gameConfig';
 import { COLORS, COMPONENT_VARIANTS } from '../../config/theme';
 
 interface Board {

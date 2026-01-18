@@ -1,4 +1,4 @@
-import { CALCULATION } from '../../../config/constants';
+import { GRID_CONFIG } from '../config/interpretersConfig';
 
 /**
  * Calculates space value from size using a divisor constant
@@ -6,7 +6,7 @@ import { CALCULATION } from '../../../config/constants';
  * @returns The calculated space value
  */
 export function getSpace(size: number): number {
-    return size / CALCULATION.spaceDivisor;
+    return size / GRID_CONFIG.calculation.spaceDivisor;
 }
 
 /**
@@ -22,7 +22,7 @@ export function convertPixels(
     width: number
 ): { rows: number; cols: number } {
     const space = getSpace(size);
-    const pixel = CALCULATION.pixelMultiplier * (size + space);
+    const pixel = GRID_CONFIG.calculation.pixelMultiplier * (size + space);
     const rows = Math.floor(height / pixel);
     const cols = Math.floor(width / pixel);
 

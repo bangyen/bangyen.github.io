@@ -1,6 +1,5 @@
 import React from 'react';
 import { Typography, Box } from '@mui/material';
-import { CCTLD_ALIASES, GAME_CONSTANTS } from '../../../config/constants';
 import { normalize, isSmartMatch } from '../utils/quizUtils';
 import {
     QuizType,
@@ -18,6 +17,73 @@ import cctldsData from '../data/cctlds_enhanced.json';
 import drivingSideData from '../data/driving_sides.json';
 import telephoneData from '../data/telephone_codes.json';
 import vehicleData from '../data/vehicle_registration_codes.json';
+
+export const QUIZ_TITLES = {
+    wikipediaQuiz: 'Wikipedia Quizzes | Bangyen',
+};
+
+export const QUIZ_GAME_CONSTANTS = {
+    cctld: {
+        defaultQuestionCount: 10,
+        questionOptions: [5, 10, 20, 50],
+    },
+    telephone: {
+        defaultQuestionCount: 10,
+        questionOptions: [5, 10, 20, 50, 100],
+    },
+    vehicleRegistration: {
+        defaultQuestionCount: 10,
+        questionOptions: [5, 10, 20, 50, 100, 186],
+    },
+};
+
+export const CCTLD_LANGUAGES = ['All', 'English', 'Non-English'];
+
+export const CCTLD_ALIASES: Record<string, string[]> = {
+    'united arab emirates': ['uae'],
+    'united states': ['us', 'usa'],
+    'united kingdom': ['uk'],
+    'democratic republic of the congo': ['drc', 'congo dr'],
+    'republic of the congo': ['congo'],
+    'central african republic': ['car'],
+    'central african': ['car'],
+    'british indian ocean territory': ['biot'],
+    'saint vincent and the grenadines': ['st vincent'],
+    'saint kitts and nevis': ['st kitts'],
+    'antigua and barbuda': ['antigua'],
+    'trinidad and tobago': ['trinidad'],
+    'bosnia and herzegovina': ['bosnia'],
+    'sao tome and principe': ['sao tome'],
+    'turks and caicos islands': ['turks and caicos'],
+};
+
+export const TELEPHONE_ZONES = [
+    { label: 'All', value: 'All' },
+    { label: 'Zone 1: North American Numbering Plan (NANP)', value: '1' },
+    { label: 'Zone 2: Mostly Africa', value: '2' },
+    { label: 'Zone 3: Mostly Europe', value: '3' },
+    { label: 'Zone 4: Mostly Europe', value: '4' },
+    { label: 'Zone 5: South and Central Americas', value: '5' },
+    { label: 'Zone 6: Southeast Asia and Oceania', value: '6' },
+    { label: 'Zone 7: Russia and neighboring regions', value: '7' },
+    {
+        label: 'Zone 8: East Asia, Southeast Asia, and special services',
+        value: '8',
+    },
+    { label: 'Zone 9: West, Central, and South Asia', value: '9' },
+];
+
+export const VEHICLE_CONVENTIONS = [
+    { label: 'All', value: 'All' },
+    { label: '1909 Paris Convention', value: '1909' },
+    { label: '1924 Paris Convention', value: '1924' },
+];
+
+export const DRIVING_SIDE_FILTERS = [
+    { label: 'All', value: 'All' },
+    { label: 'Switched historically', value: 'Switched' },
+    { label: 'Never switched', value: 'Never switched' },
+];
 
 export const QUIZ_CONFIGS: Record<
     QuizType,
@@ -58,7 +124,7 @@ export const QUIZ_CONFIGS: Record<
             { value: 'toCountry', label: 'Guess Country (from Code)' },
             { value: 'toCode', label: 'Guess Code (from Country)' },
         ],
-        maxQuestionOptions: GAME_CONSTANTS.cctld.questionOptions,
+        maxQuestionOptions: QUIZ_GAME_CONSTANTS.cctld.questionOptions,
         renderQuestionPrompt: mode =>
             mode === 'toCountry'
                 ? 'What country belongs to:'
@@ -117,7 +183,7 @@ export const QUIZ_CONFIGS: Record<
             maxQuestions: 'All',
         },
         hasModeSelect: false,
-        maxQuestionOptions: GAME_CONSTANTS.cctld.questionOptions, // Using same options
+        maxQuestionOptions: QUIZ_GAME_CONSTANTS.cctld.questionOptions, // Using same options
         renderQuestionPrompt: () => 'They drive on the...',
         renderQuestionContent: (item: DrivingSide) => (
             <Box sx={{ textAlign: 'center' }}>
@@ -187,7 +253,7 @@ export const QUIZ_CONFIGS: Record<
             { value: 'toCountry', label: 'Guess Country (from Code)' },
             { value: 'toCode', label: 'Guess Code (from Country)' },
         ],
-        maxQuestionOptions: GAME_CONSTANTS.telephone.questionOptions,
+        maxQuestionOptions: QUIZ_GAME_CONSTANTS.telephone.questionOptions,
         renderQuestionPrompt: mode =>
             mode === 'toCountry'
                 ? 'What country belongs to:'
@@ -240,7 +306,8 @@ export const QUIZ_CONFIGS: Record<
             { value: 'toCountry', label: 'Guess Country (from Code)' },
             { value: 'toCode', label: 'Guess Code (from Country)' },
         ],
-        maxQuestionOptions: GAME_CONSTANTS.vehicleRegistration.questionOptions,
+        maxQuestionOptions:
+            QUIZ_GAME_CONSTANTS.vehicleRegistration.questionOptions,
         renderQuestionPrompt: mode =>
             mode === 'toCountry'
                 ? 'What country belongs to:'

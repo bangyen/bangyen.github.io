@@ -1,8 +1,13 @@
 import React, { useCallback, ReactNode } from 'react';
 import { Box, Grid } from '../mui';
 import { getSpace } from '../../features/interpreters/utils/gridUtils';
-import { CELL_SIZE } from '../../config/constants';
-import { TYPOGRAPHY, ANIMATIONS, COMPONENT_VARIANTS } from '../../config/theme';
+import {
+    COLORS,
+    TYPOGRAPHY,
+    ANIMATIONS,
+    COMPONENT_VARIANTS,
+} from '../../config/theme';
+import { GRID_CONFIG } from '../../features/interpreters/config/interpretersConfig';
 
 interface CellProps {
     size: number;
@@ -12,14 +17,14 @@ interface CellProps {
 
 function Cell({ size, children, ...rest }: CellProps) {
     const remSize = `${size}rem`;
-    const radius = `${size / CELL_SIZE.divisor}rem`;
+    const radius = `${size / GRID_CONFIG.cellSize.divisor}rem`;
 
     const props = {
         ...COMPONENT_VARIANTS.flexCenter,
         borderRadius: radius,
         height: remSize,
         width: remSize,
-        fontSize: `${size * CELL_SIZE.fontSizeMultiplier}rem`,
+        fontSize: `${size * GRID_CONFIG.cellSize.fontSizeMultiplier}rem`,
         fontWeight: TYPOGRAPHY.fontWeight.semibold,
         fontFamily: 'monospace',
         transition: ANIMATIONS.transition,

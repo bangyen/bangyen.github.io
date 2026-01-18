@@ -13,7 +13,8 @@ import {
     RandomButton,
 } from '../../../components/ui/Controls';
 import { Board, useHandler, usePalette } from '../components/Board';
-import { PAGE_TITLES, GAME_CONSTANTS } from '../../../config/constants';
+import { PAGE_TITLES } from '../../../config/constants';
+import { GAME_CONSTANTS } from '../config/gameConfig';
 import { COLORS } from '../../../config/theme';
 import { getGrid, handleBoard, getNextMove } from './boardHandlers';
 import { useWindow, useMobile } from '../../../hooks';

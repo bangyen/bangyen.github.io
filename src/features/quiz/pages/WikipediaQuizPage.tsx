@@ -30,7 +30,8 @@ import {
     TELEPHONE_ZONES,
     VEHICLE_CONVENTIONS,
     DRIVING_SIDE_FILTERS,
-} from '../../../config/constants';
+    QUIZ_CONFIGS,
+} from '../config/quizConfig';
 import {
     QuizSettings,
     QuizType,
@@ -49,9 +50,6 @@ import QuizGameView from '../components/QuizGameView';
 import QuizSummaryView from '../components/QuizSummaryView';
 import { SkippedBadge } from '../components';
 import QuizGame from '../components/QuizGame';
-
-// Config import
-import { QUIZ_CONFIGS } from '../config/quizConfig';
 
 // --- Components ---
 
