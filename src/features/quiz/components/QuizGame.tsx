@@ -2,15 +2,21 @@ import React, { useEffect, useRef } from 'react';
 import { Button, Typography } from '@mui/material';
 import { useQuizEngine } from '../hooks/quiz';
 import QuizGameView from './QuizGameView';
-import { CCTLD, QuizType, QuizSettings, Question } from '../types/quiz';
+import {
+    CCTLD,
+    QuizType,
+    QuizSettings,
+    Question,
+    QuizItem,
+} from '../types/quiz';
 import { QUIZ_CONFIGS } from '../config/quizConfig';
 import { COLORS, SHADOWS } from '../../../config/theme';
 
 interface QuizGameProps {
     quizType: QuizType;
     settings: QuizSettings;
-    initialPool: any[];
-    onEndGame: (history: Question<any>[], score: number) => void;
+    initialPool: QuizItem[];
+    onEndGame: (history: Question<QuizItem>[], score: number) => void;
     onBackToMenu: () => void;
 }
 
@@ -22,7 +28,7 @@ const QuizGame: React.FC<QuizGameProps> = ({
     onBackToMenu,
 }) => {
     const config = QUIZ_CONFIGS[quizType];
-    const { state, actions } = useQuizEngine<any>({
+    const { state, actions } = useQuizEngine<QuizItem>({
         initialPool,
         settings,
         onEndGame,

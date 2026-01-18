@@ -21,7 +21,7 @@ describe('Custom Hooks', () => {
             };
 
             const { result } = renderHook(() =>
-                useContainer(mockContainer as any)
+                useContainer(mockContainer as React.RefObject<HTMLElement>)
             );
 
             expect(result.current).toEqual({ width: 500, height: 300 });
@@ -36,7 +36,8 @@ describe('Custom Hooks', () => {
             };
 
             const { result } = renderHook(
-                ({ container }) => useContainer(container as any),
+                ({ container }) =>
+                    useContainer(container as React.RefObject<HTMLElement>),
                 { initialProps: { container: mockContainer } }
             );
 
