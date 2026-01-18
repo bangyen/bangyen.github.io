@@ -7,6 +7,7 @@ import {
     Grid,
     ToggleButton,
     ToggleButtonGroup,
+    useMediaQuery,
 } from '../../components/mui';
 import {
     GitHub,
@@ -139,6 +140,8 @@ const ResearchDemo = <T,>({
     const currentChartConfig =
         viewTypes.find(view => view.key === currentViewType)?.chartConfig ||
         chartConfig;
+
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     return (
         <Grid
@@ -312,6 +315,7 @@ const ResearchDemo = <T,>({
                                         />
                                         <YAxis
                                             yAxisId="left"
+                                            hide={isMobile}
                                             stroke={COLORS.text.secondary}
                                             tick={{
                                                 fill: COLORS.text.secondary,
@@ -327,6 +331,7 @@ const ResearchDemo = <T,>({
                                             <YAxis
                                                 yAxisId="right"
                                                 orientation="right"
+                                                hide={isMobile}
                                                 stroke={COLORS.text.secondary}
                                                 tick={{
                                                     fill: COLORS.text.secondary,
