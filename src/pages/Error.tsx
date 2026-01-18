@@ -1,6 +1,4 @@
-import React from 'react';
 import { Grid, Typography, Box, Fade, Button } from '../components/mui';
-import { HomeButton } from '../components/ui/Controls';
 import { HomeRounded } from '../components/icons';
 import { Link } from 'react-router-dom';
 import { PAGE_TITLES } from '../config/constants';

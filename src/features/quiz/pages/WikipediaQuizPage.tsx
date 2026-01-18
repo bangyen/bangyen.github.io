@@ -14,13 +14,10 @@ import {
     InputLabel,
     ToggleButtonGroup,
     ToggleButton,
-    useTheme,
-    alpha,
 } from '@mui/material';
 import {
     CheckCircleRounded as CheckCircleIcon,
     CancelRounded as CancelIcon,
-    ArrowBackRounded as ArrowBackIcon,
 } from '@mui/icons-material';
 import { COLORS, SPACING, SHADOWS } from '../../../config/theme';
 import {
@@ -37,11 +34,8 @@ import {
     GameState,
     QuizItem,
 } from '../types/quiz';
-import { useQuizFilter, useQuizEngine } from '../hooks/quiz';
-import CCTLD_DATA from '../data/cctlds_enhanced.json';
-import DRIVING_SIDE_DATA from '../data/driving_sides.json';
-import TELEPHONE_DATA from '../data/telephone_codes.json';
-import VEHICLE_REG_DATA from '../data/vehicle_registration_codes.json';
+import { useQuizFilter } from '../hooks/quiz';
+
 import QuizLayout from '../components/QuizLayout';
 import QuizSettingsView from '../components/QuizSettingsView';
 import QuizGameView from '../components/QuizGameView';
