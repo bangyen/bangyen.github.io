@@ -271,11 +271,26 @@ const WikipediaQuizPage: React.FC = () => {
                                                     },
                                             }}
                                             {...commonSelectProps}
+                                            MenuProps={{
+                                                ...commonSelectProps.MenuProps,
+                                                PaperProps: {
+                                                    sx: {
+                                                        maxWidth: 250,
+                                                    },
+                                                },
+                                            }}
                                         >
                                             {TELEPHONE_ZONES.map(zone => (
                                                 <MenuItem
                                                     key={zone.value}
                                                     value={zone.value}
+                                                    sx={{
+                                                        whiteSpace: 'nowrap',
+                                                        overflow: 'hidden',
+                                                        textOverflow:
+                                                            'ellipsis',
+                                                        display: 'block',
+                                                    }}
                                                 >
                                                     {zone.label}
                                                 </MenuItem>
