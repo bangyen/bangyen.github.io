@@ -310,7 +310,8 @@ export const COMPONENT_VARIANTS: ComponentVariants = {
  * Creates the MUI theme for the application
  */
 export function createAppTheme() {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    // Using require to avoid circular dependency issues
+    // eslint-disable-next-line
     const { createTheme } = require('../components/mui');
 
     return createTheme({
