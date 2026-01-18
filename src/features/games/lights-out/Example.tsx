@@ -1,10 +1,12 @@
 import React from 'react';
-import { Typography, Grid } from '../../../components/mui';
+import { Typography, Grid, Box } from '../../../components/mui';
+import { CircleRounded } from '../../../components/icons';
 
 import { getStates } from './chaseHandlers';
+import { flipAdj } from './boardHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { useMobile } from '../../../hooks';
-import { TYPOGRAPHY } from '../../../config/theme';
+import { TYPOGRAPHY, COLORS } from '../../../config/theme';
 
 interface Frame {
     backgroundColor: string;
@@ -68,6 +70,98 @@ function propHandler(
     };
 }
 
+function getIconFrames(
+    states: number[][][],
+    row: number,
+    col: number,
+    dims: number,
+    palette: Palette
+): Record<string, { opacity: number; color: string }> {
+    const newStates = [[], ...states, []]; // Padding to match propHandler timing
+    const length = states.length;
+    const frames: Record<string, { opacity: number; color: string }> = {};
+
+    for (let k = 0; k < length + 1; k++) {
+        const percent = (100 * k) / length;
+        const floor = Math.floor(percent);
+
+        let opacity = 0;
+        let color = palette.secondary; // Default
+
+        const currentState = k > 0 && k <= length ? states[k - 1] : null;
+        const nextState = k > 0 && k < length ? states[k] : null;
+
+        if (currentState && nextState) {
+            // Predict if clicking (row, col) results in nextState
+            const predicted = flipAdj(row, col, currentState);
+
+            // Compare predicted with nextState
+            let match = true;
+            loop: for (let r = 0; r < dims; r++) {
+                for (let c = 0; c < dims; c++) {
+                    if (predicted[r][c] !== nextState[r][c]) {
+                        match = false;
+                        break loop;
+                    }
+                }
+            }
+
+            if (match) {
+                opacity = 1;
+                // Inverse of background color
+                // If cell is 1 (ON), bg is primary, icon is secondary
+                // If cell is 0 (OFF), bg is secondary, icon is primary
+                const isOne = currentState[row][col] === 1;
+                color = isOne ? palette.secondary : palette.primary;
+            }
+        }
+
+        frames[`${floor}%`] = { opacity, color };
+    }
+
+    return frames;
+}
+
+function iconHandler(
+    states: number[][][],
+    dims: number,
+    id: string,
+    palette: Palette
+) {
+    return (row: number, col: number): Record<string, unknown> => {
+        const frames = getIconFrames(states, row, col, dims, palette);
+        const length = states.length;
+
+        const name = `${id}-icon-${row}-${col}`;
+        const index = `@keyframes ${name}`;
+
+        const animation = `
+            ${name}
+            ${length * 2}s
+            steps(1, start)
+            infinite
+        `;
+
+        return {
+            children: (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                        height: '100%',
+                        [index]: frames,
+                        animation,
+                    }}
+                >
+                    <CircleRounded sx={{ fontSize: '60%' }} />
+                </Box>
+            ),
+        };
+    };
+}
+
 interface ExampleProps {
     states?: unknown[];
     getter?: (states: unknown[], row: number, col: number) => unknown[];
@@ -80,49 +174,7 @@ interface ExampleProps {
     start?: unknown[];
 }
 
-function getRange(dims: number): number[] {
-    const keys = Array(dims).keys();
-    return [...keys];
-}
-
-function gridTiles(states: number[][][], dims: number): number[][][] {
-    const length = states.length;
-    const dRange = getRange(dims);
-    const lRange = getRange(length);
-
-    return dRange.map(r => dRange.map(c => lRange.map(k => states[k][r][c])));
-}
-
-function rowTiles(states: number[][], dims: number): number[][] {
-    const length = states.length;
-    const dRange = getRange(dims);
-    const lRange = getRange(length);
-
-    return dRange.map(r => lRange.map(k => states[k][r]));
-}
-
-function Bifold({ children }: { children: React.ReactNode }) {
-    return <Grid size={6}>{children}</Grid>;
-}
-
-function Title({ children }: { children: React.ReactNode }) {
-    return (
-        <Bifold>
-            <Typography
-                variant="h6"
-                sx={{
-                    textAlign: 'center',
-                    fontWeight: 'semibold',
-                    fontSize: TYPOGRAPHY.fontSize.body,
-                    lineHeight: '1.2',
-                    letterSpacing: '-0.025em',
-                }}
-            >
-                {children}
-            </Typography>
-        </Bifold>
-    );
-}
+// Helper functions removed as we pass states directly
 
 export default function Example({
     start = [],
@@ -136,10 +188,6 @@ export default function Example({
 
     const { boardStates, inputStates, outputStates } = states;
 
-    const boardTiles = gridTiles(boardStates, dims);
-    const inputTiles = rowTiles(inputStates, dims);
-    const outputTiles = rowTiles(outputStates, dims);
-
     const getGrid = (s: unknown[], r: number, c: number) => {
         const states = s as number[][][];
         return states.map(state => state[r][c]);
@@ -149,54 +197,104 @@ export default function Example({
         return states.map(state => state[c]);
     };
 
-    const getBoard = propHandler(
-        boardTiles as unknown[],
+    const getBoardBg = propHandler(
+        boardStates as unknown[],
         getGrid,
         palette,
         'board'
     );
+
+    // Icon animation handler
+    const getBoardIcon = iconHandler(boardStates, dims, 'board', palette);
+
+    // Merge props
+    const getBoard = (r: number, c: number) => {
+        const bgProps = getBoardBg(r, c);
+        const iconProps = getBoardIcon(r, c);
+        return {
+            ...bgProps,
+            ...iconProps,
+        };
+    };
+
     const getInput = propHandler(
-        inputTiles as unknown[],
+        inputStates as unknown[],
         getRow,
         palette,
         'input'
     );
     const getOutput = propHandler(
-        outputTiles as unknown[],
+        outputStates as unknown[],
         getRow,
         palette,
         'output'
     );
 
     return (
-        <Grid container size={12} spacing={4}>
-            <Grid container size={12}>
-                <Bifold>
+        <Grid container size={12} spacing={2} sx={{ height: '100%' }}>
+            <Grid
+                container
+                size={12}
+                sx={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flex: 1,
+                }}
+            >
+                <Grid
+                    size={{ xs: 12, md: 6 }}
+                    sx={{ display: 'flex', justifyContent: 'center' }}
+                >
                     <CustomGrid
                         size={width}
                         rows={dims}
                         cols={dims}
                         cellProps={getBoard}
-                    />
-                </Bifold>
-                <Grid container size={6}>
-                    <CustomGrid
-                        rows={1}
-                        cols={dims}
-                        size={width}
-                        cellProps={getInput}
-                    />
-                    <CustomGrid
-                        rows={1}
-                        cols={dims}
-                        size={width}
-                        cellProps={getOutput}
+                        space={0}
                     />
                 </Grid>
-            </Grid>
-            <Grid container size={12}>
-                <Title>Animation Demo</Title>
-                <Title>Pattern Input</Title>
+                <Grid
+                    container
+                    size={{ xs: 12, md: 6 }}
+                    spacing={2}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Box sx={{ mb: 2, textAlign: 'center' }}>
+                        <Typography
+                            variant="subtitle2"
+                            sx={{ mb: 1, color: COLORS.text.secondary }}
+                        >
+                            Input
+                        </Typography>
+                        <CustomGrid
+                            rows={1}
+                            cols={dims}
+                            size={width}
+                            cellProps={getInput}
+                            space={0}
+                        />
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                        <CustomGrid
+                            rows={1}
+                            cols={dims}
+                            size={width}
+                            cellProps={getOutput}
+                            space={0}
+                        />
+                        <Typography
+                            variant="subtitle2"
+                            sx={{ mt: 1, color: COLORS.text.secondary }}
+                        >
+                            Result
+                        </Typography>
+                    </Box>
+                </Grid>
             </Grid>
         </Grid>
     );

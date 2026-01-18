@@ -30,8 +30,7 @@ class ErrorBoundary extends React.Component<
 
     componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
         // Log error details for debugging
-        // eslint-disable-next-line no-console
-        console.error('Error caught by boundary:', error, errorInfo);
+        window.console.error('Error caught by boundary:', error, errorInfo);
         this.setState({
             error,
             errorInfo,

@@ -85,6 +85,12 @@ export const DRIVING_SIDE_FILTERS = [
     { label: 'Never switched', value: 'Never switched' },
 ];
 
+export const DRIVING_SIDE_OPTIONS = [
+    { label: 'All', value: 'All' },
+    { label: 'Left', value: 'Left' },
+    { label: 'Right', value: 'Right' },
+];
+
 export const QUIZ_CONFIGS: Record<
     QuizType,
     {
@@ -97,14 +103,17 @@ export const QUIZ_CONFIGS: Record<
         modes?: { value: GameMode; label: string }[];
         maxQuestionOptions: number[];
         renderQuestionPrompt: (mode: string) => string;
-        renderQuestionContent: (item: any, mode: string) => React.ReactNode;
+        renderQuestionContent: (
+            item: QuizItem,
+            mode: string
+        ) => React.ReactNode;
         checkAnswer: (
             input: string,
-            item: any,
+            item: QuizItem,
             settings: QuizSettings
         ) => { isCorrect: boolean; expected: string; points: number };
-        renderFeedbackOrigin?: (item: any) => React.ReactNode;
-        customGameRender?: (props: any) => React.ReactNode; // For driving side special buttons
+        renderFeedbackOrigin?: (item: QuizItem) => React.ReactNode;
+        customGameRender?: (props: unknown) => React.ReactNode; // For driving side special buttons
     }
 > = {
     cctld: {
@@ -129,26 +138,30 @@ export const QUIZ_CONFIGS: Record<
             mode === 'toCountry'
                 ? 'What country belongs to:'
                 : 'What is the ccTLD for:',
-        renderQuestionContent: (item: CCTLD, mode) => (
-            <Typography
-                variant="h1"
-                sx={{
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    fontSize: { xs: '3rem', sm: '4rem' },
-                }}
-            >
-                {mode === 'toCountry' ? item.code : item.country}
-            </Typography>
-        ),
-        checkAnswer: (input, item: CCTLD, settings) => {
+        renderQuestionContent: (item, mode) => {
+            const cctldItem = item as CCTLD;
+            return (
+                <Typography
+                    variant="h1"
+                    sx={{
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        fontSize: { xs: '3rem', sm: '4rem' },
+                    }}
+                >
+                    {mode === 'toCountry' ? cctldItem.code : cctldItem.country}
+                </Typography>
+            );
+        },
+        checkAnswer: (input, item, settings) => {
+            const cctldItem = item as CCTLD;
             let correct = false;
             let expected = '';
             if (settings.mode === 'toCountry') {
-                expected = item.country;
+                expected = cctldItem.country;
                 correct = isSmartMatch(input, expected, CCTLD_ALIASES);
             } else {
-                expected = item.code;
+                expected = cctldItem.code;
                 let normalizedInput = input.trim();
                 if (!normalizedInput.startsWith('.'))
                     normalizedInput = '.' + normalizedInput;
@@ -156,19 +169,24 @@ export const QUIZ_CONFIGS: Record<
             }
             return { isCorrect: correct, expected, points: correct ? 1 : 0 };
         },
-        renderFeedbackOrigin: (item: CCTLD) => (
-            <Typography
-                variant="body2"
-                color="textSecondary"
-                sx={{ fontStyle: 'italic' }}
-            >
-                Origin:{' '}
-                <Box
-                    component="span"
-                    dangerouslySetInnerHTML={{ __html: item.explanation || '' }}
-                />
-            </Typography>
-        ),
+        renderFeedbackOrigin: item => {
+            const cctldItem = item as CCTLD;
+            return (
+                <Typography
+                    variant="body2"
+                    color="textSecondary"
+                    sx={{ fontStyle: 'italic' }}
+                >
+                    Origin:{' '}
+                    <Box
+                        component="span"
+                        dangerouslySetInnerHTML={{
+                            __html: cctldItem.explanation || '',
+                        }}
+                    />
+                </Typography>
+            );
+        },
     },
     driving_side: {
         title: 'Driving Side Quiz',
@@ -180,44 +198,103 @@ export const QUIZ_CONFIGS: Record<
             allowRepeats: false,
             filterLetter: '',
             filterSwitch: 'All',
+            filterSide: 'All',
             maxQuestions: 'All',
         },
-        hasModeSelect: false,
+        hasModeSelect: true,
+        modes: [
+            { value: 'guessing', label: 'Guess Side (from Country)' },
+            { value: 'toCountry', label: 'Guess Country (from Side)' },
+        ],
         maxQuestionOptions: QUIZ_GAME_CONSTANTS.cctld.questionOptions, // Using same options
-        renderQuestionPrompt: () => 'They drive on the...',
-        renderQuestionContent: (item: DrivingSide) => (
-            <Box sx={{ textAlign: 'center' }}>
-                <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 2 }}>
-                    {item.country}
-                </Typography>
-                {item.flag && (
+        renderQuestionPrompt: mode =>
+            mode === 'toCountry'
+                ? 'Which country is this?'
+                : 'They drive on the...',
+        renderQuestionContent: (item, mode) => {
+            const drivingItem = item as DrivingSide;
+            if (mode === 'toCountry') {
+                return (
                     <Box
-                        component="img"
-                        src={item.flag}
-                        alt={`Flag of ${item.country} `}
-                        sx={{
-                            height: 80,
-                            width: 'auto',
-                            borderRadius: 1,
-                            boxShadow: 3,
-                            mb: 2,
-                        }}
-                    />
-                )}
-            </Box>
-        ),
-        checkAnswer: (input, item: DrivingSide) => {
+                        sx={{ textAlign: 'center', maxWidth: 600, mx: 'auto' }}
+                    >
+                        <Typography
+                            variant="h2"
+                            sx={{ fontWeight: 'bold', mb: 2 }}
+                        >
+                            Drives on the {drivingItem.side}
+                        </Typography>
+                        <Typography
+                            variant="h5"
+                            color="text.secondary"
+                            sx={{ fontStyle: 'italic', mb: 3 }}
+                        >
+                            {/* We show the explanation as part of the question for context */}
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html:
+                                        (drivingItem.explanation || '')
+                                            .replace(
+                                                /^Drives on the <b>(Left|Right)<\/b>\.?\s*/i,
+                                                ''
+                                            )
+                                            .trim() || 'No details available.',
+                                }}
+                            />
+                        </Typography>
+                    </Box>
+                );
+            }
+            return (
+                <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="h2" sx={{ fontWeight: 'bold', mb: 2 }}>
+                        {drivingItem.country}
+                    </Typography>
+                    {drivingItem.flag && (
+                        <Box
+                            component="img"
+                            src={drivingItem.flag}
+                            alt={`Flag of ${drivingItem.country} `}
+                            sx={{
+                                height: 80,
+                                width: 'auto',
+                                borderRadius: 1,
+                                boxShadow: 3,
+                                mb: 2,
+                            }}
+                        />
+                    )}
+                </Box>
+            );
+        },
+        checkAnswer: (input, item, settings) => {
+            const drivingItem = item as DrivingSide;
+
+            if (settings.mode === 'toCountry') {
+                const isCorrect = isSmartMatch(
+                    input,
+                    drivingItem.country,
+                    CCTLD_ALIASES
+                );
+                return {
+                    isCorrect,
+                    expected: drivingItem.country,
+                    points: isCorrect ? 1 : 0,
+                };
+            }
+
             const normalizedInput = normalize(input);
-            const normalizedCorrect = normalize(item.side);
+            const normalizedCorrect = normalize(drivingItem.side);
             const isCorrect = normalizedInput === normalizedCorrect;
             return {
                 isCorrect,
-                expected: item.side,
+                expected: drivingItem.side,
                 points: isCorrect ? 1 : 0,
             };
         },
-        renderFeedbackOrigin: (item: DrivingSide) => {
-            const cleanExplanation = (item.explanation || '')
+        renderFeedbackOrigin: item => {
+            const drivingItem = item as DrivingSide;
+            const cleanExplanation = (drivingItem.explanation || '')
                 .replace(/^Drives on the <b>(Left|Right)<\/b>\.?\s*/i, '')
                 .trim();
             if (!cleanExplanation) return null;
@@ -258,27 +335,33 @@ export const QUIZ_CONFIGS: Record<
             mode === 'toCountry'
                 ? 'What country belongs to:'
                 : 'What is the telephone code for:',
-        renderQuestionContent: (item: TelephoneCode, mode) => (
-            <Typography
-                variant="h1"
-                sx={{
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    fontSize: { xs: '2.5rem', sm: '3.5rem' },
-                    wordBreak: 'break-word',
-                }}
-            >
-                {mode === 'toCountry' ? item.code : item.country}
-            </Typography>
-        ),
-        checkAnswer: (input, item: TelephoneCode, settings) => {
+        renderQuestionContent: (item, mode) => {
+            const telephoneItem = item as TelephoneCode;
+            return (
+                <Typography
+                    variant="h1"
+                    sx={{
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        fontSize: { xs: '2.5rem', sm: '3.5rem' },
+                        wordBreak: 'break-word',
+                    }}
+                >
+                    {mode === 'toCountry'
+                        ? telephoneItem.code
+                        : telephoneItem.country}
+                </Typography>
+            );
+        },
+        checkAnswer: (input, item, settings) => {
+            const telephoneItem = item as TelephoneCode;
             let correct = false;
             let expected = '';
             if (settings.mode === 'toCountry') {
-                expected = item.country;
+                expected = telephoneItem.country;
                 correct = isSmartMatch(input, expected, CCTLD_ALIASES);
             } else {
-                expected = item.code;
+                expected = telephoneItem.code;
                 let normalizedInput = input.trim();
                 if (!normalizedInput.startsWith('+'))
                     normalizedInput = '+' + normalizedInput;
@@ -312,27 +395,33 @@ export const QUIZ_CONFIGS: Record<
             mode === 'toCountry'
                 ? 'What country belongs to:'
                 : 'What is the vehicle registration code for:',
-        renderQuestionContent: (item: VehicleCode, mode) => (
-            <Typography
-                variant="h1"
-                sx={{
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    fontSize: { xs: '2.5rem', sm: '3.5rem' },
-                    wordBreak: 'break-word',
-                }}
-            >
-                {mode === 'toCountry' ? item.code : item.country}
-            </Typography>
-        ),
-        checkAnswer: (input, item: VehicleCode, settings) => {
+        renderQuestionContent: (item, mode) => {
+            const vehicleItem = item as VehicleCode;
+            return (
+                <Typography
+                    variant="h1"
+                    sx={{
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        fontSize: { xs: '2.5rem', sm: '3.5rem' },
+                        wordBreak: 'break-word',
+                    }}
+                >
+                    {mode === 'toCountry'
+                        ? vehicleItem.code
+                        : vehicleItem.country}
+                </Typography>
+            );
+        },
+        checkAnswer: (input, item, settings) => {
+            const vehicleItem = item as VehicleCode;
             let correct = false;
             let expected = '';
             if (settings.mode === 'toCountry') {
-                expected = item.country;
+                expected = vehicleItem.country;
                 correct = isSmartMatch(input, expected, CCTLD_ALIASES);
             } else {
-                expected = item.code;
+                expected = vehicleItem.code;
                 const norm = (s: string) =>
                     s
                         .trim()

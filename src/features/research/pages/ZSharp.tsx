@@ -8,7 +8,7 @@ import {
 import { URLS, PAGE_TITLES } from '../../../config/constants';
 import { RESEARCH_CONSTANTS, PERCENTAGE } from '../config/researchConfig';
 import { COLORS } from '../../../config/theme';
-import ResearchDemo from '../ResearchDemo';
+import ResearchDemo, { ViewType } from '../ResearchDemo';
 
 interface DataPoint {
     epoch: number;
@@ -33,27 +33,6 @@ interface RealData {
     ZSharp?: {
         train_accuracies?: number[];
         train_losses?: number[];
-    };
-}
-
-interface ViewType {
-    key: string;
-    label: string;
-    icon: React.ElementType;
-    chartTitle: string;
-    dataProcessor: (data: DataPoint[]) => ProcessedDataPoint[];
-    chartConfig: {
-        type: string;
-        xAxisKey: string;
-        yAxisFormatter: (value: number) => string;
-        yAxisDomain: string[];
-        tooltipLabelFormatter: (value: number) => string;
-        tooltipFormatter: (value: number, name: string) => [string, string];
-        lines: Array<{
-            dataKey: string;
-            name: string;
-            color: string;
-        }>;
     };
 }
 
@@ -182,7 +161,7 @@ const ZSharp: React.FC = () => {
         loadData();
     }, []);
 
-    const viewTypes: ViewType[] = [
+    const viewTypes: ViewType<DataPoint>[] = [
         {
             key: 'accuracy',
             label: 'Accuracy',
@@ -249,7 +228,7 @@ const ZSharp: React.FC = () => {
         },
         {
             key: 'learning_curve',
-            label: 'Learning Gap',
+            label: 'Learning',
             icon: ShowChartRounded,
             chartTitle: 'Learning Progress',
             dataProcessor: (data: DataPoint[]) =>
@@ -327,10 +306,10 @@ const ZSharp: React.FC = () => {
             title="ZSharp"
             subtitle="Neural Network Optimization Research"
             githubUrl={URLS.zsharpRepo}
-            chartData={chartData as any}
-            viewTypes={viewTypes as any}
+            chartData={chartData}
+            viewTypes={viewTypes}
             currentViewType={viewType}
-            onViewTypeChange={setViewType as any}
+            onViewTypeChange={setViewType}
             loading={loading}
             loadingMessage="Loading real experiment data..."
         />

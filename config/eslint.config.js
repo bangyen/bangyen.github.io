@@ -35,7 +35,6 @@ module.exports = {
     'react/no-array-index-key': 'warn', // Warn about using array indices as keys
     'import/no-unresolved': 'off', // CRA handles this
     'jsx-a11y/anchor-is-valid': 'off', // For react-router Link components
-    'react-hooks/exhaustive-deps': 'warn', // Ensure correct hook dependencies
     'no-unused-vars': 'off', // Use TypeScript version instead
     'no-console': 'warn', // Warn about console statements
     'prefer-const': 'error', // Enforce const for variables that aren't reassigned

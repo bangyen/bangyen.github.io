@@ -27,6 +27,7 @@ export function HeroSection(): React.ReactElement {
                                     fontWeight: TYPOGRAPHY.fontWeight.semibold,
                                     textTransform: 'uppercase',
                                     letterSpacing: '0.025em',
+                                    textAlign: { xs: 'center', md: 'left' },
                                     marginBottom: 3,
                                 }}
                             >
@@ -46,6 +47,7 @@ export function HeroSection(): React.ReactElement {
                                     marginBottom: 2,
                                     wordBreak: 'keep-all',
                                     hyphens: 'none',
+                                    textAlign: { xs: 'center', md: 'left' },
                                 }}
                             >
                                 {PERSONAL_INFO.name}
@@ -63,6 +65,7 @@ export function HeroSection(): React.ReactElement {
                                     lineHeight: 1.4,
                                     wordBreak: 'keep-all',
                                     hyphens: 'none',
+                                    textAlign: { xs: 'center', md: 'left' },
                                 }}
                             >
                                 {PERSONAL_INFO.title}
@@ -72,7 +75,10 @@ export function HeroSection(): React.ReactElement {
                                 sx={{
                                     display: 'flex',
                                     alignItems: 'center',
-                                    gap: 2,
+                                    justifyContent: {
+                                        xs: 'center',
+                                        md: 'flex-start',
+                                    },
                                     marginBottom: 4,
                                 }}
                             >
@@ -96,9 +102,13 @@ export function HeroSection(): React.ReactElement {
 
                             <Box
                                 sx={{
-                                    display: 'flex',
+                                    display: { xs: 'none', md: 'flex' },
                                     gap: 2,
                                     flexWrap: 'wrap',
+                                    justifyContent: {
+                                        xs: 'center',
+                                        md: 'flex-start',
+                                    },
                                 }}
                             >
                                 <Box
@@ -156,7 +166,10 @@ export function HeroSection(): React.ReactElement {
                     </Fade>
                 </Grid>
 
-                <Grid size={{ xs: 12, md: 6 }}>
+                <Grid
+                    size={{ xs: 12, md: 6 }}
+                    sx={{ display: { xs: 'none', md: 'block' } }}
+                >
                     <Fade in timeout={1000}>
                         <Box
                             sx={{

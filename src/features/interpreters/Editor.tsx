@@ -49,20 +49,27 @@ export default function Editor({
     };
 
     const contentProps = {
-        flex: 1,
+        flex: { xs: 'none', md: 1 },
         spacing: 2,
         ref: container,
         container: true,
         display: 'flex',
         alignItems: 'center',
-        sx: { overflowY: 'hidden' },
+        sx: {
+            overflowY: 'hidden',
+            height: {
+                xs: code !== undefined ? '300px' : '350px',
+                md: 'auto',
+            },
+        },
     };
 
     return (
         <Grid
             container
             spacing={2}
-            height="100vh"
+            minHeight="100vh"
+            height={{ xs: 'auto', md: '100vh' }}
             display="flex"
             flexDirection="column"
             padding="5vh 5vw 5vh 5vw"

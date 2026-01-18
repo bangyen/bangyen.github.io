@@ -7,6 +7,7 @@ import {
     Grid,
     ToggleButton,
     ToggleButtonGroup,
+    useMediaQuery,
 } from '../../components/mui';
 import {
     GitHub,
@@ -51,12 +52,12 @@ interface ChartConfig {
     tooltipFormatter: (value: number, name: string) => [string, string];
 }
 
-interface ViewType {
+export interface ViewType<T> {
     key: string;
     label: string;
     icon: React.ElementType;
     chartTitle: string;
-    dataProcessor: (data: any[]) => any[];
+    dataProcessor: (data: T[]) => any[];
     chartConfig: ChartConfig;
 }
 
@@ -75,13 +76,13 @@ interface Control {
     options: ControlOption[];
 }
 
-interface ResearchDemoProps {
+interface ResearchDemoProps<T> {
     title: string;
     subtitle: string;
     githubUrl: string;
-    chartData?: any[];
+    chartData?: T[];
     chartConfig?: ChartConfig;
-    viewTypes?: ViewType[];
+    viewTypes?: ViewType<T>[];
     currentViewType?: string;
     onViewTypeChange?: (value: string) => void;
     controls?: Control[];
@@ -92,7 +93,7 @@ interface ResearchDemoProps {
     chartTitle?: string | null;
 }
 
-const ResearchDemo: React.FC<ResearchDemoProps> = ({
+const ResearchDemo = <T,>({
     title,
     subtitle,
     githubUrl,
@@ -118,10 +119,10 @@ const ResearchDemo: React.FC<ResearchDemoProps> = ({
     controls = [],
     loading = false,
     loadingMessage = 'Loading data...',
-    onReset = null,
+    onReset = undefined,
     resetLabel = 'Reset',
     chartTitle = null,
-}) => {
+}: ResearchDemoProps<T>) => {
     const getCurrentChartData = () => {
         if (!chartData || chartData.length === 0) return [];
 
@@ -139,6 +140,8 @@ const ResearchDemo: React.FC<ResearchDemoProps> = ({
     const currentChartConfig =
         viewTypes.find(view => view.key === currentViewType)?.chartConfig ||
         chartConfig;
+
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     return (
         <Grid
@@ -312,6 +315,7 @@ const ResearchDemo: React.FC<ResearchDemoProps> = ({
                                         />
                                         <YAxis
                                             yAxisId="left"
+                                            hide={isMobile}
                                             stroke={COLORS.text.secondary}
                                             tick={{
                                                 fill: COLORS.text.secondary,
@@ -327,6 +331,7 @@ const ResearchDemo: React.FC<ResearchDemoProps> = ({
                                             <YAxis
                                                 yAxisId="right"
                                                 orientation="right"
+                                                hide={isMobile}
                                                 stroke={COLORS.text.secondary}
                                                 tick={{
                                                     fill: COLORS.text.secondary,
@@ -352,7 +357,10 @@ const ResearchDemo: React.FC<ResearchDemoProps> = ({
                                                 currentChartConfig.tooltipLabelFormatter
                                             }
                                             formatter={
-                                                currentChartConfig.tooltipFormatter as any
+                                                currentChartConfig.tooltipFormatter as (
+                                                    value: number,
+                                                    name: string
+                                                ) => [string, string]
                                             }
                                         />
                                         {currentChartConfig.lines.map(

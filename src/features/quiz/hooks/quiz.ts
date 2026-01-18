@@ -1,5 +1,14 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { QuizSettings, Question, QuizType, QuizItem } from '../types/quiz';
+import {
+    QuizSettings,
+    Question,
+    QuizType,
+    QuizItem,
+    CCTLD,
+    TelephoneCode,
+    VehicleCode,
+    DrivingSide,
+} from '../types/quiz';
 
 // Quiz Engine Hook
 interface QuizEngineProps<T> {
@@ -30,7 +39,7 @@ export const useQuizEngine = <T>({
 }: QuizEngineProps<T>) => {
     const [hasInitialized, setHasInitialized] = useState(false);
     const [history, setHistory] = useState<Question<T>[]>([]);
-    const [_pool, setPool] = useState<T[]>([]);
+    const [, setPool] = useState<T[]>([]);
     const [currentQuestion, setCurrentQuestion] = useState<T | null>(null);
     const [totalQuestions, setTotalQuestions] = useState(0);
     const [inputValue, setInputValue] = useState('');
@@ -107,6 +116,7 @@ export const useQuizEngine = <T>({
             } = checkAnswer(value, currentQuestion, settings);
 
             const newQuestion: Question<T> = {
+                id: crypto.randomUUID(),
                 item: currentQuestion,
                 userAnswer: value,
                 isCorrect: correct,
@@ -150,6 +160,7 @@ export const useQuizEngine = <T>({
         const { expected } = checkAnswer('', currentQuestion, settings);
 
         const newQuestion: Question<T> = {
+            id: crypto.randomUUID(),
             item: currentQuestion,
             userAnswer: '',
             isCorrect: false,
@@ -233,11 +244,12 @@ export const useQuizFilter = ({
         ) {
             if (settings.filterLanguage === 'Non-English') {
                 filtered = filtered.filter(
-                    (item: any) => item.language !== 'English'
+                    (item: QuizItem) => (item as CCTLD).language !== 'English'
                 );
             } else {
                 filtered = filtered.filter(
-                    (item: any) => item.language === settings.filterLanguage
+                    (item: QuizItem) =>
+                        (item as CCTLD).language === settings.filterLanguage
                 );
             }
         }
@@ -247,9 +259,11 @@ export const useQuizFilter = ({
             settings.filterZone !== 'All' &&
             quizType === 'telephone'
         ) {
-            const zones = settings.filterZone.split(',');
-            filtered = filtered.filter((item: any) =>
-                zones.some((z: string) => item.code.startsWith(`+${z}`))
+            const zones = (settings.filterZone as string).split(',');
+            filtered = filtered.filter((item: QuizItem) =>
+                zones.some((z: string) =>
+                    (item as TelephoneCode).code.startsWith(`+${z}`)
+                )
             );
         }
 
@@ -258,11 +272,15 @@ export const useQuizFilter = ({
             settings.filterConvention !== 'All' &&
             quizType === 'vehicle'
         ) {
-            filtered = filtered.filter(
-                (item: any) =>
-                    item.conventions &&
-                    item.conventions.includes(Number(settings.filterConvention))
-            );
+            filtered = filtered.filter((item: QuizItem) => {
+                const vehicleItem = item as VehicleCode;
+                return (
+                    vehicleItem.conventions &&
+                    vehicleItem.conventions.includes(
+                        Number(settings.filterConvention)
+                    )
+                );
+            });
         }
 
         if (
@@ -270,29 +288,62 @@ export const useQuizFilter = ({
             settings.filterSwitch !== 'All' &&
             quizType === 'driving_side'
         ) {
-            filtered = filtered.filter((item: any) =>
-                settings.filterSwitch === 'Switched'
-                    ? item.switched
-                    : !item.switched
+            // In 'toCountry' mode for driving_side, we ONLY show switched countries
+            // The switch filter is effectively ignored/replaced by this logic,
+            // but we keep the block structure for existing 'guessing' mode.
+            if (settings.mode === 'toCountry') {
+                filtered = filtered.filter(
+                    (item: QuizItem) => (item as DrivingSide).switched
+                );
+            } else {
+                filtered = filtered.filter((item: QuizItem) =>
+                    settings.filterSwitch === 'Switched'
+                        ? (item as DrivingSide).switched
+                        : !(item as DrivingSide).switched
+                );
+            }
+        } else if (
+            quizType === 'driving_side' &&
+            settings.mode === 'toCountry'
+        ) {
+            // Even if filterSwitch wasn't set (shouldn't happen given default settings, but for safety),
+            // force switched=true for toCountry mode
+            filtered = filtered.filter(
+                (item: QuizItem) => (item as DrivingSide).switched
+            );
+        }
+
+        if (
+            settings.filterSide &&
+            settings.filterSide !== 'All' &&
+            quizType === 'driving_side' &&
+            settings.mode === 'toCountry'
+        ) {
+            filtered = filtered.filter(
+                (item: QuizItem) =>
+                    (item as DrivingSide).side === settings.filterSide
             );
         }
 
         if (settings.filterLetter) {
-            let letters = settings.filterLetter
+            let letters = (settings.filterLetter as string)
                 .toLowerCase()
                 .split(',')
                 .map((l: string) => l.trim())
                 .filter((l: string) => l);
 
-            if (letters.length <= 1 && !settings.filterLetter.includes(',')) {
-                const spaceSplit = settings.filterLetter
+            if (
+                letters.length <= 1 &&
+                !(settings.filterLetter as string).includes(',')
+            ) {
+                const spaceSplit = (settings.filterLetter as string)
                     .toLowerCase()
                     .split(/\s+/)
                     .filter((l: string) => l);
                 if (spaceSplit.length > 1) {
                     letters = spaceSplit;
                 } else {
-                    letters = settings.filterLetter
+                    letters = (settings.filterLetter as string)
                         .toLowerCase()
                         .split('')
                         .filter((l: string) => l.trim());
@@ -300,12 +351,14 @@ export const useQuizFilter = ({
             }
 
             if (letters.length > 0) {
-                filtered = filtered.filter((item: any) => {
+                filtered = filtered.filter((item: QuizItem) => {
                     let text = '';
                     if (quizType === 'cctld') {
                         text =
                             settings.mode === 'toCountry'
-                                ? item.code.toLowerCase().replace('.', '')
+                                ? (item as CCTLD).code
+                                      .toLowerCase()
+                                      .replace('.', '')
                                 : item.country.toLowerCase();
                     } else if (quizType === 'driving_side') {
                         text = item.country.toLowerCase();
@@ -314,7 +367,7 @@ export const useQuizFilter = ({
                     } else if (quizType === 'vehicle') {
                         text =
                             settings.mode === 'toCountry'
-                                ? item.code.toLowerCase()
+                                ? (item as VehicleCode).code.toLowerCase()
                                 : item.country.toLowerCase();
                     }
                     return letters.some((l: string) => text.startsWith(l));

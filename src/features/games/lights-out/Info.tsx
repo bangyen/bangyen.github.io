@@ -1,10 +1,21 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { Backdrop, Typography, Box, Grid } from '../../../components/mui';
+import {
+    Backdrop,
+    Typography,
+    Box,
+    Grid,
+    IconButton,
+    Button,
+} from '../../../components/mui';
 import {
     CircleRounded,
     KeyboardArrowDown,
     Calculate,
     Replay,
+    NavigateBeforeRounded,
+    NavigateNextRounded,
+    CloseRounded,
+    Refresh,
 } from '../../../components/icons';
 import {
     SPACING,
@@ -23,12 +34,8 @@ import Example from './Example';
 const TypedGlassCard = GlassCard as React.ComponentType<{
     children?: React.ReactNode;
     sx?: Record<string, unknown>;
+    onClick?: (event: React.MouseEvent) => void;
 }>;
-
-interface Getters {
-    getColor: (row: number, col: number) => { front: string; back: string };
-    getBorder: (row: number, col: number) => Record<string, unknown>;
-}
 
 interface Palette {
     primary: string;
@@ -42,6 +49,13 @@ interface InfoProps {
     open: boolean;
     palette: Palette;
     toggleOpen: () => void;
+}
+
+// --- Calculator Helpers ---
+
+interface Getters {
+    getColor: (row: number, col: number) => { front: string; back: string };
+    getBorder: (row: number, col: number) => Record<string, unknown>;
 }
 
 function getInput(
@@ -62,6 +76,7 @@ function getInput(
                     cursor: 'pointer',
                     color: back,
                 },
+                transition: 'all 200ms ease',
             },
             color: front,
             children: <CircleRounded />,
@@ -76,6 +91,7 @@ function getOutput({ getColor, getBorder }: Getters) {
         return {
             backgroundColor: front,
             style: getBorder(r, c),
+            transition: 'all 200ms ease',
         };
     };
 }
@@ -84,7 +100,6 @@ function useHandler(row: number[], size: number, palette: Palette) {
     const getTile = useCallback(
         (r: number, c: number) => {
             if (r !== 0 || c < 0 || c >= size) return -1;
-
             return row[c];
         },
         [row, size]
@@ -93,357 +108,407 @@ function useHandler(row: number[], size: number, palette: Palette) {
     return useGetters(getTile, palette);
 }
 
+// --- Content Steps ---
+
+const StepTitle = ({ children }: { children: React.ReactNode }) => (
+    <Typography
+        variant="h5"
+        sx={{
+            color: COLORS.text.primary,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            textAlign: 'center',
+            fontSize: TYPOGRAPHY.fontSize.h2,
+        }}
+    >
+        {children}
+    </Typography>
+);
+
+const InstructionItem = ({
+    Icon,
+    title,
+    text,
+}: {
+    Icon: React.ElementType;
+    title: string;
+    text: string;
+}) => (
+    <Box sx={{ px: 2 }}>
+        <Typography
+            variant="h6"
+            sx={{
+                color: COLORS.text.primary,
+                fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                display: 'flex',
+                alignItems: 'center',
+                mb: 1.5,
+                fontSize: TYPOGRAPHY.fontSize.subheading,
+            }}
+        >
+            <Icon
+                sx={{ mr: 2, color: COLORS.primary.main, fontSize: '1.75rem' }}
+            />
+            {title}
+        </Typography>
+        <Typography
+            variant="body1"
+            sx={{
+                color: COLORS.text.secondary,
+                lineHeight: 1.6,
+                fontSize: TYPOGRAPHY.fontSize.body,
+                ml: 6,
+            }}
+        >
+            {text}
+        </Typography>
+    </Box>
+);
+
+// --- Main Component ---
+
+const TITLES = ['Chasing Lights', 'How It Works', 'Calculator'];
+
 export default function Info(props: InfoProps): React.ReactElement {
     const { rows, cols, size, open, palette, toggleOpen } = props;
     const isMobile = useMobile('md');
-    const isLargeScreen = useMobile('lg');
 
-    const [row, setRow] = useState<number[]>(Array(cols).fill(0));
+    // 0: Instructions, 1: Example, 2: Calculator
+    const [step, setStep] = useState(0);
+    const TOTAL_STEPS = 3;
+
+    // Calculator State (hoisted to persist across steps)
+    const [calcRow, setCalcRow] = useState<number[]>(Array(cols).fill(0));
 
     useEffect(() => {
-        const newRow = Array(cols).fill(0);
+        setCalcRow(Array(cols).fill(0));
+    }, [cols, palette]); // Reset only on config change
 
-        setRow(newRow);
-    }, [cols, palette]);
-
-    const res = getProduct(row, rows, cols);
+    const res = getProduct(calcRow, rows, cols);
 
     const toggleTile = (col: number) => (event: React.MouseEvent) => {
         event.stopPropagation();
-
-        const newRow = [...row];
+        const newRow = [...calcRow];
         newRow[col] ^= 1;
-        setRow(newRow);
+        setCalcRow(newRow);
     };
 
-    const inputGetters = useHandler(row, cols, palette);
+    const inputGetters = useHandler(calcRow, cols, palette);
     const outputGetters = useHandler(res, cols, palette);
     const inputProps = getInput(inputGetters, toggleTile);
     const outputProps = getOutput(outputGetters);
 
+    // Reset functionality
+    const handleReset = () => {
+        setCalcRow(Array(cols).fill(0));
+    };
+
+    const handleNext = () => {
+        if (step < TOTAL_STEPS - 1) setStep(step + 1);
+        else toggleOpen();
+    };
+
+    const handleBack = () => {
+        if (step > 0) setStep(step - 1);
+    };
+
+    // Close handler to also reset step? Optional. Let's keep step for now.
+    const handleClose = () => {
+        toggleOpen();
+        // setTimeout(() => setStep(0), 300); // Reset step after transition? Maybe not.
+    };
+
     return (
         <Backdrop
             open={open}
-            onClick={toggleOpen}
+            onClick={toggleOpen} // Close on backdrop click
             sx={{
-                ...COMPONENT_VARIANTS.card,
-                backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
-                transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
-                border: 'none',
+                zIndex: 9999,
+                backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                backdropFilter: 'blur(8px)',
             }}
         >
-            <Box
+            <TypedGlassCard
+                onClick={(e: React.MouseEvent) => e.stopPropagation()} // Prevent close on card click
                 sx={{
-                    maxWidth: '80vw',
-                    height: 'fit-content',
-                    maxHeight: '90vh',
-                    overflow: 'auto',
-                    mx: 'auto',
+                    width: '100%',
+                    maxWidth: '1000px',
+                    height: { xs: 'auto', md: '520px' },
+                    minHeight: { xs: '450px', md: '520px' },
                     display: 'flex',
                     flexDirection: 'column',
-                    transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
-                    padding: 0,
-                    backgroundColor: COLORS.surface.elevated,
-                    borderRadius: SPACING.borderRadius.lg,
-                    border: `1px solid ${COLORS.border.subtle}`,
+                    p: 0,
+                    overflow: 'hidden',
+                    position: 'relative',
+                    m: 2,
                 }}
             >
+                {/* Content Area */}
                 <Box
                     sx={{
-                        pt: '1rem',
-                        pb: '1rem',
-                        px: '1.25rem',
-                        height: 'fit-content',
+                        flex: 1,
+                        overflowY: 'auto',
+                        p: { xs: 2.5, md: 3 }, // balanced padding
                         display: 'flex',
                         flexDirection: 'column',
-                        minHeight: 0,
                     }}
                 >
-                    <Grid
-                        container
-                        spacing={isMobile ? 1.5 : 2}
-                        sx={{ flex: 1, minHeight: 0 }}
+                    {/* Synchronized Header (Title + Close Button) */}
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            mb: 2, // reduced from 3 for snug fit
+                        }}
                     >
-                        {/* Top section: Instructions on left, animations on right */}
-                        <Grid
-                            container
-                            size={12}
-                            spacing={2}
+                        <StepTitle>{TITLES[step]}</StepTitle>
+                        <IconButton
+                            onClick={handleClose}
+                            size="small"
                             sx={{
-                                flex: 1,
-                                minHeight: 0,
-                                maxWidth: {
-                                    xs: '100%',
-                                    lg: SPACING.maxWidth.lg,
-                                },
-                                mx: 'auto',
+                                position: 'absolute',
+                                right: 0,
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                color: COLORS.text.secondary,
                             }}
                         >
-                            {/* Left half: Algorithm instructions */}
-                            <Grid
-                                size={{ xs: 12, lg: isMobile ? 12 : 6 }}
+                            <CloseRounded />
+                        </IconButton>
+                    </Box>
+                    {/* Step 0: Instructions */}
+                    {step === 0 && (
+                        <Box
+                            sx={{
+                                animation: 'fadeIn 0.3s ease',
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                            }}
+                        >
+                            <Box
                                 sx={{
+                                    flex: 1,
                                     display: 'flex',
                                     flexDirection: 'column',
-                                    height: isLargeScreen ? '100%' : 'auto',
+                                    justifyContent: 'center',
+                                    gap: 4,
                                 }}
                             >
-                                <Box sx={{ flex: 1, overflow: 'auto' }}>
-                                    <TypedGlassCard
+                                <InstructionItem
+                                    Icon={KeyboardArrowDown}
+                                    title="Chase to Bottom"
+                                    text="Turn off rows from top to bottom by clicking lights in each row to push them down."
+                                />
+                                <InstructionItem
+                                    Icon={Calculate}
+                                    title="Use Calulator"
+                                    text="Enter the remaining lights pattern from the bottom row into the calculator on the last page."
+                                />
+                                <InstructionItem
+                                    Icon={Replay}
+                                    title="Chase Again"
+                                    text="Apply the solution pattern to the top row, then chase them down again to solve the puzzle."
+                                />
+                            </Box>
+                        </Box>
+                    )}
+
+                    {/* Step 1: Example */}
+                    {step === 1 && (
+                        <Box
+                            sx={{
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                animation: 'fadeIn 0.3s ease',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    flex: 1,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                }}
+                            >
+                                <Example
+                                    dims={3}
+                                    size={size * (isMobile ? 0.9 : 0.7)} // Adjust size for responsiveness
+                                    start={[1, 3, 8]}
+                                    palette={palette}
+                                />
+                            </Box>
+                        </Box>
+                    )}
+
+                    {/* Step 2: Calculator */}
+                    {step === 2 && (
+                        <Box
+                            sx={{
+                                animation: 'fadeIn 0.3s ease',
+                                textAlign: 'center',
+                                height: '100%',
+                                display: 'flex',
+                                flexDirection: 'column',
+                            }}
+                        >
+                            <Box
+                                sx={{
+                                    flex: 1,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                    gap: 3, // Consistent spacing
+                                }}
+                            >
+                                <Box>
+                                    <Typography
+                                        variant="subtitle2"
                                         sx={{
-                                            height: !isLargeScreen
-                                                ? '100%'
-                                                : 'auto',
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            transition:
-                                                'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+                                            mb: 1,
+                                            color: COLORS.text.primary,
+                                            fontWeight: 'bold',
                                         }}
                                     >
-                                        <Typography
-                                            variant="h5"
-                                            gutterBottom
+                                        Input{' '}
+                                        <Box
+                                            component="span"
                                             sx={{
-                                                color: COLORS.text.primary,
-                                                fontWeight:
-                                                    TYPOGRAPHY.fontWeight
-                                                        .semibold,
-                                                mb: 2,
-                                                textAlign: isMobile
-                                                    ? 'center'
-                                                    : 'left',
-                                                fontSize:
-                                                    TYPOGRAPHY.fontSize.h2,
-                                                lineHeight: 1.4,
-                                                letterSpacing: '0',
+                                                color: COLORS.text.secondary,
+                                                fontWeight: 'normal',
                                             }}
                                         >
-                                            Chasing Lights Algorithm
-                                        </Typography>
-                                        {/* Step 1 */}
-                                        <Box sx={{ mb: 2 }}>
-                                            <Typography
-                                                variant="subtitle1"
-                                                sx={{
-                                                    color: COLORS.text.primary,
-                                                    fontWeight:
-                                                        TYPOGRAPHY.fontWeight
-                                                            .semibold,
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    mb: 1,
-                                                    fontSize:
-                                                        TYPOGRAPHY.fontSize
-                                                            .body,
-                                                    letterSpacing: '0',
-                                                }}
-                                            >
-                                                <KeyboardArrowDown
-                                                    sx={{
-                                                        mr: 1.5,
-                                                        color: COLORS.primary
-                                                            .main,
-                                                        fontSize: '1.5rem',
-                                                    }}
-                                                />
-                                                Chase to Bottom
-                                            </Typography>
-                                            <Typography
-                                                variant="body1"
-                                                sx={{
-                                                    color: COLORS.text
-                                                        .secondary,
-                                                    lineHeight: 1.5,
-                                                    fontSize:
-                                                        TYPOGRAPHY.fontSize
-                                                            .body,
-                                                    ml: 4,
-                                                }}
-                                            >
-                                                Turn off rows from top to bottom
-                                                by clicking lights in each row
-                                                to eliminate all lights above
-                                                the bottom row.
-                                            </Typography>
+                                            (Bottom Row)
                                         </Box>
-
-                                        {/* Step 2 */}
-                                        <Box sx={{ mb: 2 }}>
-                                            <Typography
-                                                variant="subtitle1"
-                                                sx={{
-                                                    color: COLORS.text.primary,
-                                                    fontWeight:
-                                                        TYPOGRAPHY.fontWeight
-                                                            .semibold,
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    mb: 1,
-                                                    fontSize:
-                                                        TYPOGRAPHY.fontSize
-                                                            .body,
-                                                    letterSpacing: '0',
-                                                }}
-                                            >
-                                                <Calculate
-                                                    sx={{
-                                                        mr: 1.5,
-                                                        color: COLORS.data
-                                                            .amber,
-                                                        fontSize: '1.5rem',
-                                                    }}
-                                                />
-                                                Use the Calculator
-                                            </Typography>
-                                            <Typography
-                                                variant="body1"
-                                                sx={{
-                                                    color: COLORS.text
-                                                        .secondary,
-                                                    lineHeight: 1.5,
-                                                    fontSize:
-                                                        TYPOGRAPHY.fontSize
-                                                            .body,
-                                                    ml: 4,
-                                                }}
-                                            >
-                                                Enter the remaining lights
-                                                pattern in the bottom row using
-                                                the interactive calculator
-                                                below.
-                                            </Typography>
-                                        </Box>
-
-                                        {/* Step 3 */}
-                                        <Box sx={{ mb: 1 }}>
-                                            <Typography
-                                                variant="subtitle1"
-                                                sx={{
-                                                    color: COLORS.text.primary,
-                                                    fontWeight:
-                                                        TYPOGRAPHY.fontWeight
-                                                            .semibold,
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    mb: 1,
-                                                    fontSize:
-                                                        TYPOGRAPHY.fontSize
-                                                            .body,
-                                                    letterSpacing: '0',
-                                                }}
-                                            >
-                                                <Replay
-                                                    sx={{
-                                                        mr: 1.5,
-                                                        color: COLORS.data
-                                                            .green,
-                                                        fontSize: '1.5rem',
-                                                    }}
-                                                />
-                                                Chase Again
-                                            </Typography>
-                                            <Typography
-                                                variant="body1"
-                                                sx={{
-                                                    color: COLORS.text
-                                                        .secondary,
-                                                    lineHeight: 1.5,
-                                                    fontSize:
-                                                        TYPOGRAPHY.fontSize
-                                                            .body,
-                                                    ml: 4,
-                                                }}
-                                            >
-                                                Apply the calculated solution
-                                                pattern to the top row, then
-                                                chase downward to solve the
-                                                entire puzzle.
-                                            </Typography>
-                                        </Box>
-                                    </TypedGlassCard>
-                                </Box>
-                            </Grid>
-
-                            {/* Right half: Animations */}
-                            {!isLargeScreen && (
-                                <Grid
-                                    size={{ xs: 12, lg: 6 }}
-                                    sx={{
-                                        ...COMPONENT_VARIANTS.flexCenter,
-                                    }}
-                                >
-                                    <TypedGlassCard
-                                        sx={{
-                                            width: '100%',
-                                            height: '100%',
-                                            ...COMPONENT_VARIANTS.flexCenter,
-                                            transition:
-                                                'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
-                                        }}
-                                    >
-                                        <Example
-                                            dims={3}
-                                            size={size * 0.6}
-                                            start={[1, 3, 8]}
-                                            palette={palette}
-                                        />
-                                    </TypedGlassCard>
-                                </Grid>
-                            )}
-                        </Grid>
-
-                        {/* Bottom section: Lights Out Calculator (full width) */}
-                        <Grid container size={12} spacing={2}>
-                            <Grid size={12}>
-                                <TypedGlassCard
-                                    sx={{
-                                        textAlign: 'center',
-                                        paddingBottom: '2rem',
-                                    }}
-                                >
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            color: COLORS.text.primary,
-                                            fontWeight:
-                                                TYPOGRAPHY.fontWeight.semibold,
-                                            fontSize:
-                                                TYPOGRAPHY.fontSize.subheading,
-                                            lineHeight: 1.4,
-                                            letterSpacing: '0',
-                                            mb: 2,
-                                        }}
-                                    >
-                                        Interactive Calculator
                                     </Typography>
+                                    <CustomGrid
+                                        space={0}
+                                        rows={1}
+                                        cols={cols}
+                                        size={size * (isMobile ? 0.9 : 0.8)}
+                                        cellProps={inputProps}
+                                    />
+                                </Box>
 
-                                    {/* Input Pattern */}
-                                    <Box sx={{ mb: 2 }}>
-                                        <CustomGrid
-                                            space={0}
-                                            rows={1}
-                                            cols={cols}
-                                            size={size * 0.7}
-                                            cellProps={inputProps}
-                                        />
-                                    </Box>
+                                <Box>
+                                    <Typography
+                                        variant="subtitle2"
+                                        sx={{
+                                            mb: 1,
+                                            color: COLORS.text.primary,
+                                            fontWeight: 'bold',
+                                        }}
+                                    >
+                                        Solution{' '}
+                                        <Box
+                                            component="span"
+                                            sx={{
+                                                color: COLORS.text.secondary,
+                                                fontWeight: 'normal',
+                                            }}
+                                        >
+                                            (Top Row)
+                                        </Box>
+                                    </Typography>
+                                    <CustomGrid
+                                        space={0}
+                                        rows={1}
+                                        cols={cols}
+                                        size={size * (isMobile ? 0.9 : 0.8)}
+                                        cellProps={outputProps}
+                                    />
+                                </Box>
 
-                                    {/* Solution Pattern */}
-                                    <Box>
-                                        <CustomGrid
-                                            space={0}
-                                            rows={1}
-                                            cols={cols}
-                                            size={size * 0.7}
-                                            cellProps={outputProps}
-                                        />
-                                    </Box>
-                                </TypedGlassCard>
-                            </Grid>
-                        </Grid>
-                    </Grid>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                    }}
+                                >
+                                    <Button
+                                        variant="outlined"
+                                        size="small"
+                                        startIcon={<Refresh />}
+                                        onClick={handleReset}
+                                        sx={{
+                                            borderColor: COLORS.border.subtle,
+                                            color: COLORS.text.secondary,
+                                        }}
+                                    >
+                                        Clear Pattern
+                                    </Button>
+                                </Box>
+                            </Box>
+                        </Box>
+                    )}
                 </Box>
-            </Box>
+
+                {/* Footer (Navigation) */}
+                <Box
+                    sx={{
+                        p: 2.5,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                    }}
+                >
+                    <Button
+                        onClick={handleBack}
+                        disabled={step === 0}
+                        startIcon={<NavigateBeforeRounded />}
+                        sx={{
+                            visibility: step === 0 ? 'hidden' : 'visible',
+                            color: COLORS.text.primary,
+                        }}
+                    >
+                        Back
+                    </Button>
+
+                    {/* Dots Indicator */}
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                        {[0, 1, 2].map(i => (
+                            <Box
+                                key={i}
+                                sx={{
+                                    width: 8,
+                                    height: 8,
+                                    borderRadius: '50%',
+                                    backgroundColor:
+                                        step === i
+                                            ? COLORS.primary.main
+                                            : COLORS.interactive.disabled,
+                                    transition: 'background-color 0.3s',
+                                }}
+                            />
+                        ))}
+                    </Box>
+
+                    <Button
+                        onClick={handleNext}
+                        disabled={step === TOTAL_STEPS - 1}
+                        endIcon={<NavigateNextRounded />}
+                        sx={{
+                            visibility:
+                                step === TOTAL_STEPS - 1 ? 'hidden' : 'visible',
+                            color: COLORS.text.primary,
+                        }}
+                    >
+                        Next
+                    </Button>
+                </Box>
+            </TypedGlassCard>
+
+            {/* Global Styles for Animations */}
+            <style>
+                {`
+                    @keyframes fadeIn {
+                        from { opacity: 0; transform: translateY(10px); }
+                        to { opacity: 1; transform: translateY(0); }
+                    }
+                `}
+            </style>
         </Backdrop>
     );
 }

@@ -176,14 +176,24 @@ export const Register = memo(function Register({
 });
 
 function Display({ Icon, title, data, pointer, children }: DisplayProps) {
-    const values = data.map((val, ind) => {
-        const color = pointer === ind ? 'info' : 'inherit';
+    const items = React.useMemo(
+        () =>
+            data.map((val, ind) => ({
+                id: `${title}-${ind}`,
+                val,
+                ind,
+            })),
+        [data, title]
+    );
+
+    const values = items.map(item => {
+        const color = pointer === item.ind ? 'info' : 'inherit';
 
         return (
             <Text
-                key={`${title}-${ind}-${val}`}
+                key={item.id}
                 color={color}
-                text={val}
+                text={item.val}
                 sx={{
                     fontSize: TYPOGRAPHY.fontSize.body,
                     fontWeight: TYPOGRAPHY.fontWeight.semibold,
@@ -224,12 +234,22 @@ function Display({ Icon, title, data, pointer, children }: DisplayProps) {
 }
 
 function CompactDisplay({ Icon, title, data, pointer }: CompactDisplayProps) {
-    const values = data.map((val, ind) => {
-        const color = pointer === ind ? 'info' : 'inherit';
+    const items = React.useMemo(
+        () =>
+            data.map((val, ind) => ({
+                id: `${title}-${ind}`,
+                val,
+                ind,
+            })),
+        [data, title]
+    );
+
+    const values = items.map(item => {
+        const color = pointer === item.ind ? 'info' : 'inherit';
         return (
             <Chip
-                key={`${title}-${ind}-${val}`}
-                label={String(val)}
+                key={item.id}
+                label={String(item.val)}
                 size="small"
                 sx={{
                     backgroundColor:

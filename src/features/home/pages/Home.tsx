@@ -56,7 +56,7 @@ export default function Home(): React.ReactElement {
 
             <Box
                 sx={{
-                    height: { xs: '2rem', md: '5rem' },
+                    height: { xs: '10rem', md: '5rem' },
                 }}
             />
 

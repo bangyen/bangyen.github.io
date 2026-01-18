@@ -25,6 +25,7 @@ import {
     TELEPHONE_ZONES,
     VEHICLE_CONVENTIONS,
     DRIVING_SIDE_FILTERS,
+    DRIVING_SIDE_OPTIONS,
     QUIZ_CONFIGS,
 } from '../config/quizConfig';
 import {
@@ -34,6 +35,10 @@ import {
     GameState,
     QuizItem,
     GameMode,
+    CCTLD,
+    DrivingSide,
+    TelephoneCode,
+    VehicleCode,
 } from '../types/quiz';
 import { useQuizFilter } from '../hooks/quiz';
 
@@ -205,13 +210,66 @@ const WikipediaQuizPage: React.FC = () => {
                             maxQuestionOptions={activeConfig.maxQuestionOptions}
                             title="Quiz Settings"
                         >
-                            {/* Slot 1: Specialized Filters (Row 1 Left) */}
+                            {/* Slot 1: Game Mode (Now First) */}
+                            {activeConfig.hasModeSelect &&
+                            activeConfig.modes ? (
+                                <Grid item xs={12} md={6}>
+                                    <FormControl fullWidth>
+                                        <InputLabel>Game Mode</InputLabel>
+                                        <Select
+                                            value={settings.mode || ''}
+                                            label="Game Mode"
+                                            onChange={e =>
+                                                setSettings({
+                                                    ...settings,
+                                                    mode: e.target
+                                                        .value as GameMode,
+                                                })
+                                            }
+                                            sx={{
+                                                color: COLORS.text.primary,
+                                                '.MuiOutlinedInput-notchedOutline':
+                                                    {
+                                                        borderColor:
+                                                            COLORS.border
+                                                                .subtle,
+                                                    },
+                                            }}
+                                            {...commonSelectProps}
+                                        >
+                                            {activeConfig.modes.map(m => (
+                                                <MenuItem
+                                                    key={m.value}
+                                                    value={m.value}
+                                                >
+                                                    {m.label}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                            ) : (
+                                <Grid
+                                    item
+                                    xs={12}
+                                    md={6}
+                                    sx={{
+                                        display: { xs: 'none', md: 'block' },
+                                    }}
+                                >
+                                    <Box sx={{ height: 56 }} />
+                                </Grid>
+                            )}
+
+                            {/* Slot 2: Specialized Filters */}
                             {selectedQuiz === 'cctld' && (
                                 <Grid item xs={12} md={6}>
                                     <FormControl fullWidth>
                                         <InputLabel>Language Filter</InputLabel>
                                         <Select
-                                            value={settings.filterLanguage}
+                                            value={
+                                                settings.filterLanguage || 'All'
+                                            }
                                             label="Language Filter"
                                             onChange={e =>
                                                 setSettings({
@@ -267,11 +325,26 @@ const WikipediaQuizPage: React.FC = () => {
                                                     },
                                             }}
                                             {...commonSelectProps}
+                                            MenuProps={{
+                                                ...commonSelectProps.MenuProps,
+                                                PaperProps: {
+                                                    sx: {
+                                                        maxWidth: 250,
+                                                    },
+                                                },
+                                            }}
                                         >
                                             {TELEPHONE_ZONES.map(zone => (
                                                 <MenuItem
                                                     key={zone.value}
                                                     value={zone.value}
+                                                    sx={{
+                                                        whiteSpace: 'nowrap',
+                                                        overflow: 'hidden',
+                                                        textOverflow:
+                                                            'ellipsis',
+                                                        display: 'block',
+                                                    }}
                                                 >
                                                     {zone.label}
                                                 </MenuItem>
@@ -324,84 +397,89 @@ const WikipediaQuizPage: React.FC = () => {
                                 </Grid>
                             )}
 
-                            {selectedQuiz === 'driving_side' && (
-                                <Grid item xs={12} md={6}>
-                                    <FormControl fullWidth>
-                                        <InputLabel>Switch Filter</InputLabel>
-                                        <Select
-                                            value={
-                                                settings.filterSwitch || 'All'
-                                            }
-                                            label="Switch Filter"
-                                            onChange={e =>
-                                                setSettings({
-                                                    ...settings,
-                                                    filterSwitch:
-                                                        e.target.value,
-                                                })
-                                            }
-                                            sx={{
-                                                color: COLORS.text.primary,
-                                                '.MuiOutlinedInput-notchedOutline':
-                                                    {
-                                                        borderColor:
-                                                            COLORS.border
-                                                                .subtle,
-                                                    },
-                                            }}
-                                            {...commonSelectProps}
-                                        >
-                                            {DRIVING_SIDE_FILTERS.map(f => (
-                                                <MenuItem
-                                                    key={f.value}
-                                                    value={f.value}
-                                                >
-                                                    {f.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                            )}
+                            {selectedQuiz === 'driving_side' &&
+                                (settings.mode === 'toCountry' ? (
+                                    <Grid item xs={12} md={6}>
+                                        <FormControl fullWidth>
+                                            <InputLabel>Side Filter</InputLabel>
+                                            <Select
+                                                value={
+                                                    settings.filterSide || 'All'
+                                                }
+                                                label="Side Filter"
+                                                onChange={e =>
+                                                    setSettings({
+                                                        ...settings,
+                                                        filterSide:
+                                                            e.target.value,
+                                                    })
+                                                }
+                                                sx={{
+                                                    color: COLORS.text.primary,
+                                                    '.MuiOutlinedInput-notchedOutline':
+                                                        {
+                                                            borderColor:
+                                                                COLORS.border
+                                                                    .subtle,
+                                                        },
+                                                }}
+                                                {...commonSelectProps}
+                                            >
+                                                {DRIVING_SIDE_OPTIONS.map(f => (
+                                                    <MenuItem
+                                                        key={f.value}
+                                                        value={f.value}
+                                                    >
+                                                        {f.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                ) : (
+                                    <Grid item xs={12} md={6}>
+                                        <FormControl fullWidth>
+                                            <InputLabel>
+                                                Switch Filter
+                                            </InputLabel>
+                                            <Select
+                                                value={
+                                                    settings.filterSwitch ||
+                                                    'All'
+                                                }
+                                                label="Switch Filter"
+                                                onChange={e =>
+                                                    setSettings({
+                                                        ...settings,
+                                                        filterSwitch:
+                                                            e.target.value,
+                                                    })
+                                                }
+                                                sx={{
+                                                    color: COLORS.text.primary,
+                                                    '.MuiOutlinedInput-notchedOutline':
+                                                        {
+                                                            borderColor:
+                                                                COLORS.border
+                                                                    .subtle,
+                                                        },
+                                                }}
+                                                {...commonSelectProps}
+                                            >
+                                                {DRIVING_SIDE_FILTERS.map(f => (
+                                                    <MenuItem
+                                                        key={f.value}
+                                                        value={f.value}
+                                                    >
+                                                        {f.label}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+                                    </Grid>
+                                ))}
 
-                            {/* Slot 2: Question Limit (Row 1 Right) */}
-                            <Grid item xs={12} md={6}>
-                                <FormControl fullWidth>
-                                    <InputLabel>Question Limit</InputLabel>
-                                    <Select
-                                        value={settings.maxQuestions}
-                                        label="Question Limit"
-                                        onChange={e =>
-                                            setSettings({
-                                                ...settings,
-                                                maxQuestions: e.target.value as
-                                                    | number
-                                                    | 'All',
-                                            })
-                                        }
-                                        sx={{
-                                            color: COLORS.text.primary,
-                                            '.MuiOutlinedInput-notchedOutline':
-                                                {
-                                                    borderColor:
-                                                        COLORS.border.subtle,
-                                                },
-                                        }}
-                                        {...commonSelectProps}
-                                    >
-                                        <MenuItem value="All">All</MenuItem>
-                                        {activeConfig.maxQuestionOptions.map(
-                                            opt => (
-                                                <MenuItem key={opt} value={opt}>
-                                                    {opt}
-                                                </MenuItem>
-                                            )
-                                        )}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
-
-                            {/* Slot 3: Letter Filter (Row 2 Left) */}
+                            {/* Slot 3: Letter Filter */}
                             <Grid item xs={12} md={6}>
                                 <TextField
                                     fullWidth
@@ -439,56 +517,42 @@ const WikipediaQuizPage: React.FC = () => {
                                 />
                             </Grid>
 
-                            {/* Slot 4: Game Mode (Row 2 Right - Optional) */}
-                            {activeConfig.hasModeSelect &&
-                            activeConfig.modes ? (
-                                <Grid item xs={12} md={6}>
-                                    <FormControl fullWidth>
-                                        <InputLabel>Game Mode</InputLabel>
-                                        <Select
-                                            value={settings.mode}
-                                            label="Game Mode"
-                                            onChange={e =>
-                                                setSettings({
-                                                    ...settings,
-                                                    mode: e.target
-                                                        .value as GameMode,
-                                                })
-                                            }
-                                            sx={{
-                                                color: COLORS.text.primary,
-                                                '.MuiOutlinedInput-notchedOutline':
-                                                    {
-                                                        borderColor:
-                                                            COLORS.border
-                                                                .subtle,
-                                                    },
-                                            }}
-                                            {...commonSelectProps}
-                                        >
-                                            {activeConfig.modes.map(m => (
-                                                <MenuItem
-                                                    key={m.value}
-                                                    value={m.value}
-                                                >
-                                                    {m.label}
+                            {/* Slot 4: Question Limit (Now Last) */}
+                            <Grid item xs={12} md={6}>
+                                <FormControl fullWidth>
+                                    <InputLabel>Question Limit</InputLabel>
+                                    <Select
+                                        value={settings.maxQuestions || 'All'}
+                                        label="Question Limit"
+                                        onChange={e =>
+                                            setSettings({
+                                                ...settings,
+                                                maxQuestions: e.target.value as
+                                                    | number
+                                                    | 'All',
+                                            })
+                                        }
+                                        sx={{
+                                            color: COLORS.text.primary,
+                                            '.MuiOutlinedInput-notchedOutline':
+                                                {
+                                                    borderColor:
+                                                        COLORS.border.subtle,
+                                                },
+                                        }}
+                                        {...commonSelectProps}
+                                    >
+                                        <MenuItem value="All">All</MenuItem>
+                                        {activeConfig.maxQuestionOptions.map(
+                                            opt => (
+                                                <MenuItem key={opt} value={opt}>
+                                                    {opt}
                                                 </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                            ) : (
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={6}
-                                    sx={{
-                                        display: { xs: 'none', md: 'block' },
-                                    }}
-                                >
-                                    <Box sx={{ height: 56 }} />
-                                </Grid>
-                            )}
+                                            )
+                                        )}
+                                    </Select>
+                                </FormControl>
+                            </Grid>
                         </QuizSettingsView>
                         <Box
                             sx={{
@@ -543,9 +607,9 @@ const WikipediaQuizPage: React.FC = () => {
                     history={lastHistory}
                     onRestart={handleStart}
                     onBackToMenu={handleBackToMenu}
-                    renderHistoryItem={(q, i) => (
+                    renderHistoryItem={q => (
                         <Card
-                            key={i}
+                            key={q.id}
                             sx={{
                                 p: 2,
                                 display: 'flex',
@@ -591,7 +655,12 @@ const WikipediaQuizPage: React.FC = () => {
                                         {selectedQuiz === 'driving_side'
                                             ? q.item.country
                                             : settings.mode === 'toCountry'
-                                              ? q.item.code
+                                              ? (
+                                                    q.item as
+                                                        | CCTLD
+                                                        | TelephoneCode
+                                                        | VehicleCode
+                                                ).code
                                               : q.item.country}
                                     </Typography>
                                 </Box>
@@ -602,10 +671,15 @@ const WikipediaQuizPage: React.FC = () => {
                                 >
                                     Answer:{' '}
                                     {selectedQuiz === 'driving_side'
-                                        ? q.item.side
+                                        ? (q.item as DrivingSide).side
                                         : settings.mode === 'toCountry'
                                           ? q.item.country
-                                          : q.item.code}
+                                          : (
+                                                q.item as
+                                                    | CCTLD
+                                                    | TelephoneCode
+                                                    | VehicleCode
+                                            ).code}
                                 </Typography>
                                 {activeConfig.renderFeedbackOrigin && (
                                     <Box sx={{ mt: 0.5, opacity: 0.8 }}>

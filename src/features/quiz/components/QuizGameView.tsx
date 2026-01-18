@@ -17,11 +17,12 @@ import {
     COMPONENT_VARIANTS,
     SHADOWS,
 } from '../../../config/theme';
+import { Question } from '../types/quiz';
 
-interface QuizGameViewProps {
+interface QuizGameViewProps<T> {
     gameState: {
-        history: any[];
-        currentQuestion: any;
+        history: Question<T>[];
+        currentQuestion: T | null;
         inputValue: string;
         showFeedback: boolean;
         feedbackMessage: string;
@@ -34,26 +35,30 @@ interface QuizGameViewProps {
     actions: {
         setInputValue: (val: string) => void;
         handleSubmit: (e?: React.FormEvent) => void;
+        submitAnswer?: (ans: string) => void;
         handleSkip: () => void;
         toggleHint: () => void;
     };
     onBackToMenu: () => void;
     renderQuestionPrompt: () => string;
-    renderQuestionContent: (item: any) => React.ReactNode;
-    renderHint: (item: any) => React.ReactNode;
-    renderFeedbackFlag?: (item: any) => React.ReactNode;
-    renderFeedbackOrigin?: (item: any) => React.ReactNode;
+    renderQuestionContent: (item: T) => React.ReactNode;
+    renderHint: (item: T) => React.ReactNode;
+    renderFeedbackFlag?: (item: T) => React.ReactNode;
+    renderFeedbackOrigin?: (item: T) => React.ReactNode;
     inputPlaceholder?: string;
     inputRef?: React.RefObject<HTMLInputElement | null>;
     nextButtonRef?: React.RefObject<HTMLButtonElement | null>;
     modeLabel: string;
     hideInput?: boolean;
     hideHint?: boolean;
-    renderCustomActions?: (gameState: any, actions: any) => React.ReactNode;
+    renderCustomActions?: (
+        gameState: QuizGameViewProps<T>['gameState'],
+        actions: QuizGameViewProps<T>['actions']
+    ) => React.ReactNode;
     onKeyDown?: (e: KeyboardEvent) => void;
 }
 
-const QuizGameView: React.FC<QuizGameViewProps> = ({
+const QuizGameView = <T,>({
     gameState,
     actions,
     onBackToMenu,
@@ -70,7 +75,7 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
     hideHint = false,
     renderCustomActions,
     onKeyDown,
-}) => {
+}: QuizGameViewProps<T>) => {
     const {
         history,
         currentQuestion,
@@ -385,7 +390,7 @@ const QuizGameView: React.FC<QuizGameViewProps> = ({
                                     variant="contained"
                                     sx={{
                                         py: 1.5,
-                                        flex: 2,
+                                        flex: 1,
                                         whiteSpace: 'nowrap',
                                         fontSize: '0.8rem',
                                         '&.Mui-disabled': {
