@@ -544,6 +544,7 @@ const WikipediaQuizPage: React.FC = () => {
                     onRestart={handleStart}
                     onBackToMenu={handleBackToMenu}
                     renderHistoryItem={(q, i) => (
+                        // eslint-disable-next-line react/no-array-index-key
                         <Card
                             key={i}
                             sx={{
