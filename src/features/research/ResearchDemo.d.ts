@@ -1,5 +1,4 @@
 import React from 'react';
-import { SvgIcon } from '@mui/material';
 
 export interface ChartConfig {
     type: string;

@@ -39,7 +39,6 @@ import { useQuizFilter } from '../hooks/quiz';
 
 import QuizLayout from '../components/QuizLayout';
 import QuizSettingsView from '../components/QuizSettingsView';
-import QuizGameView from '../components/QuizGameView';
 import QuizSummaryView from '../components/QuizSummaryView';
 import { SkippedBadge } from '../components';
 import QuizGame from '../components/QuizGame';

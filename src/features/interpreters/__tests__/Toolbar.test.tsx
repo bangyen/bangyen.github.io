@@ -1,4 +1,3 @@
-import React from 'react';
 import { handleToolbar } from '../Toolbar';
 
 describe('Toolbar', () => {
