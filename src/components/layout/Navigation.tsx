@@ -7,9 +7,12 @@ import {
     COMPONENT_VARIANTS,
 } from '../../config/theme';
 
+import type { SxProps, Theme } from '@mui/material/styles';
+
 interface NavigationProps {
     children: ReactNode;
-    [key: string]: any;
+    sx?: SxProps<Theme>;
+    opacity?: number;
 }
 
 export function Navigation({ children, ...rest }: NavigationProps) {

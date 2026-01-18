@@ -35,7 +35,7 @@ export const ICON_MAP: IconMap = {
 interface TooltipButtonProps {
     Icon: IconComponent;
     title: string;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export function TooltipButton({ Icon, title, ...rest }: TooltipButtonProps) {
@@ -50,7 +50,7 @@ export function TooltipButton({ Icon, title, ...rest }: TooltipButtonProps) {
 
 interface HomeButtonProps {
     hide?: boolean;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export function HomeButton({ hide = false, ...rest }: HomeButtonProps) {
@@ -78,7 +78,7 @@ interface RandomButtonProps {
     showToggleState?: boolean;
     hide?: boolean;
     sx?: SxProps<Theme>;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export function RandomButton({

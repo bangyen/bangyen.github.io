@@ -36,7 +36,7 @@ interface SnakeState {
 
 interface Action {
     type: string;
-    payload?: any;
+    payload?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 function getRandom(max: number): number {

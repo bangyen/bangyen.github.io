@@ -3,13 +3,12 @@ import { Box } from '../mui';
 import { SPACING, COMPONENT_VARIANTS } from '../../config/theme';
 import type { SxProps, Theme } from '@mui/material/styles';
 
-interface GlassCardProps {
+interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
     children: ReactNode;
     padding?: number | string;
     sx?: SxProps<Theme>;
     className?: string;
     interactive?: boolean;
-    [key: string]: any;
 }
 
 export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
