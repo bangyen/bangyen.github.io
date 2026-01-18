@@ -211,6 +211,7 @@ export default function TextEditor({
             fastForward: true,
             pause: state.pause || false,
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         name,
         tape,
