@@ -19,7 +19,7 @@ module.exports = {
       presets: ['@babel/preset-env', '@babel/preset-react']
     }
   },
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'react-hooks'],
   env: {
     browser: true,
     es6: true,
