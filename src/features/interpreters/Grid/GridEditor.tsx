@@ -8,7 +8,7 @@ import React, {
 import Editor from '../Editor';
 import { EditorContext, EditorContextType } from '../EditorContext';
 import { GridArea } from '../components/GridArea';
-import { gridMove, convertPixels } from '../utils/gridUtils';
+import { convertPixels } from '../utils/gridUtils';
 import { handleAction, GridState } from './eventHandlers';
 import { PAGE_TITLES } from '../../../config/constants';
 
