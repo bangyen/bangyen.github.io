@@ -18,7 +18,7 @@ import { GAME_CONSTANTS } from '../config/gameConfig';
 import { COLORS } from '../../../config/theme';
 import { getGrid, handleBoard, getNextMove } from './boardHandlers';
 import { useWindow, useMobile } from '../../../hooks';
-import { gridMove, convertPixels } from '../../interpreters/utils/gridUtils';
+import { convertPixels } from '../../interpreters/utils/gridUtils';
 import Info from './Info';
 
 interface Getters {

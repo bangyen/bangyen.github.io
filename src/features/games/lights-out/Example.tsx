@@ -10,10 +10,6 @@ interface Frame {
     backgroundColor: string;
 }
 
-interface GetStatesResult {
-    [key: number]: unknown;
-}
-
 interface Palette {
     primary: string;
     secondary: string;
