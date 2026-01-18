@@ -537,7 +537,7 @@ const WikipediaQuizPage: React.FC = () => {
             )}
 
             {gameState === 'summary' && (
-                <QuizSummaryView<any>
+                <QuizSummaryView<QuizItem>
                     score={lastScore}
                     history={lastHistory}
                     onRestart={handleStart}
