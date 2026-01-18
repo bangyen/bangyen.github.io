@@ -34,6 +34,10 @@ import {
     GameState,
     QuizItem,
     GameMode,
+    CCTLD,
+    DrivingSide,
+    TelephoneCode,
+    VehicleCode,
 } from '../types/quiz';
 import { useQuizFilter } from '../hooks/quiz';
 
@@ -591,7 +595,12 @@ const WikipediaQuizPage: React.FC = () => {
                                         {selectedQuiz === 'driving_side'
                                             ? q.item.country
                                             : settings.mode === 'toCountry'
-                                              ? q.item.code
+                                              ? (
+                                                    q.item as
+                                                        | CCTLD
+                                                        | TelephoneCode
+                                                        | VehicleCode
+                                                ).code
                                               : q.item.country}
                                     </Typography>
                                 </Box>
@@ -602,10 +611,15 @@ const WikipediaQuizPage: React.FC = () => {
                                 >
                                     Answer:{' '}
                                     {selectedQuiz === 'driving_side'
-                                        ? q.item.side
+                                        ? (q.item as DrivingSide).side
                                         : settings.mode === 'toCountry'
                                           ? q.item.country
-                                          : q.item.code}
+                                          : (
+                                                q.item as
+                                                    | CCTLD
+                                                    | TelephoneCode
+                                                    | VehicleCode
+                                            ).code}
                                 </Typography>
                                 {activeConfig.renderFeedbackOrigin && (
                                     <Box sx={{ mt: 0.5, opacity: 0.8 }}>

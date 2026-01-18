@@ -4,7 +4,7 @@ import ResearchDemo from '../ResearchDemo';
 import { URLS } from '../../../config/constants';
 
 // Mock the icons
-jest.mock('../../components/icons', () => ({
+jest.mock('../../../components/icons', () => ({
     GitHub: () => <div data-testid="github-icon">GitHub</div>,
     HomeRounded: () => <div data-testid="home-icon">Home</div>,
     Refresh: () => <div data-testid="refresh-icon">Refresh</div>,
@@ -12,8 +12,8 @@ jest.mock('../../components/icons', () => ({
 }));
 
 // Mock the helpers
-jest.mock('../../components/ui/GlassCard', () => ({
-    GlassCard: ({ children, ...props }: any) => (
+jest.mock('../../../components/ui/GlassCard', () => ({
+    GlassCard: ({ children, ...props }: { children: React.ReactNode }) => (
         <div data-testid="glass-card" {...props}>
             {children}
         </div>
@@ -21,18 +21,25 @@ jest.mock('../../components/ui/GlassCard', () => ({
 }));
 
 // Mock recharts
+// Mock recharts
 jest.mock('recharts', () => ({
-    LineChart: ({ children, data }: any) => (
+    LineChart: ({
+        children,
+        data,
+    }: {
+        children: React.ReactNode;
+        data: unknown[];
+    }) => (
         <div data-testid="line-chart" data-chart-data={JSON.stringify(data)}>
             {children}
         </div>
     ),
-    Line: ({ dataKey, name }: any) => (
-        <div data-testid={`line - ${dataKey} `} data-name={name}>
+    Line: ({ dataKey, name }: { dataKey: string; name: string }) => (
+        <div data-testid={`line-${dataKey}`} data-name={name}>
             Line
         </div>
     ),
-    XAxis: ({ dataKey }: any) => (
+    XAxis: ({ dataKey }: { dataKey: string }) => (
         <div data-testid="x-axis" data-key={dataKey}>
             XAxis
         </div>
@@ -40,7 +47,7 @@ jest.mock('recharts', () => ({
     YAxis: () => <div data-testid="y-axis">YAxis</div>,
     CartesianGrid: () => <div data-testid="cartesian-grid">Grid</div>,
     Tooltip: () => <div data-testid="tooltip">Tooltip</div>,
-    ResponsiveContainer: ({ children }: any) => (
+    ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="responsive-container">{children}</div>
     ),
 }));
@@ -133,7 +140,7 @@ describe('ResearchDemo', () => {
                 label: 'View 1',
                 icon: () => <div>Icon1</div>,
                 chartTitle: 'View 1 Chart',
-                dataProcessor: (data: any[]) => data,
+                dataProcessor: (data: unknown[]) => data,
                 chartConfig: defaultProps.chartConfig,
             },
             {
@@ -141,7 +148,7 @@ describe('ResearchDemo', () => {
                 label: 'View 2',
                 icon: () => <div>Icon2</div>,
                 chartTitle: 'View 2 Chart',
-                dataProcessor: (data: any[]) => data,
+                dataProcessor: (data: unknown[]) => data,
                 chartConfig: defaultProps.chartConfig,
             },
         ];

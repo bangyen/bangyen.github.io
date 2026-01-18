@@ -276,7 +276,7 @@ const Oligopoly: React.FC = () => {
         rightYAxisFormatter: (value: number) => value.toFixed(2),
         rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
         tooltipLabelFormatter: (value: number) => `Round ${value}`,
-        tooltipFormatter: (value: number, name: string) => [
+        tooltipFormatter: (value: number, name: string): [string, string] => [
             name === 'Market Price' ? `$${value.toFixed(2)}` : value.toFixed(2),
             name,
         ],
@@ -301,10 +301,10 @@ const Oligopoly: React.FC = () => {
             title="Oligopoly"
             subtitle="Agent-Based Economic Competition Analysis"
             githubUrl={URLS.oligopolyRepo}
-            chartData={marketData as any}
-            chartConfig={chartConfig as any}
+            chartData={marketData}
+            chartConfig={chartConfig}
             chartTitle="Market Dynamics"
-            controls={controls as any}
+            controls={controls}
             loading={loading}
             loadingMessage="Loading Cournot simulation data..."
             onReset={resetToDefaults}

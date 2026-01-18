@@ -39,9 +39,10 @@ interface FrontProps {
             color: string;
         };
     };
+    [key: string]: unknown;
 }
 
-function getFrontProps(getters: Getters, dispatch: (action: any) => void) {
+function getFrontProps(getters: Getters, dispatch: (action: unknown) => void) {
     const { getColor, getBorder } = getters;
 
     const flipAdj = (row: number, col: number) => {
@@ -156,7 +157,9 @@ export default function LightsOut(): React.ReactElement {
 
     const getters = useHandler(state, palette);
 
-    const frontProps = getFrontProps(getters, dispatch);
+    const frontProps = getFrontProps(getters, action =>
+        dispatch(action as any)
+    );
 
     const backProps = (row: number, col: number) => {
         return {
@@ -177,7 +180,7 @@ export default function LightsOut(): React.ReactElement {
                 size={size}
                 rows={rows}
                 cols={cols}
-                frontProps={frontProps as any}
+                frontProps={frontProps}
                 backProps={backProps}
             />
             <Controls
@@ -200,15 +203,14 @@ export default function LightsOut(): React.ReactElement {
                     onClick={toggleOpen}
                 />
             </Controls>
-            {(Info as any)({
-                rows,
-                cols,
-                size,
-                open,
-                palette,
-                score: state.score,
-                toggleOpen,
-            })}
+            <Info
+                rows={rows}
+                cols={cols}
+                size={size}
+                open={open}
+                palette={palette}
+                toggleOpen={toggleOpen}
+            />
         </Grid>
     );
 }

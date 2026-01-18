@@ -80,7 +80,7 @@ const QuizGame: React.FC<QuizGameProps> = ({
                     <>
                         <Button
                             variant="contained"
-                            onClick={() => actions.submitAnswer('Left')}
+                            onClick={() => actions.submitAnswer?.('Left')}
                             disabled={state.showFeedback}
                             sx={{
                                 flex: 1,
@@ -98,7 +98,7 @@ const QuizGame: React.FC<QuizGameProps> = ({
                         </Button>
                         <Button
                             variant="contained"
-                            onClick={() => actions.submitAnswer('Right')}
+                            onClick={() => actions.submitAnswer?.('Right')}
                             disabled={state.showFeedback}
                             sx={{
                                 flex: 1,

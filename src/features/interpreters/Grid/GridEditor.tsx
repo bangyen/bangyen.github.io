@@ -9,7 +9,7 @@ import Editor from '../Editor';
 import { EditorContext, EditorContextType } from '../EditorContext';
 import { GridArea } from '../components/GridArea';
 import { convertPixels } from '../utils/gridUtils';
-import { handleAction, GridState } from './eventHandlers';
+import { handleAction, GridState, GridAction } from './eventHandlers';
 import { PAGE_TITLES } from '../../../config/constants';
 
 import {
@@ -40,7 +40,7 @@ interface WrapperPayload<T> {
     start: Partial<T>;
     resetState: (grid: string) => void;
     nextIter: (action: CacheAction) => T;
-    dispatch: React.Dispatch<any>;
+    dispatch: (action: any) => void;
     create: (config: { repeat: () => void; speed: number }) => void;
     clear: () => void;
 }
@@ -48,7 +48,7 @@ interface WrapperPayload<T> {
 function useWrappers<T extends GridState>(
     state: T,
     props: GridEditorProps<T>,
-    dispatch: React.Dispatch<any>
+    dispatch: React.Dispatch<GridAction>
 ) {
     const { runner, start } = props;
     const { rows, cols } = state;
@@ -100,13 +100,13 @@ function useWrappers<T extends GridState>(
             const payload: WrapperPayload<T> = {
                 start,
                 resetState,
-                nextIter,
-                dispatch,
+                nextIter: nextIter as any,
+                dispatch: dispatch as any,
                 create,
                 clear,
             };
 
-            dispatch({ type, payload });
+            dispatch({ type, payload } as any);
         },
         [resetState, nextIter, dispatch, create, clear, start]
     );
@@ -215,7 +215,7 @@ export default function GridEditor<T extends GridState>(
         index: 0,
         tape: [],
         pointer: 0,
-        output: ((state as any).output as string) || '',
+        output: state.output || '',
         register: 0,
         code: undefined,
         fastForward: false,

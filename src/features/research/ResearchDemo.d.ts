@@ -1,41 +1,23 @@
 import React from 'react';
 
-export interface ChartConfig {
-    type: string;
-    xAxisKey: string;
-    yAxisFormatter: (value: number) => string;
-    yAxisDomain: string[];
-    tooltipLabelFormatter: (value: number) => string;
-    tooltipFormatter: (value: number, name: string) => [string, string];
-    lines: Array<{
-        dataKey: string;
-        name: string;
-        color: string;
-        yAxisId?: string;
-    }>;
-    dualYAxis?: boolean;
-    rightYAxisFormatter?: (value: number) => string;
-    rightYAxisDomain?: string[];
-}
-
-export interface ViewType {
+export interface ViewType<T> {
     key: string;
     label: string;
     icon: React.ElementType;
     chartTitle: string;
-    dataProcessor: (data: any[]) => any[];
-    chartConfig: ChartConfig;
+    dataProcessor: (data: T[]) => unknown[];
+    chartConfig: any; // Keeping any here as ChartConfig is complex and defined elsewhere, or could import it
 }
 
-export interface ResearchDemoProps {
+export interface ResearchDemoProps<T> {
     title: string;
     subtitle: string;
     githubUrl: string;
-    chartData?: any[];
-    chartConfig?: ChartConfig;
-    viewTypes?: ViewType[];
+    chartData?: T[];
+    chartConfig?: any;
+    viewTypes?: ViewType<T>[];
     currentViewType?: string;
-    onViewTypeChange?: (value: string) => void;
+    onViewTypeChange?: (viewType: string) => void;
     controls?: any[];
     loading?: boolean;
     loadingMessage?: string;
@@ -44,6 +26,8 @@ export interface ResearchDemoProps {
     chartTitle?: string | null;
 }
 
-declare const ResearchDemo: React.FC<ResearchDemoProps>;
+declare const ResearchDemo: <T>(
+    props: ResearchDemoProps<T>
+) => React.JSX.Element;
 
 export default ResearchDemo;

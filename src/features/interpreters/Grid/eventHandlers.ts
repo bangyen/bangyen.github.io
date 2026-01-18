@@ -12,19 +12,26 @@ export interface GridState {
     cols: number;
     pause: boolean;
     position?: number | null;
+    output?: string;
     [key: string]: unknown;
 }
 
-interface KeysPayload {
+export interface KeysPayload {
     key: string;
     resetState: (grid: string) => void;
 }
 
-interface ResizePayload {
+export interface ResizePayload {
     resetState: (grid: string) => void;
     rows?: number;
     cols?: number;
 }
+
+export type GridAction =
+    | { type: 'edit'; payload: KeysPayload }
+    | { type: 'resize'; payload: ResizePayload }
+    | { type: 'click'; payload: { select: number } }
+    | ToolbarAction;
 
 function handleKeys(
     state: GridState,
@@ -104,22 +111,27 @@ function handleResize(
     };
 }
 
-export function handleAction(
-    state: GridState,
-    action: { type: string; payload: unknown }
-) {
-    const { type, payload } = action;
+export function handleAction(state: GridState, action: GridAction) {
+    const { type } = action;
     let newState = {};
 
     switch (type) {
         case 'edit':
-            newState = handleKeys(state, payload as KeysPayload);
+            newState = handleKeys(
+                state,
+                (action as { type: 'edit'; payload: KeysPayload }).payload
+            );
             break;
         case 'resize':
-            newState = handleResize(state, payload as ResizePayload);
+            newState = handleResize(
+                state,
+                (action as { type: 'resize'; payload: ResizePayload }).payload
+            );
             break;
         case 'click':
-            const { select } = payload as { select: number };
+            const { select } = (
+                action as { type: 'click'; payload: { select: number } }
+            ).payload;
             newState = select === state.select ? { select: null } : { select };
             break;
         default:

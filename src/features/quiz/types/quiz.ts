@@ -7,7 +7,7 @@ export interface BaseItem {
     country: string;
     flag?: string;
     explanation?: string;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export interface CCTLD extends BaseItem {
@@ -17,6 +17,7 @@ export interface CCTLD extends BaseItem {
 
 export interface DrivingSide extends BaseItem {
     side: 'Left' | 'Right';
+    switched?: boolean;
 }
 
 export interface TelephoneCode extends BaseItem {
@@ -25,6 +26,7 @@ export interface TelephoneCode extends BaseItem {
 
 export interface VehicleCode extends BaseItem {
     code: string;
+    conventions?: number[];
 }
 
 export type QuizItem = CCTLD | DrivingSide | TelephoneCode | VehicleCode;
@@ -33,7 +35,7 @@ export interface QuizSettings {
     mode: GameMode | string;
     allowRepeats: boolean;
     maxQuestions: number | 'All';
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export interface Question<T> {
