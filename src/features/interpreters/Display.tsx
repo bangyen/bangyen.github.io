@@ -180,6 +180,7 @@ function Display({ Icon, title, data, pointer, children }: DisplayProps) {
         const color = pointer === ind ? 'info' : 'inherit';
 
         return (
+            // eslint-disable-next-line react/no-array-index-key
             <Text
                 key={`${title}-${ind}-${val}`}
                 color={color}
@@ -227,6 +228,7 @@ function CompactDisplay({ Icon, title, data, pointer }: CompactDisplayProps) {
     const values = data.map((val, ind) => {
         const color = pointer === ind ? 'info' : 'inherit';
         return (
+            // eslint-disable-next-line react/no-array-index-key
             <Chip
                 key={`${title}-${ind}-${val}`}
                 label={String(val)}

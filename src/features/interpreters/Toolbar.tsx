@@ -74,6 +74,7 @@ export function Toolbar(): React.ReactElement[] {
                     Icon={PauseRounded}
                 />
             ),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [dispatch, pause]
     );
 

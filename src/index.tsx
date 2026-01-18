@@ -72,7 +72,7 @@ function App(): React.ReactElement {
     );
 }
 
-const root = createRoot(document.getElementById('root')!);
+const root = createRoot(document.getElementById('root') || document.body);
 root.render(
     <React.StrictMode>
         <ErrorBoundary>
