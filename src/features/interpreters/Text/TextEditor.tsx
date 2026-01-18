@@ -225,7 +225,6 @@ export default function TextEditor({
         state.pause,
         container.height,
         wrapDispatch,
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     ]);
 
     useEffect(() => {
