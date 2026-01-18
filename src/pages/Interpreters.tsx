@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Box } from '../components/mui';
-import { Stun_Step, Suffolk, WII2D, Back } from '../interpreters';
-import { InterpreterNavigation } from '../components/InterpreterNavigation';
+import { Stun_Step, Suffolk, WII2D, Back } from '../features/interpreters';
+import { InterpreterNavigation } from '../features/interpreters/components/InterpreterNavigation';
 import { PAGE_TITLES } from '../config/constants';
 import { COLORS } from '../config/theme';
 

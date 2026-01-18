@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback } from 'react';
 import { Grid } from '../components/mui';
 
-import { CustomGrid } from '../components/common/CustomGrid';
+import { CustomGrid } from '../components/ui/CustomGrid';
 import { COLORS } from '../config/theme';
 
 interface BoardProps {

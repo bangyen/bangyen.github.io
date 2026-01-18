@@ -12,7 +12,7 @@ import {
     PERCENTAGE,
 } from '../config/constants';
 import { COLORS } from '../config/theme';
-import ResearchDemo from '../components/ResearchDemo';
+import ResearchDemo from '../features/research/ResearchDemo';
 
 interface DataPoint {
     epoch: number;

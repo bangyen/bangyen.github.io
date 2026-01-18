@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Grid, Box } from '../components/mui';
 
-import { TooltipButton } from '../components/common/Controls';
-import { MenuButton } from '../components/home/ProjectMenu';
-import { HeroSection } from '../components/home/HeroSection';
-import { FeaturedWork } from '../components/home/FeaturedWork';
+import { TooltipButton } from '../components/ui/Controls';
+import { MenuButton } from '../features/home/components/ProjectMenu';
+import { HeroSection } from '../features/home/components/HeroSection';
+import { FeaturedWork } from '../features/home/components/FeaturedWork';
 import { URLS, PAGE_TITLES } from '../config/constants';
 import { COLORS } from '../config/theme';
 import { GitHub } from '../components/icons';

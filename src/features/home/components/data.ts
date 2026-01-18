@@ -1,0 +1,71 @@
+import { Psychology, GamepadRounded, Code } from '../../../components/icons';
+import { COLORS } from '../../../config/theme';
+import { ROUTES } from '../../../config/constants';
+import React from 'react';
+
+export interface ProjectInfo {
+    path: string;
+    description: string;
+    technology: string;
+}
+
+export interface ProjectCategory {
+    title: string;
+    icon: React.ElementType;
+    color: string;
+    projects: Record<string, ProjectInfo>;
+}
+
+export const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
+    research: {
+        title: 'Research',
+        icon: Psychology,
+        color: COLORS.data.green,
+        projects: {
+            ZSharp: {
+                path: ROUTES.pages.ZSharp,
+                description: 'ML optimization method',
+                technology: 'PyTorch',
+            },
+            Oligopoly: {
+                path: ROUTES.pages.Oligopoly,
+                description: 'Market simulation model',
+                technology: 'FastAPI',
+            },
+        },
+    },
+    games: {
+        title: 'Games',
+        icon: GamepadRounded,
+        color: COLORS.primary.main,
+        projects: {
+            Snake: {
+                path: ROUTES.pages.Snake,
+                description: 'Retro arcade gameplay',
+                technology: 'JavaScript',
+            },
+            Lights_Out: {
+                path: ROUTES.pages.Lights_Out,
+                description: 'Grid-based logic puzzle',
+                technology: 'JavaScript',
+            },
+        },
+    },
+    collections: {
+        title: 'Collections',
+        icon: Code,
+        color: COLORS.data.amber,
+        projects: {
+            Interpreters: {
+                path: ROUTES.pages.Interpreters,
+                description: 'Esoteric language demos',
+                technology: 'JavaScript',
+            },
+            Wikipedia: {
+                path: ROUTES.pages.Wikipedia_Quiz,
+                description: 'Geography and trivia hub',
+                technology: 'React',
+            },
+        },
+    },
+};

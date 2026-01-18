@@ -6,7 +6,7 @@ import {
     TrendingUpRounded,
     AttachMoneyRounded,
 } from '../components/icons';
-import ResearchDemo from '../components/ResearchDemo';
+import ResearchDemo from '../features/research/ResearchDemo';
 
 interface MatrixItem {
     round: number;

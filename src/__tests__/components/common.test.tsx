@@ -8,10 +8,10 @@ import {
     RandomButton,
     Controls,
     ArrowsButton,
-} from '../../components/common/Controls';
-import { GlassCard } from '../../components/common/GlassCard';
-import { CustomGrid } from '../../components/common/CustomGrid';
-import { Navigation } from '../../components/common/Navigation';
+} from '../../components/ui/Controls';
+import { GlassCard } from '../../components/ui/GlassCard';
+import { CustomGrid } from '../../components/ui/CustomGrid';
+import { Navigation } from '../../components/layout/Navigation';
 
 const theme = createTheme();
 

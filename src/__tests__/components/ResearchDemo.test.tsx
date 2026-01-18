@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import ResearchDemo from '../../components/ResearchDemo';
+import ResearchDemo from '../../features/research/ResearchDemo';
 import { URLS } from '../../config/constants';
 
 // Mock the icons
@@ -12,7 +12,7 @@ jest.mock('../../components/icons', () => ({
 }));
 
 // Mock the helpers
-jest.mock('../../components/common/GlassCard', () => ({
+jest.mock('../../components/ui/GlassCard', () => ({
     GlassCard: ({ children, ...props }: any) => (
         <div data-testid="glass-card" {...props}>
             {children}

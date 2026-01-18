@@ -4,7 +4,7 @@ import React, { Suspense, lazy } from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 
 import { ThemeProvider, createTheme, CssBaseline } from './components/mui';
-import ErrorBoundary from './components/ErrorBoundary';
+import ErrorBoundary from './components/layout/ErrorBoundary';
 import './styles/animations.css';
 import { ROUTES } from './config/constants';
 import {
