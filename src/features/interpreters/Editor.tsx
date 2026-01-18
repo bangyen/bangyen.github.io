@@ -1,17 +1,10 @@
-import React, {
-    createContext,
-    useContext,
-    useMemo,
-    ReactNode,
-    RefObject,
-} from 'react';
+import React, { useContext, ReactNode, RefObject } from 'react';
 import { Program, Output, Tape, Register } from './Display';
 import { Grid, Typography, Box } from '../../components/mui';
 import { Toolbar } from './Toolbar';
-import { COLORS, SPACING, TYPOGRAPHY } from '../../config/theme';
+import { COLORS, TYPOGRAPHY } from '../../config/theme';
 import { EditorContext } from './EditorContext';
 import { TextArea, TextAreaProps } from './components/TextArea';
-import { GridArea } from './components/GridArea';
 
 interface EditorProps {
     container?: RefObject<HTMLDivElement | null>;

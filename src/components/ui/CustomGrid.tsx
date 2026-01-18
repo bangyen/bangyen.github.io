@@ -1,12 +1,7 @@
 import React, { useCallback, ReactNode } from 'react';
 import { Box, Grid } from '../mui';
 import { getSpace } from '../../features/interpreters/utils/gridUtils';
-import {
-    COLORS,
-    TYPOGRAPHY,
-    ANIMATIONS,
-    COMPONENT_VARIANTS,
-} from '../../config/theme';
+import { TYPOGRAPHY, ANIMATIONS, COMPONENT_VARIANTS } from '../../config/theme';
 import { GRID_CONFIG } from '../../features/interpreters/config/interpretersConfig';
 
 interface CellProps {

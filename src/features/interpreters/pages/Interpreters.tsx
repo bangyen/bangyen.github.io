@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Box } from '../../../components/mui';
-import { Stun_Step, Suffolk, WII2D, Back } from '..';
+import { StunStep, Suffolk, WII2D, Back } from '..';
 import { InterpreterNavigation } from '../components/InterpreterNavigation';
 import { PAGE_TITLES } from '../../../config/constants';
 import { COLORS } from '../../../config/theme';
@@ -25,7 +25,7 @@ export default function Interpreters(): React.ReactElement {
 
         switch (active) {
             case 'stun-step':
-                return <Stun_Step navigation={navigation} />;
+                return <StunStep navigation={navigation} />;
             case 'suffolk':
                 return <Suffolk navigation={navigation} />;
             case 'wii2d':
@@ -33,7 +33,7 @@ export default function Interpreters(): React.ReactElement {
             case 'back':
                 return <Back navigation={navigation} />;
             default:
-                return <Stun_Step navigation={navigation} />;
+                return <StunStep navigation={navigation} />;
         }
     };
 

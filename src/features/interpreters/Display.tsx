@@ -181,7 +181,7 @@ function Display({ Icon, title, data, pointer, children }: DisplayProps) {
 
         return (
             <Text
-                key={title + ind}
+                key={`${title}-${ind}-${val}`}
                 color={color}
                 text={val}
                 sx={{
@@ -228,7 +228,7 @@ function CompactDisplay({ Icon, title, data, pointer }: CompactDisplayProps) {
         const color = pointer === ind ? 'info' : 'inherit';
         return (
             <Chip
-                key={title + ind}
+                key={`${title}-${ind}-${val}`}
                 label={String(val)}
                 size="small"
                 sx={{

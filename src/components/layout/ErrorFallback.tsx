@@ -6,8 +6,6 @@ import {
     COLORS,
     TYPOGRAPHY,
     SPACING,
-    ANIMATIONS,
-    SHADOWS,
     COMPONENT_VARIANTS,
 } from '../../config/theme';
 

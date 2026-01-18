@@ -13,7 +13,6 @@ import {
     gridMove,
     getDirection,
 } from '../interpreters/utils/gridUtils';
-import { normalize, isSmartMatch } from '../quiz/utils/quizUtils';
 import { useWindow, useTimer, useKeys } from '../../hooks';
 import { CustomGrid } from '../../components/ui/CustomGrid';
 import { Controls, ArrowsButton } from '../../components/ui/Controls';
@@ -245,7 +244,7 @@ export default function Snake(): React.ReactElement {
             }
         };
 
-        const wrapDirection = (event: any) =>
+        const wrapDirection = (event: KeyboardEvent) =>
             dispatch({
                 type: 'steer',
                 payload: event,
