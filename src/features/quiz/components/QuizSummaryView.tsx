@@ -1,18 +1,8 @@
 import React from 'react';
-import {
-    Box,
-    Typography,
-    Button,
-    Fade,
-    Chip,
-    Stack,
-    Card,
-} from '@mui/material';
+import { Box, Typography, Button, Fade, Stack, Card } from '@mui/material';
 import {
     ArrowBackRounded as ArrowBackIcon,
     RefreshRounded as RefreshIcon,
-    CheckCircleRounded as CheckCircleIcon,
-    CancelRounded as CancelIcon,
 } from '@mui/icons-material';
 import { COLORS, SPACING, COMPONENT_VARIANTS } from '../../../config/theme';
 import { Question } from '../types/quiz';

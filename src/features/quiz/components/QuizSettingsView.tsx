@@ -1,16 +1,6 @@
 import React from 'react';
-import {
-    Typography,
-    Grid,
-    Button,
-    TextField,
-    MenuItem,
-    Select,
-    FormControl,
-    InputLabel,
-    Card,
-} from '@mui/material';
-import { COLORS, SPACING, COMPONENT_VARIANTS } from '../../../config/theme';
+import { Typography, Grid, Card } from '@mui/material';
+import { SPACING, COMPONENT_VARIANTS } from '../../../config/theme';
 import { QuizSettings } from '../types/quiz';
 
 interface QuizSettingsProps<S extends QuizSettings> {
