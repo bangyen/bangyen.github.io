@@ -228,7 +228,7 @@ const ZSharp: React.FC = () => {
         },
         {
             key: 'learning_curve',
-            label: 'Learning Gap',
+            label: 'Learning',
             icon: ShowChartRounded,
             chartTitle: 'Learning Progress',
             dataProcessor: (data: DataPoint[]) =>
