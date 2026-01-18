@@ -1,3 +1,4 @@
+import React from 'react';
 import {
     Box,
     Typography,
@@ -8,6 +9,7 @@ import {
     LinearProgress,
     Card,
 } from '@mui/material';
+
 import { ArrowBackRounded as ArrowBackIcon } from '@mui/icons-material';
 import {
     COLORS,
