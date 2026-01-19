@@ -263,7 +263,13 @@ export function ArrowsButton({
                     size={size}
                 />
             </Grid>
-            <Grid container justifyContent="center" alignItems="center" gap={1}>
+            <Grid
+                container
+                justifyContent="center"
+                alignItems="center"
+                gap={1}
+                wrap="nowrap"
+            >
                 <TooltipButton
                     title="Move Left"
                     Icon={KeyboardArrowLeftRounded}
