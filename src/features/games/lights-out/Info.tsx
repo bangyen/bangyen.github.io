@@ -135,7 +135,7 @@ const InstructionItem = ({
     title: string;
     text: string;
 }) => (
-    <Box sx={{ mb: 4, px: 2 }}>
+    <Box sx={{ px: 2 }}>
         <Typography
             variant="h6"
             sx={{
@@ -232,8 +232,8 @@ export default function Info(props: InfoProps): React.ReactElement {
                 sx={{
                     width: '100%',
                     maxWidth: '1000px',
-                    height: { xs: 'auto', md: '480px' },
-                    minHeight: { xs: '450px', md: '480px' },
+                    height: { xs: 'auto', md: '520px' },
+                    minHeight: { xs: '450px', md: '520px' },
                     display: 'flex',
                     flexDirection: 'column',
                     p: 0,
@@ -319,7 +319,14 @@ export default function Info(props: InfoProps): React.ReactElement {
                             }}
                         >
                             <StepTitle>How It Works</StepTitle>
-                            <Box sx={{ flex: 1, minHeight: '250px' }}>
+                            <Box
+                                sx={{
+                                    flex: 1,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    justifyContent: 'center',
+                                }}
+                            >
                                 <Example
                                     dims={3}
                                     size={size * (isMobile ? 0.9 : 0.7)} // Adjust size for responsiveness
@@ -349,9 +356,10 @@ export default function Info(props: InfoProps): React.ReactElement {
                                     display: 'flex',
                                     flexDirection: 'column',
                                     justifyContent: 'center',
+                                    gap: 3, // Consistent spacing
                                 }}
                             >
-                                <Box sx={{ mb: 3 }}>
+                                <Box>
                                     <Typography
                                         variant="subtitle2"
                                         sx={{
@@ -380,7 +388,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                                     />
                                 </Box>
 
-                                <Box sx={{ mb: 2 }}>
+                                <Box>
                                     <Typography
                                         variant="subtitle2"
                                         sx={{
@@ -411,7 +419,6 @@ export default function Info(props: InfoProps): React.ReactElement {
 
                                 <Box
                                     sx={{
-                                        mt: 2,
                                         display: 'flex',
                                         justifyContent: 'center',
                                     }}
