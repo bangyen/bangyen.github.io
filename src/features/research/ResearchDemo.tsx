@@ -514,7 +514,7 @@ const ResearchDemo = <T,>({
                     )}
 
                     {controls.length > 0 && (
-                        <GlassCard
+                        <Box
                             sx={{
                                 marginBottom: 0,
                                 width: '100%',
@@ -523,39 +523,15 @@ const ResearchDemo = <T,>({
                                 paddingBottom: SPACING.padding.md,
                             }}
                         >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    marginBottom: 2,
-                                }}
-                            >
+                            {onReset && (
                                 <Box
                                     sx={{
                                         display: 'flex',
+                                        justifyContent: 'flex-end',
                                         alignItems: 'center',
-                                        gap: 1,
+                                        marginBottom: 1,
                                     }}
                                 >
-                                    <SettingsRounded
-                                        sx={{
-                                            color: COLORS.primary.light,
-                                            fontSize: '1.25rem',
-                                        }}
-                                    />
-                                    <Typography
-                                        variant="body1"
-                                        sx={{
-                                            color: COLORS.primary.light,
-                                            fontWeight:
-                                                TYPOGRAPHY.fontWeight.semibold,
-                                        }}
-                                    >
-                                        Parameters
-                                    </Typography>
-                                </Box>
-                                {onReset && (
                                     <Button
                                         variant="outlined"
                                         size="small"
@@ -583,8 +559,8 @@ const ResearchDemo = <T,>({
                                     >
                                         {resetLabel}
                                     </Button>
-                                )}
-                            </Box>
+                                </Box>
+                            )}
 
                             <Grid container={true} spacing={2.5}>
                                 {controls.map((control, index) => (
@@ -765,7 +741,7 @@ const ResearchDemo = <T,>({
                                     </Grid>
                                 ))}
                             </Grid>
-                        </GlassCard>
+                        </Box>
                     )}
                 </Box>
             </Grid>
