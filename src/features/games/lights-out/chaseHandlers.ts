@@ -1,16 +1,21 @@
 import { getGrid, flipAdj } from './boardHandlers';
 import { getProduct } from './matrices';
 
-function chaseLights(states: number[][][], dims: number): number[][][] {
+function chaseLights(
+    states: number[][][],
+    dims: number
+): { states: number[][][]; presses: (number[] | null)[] } {
     const newStates = [...states];
-    let prev = states.at(-1);
+    const presses: (number[] | null)[] = [];
+    let prev = states[states.length - 1];
 
-    if (!prev) return newStates;
+    if (!prev) return { states: newStates, presses };
 
     for (let r = 1; r < dims; r++) {
         for (let c = 0; c < dims; c++) {
             if (!prev[r - 1][c]) continue;
 
+            presses.push([r, c]);
             const next = flipAdj(r, c, prev);
 
             newStates.push(next);
@@ -18,7 +23,7 @@ function chaseLights(states: number[][][], dims: number): number[][][] {
         }
     }
 
-    return newStates;
+    return { states: newStates, presses };
 }
 
 function fillRow(
@@ -53,7 +58,7 @@ function fillRow(
 }
 
 function extendBack(states: number[][], size: number): number[][] {
-    const back = states.at(-1);
+    const back = states[states.length - 1];
     if (!back) return states;
 
     const extend = [...states];
@@ -70,6 +75,7 @@ export function getStates(
     boardStates: number[][][];
     inputStates: number[][];
     outputStates: number[][];
+    pressStates: (number[] | null)[];
 } {
     let board = getGrid(dims, dims);
 
@@ -80,24 +86,45 @@ export function getStates(
         board = flipAdj(row, col, board);
     }
 
-    const states = chaseLights([board], dims);
-    const last = states.at(-1);
-    if (!last) return { boardStates: [], inputStates: [], outputStates: [] };
+    const { states: chase1, presses: presses1 } = chaseLights([board], dims);
+    const last = chase1[chase1.length - 1];
+    if (!last)
+        return {
+            boardStates: [],
+            inputStates: [],
+            outputStates: [],
+            pressStates: [],
+        };
 
-    const row = last.at(-1);
-    if (!row) return { boardStates: [], inputStates: [], outputStates: [] };
+    const row = last[last.length - 1];
+    if (!row)
+        return {
+            boardStates: [],
+            inputStates: [],
+            outputStates: [],
+            pressStates: [],
+        };
 
     const { input, output } = fillRow(row, dims);
 
-    const before = states.length + input.length - 1;
+    const before = chase1.length + input.length - 1;
 
-    const top = output.at(-1);
-    if (!top) return { boardStates: [], inputStates: [], outputStates: [] };
+    const top = output[output.length - 1];
+    if (!top)
+        return {
+            boardStates: [],
+            inputStates: [],
+            outputStates: [],
+            pressStates: [],
+        };
 
     let state = [...last];
+    const states = [...chase1];
+    const pressStates: (number[] | null)[] = [...presses1];
 
-    for (let i = 0; i < before - states.length; i++) {
+    for (let i = 0; i < before - chase1.length; i++) {
         states.push([...last]);
+        pressStates.push(null);
     }
     for (let i = 0; i < before - input.length; i++) {
         input.unshift([...input[0]]);
@@ -108,12 +135,19 @@ export function getStates(
 
     for (let k = 0; k < dims; k++) {
         if (top[k]) {
+            pressStates.push([0, k]);
             state = flipAdj(0, k, state);
             states.push([...state]);
         }
     }
 
-    const boardStates = chaseLights(states, dims);
+    const { states: boardStates, presses: presses2 } = chaseLights(
+        states,
+        dims
+    );
+    pressStates.push(...presses2);
+    pressStates.push(null); // Last state has no next press
+
     const after = boardStates.length;
 
     const inputStates = extendBack(input, after);
@@ -123,6 +157,7 @@ export function getStates(
         boardStates,
         inputStates,
         outputStates,
+        pressStates,
     };
 }
 
@@ -147,6 +182,7 @@ export function getCalculator(rows: number, cols: number, dims: number) {
         boardStates: number[][][];
         inputStates: number[][];
         outputStates: number[][];
+        pressStates: (number[] | null)[];
     } => {
         const { input, output } = fillRow(row, dims);
 
