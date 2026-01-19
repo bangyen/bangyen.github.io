@@ -13,7 +13,7 @@ import {
     gridMove,
     getDirection,
 } from '../interpreters/utils/gridUtils';
-import { useWindow, useTimer, useKeys, useSwipe } from '../../hooks';
+import { useWindow, useTimer, useKeys } from '../../hooks';
 import { CustomGrid } from '../../components/ui/CustomGrid';
 import { Controls, ArrowsButton } from '../../components/ui/Controls';
 import { PAGE_TITLES } from '../../config/constants';
@@ -203,12 +203,30 @@ export default function Snake(): React.ReactElement {
         []
     );
 
-    const swipeHandlers = useSwipe({
-        onSwipeUp: controlHandler('up'),
-        onSwipeDown: controlHandler('down'),
-        onSwipeLeft: controlHandler('left'),
-        onSwipeRight: controlHandler('right'),
-    });
+    const handleTap = useCallback(
+        (event: React.PointerEvent) => {
+            const { clientX, clientY } = event;
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            const dx = clientX - centerX;
+            const dy = clientY - centerY;
+
+            let direction = '';
+            if (Math.abs(dx) > Math.abs(dy)) {
+                direction = dx > 0 ? 'right' : 'left';
+            } else {
+                direction = dy > 0 ? 'down' : 'up';
+            }
+
+            const key = GAME_CONSTANTS.controls.arrowPrefix + direction;
+            dispatch({
+                type: 'steer',
+                payload: { key },
+            });
+        },
+        [dispatch]
+    );
 
     const chooseColor = useCallback(
         (row: number, col: number) => {
@@ -285,11 +303,12 @@ export default function Snake(): React.ReactElement {
                 background: COLORS.surface.background,
                 overflow: 'hidden',
                 overscrollBehavior: 'none',
+                touchAction: 'none',
             }}
-            {...swipeHandlers}
         >
             <Grid
                 flex={1}
+                onPointerDown={handleTap}
                 sx={{
                     ...COMPONENT_VARIANTS.flexCenter,
                     zIndex: 1,

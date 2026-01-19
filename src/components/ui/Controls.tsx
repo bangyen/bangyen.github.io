@@ -276,10 +276,9 @@ export function ArrowsButton({
                     onClick={flip}
                     aria-label="Hide controls"
                     sx={{
-                        color: COLORS.primary.main,
-                        backgroundColor: `${COLORS.primary.main}10`,
+                        color: 'inherit',
                         '&:hover': {
-                            backgroundColor: `${COLORS.primary.main}20`,
+                            backgroundColor: COLORS.interactive.hover,
                         },
                     }}
                 >
