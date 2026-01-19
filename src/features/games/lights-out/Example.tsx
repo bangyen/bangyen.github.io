@@ -172,25 +172,7 @@ interface ExampleProps {
     start?: unknown[];
 }
 
-function getRange(dims: number): number[] {
-    return Array.from({ length: dims }, (_, i) => i);
-}
-
-function gridTiles(states: number[][][], dims: number): number[][][] {
-    const length = states.length;
-    const dRange = getRange(dims);
-    const lRange = getRange(length);
-
-    return dRange.map(r => dRange.map(c => lRange.map(k => states[k][r][c])));
-}
-
-function rowTiles(states: number[][], dims: number): number[][] {
-    const length = states.length;
-    const dRange = getRange(dims);
-    const lRange = getRange(length);
-
-    return dRange.map(r => lRange.map(k => states[k][r]));
-}
+// Helper functions removed as we pass states directly
 
 export default function Example({
     start = [],
@@ -204,9 +186,7 @@ export default function Example({
 
     const { boardStates, inputStates, outputStates } = states;
 
-    const boardTiles = gridTiles(boardStates, dims);
-    const inputTiles = rowTiles(inputStates, dims);
-    const outputTiles = rowTiles(outputStates, dims);
+    const { boardStates, inputStates, outputStates } = states;
 
     const getGrid = (s: unknown[], r: number, c: number) => {
         const states = s as number[][][];
@@ -218,7 +198,7 @@ export default function Example({
     };
 
     const getBoardBg = propHandler(
-        boardTiles as unknown[],
+        boardStates as unknown[],
         getGrid,
         palette,
         'board'
@@ -238,13 +218,13 @@ export default function Example({
     };
 
     const getInput = propHandler(
-        inputTiles as unknown[],
+        inputStates as unknown[],
         getRow,
         palette,
         'input'
     );
     const getOutput = propHandler(
-        outputTiles as unknown[],
+        outputStates as unknown[],
         getRow,
         palette,
         'output'
