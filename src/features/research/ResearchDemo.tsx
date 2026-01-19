@@ -494,7 +494,7 @@ const ResearchDemo = <T,>({
                                         display: 'flex',
                                         justifyContent: 'flex-end',
                                         alignItems: 'center',
-                                        marginBottom: 1,
+                                        marginBottom: 2.5,
                                     }}
                                 >
                                     <Button

@@ -194,13 +194,13 @@ const WikipediaQuizPage: React.FC = () => {
                                     Domains
                                 </ToggleButton>
                                 <ToggleButton value="driving_side">
-                                    Driving Side
+                                    Driving
                                 </ToggleButton>
                                 <ToggleButton value="telephone">
                                     Telephone
                                 </ToggleButton>
                                 <ToggleButton value="vehicle">
-                                    Plates
+                                    Registration
                                 </ToggleButton>
                             </ToggleButtonGroup>
                         </Box>
