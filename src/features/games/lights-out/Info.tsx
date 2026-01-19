@@ -369,7 +369,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                                             fontWeight: 'bold',
                                         }}
                                     >
-                                        Your Bottom Row{' '}
+                                        Input{' '}
                                         <Box
                                             component="span"
                                             sx={{
@@ -377,7 +377,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                                                 fontWeight: 'normal',
                                             }}
                                         >
-                                            (Input)
+                                            (Bottom Row)
                                         </Box>
                                     </Typography>
                                     <CustomGrid
@@ -406,7 +406,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                                                 fontWeight: 'normal',
                                             }}
                                         >
-                                            (Apply to Top Row)
+                                            (Top Row)
                                         </Box>
                                     </Typography>
                                     <CustomGrid
