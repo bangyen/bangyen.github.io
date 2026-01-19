@@ -11,6 +11,12 @@ jest.mock('../../../components/icons', () => ({
     SettingsRounded: () => <div data-testid="settings-icon">Settings</div>,
 }));
 
+// Mock @mui/material useMediaQuery
+jest.mock('@mui/material', () => ({
+    ...jest.requireActual('@mui/material'),
+    useMediaQuery: () => false,
+}));
+
 // Mock the helpers
 jest.mock('../../../components/ui/GlassCard', () => ({
     GlassCard: ({ children, ...props }: { children: React.ReactNode }) => (
