@@ -1,10 +1,10 @@
 import React from 'react';
-import { Typography, Grid } from '../../../components/mui';
+import { Typography, Grid, Box } from '../../../components/mui';
 
 import { getStates } from './chaseHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { useMobile } from '../../../hooks';
-import { TYPOGRAPHY } from '../../../config/theme';
+import { TYPOGRAPHY, COLORS } from '../../../config/theme';
 
 interface Frame {
     backgroundColor: string;
@@ -81,8 +81,7 @@ interface ExampleProps {
 }
 
 function getRange(dims: number): number[] {
-    const keys = Array(dims).keys();
-    return [...keys];
+    return Array.from({ length: dims }, (_, i) => i);
 }
 
 function gridTiles(states: number[][][], dims: number): number[][][] {
@@ -99,29 +98,6 @@ function rowTiles(states: number[][], dims: number): number[][] {
     const lRange = getRange(length);
 
     return dRange.map(r => lRange.map(k => states[k][r]));
-}
-
-function Bifold({ children }: { children: React.ReactNode }) {
-    return <Grid size={6}>{children}</Grid>;
-}
-
-function Title({ children }: { children: React.ReactNode }) {
-    return (
-        <Bifold>
-            <Typography
-                variant="h6"
-                sx={{
-                    textAlign: 'center',
-                    fontWeight: 'semibold',
-                    fontSize: TYPOGRAPHY.fontSize.body,
-                    lineHeight: '1.2',
-                    letterSpacing: '-0.025em',
-                }}
-            >
-                {children}
-            </Typography>
-        </Bifold>
-    );
 }
 
 export default function Example({
@@ -169,34 +145,67 @@ export default function Example({
     );
 
     return (
-        <Grid container size={12} spacing={4}>
-            <Grid container size={12}>
-                <Bifold>
+        <Grid container size={12} spacing={2} sx={{ height: '100%' }}>
+            <Grid
+                container
+                size={12}
+                sx={{
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flex: 1,
+                }}
+            >
+                <Grid
+                    size={{ xs: 12, md: 6 }}
+                    sx={{ display: 'flex', justifyContent: 'center' }}
+                >
                     <CustomGrid
                         size={width}
                         rows={dims}
                         cols={dims}
                         cellProps={getBoard}
                     />
-                </Bifold>
-                <Grid container size={6}>
-                    <CustomGrid
-                        rows={1}
-                        cols={dims}
-                        size={width}
-                        cellProps={getInput}
-                    />
-                    <CustomGrid
-                        rows={1}
-                        cols={dims}
-                        size={width}
-                        cellProps={getOutput}
-                    />
                 </Grid>
-            </Grid>
-            <Grid container size={12}>
-                <Title>Animation Demo</Title>
-                <Title>Pattern Input</Title>
+                <Grid
+                    container
+                    size={{ xs: 12, md: 6 }}
+                    spacing={2}
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <Box sx={{ mb: 2, textAlign: 'center' }}>
+                        <Typography
+                            variant="subtitle2"
+                            sx={{ mb: 1, color: COLORS.text.secondary }}
+                        >
+                            Input
+                        </Typography>
+                        <CustomGrid
+                            rows={1}
+                            cols={dims}
+                            size={width}
+                            cellProps={getInput}
+                        />
+                    </Box>
+                    <Box sx={{ textAlign: 'center' }}>
+                        <Typography
+                            variant="subtitle2"
+                            sx={{ mb: 1, color: COLORS.text.secondary }}
+                        >
+                            Result
+                        </Typography>
+                        <CustomGrid
+                            rows={1}
+                            cols={dims}
+                            size={width}
+                            cellProps={getOutput}
+                        />
+                    </Box>
+                </Grid>
             </Grid>
         </Grid>
     );
