@@ -39,7 +39,7 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
                     fontSize: '0.85rem',
                     fontWeight: 'medium',
                     textTransform: 'none',
-                    px: { xs: 1.5, sm: 3 },
+                    px: { xs: 1.5, sm: 2, lg: 3 },
                     py: 0.5,
                     '&.Mui-selected': {
                         backgroundColor: COLORS.primary.main,
