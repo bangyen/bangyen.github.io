@@ -212,10 +212,17 @@ export default function Snake(): React.ReactElement {
             const dx = clientX - centerX;
             const dy = clientY - centerY;
 
+            const currentDir =
+                state.buffer.length > 0
+                    ? state.buffer[state.buffer.length - 1]
+                    : state.velocity;
+
             let direction = '';
-            if (Math.abs(dx) > Math.abs(dy)) {
+            if (Math.abs(currentDir) === 2) {
+                // Moving vertically, steer horizontally
                 direction = dx > 0 ? 'right' : 'left';
             } else {
+                // Moving horizontally or stopped, steer vertically
                 direction = dy > 0 ? 'down' : 'up';
             }
 
@@ -225,7 +232,7 @@ export default function Snake(): React.ReactElement {
                 payload: { key },
             });
         },
-        [dispatch]
+        [dispatch, state.velocity, state.buffer]
     );
 
     const chooseColor = useCallback(
