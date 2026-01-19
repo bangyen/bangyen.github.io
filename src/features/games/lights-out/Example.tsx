@@ -1,15 +1,14 @@
 import React from 'react';
 import { Typography, Grid, Box } from '../../../components/mui';
+import { CircleRounded } from '../../../components/icons';
+
 import { getStates } from './chaseHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { useMobile } from '../../../hooks';
-import { COLORS, COMPONENT_VARIANTS } from '../../../config/theme';
-import { AdsClickRounded } from '../../../components/icons';
+import { TYPOGRAPHY, COLORS } from '../../../config/theme';
 
 interface Frame {
-    backgroundColor?: string;
-    opacity?: number;
-    transform?: string;
+    backgroundColor: string;
 }
 
 interface Palette {
@@ -17,11 +16,7 @@ interface Palette {
     secondary: string;
 }
 
-function getFrames(
-    states: unknown[],
-    palette: Palette,
-    type: 'color' | 'icon'
-): Record<string, Frame> {
+function getFrames(states: unknown[], palette: Palette): Record<string, Frame> {
     const newStates = [-1, ...states, -1];
     const length = states.length;
     const frames: Record<string, Frame> = {};
@@ -30,20 +25,15 @@ function getFrames(
         const state = newStates[k];
         const next = newStates[k + 1];
 
+        const value = (state as number) + 1 ? state : next;
+        const color = value ? palette.primary : palette.secondary;
+
         const percent = (100 * k) / length;
         const floor = Math.floor(percent);
 
-        if (type === 'color') {
-            const value = (state as number) + 1 ? state : next;
-            const color = value ? palette.primary : palette.secondary;
-            frames[`${floor}%`] = { backgroundColor: color };
-        } else {
-            const active = (state as number) === 1;
-            frames[`${floor}%`] = {
-                opacity: active ? 1 : 0,
-                transform: active ? 'scale(1)' : 'scale(0.5)',
-            };
-        }
+        frames[`${floor}%`] = {
+            backgroundColor: color,
+        };
     }
 
     return frames;
@@ -51,23 +41,19 @@ function getFrames(
 
 function propHandler(
     states: unknown[],
-    presses: unknown[],
     getter: (states: unknown[], row: number, col: number) => unknown[],
     palette: Palette,
     id: string
 ) {
     return (row: number, col: number): Record<string, unknown> => {
         const state = getter(states, row, col);
-        const press = getter(presses, row, col);
-
-        const colorFrames = getFrames(state as unknown[], palette, 'color');
-        const iconFrames = getFrames(press as unknown[], palette, 'icon');
+        const frames = getFrames(state as unknown[], palette);
         const length = states.length;
 
-        const colorName = `${id}-color-${row}-${col}`;
-        const iconName = `${id}-icon-${row}-${col}`;
+        const name = `${id}-${row}-${col}`;
+        const index = `@keyframes ${name}`;
 
-        const animation = (name: string) => `
+        const animation = `
             ${name}
             ${length * 2}s
             steps(1, start)
@@ -75,34 +61,99 @@ function propHandler(
         `;
 
         const style: Record<string, unknown> = {
-            [`@keyframes ${colorName}`]: colorFrames,
-            animation: animation(colorName),
-            position: 'relative',
+            [index]: frames,
+            animation,
         };
 
-        const iconStyle: Record<string, unknown> = {
-            [`@keyframes ${iconName}`]: iconFrames,
-            animation: animation(iconName),
-            position: 'absolute',
-            color: COLORS.interactive.active,
-            fontSize: '1.25rem',
-            zIndex: 2,
-            pointerEvents: 'none',
-        };
+        return { sx: style };
+    };
+}
+
+function getIconFrames(
+    states: number[][][],
+    row: number,
+    col: number,
+    dims: number
+): Record<string, { opacity: number }> {
+    const newStates = [[], ...states, []]; // Padding to match propHandler timing
+    const length = states.length;
+    const frames: Record<string, { opacity: number }> = {};
+
+    for (let k = 0; k < length + 1; k++) {
+        const percent = (100 * k) / length;
+        const floor = Math.floor(percent);
+
+        // Logic: Is (row, col) the next move for state[k]?
+        // Timeline:
+        // k=0: newStates[0] is [], dummy.
+        // k=1: newStates[1] is states[0]. We show states[0]. Next move depends on states[0].
+        // ...
+
+        // We need to align with propHandler.
+        // propHandler uses: [-1, ...states, -1].
+        // k=0: -1.
+        // k=1: states[0].
+
+        let opacity = 0;
+        const currentState = k > 0 && k <= length ? states[k - 1] : null;
+
+        if (currentState && row > 0) {
+            // Find the first required move for this state
+            let targetR = -1;
+            let targetC = -1;
+
+            // Scan row r-1 for lights
+            outer: for (let r = 1; r < dims; r++) {
+                for (let c = 0; c < dims; c++) {
+                    if (currentState[r - 1][c] === 1) {
+                        targetR = r;
+                        targetC = c;
+                        break outer;
+                    }
+                }
+            }
+
+            if (row === targetR && col === targetC) {
+                opacity = 1;
+            }
+        }
+
+        frames[`${floor}%`] = { opacity };
+    }
+
+    return frames;
+}
+
+function iconHandler(states: number[][][], dims: number, id: string) {
+    return (row: number, col: number): Record<string, unknown> => {
+        const frames = getIconFrames(states, row, col, dims);
+        const length = states.length;
+
+        const name = `${id}-icon-${row}-${col}`;
+        const index = `@keyframes ${name}`;
+
+        const animation = `
+            ${name}
+            ${length * 2}s
+            steps(1, start)
+            infinite
+        `;
 
         return {
-            sx: style,
             children: (
                 <Box
                     sx={{
-                        ...COMPONENT_VARIANTS.flexCenter,
+                        color: 'rgba(255,255,255,0.7)', // Highlight color
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         width: '100%',
                         height: '100%',
+                        [index]: frames,
+                        animation,
                     }}
                 >
-                    <Box sx={iconStyle}>
-                        <AdsClickRounded />
-                    </Box>
+                    <CircleRounded sx={{ fontSize: '60%' }} />
                 </Box>
             ),
         };
@@ -110,10 +161,15 @@ function propHandler(
 }
 
 interface ExampleProps {
+    states?: unknown[];
+    getter?: (states: unknown[], row: number, col: number) => unknown[];
     palette: Palette;
+    id?: string;
+    rows?: number;
+    cols?: number;
     size: number;
     dims?: number;
-    start?: number[];
+    start?: unknown[];
 }
 
 function getRange(dims: number): number[] {
@@ -126,21 +182,6 @@ function gridTiles(states: number[][][], dims: number): number[][][] {
     const lRange = getRange(length);
 
     return dRange.map(r => dRange.map(c => lRange.map(k => states[k][r][c])));
-}
-
-function pressTiles(presses: (number[] | null)[], dims: number): number[][][] {
-    const length = presses.length;
-    const dRange = getRange(dims);
-    const lRange = getRange(length);
-
-    return dRange.map(r =>
-        dRange.map(c =>
-            lRange.map(k => {
-                const p = presses[k];
-                return p && p[0] === r && p[1] === c ? 1 : 0;
-            })
-        )
-    );
 }
 
 function rowTiles(states: number[][], dims: number): number[][] {
@@ -161,10 +202,9 @@ export default function Example({
     const states = getStates(start as number[], dims);
     const width = mobile ? size / 2 : size;
 
-    const { boardStates, inputStates, outputStates, pressStates } = states;
+    const { boardStates, inputStates, outputStates } = states;
 
     const boardTiles = gridTiles(boardStates, dims);
-    const boardPresses = pressTiles(pressStates, dims);
     const inputTiles = rowTiles(inputStates, dims);
     const outputTiles = rowTiles(outputStates, dims);
 
@@ -177,23 +217,34 @@ export default function Example({
         return states.map(state => state[c]);
     };
 
-    const getBoard = propHandler(
+    const getBoardBg = propHandler(
         boardTiles as unknown[],
-        boardPresses as unknown[],
         getGrid,
         palette,
         'board'
     );
+
+    // Icon animation handler
+    const getBoardIcon = iconHandler(boardStates, dims, 'board');
+
+    // Merge props
+    const getBoard = (r: number, c: number) => {
+        const bgProps = getBoardBg(r, c);
+        const iconProps = getBoardIcon(r, c);
+        return {
+            ...bgProps,
+            ...iconProps,
+        };
+    };
+
     const getInput = propHandler(
         inputTiles as unknown[],
-        inputTiles.map(() => inputTiles[0].map(() => 0)) as unknown[],
         getRow,
         palette,
         'input'
     );
     const getOutput = propHandler(
         outputTiles as unknown[],
-        outputTiles.map(() => outputTiles[0].map(() => 0)) as unknown[],
         getRow,
         palette,
         'output'
