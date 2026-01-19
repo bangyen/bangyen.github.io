@@ -16,7 +16,12 @@ import { Board, useHandler, usePalette } from '../components/Board';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
 import { COLORS } from '../../../config/theme';
-import { getGrid, handleBoard, getNextMove } from './boardHandlers';
+import {
+    getGrid,
+    handleBoard,
+    getNextMove,
+    BoardAction,
+} from './boardHandlers';
 import { useWindow, useMobile } from '../../../hooks';
 import { convertPixels } from '../../interpreters/utils/gridUtils';
 import Info from './Info';
@@ -42,7 +47,10 @@ interface FrontProps {
     [key: string]: unknown;
 }
 
-function getFrontProps(getters: Getters, dispatch: (action: unknown) => void) {
+function getFrontProps(
+    getters: Getters,
+    dispatch: (action: BoardAction) => void
+) {
     const { getColor, getBorder } = getters;
 
     const flipAdj = (row: number, col: number) => {
@@ -157,9 +165,7 @@ export default function LightsOut(): React.ReactElement {
 
     const getters = useHandler(state, palette);
 
-    const frontProps = getFrontProps(getters, action =>
-        dispatch(action as any)
-    );
+    const frontProps = getFrontProps(getters, action => dispatch(action));
 
     const backProps = (row: number, col: number) => {
         return {

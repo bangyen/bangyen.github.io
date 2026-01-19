@@ -34,7 +34,7 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 
-interface ChartConfig {
+export interface ChartConfig {
     type: string;
     lines: Array<{
         dataKey: string;
@@ -61,12 +61,12 @@ export interface ViewType<T> {
     chartConfig: ChartConfig;
 }
 
-interface ControlOption {
+export interface ControlOption {
     value: number;
     label: string;
 }
 
-interface Control {
+export interface Control {
     label: string;
     icon?: React.ElementType;
     color?: string;

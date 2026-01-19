@@ -24,7 +24,7 @@ interface ButtonData {
     props?: Record<string, unknown>;
 }
 
-interface ToolbarPayload {
+export interface ToolbarPayload {
     dispatch: (action: { type: string; payload: unknown }) => void;
     nextIter: (action: {
         type: string;

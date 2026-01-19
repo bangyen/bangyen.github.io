@@ -11,6 +11,7 @@ import { GridArea } from '../components/GridArea';
 import { convertPixels } from '../utils/gridUtils';
 import { handleAction, GridState, GridAction } from './eventHandlers';
 import { PAGE_TITLES } from '../../../config/constants';
+import { ToolbarPayload } from '../Toolbar';
 
 import {
     useContainer,
@@ -40,7 +41,7 @@ interface WrapperPayload<T> {
     start: Partial<T>;
     resetState: (grid: string) => void;
     nextIter: (action: CacheAction) => T;
-    dispatch: (action: any) => void;
+    dispatch: React.Dispatch<GridAction>;
     create: (config: { repeat: () => void; speed: number }) => void;
     clear: () => void;
 }
@@ -100,13 +101,16 @@ function useWrappers<T extends GridState>(
             const payload: WrapperPayload<T> = {
                 start,
                 resetState,
-                nextIter: nextIter as any,
-                dispatch: dispatch as any,
+                nextIter,
+                dispatch,
                 create,
                 clear,
             };
 
-            dispatch({ type, payload } as any);
+            dispatch({
+                type,
+                payload: payload as unknown as ToolbarPayload,
+            } as GridAction);
         },
         [resetState, nextIter, dispatch, create, clear, start]
     );

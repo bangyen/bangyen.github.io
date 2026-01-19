@@ -8,7 +8,7 @@ describe('Toolbar', () => {
     describe('handleToolbar', () => {
         const mockPayload = {
             dispatch: jest.fn(),
-            nextIter: jest.fn((action: any) => {
+            nextIter: jest.fn((action: { type: string; payload: any }) => {
                 // Return a proper object structure - match what the code expects
                 // For reset action, nextIter is called with { type: 'clear', payload: resetPayload }
                 // resetPayload contains { ...state, ...start } which is { value: 0, pause: false }
