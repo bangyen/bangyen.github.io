@@ -133,11 +133,11 @@ export default function GridEditor<T extends GridState>(
     const container = useRef<HTMLDivElement>(null);
     let { height, width } = useContainer(container);
 
-    const mobile = useMobile('sm');
+    const mobile = useMobile('md');
     const size = mobile ? 4 : 6;
     const hide = true;
 
-    height = (height || 400) * 0.8;
+    height = (height || 400) * (mobile ? 1 : 0.8);
     width = (width || 600) * 0.95;
 
     if (!hide) {
@@ -215,7 +215,7 @@ export default function GridEditor<T extends GridState>(
         tapeFlag: tape || false,
         outFlag: output || false,
         regFlag: register || false,
-        height: height / 0.8,
+        height: height,
         index: 0,
         tape: [],
         pointer: 0,

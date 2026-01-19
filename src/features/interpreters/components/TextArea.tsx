@@ -3,6 +3,8 @@ import { TextField } from '../../../components/mui';
 import { EditorContext } from '../EditorContext';
 import { COLORS, SPACING } from '../../../config/theme';
 
+import { useMobile } from '../../../hooks';
+
 export interface TextAreaProps {
     value?: string;
     readOnly?: boolean;
@@ -28,7 +30,8 @@ export function TextArea({
     }
 
     const { height } = editorContext;
-    const rows = Math.floor(height / 32);
+    const mobile = useMobile('md');
+    const rows = Math.floor(height / (mobile ? 24 : 32));
 
     const isControlled = value !== undefined && value !== null;
     const textFieldProps = isControlled
