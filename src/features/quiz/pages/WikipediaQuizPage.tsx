@@ -124,7 +124,7 @@ const WikipediaQuizPage: React.FC = () => {
             size="small"
             sx={{
                 width: 'auto',
-                minWidth: { xs: 220, sm: 240 },
+                minWidth: { xs: 180, sm: 200 },
                 flexShrink: 0,
                 '& .MuiOutlinedInput-root': {
                     backgroundColor: COLORS.surface.glass,
@@ -198,7 +198,7 @@ const WikipediaQuizPage: React.FC = () => {
 
     return (
         <QuizLayout
-            title="Wikipedia Quizzes"
+            title="Geography"
             infoUrl={activeConfig.infoUrl}
             headerContent={topicSelector}
         >

@@ -32,7 +32,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
             sx={{
                 background: COLORS.surface.background,
                 py: 8,
-                px: { xs: 2, md: 6 },
+                px: { xs: 2, sm: 4 },
                 width: '100%',
             }}
         >
@@ -53,12 +53,12 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                     sx={{ marginBottom: 4 }}
                 >
                     <MuiGrid
-                        size={{ xs: 'grow', md: 'auto' }}
+                        size={{ xs: 'grow', sm: 'auto' }}
                         sx={{
                             display: 'flex',
                             justifyContent: {
                                 xs: 'flex-start',
-                                md: 'flex-start',
+                                sm: 'flex-start',
                             },
                             mb: 0,
                             minWidth: 0,
@@ -79,7 +79,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                             <>
                                 <Box
                                     sx={{
-                                        display: { xs: 'none', md: 'block' },
+                                        display: { xs: 'none', sm: 'block' },
                                     }}
                                 >
                                     <Typography
@@ -96,7 +96,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                                 </Box>
                                 <Box
                                     sx={{
-                                        display: { xs: 'block', md: 'none' },
+                                        display: { xs: 'block', sm: 'none' },
                                     }}
                                 >
                                     {headerContent}
@@ -106,9 +106,9 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                     </MuiGrid>
                     {headerContent && (
                         <MuiGrid
-                            size={{ xs: 0, md: 'auto' }}
+                            size={{ xs: 0, sm: 'auto' }}
                             sx={{
-                                display: { xs: 'none', md: 'flex' },
+                                display: { xs: 'none', sm: 'flex' },
                                 flex: 1,
                                 justifyContent: 'center',
                                 px: 4,
@@ -127,7 +127,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                                 sx={{
                                     fontSize: {
                                         xs: TYPOGRAPHY.fontSize.h2,
-                                        md: '2rem',
+                                        sm: '2rem',
                                     },
                                 }}
                             />
@@ -137,7 +137,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                                 sx={{
                                     fontSize: {
                                         xs: TYPOGRAPHY.fontSize.h2,
-                                        md: '2rem',
+                                        sm: '2rem',
                                     },
                                 }}
                             />

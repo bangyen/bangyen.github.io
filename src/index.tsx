@@ -62,7 +62,7 @@ function App(): React.ReactElement {
                     <Route path="/zsharp" element={<ZSharp />} />
                     <Route path="/oligopoly" element={<Oligopoly />} />
                     <Route
-                        path={ROUTES.pages.Wikipedia_Quiz}
+                        path={ROUTES.pages.Geography}
                         element={<WikipediaQuiz />}
                     />
                     <Route path="*" element={<Error />} />

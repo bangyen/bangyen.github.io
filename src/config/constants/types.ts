@@ -104,7 +104,7 @@ export interface Routes {
         Snake: string;
         Lights_Out: string;
         Interpreters: string;
-        Wikipedia_Quiz: string;
+        Geography: string;
     };
     interpreters: {
         Stun_Step: string;
@@ -189,6 +189,6 @@ export interface PageTitles {
     oligopoly: string;
     error: string;
     interpreters: string;
-    wikipediaQuiz: string;
+    geography: string;
     interpreter: (name: string) => string;
 }

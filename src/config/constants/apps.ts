@@ -10,7 +10,7 @@ export const PAGE_TITLES: PageTitles = {
     error: 'Page Not Found | Bangyen',
     interpreters: `Interpreters - ${PERSONAL_INFO.name}`,
     interpreter: (name: string) => `${name} Interpreter | Bangyen`,
-    wikipediaQuiz: 'Wikipedia Quizzes | Bangyen',
+    geography: 'Geography | Bangyen',
 };
 
 export const ROUTES: Routes = {
@@ -20,7 +20,7 @@ export const ROUTES: Routes = {
         Snake: '/snake',
         Lights_Out: '/lights-out',
         Interpreters: '/interpreters',
-        Wikipedia_Quiz: '/wikipedia',
+        Geography: '/geography',
     },
     interpreters: {
         Stun_Step: '/stun-step',
