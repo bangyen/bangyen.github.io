@@ -288,10 +288,40 @@ export const useQuizFilter = ({
             settings.filterSwitch !== 'All' &&
             quizType === 'driving_side'
         ) {
-            filtered = filtered.filter((item: QuizItem) =>
-                settings.filterSwitch === 'Switched'
-                    ? (item as DrivingSide).switched
-                    : !(item as DrivingSide).switched
+            // In 'toCountry' mode for driving_side, we ONLY show switched countries
+            // The switch filter is effectively ignored/replaced by this logic,
+            // but we keep the block structure for existing 'guessing' mode.
+            if (settings.mode === 'toCountry') {
+                filtered = filtered.filter(
+                    (item: QuizItem) => (item as DrivingSide).switched
+                );
+            } else {
+                filtered = filtered.filter((item: QuizItem) =>
+                    settings.filterSwitch === 'Switched'
+                        ? (item as DrivingSide).switched
+                        : !(item as DrivingSide).switched
+                );
+            }
+        } else if (
+            quizType === 'driving_side' &&
+            settings.mode === 'toCountry'
+        ) {
+            // Even if filterSwitch wasn't set (shouldn't happen given default settings, but for safety),
+            // force switched=true for toCountry mode
+            filtered = filtered.filter(
+                (item: QuizItem) => (item as DrivingSide).switched
+            );
+        }
+
+        if (
+            settings.filterSide &&
+            settings.filterSide !== 'All' &&
+            quizType === 'driving_side' &&
+            settings.mode === 'toCountry'
+        ) {
+            filtered = filtered.filter(
+                (item: QuizItem) =>
+                    (item as DrivingSide).side === settings.filterSide
             );
         }
 

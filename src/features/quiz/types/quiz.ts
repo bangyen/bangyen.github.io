@@ -35,6 +35,7 @@ export interface QuizSettings {
     mode: GameMode | string;
     allowRepeats: boolean;
     maxQuestions: number | 'All';
+    filterSide?: string;
     [key: string]: unknown;
 }
 

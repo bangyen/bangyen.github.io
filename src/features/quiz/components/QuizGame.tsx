@@ -51,13 +51,13 @@ const QuizGame: React.FC<QuizGameProps> = ({
     }, [showFeedback, currentQuestion]);
 
     // Special handling for Driving Side which uses custom component inputs
-    if (quizType === 'driving_side') {
+    if (quizType === 'driving_side' && settings.mode !== 'toCountry') {
         return (
             <QuizGameView
                 gameState={state}
                 actions={actions}
                 onBackToMenu={onBackToMenu}
-                modeLabel="Which Side?"
+                modeLabel="Guessing Side"
                 hideInput={true}
                 hideHint={true}
                 renderQuestionPrompt={() =>
