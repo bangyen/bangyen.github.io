@@ -113,13 +113,11 @@ function useHandler(row: number[], size: number, palette: Palette) {
 const StepTitle = ({ children }: { children: React.ReactNode }) => (
     <Typography
         variant="h5"
-        gutterBottom
         sx={{
             color: COLORS.text.primary,
             fontWeight: TYPOGRAPHY.fontWeight.bold,
             textAlign: 'center',
             fontSize: TYPOGRAPHY.fontSize.h2,
-            mb: 3,
         }}
     >
         {children}
@@ -167,6 +165,8 @@ const InstructionItem = ({
 );
 
 // --- Main Component ---
+
+const TITLES = ['Chasing Lights', 'How It Works', 'Calculator'];
 
 export default function Info(props: InfoProps): React.ReactElement {
     const { rows, cols, size, open, palette, toggleOpen } = props;
@@ -232,8 +232,8 @@ export default function Info(props: InfoProps): React.ReactElement {
                 sx={{
                     width: '100%',
                     maxWidth: '1000px',
-                    height: { xs: 'auto', md: '480px' },
-                    minHeight: { xs: '450px', md: '480px' },
+                    height: { xs: 'auto', md: '520px' },
+                    minHeight: { xs: '450px', md: '520px' },
                     display: 'flex',
                     flexDirection: 'column',
                     p: 0,
@@ -242,33 +242,41 @@ export default function Info(props: InfoProps): React.ReactElement {
                     m: 2,
                 }}
             >
-                {/* Header (Close Button) */}
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: 12,
-                        right: 12,
-                        zIndex: 10,
-                    }}
-                >
-                    <IconButton
-                        onClick={handleClose}
-                        size="small"
-                        sx={{ color: COLORS.text.secondary }}
-                    >
-                        <CloseRounded />
-                    </IconButton>
-                </Box>
                 {/* Content Area */}
                 <Box
                     sx={{
                         flex: 1,
                         overflowY: 'auto',
-                        p: { xs: 2, md: 3 },
+                        p: { xs: 2.5, md: 3 }, // balanced padding
                         display: 'flex',
                         flexDirection: 'column',
                     }}
                 >
+                    {/* Synchronized Header (Title + Close Button) */}
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            mb: 2, // reduced from 3 for snug fit
+                        }}
+                    >
+                        <StepTitle>{TITLES[step]}</StepTitle>
+                        <IconButton
+                            onClick={handleClose}
+                            size="small"
+                            sx={{
+                                position: 'absolute',
+                                right: 0,
+                                top: '50%',
+                                transform: 'translateY(-50%)',
+                                color: COLORS.text.secondary,
+                            }}
+                        >
+                            <CloseRounded />
+                        </IconButton>
+                    </Box>
                     {/* Step 0: Instructions */}
                     {step === 0 && (
                         <Box
