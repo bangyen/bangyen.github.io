@@ -158,11 +158,13 @@ const WikipediaQuizPage: React.FC = () => {
                                         COLORS.interactive.disabled,
                                     borderRadius: SPACING.borderRadius.full,
                                     p: 0.5,
+                                    gap: 1,
                                     '& .MuiToggleButton-root': {
                                         borderRadius: SPACING.borderRadius.full,
                                         px: { xs: 2, sm: 3 },
                                         py: 1,
                                         border: 'none',
+                                        margin: '0 !important',
                                         color: COLORS.text.secondary,
                                         fontSize: {
                                             xs: '0.8rem',

@@ -58,7 +58,7 @@ export default function Editor({
         sx: {
             overflowY: 'hidden',
             height: {
-                xs: code !== undefined ? '300px' : '350px',
+                xs: code !== undefined ? '600px' : '700px',
                 md: 'auto',
             },
         },

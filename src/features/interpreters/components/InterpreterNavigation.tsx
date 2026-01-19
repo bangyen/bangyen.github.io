@@ -30,9 +30,11 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
                 backgroundColor: COLORS.interactive.disabled,
                 borderRadius: SPACING.borderRadius.full,
                 p: 0.5,
+                gap: 1,
                 '& .MuiToggleButton-root': {
                     borderRadius: SPACING.borderRadius.full,
                     border: 'none',
+                    margin: '0 !important',
                     color: COLORS.text.secondary,
                     fontSize: '0.85rem',
                     fontWeight: 'medium',
