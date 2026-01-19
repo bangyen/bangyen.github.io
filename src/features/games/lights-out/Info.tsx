@@ -232,8 +232,8 @@ export default function Info(props: InfoProps): React.ReactElement {
                 sx={{
                     width: '100%',
                     maxWidth: '1000px',
-                    maxHeight: '50vh', // significantly reduced height
-                    minHeight: { xs: '30vh', md: '300px' },
+                    maxHeight: '80vh',
+                    height: 'auto',
                     display: 'flex',
                     flexDirection: 'column',
                     p: 0,
@@ -259,13 +259,12 @@ export default function Info(props: InfoProps): React.ReactElement {
                         <CloseRounded />
                     </IconButton>
                 </Box>
-
                 {/* Content Area */}
                 <Box
                     sx={{
-                        flex: 1,
+                        flex: '0 1 auto',
                         overflowY: 'auto',
-                        p: { xs: 2.5, md: 4 },
+                        p: { xs: 2, md: 3 },
                         display: 'flex',
                         flexDirection: 'column',
                     }}
@@ -275,7 +274,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                         <Box
                             sx={{
                                 animation: 'fadeIn 0.3s ease',
-                                height: '100%',
+                                height: 'auto',
                                 display: 'flex',
                                 flexDirection: 'column',
                             }}
@@ -313,14 +312,14 @@ export default function Info(props: InfoProps): React.ReactElement {
                     {step === 1 && (
                         <Box
                             sx={{
-                                height: '100%',
+                                height: 'auto',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 animation: 'fadeIn 0.3s ease',
                             }}
                         >
                             <StepTitle>How It Works</StepTitle>
-                            <Box sx={{ flex: 1, minHeight: '300px' }}>
+                            <Box sx={{ flex: '0 1 auto', minHeight: '200px' }}>
                                 <Example
                                     dims={3}
                                     size={size * (isMobile ? 0.9 : 0.7)} // Adjust size for responsiveness
@@ -337,7 +336,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                             sx={{
                                 animation: 'fadeIn 0.3s ease',
                                 textAlign: 'center',
-                                height: '100%',
+                                height: 'auto',
                                 display: 'flex',
                                 flexDirection: 'column',
                             }}

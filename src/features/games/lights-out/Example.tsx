@@ -164,6 +164,7 @@ export default function Example({
                         rows={dims}
                         cols={dims}
                         cellProps={getBoard}
+                        space={0}
                     />
                 </Grid>
                 <Grid
@@ -189,21 +190,23 @@ export default function Example({
                             cols={dims}
                             size={width}
                             cellProps={getInput}
+                            space={0}
                         />
                     </Box>
                     <Box sx={{ textAlign: 'center' }}>
-                        <Typography
-                            variant="subtitle2"
-                            sx={{ mb: 1, color: COLORS.text.secondary }}
-                        >
-                            Result
-                        </Typography>
                         <CustomGrid
                             rows={1}
                             cols={dims}
                             size={width}
                             cellProps={getOutput}
+                            space={0}
                         />
+                        <Typography
+                            variant="subtitle2"
+                            sx={{ mt: 1, color: COLORS.text.secondary }}
+                        >
+                            Result
+                        </Typography>
                     </Box>
                 </Grid>
             </Grid>
