@@ -232,8 +232,8 @@ export default function Info(props: InfoProps): React.ReactElement {
                 sx={{
                     width: '100%',
                     maxWidth: '1000px',
-                    maxHeight: '80vh',
-                    height: 'auto',
+                    height: { xs: 'auto', md: '480px' },
+                    minHeight: { xs: '450px', md: '480px' },
                     display: 'flex',
                     flexDirection: 'column',
                     p: 0,
@@ -262,7 +262,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                 {/* Content Area */}
                 <Box
                     sx={{
-                        flex: '0 1 auto',
+                        flex: 1,
                         overflowY: 'auto',
                         p: { xs: 2, md: 3 },
                         display: 'flex',
@@ -274,7 +274,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                         <Box
                             sx={{
                                 animation: 'fadeIn 0.3s ease',
-                                height: 'auto',
+                                height: '100%',
                                 display: 'flex',
                                 flexDirection: 'column',
                             }}
@@ -312,14 +312,14 @@ export default function Info(props: InfoProps): React.ReactElement {
                     {step === 1 && (
                         <Box
                             sx={{
-                                height: 'auto',
+                                height: '100%',
                                 display: 'flex',
                                 flexDirection: 'column',
                                 animation: 'fadeIn 0.3s ease',
                             }}
                         >
                             <StepTitle>How It Works</StepTitle>
-                            <Box sx={{ flex: '0 1 auto', minHeight: '200px' }}>
+                            <Box sx={{ flex: 1, minHeight: '250px' }}>
                                 <Example
                                     dims={3}
                                     size={size * (isMobile ? 0.9 : 0.7)} // Adjust size for responsiveness
@@ -336,7 +336,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                             sx={{
                                 animation: 'fadeIn 0.3s ease',
                                 textAlign: 'center',
-                                height: 'auto',
+                                height: '100%',
                                 display: 'flex',
                                 flexDirection: 'column',
                             }}
