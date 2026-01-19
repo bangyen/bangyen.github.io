@@ -13,7 +13,7 @@ import {
     gridMove,
     getDirection,
 } from '../interpreters/utils/gridUtils';
-import { useWindow, useTimer, useKeys } from '../../hooks';
+import { useWindow, useTimer, useKeys, useSwipe } from '../../hooks';
 import { CustomGrid } from '../../components/ui/CustomGrid';
 import { Controls, ArrowsButton } from '../../components/ui/Controls';
 import { PAGE_TITLES } from '../../config/constants';
@@ -203,6 +203,13 @@ export default function Snake(): React.ReactElement {
         []
     );
 
+    const swipeHandlers = useSwipe({
+        onSwipeUp: controlHandler('up'),
+        onSwipeDown: controlHandler('down'),
+        onSwipeLeft: controlHandler('left'),
+        onSwipeRight: controlHandler('right'),
+    });
+
     const chooseColor = useCallback(
         (row: number, col: number) => {
             const index = row * cols + col;
@@ -277,7 +284,9 @@ export default function Snake(): React.ReactElement {
             sx={{
                 background: COLORS.surface.background,
                 overflow: 'hidden',
+                overscrollBehavior: 'none',
             }}
+            {...swipeHandlers}
         >
             <Grid
                 flex={1}

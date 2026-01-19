@@ -242,8 +242,19 @@ export function ArrowsButton({
     }
 
     return (
-        <Grid role="group" aria-label="Directional controls">
-            <Grid width="100%" display="flex" justifyContent="center">
+        <Grid
+            container
+            direction="column"
+            alignItems="center"
+            role="group"
+            aria-label="Directional controls"
+            sx={{
+                width: 'fit-content',
+                mx: 'auto',
+                gap: 0.5,
+            }}
+        >
+            <Grid>
                 <TooltipButton
                     title="Move Up"
                     Icon={KeyboardArrowUpRounded}
@@ -252,7 +263,7 @@ export function ArrowsButton({
                     size={size}
                 />
             </Grid>
-            <Grid>
+            <Grid container justifyContent="center" alignItems="center" gap={1}>
                 <TooltipButton
                     title="Move Left"
                     Icon={KeyboardArrowLeftRounded}
@@ -264,6 +275,13 @@ export function ArrowsButton({
                     size={size === 'inherit' ? 'large' : size}
                     onClick={flip}
                     aria-label="Hide controls"
+                    sx={{
+                        color: COLORS.primary.main,
+                        backgroundColor: `${COLORS.primary.main}10`,
+                        '&:hover': {
+                            backgroundColor: `${COLORS.primary.main}20`,
+                        },
+                    }}
                 >
                     <CloseRounded fontSize="inherit" aria-hidden="true" />
                 </IconButton>
@@ -275,7 +293,7 @@ export function ArrowsButton({
                     size={size}
                 />
             </Grid>
-            <Grid width="100%" display="flex" justifyContent="center">
+            <Grid>
                 <TooltipButton
                     title="Move Down"
                     Icon={KeyboardArrowDownRounded}
