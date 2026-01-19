@@ -295,10 +295,9 @@ export default function Snake(): React.ReactElement {
             </Grid>
             <Controls
                 handler={controlHandler}
-                onRandom={() => setRandomMovesEnabled(!randomMovesEnabled)}
-                randomEnabled={randomMovesEnabled}
+                onAutoPlay={() => setRandomMovesEnabled(!randomMovesEnabled)}
+                autoPlayEnabled={randomMovesEnabled}
                 hide={showArrows}
-                size="inherit"
             >
                 <ArrowsButton
                     show={showArrows}

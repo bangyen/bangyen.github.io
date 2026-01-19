@@ -38,25 +38,28 @@ jest.mock('../../components/Board', () => ({
 jest.mock('../../../../components/ui/Controls', () => ({
     Controls: function MockControls({
         children,
+        onAutoPlay,
+        autoPlayEnabled,
     }: {
         children: React.ReactNode;
-    }) {
-        return <div data-testid="controls">{children}</div>;
-    },
-    TooltipButton: function MockTooltipButton({
-        title,
-        onClick,
-    }: {
-        title: string;
-        onClick: () => void;
+        onAutoPlay?: () => void;
+        autoPlayEnabled?: boolean;
     }) {
         return (
-            <button aria-label={title} onClick={onClick}>
-                {title}
-            </button>
+            <div data-testid="controls">
+                {onAutoPlay && (
+                    <button
+                        aria-label={autoPlayEnabled ? 'Pause' : 'Auto Play'}
+                        onClick={onAutoPlay}
+                    >
+                        {autoPlayEnabled ? 'Pause' : 'Auto Play'}
+                    </button>
+                )}
+                {children}
+            </div>
         );
     },
-    RandomButton: function MockRandomButton({
+    TooltipButton: function MockTooltipButton({
         title,
         onClick,
     }: {
@@ -90,7 +93,7 @@ describe('LightsOut', () => {
         expect(screen.getByTestId('board')).toBeInTheDocument();
         expect(screen.getByTestId('controls')).toBeInTheDocument();
         expect(screen.getByLabelText('Auto Play')).toBeInTheDocument(); // Initially auto is false, so button shows 'Auto Play'
-        expect(screen.getByLabelText('New Game')).toBeInTheDocument();
+        expect(screen.queryByLabelText('New Game')).not.toBeInTheDocument();
     });
 
     it('sets the document title', () => {
@@ -119,11 +122,9 @@ describe('LightsOut', () => {
         expect(screen.getByLabelText('Pause')).toBeInTheDocument();
     });
 
-    it('handles new game request', () => {
+    it('does not render a new game button', () => {
         render(<LightsOut />);
-        const newGameBtn = screen.getByLabelText('New Game');
-        fireEvent.click(newGameBtn);
-        // Should not crash
+        expect(screen.queryByLabelText('New Game')).not.toBeInTheDocument();
     });
 
     it('toggles info modal', () => {

@@ -29,7 +29,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
             sx={{
                 background: COLORS.surface.background,
                 py: 8,
-                px: 2,
+                px: { xs: 4, md: 6 },
                 width: '100%',
             }}
         >

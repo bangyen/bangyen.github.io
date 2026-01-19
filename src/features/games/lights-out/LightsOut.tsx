@@ -1,17 +1,8 @@
 import React, { useMemo, useEffect, useReducer } from 'react';
 import { Grid } from '../../../components/mui';
-import {
-    InfoRounded,
-    CircleRounded,
-    PlayArrowRounded,
-    PauseRounded,
-} from '../../../components/icons';
+import { InfoRounded, CircleRounded } from '../../../components/icons';
 
-import {
-    Controls,
-    TooltipButton,
-    RandomButton,
-} from '../../../components/ui/Controls';
+import { Controls, TooltipButton } from '../../../components/ui/Controls';
 import { Board, useHandler, usePalette } from '../components/Board';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
@@ -191,18 +182,9 @@ export default function LightsOut(): React.ReactElement {
             />
             <Controls
                 handler={() => () => undefined} // No directional controls for Lights Out
-                size="inherit"
+                onAutoPlay={() => dispatch({ type: 'auto' })}
+                autoPlayEnabled={state.auto}
             >
-                <TooltipButton
-                    title={state.auto ? 'Pause' : 'Auto Play'}
-                    Icon={state.auto ? PauseRounded : PlayArrowRounded}
-                    onClick={() => dispatch({ type: 'auto' })}
-                />
-                <RandomButton
-                    title="New Game"
-                    onClick={() => dispatch({ type: 'random' })}
-                    size="inherit"
-                />
                 <TooltipButton
                     title="Info"
                     Icon={InfoRounded}
