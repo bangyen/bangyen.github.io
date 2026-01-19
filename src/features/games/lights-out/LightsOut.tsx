@@ -1,22 +1,18 @@
 import React, { useMemo, useEffect, useReducer } from 'react';
 import { Grid } from '../../../components/mui';
-import {
-    InfoRounded,
-    CircleRounded,
-    PlayArrowRounded,
-    PauseRounded,
-} from '../../../components/icons';
+import { InfoRounded, CircleRounded } from '../../../components/icons';
 
-import {
-    Controls,
-    TooltipButton,
-    RandomButton,
-} from '../../../components/ui/Controls';
+import { Controls, TooltipButton } from '../../../components/ui/Controls';
 import { Board, useHandler, usePalette } from '../components/Board';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
 import { COLORS } from '../../../config/theme';
-import { getGrid, handleBoard, getNextMove } from './boardHandlers';
+import {
+    getGrid,
+    handleBoard,
+    getNextMove,
+    BoardAction,
+} from './boardHandlers';
 import { useWindow, useMobile } from '../../../hooks';
 import { convertPixels } from '../../interpreters/utils/gridUtils';
 import Info from './Info';
@@ -42,7 +38,10 @@ interface FrontProps {
     [key: string]: unknown;
 }
 
-function getFrontProps(getters: Getters, dispatch: (action: unknown) => void) {
+function getFrontProps(
+    getters: Getters,
+    dispatch: (action: BoardAction) => void
+) {
     const { getColor, getBorder } = getters;
 
     const flipAdj = (row: number, col: number) => {
@@ -157,9 +156,7 @@ export default function LightsOut(): React.ReactElement {
 
     const getters = useHandler(state, palette);
 
-    const frontProps = getFrontProps(getters, action =>
-        dispatch(action as any)
-    );
+    const frontProps = getFrontProps(getters, action => dispatch(action));
 
     const backProps = (row: number, col: number) => {
         return {
@@ -185,18 +182,9 @@ export default function LightsOut(): React.ReactElement {
             />
             <Controls
                 handler={() => () => undefined} // No directional controls for Lights Out
-                size="inherit"
+                onAutoPlay={() => dispatch({ type: 'auto' })}
+                autoPlayEnabled={state.auto}
             >
-                <TooltipButton
-                    title={state.auto ? 'Pause' : 'Auto Play'}
-                    Icon={state.auto ? PauseRounded : PlayArrowRounded}
-                    onClick={() => dispatch({ type: 'auto' })}
-                />
-                <RandomButton
-                    title="New Game"
-                    onClick={() => dispatch({ type: 'random' })}
-                    size="inherit"
-                />
                 <TooltipButton
                     title="Info"
                     Icon={InfoRounded}

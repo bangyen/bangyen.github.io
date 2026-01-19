@@ -13,6 +13,8 @@ import {
     Psychology,
     Cloud,
     Work,
+    PlayArrowRounded,
+    PauseRounded,
 } from '../icons';
 import { Link } from 'react-router-dom';
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -38,10 +40,15 @@ interface TooltipButtonProps {
     [key: string]: unknown;
 }
 
-export function TooltipButton({ Icon, title, ...rest }: TooltipButtonProps) {
+export function TooltipButton({
+    Icon,
+    title,
+    size = 'large',
+    ...rest
+}: TooltipButtonProps) {
     return (
         <Tooltip title={title}>
-            <IconButton size="large" aria-label={title} {...rest}>
+            <IconButton size={size as any} aria-label={title} {...rest}>
                 <Icon fontSize="inherit" aria-hidden="true" />
             </IconButton>
         </Tooltip>
@@ -127,10 +134,38 @@ export function RandomButton({
     );
 }
 
+interface AutoPlayButtonProps {
+    onClick: () => void;
+    enabled?: boolean;
+    hide?: boolean;
+    [key: string]: unknown;
+}
+
+export function AutoPlayButton({
+    onClick,
+    enabled = false,
+    hide = false,
+    ...props
+}: AutoPlayButtonProps) {
+    if (hide) return null;
+
+    return (
+        <TooltipButton
+            title={enabled ? 'Pause' : 'Auto Play'}
+            Icon={enabled ? PauseRounded : PlayArrowRounded}
+            onClick={onClick}
+            aria-label={enabled ? 'Pause' : 'Auto Play'}
+            {...props}
+        />
+    );
+}
+
 interface ControlsProps {
     handler?: (direction: string) => () => void;
     onRandom?: () => void;
     randomEnabled?: boolean;
+    onAutoPlay?: () => void;
+    autoPlayEnabled?: boolean;
     children?: React.ReactNode;
     size?: 'small' | 'medium' | 'large' | 'inherit';
     hide?: boolean;
@@ -140,8 +175,10 @@ export function Controls({
     handler,
     onRandom,
     randomEnabled,
+    onAutoPlay,
+    autoPlayEnabled,
     children,
-    size = 'inherit',
+    size = 'large',
     hide = false,
 }: ControlsProps) {
     const opacity = hide ? 0.8 : 1;
@@ -156,6 +193,14 @@ export function Controls({
                     showToggleState={!!randomEnabled}
                     enabledTitle="Disable Random Moves"
                     disabledTitle="Enable Random Moves"
+                    hide={hide}
+                    size={size}
+                />
+            )}
+            {onAutoPlay && (
+                <AutoPlayButton
+                    onClick={onAutoPlay}
+                    enabled={autoPlayEnabled}
                     hide={hide}
                     size={size}
                 />
@@ -177,7 +222,7 @@ export function ArrowsButton({
     show = false,
     setShow,
     handler,
-    size = 'inherit',
+    size = 'large',
     hide = false,
 }: ArrowsButtonProps) {
     const flip = useCallback(() => setShow(!show), [show, setShow]);
@@ -197,8 +242,19 @@ export function ArrowsButton({
     }
 
     return (
-        <Grid role="group" aria-label="Directional controls">
-            <Grid width="100%" display="flex" justifyContent="center">
+        <Grid
+            container
+            direction="column"
+            alignItems="center"
+            role="group"
+            aria-label="Directional controls"
+            sx={{
+                width: 'fit-content',
+                mx: 'auto',
+                gap: 0.5,
+            }}
+        >
+            <Grid>
                 <TooltipButton
                     title="Move Up"
                     Icon={KeyboardArrowUpRounded}
@@ -207,7 +263,13 @@ export function ArrowsButton({
                     size={size}
                 />
             </Grid>
-            <Grid>
+            <Grid
+                container
+                justifyContent="center"
+                alignItems="center"
+                gap={1}
+                wrap="nowrap"
+            >
                 <TooltipButton
                     title="Move Left"
                     Icon={KeyboardArrowLeftRounded}
@@ -219,6 +281,12 @@ export function ArrowsButton({
                     size={size === 'inherit' ? 'large' : size}
                     onClick={flip}
                     aria-label="Hide controls"
+                    sx={{
+                        color: 'inherit',
+                        '&:hover': {
+                            backgroundColor: COLORS.interactive.hover,
+                        },
+                    }}
                 >
                     <CloseRounded fontSize="inherit" aria-hidden="true" />
                 </IconButton>
@@ -230,7 +298,7 @@ export function ArrowsButton({
                     size={size}
                 />
             </Grid>
-            <Grid width="100%" display="flex" justifyContent="center">
+            <Grid>
                 <TooltipButton
                     title="Move Down"
                     Icon={KeyboardArrowDownRounded}

@@ -5,7 +5,7 @@ import { CircleRounded } from '../../../components/icons';
 import { getStates } from './chaseHandlers';
 import { flipAdj } from './boardHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
-import { useMobile } from '../../../hooks';
+
 import { TYPOGRAPHY, COLORS } from '../../../config/theme';
 
 interface Frame {
@@ -155,7 +155,7 @@ function iconHandler(
                         animation,
                     }}
                 >
-                    <CircleRounded sx={{ fontSize: '60%' }} />
+                    <CircleRounded sx={{ fontSize: 'inherit' }} />
                 </Box>
             ),
         };
@@ -182,9 +182,8 @@ export default function Example({
     size,
     palette,
 }: ExampleProps): React.ReactElement {
-    const mobile = useMobile('lg');
     const states = getStates(start as number[], dims);
-    const width = mobile ? size / 2 : size;
+    const width = size;
 
     const { boardStates, inputStates, outputStates } = states;
 
@@ -235,14 +234,16 @@ export default function Example({
             <Grid
                 container
                 size={12}
+                wrap="nowrap"
                 sx={{
                     justifyContent: 'center',
                     alignItems: 'center',
                     flex: 1,
+                    height: '100%',
                 }}
             >
                 <Grid
-                    size={{ xs: 12, md: 6 }}
+                    size={6}
                     sx={{ display: 'flex', justifyContent: 'center' }}
                 >
                     <CustomGrid
@@ -255,7 +256,7 @@ export default function Example({
                 </Grid>
                 <Grid
                     container
-                    size={{ xs: 12, md: 6 }}
+                    size={6}
                     spacing={2}
                     sx={{
                         display: 'flex',

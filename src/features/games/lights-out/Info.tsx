@@ -232,8 +232,8 @@ export default function Info(props: InfoProps): React.ReactElement {
                 sx={{
                     width: '100%',
                     maxWidth: '1000px',
-                    height: { xs: 'auto', md: '520px' },
-                    minHeight: { xs: '450px', md: '520px' },
+                    height: '550px',
+                    minHeight: '550px',
                     display: 'flex',
                     flexDirection: 'column',
                     p: 0,
@@ -282,7 +282,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                         <Box
                             sx={{
                                 animation: 'fadeIn 0.3s ease',
-                                height: '100%',
+                                flex: 1,
                                 display: 'flex',
                                 flexDirection: 'column',
                             }}
@@ -319,7 +319,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                     {step === 1 && (
                         <Box
                             sx={{
-                                height: '100%',
+                                flex: 1,
                                 display: 'flex',
                                 flexDirection: 'column',
                                 animation: 'fadeIn 0.3s ease',
@@ -335,7 +335,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                             >
                                 <Example
                                     dims={3}
-                                    size={size * (isMobile ? 0.9 : 0.7)} // Adjust size for responsiveness
+                                    size={size * 0.7} // Adjust size for responsiveness
                                     start={[1, 3, 8]}
                                     palette={palette}
                                 />
@@ -349,7 +349,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                             sx={{
                                 animation: 'fadeIn 0.3s ease',
                                 textAlign: 'center',
-                                height: '100%',
+                                flex: 1,
                                 display: 'flex',
                                 flexDirection: 'column',
                             }}

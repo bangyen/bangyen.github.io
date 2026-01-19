@@ -34,7 +34,7 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 
-interface ChartConfig {
+export interface ChartConfig {
     type: string;
     lines: Array<{
         dataKey: string;
@@ -61,12 +61,12 @@ export interface ViewType<T> {
     chartConfig: ChartConfig;
 }
 
-interface ControlOption {
+export interface ControlOption {
     value: number;
     label: string;
 }
 
-interface Control {
+export interface Control {
     label: string;
     icon?: React.ElementType;
     color?: string;
@@ -395,49 +395,13 @@ const ResearchDemo = <T,>({
                     </GlassCard>
 
                     {viewTypes.length > 1 && (
-                        <GlassCard
+                        <Box
                             sx={{
                                 marginBottom: 3,
                                 width: '100%',
                                 boxSizing: 'border-box',
-                                overflow: 'hidden',
-                                paddingBottom: SPACING.padding.md,
                             }}
                         >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    marginBottom: 2,
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 1,
-                                    }}
-                                >
-                                    <SettingsRounded
-                                        sx={{
-                                            color: COLORS.primary.light,
-                                            fontSize: '1.25rem',
-                                        }}
-                                    />
-                                    <Typography
-                                        variant="body1"
-                                        sx={{
-                                            color: COLORS.primary.light,
-                                            fontWeight:
-                                                TYPOGRAPHY.fontWeight.semibold,
-                                        }}
-                                    >
-                                        Chart Views
-                                    </Typography>
-                                </Box>
-                            </Box>
-
                             <Box
                                 sx={{
                                     display: 'grid',
@@ -476,7 +440,8 @@ const ResearchDemo = <T,>({
                                                     currentViewType ===
                                                     viewType.key
                                                         ? COLORS.primary.main
-                                                        : 'transparent',
+                                                        : COLORS.surface
+                                                              .elevated, // Changed from transparent to give it a card-like feel
                                                 borderColor:
                                                     COLORS.border.subtle,
                                                 borderWidth: '1px',
@@ -510,11 +475,11 @@ const ResearchDemo = <T,>({
                                     );
                                 })}
                             </Box>
-                        </GlassCard>
+                        </Box>
                     )}
 
                     {controls.length > 0 && (
-                        <GlassCard
+                        <Box
                             sx={{
                                 marginBottom: 0,
                                 width: '100%',
@@ -523,39 +488,15 @@ const ResearchDemo = <T,>({
                                 paddingBottom: SPACING.padding.md,
                             }}
                         >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    marginBottom: 2,
-                                }}
-                            >
+                            {onReset && (
                                 <Box
                                     sx={{
                                         display: 'flex',
+                                        justifyContent: 'flex-end',
                                         alignItems: 'center',
-                                        gap: 1,
+                                        marginBottom: 2.5,
                                     }}
                                 >
-                                    <SettingsRounded
-                                        sx={{
-                                            color: COLORS.primary.light,
-                                            fontSize: '1.25rem',
-                                        }}
-                                    />
-                                    <Typography
-                                        variant="body1"
-                                        sx={{
-                                            color: COLORS.primary.light,
-                                            fontWeight:
-                                                TYPOGRAPHY.fontWeight.semibold,
-                                        }}
-                                    >
-                                        Parameters
-                                    </Typography>
-                                </Box>
-                                {onReset && (
                                     <Button
                                         variant="outlined"
                                         size="small"
@@ -583,8 +524,8 @@ const ResearchDemo = <T,>({
                                     >
                                         {resetLabel}
                                     </Button>
-                                )}
-                            </Box>
+                                </Box>
+                            )}
 
                             <Grid container={true} spacing={2.5}>
                                 {controls.map((control, index) => (
@@ -765,7 +706,7 @@ const ResearchDemo = <T,>({
                                     </Grid>
                                 ))}
                             </Grid>
-                        </GlassCard>
+                        </Box>
                     )}
                 </Box>
             </Grid>

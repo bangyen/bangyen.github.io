@@ -1,6 +1,7 @@
 export { useCache } from './useCache';
 export type { CacheAction } from './useCache';
 export { useKeys } from './useKeys';
+export { useSwipe } from './useSwipe';
 export { useTimer } from './useTimer';
 export { useWindow } from './useWindow';
 export { useMobile, useContainer } from './layout';

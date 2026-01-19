@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography, Grid, IconButton } from '@mui/material';
+
 import {
     InfoRounded as InfoIcon,
     HomeRounded as HomeIcon,
@@ -12,6 +13,7 @@ interface QuizLayoutProps {
     subtitle?: string;
     infoUrl: string;
     children: React.ReactNode;
+    headerContent?: React.ReactNode;
 }
 
 const QuizLayout: React.FC<QuizLayoutProps> = ({
@@ -19,6 +21,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
     subtitle,
     infoUrl,
     children,
+    headerContent,
 }) => {
     return (
         <Grid
@@ -29,7 +32,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
             sx={{
                 background: COLORS.surface.background,
                 py: 8,
-                px: 2,
+                px: { xs: 2, sm: 4 },
                 width: '100%',
             }}
         >
@@ -49,18 +52,71 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                     justifyContent="space-between"
                     sx={{ marginBottom: 4 }}
                 >
-                    <MuiGrid size="auto">
-                        <Typography
-                            variant="h1"
+                    <MuiGrid
+                        size={{ xs: 'grow', sm: 'auto' }}
+                        sx={{
+                            display: 'flex',
+                            justifyContent: {
+                                xs: 'flex-start',
+                                sm: 'flex-start',
+                            },
+                            mb: 0,
+                            minWidth: 0,
+                        }}
+                    >
+                        {!headerContent ? (
+                            <Typography
+                                variant="h1"
+                                sx={{
+                                    color: COLORS.text.primary,
+                                    fontWeight: TYPOGRAPHY.fontWeight.bold,
+                                    fontSize: TYPOGRAPHY.fontSize.h2,
+                                }}
+                            >
+                                {title}
+                            </Typography>
+                        ) : (
+                            <>
+                                <Box
+                                    sx={{
+                                        display: { xs: 'none', sm: 'block' },
+                                    }}
+                                >
+                                    <Typography
+                                        variant="h1"
+                                        sx={{
+                                            color: COLORS.text.primary,
+                                            fontWeight:
+                                                TYPOGRAPHY.fontWeight.bold,
+                                            fontSize: TYPOGRAPHY.fontSize.h2,
+                                        }}
+                                    >
+                                        {title}
+                                    </Typography>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        display: { xs: 'block', sm: 'none' },
+                                    }}
+                                >
+                                    {headerContent}
+                                </Box>
+                            </>
+                        )}
+                    </MuiGrid>
+                    {headerContent && (
+                        <MuiGrid
+                            size={{ xs: 0, sm: 'auto' }}
                             sx={{
-                                color: COLORS.text.primary,
-                                fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                fontSize: TYPOGRAPHY.fontSize.h2,
+                                display: { xs: 'none', sm: 'flex' },
+                                flex: 1,
+                                justifyContent: 'center',
+                                px: 4,
                             }}
                         >
-                            {title}
-                        </Typography>
-                    </MuiGrid>
+                            {headerContent}
+                        </MuiGrid>
+                    )}
                     <MuiGrid size="auto" sx={{ display: 'flex', gap: 1 }}>
                         <IconButton
                             href={infoUrl}
@@ -71,7 +127,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                                 sx={{
                                     fontSize: {
                                         xs: TYPOGRAPHY.fontSize.h2,
-                                        md: '2rem',
+                                        sm: '2rem',
                                     },
                                 }}
                             />
@@ -81,7 +137,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                                 sx={{
                                     fontSize: {
                                         xs: TYPOGRAPHY.fontSize.h2,
-                                        md: '2rem',
+                                        sm: '2rem',
                                     },
                                 }}
                             />

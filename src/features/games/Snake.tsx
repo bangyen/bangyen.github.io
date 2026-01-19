@@ -203,6 +203,38 @@ export default function Snake(): React.ReactElement {
         []
     );
 
+    const handleTap = useCallback(
+        (event: React.PointerEvent) => {
+            const { clientX, clientY } = event;
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+
+            const dx = clientX - centerX;
+            const dy = clientY - centerY;
+
+            const currentDir =
+                state.buffer.length > 0
+                    ? state.buffer[state.buffer.length - 1]
+                    : state.velocity;
+
+            let direction = '';
+            if (Math.abs(currentDir) === 2) {
+                // Moving vertically, steer horizontally
+                direction = dx > 0 ? 'right' : 'left';
+            } else {
+                // Moving horizontally or stopped, steer vertically
+                direction = dy > 0 ? 'down' : 'up';
+            }
+
+            const key = GAME_CONSTANTS.controls.arrowPrefix + direction;
+            dispatch({
+                type: 'steer',
+                payload: { key },
+            });
+        },
+        [dispatch, state.velocity, state.buffer]
+    );
+
     const chooseColor = useCallback(
         (row: number, col: number) => {
             const index = row * cols + col;
@@ -277,10 +309,13 @@ export default function Snake(): React.ReactElement {
             sx={{
                 background: COLORS.surface.background,
                 overflow: 'hidden',
+                overscrollBehavior: 'none',
+                touchAction: 'none',
             }}
         >
             <Grid
                 flex={1}
+                onPointerDown={handleTap}
                 sx={{
                     ...COMPONENT_VARIANTS.flexCenter,
                     zIndex: 1,
@@ -295,10 +330,9 @@ export default function Snake(): React.ReactElement {
             </Grid>
             <Controls
                 handler={controlHandler}
-                onRandom={() => setRandomMovesEnabled(!randomMovesEnabled)}
-                randomEnabled={randomMovesEnabled}
+                onAutoPlay={() => setRandomMovesEnabled(!randomMovesEnabled)}
+                autoPlayEnabled={randomMovesEnabled}
                 hide={showArrows}
-                size="inherit"
             >
                 <ArrowsButton
                     show={showArrows}

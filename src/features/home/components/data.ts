@@ -61,9 +61,9 @@ export const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
                 description: 'Esoteric language demos',
                 technology: 'JavaScript',
             },
-            Wikipedia: {
-                path: ROUTES.pages.Wikipedia_Quiz,
-                description: 'Geography and trivia hub',
+            Geography: {
+                path: ROUTES.pages.Geography,
+                description: 'Wikipedia-based quizzes',
                 technology: 'React',
             },
         },

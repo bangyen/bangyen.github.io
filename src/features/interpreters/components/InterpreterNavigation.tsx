@@ -1,6 +1,6 @@
 import React from 'react';
-import { ToggleButton, ToggleButtonGroup } from '../../../components/mui';
-import { COLORS, SPACING, SHADOWS } from '../../../config/theme';
+import { Select, MenuItem, FormControl } from '@mui/material';
+import { COLORS, SPACING, TYPOGRAPHY } from '../../../config/theme';
 
 interface InterpreterNavigationProps {
     active: string;
@@ -11,52 +11,88 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
     active,
     onChange,
 }) => {
-    const handleChange = (
-        _event: React.MouseEvent<HTMLElement>,
-        newAlignment: string | null
-    ) => {
-        if (newAlignment !== null) {
-            onChange(newAlignment);
-        }
+    const handleChange = (event: any) => {
+        onChange(event.target.value);
     };
 
     return (
-        <ToggleButtonGroup
-            value={active}
-            exclusive
-            onChange={handleChange}
-            aria-label="interpreter selector"
+        <FormControl
+            size="small"
             sx={{
-                backgroundColor: COLORS.interactive.disabled,
-                borderRadius: SPACING.borderRadius.full,
-                p: 0.5,
-                '& .MuiToggleButton-root': {
+                minWidth: { xs: 140, sm: 160 },
+                '& .MuiOutlinedInput-root': {
+                    backgroundColor: COLORS.surface.glass,
+                    backdropFilter: 'blur(24px) saturate(180%)',
                     borderRadius: SPACING.borderRadius.full,
-                    border: 'none',
+                    color: COLORS.text.primary,
+                    fontWeight: TYPOGRAPHY.fontWeight.medium,
+                    transition: 'all 0.2s ease',
+                    '& fieldset': {
+                        border: `1px solid ${COLORS.border.subtle}`,
+                    },
+                    '&:hover fieldset': {
+                        borderColor: COLORS.primary.main,
+                    },
+                    '&.Mui-focused fieldset': {
+                        borderColor: COLORS.primary.main,
+                        boxShadow: `0 0 0 2px ${COLORS.primary.main}22`,
+                    },
+                },
+                '& .MuiSelect-select': {
+                    py: 1,
+                    px: { xs: 2, sm: 3 },
+                },
+                '& .MuiSvgIcon-root': {
                     color: COLORS.text.secondary,
-                    fontSize: '0.85rem',
-                    fontWeight: 'medium',
-                    textTransform: 'none',
-                    px: { xs: 1.5, sm: 3 },
-                    py: 0.5,
-                    '&.Mui-selected': {
-                        backgroundColor: COLORS.primary.main,
-                        color: COLORS.text.primary,
-                        boxShadow: SHADOWS.md,
-                        '&:hover': {
-                            backgroundColor: COLORS.primary.light,
-                        },
-                    },
-                    '&:hover': {
-                        backgroundColor: COLORS.interactive.hover,
-                    },
                 },
             }}
         >
-            <ToggleButton value="stun-step">Stun Step</ToggleButton>
-            <ToggleButton value="suffolk">Suffolk</ToggleButton>
-            <ToggleButton value="wii2d">WII2D</ToggleButton>
-            <ToggleButton value="back">Back</ToggleButton>
-        </ToggleButtonGroup>
+            <Select
+                value={active}
+                onChange={handleChange}
+                MenuProps={{
+                    autoFocus: false,
+                    BackdropProps: {
+                        sx: {
+                            backdropFilter: 'none',
+                            backgroundColor: 'transparent',
+                        },
+                    },
+                    PaperProps: {
+                        sx: {
+                            backgroundColor: COLORS.surface.glass,
+                            backdropFilter: 'blur(24px) saturate(180%)',
+                            border: `1px solid ${COLORS.border.subtle}`,
+                            borderRadius: SPACING.borderRadius.lg,
+                            mt: 1,
+                            '& .MuiMenuItem-root': {
+                                color: COLORS.text.secondary,
+                                fontSize: '0.9rem',
+                                transition: 'all 0.2s ease',
+                                '&:hover': {
+                                    backgroundColor: COLORS.interactive.hover,
+                                    color: COLORS.text.primary,
+                                },
+                                '&.Mui-selected': {
+                                    backgroundColor:
+                                        COLORS.interactive.selected,
+                                    color: COLORS.primary.main,
+                                    fontWeight: 'bold',
+                                    '&:hover': {
+                                        backgroundColor:
+                                            COLORS.interactive.selected,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                }}
+            >
+                <MenuItem value="stun-step">Stun Step</MenuItem>
+                <MenuItem value="suffolk">Suffolk</MenuItem>
+                <MenuItem value="wii2d">WII2D</MenuItem>
+                <MenuItem value="back">Back</MenuItem>
+            </Select>
+        </FormControl>
     );
 };

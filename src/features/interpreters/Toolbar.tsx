@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { TooltipButton } from '../../components/ui/Controls';
 import { EditorContext } from './EditorContext';
 import { useMobile } from '../../hooks';
+import { useMediaQuery } from '../../components/mui';
 import { GLOBAL_CONFIG } from '../../config/constants';
 
 import {
@@ -24,7 +25,7 @@ interface ButtonData {
     props?: Record<string, unknown>;
 }
 
-interface ToolbarPayload {
+export interface ToolbarPayload {
     dispatch: (action: { type: string; payload: unknown }) => void;
     nextIter: (action: {
         type: string;
@@ -48,7 +49,8 @@ export interface ToolbarAction {
 
 export function Toolbar(): React.ReactElement[] {
     const editorContext = useContext(EditorContext);
-    const notMobile = !useMobile('sm');
+    const notMobile = useMediaQuery('(min-width:650px)');
+    const showResetFF = useMediaQuery('(min-width:500px)');
 
     const link = editorContext
         ? 'https://esolangs.org/wiki/' + editorContext.name.replace(' ', '_')
@@ -118,31 +120,34 @@ export function Toolbar(): React.ReactElement[] {
 
     // Primary Playback Controls: Run/Pause, Reset, Fast Forward
     buttons.push(TimerButton);
-    buttons.push(
-        <TooltipButton
-            key="Reset"
-            title="Reset"
-            Icon={FirstPageRounded}
-            onClick={dispatch('reset')}
-        />
-    );
-    buttons.push(
-        <TooltipButton
-            key="Fast Forward"
-            title="Fast Forward"
-            Icon={ffData.icon}
-            onClick={ffData.flag ? dispatch('ff') : undefined}
-            disabled={!ffData.flag}
-            sx={{
-                opacity: ffData.flag ? 1 : 0.3,
-                // Ensure visibility even when disabled
-                '&.Mui-disabled': {
-                    color: 'inherit',
-                    opacity: 0.3,
-                },
-            }}
-        />
-    );
+
+    if (showResetFF) {
+        buttons.push(
+            <TooltipButton
+                key="Reset"
+                title="Reset"
+                Icon={FirstPageRounded}
+                onClick={dispatch('reset')}
+            />
+        );
+        buttons.push(
+            <TooltipButton
+                key="Fast Forward"
+                title="Fast Forward"
+                Icon={ffData.icon}
+                onClick={ffData.flag ? dispatch('ff') : undefined}
+                disabled={!ffData.flag}
+                sx={{
+                    opacity: ffData.flag ? 1 : 0.3,
+                    // Ensure visibility even when disabled
+                    '&.Mui-disabled': {
+                        color: 'inherit',
+                        opacity: 0.3,
+                    },
+                }}
+            />
+        );
+    }
 
     // Secondary Controls: Previous, Next, Info, Home
     const secondaryKeys = ['Previous', 'Next', 'Info', 'Home'];

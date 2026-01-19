@@ -12,14 +12,12 @@ import {
     Select,
     FormControl,
     InputLabel,
-    ToggleButtonGroup,
-    ToggleButton,
 } from '@mui/material';
 import {
     CheckCircleRounded as CheckCircleIcon,
     CancelRounded as CancelIcon,
 } from '@mui/icons-material';
-import { COLORS, SPACING, SHADOWS } from '../../../config/theme';
+import { COLORS, SPACING } from '../../../config/theme';
 import {
     CCTLD_LANGUAGES,
     TELEPHONE_ZONES,
@@ -87,13 +85,9 @@ const WikipediaQuizPage: React.FC = () => {
     }, [selectedQuiz]);
 
     // URL sync
-    const handleQuizChange = (
-        _event: React.MouseEvent<HTMLElement>,
-        newQuiz: QuizType | null
-    ) => {
-        if (newQuiz !== null) {
-            setSearchParams({ type: newQuiz });
-        }
+    const handleQuizChange = (event: any) => {
+        const newQuiz = event.target.value as QuizType;
+        setSearchParams({ type: newQuiz });
     };
 
     const activeConfig = QUIZ_CONFIGS[selectedQuiz];
@@ -125,8 +119,89 @@ const WikipediaQuizPage: React.FC = () => {
         setGameState('menu');
     };
 
+    const topicSelector = (
+        <FormControl
+            size="small"
+            sx={{
+                width: 'auto',
+                minWidth: { xs: 180, sm: 200 },
+                flexShrink: 0,
+                '& .MuiOutlinedInput-root': {
+                    backgroundColor: COLORS.surface.glass,
+                    backdropFilter: 'blur(24px) saturate(180%)',
+                    borderRadius: SPACING.borderRadius.full,
+                    color: COLORS.text.primary,
+                    fontWeight: 'medium',
+                    '& fieldset': {
+                        border: `1px solid ${COLORS.border.subtle}`,
+                    },
+                    '&:hover fieldset': {
+                        borderColor: COLORS.primary.main,
+                    },
+                    '&.Mui-focused fieldset': {
+                        borderColor: COLORS.primary.main,
+                    },
+                },
+                '& .MuiSelect-select': {
+                    py: 1,
+                    px: { xs: 2, sm: 3 },
+                    textAlign: 'center',
+                },
+                '& .MuiSvgIcon-root': {
+                    color: COLORS.text.secondary,
+                },
+            }}
+        >
+            <Select
+                value={selectedQuiz}
+                onChange={handleQuizChange}
+                MenuProps={{
+                    autoFocus: false,
+                    BackdropProps: {
+                        sx: {
+                            backdropFilter: 'none',
+                            backgroundColor: 'transparent',
+                        },
+                    },
+                    PaperProps: {
+                        sx: {
+                            backgroundColor: COLORS.surface.glass,
+                            backdropFilter: 'blur(24px) saturate(180%)',
+                            border: `1px solid ${COLORS.border.subtle}`,
+                            borderRadius: SPACING.borderRadius.lg,
+                            mt: 1,
+                            '& .MuiMenuItem-root': {
+                                color: COLORS.text.secondary,
+                                transition: 'all 0.2s ease',
+                                '&:hover': {
+                                    backgroundColor: COLORS.interactive.hover,
+                                    color: COLORS.text.primary,
+                                },
+                                '&.Mui-selected': {
+                                    backgroundColor:
+                                        COLORS.interactive.selected,
+                                    color: COLORS.primary.main,
+                                    fontWeight: 'bold',
+                                },
+                            },
+                        },
+                    },
+                }}
+            >
+                <MenuItem value="cctld">Domains</MenuItem>
+                <MenuItem value="driving_side">Driving Side</MenuItem>
+                <MenuItem value="telephone">Telephone Codes</MenuItem>
+                <MenuItem value="vehicle">Vehicle Registration</MenuItem>
+            </Select>
+        </FormControl>
+    );
+
     return (
-        <QuizLayout title="Wikipedia Quizzes" infoUrl={activeConfig.infoUrl}>
+        <QuizLayout
+            title="Geography"
+            infoUrl={activeConfig.infoUrl}
+            headerContent={topicSelector}
+        >
             {gameState === 'menu' && (
                 <Fade in>
                     <Box
@@ -137,72 +212,6 @@ const WikipediaQuizPage: React.FC = () => {
                             alignItems: 'center',
                         }}
                     >
-                        {/* Quiz Type Selector Above */}
-                        <Box
-                            sx={{
-                                mb: 4,
-                                width: '100%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                overflowX: 'auto',
-                                pb: 1, // Add padding for scrollbar spacing if needed
-                            }}
-                        >
-                            <ToggleButtonGroup
-                                value={selectedQuiz}
-                                exclusive
-                                onChange={handleQuizChange}
-                                aria-label="quiz selection"
-                                sx={{
-                                    backgroundColor:
-                                        COLORS.interactive.disabled,
-                                    borderRadius: SPACING.borderRadius.full,
-                                    p: 0.5,
-                                    '& .MuiToggleButton-root': {
-                                        borderRadius: SPACING.borderRadius.full,
-                                        px: { xs: 2, sm: 3 },
-                                        py: 1,
-                                        border: 'none',
-                                        color: COLORS.text.secondary,
-                                        fontSize: {
-                                            xs: '0.8rem',
-                                            sm: '0.9rem',
-                                        },
-                                        whiteSpace: 'nowrap',
-                                        fontWeight: 'medium',
-                                        textTransform: 'none',
-                                        '&.Mui-selected': {
-                                            backgroundColor:
-                                                COLORS.primary.main,
-                                            color: COLORS.text.primary,
-                                            boxShadow: SHADOWS.md,
-                                            '&:hover': {
-                                                backgroundColor:
-                                                    COLORS.primary.light,
-                                            },
-                                        },
-                                        '&:hover': {
-                                            backgroundColor:
-                                                COLORS.interactive.disabled,
-                                        },
-                                    },
-                                }}
-                            >
-                                <ToggleButton value="cctld">
-                                    Domains
-                                </ToggleButton>
-                                <ToggleButton value="driving_side">
-                                    Driving Side
-                                </ToggleButton>
-                                <ToggleButton value="telephone">
-                                    Telephone
-                                </ToggleButton>
-                                <ToggleButton value="vehicle">
-                                    Plates
-                                </ToggleButton>
-                            </ToggleButtonGroup>
-                        </Box>
-
                         <QuizSettingsView
                             settings={settings}
                             onUpdate={setSettings}
@@ -567,13 +576,13 @@ const WikipediaQuizPage: React.FC = () => {
                                 onClick={handleStart}
                                 disabled={filteredPool.length === 0}
                                 sx={{
-                                    px: 8,
+                                    px: { xs: 4, sm: 8 },
                                     py: 1.5,
-                                    fontSize: '1.2rem',
+                                    fontSize: { xs: '1rem', sm: '1.2rem' },
                                     borderRadius: SPACING.borderRadius.full,
                                     fontWeight: 'bold',
                                     letterSpacing: '0.05em',
-                                    minWidth: 300,
+                                    minWidth: { xs: 210, sm: 300 },
                                     whiteSpace: 'nowrap',
                                     '&.Mui-disabled': {
                                         backgroundColor:

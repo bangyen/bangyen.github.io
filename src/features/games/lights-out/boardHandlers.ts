@@ -127,7 +127,7 @@ interface BoardState {
     auto: boolean;
 }
 
-interface BoardAction {
+export interface BoardAction {
     type: string;
     row?: number;
     col?: number;

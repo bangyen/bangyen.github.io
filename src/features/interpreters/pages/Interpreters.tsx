@@ -4,7 +4,7 @@ import { Box } from '../../../components/mui';
 import { StunStep, Suffolk, WII2D, Back } from '..';
 import { InterpreterNavigation } from '../components/InterpreterNavigation';
 import { PAGE_TITLES } from '../../../config/constants';
-import { COLORS } from '../../../config/theme';
+import { COLORS, SPACING } from '../../../config/theme';
 
 export default function Interpreters(): React.ReactElement {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -42,9 +42,19 @@ export default function Interpreters(): React.ReactElement {
             sx={{
                 minHeight: '100vh',
                 background: COLORS.surface.background,
+                display: 'flex',
+                justifyContent: 'center',
             }}
         >
-            {renderInterpreter()}
+            <Box
+                sx={{
+                    width: '100%',
+                    maxWidth: SPACING.maxWidth.lg,
+                    margin: '0 auto',
+                }}
+            >
+                {renderInterpreter()}
+            </Box>
         </Box>
     );
 }

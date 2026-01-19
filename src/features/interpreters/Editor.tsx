@@ -43,7 +43,7 @@ export default function Editor({
         sx: {
             display: {
                 xs: 'none',
-                lg: 'block',
+                md: 'block',
             },
         },
     };
@@ -58,7 +58,7 @@ export default function Editor({
         sx: {
             overflowY: 'hidden',
             height: {
-                xs: code !== undefined ? '300px' : '350px',
+                xs: code !== undefined ? '600px' : '700px',
                 md: 'auto',
             },
         },
@@ -84,7 +84,7 @@ export default function Editor({
                 justifyContent="space-between"
                 sx={{ mb: { xs: 2, md: 0 } }}
             >
-                <Grid {...titleProps} size={{ lg: 'auto' }}>
+                <Grid {...titleProps} size={{ md: 'auto' }}>
                     <Typography
                         variant="h4"
                         sx={{
@@ -97,9 +97,9 @@ export default function Editor({
                 </Grid>
                 {navigation && (
                     <Grid
-                        size={{ xs: 12, md: 'auto' }}
+                        size="grow"
                         display="flex"
-                        justifyContent="center"
+                        justifyContent={{ xs: 'flex-start', md: 'center' }}
                     >
                         {navigation}
                     </Grid>
@@ -108,8 +108,8 @@ export default function Editor({
                     display="flex"
                     alignItems="center"
                     gap={1}
-                    size={{ xs: 12, md: 'auto' }}
-                    justifyContent={{ xs: 'center', md: 'flex-end' }}
+                    size="auto"
+                    justifyContent="flex-end"
                 >
                     <Toolbar />
                 </Grid>
