@@ -3,6 +3,7 @@ import { Typography, Grid, Box } from '../../../components/mui';
 import { CircleRounded } from '../../../components/icons';
 
 import { getStates } from './chaseHandlers';
+import { flipAdj } from './boardHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { useMobile } from '../../../hooks';
 import { TYPOGRAPHY, COLORS } from '../../../config/theme';
@@ -88,29 +89,29 @@ function getIconFrames(
         let color = palette.secondary; // Default
 
         const currentState = k > 0 && k <= length ? states[k - 1] : null;
+        const nextState = k > 0 && k < length ? states[k] : null;
 
-        if (currentState && row > 0) {
-            // Find the first required move for this state
-            let targetR = -1;
-            let targetC = -1;
+        if (currentState && nextState) {
+            // Predict if clicking (row, col) results in nextState
+            const predicted = flipAdj(row, col, currentState);
 
-            // Scan row r-1 for lights
-            outer: for (let r = 1; r < dims; r++) {
+            // Compare predicted with nextState
+            let match = true;
+            loop: for (let r = 0; r < dims; r++) {
                 for (let c = 0; c < dims; c++) {
-                    if (currentState[r - 1][c] === 1) {
-                        targetR = r;
-                        targetC = c;
-                        break outer;
+                    if (predicted[r][c] !== nextState[r][c]) {
+                        match = false;
+                        break loop;
                     }
                 }
             }
 
-            if (row === targetR && col === targetC) {
+            if (match) {
                 opacity = 1;
                 // Inverse of background color
                 // If cell is 1 (ON), bg is primary, icon is secondary
                 // If cell is 0 (OFF), bg is secondary, icon is primary
-                const isOne = currentState[targetR][targetC] === 1;
+                const isOne = currentState[row][col] === 1;
                 color = isOne ? palette.secondary : palette.primary;
             }
         }
