@@ -570,13 +570,13 @@ const WikipediaQuizPage: React.FC = () => {
                                 onClick={handleStart}
                                 disabled={filteredPool.length === 0}
                                 sx={{
-                                    px: 8,
+                                    px: { xs: 4, sm: 8 },
                                     py: 1.5,
-                                    fontSize: '1.2rem',
+                                    fontSize: { xs: '1rem', sm: '1.2rem' },
                                     borderRadius: SPACING.borderRadius.full,
                                     fontWeight: 'bold',
                                     letterSpacing: '0.05em',
-                                    minWidth: 300,
+                                    minWidth: { xs: 210, sm: 300 },
                                     whiteSpace: 'nowrap',
                                     '&.Mui-disabled': {
                                         backgroundColor:
