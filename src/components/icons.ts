@@ -46,7 +46,6 @@ export {
     GridView,
     TextFields,
     TextFieldsRounded,
-    AdsClickRounded,
 } from '@mui/icons-material';
 
 // Code Icons
