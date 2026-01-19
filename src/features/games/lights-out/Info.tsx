@@ -232,8 +232,8 @@ export default function Info(props: InfoProps): React.ReactElement {
                 sx={{
                     width: '100%',
                     maxWidth: '1000px',
-                    height: { xs: 'auto', md: '520px' },
-                    minHeight: { xs: '450px', md: '520px' },
+                    height: { xs: 'auto', md: '480px' },
+                    minHeight: { xs: '450px', md: '480px' },
                     display: 'flex',
                     flexDirection: 'column',
                     p: 0,
@@ -279,8 +279,6 @@ export default function Info(props: InfoProps): React.ReactElement {
                                 flexDirection: 'column',
                             }}
                         >
-                            <StepTitle>Chasing Lights</StepTitle>
-
                             <Box
                                 sx={{
                                     flex: 1,
@@ -319,7 +317,6 @@ export default function Info(props: InfoProps): React.ReactElement {
                                 animation: 'fadeIn 0.3s ease',
                             }}
                         >
-                            <StepTitle>How It Works</StepTitle>
                             <Box
                                 sx={{
                                     flex: 1,
@@ -349,8 +346,6 @@ export default function Info(props: InfoProps): React.ReactElement {
                                 flexDirection: 'column',
                             }}
                         >
-                            <StepTitle>Calculator</StepTitle>
-
                             <Box
                                 sx={{
                                     flex: 1,
