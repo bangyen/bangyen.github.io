@@ -155,7 +155,7 @@ function iconHandler(
                         animation,
                     }}
                 >
-                    <CircleRounded sx={{ fontSize: '60%' }} />
+                    <CircleRounded sx={{ fontSize: 'inherit' }} />
                 </Box>
             ),
         };

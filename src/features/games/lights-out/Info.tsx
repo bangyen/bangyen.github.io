@@ -232,8 +232,8 @@ export default function Info(props: InfoProps): React.ReactElement {
                 sx={{
                     width: '100%',
                     maxWidth: '1000px',
-                    height: { xs: 'auto', md: '520px' },
-                    minHeight: { xs: '450px', md: '520px' },
+                    height: '520px',
+                    minHeight: '520px',
                     display: 'flex',
                     flexDirection: 'column',
                     p: 0,
