@@ -287,6 +287,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                                     display: 'flex',
                                     flexDirection: 'column',
                                     justifyContent: 'center',
+                                    gap: 4,
                                 }}
                             >
                                 <InstructionItem
