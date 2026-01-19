@@ -73,28 +73,20 @@ function getIconFrames(
     states: number[][][],
     row: number,
     col: number,
-    dims: number
-): Record<string, { opacity: number }> {
+    dims: number,
+    palette: Palette
+): Record<string, { opacity: number; color: string }> {
     const newStates = [[], ...states, []]; // Padding to match propHandler timing
     const length = states.length;
-    const frames: Record<string, { opacity: number }> = {};
+    const frames: Record<string, { opacity: number; color: string }> = {};
 
     for (let k = 0; k < length + 1; k++) {
         const percent = (100 * k) / length;
         const floor = Math.floor(percent);
 
-        // Logic: Is (row, col) the next move for state[k]?
-        // Timeline:
-        // k=0: newStates[0] is [], dummy.
-        // k=1: newStates[1] is states[0]. We show states[0]. Next move depends on states[0].
-        // ...
-
-        // We need to align with propHandler.
-        // propHandler uses: [-1, ...states, -1].
-        // k=0: -1.
-        // k=1: states[0].
-
         let opacity = 0;
+        let color = palette.secondary; // Default
+
         const currentState = k > 0 && k <= length ? states[k - 1] : null;
 
         if (currentState && row > 0) {
@@ -115,18 +107,28 @@ function getIconFrames(
 
             if (row === targetR && col === targetC) {
                 opacity = 1;
+                // Inverse of background color
+                // If cell is 1 (ON), bg is primary, icon is secondary
+                // If cell is 0 (OFF), bg is secondary, icon is primary
+                const isOne = currentState[targetR][targetC] === 1;
+                color = isOne ? palette.secondary : palette.primary;
             }
         }
 
-        frames[`${floor}%`] = { opacity };
+        frames[`${floor}%`] = { opacity, color };
     }
 
     return frames;
 }
 
-function iconHandler(states: number[][][], dims: number, id: string) {
+function iconHandler(
+    states: number[][][],
+    dims: number,
+    id: string,
+    palette: Palette
+) {
     return (row: number, col: number): Record<string, unknown> => {
-        const frames = getIconFrames(states, row, col, dims);
+        const frames = getIconFrames(states, row, col, dims, palette);
         const length = states.length;
 
         const name = `${id}-icon-${row}-${col}`;
@@ -143,7 +145,6 @@ function iconHandler(states: number[][][], dims: number, id: string) {
             children: (
                 <Box
                     sx={{
-                        color: 'rgba(255,255,255,0.7)', // Highlight color
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
@@ -186,8 +187,6 @@ export default function Example({
 
     const { boardStates, inputStates, outputStates } = states;
 
-    const { boardStates, inputStates, outputStates } = states;
-
     const getGrid = (s: unknown[], r: number, c: number) => {
         const states = s as number[][][];
         return states.map(state => state[r][c]);
@@ -205,7 +204,7 @@ export default function Example({
     );
 
     // Icon animation handler
-    const getBoardIcon = iconHandler(boardStates, dims, 'board');
+    const getBoardIcon = iconHandler(boardStates, dims, 'board', palette);
 
     // Merge props
     const getBoard = (r: number, c: number) => {
