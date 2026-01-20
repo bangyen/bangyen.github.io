@@ -116,7 +116,7 @@ const StepTitle = ({ children }: { children: React.ReactNode }) => (
         sx={{
             color: COLORS.text.primary,
             fontWeight: TYPOGRAPHY.fontWeight.bold,
-            textAlign: 'center',
+            textAlign: 'left',
             fontSize: TYPOGRAPHY.fontSize.h2,
         }}
     >
@@ -232,8 +232,8 @@ export default function Info(props: InfoProps): React.ReactElement {
                 sx={{
                     width: '100%',
                     maxWidth: '1000px',
-                    height: '550px',
-                    minHeight: '550px',
+                    height: { xs: '630px', sm: '495px' },
+                    minHeight: { xs: '630px', sm: '495px' },
                     display: 'flex',
                     flexDirection: 'column',
                     p: 0,
@@ -255,11 +255,11 @@ export default function Info(props: InfoProps): React.ReactElement {
                     {/* Synchronized Header (Title + Close Button) */}
                     <Box
                         sx={{
-                            position: 'relative',
                             display: 'flex',
-                            justifyContent: 'center',
+                            justifyContent: 'space-between',
                             alignItems: 'center',
                             mb: 2, // reduced from 3 for snug fit
+                            px: 2,
                         }}
                     >
                         <StepTitle>{TITLES[step]}</StepTitle>
@@ -267,10 +267,6 @@ export default function Info(props: InfoProps): React.ReactElement {
                             onClick={handleClose}
                             size="small"
                             sx={{
-                                position: 'absolute',
-                                right: 0,
-                                top: '50%',
-                                transform: 'translateY(-50%)',
                                 color: COLORS.text.secondary,
                             }}
                         >

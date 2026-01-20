@@ -58,7 +58,7 @@ export default function Editor({
         sx: {
             overflowY: 'hidden',
             height: {
-                xs: code !== undefined ? '600px' : '700px',
+                xs: code !== undefined ? '300px' : '350px',
                 md: 'auto',
             },
         },
@@ -68,11 +68,11 @@ export default function Editor({
         <Grid
             container
             spacing={2}
-            minHeight="100vh"
+            minHeight={{ xs: '50vh', md: '100vh' }}
             height={{ xs: 'auto', md: '100vh' }}
             display="flex"
             flexDirection="column"
-            padding="5vh 5vw 5vh 5vw"
+            padding={{ xs: '2.5vh 5vw', md: '5vh 5vw' }}
             sx={{
                 background: COLORS.surface.background,
                 position: 'relative',

@@ -32,3 +32,5 @@ yarn-error.log*
 
 # Temporary files
 cctlds_wiki.html
+# Research Data Generation
+temp_research_repos/

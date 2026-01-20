@@ -8,6 +8,7 @@ import React, {
 import Editor from '../Editor';
 import { EditorContext, EditorContextType } from '../EditorContext';
 import { GridArea } from '../components/GridArea';
+import { KeySelector } from '../components/KeySelector';
 import { convertPixels } from '../utils/gridUtils';
 import { handleAction, GridState, GridAction } from './eventHandlers';
 import { PAGE_TITLES } from '../../../config/constants';
@@ -35,6 +36,7 @@ interface GridEditorProps<T extends GridState> {
     output?: boolean;
     register?: boolean;
     navigation?: React.ReactNode;
+    keys?: string[];
 }
 
 interface WrapperPayload<T> {
@@ -128,7 +130,15 @@ export default function GridEditor<T extends GridState>(
 ): React.ReactElement {
     const { create: createKeys, clear: clearKeys } = useKeys();
 
-    const { name, start, tape, output, register, navigation } = props;
+    const {
+        name,
+        start,
+        tape,
+        output,
+        register,
+        navigation,
+        keys = [],
+    } = props;
 
     const container = useRef<HTMLDivElement>(null);
     let { height, width } = useContainer(container);
@@ -189,23 +199,38 @@ export default function GridEditor<T extends GridState>(
         });
     }, [rows, cols, resetState]);
 
+    const handleEdit = useCallback(
+        (key: string) => {
+            if (key === 'Escape') {
+                dispatch({
+                    type: 'click',
+                    payload: { select: state.select as number },
+                });
+                return;
+            }
+
+            dispatch({
+                type: 'edit',
+                payload: {
+                    key,
+                    resetState,
+                },
+            });
+        },
+        [resetState, state.select]
+    );
+
     useEffect(() => {
         document.title = PAGE_TITLES.interpreter(name);
 
         const wrapper = (event: KeyboardEvent) => {
-            dispatch({
-                type: 'edit',
-                payload: {
-                    key: event.key,
-                    resetState,
-                },
-            });
+            handleEdit(event.key);
         };
 
         createKeys(wrapper);
 
         return () => clearKeys();
-    }, [name, createKeys, resetState, clearKeys]);
+    }, [name, createKeys, handleEdit, clearKeys]);
 
     const context = {
         name,
@@ -237,6 +262,9 @@ export default function GridEditor<T extends GridState>(
                     chooseColor={chooseColor}
                 />
             </Editor>
+            {mobile && state.select !== null && (
+                <KeySelector keys={keys} onSelect={handleEdit} />
+            )}
         </EditorContext.Provider>
     );
 }

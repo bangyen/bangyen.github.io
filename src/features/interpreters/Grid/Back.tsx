@@ -92,6 +92,7 @@ export default function Editor({
             runner={getState}
             tape
             navigation={navigation}
+            keys={['\\', '/', '<', '>', '-', '+', '*']}
         />
     );
 }

@@ -40,7 +40,7 @@ export default function Interpreters(): React.ReactElement {
     return (
         <Box
             sx={{
-                minHeight: '100vh',
+                minHeight: { xs: '50vh', md: '100vh' },
                 background: COLORS.surface.background,
                 display: 'flex',
                 justifyContent: 'center',

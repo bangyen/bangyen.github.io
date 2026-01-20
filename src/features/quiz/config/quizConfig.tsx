@@ -13,10 +13,10 @@ import {
 } from '../types/quiz';
 
 // Data imports
-import cctldsData from '../data/cctlds_enhanced.json';
+import cctldsData from '../data/cctlds.json';
 import drivingSideData from '../data/driving_sides.json';
 import telephoneData from '../data/telephone_codes.json';
-import vehicleData from '../data/vehicle_registration_codes.json';
+import vehicleData from '../data/vehicle_codes.json';
 
 export const QUIZ_TITLES = {
     wikipediaQuiz: 'Wikipedia Quizzes | Bangyen',
