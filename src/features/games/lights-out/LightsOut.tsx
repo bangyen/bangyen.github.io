@@ -80,7 +80,7 @@ export default function LightsOut(): React.ReactElement {
         : GAME_CONSTANTS.gridSizes.desktop;
 
     let { rows, cols } = useMemo(
-        () => convertPixels(size, height, width),
+        () => convertPixels(size, height, Math.min(width, 1300)),
         [size, height, width]
     );
 
