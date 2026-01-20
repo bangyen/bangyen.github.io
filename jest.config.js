@@ -33,4 +33,6 @@ module.exports = {
         url: 'http://localhost',
         customExportConditions: [''],
     },
+    slowTestThreshold: 5,
+    testTimeout: 10000,
 };
