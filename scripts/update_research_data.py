@@ -89,7 +89,7 @@ def main():
     env["PYTHONPATH"] = zsharp_cwd
     
     # Use venv python
-    # run_cmd([python_cmd, "generate_data.py"], cwd=zsharp_cwd, env=env)
+    run_cmd([python_cmd, "generate_data.py"], cwd=zsharp_cwd, env=env)
     
     # 7. Run Oligopoly Generation
     print("Generating Oligopoly Data...")
@@ -101,7 +101,7 @@ def main():
     
     # 8. Compress and Move
     output_files = [
-        # (os.path.join(zsharp_cwd, "zsharp_data.json"), os.path.join(PUBLIC_DIR, "zsharp_data.json.gz")),
+        (os.path.join(zsharp_cwd, "zsharp_data.json"), os.path.join(PUBLIC_DIR, "zsharp_data.json.gz")),
         (os.path.join(oligopoly_cwd, "oligopoly_matrix.json"), os.path.join(PUBLIC_DIR, "oligopoly_data.json.gz"))
     ]
     
