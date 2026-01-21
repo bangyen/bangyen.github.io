@@ -39,68 +39,75 @@ def generate_matrix():
     
     print(f"Starting generation of {total_runs} simulations...")
     
+    print(f"Starting generation of {total_runs} simulations...")
+    
+    model_options = ["cournot", "bertrand"]
+    collusion_options = [True, False]
+    
     for n_firms in firms_options:
         for elasticity in elasticity_options:
             for base_price in base_price_options:
-                current_run += 1
-                print(f"[{current_run}/{total_runs}] Simulating: {n_firms} firms, b={elasticity}, a={base_price}")
+                for model_type in model_options:
+                    for collusion_enabled in collusion_options:
+                        current_run += 1
+                        print(f"[{current_run}] Sim: {n_firms} firms, b={elasticity}, a={base_price}, {model_type}, coll={collusion_enabled}")
                 
-                # Configure Firms
-                # costs: spread them out slightly to be realistic? 
-                # Or identical? Frontend fallback uses:
-                # But typically Cournot with identical costs is standard baseline.
-                # Let's use identical costs of 10.0 to keep it clean, 
-                # or slight variance like [10, 10, 10]
-                firms_config = [{"cost": 10.0} for _ in range(n_firms)]
-                
-                # Config
-                config = {
-                    "params": {
-                        "a": float(base_price),
-                        "b": float(elasticity)
-                    },
-                    "firms": firms_config,
-                    "seed": 42, # Deterministic
-                    "events": []
-                }
-                
-                try:
-                    # Run 15 rounds
-                    run_id = run_game("cournot", 15, config, db)
-                    run_results = get_run_results(run_id, db)
-                    
-                    rounds_data = run_results["rounds_data"]
-                    firms_data = run_results["firms_data"]
-                    
-                    for r_data in rounds_data:
-                        round_idx = r_data["round"]
+                        # Configure Firms
+                        # costs: spread them out slightly to be realistic? 
+                        # Or identical? Frontend fallback uses:
+                        # But typically Cournot with identical costs is standard baseline.
+                        # Let's use identical costs of 10.0 to keep it clean, 
+                        # or slight variance like [10, 10, 10]
+                        firms_config = [{"cost": 10.0} for _ in range(n_firms)]
                         
-                        # Calculate HHI for this round
-                        current_quantities = []
-                        for f_data in firms_data:
-                            if round_idx < len(f_data["quantities"]):
-                                current_quantities.append(f_data["quantities"][round_idx])
-                            else:
-                                current_quantities.append(0)
-                                
-                        hhi = calculate_hhi_for_round(current_quantities)
-                        
-                        # Create MatrixItem
-                        item = {
-                            "round": round_idx + 1, # 1-based for frontend
-                            "price": r_data["price"],
-                            "hhi": hhi,
-                            "collusion": False,
-                            "num_firms": n_firms,
-                            "model_type": "cournot",
-                            "demand_elasticity": elasticity,
-                            "base_price": base_price,
-                            "collusion_enabled": False
+                        # Config
+                        config = {
+                            "params": {
+                                "a": float(base_price),
+                                "b": float(elasticity)
+                            },
+                            "firms": firms_config,
+                            "seed": 42, # Deterministic
+                            "events": []
                         }
-                        results_matrix.append(item)
                         
-                except Exception as e:
-                    print(f"Error generating run: {e}")
+                        try:
+                            # Run 15 rounds
+                            run_id = run_game(model_type, 15, config, db)
+                            run_results = get_run_results(run_id, db)
+                            
+                            rounds_data = run_results["rounds_data"]
+                            firms_data = run_results["firms_data"]
+                            
+                            for r_data in rounds_data:
+                                round_idx = r_data["round"]
+                                
+                                # Calculate HHI for this round
+                                current_quantities = []
+                                for f_data in firms_data:
+                                    if round_idx < len(f_data["quantities"]):
+                                        current_quantities.append(f_data["quantities"][round_idx])
+                                    else:
+                                        current_quantities.append(0)
+                                        
+                                hhi = calculate_hhi_for_round(current_quantities)
+                                
+                                # Create MatrixItem
+                                item = {
+                                    "round": round_idx + 1, # 1-based for frontend
+                                    "price": r_data["price"],
+                                    "hhi": hhi,
+                                    "collusion": collusion_enabled, # Match legacy key behavior if needed, or keeping explicit
+                                    "num_firms": n_firms,
+                                    "model_type": model_type,
+                                    "demand_elasticity": elasticity,
+                                    "base_price": base_price,
+                                    "collusion_enabled": collusion_enabled
+                                }
+                                results_matrix.append(item)
+                                
+                        except Exception as e:
+                            print(f"Error generating run: {e}")
                     
     # Output to JSON
     with open("oligopoly_matrix.json", "w") as f:

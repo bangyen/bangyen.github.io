@@ -56,7 +56,10 @@ def run():
                 "train_accuracies": output.get("train_accuracies", []),
                 "train_losses": output.get("train_losses", []),
                 "test_accuracies": output.get("test_accuracies", []),
-                "test_losses": output.get("test_losses", [])
+                "test_accuracies": output.get("test_accuracies", []),
+                "test_losses": output.get("test_losses", []),
+                "final_test_accuracy": output.get("test_accuracies", [])[-1] if output.get("test_accuracies") else 0,
+                "final_test_loss": output.get("test_losses", [])[-1] if output.get("test_losses") else 0
             }
             print(f"Completed {name}: Final Acc {output.get('final_test_accuracy', 0):.2f}%")
             
