@@ -151,7 +151,7 @@ def generate_cctlds():
 
     # Load existing language map
     lang_map = {}
-    enhanced_path = os.path.join(DATA_DIR, 'cctlds_enhanced.json')
+    enhanced_path = os.path.join(DATA_DIR, 'cctlds.json')
     if os.path.exists(enhanced_path):
         with open(enhanced_path, 'r') as f:
             old_data = json.load(f)
@@ -202,7 +202,7 @@ def generate_cctlds():
         
     results.sort(key=lambda x: x['code'])
     
-    with open(os.path.join(DATA_DIR, 'cctlds_enhanced.json'), 'w') as f:
+    with open(os.path.join(DATA_DIR, 'cctlds.json'), 'w') as f:
         json.dump(results, f, indent=4)
     print(f"Generated {len(results)} CCTLDs.")
 
@@ -326,9 +326,10 @@ def generate_telephone_codes():
     # Identify column indices
     col_country = -1
     col_code = -1
+    
+    # Prioritize 'serving' or 'country' over default
     if target_table:
         headers = [c['text'].lower() for c in target_table[0]]
-        print(f"Found table with headers: {headers}")
         for i, h in enumerate(headers):
             if any(keyword in h for keyword in ['country', 'state', 'serving']): col_country = i
             if 'code' in h: col_code = i
@@ -337,19 +338,16 @@ def generate_telephone_codes():
     if col_country == -1: col_country = 0
     if col_code == -1: col_code = 1
     
-    # Prioritize 'serving' or 'country' over default
-    if target_table:
-        headers = [c['text'].lower() for c in target_table[0]]
-        # Print actual headers for debugging
-        # print(f"Processing table headers: {headers}")
-
+    # print(f"Using columns: Country={col_country}, Code={col_code}")
 
     for row in target_table[1:]: # Skip header
         if len(row) <= max(col_country, col_code): 
+            # print(f"Skipping row len {len(row)}")
             continue
         
         country = clean_text(row[col_country]['text'])
         code_raw = clean_text(row[col_code]['text'])
+        # print(f"Row: Country='{country}', Code='{code_raw}'")
         
         flag = resolve_flag_url(row[col_country]['html'])
         
@@ -365,6 +363,7 @@ def generate_telephone_codes():
             if not code.startswith('+'):
                 code = '+' + code
         else:
+            # print(f"No match for code in '{code_raw}'")
             continue
             
         results.append({
@@ -432,7 +431,7 @@ def generate_vehicle_codes():
         
     results.sort(key=lambda x: x['code'])
     
-    with open(os.path.join(DATA_DIR, 'vehicle_registration_codes.json'), 'w') as f:
+    with open(os.path.join(DATA_DIR, 'vehicle_codes.json'), 'w') as f:
         json.dump(results, f, indent=2)
     print(f"Generated {len(results)} Vehicle Codes.")
 
