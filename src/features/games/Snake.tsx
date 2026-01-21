@@ -134,10 +134,11 @@ function reduceBoard(state: SnakeState): SnakeState {
 
 function handleAction(state: SnakeState, action: Action): SnakeState {
     switch (action.type) {
-        case 'resize':
+        case 'resize': {
             const { rows, cols } = action.payload;
             return handleResize(state, rows, cols);
-        case 'steer':
+        }
+        case 'steer': {
             const { payload } = action;
             const velocity = getDirection(payload.key);
             let { buffer } = state;
@@ -148,6 +149,7 @@ function handleAction(state: SnakeState, action: Action): SnakeState {
                 ...state,
                 buffer,
             };
+        }
         case 'move':
             return reduceBoard(state);
         default:

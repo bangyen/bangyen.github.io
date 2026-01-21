@@ -118,7 +118,7 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
         }
 
         return data;
-    } catch (error) {
+    } catch (_error) {
         return generateFallbackData();
     }
 };
@@ -164,7 +164,7 @@ const ZSharp: React.FC = () => {
             try {
                 const data = await loadRealZSharpData();
                 setChartData(data);
-            } catch (error) {
+            } catch (_error) {
                 // Error loading data, use fallback
                 setChartData(generateFallbackData());
             } finally {

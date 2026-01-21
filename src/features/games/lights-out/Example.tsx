@@ -6,7 +6,7 @@ import { getStates } from './chaseHandlers';
 import { flipAdj } from './boardHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 
-import { TYPOGRAPHY, COLORS } from '../../../config/theme';
+import { COLORS } from '../../../config/theme';
 
 interface Frame {
     backgroundColor: string;
@@ -77,7 +77,7 @@ function getIconFrames(
     dims: number,
     palette: Palette
 ): Record<string, { opacity: number; color: string }> {
-    const newStates = [[], ...states, []]; // Padding to match propHandler timing
+    // const newStates = [[], ...states, []]; // Padding to match propHandler timing
     const length = states.length;
     const frames: Record<string, { opacity: number; color: string }> = {};
 

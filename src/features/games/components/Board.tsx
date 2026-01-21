@@ -122,7 +122,7 @@ function fillerHandler(
     return color;
 }
 
-export function usePalette(score: number): Palette {
+export function usePalette(_score: number): Palette {
     const palette = useMemo(() => {
         const primary = COLORS.primary.main;
         const secondary = COLORS.primary.dark;

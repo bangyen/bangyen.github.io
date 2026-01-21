@@ -3,7 +3,6 @@ import {
     Backdrop,
     Typography,
     Box,
-    Grid,
     IconButton,
     Button,
 } from '../../../components/mui';
@@ -17,12 +16,7 @@ import {
     CloseRounded,
     Refresh,
 } from '../../../components/icons';
-import {
-    SPACING,
-    COLORS,
-    TYPOGRAPHY,
-    COMPONENT_VARIANTS,
-} from '../../../config/theme';
+import { COLORS, TYPOGRAPHY } from '../../../config/theme';
 import { GlassCard } from '../../../components/ui/GlassCard';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { getProduct } from './matrices';

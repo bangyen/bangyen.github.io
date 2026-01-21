@@ -4,21 +4,23 @@ import { SPACING, COMPONENT_VARIANTS } from '../../../config/theme';
 import { QuizSettings } from '../types/quiz';
 
 interface QuizSettingsProps<S extends QuizSettings> {
-    settings: S;
-    onUpdate: (s: S) => void;
-    onStart: () => void;
+    _settings: S;
+    _onUpdate: (s: S) => void;
+    _onStart: () => void;
+    _questions: { length: number };
     children?: React.ReactNode;
     title?: string;
-    maxQuestionOptions: number[];
+    _maxQuestionOptions?: number[];
 }
 
 const QuizSettingsView = <S extends QuizSettings>({
-    settings,
-    onUpdate,
-    onStart,
+    _settings,
+    _onUpdate,
+    _onStart,
+    _questions,
     children,
     title = 'Game Settings',
-    maxQuestionOptions,
+    _maxQuestionOptions,
 }: QuizSettingsProps<S>) => {
     return (
         <Card

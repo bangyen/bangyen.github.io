@@ -77,10 +77,18 @@ const mockIcons = [
     'AttachMoneyRounded',
     'BusinessRounded',
     'SettingsRounded',
-].reduce((acc, iconName) => {
-    const testId = iconNameMap[iconName] || iconName.toLowerCase();
-    acc[iconName] = () => <div data-testid={`${testId}-icon`}>{iconName}</div>;
-    return acc;
-}, {} as any);
+].reduce(
+    (acc, iconName) => {
+        const testId = iconNameMap[iconName] || iconName.toLowerCase();
+        acc[iconName] = () => (
+            <div data-testid={`${testId}-icon`}>{iconName}</div>
+        );
+        return acc;
+    },
+    {} as Record<string, unknown>
+);
 
+export const ZoomOutMap = (props: unknown) => (
+    <div data-testid="ZoomOutMap" {...(props as object)} />
+);
 module.exports = mockIcons;

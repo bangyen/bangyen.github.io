@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Select, MenuItem, FormControl } from '@mui/material';
 import { COLORS, SPACING, TYPOGRAPHY } from '../../../config/theme';

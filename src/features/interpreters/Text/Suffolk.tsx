@@ -61,12 +61,13 @@ function getState(state: SuffolkState): SuffolkState {
             register = 0;
             pointer = 0;
             break;
-        case ',':
+        case ',': {
             const input = prompt('Input: ');
 
             if (input && input.length) register = input.charCodeAt(0);
             else register = 0;
             break;
+        }
         case '.':
             if (register > 0) output += String.fromCharCode(register - 1);
             break;

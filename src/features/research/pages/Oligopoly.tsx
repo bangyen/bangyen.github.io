@@ -114,6 +114,7 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
 
         return matrixData;
     } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error loading oligopoly data:', error);
         return [];
     }
@@ -204,7 +205,7 @@ const Oligopoly: React.FC = () => {
                     collusionEnabled
                 );
                 setMarketData(initialData);
-            } catch (error) {
+            } catch (_error) {
                 // Error loading data, use fallback
                 setMarketData(generateFallbackOligopolyData());
             } finally {

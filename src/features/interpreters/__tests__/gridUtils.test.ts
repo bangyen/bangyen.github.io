@@ -1,9 +1,5 @@
-import {
-    getSpace,
-    convertPixels,
-    getDirection,
-    gridMove,
-} from '../utils/gridUtils';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { convertPixels, getDirection, gridMove } from '../utils/gridUtils';
 
 describe('Calculate Utilities', () => {
     /**

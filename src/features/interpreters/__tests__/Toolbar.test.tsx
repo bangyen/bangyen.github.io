@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { handleToolbar } from '../Toolbar';
 
 describe('Toolbar', () => {

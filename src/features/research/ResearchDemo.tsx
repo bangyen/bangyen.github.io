@@ -9,12 +9,7 @@ import {
     ToggleButtonGroup,
     useMediaQuery,
 } from '../../components/mui';
-import {
-    GitHub,
-    HomeRounded as Home,
-    Refresh,
-    SettingsRounded,
-} from '../../components/icons';
+import { GitHub, HomeRounded as Home, Refresh } from '../../components/icons';
 import { CHART_DIMENSIONS, CHART_FORMATTING } from './config/researchConfig';
 import {
     COLORS,
@@ -57,7 +52,7 @@ export interface ViewType<T> {
     label: string;
     icon: React.ElementType;
     chartTitle: string;
-    dataProcessor: (data: T[]) => any[];
+    dataProcessor: (data: T[]) => unknown[];
     chartConfig: ChartConfig;
 }
 
@@ -364,7 +359,7 @@ const ResearchDemo = <T,>({
                                             }
                                         />
                                         {currentChartConfig.lines.map(
-                                            (line, index) => (
+                                            (line, _index) => (
                                                 <Line
                                                     key={line.dataKey}
                                                     yAxisId={
@@ -529,7 +524,10 @@ const ResearchDemo = <T,>({
 
                             <Grid container={true} spacing={2.5}>
                                 {controls.map((control, index) => (
-                                    <Grid key={index} size={{ xs: 12, md: 4 }}>
+                                    <Grid
+                                        key={control.label || index}
+                                        size={{ xs: 12, md: 4 }}
+                                    >
                                         <Box
                                             sx={{
                                                 marginBottom: 0,
