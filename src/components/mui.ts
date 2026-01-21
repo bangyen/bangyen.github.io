@@ -41,4 +41,3 @@ export { grey, blueGrey } from '@mui/material/colors';
 
 // Hooks
 export { useMediaQuery } from '@mui/material';
-

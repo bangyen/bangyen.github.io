@@ -59,6 +59,11 @@ cd bangyen.github.io
 npm install
 ```
 
+3. Install Python dependencies (optional, for scripts):
+```bash
+pip install -r dev-requirements.txt
+```
+
 3. Start the development server:
 ```bash
 npm start
