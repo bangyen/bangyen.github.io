@@ -31,7 +31,6 @@
     "test:new": "jest --config jest.config.js --maxWorkers=50%",
     "test:ci": "jest --config jest.config.js --ci --maxWorkers=2",
     "test:coverage": "jest --config jest.config.js --coverage",
-    "eject": "react-scripts eject",
     "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx --config config/eslint.config.js",
     "lint:fix": "eslint src/ --ext .js,.jsx,.ts,.tsx --fix --config config/eslint.config.js",
     "format": "prettier --write src/",

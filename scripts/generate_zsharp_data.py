@@ -86,14 +86,11 @@ def run():
             traceback.print_exc()
 
     # Save to json
-    # Save to Gzipped JSON in public directory
-    output_path = Path("public/zsharp_data.json.gz")
-    os.makedirs("public", exist_ok=True)
-    
-    with gzip.open(output_path, "wt", encoding="UTF-8") as f:
+    # Save to json
+    with open("zsharp_data.json", "w", encoding="utf-8") as f:
         json.dump(results_data, f)
 
-    print(f"ZSharp generation complete. Saved to {output_path}")
+    print("ZSharp generation complete. Saved to zsharp_data.json")
 
 
 if __name__ == "__main__":
