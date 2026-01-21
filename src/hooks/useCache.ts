@@ -21,7 +21,8 @@ export function useCache<T>(getState: (state: T) => T) {
         const states = cache.current;
 
         switch (type) {
-            case 'next':
+            case 'next': {
+                // Wrapped case block
                 if (
                     GLOBAL_CONFIG.processing.doubleProcessingPrevention &&
                     processingRef.current
@@ -40,6 +41,7 @@ export function useCache<T>(getState: (state: T) => T) {
                     const next = getStateRef.current(state);
 
                     if (next === state) {
+                        // State did not change, no-op
                     } else {
                         states.push(next);
                         index.current++;
@@ -57,7 +59,8 @@ export function useCache<T>(getState: (state: T) => T) {
                 }
 
                 return result;
-            case 'prev':
+            }
+            case 'prev': {
                 if (
                     GLOBAL_CONFIG.processing.doubleProcessingPrevention &&
                     processingRef.current
@@ -80,6 +83,7 @@ export function useCache<T>(getState: (state: T) => T) {
                 }
 
                 return prevResult;
+            }
             case 'clear':
                 cache.current = [{ ...(payload as T) }];
                 index.current = 0;

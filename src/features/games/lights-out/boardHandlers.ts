@@ -148,7 +148,7 @@ export function handleBoard(
         case 'auto':
             auto = !auto;
             break;
-        case 'adjacent':
+        case 'adjacent': {
             if (row !== undefined && col !== undefined) {
                 grid = flipAdj(row, col, grid);
                 // Check win condition...
@@ -160,6 +160,7 @@ export function handleBoard(
                 }
             }
             break;
+        }
         case 'multi_adjacent':
             if (moves) {
                 moves.forEach(m => {
@@ -178,11 +179,12 @@ export function handleBoard(
             grid = randomize(rows, cols);
             auto = false;
             break;
-        case 'randomize':
+        case 'randomize': {
             grid = randomize(rows, cols);
             auto = false;
             break;
-        case 'resize':
+        }
+        case 'resize': {
             const { newRows, newCols } = action;
             if (newRows !== undefined && newCols !== undefined) {
                 rows = newRows;
@@ -191,6 +193,7 @@ export function handleBoard(
                 auto = false;
             }
             break;
+        }
         case 'reset':
             grid = getGrid(rows, cols);
             score = 0;

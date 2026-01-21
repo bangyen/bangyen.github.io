@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 
 import { TooltipButton } from '../../components/ui/Controls';
 import { EditorContext } from './EditorContext';
-import { useMobile } from '../../hooks';
 import { useMediaQuery } from '../../components/mui';
 import { GLOBAL_CONFIG } from '../../config/constants';
 
@@ -56,7 +55,10 @@ export function Toolbar(): React.ReactElement[] {
         ? 'https://esolangs.org/wiki/' + editorContext.name.replace(' ', '_')
         : '';
     const pause = editorContext?.pause || false;
-    const dispatch = editorContext?.dispatch || (() => undefined);
+    const dispatch = useMemo(
+        () => editorContext?.dispatch || (() => undefined),
+        [editorContext]
+    );
     const fastForward = editorContext?.fastForward || false;
 
     const TimerButton = useMemo(
@@ -195,7 +197,7 @@ export function handleToolbar(
     const { type, payload } = action;
     let newState: ToolbarState = {};
 
-    const { dispatch, nextIter, create, clear, start } = payload;
+    const { dispatch, create, clear } = payload;
 
     const update = updateHandler(payload);
 
@@ -218,7 +220,7 @@ export function handleToolbar(
             create({ repeat, speed: GLOBAL_CONFIG.timer.defaultSpeed });
             newState.pause = pauseStateMap.run;
             break;
-        case 'timer':
+        case 'timer': {
             const newType = state.end ? 'stop' : 'next';
 
             dispatch({
@@ -226,35 +228,37 @@ export function handleToolbar(
                 payload,
             });
             break;
-        case 'stop':
+        }
+        case 'stop': {
             clear();
             newState.pause = pauseStateMap.stop;
             break;
-        case 'reset':
-            clear();
-
-            // For text editors, preserve the code and text, only reset execution state
-            const resetPayload = { ...state, ...start };
-
-            // Preserve text and code if they exist (for text editors)
-            if ('text' in state && 'code' in state) {
-                resetPayload.text = state.text;
-                resetPayload.code = state.code;
+        }
+        case 'reset': {
+            const confirm = window.confirm(
+                'Are you sure you want to reset the code?'
+            );
+            if (confirm) {
+                newState = update('clear', true) as ToolbarState;
+                newState.pause = pauseStateMap.reset;
             }
-
-            newState = nextIter({
-                type: 'clear',
-                payload: resetPayload,
-            }) as ToolbarState;
-            newState.pause = pauseStateMap.reset;
             break;
-        case 'prev':
+        }
+        case 'prev': {
             newState = update('prev', true) as ToolbarState;
             newState.pause = pauseStateMap.prev;
             break;
-        case 'next':
+        }
+        case 'next': {
             newState = update('next', false) as ToolbarState;
             break;
+        }
+        case 'share': {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url);
+            // TODO: Toast notification
+            break;
+        }
         default:
             break;
     }

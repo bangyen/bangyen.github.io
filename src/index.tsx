@@ -31,13 +31,7 @@ const darkTheme = createAppTheme();
 
 function App(): React.ReactElement {
     return (
-        <HashRouter
-            basename="/"
-            future={{
-                v7_startTransition: true,
-                v7_relativeSplatPath: true,
-            }}
-        >
+        <HashRouter basename="/">
             <Suspense
                 fallback={
                     <div

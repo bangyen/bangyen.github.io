@@ -57,41 +57,56 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
             );
         }
 
-        const compressedData = await response.arrayBuffer();
-        const decompressedData = await new Response(
-            new ReadableStream({
-                start(controller) {
-                    const decompressionStream = new DecompressionStream('gzip');
-                    const writer = decompressionStream.writable.getWriter();
-                    const reader = decompressionStream.readable.getReader();
+        const data = await response.arrayBuffer();
+        const view = new Uint8Array(data);
 
-                    writer.write(compressedData).then(() => writer.close());
+        let matrixData: MatrixItem[];
 
-                    function pump(): Promise<void> {
-                        return reader
-                            .read()
-                            .then(
-                                ({
-                                    done,
-                                    value,
-                                }: {
-                                    done: boolean;
-                                    value: Uint8Array | undefined;
-                                }) => {
-                                    if (done) {
-                                        controller.close();
-                                        return;
+        // Check for GZIP magic number (0x1f 0x8b)
+        const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
+
+        if (isGzipped) {
+            const decompressedData = await new Response(
+                new ReadableStream({
+                    start(controller) {
+                        const decompressionStream = new DecompressionStream(
+                            'gzip'
+                        );
+                        const writer = decompressionStream.writable.getWriter();
+                        const reader = decompressionStream.readable.getReader();
+
+                        writer.write(data).then(() => writer.close());
+
+                        function pump(): Promise<void> {
+                            return reader
+                                .read()
+                                .then(
+                                    ({
+                                        done,
+                                        value,
+                                    }: {
+                                        done: boolean;
+                                        value: Uint8Array | undefined;
+                                    }) => {
+                                        if (done) {
+                                            controller.close();
+                                            return;
+                                        }
+                                        controller.enqueue(value);
+                                        return pump();
                                     }
-                                    controller.enqueue(value);
-                                    return pump();
-                                }
-                            );
-                    }
-                    return pump();
-                },
-            })
-        ).text();
-        const matrixData: MatrixItem[] = JSON.parse(decompressedData);
+                                );
+                        }
+                        return pump();
+                    },
+                })
+            ).text();
+            matrixData = JSON.parse(decompressedData);
+        } else {
+            // Assume already decompressed (Vite dev server)
+            const text = new TextDecoder().decode(data);
+            matrixData = JSON.parse(text);
+        }
 
         if (!Array.isArray(matrixData)) {
             throw new Error('Invalid data format: expected array');
@@ -99,7 +114,8 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
 
         return matrixData;
     } catch (error) {
-        // Error loading data, return empty array
+        // eslint-disable-next-line no-console
+        console.error('Error loading oligopoly data:', error);
         return [];
     }
 };
@@ -189,7 +205,7 @@ const Oligopoly: React.FC = () => {
                     collusionEnabled
                 );
                 setMarketData(initialData);
-            } catch (error) {
+            } catch (_error) {
                 // Error loading data, use fallback
                 setMarketData(generateFallbackOligopolyData());
             } finally {

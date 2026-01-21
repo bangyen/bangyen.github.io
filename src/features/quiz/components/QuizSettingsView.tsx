@@ -7,18 +7,20 @@ interface QuizSettingsProps<S extends QuizSettings> {
     settings: S;
     onUpdate: (s: S) => void;
     onStart: () => void;
+    questions?: { length: number }; // Made optional as it seems unused or mocked
     children?: React.ReactNode;
     title?: string;
-    maxQuestionOptions: number[];
+    maxQuestionOptions?: number[];
 }
 
 const QuizSettingsView = <S extends QuizSettings>({
-    settings,
-    onUpdate,
-    onStart,
+    settings: _settings,
+    onUpdate: _onUpdate,
+    onStart: _onStart,
+    questions: _questions,
     children,
     title = 'Game Settings',
-    maxQuestionOptions,
+    maxQuestionOptions: _maxQuestionOptions,
 }: QuizSettingsProps<S>) => {
     return (
         <Card

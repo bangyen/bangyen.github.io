@@ -52,7 +52,7 @@ function handleAction(
     let newState: Partial<TextState> = {};
 
     switch (type) {
-        case 'ff':
+        case 'ff': {
             const repeat = () => dispatch({ type: 'timer', payload });
 
             if (state.pause) {
@@ -64,7 +64,8 @@ function handleAction(
                 create({ repeat, speed: 10 });
             }
             break;
-        case 'edit':
+        }
+        case 'edit': {
             const { newText, clean } = payload;
 
             if (newText !== undefined && clean) {
@@ -82,9 +83,11 @@ function handleAction(
                 newState.pause = true;
             }
             break;
-        default:
+        }
+        default: {
             newState = handleToolbar(state, action as unknown as ToolbarAction);
             break;
+        }
     }
 
     return {
@@ -212,6 +215,7 @@ export default function TextEditor({
             pause: state.pause || false,
         };
     }, [
+        container,
         name,
         tape,
         output,
@@ -223,7 +227,6 @@ export default function TextEditor({
         state.output,
         state.register,
         state.pause,
-        container.height,
         wrapDispatch,
     ]);
 

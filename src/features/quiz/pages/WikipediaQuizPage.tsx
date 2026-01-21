@@ -1,52 +1,25 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import {
-    Box,
-    Typography,
-    Grid,
-    Button,
-    Fade,
-    TextField,
-    Card,
-    MenuItem,
-    Select,
-    FormControl,
-    InputLabel,
-} from '@mui/material';
-import {
-    CheckCircleRounded as CheckCircleIcon,
-    CancelRounded as CancelIcon,
-} from '@mui/icons-material';
-import { COLORS, SPACING } from '../../../config/theme';
-import {
-    CCTLD_LANGUAGES,
-    TELEPHONE_ZONES,
-    VEHICLE_CONVENTIONS,
-    DRIVING_SIDE_FILTERS,
-    DRIVING_SIDE_OPTIONS,
-    QUIZ_CONFIGS,
-} from '../config/quizConfig';
+import { Box, Button, Fade, SelectChangeEvent } from '@mui/material';
+import { SPACING, COLORS } from '../../../config/theme';
+import { QUIZ_CONFIGS } from '../config/quizConfig';
 import {
     QuizSettings,
     QuizType,
     Question,
     GameState,
     QuizItem,
-    GameMode,
-    CCTLD,
-    DrivingSide,
-    TelephoneCode,
-    VehicleCode,
 } from '../types/quiz';
 import { useQuizFilter } from '../hooks/quiz';
 
 import QuizLayout from '../components/QuizLayout';
 import QuizSettingsView from '../components/QuizSettingsView';
 import QuizSummaryView from '../components/QuizSummaryView';
-import { SkippedBadge } from '../components';
 import QuizGame from '../components/QuizGame';
 
-// --- Components ---
+import QuizTopicSelector from '../components/QuizTopicSelector';
+import QuizFilters from '../components/QuizFilters';
+import QuizHistoryItem from '../components/QuizHistoryItem';
 
 const commonSelectProps = {
     MenuProps: {
@@ -85,7 +58,7 @@ const WikipediaQuizPage: React.FC = () => {
     }, [selectedQuiz]);
 
     // URL sync
-    const handleQuizChange = (event: any) => {
+    const handleQuizChange = (event: SelectChangeEvent<unknown>) => {
         const newQuiz = event.target.value as QuizType;
         setSearchParams({ type: newQuiz });
     };
@@ -119,88 +92,17 @@ const WikipediaQuizPage: React.FC = () => {
         setGameState('menu');
     };
 
-    const topicSelector = (
-        <FormControl
-            size="small"
-            sx={{
-                width: 'auto',
-                minWidth: { xs: 180, sm: 200 },
-                flexShrink: 0,
-                '& .MuiOutlinedInput-root': {
-                    backgroundColor: COLORS.surface.glass,
-                    backdropFilter: 'blur(24px) saturate(180%)',
-                    borderRadius: SPACING.borderRadius.full,
-                    color: COLORS.text.primary,
-                    fontWeight: 'medium',
-                    '& fieldset': {
-                        border: `1px solid ${COLORS.border.subtle}`,
-                    },
-                    '&:hover fieldset': {
-                        borderColor: COLORS.primary.main,
-                    },
-                    '&.Mui-focused fieldset': {
-                        borderColor: COLORS.primary.main,
-                    },
-                },
-                '& .MuiSelect-select': {
-                    py: 1,
-                    px: { xs: 2, sm: 3 },
-                    textAlign: 'center',
-                },
-                '& .MuiSvgIcon-root': {
-                    color: COLORS.text.secondary,
-                },
-            }}
-        >
-            <Select
-                value={selectedQuiz}
-                onChange={handleQuizChange}
-                MenuProps={{
-                    autoFocus: false,
-                    BackdropProps: {
-                        sx: {
-                            backdropFilter: 'none',
-                            backgroundColor: 'transparent',
-                        },
-                    },
-                    PaperProps: {
-                        sx: {
-                            backgroundColor: COLORS.surface.glass,
-                            backdropFilter: 'blur(24px) saturate(180%)',
-                            border: `1px solid ${COLORS.border.subtle}`,
-                            borderRadius: SPACING.borderRadius.lg,
-                            mt: 1,
-                            '& .MuiMenuItem-root': {
-                                color: COLORS.text.secondary,
-                                transition: 'all 0.2s ease',
-                                '&:hover': {
-                                    backgroundColor: COLORS.interactive.hover,
-                                    color: COLORS.text.primary,
-                                },
-                                '&.Mui-selected': {
-                                    backgroundColor:
-                                        COLORS.interactive.selected,
-                                    color: COLORS.primary.main,
-                                    fontWeight: 'bold',
-                                },
-                            },
-                        },
-                    },
-                }}
-            >
-                <MenuItem value="cctld">Domains</MenuItem>
-                <MenuItem value="driving_side">Driving Side</MenuItem>
-                <MenuItem value="telephone">Telephone Codes</MenuItem>
-                <MenuItem value="vehicle">Vehicle Registration</MenuItem>
-            </Select>
-        </FormControl>
-    );
-
     return (
         <QuizLayout
             title="Geography"
             infoUrl={activeConfig.infoUrl}
-            headerContent={topicSelector}
+            headerContent={
+                <QuizTopicSelector
+                    uniqueId="quiz-topic-selector"
+                    selectedQuiz={selectedQuiz}
+                    onQuizChange={handleQuizChange}
+                />
+            }
         >
             {gameState === 'menu' && (
                 <Fade in>
@@ -219,349 +121,14 @@ const WikipediaQuizPage: React.FC = () => {
                             maxQuestionOptions={activeConfig.maxQuestionOptions}
                             title="Quiz Settings"
                         >
-                            {/* Slot 1: Game Mode (Now First) */}
-                            {activeConfig.hasModeSelect &&
-                            activeConfig.modes ? (
-                                <Grid item xs={12} md={6}>
-                                    <FormControl fullWidth>
-                                        <InputLabel>Game Mode</InputLabel>
-                                        <Select
-                                            value={settings.mode || ''}
-                                            label="Game Mode"
-                                            onChange={e =>
-                                                setSettings({
-                                                    ...settings,
-                                                    mode: e.target
-                                                        .value as GameMode,
-                                                })
-                                            }
-                                            sx={{
-                                                color: COLORS.text.primary,
-                                                '.MuiOutlinedInput-notchedOutline':
-                                                    {
-                                                        borderColor:
-                                                            COLORS.border
-                                                                .subtle,
-                                                    },
-                                            }}
-                                            {...commonSelectProps}
-                                        >
-                                            {activeConfig.modes.map(m => (
-                                                <MenuItem
-                                                    key={m.value}
-                                                    value={m.value}
-                                                >
-                                                    {m.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                            ) : (
-                                <Grid
-                                    item
-                                    xs={12}
-                                    md={6}
-                                    sx={{
-                                        display: { xs: 'none', md: 'block' },
-                                    }}
-                                >
-                                    <Box sx={{ height: 56 }} />
-                                </Grid>
-                            )}
-
-                            {/* Slot 2: Specialized Filters */}
-                            {selectedQuiz === 'cctld' && (
-                                <Grid item xs={12} md={6}>
-                                    <FormControl fullWidth>
-                                        <InputLabel>Language Filter</InputLabel>
-                                        <Select
-                                            value={
-                                                settings.filterLanguage || 'All'
-                                            }
-                                            label="Language Filter"
-                                            onChange={e =>
-                                                setSettings({
-                                                    ...settings,
-                                                    filterLanguage:
-                                                        e.target.value,
-                                                })
-                                            }
-                                            sx={{
-                                                color: COLORS.text.primary,
-                                                '.MuiOutlinedInput-notchedOutline':
-                                                    {
-                                                        borderColor:
-                                                            COLORS.border
-                                                                .subtle,
-                                                    },
-                                            }}
-                                            {...commonSelectProps}
-                                        >
-                                            {CCTLD_LANGUAGES.map(lang => (
-                                                <MenuItem
-                                                    key={lang}
-                                                    value={lang}
-                                                >
-                                                    {lang}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                            )}
-
-                            {selectedQuiz === 'telephone' && (
-                                <Grid item xs={12} md={6}>
-                                    <FormControl fullWidth>
-                                        <InputLabel>Zone Filter</InputLabel>
-                                        <Select
-                                            value={settings.filterZone || 'All'}
-                                            label="Zone Filter"
-                                            onChange={e =>
-                                                setSettings({
-                                                    ...settings,
-                                                    filterZone: e.target.value,
-                                                })
-                                            }
-                                            sx={{
-                                                color: COLORS.text.primary,
-                                                '.MuiOutlinedInput-notchedOutline':
-                                                    {
-                                                        borderColor:
-                                                            COLORS.border
-                                                                .subtle,
-                                                    },
-                                            }}
-                                            {...commonSelectProps}
-                                            MenuProps={{
-                                                ...commonSelectProps.MenuProps,
-                                                PaperProps: {
-                                                    sx: {
-                                                        maxWidth: 250,
-                                                    },
-                                                },
-                                            }}
-                                        >
-                                            {TELEPHONE_ZONES.map(zone => (
-                                                <MenuItem
-                                                    key={zone.value}
-                                                    value={zone.value}
-                                                    sx={{
-                                                        whiteSpace: 'nowrap',
-                                                        overflow: 'hidden',
-                                                        textOverflow:
-                                                            'ellipsis',
-                                                        display: 'block',
-                                                    }}
-                                                >
-                                                    {zone.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                            )}
-
-                            {selectedQuiz === 'vehicle' && (
-                                <Grid item xs={12} md={6}>
-                                    <FormControl fullWidth>
-                                        <InputLabel>
-                                            Convention Filter
-                                        </InputLabel>
-                                        <Select
-                                            value={
-                                                settings.filterConvention ||
-                                                'All'
-                                            }
-                                            label="Convention Filter"
-                                            onChange={e =>
-                                                setSettings({
-                                                    ...settings,
-                                                    filterConvention:
-                                                        e.target.value,
-                                                })
-                                            }
-                                            sx={{
-                                                color: COLORS.text.primary,
-                                                '.MuiOutlinedInput-notchedOutline':
-                                                    {
-                                                        borderColor:
-                                                            COLORS.border
-                                                                .subtle,
-                                                    },
-                                            }}
-                                            {...commonSelectProps}
-                                        >
-                                            {VEHICLE_CONVENTIONS.map(conv => (
-                                                <MenuItem
-                                                    key={conv.value}
-                                                    value={conv.value}
-                                                >
-                                                    {conv.label}
-                                                </MenuItem>
-                                            ))}
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                            )}
-
-                            {selectedQuiz === 'driving_side' &&
-                                (settings.mode === 'toCountry' ? (
-                                    <Grid item xs={12} md={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel>Side Filter</InputLabel>
-                                            <Select
-                                                value={
-                                                    settings.filterSide || 'All'
-                                                }
-                                                label="Side Filter"
-                                                onChange={e =>
-                                                    setSettings({
-                                                        ...settings,
-                                                        filterSide:
-                                                            e.target.value,
-                                                    })
-                                                }
-                                                sx={{
-                                                    color: COLORS.text.primary,
-                                                    '.MuiOutlinedInput-notchedOutline':
-                                                        {
-                                                            borderColor:
-                                                                COLORS.border
-                                                                    .subtle,
-                                                        },
-                                                }}
-                                                {...commonSelectProps}
-                                            >
-                                                {DRIVING_SIDE_OPTIONS.map(f => (
-                                                    <MenuItem
-                                                        key={f.value}
-                                                        value={f.value}
-                                                    >
-                                                        {f.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                ) : (
-                                    <Grid item xs={12} md={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel>
-                                                Switch Filter
-                                            </InputLabel>
-                                            <Select
-                                                value={
-                                                    settings.filterSwitch ||
-                                                    'All'
-                                                }
-                                                label="Switch Filter"
-                                                onChange={e =>
-                                                    setSettings({
-                                                        ...settings,
-                                                        filterSwitch:
-                                                            e.target.value,
-                                                    })
-                                                }
-                                                sx={{
-                                                    color: COLORS.text.primary,
-                                                    '.MuiOutlinedInput-notchedOutline':
-                                                        {
-                                                            borderColor:
-                                                                COLORS.border
-                                                                    .subtle,
-                                                        },
-                                                }}
-                                                {...commonSelectProps}
-                                            >
-                                                {DRIVING_SIDE_FILTERS.map(f => (
-                                                    <MenuItem
-                                                        key={f.value}
-                                                        value={f.value}
-                                                    >
-                                                        {f.label}
-                                                    </MenuItem>
-                                                ))}
-                                            </Select>
-                                        </FormControl>
-                                    </Grid>
-                                ))}
-
-                            {/* Slot 3: Letter Filter */}
-                            <Grid item xs={12} md={6}>
-                                <TextField
-                                    fullWidth
-                                    label="Filter by Letter(s)"
-                                    value={settings.filterLetter}
-                                    onChange={e =>
-                                        setSettings({
-                                            ...settings,
-                                            filterLetter: e.target.value,
-                                        })
-                                    }
-                                    helperText="Comma separated (e.g. a, b)"
-                                    InputLabelProps={{
-                                        style: { color: COLORS.text.secondary },
-                                    }}
-                                    onKeyDown={e => {
-                                        if (e.key === 'Enter') {
-                                            handleStart();
-                                        }
-                                    }}
-                                    sx={{
-                                        input: { color: COLORS.text.primary },
-                                        label: { color: COLORS.text.secondary },
-                                        '& .MuiOutlinedInput-root': {
-                                            '& fieldset': {
-                                                borderColor:
-                                                    COLORS.border.subtle,
-                                            },
-                                            '&:hover fieldset': {
-                                                borderColor:
-                                                    COLORS.primary.main,
-                                            },
-                                        },
-                                    }}
-                                />
-                            </Grid>
-
-                            {/* Slot 4: Question Limit (Now Last) */}
-                            <Grid item xs={12} md={6}>
-                                <FormControl fullWidth>
-                                    <InputLabel>Question Limit</InputLabel>
-                                    <Select
-                                        value={settings.maxQuestions || 'All'}
-                                        label="Question Limit"
-                                        onChange={e =>
-                                            setSettings({
-                                                ...settings,
-                                                maxQuestions: e.target.value as
-                                                    | number
-                                                    | 'All',
-                                            })
-                                        }
-                                        sx={{
-                                            color: COLORS.text.primary,
-                                            '.MuiOutlinedInput-notchedOutline':
-                                                {
-                                                    borderColor:
-                                                        COLORS.border.subtle,
-                                                },
-                                        }}
-                                        {...commonSelectProps}
-                                    >
-                                        <MenuItem value="All">All</MenuItem>
-                                        {activeConfig.maxQuestionOptions.map(
-                                            opt => (
-                                                <MenuItem key={opt} value={opt}>
-                                                    {opt}
-                                                </MenuItem>
-                                            )
-                                        )}
-                                    </Select>
-                                </FormControl>
-                            </Grid>
+                            <QuizFilters
+                                selectedQuiz={selectedQuiz}
+                                settings={settings}
+                                onSettingsChange={setSettings}
+                                activeConfig={activeConfig}
+                                commonSelectProps={commonSelectProps}
+                                onEnterKey={handleStart}
+                            />
                         </QuizSettingsView>
                         <Box
                             sx={{
@@ -617,196 +184,13 @@ const WikipediaQuizPage: React.FC = () => {
                     onRestart={handleStart}
                     onBackToMenu={handleBackToMenu}
                     renderHistoryItem={q => (
-                        <Card
+                        <QuizHistoryItem
                             key={q.id}
-                            sx={{
-                                p: 2,
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'flex-start',
-                                bgcolor:
-                                    q.pointsEarned === 1
-                                        ? COLORS.surface.success
-                                        : q.pointsEarned === 0.5
-                                          ? COLORS.surface.warning
-                                          : COLORS.surface.error,
-                                border: `1px solid ${COLORS.border.subtle} `,
-                                flexShrink: 0,
-                            }}
-                        >
-                            <Box
-                                sx={{ textAlign: 'left', flex: 1, minWidth: 0 }}
-                            >
-                                <Box
-                                    sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 1,
-                                        mb: 1,
-                                    }}
-                                >
-                                    {q.item.flag && (
-                                        <img
-                                            src={q.item.flag}
-                                            alt={`Flag of ${q.item.country} `}
-                                            style={{
-                                                height: '16px',
-                                                width: 'auto',
-                                                borderRadius: '1px',
-                                            }}
-                                        />
-                                    )}
-                                    <Typography
-                                        variant="body1"
-                                        fontWeight="bold"
-                                        noWrap
-                                    >
-                                        {selectedQuiz === 'driving_side'
-                                            ? q.item.country
-                                            : settings.mode === 'toCountry'
-                                              ? (
-                                                    q.item as
-                                                        | CCTLD
-                                                        | TelephoneCode
-                                                        | VehicleCode
-                                                ).code
-                                              : q.item.country}
-                                    </Typography>
-                                </Box>
-                                <Typography
-                                    variant="body2"
-                                    color="textSecondary"
-                                    noWrap
-                                >
-                                    Answer:{' '}
-                                    {selectedQuiz === 'driving_side'
-                                        ? (q.item as DrivingSide).side
-                                        : settings.mode === 'toCountry'
-                                          ? q.item.country
-                                          : (
-                                                q.item as
-                                                    | CCTLD
-                                                    | TelephoneCode
-                                                    | VehicleCode
-                                            ).code}
-                                </Typography>
-                                {activeConfig.renderFeedbackOrigin && (
-                                    <Box sx={{ mt: 0.5, opacity: 0.8 }}>
-                                        {activeConfig.renderFeedbackOrigin(
-                                            q.item
-                                        )}
-                                    </Box>
-                                )}
-                            </Box>
-
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'flex-end',
-                                    gap: 1,
-                                    flexShrink: 0,
-                                    ml: 2,
-                                }}
-                            >
-                                <Typography
-                                    variant="body2"
-                                    sx={{
-                                        color:
-                                            q.pointsEarned === 1
-                                                ? COLORS.data.green
-                                                : q.pointsEarned === 0.5
-                                                  ? COLORS.data.amber
-                                                  : COLORS.data.red,
-                                        fontWeight:
-                                            q.pointsEarned > 0
-                                                ? 'bold'
-                                                : 'normal',
-                                        maxWidth: '150px',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                        textOverflow: 'ellipsis',
-                                        display: 'block',
-                                        fontSize: '0.75rem',
-                                    }}
-                                >
-                                    {(() => {
-                                        const answer = q.userAnswer?.trim();
-                                        if (!answer) return <SkippedBadge />;
-
-                                        let normalizedAnswer = answer;
-                                        if (selectedQuiz === 'cctld') {
-                                            if (settings.mode === 'toCode') {
-                                                normalizedAnswer = (
-                                                    normalizedAnswer.startsWith(
-                                                        '.'
-                                                    )
-                                                        ? normalizedAnswer
-                                                        : '.' + normalizedAnswer
-                                                ).toLowerCase();
-                                            } else {
-                                                normalizedAnswer =
-                                                    normalizedAnswer.toUpperCase();
-                                            }
-                                        } else if (
-                                            selectedQuiz === 'telephone'
-                                        ) {
-                                            if (settings.mode === 'toCode') {
-                                                normalizedAnswer =
-                                                    normalizedAnswer.startsWith(
-                                                        '+'
-                                                    )
-                                                        ? normalizedAnswer.toUpperCase()
-                                                        : '+' +
-                                                          normalizedAnswer.toUpperCase();
-                                            } else {
-                                                normalizedAnswer =
-                                                    normalizedAnswer.toUpperCase();
-                                            }
-                                        } else if (selectedQuiz === 'vehicle') {
-                                            normalizedAnswer =
-                                                normalizedAnswer.toUpperCase();
-                                        } else if (
-                                            selectedQuiz === 'driving_side'
-                                        ) {
-                                            normalizedAnswer =
-                                                normalizedAnswer.toUpperCase();
-                                        }
-
-                                        return (
-                                            <Typography
-                                                component="span"
-                                                variant="inherit"
-                                            >
-                                                {normalizedAnswer}
-                                                {q.pointsEarned === 0.5 &&
-                                                    ' (0.5 pts)'}
-                                            </Typography>
-                                        );
-                                    })()}
-                                </Typography>
-                                {q.pointsEarned === 1 ? (
-                                    <CheckCircleIcon
-                                        fontSize="small"
-                                        color="success"
-                                    />
-                                ) : q.pointsEarned === 0.5 ? (
-                                    <CheckCircleIcon
-                                        fontSize="small"
-                                        sx={{
-                                            color: COLORS.data.amber,
-                                        }}
-                                    />
-                                ) : (
-                                    q.userAnswer?.trim() && (
-                                        <CancelIcon
-                                            fontSize="small"
-                                            color="error"
-                                        />
-                                    )
-                                )}
-                            </Box>
-                        </Card>
+                            question={q}
+                            selectedQuiz={selectedQuiz}
+                            settings={settings}
+                            activeConfig={activeConfig}
+                        />
                     )}
                 />
             )}

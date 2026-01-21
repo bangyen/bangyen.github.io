@@ -1,144 +1,113 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import {
-    ThemeProvider,
-    createTheme,
-    grey,
-    blueGrey,
-} from '../../../../components/mui';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import Interpreters from '../Interpreters';
 
-// Create a test theme
-const testTheme = createTheme({
-    palette: {
-        primary: blueGrey,
-        secondary: grey,
-        mode: 'dark',
-    },
-    typography: {
-        fontFamily: 'monospace',
-    },
-});
-
-// Test wrapper component
-const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-    <BrowserRouter
-        future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-        }}
-    >
-        <ThemeProvider theme={testTheme}>{children}</ThemeProvider>
-    </BrowserRouter>
+// Mock child components
+jest.mock(
+    '../../Text/StunStep',
+    () =>
+        function MockStunStep({ navigation }: { navigation: React.ReactNode }) {
+            return (
+                <div data-testid="stun-step">
+                    StunStep Interpreter {navigation}
+                </div>
+            );
+        }
+);
+jest.mock(
+    '../../Text/Suffolk',
+    () =>
+        function MockSuffolk({ navigation }: { navigation: React.ReactNode }) {
+            return (
+                <div data-testid="suffolk">
+                    Suffolk Interpreter {navigation}
+                </div>
+            );
+        }
+);
+jest.mock(
+    '../../Grid/WII2D',
+    () =>
+        function MockWII2D({ navigation }: { navigation: React.ReactNode }) {
+            return (
+                <div data-testid="wii2d">WII2D Interpreter {navigation}</div>
+            );
+        }
+);
+jest.mock(
+    '../../Grid/Back',
+    () =>
+        function MockBack({ navigation }: { navigation: React.ReactNode }) {
+            return <div data-testid="back">Back Interpreter {navigation}</div>;
+        }
 );
 
-// Mock Material-UI icons
-jest.mock('@mui/icons-material', () => ({
-    GitHub: () => <div data-testid="github-icon">GitHub</div>,
-    Home: () => <div data-testid="home-icon">Home</div>,
-    GridView: () => <div data-testid="grid-icon">Grid</div>,
-    TextFields: () => <div data-testid="text-icon">Text</div>,
+// Mock navigation to test interaction
+jest.mock('../../components/InterpreterNavigation', () => ({
+    InterpreterNavigation: ({
+        active,
+        onChange,
+    }: {
+        active: string;
+        onChange: (v: string) => void;
+    }) => (
+        <select
+            data-testid="nav-select"
+            value={active}
+            onChange={e => onChange(e.target.value)}
+        >
+            <option value="stun-step">StunStep</option>
+            <option value="suffolk">Suffolk</option>
+            <option value="wii2d">WII2D</option>
+            <option value="back">Back</option>
+        </select>
+    ),
 }));
 
-// Mock the Interpreters component with a simple version for testing
-const MockInterpreters = () => {
-    React.useEffect(() => {
-        document.title = 'Interpreters - Bangyen Pham';
-    }, []);
+describe('Interpreters Page Integration', () => {
+    const renderWithRouter = (initialEntry = '/interpreters') => {
+        return render(
+            <MemoryRouter initialEntries={[initialEntry]}>
+                <Routes>
+                    <Route path="/interpreters" element={<Interpreters />} />
+                </Routes>
+            </MemoryRouter>
+        );
+    };
 
-    return (
-        <div>
-            <h1>Esolang Interpreters</h1>
-            <div data-testid="github-icon">GitHub</div>
-            <div data-testid="home-icon">Home</div>
-            <div>Stun Step</div>
-            <div>Suffolk</div>
-            <div>WII2D</div>
-            <div>Back</div>
-            <div data-testid="text-icon">Text</div>
-            <div data-testid="text-icon">Text</div>
-            <div data-testid="grid-icon">Grid</div>
-            <div data-testid="grid-icon">Grid</div>
-        </div>
-    );
-};
+    test('renders StunStep by default', () => {
+        renderWithRouter();
+        expect(screen.getByTestId('stun-step')).toBeInTheDocument();
+    });
 
-describe('Interpreters Component', () => {
-    /**
-     * Tests the Interpreters page component for proper rendering and functionality
-     * to ensure the esolang interpreters showcase displays correctly.
-     */
-    beforeEach(() => {
-        // Mock document.title
-        Object.defineProperty(document, 'title', {
-            writable: true,
-            value: '',
+    test('renders Suffolk based on URL param', () => {
+        renderWithRouter('/interpreters?type=suffolk');
+        expect(screen.getByTestId('suffolk')).toBeInTheDocument();
+    });
+
+    test('renders WII2D based on URL param', () => {
+        renderWithRouter('/interpreters?type=wii2d');
+        expect(screen.getByTestId('wii2d')).toBeInTheDocument();
+    });
+
+    test('renders Back based on URL param', () => {
+        renderWithRouter('/interpreters?type=back');
+        expect(screen.getByTestId('back')).toBeInTheDocument();
+    });
+
+    test('switches interpreter when navigation changes', () => {
+        renderWithRouter();
+
+        // Default
+        expect(screen.getByTestId('stun-step')).toBeInTheDocument();
+
+        // Switch to WII2D
+        fireEvent.change(screen.getByTestId('nav-select'), {
+            target: { value: 'wii2d' },
         });
-    });
 
-    test('renders main title and navigation', () => {
-        render(
-            <TestWrapper>
-                <MockInterpreters />
-            </TestWrapper>
-        );
-
-        // Check main title
-        expect(screen.getByText('Esolang Interpreters')).toBeInTheDocument();
-
-        // Check navigation buttons
-        expect(screen.getByTestId('github-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('home-icon')).toBeInTheDocument();
-    });
-
-    test('sets document title on mount', () => {
-        render(
-            <TestWrapper>
-                <MockInterpreters />
-            </TestWrapper>
-        );
-
-        expect(document.title).toBe('Interpreters - Bangyen Pham');
-    });
-
-    test('renders all interpreter cards', () => {
-        render(
-            <TestWrapper>
-                <MockInterpreters />
-            </TestWrapper>
-        );
-
-        // Check that all 4 interpreters are rendered
-        expect(screen.getByText('Stun Step')).toBeInTheDocument();
-        expect(screen.getByText('Suffolk')).toBeInTheDocument();
-        expect(screen.getByText('WII2D')).toBeInTheDocument();
-        expect(screen.getByText('Back')).toBeInTheDocument();
-    });
-
-    test('renders correct icons for each interpreter type', () => {
-        render(
-            <TestWrapper>
-                <MockInterpreters />
-            </TestWrapper>
-        );
-
-        // Check that text-based interpreters have text icons
-        const textIcons = screen.getAllByTestId('text-icon');
-        expect(textIcons).toHaveLength(2); // Stun Step and Suffolk
-
-        // Check that grid-based interpreters have grid icons
-        const gridIcons = screen.getAllByTestId('grid-icon');
-        expect(gridIcons).toHaveLength(2); // WII2D and Back
-    });
-
-    test('renders with proper accessibility attributes', () => {
-        render(
-            <TestWrapper>
-                <MockInterpreters />
-            </TestWrapper>
-        );
-
-        // Check that the component renders
-        expect(screen.getByText('Esolang Interpreters')).toBeInTheDocument();
+        expect(screen.getByTestId('wii2d')).toBeInTheDocument();
+        expect(screen.queryByTestId('stun-step')).not.toBeInTheDocument();
     });
 });

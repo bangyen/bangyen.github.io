@@ -22,12 +22,7 @@ const testTheme = createTheme({
 
 // Test wrapper component
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-    <BrowserRouter
-        future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-        }}
-    >
+    <BrowserRouter>
         <ThemeProvider theme={testTheme}>{children}</ThemeProvider>
     </BrowserRouter>
 );

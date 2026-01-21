@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderHook, act } from '@testing-library/react';
 import { useSwipe } from '../useSwipe';
 import { TouchEvent } from 'react';

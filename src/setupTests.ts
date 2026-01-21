@@ -35,16 +35,27 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 
 // Mock TextEncoder for Node.js environment
 global.TextEncoder = class TextEncoder {
+    encoding = 'utf-8';
     encode(str: string): Uint8Array {
         return new Uint8Array(str.split('').map(c => c.charCodeAt(0)));
     }
-} as any;
+    encodeInto(
+        source: string,
+        destination: Uint8Array
+    ): { read: number; written: number } {
+        const encoded = this.encode(source);
+        destination.set(encoded);
+        return { read: source.length, written: encoded.length };
+    }
+} as unknown as typeof TextEncoder;
 
 global.TextDecoder = class TextDecoder {
+    encoding = 'utf-8';
+    fatal = false;
+    ignoreBOM = false;
     decode(bytes: Uint8Array): string {
         return String.fromCharCode(...bytes);
     }
-} as any;
+} as unknown as typeof TextDecoder;
 
 // All warnings have been fixed at the root cause - no suppressions needed!
-

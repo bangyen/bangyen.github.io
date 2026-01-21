@@ -101,11 +101,12 @@ function getState(state: WII2DState): WII2DState {
         case '~':
             output += String.fromCharCode(register);
             break;
-        case '?':
+        case '?': {
             const rand = Math.random() * 4;
             const floor = Math.floor(rand);
             velocity = floor - 2 + (floor > 1 ? 1 : 0);
             break;
+        }
         case '.':
             position = null;
             end = true;
@@ -157,6 +158,8 @@ export default function Editor({
                 '>',
                 'v',
                 '|',
+                "'", // Added to keys
+                '"', // Added to keys
                 '@',
                 '+',
                 '-',

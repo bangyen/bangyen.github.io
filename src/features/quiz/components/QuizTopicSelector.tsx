@@ -1,33 +1,37 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { Select, MenuItem, FormControl } from '@mui/material';
-import { COLORS, SPACING, TYPOGRAPHY } from '../../../config/theme';
+import {
+    FormControl,
+    Select,
+    MenuItem,
+    SelectChangeEvent,
+} from '@mui/material';
+import { COLORS, SPACING } from '../../../config/theme';
+import { QuizType } from '../types/quiz';
 
-interface InterpreterNavigationProps {
-    active: string;
-    onChange: (newValue: string) => void;
+interface QuizTopicSelectorProps {
+    uniqueId: string;
+    selectedQuiz: QuizType;
+    onQuizChange: (event: SelectChangeEvent<unknown>) => void;
 }
 
-export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
-    active,
-    onChange,
+const QuizTopicSelector: React.FC<QuizTopicSelectorProps> = ({
+    uniqueId,
+    selectedQuiz,
+    onQuizChange,
 }) => {
-    const handleChange = (event: any) => {
-        onChange(event.target.value);
-    };
-
     return (
         <FormControl
             size="small"
             sx={{
-                minWidth: { xs: 140, sm: 160 },
+                width: 'auto',
+                minWidth: { xs: 180, sm: 200 },
+                flexShrink: 0,
                 '& .MuiOutlinedInput-root': {
                     backgroundColor: COLORS.surface.glass,
                     backdropFilter: 'blur(24px) saturate(180%)',
                     borderRadius: SPACING.borderRadius.full,
                     color: COLORS.text.primary,
-                    fontWeight: TYPOGRAPHY.fontWeight.medium,
-                    transition: 'all 0.2s ease',
+                    fontWeight: 'medium',
                     '& fieldset': {
                         border: `1px solid ${COLORS.border.subtle}`,
                     },
@@ -36,12 +40,12 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
                     },
                     '&.Mui-focused fieldset': {
                         borderColor: COLORS.primary.main,
-                        boxShadow: `0 0 0 2px ${COLORS.primary.main}22`,
                     },
                 },
                 '& .MuiSelect-select': {
                     py: 1,
                     px: { xs: 2, sm: 3 },
+                    textAlign: 'center',
                 },
                 '& .MuiSvgIcon-root': {
                     color: COLORS.text.secondary,
@@ -49,8 +53,9 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
             }}
         >
             <Select
-                value={active}
-                onChange={handleChange}
+                id={uniqueId}
+                value={selectedQuiz}
+                onChange={onQuizChange}
                 MenuProps={{
                     autoFocus: false,
                     BackdropProps: {
@@ -68,7 +73,6 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
                             mt: 1,
                             '& .MuiMenuItem-root': {
                                 color: COLORS.text.secondary,
-                                fontSize: '0.9rem',
                                 transition: 'all 0.2s ease',
                                 '&:hover': {
                                     backgroundColor: COLORS.interactive.hover,
@@ -79,21 +83,19 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
                                         COLORS.interactive.selected,
                                     color: COLORS.primary.main,
                                     fontWeight: 'bold',
-                                    '&:hover': {
-                                        backgroundColor:
-                                            COLORS.interactive.selected,
-                                    },
                                 },
                             },
                         },
                     },
                 }}
             >
-                <MenuItem value="stun-step">Stun Step</MenuItem>
-                <MenuItem value="suffolk">Suffolk</MenuItem>
-                <MenuItem value="wii2d">WII2D</MenuItem>
-                <MenuItem value="back">Back</MenuItem>
+                <MenuItem value="cctld">Domains</MenuItem>
+                <MenuItem value="driving_side">Driving Side</MenuItem>
+                <MenuItem value="telephone">Telephone Codes</MenuItem>
+                <MenuItem value="vehicle">Vehicle Registration</MenuItem>
             </Select>
         </FormControl>
     );
 };
+
+export default QuizTopicSelector;

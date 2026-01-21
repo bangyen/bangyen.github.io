@@ -1,4 +1,5 @@
 /* Respect user's motion preferences */
+/* stylelint-disable declaration-no-important */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -9,6 +10,7 @@
         scroll-behavior: auto !important;
     }
 }
+/* stylelint-enable declaration-no-important */
 
 /* Custom scrollbars */
 ::-webkit-scrollbar {

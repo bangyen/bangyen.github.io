@@ -46,41 +46,55 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const compressedData = await response.arrayBuffer();
-        const decompressedData = await new Response(
-            new ReadableStream({
-                start(controller) {
-                    const decompressionStream = new DecompressionStream('gzip');
-                    const writer = decompressionStream.writable.getWriter();
-                    const reader = decompressionStream.readable.getReader();
+        const buffer = await response.arrayBuffer();
+        const view = new Uint8Array(buffer);
 
-                    writer.write(compressedData).then(() => writer.close());
+        let realData: RealData;
 
-                    function pump(): Promise<void> {
-                        return reader
-                            .read()
-                            .then(
-                                ({
-                                    done,
-                                    value,
-                                }: {
-                                    done: boolean;
-                                    value: Uint8Array | undefined;
-                                }) => {
-                                    if (done) {
-                                        controller.close();
-                                        return;
+        // Check for GZIP magic number (0x1f 0x8b)
+        const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
+
+        if (isGzipped) {
+            const decompressedData = await new Response(
+                new ReadableStream({
+                    start(controller) {
+                        const decompressionStream = new DecompressionStream(
+                            'gzip'
+                        );
+                        const writer = decompressionStream.writable.getWriter();
+                        const reader = decompressionStream.readable.getReader();
+
+                        writer.write(buffer).then(() => writer.close());
+
+                        function pump(): Promise<void> {
+                            return reader
+                                .read()
+                                .then(
+                                    ({
+                                        done,
+                                        value,
+                                    }: {
+                                        done: boolean;
+                                        value: Uint8Array | undefined;
+                                    }) => {
+                                        if (done) {
+                                            controller.close();
+                                            return;
+                                        }
+                                        controller.enqueue(value);
+                                        return pump();
                                     }
-                                    controller.enqueue(value);
-                                    return pump();
-                                }
-                            );
-                    }
-                    return pump();
-                },
-            })
-        ).text();
-        const realData: RealData = JSON.parse(decompressedData);
+                                );
+                        }
+                        return pump();
+                    },
+                })
+            ).text();
+            realData = JSON.parse(decompressedData);
+        } else {
+            const text = new TextDecoder().decode(buffer);
+            realData = JSON.parse(text);
+        }
 
         const data: DataPoint[] = [];
         const sgdAccuracies = realData['SGD Baseline']?.train_accuracies || [];
@@ -104,7 +118,7 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
         }
 
         return data;
-    } catch (error) {
+    } catch (_error) {
         return generateFallbackData();
     }
 };
@@ -150,7 +164,7 @@ const ZSharp: React.FC = () => {
             try {
                 const data = await loadRealZSharpData();
                 setChartData(data);
-            } catch (error) {
+            } catch (_error) {
                 // Error loading data, use fallback
                 setChartData(generateFallbackData());
             } finally {

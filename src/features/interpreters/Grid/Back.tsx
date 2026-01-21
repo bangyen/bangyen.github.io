@@ -13,8 +13,8 @@ interface BackState extends GridState {
 }
 
 function getState(state: BackState): BackState {
-    let { velocity, position, pointer, tape, end } = state;
-    const { grid, rows, cols } = state;
+    let { velocity, position, pointer, tape } = state;
+    const { grid, rows, cols, end } = state;
 
     if (end || position == null) return state;
 
@@ -38,7 +38,7 @@ function getState(state: BackState): BackState {
         case '-':
             tape[pointer] ^= 1;
             break;
-        case '+':
+        case '+': {
             let next: string;
 
             if (!tape[pointer])
@@ -49,10 +49,7 @@ function getState(state: BackState): BackState {
                     else next = '';
                 } while (!'\\/<>-+*'.includes(next));
             break;
-        case '*':
-            position = null;
-            end = true;
-            break;
+        }
         default:
             break;
     }

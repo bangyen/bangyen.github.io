@@ -1,14 +1,12 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Backdrop,
     Typography,
     Box,
-    Grid,
     IconButton,
     Button,
 } from '../../../components/mui';
 import {
-    CircleRounded,
     KeyboardArrowDown,
     Calculate,
     Replay,
@@ -17,18 +15,14 @@ import {
     CloseRounded,
     Refresh,
 } from '../../../components/icons';
-import {
-    SPACING,
-    COLORS,
-    TYPOGRAPHY,
-    COMPONENT_VARIANTS,
-} from '../../../config/theme';
+import { COLORS } from '../../../config/theme';
 import { GlassCard } from '../../../components/ui/GlassCard';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { getProduct } from './matrices';
-import { useGetters } from '../components/Board';
 import { useMobile } from '../../../hooks';
 import Example from './Example';
+import { getInput, getOutput, useHandler, Palette } from './calculator';
+import { StepTitle, InstructionItem, INFO_TITLES } from './content';
 
 // Type assertion for GlassCard component
 const TypedGlassCard = GlassCard as React.ComponentType<{
@@ -36,11 +30,6 @@ const TypedGlassCard = GlassCard as React.ComponentType<{
     sx?: Record<string, unknown>;
     onClick?: (event: React.MouseEvent) => void;
 }>;
-
-interface Palette {
-    primary: string;
-    secondary: string;
-}
 
 interface InfoProps {
     rows: number;
@@ -50,123 +39,6 @@ interface InfoProps {
     palette: Palette;
     toggleOpen: () => void;
 }
-
-// --- Calculator Helpers ---
-
-interface Getters {
-    getColor: (row: number, col: number) => { front: string; back: string };
-    getBorder: (row: number, col: number) => Record<string, unknown>;
-}
-
-function getInput(
-    getters: Getters,
-    toggleTile: (col: number) => (event: React.MouseEvent) => void
-) {
-    const { getColor, getBorder } = getters;
-
-    return (r: number, c: number) => {
-        const { front, back } = getColor(r, c);
-
-        return {
-            backgroundColor: front,
-            style: getBorder(r, c),
-            onClick: toggleTile(c),
-            sx: {
-                '&:hover': {
-                    cursor: 'pointer',
-                    color: back,
-                },
-                transition: 'all 200ms ease',
-            },
-            color: front,
-            children: <CircleRounded />,
-        };
-    };
-}
-
-function getOutput({ getColor, getBorder }: Getters) {
-    return (r: number, c: number) => {
-        const { front } = getColor(r, c);
-
-        return {
-            backgroundColor: front,
-            style: getBorder(r, c),
-            transition: 'all 200ms ease',
-        };
-    };
-}
-
-function useHandler(row: number[], size: number, palette: Palette) {
-    const getTile = useCallback(
-        (r: number, c: number) => {
-            if (r !== 0 || c < 0 || c >= size) return -1;
-            return row[c];
-        },
-        [row, size]
-    );
-
-    return useGetters(getTile, palette);
-}
-
-// --- Content Steps ---
-
-const StepTitle = ({ children }: { children: React.ReactNode }) => (
-    <Typography
-        variant="h5"
-        sx={{
-            color: COLORS.text.primary,
-            fontWeight: TYPOGRAPHY.fontWeight.bold,
-            textAlign: 'left',
-            fontSize: TYPOGRAPHY.fontSize.h2,
-        }}
-    >
-        {children}
-    </Typography>
-);
-
-const InstructionItem = ({
-    Icon,
-    title,
-    text,
-}: {
-    Icon: React.ElementType;
-    title: string;
-    text: string;
-}) => (
-    <Box sx={{ px: 2 }}>
-        <Typography
-            variant="h6"
-            sx={{
-                color: COLORS.text.primary,
-                fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                display: 'flex',
-                alignItems: 'center',
-                mb: 1.5,
-                fontSize: TYPOGRAPHY.fontSize.subheading,
-            }}
-        >
-            <Icon
-                sx={{ mr: 2, color: COLORS.primary.main, fontSize: '1.75rem' }}
-            />
-            {title}
-        </Typography>
-        <Typography
-            variant="body1"
-            sx={{
-                color: COLORS.text.secondary,
-                lineHeight: 1.6,
-                fontSize: TYPOGRAPHY.fontSize.body,
-                ml: 6,
-            }}
-        >
-            {text}
-        </Typography>
-    </Box>
-);
-
-// --- Main Component ---
-
-const TITLES = ['Chasing Lights', 'How It Works', 'Calculator'];
 
 export default function Info(props: InfoProps): React.ReactElement {
     const { rows, cols, size, open, palette, toggleOpen } = props;
@@ -211,10 +83,8 @@ export default function Info(props: InfoProps): React.ReactElement {
         if (step > 0) setStep(step - 1);
     };
 
-    // Close handler to also reset step? Optional. Let's keep step for now.
     const handleClose = () => {
         toggleOpen();
-        // setTimeout(() => setStep(0), 300); // Reset step after transition? Maybe not.
     };
 
     return (
@@ -262,7 +132,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                             px: 2,
                         }}
                     >
-                        <StepTitle>{TITLES[step]}</StepTitle>
+                        <StepTitle>{INFO_TITLES[step]}</StepTitle>
                         <IconButton
                             onClick={handleClose}
                             size="small"

@@ -116,30 +116,45 @@ export function handleAction(state: GridState, action: GridAction) {
     let newState = {};
 
     switch (type) {
-        case 'edit':
+        case 'edit': {
             newState = handleKeys(
                 state,
                 (action as { type: 'edit'; payload: KeysPayload }).payload
             );
             break;
+        }
         case 'resize':
             newState = handleResize(
                 state,
                 (action as { type: 'resize'; payload: ResizePayload }).payload
             );
             break;
-        case 'click':
+        case 'click': {
             const { select } = (
                 action as { type: 'click'; payload: { select: number } }
             ).payload;
             newState = select === state.select ? { select: null } : { select };
             break;
-        default:
+        }
+        case 'delete': {
+            // Assuming 'tape' and 'pointer' are part of GridState via index signature or will be added.
+            // If not, this will cause a type error.
+            const { tape, pointer } = state as unknown as {
+                tape: number[];
+                pointer: number;
+            };
+            if (pointer > 0 && tape[pointer] === 0) {
+                (state as unknown as { pointer: number }).pointer--;
+            }
+            break;
+        }
+        default: {
             newState = handleToolbar(
                 state as unknown as ToolbarState,
                 action as ToolbarAction
             );
             break;
+        }
     }
 
     return {

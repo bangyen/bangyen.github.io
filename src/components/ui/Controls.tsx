@@ -48,7 +48,11 @@ export function TooltipButton({
 }: TooltipButtonProps) {
     return (
         <Tooltip title={title}>
-            <IconButton size={size as any} aria-label={title} {...rest}>
+            <IconButton
+                size={size as unknown as 'small'}
+                aria-label={title}
+                {...rest}
+            >
                 <Icon fontSize="inherit" aria-hidden="true" />
             </IconButton>
         </Tooltip>
@@ -172,7 +176,7 @@ interface ControlsProps {
 }
 
 export function Controls({
-    handler,
+    handler: _handler,
     onRandom,
     randomEnabled,
     onAutoPlay,

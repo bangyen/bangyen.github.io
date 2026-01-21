@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { handleToolbar } from '../Toolbar';
 
 describe('Toolbar', () => {
     beforeEach(() => {
         jest.clearAllMocks();
+        window.confirm = jest.fn(() => true);
     });
 
     describe('handleToolbar', () => {

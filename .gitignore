@@ -34,3 +34,6 @@ yarn-error.log*
 cctlds_wiki.html
 # Research Data Generation
 temp_research_repos/
+.dev-venv/
+*.tsbuildinfo
+__pycache__/
