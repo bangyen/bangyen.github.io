@@ -10,23 +10,24 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
+    "@types/pako": "^2.0.4",
     "depcheck": "^1.4.3",
     "gh-pages": "^6.3.0",
+    "pako": "^2.1.0",
     "prop-types": "^15.8.1",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-router": "^7.12.0",
     "react-router-dom": "^7.12.0",
-    "react-scripts": "^5.0.1",
     "recharts": "^3.2.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "vite",
     "predeploy": "npm run build",
     "deploy": "gh-pages -b gh-pages -d build",
-    "build": "react-scripts build",
-    "test": "react-scripts test --watchAll=false",
-    "test:watch": "react-scripts test",
+    "build": "vite build",
+    "test": "jest --watchAll=false",
+    "test:watch": "jest --watch",
     "test:new": "jest --config jest.config.js --maxWorkers=50%",
     "test:ci": "jest --config jest.config.js --ci --maxWorkers=2",
     "test:coverage": "jest --config jest.config.js --coverage",
@@ -77,7 +78,6 @@
   "overrides": {
     "nth-check": "^2.1.1",
     "postcss": "^8.4.31",
-    "webpack-dev-server": "^4.15.1",
     "@babel/core": "^7.22.0"
   },
   "devDependencies": {
@@ -93,16 +93,22 @@
     "@types/node": "^24.9.1",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
+    "@vitejs/plugin-react": "^5.1.2",
     "babel-jest": "^29.7.0",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "husky": "^9.1.7",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
     "lint-staged": "^16.1.6",
     "prettier": "^3.6.2",
     "stylelint": "^16.24.0",
     "stylelint-config-standard": "^39.0.0",
-    "typescript": "^5.9.3"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1",
+    "vite-tsconfig-paths": "^6.0.4"
   }
 }

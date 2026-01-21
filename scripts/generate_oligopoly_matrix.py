@@ -4,6 +4,7 @@ import multiprocessing
 import os
 import shutil
 import uuid
+import gzip
 from pathlib import Path
 import sys
 
@@ -94,10 +95,14 @@ def generate_matrix():
         results_matrix.extend(res)
 
     # Output to JSON
-    with open("oligopoly_matrix.json", "w") as f:
+    # Output to Gzipped JSON in public directory
+    output_path = Path("public/oligopoly_data.json.gz")
+    os.makedirs("public", exist_ok=True)
+    
+    with gzip.open(output_path, "wt", encoding="UTF-8") as f:
         json.dump(results_matrix, f)
 
-    print("Matrix generation complete. Saved to oligopoly_matrix.json")
+    print(f"Matrix generation complete. Saved to {output_path}")
 
 
 def run_simulation_batch(item):

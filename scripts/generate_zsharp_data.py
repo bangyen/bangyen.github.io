@@ -4,6 +4,7 @@ import os
 import sys
 import time
 import traceback
+import gzip
 from pathlib import Path
 
 import yaml
@@ -85,10 +86,14 @@ def run():
             traceback.print_exc()
 
     # Save to json
-    with open("zsharp_data.json", "w", encoding="utf-8") as f:
+    # Save to Gzipped JSON in public directory
+    output_path = Path("public/zsharp_data.json.gz")
+    os.makedirs("public", exist_ok=True)
+    
+    with gzip.open(output_path, "wt", encoding="UTF-8") as f:
         json.dump(results_data, f)
 
-    print("ZSharp generation complete. Saved to zsharp_data.json")
+    print(f"ZSharp generation complete. Saved to {output_path}")
 
 
 if __name__ == "__main__":
