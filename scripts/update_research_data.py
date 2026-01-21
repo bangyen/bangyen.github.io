@@ -22,15 +22,24 @@ def run_cmd(cmd, cwd=None, env=None):
     subprocess.check_call(cmd, shell=isinstance(cmd, str), cwd=cwd, env=env)
 
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Update research data.")
+    parser.add_argument("--clean", action="store_true", help="Clean temp directory and start fresh.")
+    args = parser.parse_args()
+
     # 1. Clean and Setup Temp Dir
-    if os.path.exists(TEMP_DIR):
+    if args.clean and os.path.exists(TEMP_DIR):
         print(f"Cleaning existing {TEMP_DIR}...")
         shutil.rmtree(TEMP_DIR)
-    os.makedirs(TEMP_DIR)
+    
+    os.makedirs(TEMP_DIR, exist_ok=True)
     
     # 2. Create Virtual Environment
-    print("Creating virtual environment...")
-    subprocess.check_call([sys.executable, "-m", "venv", VENV_DIR])
+    if not os.path.exists(VENV_DIR):
+        print("Creating virtual environment...")
+        subprocess.check_call([sys.executable, "-m", "venv", VENV_DIR])
+    else:
+        print("Using existing virtual environment...")
     
     # Determine paths for venv binaries
     if sys.platform == "win32":
@@ -40,16 +49,23 @@ def main():
         pip_cmd = os.path.join(VENV_DIR, "bin", "pip")
         python_cmd = os.path.join(VENV_DIR, "bin", "python")
 
-    # Upgrade pip
-    run_cmd([python_cmd, "-m", "pip", "install", "--upgrade", "pip"])
+    # Upgrade pip (skip if not clean? Safe to run always but faster to skip if cached)
+    # run_cmd([python_cmd, "-m", "pip", "install", "--upgrade", "pip"])
 
-    # 3. Clone Repos
+    # 3. Clone or Update Repos
     for name, url in REPOS.items():
-        print(f"Cloning {name}...")
-        run_cmd(f"git clone {url} {name}", cwd=TEMP_DIR)
+        repo_dir = os.path.join(TEMP_DIR, name)
+        if os.path.exists(repo_dir):
+            print(f"Updating {name}...")
+            # Reset hard to ensure clean state
+            run_cmd("git fetch origin", cwd=repo_dir)
+            run_cmd("git reset --hard origin/main", cwd=repo_dir)
+        else:
+            print(f"Cloning {name}...")
+            run_cmd(f"git clone {url} {name}", cwd=TEMP_DIR)
         
     # 4. Install Repos into Venv
-    # This automatically installs all dependencies defined in their pyproject.toml
+    # Only install if we think dependencies changed? Or just always install (pip is usually fast if satisfied)
     print("Installing ZSharp dependencies...")
     run_cmd([pip_cmd, "install", "."], cwd=os.path.join(TEMP_DIR, "zsharp"))
     
@@ -98,9 +114,13 @@ def main():
         else:
             print(f"Error: Output file {src} not found!")
             
-    # 9. Cleanup
-    print(f"Cleaning up {TEMP_DIR}...")
-    shutil.rmtree(TEMP_DIR)
+    # 9. Cleanup - SKIP cleanup to allow caching
+    if args.clean:
+         print(f"Cleaning up {TEMP_DIR}...")
+         shutil.rmtree(TEMP_DIR)
+    else:
+         print(f"Keeping {TEMP_DIR} for caching. Use --clean to remove.")
+         
     print("Done! Research data updated in public/.")
 
 if __name__ == "__main__":
