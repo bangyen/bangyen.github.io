@@ -222,7 +222,7 @@ const WikipediaQuizPage: React.FC = () => {
                             {/* Slot 1: Game Mode (Now First) */}
                             {activeConfig.hasModeSelect &&
                             activeConfig.modes ? (
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <FormControl fullWidth>
                                         <InputLabel>Game Mode</InputLabel>
                                         <Select
@@ -259,9 +259,7 @@ const WikipediaQuizPage: React.FC = () => {
                                 </Grid>
                             ) : (
                                 <Grid
-                                    item
-                                    xs={12}
-                                    md={6}
+                                    size={{ xs: 12, md: 6 }}
                                     sx={{
                                         display: { xs: 'none', md: 'block' },
                                     }}
@@ -272,7 +270,7 @@ const WikipediaQuizPage: React.FC = () => {
 
                             {/* Slot 2: Specialized Filters */}
                             {selectedQuiz === 'cctld' && (
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <FormControl fullWidth>
                                         <InputLabel>Language Filter</InputLabel>
                                         <Select
@@ -312,7 +310,7 @@ const WikipediaQuizPage: React.FC = () => {
                             )}
 
                             {selectedQuiz === 'telephone' && (
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <FormControl fullWidth>
                                         <InputLabel>Zone Filter</InputLabel>
                                         <Select
@@ -364,7 +362,7 @@ const WikipediaQuizPage: React.FC = () => {
                             )}
 
                             {selectedQuiz === 'vehicle' && (
-                                <Grid item xs={12} md={6}>
+                                <Grid size={{ xs: 12, md: 6 }}>
                                     <FormControl fullWidth>
                                         <InputLabel>
                                             Convention Filter
@@ -408,7 +406,7 @@ const WikipediaQuizPage: React.FC = () => {
 
                             {selectedQuiz === 'driving_side' &&
                                 (settings.mode === 'toCountry' ? (
-                                    <Grid item xs={12} md={6}>
+                                    <Grid size={{ xs: 12, md: 6 }}>
                                         <FormControl fullWidth>
                                             <InputLabel>Side Filter</InputLabel>
                                             <Select
@@ -446,7 +444,7 @@ const WikipediaQuizPage: React.FC = () => {
                                         </FormControl>
                                     </Grid>
                                 ) : (
-                                    <Grid item xs={12} md={6}>
+                                    <Grid size={{ xs: 12, md: 6 }}>
                                         <FormControl fullWidth>
                                             <InputLabel>
                                                 Switch Filter
@@ -489,7 +487,7 @@ const WikipediaQuizPage: React.FC = () => {
                                 ))}
 
                             {/* Slot 3: Letter Filter */}
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <TextField
                                     fullWidth
                                     label="Filter by Letter(s)"
@@ -527,7 +525,7 @@ const WikipediaQuizPage: React.FC = () => {
                             </Grid>
 
                             {/* Slot 4: Question Limit (Now Last) */}
-                            <Grid item xs={12} md={6}>
+                            <Grid size={{ xs: 12, md: 6 }}>
                                 <FormControl fullWidth>
                                     <InputLabel>Question Limit</InputLabel>
                                     <Select

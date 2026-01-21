@@ -31,12 +31,7 @@ export const TestWrapper: React.FC<TestWrapperProps> = ({
     children,
     theme = createTestTheme(),
 }) => (
-    <BrowserRouter
-        future={{
-            v7_startTransition: true,
-            v7_relativeSplatPath: true,
-        }}
-    >
+    <BrowserRouter>
         <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </BrowserRouter>
 );

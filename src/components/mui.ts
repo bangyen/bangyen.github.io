@@ -4,7 +4,7 @@
  */
 
 // Core Layout Components
-export { default as Grid } from '@mui/material/Grid2';
+export { Grid } from '@mui/material';
 export { Container, Box, Paper } from '@mui/material';
 
 // Typography Components
