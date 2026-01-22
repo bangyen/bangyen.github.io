@@ -109,8 +109,7 @@ const ResearchDemo = <T,>({
             />
 
             <Grid
-                item
-                xs={12}
+                size={{ xs: 12 }}
                 flex={1}
                 sx={{
                     ...COMPONENT_VARIANTS.flexCenter,
@@ -139,7 +138,7 @@ const ResearchDemo = <T,>({
                         justifyContent="space-between"
                         sx={{ marginBottom: 2 }}
                     >
-                        <Grid item xs="auto">
+                        <Grid size="auto">
                             <Typography
                                 variant="h1"
                                 sx={{
@@ -151,7 +150,7 @@ const ResearchDemo = <T,>({
                                 {title}
                             </Typography>
                         </Grid>
-                        <Grid item xs="auto" sx={{ display: 'flex', gap: 1 }}>
+                        <Grid size="auto" sx={{ display: 'flex', gap: 1 }}>
                             <IconButton
                                 href={githubUrl}
                                 target="_blank"

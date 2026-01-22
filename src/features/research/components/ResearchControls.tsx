@@ -30,7 +30,6 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
                 marginBottom: 0,
                 width: '100%',
                 boxSizing: 'border-box',
-                overflow: 'hidden',
                 paddingBottom: SPACING.padding.md,
             }}
         >
@@ -71,7 +70,7 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
 
             <Grid container spacing={2.5}>
                 {controls.map((control, index) => (
-                    <Grid key={control.label || index} item xs={12} md={4}>
+                    <Grid key={control.label || index} size={{ xs: 12, md: 4 }}>
                         <Box
                             sx={{
                                 marginBottom: 0,
