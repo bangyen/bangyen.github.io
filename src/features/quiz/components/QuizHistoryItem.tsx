@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Box, Typography } from '@mui/material';
 import { CheckCircleRounded as CheckCircleIcon } from '@mui/icons-material';
 import { COLORS } from '../../../config/theme';
-import { SkippedBadge } from '../../../components';
+import SkippedBadge from './SkippedBadge';
 import {
     Question,
     QuizItem,
