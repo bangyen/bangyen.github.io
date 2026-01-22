@@ -248,41 +248,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                     </Grid>
                 ))}
 
-            {/* Slot 3: Number of Questions */}
-            <Grid size={{ xs: 12, md: 6 }}>
-                <FormControl fullWidth>
-                    <InputLabel># Questions</InputLabel>
-                    <Select
-                        value={settings.maxQuestions || 'All'}
-                        label="# Questions"
-                        onChange={e =>
-                            onSettingsChange({
-                                ...settings,
-                                maxQuestions:
-                                    e.target.value === 'All'
-                                        ? 'All'
-                                        : (Number(e.target.value) as number),
-                            })
-                        }
-                        sx={{
-                            color: COLORS.text.primary,
-                            '.MuiOutlinedInput-notchedOutline': {
-                                borderColor: COLORS.border.subtle,
-                            },
-                        }}
-                        {...commonSelectProps}
-                    >
-                        {activeConfig.maxQuestionOptions.map((opt: number) => (
-                            <MenuItem key={opt} value={opt}>
-                                {opt}
-                            </MenuItem>
-                        ))}
-                        <MenuItem value="All">All</MenuItem>
-                    </Select>
-                </FormControl>
-            </Grid>
-
-            {/* Slot 4: Letter Filter */}
+            {/* Slot 3: Letter Filter */}
             <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                     fullWidth
@@ -316,6 +282,40 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                         },
                     }}
                 />
+            </Grid>
+
+            {/* Slot 4: Number of Questions */}
+            <Grid size={{ xs: 12, md: 6 }}>
+                <FormControl fullWidth>
+                    <InputLabel># Questions</InputLabel>
+                    <Select
+                        value={settings.maxQuestions || 'All'}
+                        label="# Questions"
+                        onChange={e =>
+                            onSettingsChange({
+                                ...settings,
+                                maxQuestions:
+                                    e.target.value === 'All'
+                                        ? 'All'
+                                        : (Number(e.target.value) as number),
+                            })
+                        }
+                        sx={{
+                            color: COLORS.text.primary,
+                            '.MuiOutlinedInput-notchedOutline': {
+                                borderColor: COLORS.border.subtle,
+                            },
+                        }}
+                        {...commonSelectProps}
+                    >
+                        {activeConfig.maxQuestionOptions.map((opt: number) => (
+                            <MenuItem key={opt} value={opt}>
+                                {opt}
+                            </MenuItem>
+                        ))}
+                        <MenuItem value="All">All</MenuItem>
+                    </Select>
+                </FormControl>
             </Grid>
         </>
     );
