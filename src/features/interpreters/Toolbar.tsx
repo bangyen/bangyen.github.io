@@ -238,7 +238,10 @@ export function handleToolbar(
             const confirm = window.confirm(
                 'Are you sure you want to reset the code?'
             );
-            if (confirm) clear();
+            if (confirm) {
+                newState = update('clear', true) as ToolbarState;
+                newState.pause = pauseStateMap.reset;
+            }
             break;
         }
         case 'prev': {
