@@ -357,13 +357,6 @@
         "switched": true
     },
     {
-        "country": "DR Congo",
-        "side": "Right",
-        "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Flag_of_the_Democratic_Republic_of_the_Congo.svg/320px-Flag_of_the_Democratic_Republic_of_the_Congo.svg.png",
-        "explanation": "Drives on the <b>Right</b>.",
-        "switched": false
-    },
-    {
         "country": "Denmark",
         "side": "Right",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Flag_of_Denmark.svg/320px-Flag_of_Denmark.svg.png",
@@ -388,6 +381,13 @@
         "country": "Dominican Republic",
         "side": "Right",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_the_Dominican_Republic.svg/320px-Flag_of_the_Dominican_Republic.svg.png",
+        "explanation": "Drives on the <b>Right</b>.",
+        "switched": false
+    },
+    {
+        "country": "DR Congo",
+        "side": "Right",
+        "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Flag_of_the_Democratic_Republic_of_the_Congo.svg/320px-Flag_of_the_Democratic_Republic_of_the_Congo.svg.png",
         "explanation": "Drives on the <b>Right</b>.",
         "switched": false
     },
@@ -672,7 +672,7 @@
         "switched": true
     },
     {
-        "country": "Ivory Coast(C\u00f4te d'Ivoire)",
+        "country": "Ivory Coast(Côte d'Ivoire)",
         "side": "Right",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_C%C3%B4te_d%27Ivoire.svg/320px-Flag_of_C%C3%B4te_d%27Ivoire.svg.png",
         "explanation": "Drives on the <b>Right</b>.",
@@ -1246,6 +1246,13 @@
         "switched": false
     },
     {
+        "country": "São Tomé and Príncipe",
+        "side": "Right",
+        "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_S%C3%A3o_Tom%C3%A9_and_Pr%C3%ADncipe.svg/320px-Flag_of_S%C3%A3o_Tom%C3%A9_and_Pr%C3%ADncipe.svg.png",
+        "explanation": "Drives on the <b>Right</b>. (Switched in 1928)",
+        "switched": true
+    },
+    {
         "country": "Saskatchewan",
         "side": "Right",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Flag_of_Saskatchewan.svg/320px-Flag_of_Saskatchewan.svg.png",
@@ -1391,13 +1398,6 @@
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/54/Flag_of_Syria_%282025-%29.svg/320px-Flag_of_Syria_%282025-%29.svg.png",
         "explanation": "Drives on the <b>Right</b>.",
         "switched": false
-    },
-    {
-        "country": "S\u00e3o Tom\u00e9 and Pr\u00edncipe",
-        "side": "Right",
-        "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_S%C3%A3o_Tom%C3%A9_and_Pr%C3%ADncipe.svg/320px-Flag_of_S%C3%A3o_Tom%C3%A9_and_Pr%C3%ADncipe.svg.png",
-        "explanation": "Drives on the <b>Right</b>. (Switched in 1928)",
-        "switched": true
     },
     {
         "country": "Taiwan",

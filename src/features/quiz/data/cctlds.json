@@ -3,7 +3,7 @@
         "code": ".ac",
         "country": "Ascension Island (United Kingdom)",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/Flag_of_Ascension_Island.svg/320px-Flag_of_Ascension_Island.svg.png",
-        "explanation": "<i><b>A</b>s<b>c</b>ension Island</i>\n",
+        "explanation": "<i><b>A</b>s<b>c</b>ension Island</i>",
         "notes": "In ISO 3166-1, Ascension Island falls under Saint Helena, Ascension and Tristan da Cunha's code SH. AC is an exceptionally reserved ISO 3166-1 code. Commonly used for academic websites, such as universities. However, .ac is not to be confused with the official academic domains used by several countries such as the United Kingdom (.ac.uk), India (.ac.in) or Indonesia (.ac.id). Also used in the accounting, consulting, and air-conditioning industries.",
         "language": "English"
     },
@@ -11,7 +11,7 @@
         "code": ".ad",
         "country": "Andorra",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Flag_of_Andorra.svg/320px-Flag_of_Andorra.svg.png",
-        "explanation": "<i><b>A</b>n<b>d</b>orra</i>\n",
+        "explanation": "<i><b>A</b>n<b>d</b>orra</i>",
         "notes": "",
         "language": "English"
     },
@@ -19,7 +19,7 @@
         "code": ".ae",
         "country": "United Arab Emirates",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Flag_of_the_United_Arab_Emirates.svg/320px-Flag_of_the_United_Arab_Emirates.svg.png",
-        "explanation": "<i>United <b>A</b>rab <b>E</b>mirates</i>\n",
+        "explanation": "<i>United <b>A</b>rab <b>E</b>mirates</i>",
         "notes": "",
         "language": "English"
     },
@@ -27,7 +27,7 @@
         "code": ".af",
         "country": "Afghanistan",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5c/Flag_of_the_Taliban.svg/320px-Flag_of_the_Taliban.svg.png",
-        "explanation": "<i><b>Af</b>ghanistan</i>\n",
+        "explanation": "<i><b>Af</b>ghanistan</i>",
         "notes": "",
         "language": "English"
     },
@@ -35,7 +35,7 @@
         "code": ".ag",
         "country": "Antigua and Barbuda",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Flag_of_Antigua_and_Barbuda.svg/320px-Flag_of_Antigua_and_Barbuda.svg.png",
-        "explanation": "<i><b>A</b>nti<b>g</b>ua and Barbuda</i>\n",
+        "explanation": "<i><b>A</b>nti<b>g</b>ua and Barbuda</i>",
         "notes": "Also unofficially used by German businesses (where AG is an abbreviation of Aktiengesellschaft).",
         "language": "English"
     },
@@ -51,7 +51,7 @@
         "code": ".al",
         "country": "Albania",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Flag_of_Albania.svg/320px-Flag_of_Albania.svg.png",
-        "explanation": "<i><b>Al</b>bania</i>\n",
+        "explanation": "<i><b>Al</b>bania</i>",
         "notes": "Citizenship no longer required.",
         "language": "English"
     },
@@ -67,7 +67,7 @@
         "code": ".ao",
         "country": "Angola",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Flag_of_Angola.svg/320px-Flag_of_Angola.svg.png",
-        "explanation": "<i><b>A</b>ng<b>o</b>la</i>\n",
+        "explanation": "<i><b>A</b>ng<b>o</b>la</i>",
         "notes": "",
         "language": "English"
     },
@@ -76,14 +76,14 @@
         "country": "Antarctica",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Blank_flag.svg/320px-Blank_flag.svg.png",
         "explanation": "<i><b>A</b>ntarcti<b>q</b>ue</i> (French)",
-        "notes": "Defined by the Antarctic Treaty as everything south of latitude 60\u00b0S. AQ domain names are available to government organizations who are signatories to the Antarctic Treaty and to other registrants who have a physical presence in Antarctica. Domain names can be registered and renewed free of charge.",
+        "notes": "Defined by the Antarctic Treaty as everything south of latitude 60°S. AQ domain names are available to government organizations who are signatories to the Antarctic Treaty and to other registrants who have a physical presence in Antarctica. Domain names can be registered and renewed free of charge.",
         "language": "French"
     },
     {
         "code": ".ar",
         "country": "Argentina",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Flag_of_Argentina.svg/320px-Flag_of_Argentina.svg.png",
-        "explanation": "<i><b>Ar</b>gentina</i>\n",
+        "explanation": "<i><b>Ar</b>gentina</i>",
         "notes": "",
         "language": "English"
     },
@@ -91,7 +91,7 @@
         "code": ".as",
         "country": "American Samoa (United States)",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Flag_of_American_Samoa.svg/320px-Flag_of_American_Samoa.svg.png",
-        "explanation": "<i><b>A</b>merican <b>S</b>amoa</i>\n",
+        "explanation": "<i><b>A</b>merican <b>S</b>amoa</i>",
         "notes": "In some countries, like Norway and Denmark, \"AS\" or \"A/S\" is used as an abbreviation for stock-based or limited companies. Such companies will often make use of the domain. Also unofficially used by the Principality of Asturias, Spain.",
         "language": "English"
     },
@@ -99,7 +99,7 @@
         "code": ".at",
         "country": "Austria",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Flag_of_Austria.svg/320px-Flag_of_Austria.svg.png",
-        "explanation": "<i><b>A</b>us<b>t</b>ria</i>\n",
+        "explanation": "<i><b>A</b>us<b>t</b>ria</i>",
         "notes": "",
         "language": "English"
     },
@@ -107,7 +107,7 @@
         "code": ".au",
         "country": "Australia",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Flag_of_Australia_%28converted%29.svg/320px-Flag_of_Australia_%28converted%29.svg.png",
-        "explanation": "<i><b>Au</b>stralia</i>\n",
+        "explanation": "<i><b>Au</b>stralia</i>",
         "notes": "Restrictions apply. In general, registrants must have an \"Australian presence\" and can be registered anywhere between one and five years. Includes Ashmore and Cartier Islands and Coral Sea Islands. Direct second-level domain registration (marketed as \".au Direct\") has been available since 24 March 2022.",
         "language": "English"
     },
@@ -121,7 +121,7 @@
     },
     {
         "code": ".ax",
-        "country": "\u00c5land (Finland)",
+        "country": "Åland (Finland)",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Flag_of_%C3%85land.svg/320px-Flag_of_%C3%85land.svg.png",
         "explanation": "<code class=\"mw-highlight mw-highlight-lang-text mw-content-ltr\" style=\"\" dir=\"ltr\">.al</code> <i>and</i> <code class=\"mw-highlight mw-highlight-lang-text mw-content-ltr\" style=\"\" dir=\"ltr\">.ad</code> <i>already allocated</i>",
         "notes": "",
@@ -180,7 +180,7 @@
         "country": "Bulgaria",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Bulgaria.svg/320px-Flag_of_Bulgaria.svg.png",
         "explanation": "<i><b>B</b>ul<b>g</b>aria</i>",
-        "notes": "See also .\u0431\u0433 (.bg in Cyrillic) for IDN ccTLD.",
+        "notes": "See also .бг (.bg in Cyrillic) for IDN ccTLD.",
         "language": "English"
     },
     {
@@ -233,7 +233,7 @@
     },
     {
         "code": ".bq",
-        "country": "Caribbean Netherlands (\u00a0Bonaire,  Saba, and \u00a0Sint Eustatius)",
+        "country": "Caribbean Netherlands ( Bonaire,  Saba, and  Sint Eustatius)",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Flag_of_the_Netherlands.svg/320px-Flag_of_the_Netherlands.svg.png",
         "explanation": "<code class=\"mw-highlight mw-highlight-lang-text mw-content-ltr\" style=\"\" dir=\"ltr\">.be</code> <i>and</i> <code class=\"mw-highlight mw-highlight-lang-text mw-content-ltr\" style=\"\" dir=\"ltr\">.bs</code> <i>already allocated</i>",
         "notes": "",
@@ -339,7 +339,7 @@
         "code": ".ci",
         "country": "Ivory Coast",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_C%C3%B4te_d%27Ivoire.svg/320px-Flag_of_C%C3%B4te_d%27Ivoire.svg.png",
-        "explanation": "<i><b>C</b>\u00f4te d'<b>I</b>voire</i> (French)\n",
+        "explanation": "<i><b>C</b>ôte d'<b>I</b>voire</i> (French)",
         "notes": "",
         "language": "French"
     },
@@ -387,7 +387,7 @@
         "code": ".cq",
         "country": "Sark (Channel Islands, Bailiwick of Guernsey)",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Flag_of_Sark_%28bordered%29.svg/320px-Flag_of_Sark_%28bordered%29.svg.png",
-        "explanation": "<code class=\"mw-highlight mw-highlight-lang-text mw-content-ltr\" style=\"\" dir=\"ltr\">.sa</code> <i>and</i> <code class=\"mw-highlight mw-highlight-lang-text mw-content-ltr\" style=\"\" dir=\"ltr\">.sk</code> <i>already allocated; Ser<b>cq</b> </i>(Norman French)\n",
+        "explanation": "<code class=\"mw-highlight mw-highlight-lang-text mw-content-ltr\" style=\"\" dir=\"ltr\">.sa</code> <i>and</i> <code class=\"mw-highlight mw-highlight-lang-text mw-content-ltr\" style=\"\" dir=\"ltr\">.sk</code> <i>already allocated; Ser<b>cq</b> </i>(Norman French)",
         "notes": "The ISO 3166-1 code element .cq has been exceptionally reserved to refer to Sark. Previously, Sark was represented by Guernsey's ccTLD .gg.",
         "language": "Norman French"
     },
@@ -417,9 +417,9 @@
     },
     {
         "code": ".cw",
-        "country": "Cura\u00e7ao (Kingdom of the Netherlands)",
+        "country": "Curaçao (Kingdom of the Netherlands)",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b1/Flag_of_Cura%C3%A7ao.svg/320px-Flag_of_Cura%C3%A7ao.svg.png",
-        "explanation": "<i><b>C</b>ura\u00e7ao, <b>W</b>est Indies</i>",
+        "explanation": "<i><b>C</b>uraçao, <b>W</b>est Indies</i>",
         "notes": "",
         "language": "English"
     },
@@ -523,7 +523,7 @@
         "code": ".eh",
         "country": "Western Sahara",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Flag_of_the_Sahrawi_Arab_Democratic_Republic.svg/320px-Flag_of_the_Sahrawi_Arab_Democratic_Republic.svg.png",
-        "explanation": "<i><b>E</b>spa\u00f1ol Sa<b>h</b>ara</i> and <a href=\"/wiki/Saguia_el-Hamra\" title=\"Saguia el-Hamra\"><i>Sagu\u00eda <b>e</b>l <b>H</b>amra</i></a> (Spanish)",
+        "explanation": "<i><b>E</b>spañol Sa<b>h</b>ara</i> and <a href=\"/wiki/Saguia_el-Hamra\" title=\"Saguia el-Hamra\"><i>Saguía <b>e</b>l <b>H</b>amra</i></a> (Spanish)",
         "notes": "Unassigned.",
         "language": "Spanish"
     },
@@ -539,7 +539,7 @@
         "code": ".es",
         "country": "Spain",
         "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/9/9a/Flag_of_Spain.svg/320px-Flag_of_Spain.svg.png",
-        "explanation": "<i><b>Es</b>pa\u00f1a</i> (Spanish)",
+        "explanation": "<i><b>Es</b>paña</i> (Spanish)",
         "notes": "",
         "language": "Spanish"
     },
@@ -595,7 +595,7 @@
         "code": ".fo",
         "country": "Faroe Islands (Kingdom of Denmark)",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Flag_of_the_Faroe_Islands.svg/320px-Flag_of_the_Faroe_Islands.svg.png",
-        "explanation": "<i><b>F\u00f8</b>royar</i> (Faroese)",
+        "explanation": "<i><b>Fø</b>royar</i> (Faroese)",
         "notes": "",
         "language": "Faroese"
     },
@@ -635,7 +635,7 @@
         "code": ".gf",
         "country": "French Guiana (France)",
         "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/Flag_of_France.svg/320px-Flag_of_France.svg.png",
-        "explanation": "<i><b>G</b>uyane <b>F</b>ran\u00e7aise</i> (French)",
+        "explanation": "<i><b>G</b>uyane <b>F</b>rançaise</i> (French)",
         "notes": "",
         "language": "French"
     },
@@ -691,15 +691,15 @@
         "code": ".gp",
         "country": "Guadeloupe (France)",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Unofficial_flag_of_Guadeloupe_%28local%29.svg/320px-Unofficial_flag_of_Guadeloupe_%28local%29.svg.png",
-        "explanation": "<i><b>G</b>uadelou<b>p</b>e</i>\n",
-        "notes": "Still used for Saint-Barth\u00e9lemy and Saint-Martin.",
+        "explanation": "<i><b>G</b>uadelou<b>p</b>e</i>",
+        "notes": "Still used for Saint-Barthélemy and Saint-Martin.",
         "language": "English"
     },
     {
         "code": ".gq",
         "country": "Equatorial Guinea",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Flag_of_Equatorial_Guinea.svg/320px-Flag_of_Equatorial_Guinea.svg.png",
-        "explanation": "<i><b>G</b>uin\u00e9e \u00e9<b>q</b>uatoriale</i> (French)",
+        "explanation": "<i><b>G</b>uinée é<b>q</b>uatoriale</i> (French)",
         "notes": "Was previously used as a free domain service to the public.",
         "language": "French"
     },
@@ -804,7 +804,7 @@
         "country": "Indonesia",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/Flag_of_Indonesia.svg/320px-Flag_of_Indonesia.svg.png",
         "explanation": "<i><b>I</b>n<b>d</b>onesia</i>",
-        "notes": "Restricted to Indonesian companies (co.id), organisations (or.id), academic (ac.id & sch.id) and citizens (biz.id, my.id & web.id). Second-level domains are becoming available now and opened to general registration on 17\u00a0August 2014.",
+        "notes": "Restricted to Indonesian companies (co.id), organisations (or.id), academic (ac.id & sch.id) and citizens (biz.id, my.id & web.id). Second-level domains are becoming available now and opened to general registration on 17 August 2014.",
         "language": "English"
     },
     {
@@ -836,7 +836,7 @@
         "country": "India",
         "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/4/41/Flag_of_India.svg/320px-Flag_of_India.svg.png",
         "explanation": "<i><b>In</b>dia</i>",
-        "notes": "Under INRegistry since April\u00a02005 (except for gov.in, nic.in, mil.in, ac.in, edu.in, and res.in).",
+        "notes": "Under INRegistry since April 2005 (except for gov.in, nic.in, mil.in, ac.in, edu.in, and res.in).",
         "language": "English"
     },
     {
@@ -867,7 +867,7 @@
         "code": ".is",
         "country": "Iceland",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Flag_of_Iceland.svg/320px-Flag_of_Iceland.svg.png",
-        "explanation": "<i><b>\u00cds</b>land</i> (Icelandic)",
+        "explanation": "<i><b>Ís</b>land</i> (Icelandic)",
         "notes": "Also unofficially used and marketed as a domain hack (for example it.is, that.is, etc.).",
         "language": "Icelandic"
     },
@@ -1028,7 +1028,7 @@
         "country": "Liechtenstein",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Flag_of_Liechtenstein.svg/320px-Flag_of_Liechtenstein.svg.png",
         "explanation": "<i><b>Li</b>echtenstein</i>",
-        "notes": "Also unofficially used by entities on Long Island, New York or people with the last name Li. In Russian, li can be used to create domain names that mean a verb with a past tense plural ending li\u00a0.",
+        "notes": "Also unofficially used by entities on Long Island, New York or people with the last name Li. In Russian, li can be used to create domain names that mean a verb with a past tense plural ending li .",
         "language": "English"
     },
     {
@@ -1276,7 +1276,7 @@
         "country": "New Caledonia (France)",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/Flags_of_New_Caledonia.svg/320px-Flags_of_New_Caledonia.svg.png",
         "explanation": "<i><b>N</b>ew <b>C</b>aledonia</i>",
-        "notes": "Restricted to companies that have a New Caledonian Business Registration Certificate or individuals living in New Caledonia for at least 6\u00a0months.",
+        "notes": "Restricted to companies that have a New Caledonian Business Registration Certificate or individuals living in New Caledonia for at least 6 months.",
         "language": "English"
     },
     {
@@ -1324,7 +1324,7 @@
         "country": "Norway",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Flag_of_Norway.svg/320px-Flag_of_Norway.svg.png",
         "explanation": "<i><b>No</b>rway</i>",
-        "notes": "Businesses and professionals must be registered as an approved type of organization in the Br\u00f8nn\u00f8ysund Register Centre. Individual applicants must be of age (18\u00a0years) and be registered in Folkeregisteret. All applicants must have a Norwegian postal address.",
+        "notes": "Businesses and professionals must be registered as an approved type of organization in the Brønnøysund Register Centre. Individual applicants must be of age (18 years) and be registered in Folkeregisteret. All applicants must have a Norwegian postal address.",
         "language": "English"
     },
     {
@@ -1387,7 +1387,7 @@
         "code": ".pf",
         "country": "French Polynesia (France)",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Flag_of_French_Polynesia.svg/320px-Flag_of_French_Polynesia.svg.png",
-        "explanation": "<i><b>P</b>olyn\u00e9sie <b>f</b>ran\u00e7aise</i> (French)",
+        "explanation": "<i><b>P</b>olynésie <b>f</b>rançaise</i> (French)",
         "notes": "With Clipperton Island.",
         "language": "French"
     },
@@ -1489,9 +1489,9 @@
     },
     {
         "code": ".re",
-        "country": "R\u00e9union (France)",
+        "country": "Réunion (France)",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Proposed_flag_of_R%C3%A9union_%28VAR%29.svg/320px-Proposed_flag_of_R%C3%A9union_%28VAR%29.svg.png",
-        "explanation": "<i><b>R\u00e9</b>union</i>",
+        "explanation": "<i><b>Ré</b>union</i>",
         "notes": "Restricted to individuals and companies in the European Union, Switzerland, Norway, Iceland, and Liechtenstein.",
         "language": "English"
     },
@@ -1508,7 +1508,7 @@
         "country": "Serbia",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Flag_of_Serbia.svg/320px-Flag_of_Serbia.svg.png",
         "explanation": "<i><b>R</b>epublic of <b>S</b>erbia</i>",
-        "notes": "See also .\u0441\u0440\u0431 (.srb in Cyrillic). Also unofficially used for Rust (programming language)-related domains.",
+        "notes": "See also .срб (.srb in Cyrillic). Also unofficially used for Rust (programming language)-related domains.",
         "language": "English"
     },
     {
@@ -1516,7 +1516,7 @@
         "country": "Russia",
         "flag": "https://upload.wikimedia.org/wikipedia/en/thumb/f/f3/Flag_of_Russia.svg/320px-Flag_of_Russia.svg.png",
         "explanation": "<i><b>Ru</b>ssia</i>",
-        "notes": "See also .su, still in use, and .\u0440\u0444, for IDN.",
+        "notes": "See also .su, still in use, and .рф, for IDN.",
         "language": "English"
     },
     {
@@ -1628,7 +1628,7 @@
         "country": "Somalia",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Flag_of_Somalia.svg/320px-Flag_of_Somalia.svg.png",
         "explanation": "<i><b>So</b>malia</i>",
-        "notes": "Relaunched on 1\u00a0November 2010.",
+        "notes": "Relaunched on 1 November 2010.",
         "language": "English"
     },
     {
@@ -1649,9 +1649,9 @@
     },
     {
         "code": ".st",
-        "country": "S\u00e3o Tom\u00e9 and Pr\u00edncipe",
+        "country": "São Tomé and Príncipe",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/Flag_of_S%C3%A3o_Tom%C3%A9_and_Pr%C3%ADncipe.svg/320px-Flag_of_S%C3%A3o_Tom%C3%A9_and_Pr%C3%ADncipe.svg.png",
-        "explanation": "<i><b>S</b>\u00e3o <b>T</b>om\u00e9</i>",
+        "explanation": "<i><b>S</b>ão <b>T</b>omé</i>",
         "notes": "Also unofficially used in South Tyrol (or province of Bozen, see .bz) and Styria.",
         "language": "English"
     },
@@ -1699,8 +1699,8 @@
         "code": ".tc",
         "country": "Turks and Caicos Islands (United Kingdom)",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Flag_of_the_Turks_and_Caicos_Islands.svg/320px-Flag_of_the_Turks_and_Caicos_Islands.svg.png",
-        "explanation": "<i><b>T</b>urks and <b>C</b>aicos</i>\n",
-        "notes": "Also marketed in Turkey. The official abbreviation of 'T\u00fcrkiye Cumhuriyeti' (Republic of Turkey) is TC.",
+        "explanation": "<i><b>T</b>urks and <b>C</b>aicos</i>",
+        "notes": "Also marketed in Turkey. The official abbreviation of 'Türkiye Cumhuriyeti' (Republic of Turkey) is TC.",
         "language": "English"
     },
     {
@@ -1715,7 +1715,7 @@
         "code": ".tf",
         "country": "French Southern and Antarctic Lands",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Flag_of_the_French_Southern_and_Antarctic_Lands.svg/320px-Flag_of_the_French_Southern_and_Antarctic_Lands.svg.png",
-        "explanation": "<i><b>T</b>erres australes et antarctiques <b>f</b>ran\u00e7aises</i> (French)",
+        "explanation": "<i><b>T</b>erres australes et antarctiques <b>f</b>rançaises</i> (French)",
         "notes": "Seldom used. Restricted to individuals and companies in the European Union, Switzerland, Norway, Iceland, and Liechtenstein.",
         "language": "French"
     },
@@ -1795,7 +1795,7 @@
         "code": ".tt",
         "country": "Trinidad and Tobago",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Flag_of_Trinidad_and_Tobago.svg/320px-Flag_of_Trinidad_and_Tobago.svg.png",
-        "explanation": "<i><b>T</b>rinidad and <b>T</b>obago</i>\n",
+        "explanation": "<i><b>T</b>rinidad and <b>T</b>obago</i>",
         "notes": "",
         "language": "English"
     },
@@ -1860,7 +1860,7 @@
         "country": "Uruguay",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Flag_of_Uruguay.svg/320px-Flag_of_Uruguay.svg.png",
         "explanation": "<i><b>U</b>rugua<b>y</b></i>",
-        "notes": "2LD rollout began on 10\u00a0July 2012.",
+        "notes": "2LD rollout began on 10 July 2012.",
         "language": "English"
     },
     {
@@ -1931,7 +1931,7 @@
         "code": ".wf",
         "country": "Wallis and Futuna",
         "flag": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Flag_of_Wallis_and_Futuna.svg/320px-Flag_of_Wallis_and_Futuna.svg.png",
-        "explanation": "<i><b>W</b>allis and <b>F</b>utuna</i>\n",
+        "explanation": "<i><b>W</b>allis and <b>F</b>utuna</i>",
         "notes": "Restricted to individuals and companies in the European Union, Switzerland, Norway, Iceland, and Liechtenstein.",
         "language": "English"
     },

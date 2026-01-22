@@ -24,10 +24,7 @@ jobs:
         run: npm ci
       - name: Run all linting checks
         run: npm run lint:all
-      - name: Run Python Linting
-        run: |
-          pip install requests pylint black
-          npm run lint:python || true
+
       - name: Run Type Checking
         run: npm run type-check
 
