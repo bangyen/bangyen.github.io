@@ -41,6 +41,16 @@ def main():
         action="store_true",
         help="Skip research data generation (ZSharp/Oligopoly).",
     )
+    parser.add_argument(
+        "--skip-zsharp",
+        action="store_true",
+        help="Skip ZSharp data generation.",
+    )
+    parser.add_argument(
+        "--skip-oligopoly",
+        action="store_true",
+        help="Skip Oligopoly data generation.",
+    )
     args = parser.parse_args()
 
     # 1. Clean and Setup Temp Dir
@@ -71,6 +81,10 @@ def main():
     # 3. Clone or Update Repos
     if not args.skip_research:
         for name, url in REPOS.items():
+            if name == "zsharp" and args.skip_zsharp:
+                continue
+            if name == "oligopoly" and args.skip_oligopoly:
+                continue
             repo_dir = os.path.join(TEMP_DIR, name)
             if os.path.exists(repo_dir):
                 print(f"Updating {name}...")
@@ -84,28 +98,32 @@ def main():
     # 4. Install Repos into Venv
     # Only install if we think dependencies changed? Or just always install (pip is usually fast if satisfied)
     if not args.skip_research:
-        print("Installing ZSharp dependencies...")
-        run_cmd([pip_cmd, "install", "."], cwd=os.path.join(TEMP_DIR, "zsharp"))
+        if not args.skip_zsharp:
+            print("Installing ZSharp dependencies...")
+            run_cmd([pip_cmd, "install", "."], cwd=os.path.join(TEMP_DIR, "zsharp"))
 
-        print("Installing Oligopoly dependencies...")
-        run_cmd([pip_cmd, "install", "."], cwd=os.path.join(TEMP_DIR, "oligopoly"))
+        if not args.skip_oligopoly:
+            print("Installing Oligopoly dependencies...")
+            run_cmd([pip_cmd, "install", "."], cwd=os.path.join(TEMP_DIR, "oligopoly"))
 
     print("Installing common dependencies (requests)...")
     run_cmd([pip_cmd, "install", "requests"], cwd=TEMP_DIR)
 
     # 5. Copy Helper Scripts
     if not args.skip_research:
-        shutil.copy(
-            os.path.join(SCRIPTS_DIR, "generate_zsharp_data.py"),
-            os.path.join(TEMP_DIR, "zsharp", "generate_data.py"),
-        )
-        shutil.copy(
-            os.path.join(SCRIPTS_DIR, "generate_oligopoly_matrix.py"),
-            os.path.join(TEMP_DIR, "oligopoly", "generate_matrix.py"),
-        )
+        if not args.skip_zsharp:
+            shutil.copy(
+                os.path.join(SCRIPTS_DIR, "generate_zsharp_data.py"),
+                os.path.join(TEMP_DIR, "zsharp", "generate_data.py"),
+            )
+        if not args.skip_oligopoly:
+            shutil.copy(
+                os.path.join(SCRIPTS_DIR, "generate_oligopoly_matrix.py"),
+                os.path.join(TEMP_DIR, "oligopoly", "generate_matrix.py"),
+            )
 
     # 6. Run ZSharp Generation
-    if not args.skip_research:
+    if not args.skip_research and not args.skip_zsharp:
         print("Generating ZSharp Data...")
         zsharp_cwd = os.path.join(TEMP_DIR, "zsharp")
         env = os.environ.copy()
@@ -115,7 +133,7 @@ def main():
         run_cmd([python_cmd, "generate_data.py"], cwd=zsharp_cwd, env=env)
 
     # 7. Run Oligopoly Generation
-    if not args.skip_research:
+    if not args.skip_research and not args.skip_oligopoly:
         print("Generating Oligopoly Data...")
         oligopoly_cwd = os.path.join(TEMP_DIR, "oligopoly")
         env = os.environ.copy()
@@ -136,16 +154,17 @@ def main():
         zsharp_cwd = os.path.join(TEMP_DIR, "zsharp")
         oligopoly_cwd = os.path.join(TEMP_DIR, "oligopoly")
 
-        output_files = [
-            (
+        output_files = []
+        if not args.skip_zsharp:
+            output_files.append((
                 os.path.join(zsharp_cwd, "zsharp_data.json"),
                 os.path.join(PUBLIC_DIR, "zsharp_data.json.gz"),
-            ),
-            (
+            ))
+        if not args.skip_oligopoly:
+            output_files.append((
                 os.path.join(oligopoly_cwd, "oligopoly_matrix.json"),
                 os.path.join(PUBLIC_DIR, "oligopoly_data.json.gz"),
-            ),
-        ]
+            ))
 
         for src, dst in output_files:
             if os.path.exists(src):
