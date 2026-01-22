@@ -28,50 +28,14 @@ def run_cmd(cmd, cwd=None, env=None):
     subprocess.check_call(cmd, shell=isinstance(cmd, str), cwd=cwd, env=env)
 
 
-def main():
-    """Main entry point."""
-
-    parser = argparse.ArgumentParser(description="Update research data.")
-    parser.add_argument(
-        "--clean", action="store_true", help="Clean temp directory and start fresh."
-    )
-    parser.add_argument(
-        "--quizzes",
-        action="store_true",
-        help="Also scrape quiz data (requires internet).",
-    )
-    parser.add_argument(
-        "--skip-research",
-        action="store_true",
-        help="Skip research data generation (ZSharp/Oligopoly).",
-    )
-    parser.add_argument(
-        "--skip-zsharp",
-        action="store_true",
-        help="Skip ZSharp data generation.",
-    )
-    parser.add_argument(
-        "--skip-oligopoly",
-        action="store_true",
-        help="Skip Oligopoly data generation.",
-    )
-    args = parser.parse_args()
-
-    # 1. Clean and Setup Temp Dir
-    if args.clean and os.path.exists(TEMP_DIR):
-        print(f"Cleaning existing {TEMP_DIR}...")
-        shutil.rmtree(TEMP_DIR)
-
-    os.makedirs(TEMP_DIR, exist_ok=True)
-
-    # 2. Create Virtual Environment
+def setup_venv():
+    """Creates and configures the virtual environment."""
     if not os.path.exists(VENV_DIR):
         print("Creating virtual environment...")
         subprocess.check_call([sys.executable, "-m", "venv", VENV_DIR])
     else:
         print("Using existing virtual environment...")
 
-    # Determine paths for venv binaries
     if sys.platform == "win32":
         pip_cmd = os.path.join(VENV_DIR, "Scripts", "pip")
         python_cmd = os.path.join(VENV_DIR, "Scripts", "python")
@@ -79,10 +43,11 @@ def main():
         pip_cmd = os.path.join(VENV_DIR, "bin", "pip")
         python_cmd = os.path.join(VENV_DIR, "bin", "python")
 
-    # Upgrade pip (skip if not clean? Safe to run always but faster to skip if cached)
-    # run_cmd([python_cmd, "-m", "pip", "install", "--upgrade", "pip"])
+    return pip_cmd, python_cmd
 
-    # 3. Clone or Update Repos
+
+def update_repos(args):
+    """Clones or updates repositories."""
     if not args.skip_research:
         for name, url in REPOS.items():
             if name == "zsharp" and args.skip_zsharp:
@@ -92,15 +57,15 @@ def main():
             repo_dir = os.path.join(TEMP_DIR, name)
             if os.path.exists(repo_dir):
                 print(f"Updating {name}...")
-                # Reset hard to ensure clean state
                 run_cmd("git fetch origin", cwd=repo_dir)
                 run_cmd("git reset --hard origin/main", cwd=repo_dir)
             else:
                 print(f"Cloning {name}...")
                 run_cmd(f"git clone {url} {name}", cwd=TEMP_DIR)
 
-    # 4. Install Repos into Venv
-    # Only install if we think dependencies changed? Or just always install (pip is usually fast if satisfied)
+
+def install_dependencies(args, pip_cmd):
+    """Installs dependencies for repositories."""
     if not args.skip_research:
         if not args.skip_zsharp:
             print("Installing ZSharp dependencies...")
@@ -113,73 +78,106 @@ def main():
     print("Installing common dependencies (requests)...")
     run_cmd([pip_cmd, "install", "requests"], cwd=TEMP_DIR)
 
-    # 5. Copy Helper Scripts
-    if not args.skip_research:
-        if not args.skip_zsharp:
-            shutil.copy(
-                os.path.join(SCRIPTS_DIR, "generate_zsharp_data.py"),
-                os.path.join(TEMP_DIR, "zsharp", "generate_data.py"),
-            )
-        if not args.skip_oligopoly:
-            shutil.copy(
-                os.path.join(SCRIPTS_DIR, "generate_oligopoly_matrix.py"),
-                os.path.join(TEMP_DIR, "oligopoly", "generate_matrix.py"),
-            )
 
-    # 6. Run ZSharp Generation
+def run_zsharp_generation(args, python_cmd):
+    """Runs ZSharp data generation."""
     if not args.skip_research and not args.skip_zsharp:
+        # Copy script
+        shutil.copy(
+            os.path.join(SCRIPTS_DIR, "generate_zsharp_data.py"),
+            os.path.join(TEMP_DIR, "zsharp", "generate_data.py"),
+        )
         print("Generating ZSharp Data...")
         zsharp_cwd = os.path.join(TEMP_DIR, "zsharp")
         env = os.environ.copy()
         env["PYTHONPATH"] = zsharp_cwd
-
-        # Use venv python
         run_cmd([python_cmd, "generate_data.py"], cwd=zsharp_cwd, env=env)
 
-    # 7. Run Oligopoly Generation
+
+def run_oligopoly_generation(args, python_cmd):
+    """Runs Oligopoly data generation."""
     if not args.skip_research and not args.skip_oligopoly:
+        # Copy Script
+        shutil.copy(
+            os.path.join(SCRIPTS_DIR, "generate_oligopoly_matrix.py"),
+            os.path.join(TEMP_DIR, "oligopoly", "generate_matrix.py"),
+        )
         print("Generating Oligopoly Data...")
         oligopoly_cwd = os.path.join(TEMP_DIR, "oligopoly")
         env = os.environ.copy()
         env["PYTHONPATH"] = oligopoly_cwd
-
         run_cmd([python_cmd, "generate_matrix.py"], cwd=oligopoly_cwd, env=env)
 
-    # 8. Run Quiz Scraper (if requested)
+
+def compress_output(args):
+    """Compresses and moves output files."""
+    if args.skip_research:
+        return
+
+    output_files = []
+    if not args.skip_zsharp:
+        zsharp_cwd = os.path.join(TEMP_DIR, "zsharp")
+        output_files.append((
+            os.path.join(zsharp_cwd, "zsharp_data.json"),
+            os.path.join(PUBLIC_DIR, "zsharp_data.json.gz"),
+        ))
+    if not args.skip_oligopoly:
+        oligopoly_cwd = os.path.join(TEMP_DIR, "oligopoly")
+        output_files.append((
+            os.path.join(oligopoly_cwd, "oligopoly_matrix.json"),
+            os.path.join(PUBLIC_DIR, "oligopoly_data.json.gz"),
+        ))
+
+    for src, dst in output_files:
+        if os.path.exists(src):
+            print(f"Compressing {src} -> {dst}")
+            with open(src, "rb") as f_in:
+                with gzip.open(dst, "wb") as f_out:
+                    shutil.copyfileobj(f_in, f_out)
+        else:
+            print(f"Error: Output file {src} not found!")
+
+
+def main():
+    """Main entry point."""
+    parser = argparse.ArgumentParser(description="Update research data.")
+    parser.add_argument("--clean", action="store_true", help="Clean temp directory.")
+    parser.add_argument("--quizzes", action="store_true", help="Scrape quiz data.")
+    parser.add_argument("--skip-research", action="store_true", help="Skip research data.")
+    parser.add_argument("--skip-zsharp", action="store_true", help="Skip ZSharp.")
+    parser.add_argument("--skip-oligopoly", action="store_true", help="Skip Oligopoly.")
+    args = parser.parse_args()
+
+    # 1. Clean and Setup Temp Dir
+    if args.clean and os.path.exists(TEMP_DIR):
+        print(f"Cleaning existing {TEMP_DIR}...")
+        shutil.rmtree(TEMP_DIR)
+    os.makedirs(TEMP_DIR, exist_ok=True)
+
+    # 2. Setup Venv
+    pip_cmd, python_cmd = setup_venv()
+
+    # 3. Clone/Update
+    update_repos(args)
+
+    # 4. Install Deps
+    install_dependencies(args, pip_cmd)
+
+    # 5. Run Generations
+    run_zsharp_generation(args, python_cmd)
+    run_oligopoly_generation(args, python_cmd)
+
+    # 6. Run Quiz Scraper
     if args.quizzes:
         print("Scraping Quizzes...")
-        # Ensure env is defined
         env = os.environ.copy()
         scrape_script = os.path.join(SCRIPTS_DIR, "scrape_quizzes.py")
         run_cmd([python_cmd, scrape_script], cwd=SCRIPTS_DIR, env=env)
 
-    # 9. Compress and Move
-    if not args.skip_research:
-        zsharp_cwd = os.path.join(TEMP_DIR, "zsharp")
-        oligopoly_cwd = os.path.join(TEMP_DIR, "oligopoly")
+    # 7. Compress
+    compress_output(args)
 
-        output_files = []
-        if not args.skip_zsharp:
-            output_files.append((
-                os.path.join(zsharp_cwd, "zsharp_data.json"),
-                os.path.join(PUBLIC_DIR, "zsharp_data.json.gz"),
-            ))
-        if not args.skip_oligopoly:
-            output_files.append((
-                os.path.join(oligopoly_cwd, "oligopoly_matrix.json"),
-                os.path.join(PUBLIC_DIR, "oligopoly_data.json.gz"),
-            ))
-
-        for src, dst in output_files:
-            if os.path.exists(src):
-                print(f"Compressing {src} -> {dst}")
-                with open(src, "rb") as f_in:
-                    with gzip.open(dst, "wb") as f_out:
-                        shutil.copyfileobj(f_in, f_out)
-            else:
-                print(f"Error: Output file {src} not found!")
-
-    # 10. Cleanup - SKIP cleanup to allow caching
+    # 8. Cleanup
     if args.clean:
         print(f"Cleaning up {TEMP_DIR}...")
         shutil.rmtree(TEMP_DIR)

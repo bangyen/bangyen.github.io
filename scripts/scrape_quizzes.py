@@ -15,6 +15,7 @@ os.makedirs(DATA_DIR, exist_ok=True)
 
 class TableParser(HTMLParser):
     """Parses HTML tables from a given string."""
+    # pylint: disable=too-many-instance-attributes
 
     def error(self, message):
         """Deprecated method required by some legacy parsers."""
@@ -37,10 +38,10 @@ class TableParser(HTMLParser):
         # Note: simplistic approach, might need refinement for complex nested tables.
         # But for wiki tables, usually we just need to handle the fact that some cells are skipped.
         # However, a robust implementation for rowspan/colspan is complex.
-        # Given the task, I'll start with a simpler approach: extract all cells and post-process if possible,
         # or just try to be robust about cell indices.
         # Edit: Wikipedia tables often use rowspan. I should try to handle it.
-        # But for now, let's just extract the raw grid and see if we can get by with basic parsing for these specific tables.
+        # But for now, let's just extract the raw grid and see if we can get by with basic parsing
+        # for these specific tables.
         # Most of these 'list' tables are flat.
 
     def handle_starttag(self, tag, attrs):
@@ -108,7 +109,11 @@ def extract_tables(url):
         response = requests.get(
             url,
             headers={
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36"
+                "User-Agent": (
+                    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) "
+                    "Chrome/91.0.4472.114 Safari/537.36"
+                )
             },
             timeout=30,
         )
@@ -116,7 +121,7 @@ def extract_tables(url):
         parser = TableParser()
         parser.feed(response.text)
         return parser.tables
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-exception-caught
         print(f"Error fetching {url}: {e}")
         return []
 
@@ -152,6 +157,7 @@ def clean_text(text):
 
 def generate_cctlds():
     """Generates CCTLD quiz data."""
+    # pylint: disable=too-many-locals
     url = "https://en.wikipedia.org/wiki/Country_code_top-level_domain"
     tables = extract_tables(url)
 
@@ -164,7 +170,7 @@ def generate_cctlds():
         # Check first row (headers)
         if not table:
             continue
-        headers = [c["text"].lower() for c in table[0]]
+        # headers = [c["text"].lower() for c in table[0]]
         if any(".ad" in r[0]["text"] for r in table[1:10]):  # Heuristic: contains .ad
             target_table = table
             break
@@ -201,10 +207,12 @@ def generate_cctlds():
         # cell 2: explanation/notes
         explanation = row[2]["html"]  # Keep HTML for explanation as per existing
         # Clean explanation HTML - remove links but keep text?
-        # The JS script: explanationCell.querySelectorAll('a').forEach(a => a.replaceWith(...a.childNodes));
+        # The JS script:
+        # explanationCell.querySelectorAll('a').forEach(a => a.replaceWith(...a.childNodes));
         # This is hard with regex.
         # But let's just keep the text mostly, or try to preserve basic formatting.
-        # Actually user wants "integrity", so maybe we should just use text if html is messy.
+        # Actually user wants "integrity", so maybe we should just use text if
+        # html is messy.
         # But the existing json has <i><b>...</b></i>.
         # Let's try to preserve it.
 
@@ -237,6 +245,7 @@ def generate_cctlds():
 
 def generate_driving_sides():
     """Generates Driving Side quiz data."""
+    # pylint: disable=too-many-locals, too-many-branches
     url = "https://en.wikipedia.org/wiki/Left-_and_right-hand_traffic"
     tables = extract_tables(url)
 
@@ -327,99 +336,74 @@ def generate_driving_sides():
     print(f"Generated {len(results)} Driving Sides.")
 
 
-def generate_telephone_codes():
-    """Generates Telephone Code quiz data."""
-    url = "https://en.wikipedia.org/wiki/List_of_country_calling_codes"
-    tables = extract_tables(url)
-
-    # Target table is usually the big one.
+def find_telephone_table(tables):
+    """Finds the telephone code table among extracted tables."""
     target_table = None
     for table in tables:
         if not table:
             continue
-        # Look for headers containing "Country", "Code"
         headers = [c["text"].lower() for c in table[0]]
-        # The table headers might be "Country, Territory or Service", "Code"
         if any(
             k in h for h in headers for k in ["country", "state", "serving"]
         ) and any("code" in h for h in headers):
-            # Ensure it's the large alphabetical table, not a small sub-table
             if len(table) > 100:
                 target_table = table
                 break
 
     if not target_table:
-        print(
-            "Could not find Telephone Codes table via headers. Searching by content..."
-        )
-        # Fallback: look for row with "Afghanistan" and "+93"
+        print("Could not find Telephone Codes table via headers. Searching by content...")
         for table in tables:
             for row in table:
                 texts = [c["text"] for c in row]
-                if any("Afghanistan" in t for t in texts) and any(
-                    "+93" in t for t in texts
-                ):
+                if any("Afghanistan" in t for t in texts) and any("+93" in t for t in texts):
                     target_table = table
                     break
             if target_table:
                 break
+    return target_table
 
-        if not target_table:
-            # Debug: print first row of all tables
-            for i, t in enumerate(tables):
-                if t:
-                    pass
+
+def process_telephone_row(row, col_country, col_code):
+    """Processes a single row of the telephone table."""
+    country = clean_text(row[col_country]["text"])
+    code_raw = clean_text(row[col_code]["text"])
+    flag = resolve_flag_url(row[col_country]["html"])
+
+    match = re.search(r"[\+\d][\d\s\-\(\),]*", code_raw)
+    if match:
+        code = match.group(0).strip()
+        if not code.startswith("+"):
+            code = "+" + code
+        return {"code": code, "country": country, "flag": flag}
+    return None
+
+
+def generate_telephone_codes():
+    """Generates Telephone Code quiz data."""
+    url = "https://en.wikipedia.org/wiki/List_of_country_calling_codes"
+    tables = extract_tables(url)
+    target_table = find_telephone_table(tables)
+
+    if not target_table:
         return
 
     results = []
-    # Identify column indices
-    col_country = -1
-    col_code = -1
+    col_country, col_code = 0, 1
 
-    # Prioritize 'serving' or 'country' over default
-    if target_table:
-        headers = [c["text"].lower() for c in target_table[0]]
-        for i, h in enumerate(headers):
-            if any(keyword in h for keyword in ["country", "state", "serving"]):
-                col_country = i
-            if "code" in h:
-                col_code = i
+    headers = [c["text"].lower() for c in target_table[0]]
+    for i, h in enumerate(headers):
+        if any(keyword in h for keyword in ["country", "state", "serving"]):
+            col_country = i
+        if "code" in h:
+            col_code = i
 
-    # default to 0 and 1 if not found but table was found by content
-    if col_country == -1:
-        col_country = 0
-    if col_code == -1:
-        col_code = 1
-
-    # print(f"Using columns: Country={col_country}, Code={col_code}")
-
-    for row in target_table[1:]:  # Skip header
+    for row in target_table[1:]:
         if len(row) <= max(col_country, col_code):
-            # print(f"Skipping row len {len(row)}")
             continue
 
-        country = clean_text(row[col_country]["text"])
-        code_raw = clean_text(row[col_code]["text"])
-        # print(f"Row: Country='{country}', Code='{code_raw}'")
-
-        flag = resolve_flag_url(row[col_country]["html"])
-
-        # Clean code
-        # Code might be "+93", "93", "1 (242)"
-        # Relaxed pattern to capture codes without leading +
-        match = re.search(r"[\+\d][\d\s\-\(\),]*", code_raw)
-        if match:
-            code = match.group(0).strip()
-            # Remove internal whitespace if it's just a number, but keep it if formatted like "+1 (242)"
-            # Actually, keeping it as scraped is usually better for specific formats,
-            # but standardizing to +XX... is good.
-            if not code.startswith("+"):
-                code = "+" + code
-        else:
-            # print(f"No match for code in '{code_raw}'")
-            continue
-
-        results.append({"code": code, "country": country, "flag": flag})
+        item = process_telephone_row(row, col_country, col_code)
+        if item:
+            results.append(item)
 
     results.sort(key=lambda x: x["country"])
 
@@ -430,6 +414,7 @@ def generate_telephone_codes():
 
 def generate_vehicle_codes():
     """Generates Vehicle Code quiz data."""
+    # pylint: disable=too-many-branches
     url = "https://en.wikipedia.org/wiki/International_vehicle_registration_code"
     tables = extract_tables(url)
 

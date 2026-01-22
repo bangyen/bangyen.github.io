@@ -2,12 +2,14 @@
 import json
 import os
 import sys
-import yaml
+import yaml  # pylint: disable=import-error
 
 # Add project root to path
 sys.path.insert(0, os.getcwd())
 
+# pylint: disable=wrong-import-position, import-error
 from src.train import train
+# pylint: enable=wrong-import-position, import-error
 
 
 def run():
@@ -51,7 +53,8 @@ def run():
                 continue
 
             # Extract full trace
-            # output typically contains: train_accuracies, test_accuracies, train_losses, test_losses
+            # output typically contains:
+            # train_accuracies, test_accuracies, train_losses, test_losses
             results_data[name] = {
                 "train_accuracies": output.get("train_accuracies", []),
                 "train_losses": output.get("train_losses", []),
@@ -72,7 +75,7 @@ def run():
                 f"Completed {name}: Final Acc {output.get('final_test_accuracy', 0):.2f}%"
             )
 
-        except Exception as e:
+        except Exception as e:  # pylint: disable=broad-exception-caught
             print(f"Error running {name}: {e}")
             # print stack trace? we don't have traceback imported
             # import traceback; traceback.print_exc()
