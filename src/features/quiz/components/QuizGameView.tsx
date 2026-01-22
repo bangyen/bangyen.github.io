@@ -225,6 +225,7 @@ const QuizGameView = <T,>({
                     </Box>
                     {gameState.hasInitialized && (
                         <LinearProgress
+                            aria-label="Quiz progress"
                             variant="determinate"
                             value={
                                 totalQuestions > 0
@@ -303,6 +304,7 @@ const QuizGameView = <T,>({
                     >
                         {!hideInput && (
                             <TextField
+                                inputProps={{ 'aria-label': 'Answer input' }}
                                 inputRef={inputRef}
                                 value={inputValue}
                                 onChange={e => setInputValue(e.target.value)}

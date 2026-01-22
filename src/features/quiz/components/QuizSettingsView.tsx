@@ -14,13 +14,13 @@ interface QuizSettingsProps<S extends QuizSettings> {
 }
 
 const QuizSettingsView = <S extends QuizSettings>({
-    settings,
-    onUpdate,
-    onStart,
-    questions,
+    settings: _settings,
+    onUpdate: _onUpdate,
+    onStart: _onStart,
+    questions: _questions,
     children,
     title = 'Game Settings',
-    maxQuestionOptions,
+    maxQuestionOptions: _maxQuestionOptions,
 }: QuizSettingsProps<S>) => {
     return (
         <Card
