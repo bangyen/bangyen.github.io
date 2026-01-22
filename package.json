@@ -31,6 +31,7 @@
     "test:new": "jest --config jest.config.js --maxWorkers=50%",
     "test:ci": "jest --config jest.config.js --ci --maxWorkers=2",
     "test:coverage": "jest --config jest.config.js --coverage",
+    "type-check": "tsc --noEmit",
     "lint": "eslint src/",
     "lint:fix": "eslint src/ --fix",
     "format": "prettier --write src/",

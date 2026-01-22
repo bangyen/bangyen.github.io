@@ -2,15 +2,7 @@
 import json
 import os
 import sys
-import time
-import traceback
-import gzip
-from pathlib import Path
-
 import yaml
-import time
-import traceback
-from pathlib import Path
 
 # Add project root to path
 sys.path.insert(0, os.getcwd())
@@ -19,6 +11,7 @@ from src.train import train
 
 
 def run():
+    """Main execution function."""
     print("Running ZSharp Data Generation...")
 
     # Define tasks
@@ -81,9 +74,8 @@ def run():
 
         except Exception as e:
             print(f"Error running {name}: {e}")
-            import traceback
-
-            traceback.print_exc()
+            # print stack trace? we don't have traceback imported
+            # import traceback; traceback.print_exc()
 
     # Save to json
     # Save to json

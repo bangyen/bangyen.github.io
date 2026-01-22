@@ -352,10 +352,7 @@ const ResearchDemo = <T,>({
                                                 currentChartConfig.tooltipLabelFormatter
                                             }
                                             formatter={
-                                                currentChartConfig.tooltipFormatter as (
-                                                    value: number,
-                                                    name: string
-                                                ) => [string, string]
+                                                currentChartConfig.tooltipFormatter as any
                                             }
                                         />
                                         {currentChartConfig.lines.map(

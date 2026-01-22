@@ -2,10 +2,7 @@
 import json
 import multiprocessing
 import os
-import shutil
 import uuid
-import gzip
-from pathlib import Path
 import sys
 
 # Add the project root to the Python path
@@ -17,11 +14,13 @@ from src.sim.models.metrics import calculate_hhi, calculate_market_shares_courno
 
 
 def calculate_hhi_for_round(firm_quantities):
+    """Calculates HHI for a given round based on firm quantities."""
     market_shares = calculate_market_shares_cournot(firm_quantities)
     return calculate_hhi(market_shares)
 
 
 def generate_matrix():
+    """Generates the oligopoly simulation matrix."""
     # Matrix Validation
     # Firms: 2, 3, 4, 5
     # Elasticity (b): 1.5, 2.0, 2.5
@@ -36,16 +35,16 @@ def generate_matrix():
     if os.path.exists(db_path):
         os.remove(db_path)
 
-    db = create_experiment_database(db_path)
+    create_experiment_database(db_path)
 
     results_matrix = []
 
-    total_runs = len(firms_options) * len(elasticity_options) * len(base_price_options)
+    # total_runs = len(firms_options) * len(elasticity_options) * len(base_price_options)
 
     # Generate all configs first
     configs = []
 
-    print(f"Generating simulation configurations...")
+    print("Generating simulation configurations...")
 
     model_options = ["cournot", "bertrand"]
     collusion_options = [True, False]
@@ -96,13 +95,14 @@ def generate_matrix():
 
     # Output to JSON
     # Output to JSON
-    with open("oligopoly_matrix.json", "w") as f:
+    with open("oligopoly_matrix.json", "w", encoding="utf-8") as f:
         json.dump(results_matrix, f)
 
     print("Matrix generation complete. Saved to oligopoly_matrix.json")
 
 
 def run_simulation_batch(item):
+    """Runs a batch of simulations for a given configuration."""
     # item is a dict with config details
     # We create a unique temporary DB for this run to avoid locking
     temp_id = str(uuid.uuid4())
@@ -170,7 +170,7 @@ def run_simulation_batch(item):
         if os.path.exists(db_path):
             try:
                 os.remove(db_path)
-            except:
+            except OSError:
                 pass
 
 

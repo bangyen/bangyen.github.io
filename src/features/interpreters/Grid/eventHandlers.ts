@@ -139,12 +139,12 @@ export function handleAction(state: GridState, action: GridAction) {
         case 'delete': {
             // Assuming 'tape' and 'pointer' are part of GridState via index signature or will be added.
             // If not, this will cause a type error.
-            const { tape, pointer } = state as {
+            const { tape, pointer } = state as unknown as {
                 tape: number[];
                 pointer: number;
             };
             if (pointer > 0 && tape[pointer] === 0) {
-                (state as { pointer: number }).pointer--;
+                (state as unknown as { pointer: number }).pointer--;
             }
             break;
         }

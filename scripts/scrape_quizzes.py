@@ -1,7 +1,9 @@
+"""
+Scrapes quiz data from Wikipedia for CCTLDs, Driving Sides, Telephone Codes, and Vehicle Codes.
+"""
 import json
 import os
 import re
-import sys
 from html.parser import HTMLParser
 import requests
 
@@ -16,7 +18,6 @@ class TableParser(HTMLParser):
 
     def error(self, message):
         """Deprecated method required by some legacy parsers."""
-        pass
 
     def __init__(self):
         super().__init__()
@@ -101,6 +102,7 @@ class TableParser(HTMLParser):
 
 
 def extract_tables(url):
+    """Fetches a URL and extracts all tables."""
     print(f"Fetching {url}...")
     try:
         response = requests.get(
@@ -108,6 +110,7 @@ def extract_tables(url):
             headers={
                 "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36"
             },
+            timeout=30,
         )
         response.raise_for_status()
         parser = TableParser()
@@ -119,6 +122,7 @@ def extract_tables(url):
 
 
 def resolve_flag_url(cell_html):
+    """Extracts and upgrades resolution of flag URLs from cell HTML."""
     # Extract src from <img src="...">
     match = re.search(r'src="([^"]+)"', cell_html)
     if match:
@@ -137,6 +141,7 @@ def resolve_flag_url(cell_html):
 
 
 def clean_text(text):
+    """Cleans Wiki text by removing citations."""
     # Remove citations [1], [a], etc.
     text = re.sub(r"\[.*?\]", "", text)
     return text.strip()
@@ -146,6 +151,7 @@ def clean_text(text):
 
 
 def generate_cctlds():
+    """Generates CCTLD quiz data."""
     url = "https://en.wikipedia.org/wiki/Country_code_top-level_domain"
     tables = extract_tables(url)
 
@@ -230,6 +236,7 @@ def generate_cctlds():
 
 
 def generate_driving_sides():
+    """Generates Driving Side quiz data."""
     url = "https://en.wikipedia.org/wiki/Left-_and_right-hand_traffic"
     tables = extract_tables(url)
 
@@ -321,6 +328,7 @@ def generate_driving_sides():
 
 
 def generate_telephone_codes():
+    """Generates Telephone Code quiz data."""
     url = "https://en.wikipedia.org/wiki/List_of_country_calling_codes"
     tables = extract_tables(url)
 
@@ -421,6 +429,7 @@ def generate_telephone_codes():
 
 
 def generate_vehicle_codes():
+    """Generates Vehicle Code quiz data."""
     url = "https://en.wikipedia.org/wiki/International_vehicle_registration_code"
     tables = extract_tables(url)
 

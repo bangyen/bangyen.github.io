@@ -1,9 +1,12 @@
+"""
+Script to update research data by cloning repositories, generating data, and processing it.
+"""
 import os
 import shutil
 import subprocess
 import gzip
 import sys
-from pathlib import Path
+import argparse
 
 # Constants
 TEMP_DIR = os.path.abspath("temp_research_repos")
@@ -18,6 +21,7 @@ REPOS = {
 
 
 def run_cmd(cmd, cwd=None, env=None):
+    """Executes a shell command."""
     print(
         f"Running: {' '.join(cmd) if isinstance(cmd, list) else cmd} in {cwd or os.getcwd()}"
     )
@@ -25,7 +29,7 @@ def run_cmd(cmd, cwd=None, env=None):
 
 
 def main():
-    import argparse
+    """Main entry point."""
 
     parser = argparse.ArgumentParser(description="Update research data.")
     parser.add_argument(
