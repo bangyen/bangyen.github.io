@@ -1,8 +1,7 @@
-import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import WikipediaQuizPage from '../pages/WikipediaQuizPage';
-import { QuizSettings, QuizType, Question, QuizItem } from '../types/quiz';
+import { Question, QuizItem } from '../types/quiz';
 
 // Mock child components to isolate Page logic
 jest.mock('../components/QuizGame', () => {
@@ -10,7 +9,7 @@ jest.mock('../components/QuizGame', () => {
         onEndGame,
         onBackToMenu,
     }: {
-        onEndGame: (history: any[], score: number) => void;
+        onEndGame: (history: Question<QuizItem>[], score: number) => void;
         onBackToMenu: () => void;
     }) {
         return (
