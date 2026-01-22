@@ -77,6 +77,8 @@ npm start
 - `npm run lint:all` - Run all linting (ESLint, Prettier, Stylelint)
 - `npm run format` - Format code with Prettier
 - `npm run deploy` - Deploy to GitHub Pages
+- `npm run scrape:quizzes` - Scrape quiz data from Wikipedia
+- `npm run data:update` - Update research data (requires repo cloning)
 
 ## Project Structure
 
