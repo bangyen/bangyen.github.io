@@ -39,7 +39,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
         <>
             {/* Slot 1: Game Mode */}
             {activeConfig.hasModeSelect && activeConfig.modes ? (
-                <Grid size={{ xs: 12, md: 3 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <FormControl fullWidth>
                         <InputLabel>Game Mode</InputLabel>
                         <Select
@@ -69,7 +69,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                 </Grid>
             ) : (
                 <Grid
-                    size={{ xs: 12, md: 3 }}
+                    size={{ xs: 12, md: 6 }}
                     sx={{ display: { xs: 'none', md: 'block' } }}
                 >
                     <Box sx={{ height: 56 }} />
@@ -78,7 +78,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
 
             {/* Slot 2: Specialized Filters */}
             {selectedQuiz === 'cctld' && (
-                <Grid size={{ xs: 12, md: 3 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <FormControl fullWidth>
                         <InputLabel>Language Filter</InputLabel>
                         <Select
@@ -109,7 +109,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
             )}
 
             {selectedQuiz === 'telephone' && (
-                <Grid size={{ xs: 12, md: 3 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <FormControl fullWidth>
                         <InputLabel>Zone Filter</InputLabel>
                         <Select
@@ -157,7 +157,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
             )}
 
             {selectedQuiz === 'vehicle' && (
-                <Grid size={{ xs: 12, md: 3 }}>
+                <Grid size={{ xs: 12, md: 6 }}>
                     <FormControl fullWidth>
                         <InputLabel>Convention Filter</InputLabel>
                         <Select
@@ -189,7 +189,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
 
             {selectedQuiz === 'driving_side' &&
                 (settings.mode === 'toCountry' ? (
-                    <Grid size={{ xs: 12, md: 3 }}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <FormControl fullWidth>
                             <InputLabel>Side Filter</InputLabel>
                             <Select
@@ -218,7 +218,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                         </FormControl>
                     </Grid>
                 ) : (
-                    <Grid size={{ xs: 12, md: 3 }}>
+                    <Grid size={{ xs: 12, md: 6 }}>
                         <FormControl fullWidth>
                             <InputLabel>Switch Filter</InputLabel>
                             <Select
@@ -249,7 +249,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                 ))}
 
             {/* Slot 3: Number of Questions */}
-            <Grid size={{ xs: 12, md: 3 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
                 <FormControl fullWidth>
                     <InputLabel># Questions</InputLabel>
                     <Select
@@ -283,7 +283,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
             </Grid>
 
             {/* Slot 4: Letter Filter */}
-            <Grid size={{ xs: 12, md: 3 }}>
+            <Grid size={{ xs: 12, md: 6 }}>
                 <TextField
                     fullWidth
                     label="Filter by Letter(s)"
