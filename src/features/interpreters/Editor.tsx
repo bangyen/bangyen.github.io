@@ -109,7 +109,8 @@ export default function Editor({
                     alignItems="center"
                     gap={1}
                     size="auto"
-                    justifyContent="flex-end"
+                    justifyContent={{ xs: 'center', md: 'flex-end' }}
+                    sx={{ paddingRight: 1 }}
                 >
                     <Toolbar />
                     {navigation && (
