@@ -33,7 +33,7 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
                     xs: LAYOUT.headerHeight.xs,
                     md: LAYOUT.headerHeight.md,
                 },
-                paddingX: { xs: 1, md: 3 },
+                paddingX: { xs: 2, md: 4 },
                 paddingY: { xs: 1, md: 1.5 },
                 zIndex: 1000,
                 display: 'flex',
