@@ -87,10 +87,14 @@ export default function Editor({
             <Grid
                 container
                 alignItems="center"
-                justifyContent="space-between"
+                justifyContent={{ xs: 'center', md: 'space-between' }}
                 sx={{ mb: { xs: 2, md: 0 } }}
             >
-                <Grid size="grow" display="flex" alignItems="center">
+                <Grid
+                    size="grow"
+                    display={{ xs: 'none', md: 'flex' }}
+                    alignItems="center"
+                >
                     <Typography
                         variant="h4"
                         sx={{
@@ -98,7 +102,6 @@ export default function Editor({
                             fontWeight: TYPOGRAPHY.fontWeight.semibold,
                             paddingLeft: 2,
                             flexShrink: 0,
-                            display: { xs: 'none', md: 'block' },
                         }}
                     >
                         Interpreters
