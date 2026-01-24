@@ -74,7 +74,7 @@ export default function Editor({
             }}
             display="flex"
             flexDirection="column"
-            padding={{ xs: '1rem', md: '2rem' }}
+            padding={{ xs: 2, md: 4 }}
             sx={{
                 background: COLORS.surface.background,
                 position: 'relative',
