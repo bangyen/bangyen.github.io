@@ -98,6 +98,7 @@ export default function Editor({
                             fontWeight: TYPOGRAPHY.fontWeight.semibold,
                             paddingLeft: 2,
                             flexShrink: 0,
+                            display: { xs: 'none', md: 'block' },
                         }}
                     >
                         Interpreters
