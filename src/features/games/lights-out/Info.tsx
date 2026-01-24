@@ -93,8 +93,11 @@ export default function Info(props: InfoProps): React.ReactElement {
             onClick={toggleOpen} // Close on backdrop click
             sx={{
                 zIndex: 9999,
-                backgroundColor: 'rgba(0, 0, 0, 0.85)',
-                backdropFilter: 'blur(8px)',
+                backgroundColor: theme =>
+                    theme.palette.mode === 'dark'
+                        ? 'hsla(0, 0%, 3%, 0.85)'
+                        : 'hsla(0, 0%, 98%, 0.85)',
+                backdropFilter: 'blur(12px) saturate(180%)',
             }}
         >
             <TypedGlassCard
