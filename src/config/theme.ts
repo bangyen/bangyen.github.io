@@ -186,6 +186,7 @@ const DARK_COLORS = {
     interactiveDisabledText: 'hsla(0, 0%, 100%, 0.3)',
     selectionBackground: 'hsla(217, 91%, 60%, 0.2)',
     selectionText: 'hsl(0, 0%, 98%)',
+    textShadow: '0 0 20px rgba(0, 0, 0, 0.5)',
 };
 
 const LIGHT_COLORS = {
@@ -200,6 +201,7 @@ const LIGHT_COLORS = {
     interactiveDisabledText: 'hsla(0, 0%, 0%, 0.3)',
     selectionBackground: 'hsla(217, 91%, 60%, 0.25)',
     selectionText: 'hsl(0, 0%, 10%)',
+    textShadow: '0 0 20px rgba(255, 255, 255, 0.8)',
 };
 
 // Simplified Color System - Uses CSS variables for dynamic themes
@@ -305,7 +307,7 @@ export const SHADOWS: Shadows = {
     sm: '0 1px 4px rgba(0,0,0,0.2)',
     md: '0 4px 12px rgba(0,0,0,0.2)',
     lg: '0 8px 24px rgba(0,0,0,0.2)',
-    text: '0 0 20px rgba(0,0,0,0.5)',
+    text: 'var(--text-shadow)',
 };
 
 export const ANIMATIONS: Animations = {
@@ -426,6 +428,7 @@ export function createAppTheme(mode: 'light' | 'dark' = 'dark') {
                             palette.interactiveDisabledText,
                         '--selection-background': palette.selectionBackground,
                         '--selection-text': palette.selectionText,
+                        '--text-shadow': palette.textShadow,
                     },
                     body: {
                         transition:
