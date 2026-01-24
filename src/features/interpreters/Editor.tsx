@@ -67,6 +67,7 @@ export default function Editor({
     return (
         <Grid
             container
+            spacing={2}
             minHeight={{ xs: '50vh', md: 'auto' }}
             height={{
                 xs: 'auto',
@@ -74,7 +75,7 @@ export default function Editor({
             }}
             display="flex"
             flexDirection="column"
-            padding={{ xs: 2, md: 4 }}
+            padding={{ xs: '1rem', md: '2rem' }}
             sx={{
                 background: COLORS.surface.background,
                 position: 'relative',
@@ -87,7 +88,7 @@ export default function Editor({
                 container
                 alignItems="center"
                 justifyContent="space-between"
-                sx={{ mb: { xs: 3, md: 2 } }}
+                sx={{ mb: { xs: 2, md: 0 } }}
             >
                 <Grid {...titleProps} size={{ md: 'auto' }}>
                     <Typography

@@ -41,7 +41,8 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                 flexDirection="column"
                 alignItems="center"
                 sx={{
-                    py: 4,
+                    py: 4, // Reduced from 8 since we have a header now
+                    px: { xs: 2, sm: 4 },
                     width: '100%',
                 }}
             >
@@ -53,7 +54,6 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                         maxWidth: 800,
                         mx: 'auto',
                         marginBottom: 0,
-                        px: { xs: 2, md: 4 },
                     }}
                 >
                     <MuiGrid
@@ -128,6 +128,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                                     display: { xs: 'none', sm: 'flex' },
                                     flex: 1,
                                     justifyContent: 'center',
+                                    px: 4,
                                 }}
                             >
                                 {headerContent}
