@@ -104,17 +104,6 @@ export function Toolbar(): React.ReactElement[] {
             flag: notMobile,
             action: 'next',
         },
-        Info: {
-            icon: InfoRounded,
-            props: { href: link },
-        },
-        Home: {
-            icon: HomeRounded,
-            props: {
-                component: Link,
-                to: '/',
-            },
-        },
     };
 
     const buttons: React.ReactElement[] = [];
@@ -151,8 +140,8 @@ export function Toolbar(): React.ReactElement[] {
         );
     }
 
-    // Secondary Controls: Previous, Next, Info, Home
-    const secondaryKeys = ['Previous', 'Next', 'Info', 'Home'];
+    // Secondary Controls: Previous, Next
+    const secondaryKeys = ['Previous', 'Next'];
     secondaryKeys.forEach(key => {
         const { icon, flag, action, props } = buttonData[key];
 

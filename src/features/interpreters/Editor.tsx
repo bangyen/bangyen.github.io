@@ -2,7 +2,7 @@ import React, { useContext, ReactNode, RefObject } from 'react';
 import { Program, Output, Tape, Register } from './Display';
 import { Grid, Typography, Box } from '../../components/mui';
 import { Toolbar } from './Toolbar';
-import { COLORS, TYPOGRAPHY } from '../../config/theme';
+import { LAYOUT, COLORS, TYPOGRAPHY } from '../../config/theme';
 import { EditorContext } from './EditorContext';
 import { TextArea, TextAreaProps } from './components/TextArea';
 
@@ -68,14 +68,20 @@ export default function Editor({
         <Grid
             container
             spacing={2}
-            minHeight={{ xs: '50vh', md: '100vh' }}
-            height={{ xs: 'auto', md: '100vh' }}
+            minHeight={{ xs: '50vh', md: 'auto' }}
+            height={{
+                xs: 'auto',
+                md: `calc(100vh - ${LAYOUT.headerHeight.md}px)`,
+            }}
             display="flex"
             flexDirection="column"
-            padding={{ xs: '2.5vh 5vw', md: '5vh 5vw' }}
+            padding={{ xs: '1rem', md: '2rem' }}
             sx={{
                 background: COLORS.surface.background,
                 position: 'relative',
+                boxSizing: 'border-box',
+                width: '100% !important',
+                margin: '0 !important',
             }}
         >
             <Grid

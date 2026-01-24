@@ -261,6 +261,20 @@ export const TYPOGRAPHY: Typography = {
     },
 };
 
+interface Layout {
+    headerHeight: {
+        xs: number;
+        md: number;
+    };
+}
+
+export const LAYOUT: Layout = {
+    headerHeight: {
+        xs: 56,
+        md: 80,
+    },
+};
+
 export const SPACING: Spacing = {
     padding: {
         xs: '0.5rem',
