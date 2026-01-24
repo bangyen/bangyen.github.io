@@ -54,7 +54,6 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                         maxWidth: 800,
                         mx: 'auto',
                         marginBottom: 0,
-                        paddingX: { xs: 2, md: 4 },
                     }}
                 >
                     <MuiGrid

@@ -96,6 +96,7 @@ export default function Editor({
                         sx={{
                             fontSize: TYPOGRAPHY.fontSize.h2,
                             fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                            paddingLeft: 2,
                         }}
                     >
                         Interpreters

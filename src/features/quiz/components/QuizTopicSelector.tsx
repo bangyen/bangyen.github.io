@@ -26,6 +26,7 @@ const QuizTopicSelector: React.FC<QuizTopicSelectorProps> = ({
                 width: 'auto',
                 minWidth: { xs: 180, sm: 200 },
                 flexShrink: 0,
+                marginRight: -4,
                 '& .MuiOutlinedInput-root': {
                     backgroundColor: COLORS.surface.glass,
                     backdropFilter: 'blur(24px) saturate(180%)',
