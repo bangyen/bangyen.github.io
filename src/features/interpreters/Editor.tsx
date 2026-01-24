@@ -90,7 +90,7 @@ export default function Editor({
                 justifyContent="space-between"
                 sx={{ mb: { xs: 2, md: 0 } }}
             >
-                <Grid size="grow" display="flex" alignItems="center" gap={2}>
+                <Grid size="grow" display="flex" alignItems="center">
                     <Typography
                         variant="h4"
                         sx={{
@@ -103,9 +103,6 @@ export default function Editor({
                     >
                         Interpreters
                     </Typography>
-                    {navigation && (
-                        <Box sx={{ flexShrink: 0 }}>{navigation}</Box>
-                    )}
                 </Grid>
                 <Grid
                     display="flex"
@@ -115,6 +112,9 @@ export default function Editor({
                     justifyContent="flex-end"
                 >
                     <Toolbar />
+                    {navigation && (
+                        <Box sx={{ flexShrink: 0 }}>{navigation}</Box>
+                    )}
                 </Grid>
             </Grid>
             <Grid {...contentProps}>
