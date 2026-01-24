@@ -73,8 +73,8 @@ export default function Editor({
                 xs: 'auto',
                 md: `calc(100vh - ${LAYOUT.headerHeight.md}px)`,
             }}
-            display="flex"
-            flexDirection="column"
+            direction="column"
+            wrap="nowrap"
             padding={{ xs: '1rem', md: '2rem' }}
             sx={{
                 background: COLORS.surface.background,
@@ -82,6 +82,10 @@ export default function Editor({
                 boxSizing: 'border-box',
                 width: '100% !important',
                 margin: '0 !important',
+                display: 'flex',
+                flexDirection: 'column',
+                overflowY: 'auto',
+                height: '100%', // Ensure it takes available height and scrolls
             }}
         >
             <Grid
@@ -127,9 +131,9 @@ export default function Editor({
                     <TextArea {...sideProps} />
                 </Grid>
             </Grid>
-            <Box
+            <Grid
+                size={{ xs: 12 }}
                 sx={{
-                    width: '100%',
                     // Ensure space for up to 2 rows of fields to prevent layout shift
                     // when switching between interpreters with 1-2 vs 3-4 fields.
                     minHeight:
@@ -138,6 +142,7 @@ export default function Editor({
                         ).length > 0
                             ? { xs: 'auto', md: '210px' }
                             : 0,
+                    flexShrink: 0,
                 }}
             >
                 <Grid
@@ -219,7 +224,7 @@ export default function Editor({
                         return fields;
                     })()}
                 </Grid>
-            </Box>
+            </Grid>
         </Grid>
     );
 }
