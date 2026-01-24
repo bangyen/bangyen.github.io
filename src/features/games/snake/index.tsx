@@ -111,7 +111,9 @@ export default function Snake(): React.ReactElement {
             return {
                 backgroundColor: color,
                 boxShadow:
-                    color !== 'inherit' ? `0 0 1.25rem ${color}40` : 'none',
+                    color !== 'inherit'
+                        ? `0 0 1.25rem ${color.replace('hsl', 'hsla').replace(')', ', 0.25)')}`
+                        : 'none',
                 border:
                     color !== 'inherit' ? `0.0625rem solid ${color}` : 'none',
             };

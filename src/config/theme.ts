@@ -34,6 +34,8 @@ interface InteractiveColors {
     selected: string;
     disabled: string;
     disabledText: string;
+    selection: string;
+    selectionText: string;
 }
 
 interface DataColors {
@@ -182,6 +184,8 @@ const DARK_COLORS = {
     interactiveHover: 'hsla(0, 0%, 80%, 0.08)',
     interactiveDisabled: 'hsla(0, 0%, 100%, 0.05)',
     interactiveDisabledText: 'hsla(0, 0%, 100%, 0.3)',
+    selectionBackground: 'hsla(217, 91%, 60%, 0.2)',
+    selectionText: 'hsl(0, 0%, 98%)',
 };
 
 const LIGHT_COLORS = {
@@ -194,6 +198,8 @@ const LIGHT_COLORS = {
     interactiveHover: 'hsla(0, 0%, 10%, 0.08)',
     interactiveDisabled: 'hsla(0, 0%, 0%, 0.05)',
     interactiveDisabledText: 'hsla(0, 0%, 0%, 0.3)',
+    selectionBackground: 'hsla(217, 91%, 60%, 0.25)',
+    selectionText: 'hsl(0, 0%, 10%)',
 };
 
 // Simplified Color System - Uses CSS variables for dynamic themes
@@ -224,6 +230,8 @@ export const COLORS: Colors = {
         selected: `hsla(217, 91%, 60%, 0.1)`,
         disabled: 'var(--interactive-disabled)',
         disabledText: 'var(--interactive-disabled-text)',
+        selection: 'var(--selection-background)',
+        selectionText: 'var(--selection-text)',
     },
     data: {
         green: 'hsl(141, 64%, 49%)',
@@ -402,6 +410,8 @@ export function createAppTheme(mode: 'light' | 'dark' = 'dark') {
                         '--interactive-disabled': palette.interactiveDisabled,
                         '--interactive-disabled-text':
                             palette.interactiveDisabledText,
+                        '--selection-background': palette.selectionBackground,
+                        '--selection-text': palette.selectionText,
                     },
                     body: {
                         transition:
