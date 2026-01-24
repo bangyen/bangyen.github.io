@@ -9,31 +9,37 @@ import React, {
 import { Grid } from '../../../components/mui';
 
 import { convertPixels } from '../../interpreters/utils/gridUtils';
-import { useWindow, useTimer, useKeys } from '../../../hooks';
+import { useWindow, useTimer, useKeys, useMobile } from '../../../hooks';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { Controls, ArrowsButton } from '../../../components/ui/Controls';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
-import { COLORS, COMPONENT_VARIANTS } from '../../../config/theme';
+import { LAYOUT, COLORS, COMPONENT_VARIANTS } from '../../../config/theme';
 import { handleAction, handleResize, getRandom } from './logic';
+import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 
 export default function Snake(): React.ReactElement {
     const { create: createTimer } = useTimer(0);
     const { create: createKeys } = useKeys();
+    const mobile = useMobile('sm');
 
     const { height, width } = useWindow();
     const length = GAME_CONSTANTS.snake.initialLength;
-    const size = GAME_CONSTANTS.snake.segmentSize;
+    const size = mobile
+        ? GAME_CONSTANTS.gridSizes.mobile
+        : GAME_CONSTANTS.gridSizes.desktop;
 
     const [randomMovesEnabled, setRandomMovesEnabled] = useState(false);
     const randomMovesRef = useRef(false);
 
     const [showArrows, setShowArrows] = useState(false);
 
-    const { rows, cols } = useMemo(
-        () => convertPixels(size, height, width),
-        [size, height, width]
-    );
+    const { rows, cols } = useMemo(() => {
+        const headerOffset = mobile
+            ? LAYOUT.headerHeight.xs
+            : LAYOUT.headerHeight.md;
+        return convertPixels(size, height - headerOffset, width);
+    }, [size, height, width, mobile]);
 
     const initial = useMemo(
         () => ({
@@ -111,7 +117,9 @@ export default function Snake(): React.ReactElement {
             return {
                 backgroundColor: color,
                 boxShadow:
-                    color !== 'inherit' ? `0 0 1.25rem ${color}40` : 'none',
+                    color !== 'inherit'
+                        ? `0 0 1.25rem ${color.replace('hsl', 'hsla').replace(')', ', 0.25)')}`
+                        : 'none',
                 border:
                     color !== 'inherit' ? `0.0625rem solid ${color}` : 'none',
             };
@@ -175,6 +183,10 @@ export default function Snake(): React.ReactElement {
                 touchAction: 'none',
             }}
         >
+            <GlobalHeader
+                showHome={true}
+                infoUrl="https://en.wikipedia.org/wiki/Snake_(video_game_genre)"
+            />
             <Grid
                 flex={1}
                 onPointerDown={handleTap}

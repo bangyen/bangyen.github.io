@@ -189,7 +189,6 @@ export function Controls({
 
     return (
         <Navigation opacity={opacity}>
-            <HomeButton hide={hide} size={size} />
             {onRandom && (
                 <RandomButton
                     onClick={onRandom}

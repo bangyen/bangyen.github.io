@@ -1,12 +1,12 @@
 import React, { useMemo, useEffect, useReducer } from 'react';
-import { Grid } from '../../../components/mui';
+import { Grid, Box } from '../../../components/mui';
 import { InfoRounded, CircleRounded } from '../../../components/icons';
 
 import { Controls, TooltipButton } from '../../../components/ui/Controls';
 import { Board, useHandler, usePalette } from '../components/Board';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
-import { COLORS } from '../../../config/theme';
+import { LAYOUT, COLORS } from '../../../config/theme';
 import {
     getGrid,
     handleBoard,
@@ -16,6 +16,7 @@ import {
 import { useWindow, useMobile } from '../../../hooks';
 import { convertPixels } from '../../interpreters/utils/gridUtils';
 import Info from './Info';
+import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 
 interface Getters {
     getColor: (row: number, col: number) => { front: string; back: string };
@@ -79,10 +80,16 @@ export default function LightsOut(): React.ReactElement {
         ? GAME_CONSTANTS.gridSizes.mobile
         : GAME_CONSTANTS.gridSizes.desktop;
 
-    let { rows, cols } = useMemo(
-        () => convertPixels(size, height, Math.min(width, 1300)),
-        [size, height, width]
-    );
+    let { rows, cols } = useMemo(() => {
+        const headerOffset = mobile
+            ? LAYOUT.headerHeight.xs
+            : LAYOUT.headerHeight.md;
+        return convertPixels(
+            size,
+            height - headerOffset,
+            Math.min(width, 1300)
+        );
+    }, [size, height, width, mobile]);
 
     rows -= 1;
     cols -= 1;
@@ -168,18 +175,36 @@ export default function LightsOut(): React.ReactElement {
         <Grid
             container
             minHeight="100vh"
+            flexDirection="column"
             sx={{
                 background: COLORS.surface.background,
                 position: 'relative',
             }}
         >
-            <Board
-                size={size}
-                rows={rows}
-                cols={cols}
-                frontProps={frontProps}
-                backProps={backProps}
+            <GlobalHeader
+                showHome={true}
+                infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
             />
+            <Box
+                sx={{
+                    flex: 1,
+                    position: 'relative',
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    paddingTop: 6,
+                }}
+            >
+                <Board
+                    size={size}
+                    rows={rows}
+                    cols={cols}
+                    frontProps={frontProps}
+                    backProps={backProps}
+                />
+            </Box>
             <Controls
                 handler={() => () => undefined} // No directional controls for Lights Out
                 onAutoPlay={() => dispatch({ type: 'auto' })}

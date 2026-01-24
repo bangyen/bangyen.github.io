@@ -49,7 +49,6 @@ export interface ToolbarAction {
 export function Toolbar(): React.ReactElement[] {
     const editorContext = useContext(EditorContext);
     const notMobile = useMediaQuery('(min-width:650px)');
-    const showResetFF = useMediaQuery('(min-width:500px)');
 
     const link = editorContext
         ? 'https://esolangs.org/wiki/' + editorContext.name.replace(' ', '_')
@@ -104,17 +103,6 @@ export function Toolbar(): React.ReactElement[] {
             flag: notMobile,
             action: 'next',
         },
-        Info: {
-            icon: InfoRounded,
-            props: { href: link },
-        },
-        Home: {
-            icon: HomeRounded,
-            props: {
-                component: Link,
-                to: '/',
-            },
-        },
     };
 
     const buttons: React.ReactElement[] = [];
@@ -123,36 +111,34 @@ export function Toolbar(): React.ReactElement[] {
     // Primary Playback Controls: Run/Pause, Reset, Fast Forward
     buttons.push(TimerButton);
 
-    if (showResetFF) {
-        buttons.push(
-            <TooltipButton
-                key="Reset"
-                title="Reset"
-                Icon={FirstPageRounded}
-                onClick={dispatch('reset')}
-            />
-        );
-        buttons.push(
-            <TooltipButton
-                key="Fast Forward"
-                title="Fast Forward"
-                Icon={ffData.icon}
-                onClick={ffData.flag ? dispatch('ff') : undefined}
-                disabled={!ffData.flag}
-                sx={{
-                    opacity: ffData.flag ? 1 : 0.3,
-                    // Ensure visibility even when disabled
-                    '&.Mui-disabled': {
-                        color: 'inherit',
-                        opacity: 0.3,
-                    },
-                }}
-            />
-        );
-    }
+    buttons.push(
+        <TooltipButton
+            key="Reset"
+            title="Reset"
+            Icon={FirstPageRounded}
+            onClick={dispatch('reset')}
+        />
+    );
+    buttons.push(
+        <TooltipButton
+            key="Fast Forward"
+            title="Fast Forward"
+            Icon={ffData.icon}
+            onClick={ffData.flag ? dispatch('ff') : undefined}
+            disabled={!ffData.flag}
+            sx={{
+                opacity: ffData.flag ? 1 : 0.3,
+                // Ensure visibility even when disabled
+                '&.Mui-disabled': {
+                    color: 'inherit',
+                    opacity: 0.3,
+                },
+            }}
+        />
+    );
 
-    // Secondary Controls: Previous, Next, Info, Home
-    const secondaryKeys = ['Previous', 'Next', 'Info', 'Home'];
+    // Secondary Controls: Previous, Next
+    const secondaryKeys = ['Previous', 'Next'];
     secondaryKeys.forEach(key => {
         const { icon, flag, action, props } = buttonData[key];
 

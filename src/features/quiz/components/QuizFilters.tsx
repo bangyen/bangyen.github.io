@@ -273,6 +273,8 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                         input: { color: COLORS.text.primary },
                         label: { color: COLORS.text.secondary },
                         '& .MuiOutlinedInput-root': {
+                            backgroundColor: 'transparent',
+                            backdropFilter: 'none',
                             '& fieldset': {
                                 borderColor: COLORS.border.subtle,
                             },

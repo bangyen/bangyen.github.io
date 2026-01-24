@@ -2,11 +2,12 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import {
-    ThemeProvider,
+    ThemeProvider as MuiThemeProvider,
     createTheme,
     grey,
     blueGrey,
 } from '../../../../components/mui';
+import { ThemeProvider } from '../../../../hooks/useTheme';
 import Home from '../Home';
 
 // Create a test theme
@@ -24,12 +25,21 @@ const testTheme = createTheme({
 // Test wrapper component
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
     <BrowserRouter>
-        <ThemeProvider theme={testTheme}>{children}</ThemeProvider>
+        <ThemeProvider>
+            <MuiThemeProvider theme={testTheme}>{children}</MuiThemeProvider>
+        </ThemeProvider>
     </BrowserRouter>
 );
 
-// Mock Material-UI icons using the centralized mock
-jest.mock('@mui/icons-material');
+// Mock Material-UI icons
+jest.mock('@mui/icons-material', () => ({
+    ...jest.requireActual('@mui/icons-material'),
+    LightModeRounded: () => <div data-testid="light-mode-icon" />,
+    DarkModeRounded: () => <div data-testid="dark-mode-icon" />,
+    ViewModuleRounded: () => <div data-testid="view-module-icon" />,
+    GitHub: () => <div data-testid="github-icon" />,
+    LocationOn: () => <div data-testid="location-icon" />,
+}));
 
 // Mock the Pages module
 jest.mock('../../../../pages', () => ({
@@ -126,7 +136,9 @@ describe('Home Component', () => {
             </TestWrapper>
         );
 
-        const menuButton = screen.getByRole('button');
+        const menuButton = screen
+            .getByTestId('view-module-icon')
+            .closest('button')!;
 
         fireEvent.click(menuButton);
 
@@ -147,7 +159,9 @@ describe('Home Component', () => {
             </TestWrapper>
         );
 
-        const menuButton = screen.getByRole('button');
+        const menuButton = screen
+            .getByTestId('view-module-icon')
+            .closest('button')!;
 
         fireEvent.click(menuButton);
 
@@ -200,7 +214,9 @@ describe('Home Component', () => {
             </TestWrapper>
         );
 
-        const menuButton = screen.getByRole('button');
+        const menuButton = screen
+            .getByTestId('view-module-icon')
+            .closest('button')!;
         expect(menuButton).toHaveAttribute('aria-haspopup', 'true');
     });
 

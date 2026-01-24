@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
-import { Grid } from '../../../components/mui';
+import { Box } from '../../../components/mui';
 
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { COLORS } from '../../../config/theme';
@@ -10,10 +10,6 @@ interface BoardProps {
     size: number;
     rows: number;
     cols: number;
-}
-
-interface CenteredProps {
-    children: React.ReactNode;
 }
 
 interface Palette {
@@ -37,15 +33,31 @@ export function Board(props: BoardProps): React.ReactElement {
     const { frontProps, backProps, size, rows, cols } = props;
 
     return (
-        <Centered>
-            <CustomGrid
-                space={0}
-                size={size}
-                rows={rows - 1}
-                cols={cols - 1}
-                cellProps={backProps}
-            />
-            <Centered>
+        <Box
+            sx={{
+                display: 'grid',
+                placeItems: 'center',
+            }}
+        >
+            <Box
+                sx={{
+                    gridArea: '1/1',
+                }}
+            >
+                <CustomGrid
+                    space={0}
+                    size={size}
+                    rows={rows - 1}
+                    cols={cols - 1}
+                    cellProps={backProps}
+                />
+            </Box>
+            <Box
+                sx={{
+                    gridArea: '1/1',
+                    zIndex: 1,
+                }}
+            >
                 <CustomGrid
                     space={0}
                     size={size}
@@ -53,28 +65,8 @@ export function Board(props: BoardProps): React.ReactElement {
                     cols={cols}
                     cellProps={frontProps}
                 />
-            </Centered>
-        </Centered>
-    );
-}
-
-function Centered({ children }: CenteredProps): React.ReactElement {
-    const style = {
-        transform: 'translate(-50%, -50%)',
-    };
-
-    return (
-        <Grid
-            sx={{
-                top: '50%',
-                left: '50%',
-                width: '100%',
-                position: 'absolute',
-                ...style,
-            }}
-        >
-            {children}
-        </Grid>
+            </Box>
+        </Box>
     );
 }
 

@@ -94,7 +94,7 @@ export const KeySelector = ({ keys, onSelect }: KeySelectorProps) => {
                             borderRadius: SPACING.borderRadius.sm,
                             border: `1px solid ${COLORS.border.subtle}`,
                             '&:hover': {
-                                background: 'hsla(0, 78%, 62%, 0.1)',
+                                background: COLORS.interactive.hover,
                             },
                         }}
                     >

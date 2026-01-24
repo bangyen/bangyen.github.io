@@ -19,14 +19,18 @@
 }
 
 ::-webkit-scrollbar-track {
-    background: hsl(0deg 0% 8%);
+    background: var(--elevated);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: hsl(217deg 91% 45%);
+    background: hsl(217deg 91% 45%); /* Keep primary dark for dark mode feel */
     border-radius: 4px;
     transition: background-color 150ms ease-in-out;
+}
+
+[data-theme='light'] ::-webkit-scrollbar-thumb {
+    background: hsl(217deg 91% 60%);
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -35,8 +39,8 @@
 
 /* Selection styles */
 ::selection {
-    background-color: hsl(217deg 91% 60% / 20%);
-    color: hsl(0deg 0% 98%);
+    background-color: var(--selection-background);
+    color: var(--selection-text);
 }
 
 /* Focus visible styles for better accessibility */

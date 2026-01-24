@@ -3,13 +3,18 @@ import React, { Suspense, lazy } from 'react';
 
 import { HashRouter, Routes, Route } from 'react-router-dom';
 
-import { ThemeProvider, CssBaseline } from './components/mui';
+import {
+    ThemeProvider as MuiThemeProvider,
+    CssBaseline,
+} from './components/mui';
 import ErrorBoundary from './components/layout/ErrorBoundary';
 import './styles/animations.css';
 import { ROUTES } from './config/constants';
 import { COLORS, createAppTheme } from './config/theme';
+import { ThemeProvider, useThemeContext } from './hooks/useTheme';
 
 // Lazy load pages
+// ... (omitting lazy loads for brevity in ReplacementContent, but they must be kept)
 const Home = lazy(() => import('./pages').then(m => ({ default: m.Home })));
 const Error = lazy(() => import('./pages').then(m => ({ default: m.Error })));
 const Snake = lazy(() => import('./pages').then(m => ({ default: m.Snake })));
@@ -27,11 +32,13 @@ const WikipediaQuiz = lazy(() =>
     import('./pages').then(m => ({ default: m.WikipediaQuiz }))
 );
 
-const darkTheme = createAppTheme();
-
 function App(): React.ReactElement {
+    const { mode } = useThemeContext();
+    const theme = React.useMemo(() => createAppTheme(mode), [mode]);
+
     return (
-        <HashRouter basename="/">
+        <MuiThemeProvider theme={theme}>
+            <CssBaseline />
             <Suspense
                 fallback={
                     <div
@@ -62,18 +69,19 @@ function App(): React.ReactElement {
                     <Route path="*" element={<Error />} />
                 </Routes>
             </Suspense>
-        </HashRouter>
+        </MuiThemeProvider>
     );
 }
 
 const root = createRoot(document.getElementById('root') || document.body);
 root.render(
     <React.StrictMode>
-        <ErrorBoundary>
-            <ThemeProvider theme={darkTheme}>
-                <CssBaseline />
-                <App />
-            </ThemeProvider>
-        </ErrorBoundary>
+        <HashRouter basename="/">
+            <ErrorBoundary>
+                <ThemeProvider>
+                    <App />
+                </ThemeProvider>
+            </ErrorBoundary>
+        </HashRouter>
     </React.StrictMode>
 );

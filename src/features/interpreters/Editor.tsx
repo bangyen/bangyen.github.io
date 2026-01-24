@@ -2,7 +2,7 @@ import React, { useContext, ReactNode, RefObject } from 'react';
 import { Program, Output, Tape, Register } from './Display';
 import { Grid, Typography, Box } from '../../components/mui';
 import { Toolbar } from './Toolbar';
-import { COLORS, TYPOGRAPHY } from '../../config/theme';
+import { LAYOUT, COLORS, TYPOGRAPHY } from '../../config/theme';
 import { EditorContext } from './EditorContext';
 import { TextArea, TextAreaProps } from './components/TextArea';
 
@@ -68,50 +68,64 @@ export default function Editor({
         <Grid
             container
             spacing={2}
-            minHeight={{ xs: '50vh', md: '100vh' }}
-            height={{ xs: 'auto', md: '100vh' }}
-            display="flex"
-            flexDirection="column"
-            padding={{ xs: '2.5vh 5vw', md: '5vh 5vw' }}
+            minHeight={{ xs: '50vh', md: 'auto' }}
+            height={{
+                xs: 'auto',
+                md: `calc(100vh - ${LAYOUT.headerHeight.md}px)`,
+            }}
+            direction="column"
+            wrap="nowrap"
+            padding={{ xs: '1rem', md: '2rem' }}
             sx={{
                 background: COLORS.surface.background,
                 position: 'relative',
+                boxSizing: 'border-box',
+                width: '100% !important',
+                margin: '0 !important',
+                display: 'flex',
+                flexDirection: 'column',
+                overflowY: 'auto',
+                height: '100%', // Ensure it takes available height and scrolls
             }}
         >
             <Grid
                 container
                 alignItems="center"
+                direction={{ xs: 'column', md: 'row' }}
                 justifyContent="space-between"
-                sx={{ mb: { xs: 2, md: 0 } }}
+                sx={{ mb: { xs: 2, md: 0 }, gap: { xs: 2, md: 0 } }}
             >
-                <Grid {...titleProps} size={{ md: 'auto' }}>
+                <Grid
+                    size="grow"
+                    display="flex"
+                    alignItems="center"
+                    justifyContent={{ xs: 'center', md: 'flex-start' }}
+                    sx={{ width: '100%' }}
+                >
                     <Typography
                         variant="h4"
                         sx={{
                             fontSize: TYPOGRAPHY.fontSize.h2,
                             fontWeight: TYPOGRAPHY.fontWeight.semibold,
+                            paddingLeft: { xs: 0, md: 2 },
+                            flexShrink: 0,
                         }}
                     >
                         Interpreters
                     </Typography>
                 </Grid>
-                {navigation && (
-                    <Grid
-                        size="grow"
-                        display="flex"
-                        justifyContent={{ xs: 'flex-start', md: 'center' }}
-                    >
-                        {navigation}
-                    </Grid>
-                )}
                 <Grid
                     display="flex"
                     alignItems="center"
                     gap={1}
                     size="auto"
-                    justifyContent="flex-end"
+                    justifyContent={{ xs: 'center', md: 'flex-end' }}
+                    sx={{ paddingRight: 1, width: { xs: '100%', md: 'auto' } }}
                 >
                     <Toolbar />
+                    {navigation && (
+                        <Box sx={{ flexShrink: 0 }}>{navigation}</Box>
+                    )}
                 </Grid>
             </Grid>
             <Grid {...contentProps}>
@@ -120,9 +134,9 @@ export default function Editor({
                     <TextArea {...sideProps} />
                 </Grid>
             </Grid>
-            <Box
+            <Grid
+                size={{ xs: 12 }}
                 sx={{
-                    width: '100%',
                     // Ensure space for up to 2 rows of fields to prevent layout shift
                     // when switching between interpreters with 1-2 vs 3-4 fields.
                     minHeight:
@@ -131,6 +145,7 @@ export default function Editor({
                         ).length > 0
                             ? { xs: 'auto', md: '210px' }
                             : 0,
+                    flexShrink: 0,
                 }}
             >
                 <Grid
@@ -212,7 +227,7 @@ export default function Editor({
                         return fields;
                     })()}
                 </Grid>
-            </Box>
+            </Grid>
         </Grid>
     );
 }
