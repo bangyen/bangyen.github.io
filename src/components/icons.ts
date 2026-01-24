@@ -46,6 +46,8 @@ export {
     GridView,
     TextFields,
     TextFieldsRounded,
+    LightModeRounded,
+    DarkModeRounded,
 } from '@mui/icons-material';
 
 // Code Icons

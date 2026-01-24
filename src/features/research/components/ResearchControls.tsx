@@ -145,7 +145,7 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
                                             backgroundColor:
                                                 control.color ||
                                                 COLORS.primary.main,
-                                            color: COLORS.text.primary,
+                                            color: '#fff',
                                             borderColor:
                                                 control.color ||
                                                 COLORS.primary.main,

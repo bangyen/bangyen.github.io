@@ -49,12 +49,18 @@ const ResearchViewSelector = <T,>({
                                 width: '100%',
                                 color:
                                     currentViewType === viewType.key
-                                        ? COLORS.text.primary
+                                        ? 'inherit' // MUI Button will handle the color inheritance
                                         : COLORS.text.secondary,
                                 backgroundColor:
                                     currentViewType === viewType.key
                                         ? COLORS.primary.main
                                         : COLORS.surface.elevated,
+                                '&.MuiButton-root': {
+                                    color:
+                                        currentViewType === viewType.key
+                                            ? '#fff'
+                                            : COLORS.text.secondary,
+                                },
                                 borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',

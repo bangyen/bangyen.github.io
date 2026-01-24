@@ -8,6 +8,7 @@ import { FeaturedWork } from '../components/FeaturedWork';
 import { URLS, PAGE_TITLES } from '../../../config/constants';
 import { COLORS } from '../../../config/theme';
 import { GitHub } from '../../../components/icons';
+import { ThemeToggle } from '../../../components/ui/ThemeToggle';
 
 export default function Home(): React.ReactElement {
     useEffect(() => {
@@ -44,14 +45,17 @@ export default function Home(): React.ReactElement {
                 }}
             >
                 <MenuButton />
-                <TooltipButton
-                    component="a"
-                    href={URLS.githubProfile}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    title="GitHub Profile"
-                    Icon={GitHub}
-                />
+                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                    <ThemeToggle />
+                    <TooltipButton
+                        component="a"
+                        href={URLS.githubProfile}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="GitHub Profile"
+                        Icon={GitHub}
+                    />
+                </Box>
             </Box>
 
             <Box

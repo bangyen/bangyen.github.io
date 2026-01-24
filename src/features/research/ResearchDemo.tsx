@@ -238,6 +238,7 @@ const ResearchDemo = <T,>({
                                                     .strokeDashArray
                                             }
                                             stroke={COLORS.border.subtle}
+                                            vertical={false}
                                         />
                                         <XAxis
                                             dataKey={
@@ -246,7 +247,12 @@ const ResearchDemo = <T,>({
                                             stroke={COLORS.text.secondary}
                                             tick={{
                                                 fill: COLORS.text.secondary,
+                                                fontSize: 10,
                                             }}
+                                            axisLine={{
+                                                stroke: COLORS.border.subtle,
+                                            }}
+                                            tickLine={false}
                                         />
                                         <YAxis
                                             yAxisId="left"
@@ -254,7 +260,10 @@ const ResearchDemo = <T,>({
                                             stroke={COLORS.text.secondary}
                                             tick={{
                                                 fill: COLORS.text.secondary,
+                                                fontSize: 10,
                                             }}
+                                            axisLine={false}
+                                            tickLine={false}
                                             tickFormatter={
                                                 currentChartConfig.yAxisFormatter
                                             }
@@ -270,7 +279,10 @@ const ResearchDemo = <T,>({
                                                 stroke={COLORS.text.secondary}
                                                 tick={{
                                                     fill: COLORS.text.secondary,
+                                                    fontSize: 10,
                                                 }}
+                                                axisLine={false}
+                                                tickLine={false}
                                                 tickFormatter={
                                                     currentChartConfig.rightYAxisFormatter
                                                 }
@@ -282,10 +294,22 @@ const ResearchDemo = <T,>({
                                         <RechartsTooltip
                                             contentStyle={{
                                                 backgroundColor:
-                                                    COLORS.surface.elevated,
+                                                    COLORS.surface.glass,
+                                                backdropFilter:
+                                                    'blur(8px) saturate(180%)',
                                                 border: `1px solid ${COLORS.border.subtle}`,
                                                 borderRadius:
-                                                    SPACING.borderRadius.lg,
+                                                    SPACING.borderRadius.md,
+                                                color: COLORS.text.primary,
+                                                boxShadow: 'none',
+                                            }}
+                                            itemStyle={{
+                                                fontSize: '12px',
+                                                padding: '2px 0',
+                                            }}
+                                            labelStyle={{
+                                                fontWeight: 'bold',
+                                                marginBottom: '4px',
                                                 color: COLORS.text.primary,
                                             }}
                                             labelFormatter={

@@ -171,7 +171,32 @@ interface ComponentVariants {
     };
 }
 
-// Simplified Color System - Consolidated from BASE_COLORS and COLORS
+// Palette Definitions
+const DARK_COLORS = {
+    background: 'hsl(0, 0%, 3%)',
+    elevated: 'hsl(0, 0%, 8%)',
+    glass: 'hsla(0, 0%, 8%, 0.85)',
+    textPrimary: 'hsl(0, 0%, 98%)',
+    textSecondary: 'hsl(0, 0%, 80%)',
+    border: 'hsl(0, 0%, 18%)',
+    interactiveHover: 'hsla(0, 0%, 80%, 0.08)',
+    interactiveDisabled: 'hsla(0, 0%, 100%, 0.05)',
+    interactiveDisabledText: 'hsla(0, 0%, 100%, 0.3)',
+};
+
+const LIGHT_COLORS = {
+    background: 'hsl(0, 0%, 98%)',
+    elevated: 'hsl(0, 0%, 94%)',
+    glass: 'hsla(0, 0%, 94%, 0.85)',
+    textPrimary: 'hsl(0, 0%, 10%)',
+    textSecondary: 'hsl(0, 0%, 30%)',
+    border: 'hsl(0, 0%, 85%)',
+    interactiveHover: 'hsla(0, 0%, 10%, 0.08)',
+    interactiveDisabled: 'hsla(0, 0%, 0%, 0.05)',
+    interactiveDisabledText: 'hsla(0, 0%, 0%, 0.3)',
+};
+
+// Simplified Color System - Uses CSS variables for dynamic themes
 export const COLORS: Colors = {
     primary: {
         main: 'hsl(217, 91%, 60%)',
@@ -179,26 +204,26 @@ export const COLORS: Colors = {
         dark: 'hsl(217, 91%, 45%)',
     },
     surface: {
-        background: 'hsl(0, 0%, 3%)',
-        elevated: 'hsl(0, 0%, 8%)',
-        glass: 'hsla(0, 0%, 8%, 0.85)',
+        background: 'var(--background)',
+        elevated: 'var(--elevated)',
+        glass: 'var(--glass)',
         success: 'rgba(76, 175, 80, 0.05)',
         warning: 'rgba(255, 193, 7, 0.05)',
         error: 'rgba(239, 83, 80, 0.05)',
     },
     text: {
-        primary: 'hsl(0, 0%, 98%)',
-        secondary: 'hsl(0, 0%, 80%)',
+        primary: 'var(--text-primary)',
+        secondary: 'var(--text-secondary)',
     },
     border: {
-        subtle: 'hsl(0, 0%, 18%)',
+        subtle: 'var(--border)',
     },
     interactive: {
-        hover: `hsla(0, 0%, 80%, 0.08)`,
+        hover: 'var(--interactive-hover)',
         focus: `hsla(217, 91%, 60%, 0.15)`,
         selected: `hsla(217, 91%, 60%, 0.1)`,
-        disabled: `hsla(0, 0%, 100%, 0.05)`,
-        disabledText: `hsla(0, 0%, 100%, 0.3)`,
+        disabled: 'var(--interactive-disabled)',
+        disabledText: 'var(--interactive-disabled-text)',
     },
     data: {
         green: 'hsl(141, 64%, 49%)',
@@ -310,24 +335,27 @@ export const COMPONENT_VARIANTS: ComponentVariants = {
 /**
  * Creates the MUI theme for the application
  */
-export function createAppTheme() {
+export function createAppTheme(mode: 'light' | 'dark' = 'dark') {
+    const palette = mode === 'light' ? LIGHT_COLORS : DARK_COLORS;
+
     return createTheme({
         palette: {
+            mode,
             primary: {
                 main: COLORS.primary.main,
                 light: COLORS.primary.light,
                 dark: COLORS.primary.dark,
             },
             secondary: {
-                main: COLORS.text.secondary,
+                main: palette.textSecondary,
             },
             background: {
-                default: COLORS.surface.background,
-                paper: COLORS.surface.elevated,
+                default: palette.background,
+                paper: palette.elevated,
             },
             text: {
-                primary: COLORS.text.primary,
-                secondary: COLORS.text.secondary,
+                primary: palette.textPrimary,
+                secondary: palette.textSecondary,
             },
         },
         typography: {
@@ -361,6 +389,26 @@ export function createAppTheme() {
             borderRadius: parseInt(SPACING.borderRadius.md),
         },
         components: {
+            MuiCssBaseline: {
+                styleOverrides: {
+                    ':root': {
+                        '--background': palette.background,
+                        '--elevated': palette.elevated,
+                        '--glass': palette.glass,
+                        '--text-primary': palette.textPrimary,
+                        '--text-secondary': palette.textSecondary,
+                        '--border': palette.border,
+                        '--interactive-hover': palette.interactiveHover,
+                        '--interactive-disabled': palette.interactiveDisabled,
+                        '--interactive-disabled-text':
+                            palette.interactiveDisabledText,
+                    },
+                    body: {
+                        transition:
+                            'background-color 200ms ease, color 200ms ease',
+                    },
+                },
+            },
             MuiButton: {
                 styleOverrides: {
                     root: {
@@ -372,7 +420,7 @@ export function createAppTheme() {
                     },
                     contained: {
                         backgroundColor: COLORS.primary.main,
-                        color: COLORS.text.primary,
+                        color: mode === 'light' ? '#fff' : COLORS.text.primary,
                         '&:hover': {
                             backgroundColor: COLORS.primary.light,
                             transform: 'translateY(-2px)',
@@ -463,7 +511,10 @@ export function createAppTheme() {
             MuiBackdrop: {
                 styleOverrides: {
                     root: {
-                        backgroundColor: 'hsla(0, 0%, 3%, 0.85)',
+                        backgroundColor:
+                            mode === 'dark'
+                                ? 'hsla(0, 0%, 3%, 0.85)'
+                                : 'hsla(0, 0%, 98%, 0.85)',
                         backdropFilter: 'blur(24px) saturate(180%)',
                     },
                 },
