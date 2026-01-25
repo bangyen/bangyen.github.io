@@ -183,7 +183,10 @@ export default function Snake(): React.ReactElement {
                 touchAction: 'none',
             }}
         >
-            <GlobalHeader showHome={true} />
+            <GlobalHeader
+                showHome={true}
+                infoUrl="https://en.wikipedia.org/wiki/Snake_(video_game_genre)"
+            />
             <Grid
                 flex={1}
                 onPointerDown={handleTap}

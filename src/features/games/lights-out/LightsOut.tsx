@@ -181,7 +181,10 @@ export default function LightsOut(): React.ReactElement {
                 position: 'relative',
             }}
         >
-            <GlobalHeader showHome={true} />
+            <GlobalHeader
+                showHome={true}
+                infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
+            />
             <Box sx={{ flex: 1, position: 'relative', width: '100%' }}>
                 <Board
                     size={size}
