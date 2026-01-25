@@ -89,10 +89,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                                 <>
                                     <Box
                                         sx={{
-                                            display: {
-                                                xs: 'none',
-                                                sm: 'block',
-                                            },
+                                            display: 'block',
                                         }}
                                     >
                                         <Typography

@@ -91,20 +91,23 @@ export default function Editor({
             <Grid
                 container
                 alignItems="center"
-                justifyContent={{ xs: 'center', md: 'space-between' }}
-                sx={{ mb: { xs: 2, md: 0 } }}
+                direction={{ xs: 'column', md: 'row' }}
+                justifyContent="space-between"
+                sx={{ mb: { xs: 2, md: 0 }, gap: { xs: 2, md: 0 } }}
             >
                 <Grid
                     size="grow"
-                    display={{ xs: 'none', md: 'flex' }}
+                    display="flex"
                     alignItems="center"
+                    justifyContent={{ xs: 'center', md: 'flex-start' }}
+                    sx={{ width: '100%' }}
                 >
                     <Typography
                         variant="h4"
                         sx={{
                             fontSize: TYPOGRAPHY.fontSize.h2,
                             fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                            paddingLeft: 2,
+                            paddingLeft: { xs: 0, md: 2 },
                             flexShrink: 0,
                         }}
                     >
@@ -117,7 +120,7 @@ export default function Editor({
                     gap={1}
                     size="auto"
                     justifyContent={{ xs: 'center', md: 'flex-end' }}
-                    sx={{ paddingRight: 1 }}
+                    sx={{ paddingRight: 1, width: { xs: '100%', md: 'auto' } }}
                 >
                     <Toolbar />
                     {navigation && (

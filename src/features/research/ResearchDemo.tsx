@@ -89,7 +89,7 @@ const ResearchDemo = <T,>({
                 sx={{
                     position: 'relative',
                     padding: SPACING.padding.md,
-                    paddingTop: 0,
+                    paddingTop: SPACING.padding.xl,
                     paddingBottom: {
                         xs: SPACING.padding.md,
                         md: 0,
@@ -126,7 +126,7 @@ const ResearchDemo = <T,>({
                     >
                         <Box
                             sx={{
-                                display: { xs: 'none', md: 'flex' },
+                                display: 'flex',
                                 flexDirection: { xs: 'column', md: 'row' },
                                 justifyContent: {
                                     xs: 'center',
@@ -134,7 +134,7 @@ const ResearchDemo = <T,>({
                                 },
                                 alignItems: { xs: 'center', md: 'center' },
                                 gap: { xs: 2, md: 4 },
-                                marginBottom: 4,
+                                marginBottom: { xs: 2, md: 4 },
                                 width: '100%',
                             }}
                         >
@@ -157,7 +157,6 @@ const ResearchDemo = <T,>({
                                     fontSize: TYPOGRAPHY.fontSize.subheading,
                                     textAlign: { xs: 'center', md: 'right' },
                                     whiteSpace: { xs: 'normal', md: 'nowrap' },
-                                    display: { xs: 'none', md: 'block' },
                                 }}
                             >
                                 {subtitle}
