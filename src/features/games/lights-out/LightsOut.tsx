@@ -185,7 +185,18 @@ export default function LightsOut(): React.ReactElement {
                 showHome={true}
                 infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
             />
-            <Box sx={{ flex: 1, position: 'relative', width: '100%' }}>
+            <Box
+                sx={{
+                    flex: 1,
+                    position: 'relative',
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    paddingTop: 6,
+                }}
+            >
                 <Board
                     size={size}
                     rows={rows}

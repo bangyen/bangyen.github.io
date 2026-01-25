@@ -126,7 +126,7 @@ const ResearchDemo = <T,>({
                     >
                         <Box
                             sx={{
-                                display: 'flex',
+                                display: { xs: 'none', md: 'flex' },
                                 flexDirection: { xs: 'column', md: 'row' },
                                 justifyContent: {
                                     xs: 'center',
@@ -157,6 +157,7 @@ const ResearchDemo = <T,>({
                                     fontSize: TYPOGRAPHY.fontSize.subheading,
                                     textAlign: { xs: 'center', md: 'right' },
                                     whiteSpace: { xs: 'normal', md: 'nowrap' },
+                                    display: { xs: 'none', md: 'block' },
                                 }}
                             >
                                 {subtitle}
