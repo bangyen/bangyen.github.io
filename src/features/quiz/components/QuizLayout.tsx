@@ -111,9 +111,11 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
                                     <Box
                                         sx={{
                                             display: {
-                                                xs: 'block',
+                                                xs: 'flex',
                                                 sm: 'none',
                                             },
+                                            justifyContent: 'flex-end',
+                                            width: '100%',
                                         }}
                                     >
                                         {headerContent}
