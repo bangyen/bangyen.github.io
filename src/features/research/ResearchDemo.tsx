@@ -157,6 +157,7 @@ const ResearchDemo = <T,>({
                                     fontSize: TYPOGRAPHY.fontSize.subheading,
                                     textAlign: { xs: 'center', md: 'right' },
                                     whiteSpace: { xs: 'normal', md: 'nowrap' },
+                                    display: { xs: 'none', md: 'block' },
                                 }}
                             >
                                 {subtitle}
