@@ -82,6 +82,15 @@ jest.mock(
         }
 );
 
+// Mock the ThemeProvider since we just need the context to exist
+jest.mock('../../../../hooks/useTheme', () => ({
+    useThemeContext: () => ({
+        mode: 'light',
+        resolvedMode: 'light',
+        toggleTheme: jest.fn(),
+    }),
+}));
+
 describe('LightsOut', () => {
     beforeEach(() => {
         jest.clearAllMocks();

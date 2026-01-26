@@ -199,7 +199,7 @@ describe('Home Component', () => {
 
         // Get the navigation GitHub link specifically
         const navigationGithubLink = screen.getByRole('link', {
-            name: 'GitHub Profile',
+            name: 'View on GitHub',
         });
         expect(navigationGithubLink).toHaveAttribute(
             'href',

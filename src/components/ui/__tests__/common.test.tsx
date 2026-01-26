@@ -212,7 +212,9 @@ describe('Helper Components', () => {
         test('includes HomeButton', () => {
             render(
                 <TestWrapper>
-                    <Controls />
+                    <Controls>
+                        <HomeButton />
+                    </Controls>
                 </TestWrapper>
             );
 

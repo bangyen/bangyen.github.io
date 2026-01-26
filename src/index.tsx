@@ -32,9 +32,12 @@ const WikipediaQuiz = lazy(() =>
     import('./pages').then(m => ({ default: m.WikipediaQuiz }))
 );
 
-function App(): React.ReactElement {
-    const { mode } = useThemeContext();
-    const theme = React.useMemo(() => createAppTheme(mode), [mode]);
+const App = (): React.ReactElement => {
+    const { resolvedMode } = useThemeContext();
+    const theme = React.useMemo(
+        () => createAppTheme(resolvedMode),
+        [resolvedMode]
+    );
 
     return (
         <MuiThemeProvider theme={theme}>
@@ -71,7 +74,7 @@ function App(): React.ReactElement {
             </Suspense>
         </MuiThemeProvider>
     );
-}
+};
 
 const root = createRoot(document.getElementById('root') || document.body);
 root.render(

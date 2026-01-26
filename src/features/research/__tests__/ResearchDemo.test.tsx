@@ -9,6 +9,16 @@ jest.mock('../../../components/icons', () => ({
     HomeRounded: () => <div data-testid="home-icon">Home</div>,
     Refresh: () => <div data-testid="refresh-icon">Refresh</div>,
     SettingsRounded: () => <div data-testid="settings-icon">Settings</div>,
+    InfoRounded: () => <div data-testid="info-icon">Info</div>,
+}));
+
+// Mock useTheme
+jest.mock('../../../hooks/useTheme', () => ({
+    useThemeContext: () => ({
+        mode: 'light',
+        resolvedMode: 'light',
+        toggleTheme: jest.fn(),
+    }),
 }));
 
 // Mock @mui/material useMediaQuery
@@ -23,6 +33,24 @@ jest.mock('../../../components/ui/GlassCard', () => ({
         <div data-testid="glass-card" {...props}>
             {children}
         </div>
+    ),
+}));
+
+jest.mock('../../../components/ui/Controls', () => ({
+    TooltipButton: ({
+        title,
+        Icon,
+    }: {
+        title: string;
+        Icon: React.ElementType;
+    }) => (
+        <button aria-label={title}>
+            {title}
+            {Icon && <Icon />}
+        </button>
+    ),
+    Controls: ({ children }: { children: React.ReactNode }) => (
+        <div>{children}</div>
     ),
 }));
 
