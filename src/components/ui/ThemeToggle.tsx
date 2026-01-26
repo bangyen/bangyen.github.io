@@ -1,17 +1,39 @@
 import React from 'react';
 import { useThemeContext } from '../../hooks/useTheme';
-import { LightModeRounded, DarkModeRounded } from '../icons';
+import { LightModeRounded, DarkModeRounded, DevicesRounded } from '../icons';
 import { TooltipButton } from './Controls';
 
 export function ThemeToggle() {
     const { mode, toggleTheme } = useThemeContext();
 
+    const getToggleConfig = () => {
+        switch (mode) {
+            case 'light':
+                return {
+                    title: 'Switch to dark mode',
+                    Icon: DarkModeRounded,
+                };
+            case 'dark':
+                return {
+                    title: 'Switch to system theme',
+                    Icon: DevicesRounded,
+                };
+            case 'system':
+                return {
+                    title: 'Switch to light mode',
+                    Icon: LightModeRounded,
+                };
+        }
+    };
+
+    const { title, Icon } = getToggleConfig();
+
     return (
         <TooltipButton
-            title={`Switch to ${mode === 'light' ? 'dark' : 'light'} mode`}
+            title={title}
             onClick={toggleTheme}
             color="inherit"
-            Icon={mode === 'light' ? DarkModeRounded : LightModeRounded}
+            Icon={Icon}
         />
     );
 }
