@@ -97,7 +97,9 @@ describe('QuizGameView', () => {
         );
 
         const submitBtn = screen.getByText('Submit');
-        fireEvent.click(submitBtn);
+        // JSDOM doesn't support requestSubmit, so we use fireEvent.submit on the form or fireEvent.click if it's a button type=submit
+        // But since we are clicking a button inside a form, we can just spy on handleSubmit
+        fireEvent.submit(submitBtn.closest('form')!);
         expect(mockActions.handleSubmit).toHaveBeenCalled();
     });
 
