@@ -65,6 +65,24 @@ jest.mock('../../components/InterpreterNavigation', () => ({
     ),
 }));
 
+jest.mock('../../../../components/ui/Controls', () => ({
+    TooltipButton: ({ title }: { title: string }) => (
+        <button aria-label={title}>{title}</button>
+    ),
+    Controls: ({ children }: { children: React.ReactNode }) => (
+        <div>{children}</div>
+    ),
+}));
+
+// Mock the ThemeProvider since we just need the context to exist
+jest.mock('../../../../hooks/useTheme', () => ({
+    useThemeContext: () => ({
+        mode: 'light',
+        resolvedMode: 'light',
+        toggleTheme: jest.fn(),
+    }),
+}));
+
 describe('Interpreters Page Integration', () => {
     const renderWithRouter = (initialEntry = '/interpreters') => {
         return render(
