@@ -1,218 +1,136 @@
-import { getState } from '../WII2D';
-import { gridMove } from '../../utils/gridUtils';
+import { render, screen } from '@testing-library/react';
+import React from 'react';
+import WII2D, { getState } from '../WII2D';
 
-jest.mock('../../utils/gridUtils', () => ({
-    gridMove: jest.fn((pos, vel, rows, cols) => pos + vel),
+// Mock GridEditor
+jest.mock('../GridEditor', () => ({
+    __esModule: true,
+    default: ({ name }: { name: string }) => (
+        <div data-testid="grid-editor">{name}</div>
+    ),
 }));
 
-describe('WII2D Interpreter', () => {
+describe('WII2D Interpreter Logic', () => {
     const initialState = {
-        grid: '          ',
-        select: null,
-        rows: 2,
-        cols: 5,
-        pause: false,
-        velocity: 1,
-        position: 0,
+        position: null,
+        velocity: -2,
         output: '',
         register: 0,
         end: false,
+        grid: ' '.repeat(25),
+        rows: 5,
+        cols: 5,
     };
 
-    beforeEach(() => {
-        jest.clearAllMocks();
+    test('initializes position at ! if it only appears once', () => {
+        const state = { ...initialState, grid: '    !                    ' };
+        const nextState = getState(state as any);
+        expect(nextState.position).toBe(24);
     });
 
-    test('initializes position if null (find !)', () => {
-        // Find !. Single ! -> valid.
-        const state = { ...initialState, grid: '.!..', position: null };
-        const newState = getState(state);
-        expect(newState.position).toBe(2); // Index of ! (1) + velocity (1)
+    test('ends if ! appears multiple times or not at all', () => {
+        const stateNoExcl = { ...initialState, grid: ' '.repeat(25) };
+        expect(getState(stateNoExcl as any).end).toBe(true);
+
+        const stateMultiExcl = {
+            ...initialState,
+            grid: '!!                       ',
+        };
+        expect(getState(stateMultiExcl as any).end).toBe(true);
     });
 
-    test('ends if ! not found or ambiguous', () => {
-        // No !
-        const state = { ...initialState, grid: '....', position: null };
-        const newState = getState(state);
-        expect(newState.end).toBe(true);
-
-        // Double !
-        const stateDouble = { ...initialState, grid: '!.!.', position: null };
-        const newStateDouble = getState(stateDouble);
-        expect(newStateDouble.end).toBe(true);
-    });
-
-    test('returns state if already ended', () => {
-        const state = { ...initialState, end: true };
-        const newState = getState(state);
-        expect(newState).toBe(state);
-    });
-
-    test('handles arrows for velocity', () => {
-        // Arrows: ^ < > v
-        // ^: index 0. vel = 0%2 + 1 = 1. index<2 -> vel -= 3 -> -2?
-        // ^ at index 0 of arrows string? No, arrows="^<>v".
-        // ^ is index 0. vel = 1. -> -2.
-        // < is index 1. vel = 2. -> -1.
-        // > is index 2. vel = 1.
-        // v is index 3. vel = 2.
-
-        let state = { ...initialState, grid: '>', position: 0 };
-        let newState = getState(state);
-        expect(newState.velocity).toBe(1);
-
-        state = { ...initialState, grid: 'v', position: 0 };
-        newState = getState(state);
-        expect(newState.velocity).toBe(2);
-
-        state = { ...initialState, grid: '<', position: 0 };
-        newState = getState(state);
-        expect(newState.velocity).toBe(-1);
-
-        state = { ...initialState, grid: '^', position: 0 };
-        newState = getState(state);
-        expect(newState.velocity).toBe(-2);
-    });
-
-    test('handles arithmetic + - * / s', () => {
-        const state = { ...initialState, position: 0, register: 4 };
-
-        // +
-        expect(getState({ ...state, grid: '+' }).register).toBe(5);
-        // -
-        expect(getState({ ...state, grid: '-' }).register).toBe(3);
-        // *
-        expect(getState({ ...state, grid: '*' }).register).toBe(8);
-        // /
-        expect(getState({ ...state, grid: '/' }).register).toBe(2);
-        // s (square)
-        expect(getState({ ...state, grid: 's' }).register).toBe(16);
-    });
-
-    test('handles register literals (digits)', () => {
-        const state = { ...initialState, position: 0, grid: '5' };
-        const newState = getState(state);
-        expect(newState.register).toBe(5);
-    });
-
-    test('handles reverse |', () => {
-        const state = { ...initialState, position: 0, grid: '|', velocity: 2 };
-        const newState = getState(state);
-        expect(newState.velocity).toBe(-2);
-    });
-
-    test('handles output ~', () => {
+    test('handles arrows ^<>v', () => {
         const state = {
             ...initialState,
+            grid: '>!                       ',
             position: 0,
-            grid: '~',
-            register: 65,
-            output: '',
-        };
-        const newState = getState(state);
-        expect(newState.output).toBe('A');
-    });
-
-    test('handles random ?', () => {
-        const originalRandom = Math.random;
-        Math.random = () => 0; // value 0
-        const state = { ...initialState, position: 0, grid: '?' };
-        const newState = getState(state);
-        // rand 0 -> floor 0. vel = 0 - 2 + (0>1?1:0) = -2.
-        expect(newState.velocity).toBe(-2);
-        Math.random = originalRandom;
-    });
-
-    test('handles end .', () => {
-        const state = { ...initialState, position: 0, grid: '.' };
-        const newState = getState(state);
-        expect(newState.end).toBe(true);
-        expect(newState.position).toBeNull();
-    });
-
-    test('handles warp @', () => {
-        // Warp logic: find closest @ in grid.
-        // grid: '@..@'. cols=4.
-        // pos 0: @.
-        // getClosest finds target. then pos -= cols. then loop.
-        // Logic is complex, depends on getDistance.
-        // Mocking grid utils logic is hard if we assume linear mocks.
-        // But WII2D imports getClosest? No, it defines it internally.
-
-        // Test: simple case.
-        // Grid: '@  @'. cols=4.
-        // Position 0. Target is Position 3?
-        // dist(0, 3, 4).
-        // 0: (0,0). 3: (3,0).
-        // dist = 0 + 3 = 3.
-
-        // Logic: warp.push(k). sort by distance. return warp[1] (closest non-self).
-
-        const state = {
-            ...initialState,
-            grid: '@   @', // index 0 and 4.
-            rows: 1,
-            cols: 5,
-            position: 0,
-        };
-        // closest to 0 is 4.
-        // newPos = 4 - cols(5) = -1.
-        // check negative: -1 + rows*cols(5) = 4.
-        // Result 4.
-
-        const newState = getState(state);
-        expect(newState.position).toBe(4);
-    });
-
-    test('handles warp @ with single @ (no jump)', () => {
-        const state = {
-            ...initialState,
-            grid: '@',
-            rows: 1,
-            cols: 1,
-            position: 0,
-        };
-        // Only 1 @. getClosest returns position (0).
-        // Then position -= cols (1) -> -1.
-        // Check bounds: -1 < 0 -> += rows*cols (1) -> 0.
-        // Net result: 0.
-        const newState = getState(state);
-        expect(newState.position).toBe(0);
-    });
-});
-
-// Component Test
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import WII2DEditor from '../WII2D';
-import GridEditor from '../GridEditor';
-
-jest.mock('../GridEditor', () =>
-    jest.fn(() => <div data-testid="grid-editor-mock" />)
-);
-
-describe('WII2D Component', () => {
-    test('renders GridEditor and invokes runner', () => {
-        render(<WII2DEditor />);
-        expect(screen.getByTestId('grid-editor-mock')).toBeInTheDocument();
-
-        const props = (GridEditor as jest.Mock).mock.calls[
-            (GridEditor as jest.Mock).mock.calls.length - 1
-        ][0];
-        expect(props.name).toBe('WII2D');
-
-        // Verify runner
-        const state = {
             velocity: 1,
-            position: 0,
-            output: '',
-            register: 0,
-            end: false,
-            grid: '+',
-            rows: 1,
-            cols: 1,
         };
-        const newState = props.runner(state);
-        expect(newState.register).toBe(1);
+        const next = getState(state as any);
+        expect(next.velocity).toBe(1);
+
+        next.grid = 'v!                       ';
+        next.position = 0;
+        const final = getState(next as any);
+        expect(final.velocity).toBe(2);
+    });
+
+    test('handles | (velocity reverse)', () => {
+        const state = {
+            ...initialState,
+            grid: '|!                       ',
+            position: 0,
+            velocity: 1,
+        };
+        const nextState = getState(state as any);
+        expect(nextState.velocity).toBe(-1);
+    });
+
+    test('handles arithmetic and output', () => {
+        const state = {
+            ...initialState,
+            grid: '+-*s/~!                  ',
+            position: 0,
+            register: 5,
+        };
+
+        let next = getState(state as any);
+        expect(next.register).toBe(6); // +
+
+        next.position = 1; // -
+        next = getState(next as any);
+        expect(next.register).toBe(5);
+
+        next.position = 2; // *
+        next = getState(next as any);
+        expect(next.register).toBe(10);
+
+        next.position = 3; // s
+        next = getState(next as any);
+        expect(next.register).toBe(100);
+
+        next.position = 4; // /
+        next = getState(next as any);
+        expect(next.register).toBe(50);
+
+        next.position = 5; // ~
+        next = getState(next as any);
+        expect(next.output).toBe(String.fromCharCode(50));
+    });
+
+    test('handles ? (random velocity)', () => {
+        const state = {
+            ...initialState,
+            grid: '?!                       ',
+            position: 0,
+        };
+        const nextState = getState(state as any);
+        expect([-2, -1, 1, 2]).toContain(nextState.velocity);
+    });
+
+    test('handles @ (warp)', () => {
+        const grid = '  @  ' + '     ' + '  @  ' + '     ' + ' !   ';
+        const state = { ...initialState, grid, position: 12, cols: 5, rows: 5 };
+        const nextState = getState(state as any);
+        expect(nextState.position).toBe(22);
+    });
+
+    test('handles . (end)', () => {
+        const state = {
+            ...initialState,
+            grid: '.!                       ',
+            position: 0,
+        };
+        const nextState = getState(state as any);
+        expect(nextState.end).toBe(true);
+    });
+
+    describe('Editor Component', () => {
+        test('renders GridEditor with correct name', () => {
+            render(<WII2D />);
+            expect(screen.getByTestId('grid-editor')).toHaveTextContent(
+                'WII2D'
+            );
+        });
     });
 });

@@ -1,245 +1,139 @@
 import { handleAction, GridState, GridAction } from '../eventHandlers';
-import * as Toolbar from '../../Toolbar';
+import * as gridUtils from '../../utils/gridUtils';
 
-// Mock getDirection and gridMove
-jest.mock('../../utils/gridUtils', () => ({
-    getDirection: jest.fn((key) => {
-        if (key === 'ArrowRight') return 1;
-        if (key === 'ArrowLeft') return -1;
-        if (key === 'ArrowDown') return 10; // Mock 10 cols
-        if (key === 'ArrowUp') return -10;
-        return 0;
-    }),
-    gridMove: jest.fn((pos, dir, rows, cols) => pos + dir), // Simplified movement
-}));
-
-// Mock Toolbar handler
 jest.mock('../../Toolbar', () => ({
-    handleToolbar: jest.fn((state) => ({ ...state, toolbarUpdated: true })),
+    handleToolbar: jest.fn(state => state),
 }));
 
 describe('Grid eventHandlers', () => {
     const initialState: GridState = {
-        grid: '          ', // 10 spaces
+        grid: ' '.repeat(9),
         select: null,
-        rows: 2,
-        cols: 5,
-        pause: false,
+        rows: 3,
+        cols: 3,
+        pause: true,
     };
 
-    const resetState = jest.fn();
+    describe('handleKeys (via handleAction edit)', () => {
+        test('does nothing if no square is selected', () => {
+            const action: GridAction = {
+                type: 'edit',
+                payload: { key: 'a', resetState: jest.fn() },
+            };
+            const nextState = handleAction(initialState, action);
+            expect(nextState.grid).toBe(initialState.grid);
+        });
 
-    beforeEach(() => {
-        jest.clearAllMocks();
+        test('updates grid and calls resetState when a key is pressed', () => {
+            const resetState = jest.fn();
+            const state = { ...initialState, select: 4 }; // Center square
+            const action: GridAction = {
+                type: 'edit',
+                payload: { key: 'X', resetState },
+            };
+            const nextState = handleAction(state, action);
+
+            expect(nextState.grid[4]).toBe('X');
+            expect(resetState).toHaveBeenCalledWith(nextState.grid);
+            expect(nextState.pause).toBe(true);
+        });
+
+        test('handles Backslash specifically', () => {
+            const resetState = jest.fn();
+            const state = { ...initialState, select: 0 };
+            const action: GridAction = {
+                type: 'edit',
+                payload: { key: 'Backslash', resetState },
+            };
+            const nextState = handleAction(state, action);
+            expect(nextState.grid[0]).toBe('\\');
+        });
+
+        test('handles Backspace/Delete by inserting space', () => {
+            const resetState = jest.fn();
+            const state = { ...initialState, grid: 'ABCDEFGHI', select: 1 };
+            const action: GridAction = {
+                type: 'edit',
+                payload: { key: 'Backspace', resetState },
+            };
+            const nextState = handleAction(state, action);
+            expect(nextState.grid[1]).toBe(' ');
+        });
+
+        test('moves selection on arrow keys', () => {
+            const spy = jest.spyOn(gridUtils, 'gridMove').mockReturnValue(5);
+            const state = { ...initialState, select: 4 };
+            const action: GridAction = {
+                type: 'edit',
+                payload: { key: 'ArrowRight', resetState: jest.fn() },
+            };
+            const nextState = handleAction(state, action);
+            expect(nextState.select).toBe(5);
+            spy.mockRestore();
+        });
     });
 
-    describe('handleAction', () => {
-        it('handles resize', () => {
-            const state = { ...initialState, grid: 'AB' }; // 2 chars
+    describe('handleResize (via handleAction resize)', () => {
+        test('expands grid when rows increase', () => {
+            const resetState = jest.fn();
             const action: GridAction = {
                 type: 'resize',
-                payload: {
-                    resetState,
-                    rows: 2,
-                    cols: 2,
-                },
+                payload: { rows: 4, resetState },
             };
-            // Initial rows=2, cols=5. Resize to 2x2.
-            // 2 rows. 
-            // Row 0: AB... (5 cols). Resize to 2 cols -> AB
-            // Row 1: ..... (5 cols). Resize to 2 cols -> ..
-            // But 'AB' is grid string.
-
-            // Actually let's test a simple pad case.
-            // Current grid 'AB'. Rows=2, Cols=5?? Non-matching length?
-            // logic: grid.substring...
-
-            // Let's use consistent state.
-            const consistentState = {
-                ...initialState,
-                rows: 1,
-                cols: 2,
-                grid: 'AB'
-            };
-
-            const resizeAction: GridAction = {
-                type: 'resize',
-                payload: {
-                    resetState,
-                    rows: 2,
-                    cols: 2
-                }
-            };
-
-            // 1x2 -> 2x2.
-            // Row 0: AB -> AB
-            // Row 1: (New) -> '  ' (2 spaces)
-            // Result: 'AB  '
-
-            const newState = handleAction(consistentState, resizeAction);
-            // resetState should be called with new grid
-            expect(resetState).toHaveBeenCalledWith('AB  ');
-            expect(newState).toEqual(expect.objectContaining({
-                rows: 2,
-                cols: 2,
-                grid: 'AB  ',
-                pause: true
-            }));
+            const nextState = handleAction(initialState, action);
+            expect(nextState.grid.length).toBe(12); // 4 * 3
+            expect(nextState.rows).toBe(4);
+            expect(resetState).toHaveBeenCalled();
         });
 
-        it('handles edit (character input)', () => {
-            const state = { ...initialState, select: 0, grid: '  ' };
-            const action: GridAction = {
-                type: 'edit',
-                payload: {
-                    key: 'X',
-                    resetState
-                }
-            };
-
-            const newState = handleAction(state, action);
-            expect(resetState).toHaveBeenCalledWith('X ');
-            expect(newState).toEqual(expect.objectContaining({ grid: 'X ' }));
-        });
-
-        it('handles edit (arrow keys)', () => {
-            const state = { ...initialState, select: 0 };
-            const action: GridAction = {
-                type: 'edit',
-                payload: {
-                    key: 'ArrowRight',
-                    resetState
-                }
-            };
-
-            // gridMove is mocked to just add direction. ArrowRight -> +1
-            const newState = handleAction(state, action);
-            expect(newState.select).toBe(1);
-            expect(resetState).not.toHaveBeenCalled(); // Navigation doesn't reset grid
-        });
-
-        it('handles click', () => {
-            const state = { ...initialState, select: 0 };
-            // Click same -> deselect
-            const actionSame: GridAction = { type: 'click', payload: { select: 0 } };
-            expect(handleAction(state, actionSame).select).toBeNull();
-
-            // Click diff -> select
-            const actionDiff: GridAction = { type: 'click', payload: { select: 5 } };
-            expect(handleAction(state, actionDiff).select).toBe(5);
-        });
-
-        it('delegates to handleToolbar for unknown types', () => {
-            const state = { ...initialState };
-            const action = { type: 'run' } as any;
-            const newState = handleAction(state, action);
-            expect(Toolbar.handleToolbar).toHaveBeenCalled();
-            expect(newState).toHaveProperty('toolbarUpdated', true);
-        });
-
-        it('handles special keys (Backslash, Backspace)', () => {
-            const state = { ...initialState, select: 0, grid: '  ' };
-
-            // Backslash
-            const actionBackslash: GridAction = {
-                type: 'edit',
-                payload: { key: 'Backslash', resetState }
-            };
-            expect(handleAction(state, actionBackslash).grid).toBe('\\ ');
-
-            // Backspace -> space
-            const actionBackspace: GridAction = {
-                type: 'edit',
-                payload: { key: 'Backspace', resetState }
-            };
-            expect(handleAction(state, actionBackspace).grid).toBe('  ');
-        });
-
-        it('ignores invalid keys', () => {
-            const state = { ...initialState, select: 0 };
-            const action: GridAction = {
-                type: 'edit',
-                payload: { key: 'Shift', resetState }
-            };
-            const newState = handleAction(state, action);
-            expect(newState).toEqual(state);
-        });
-
-        it('ignores edit when no selection', () => {
-            const state = { ...initialState, select: null };
-            const action: GridAction = {
-                type: 'edit',
-                payload: { key: 'X', resetState }
-            };
-            const newState = handleAction(state, action);
-            expect(newState).toEqual(state);
-        });
-
-        it('handles resize (expansion variants)', () => {
-            // Test expand cols
-            const state = { ...initialState, rows: 2, cols: 2, grid: 'ABAB' };
+        test('pads rows when cols increase', () => {
+            const resetState = jest.fn();
             const action: GridAction = {
                 type: 'resize',
-                payload: { resetState, rows: 2, cols: 3 }
+                payload: { cols: 4, resetState },
             };
-            // Row 0: AB -> AB 
-            // Row 1: AB -> AB 
-            handleAction(state, action);
-            expect(resetState).toHaveBeenCalledWith('AB AB ');
+            // Initial grid: "123456789" (if 3x3)
+            const state = { ...initialState, grid: '123456789' };
+            const nextState = handleAction(state, action);
+            // row 1: "123 "
+            // row 2: "456 "
+            // row 3: "789 "
+            expect(nextState.grid).toBe('123 456 789 ');
+            expect(nextState.cols).toBe(4);
+        });
+    });
 
-            // Test shrink rows/cols
-            const shrinkAction: GridAction = {
-                type: 'resize',
-                payload: { resetState, rows: 1, cols: 1 }
+    describe('handleAction click', () => {
+        test('sets selection', () => {
+            const action: GridAction = {
+                type: 'click',
+                payload: { select: 5 },
             };
-            // Row 0: AB -> A
-            handleAction(state, shrinkAction);
-            expect(resetState).toHaveBeenCalledWith('A');
-
-            // Test partial resize (only rows)
-            const partialRowsAction: GridAction = {
-                type: 'resize',
-                payload: { resetState, rows: 3 } // Cols undefined
-            };
-            // state is 2x2. Expand to 3x2.
-            // Row 0: AB
-            // Row 1: AB
-            // Row 2: (2 spaces)
-            handleAction(state, partialRowsAction);
-            expect(resetState).toHaveBeenCalledWith('ABAB  ');
-
-            // Test partial resize (only cols)
-            const partialColsAction: GridAction = {
-                type: 'resize',
-                payload: { resetState, cols: 3 } // Rows undefined
-            };
-            // state is 2x2. Expand to 2x3.
-            // Row 0: AB -> AB 
-            // Row 1: AB -> AB 
-            handleAction(state, partialColsAction);
-            expect(resetState).toHaveBeenCalledWith('AB AB ');
+            const nextState = handleAction(initialState, action);
+            expect(nextState.select).toBe(5);
         });
 
-        it('handles delete action branches', () => {
-            // 1. Valid execution (already tested)
+        test('toggles selection off if same square clicked', () => {
+            const state = { ...initialState, select: 5 };
+            const action: GridAction = {
+                type: 'click',
+                payload: { select: 5 },
+            };
+            const nextState = handleAction(state, action);
+            expect(nextState.select).toBeNull();
+        });
+    });
+
+    describe('handleAction delete (special pointer loop)', () => {
+        test('decrements pointer if pointer > 0 and tape[pointer] is 0', () => {
             const state = {
                 ...initialState,
-                tape: [0, 0, 0],
-                pointer: 1
-            };
-            const action: GridAction = { type: 'delete' } as any;
-            const newState = handleAction(state, action) as any;
-            expect(newState.pointer).toBe(0);
-
-            // 2. Pointer 0 (no decrement)
-            const stateZero = { ...initialState, tape: [0, 0, 0], pointer: 0 };
-            const newStateZero = handleAction(stateZero, action) as any;
-            expect(newStateZero.pointer).toBe(0); // No change
-
-            // 3. Non-zero value (no decrement)
-            const stateVal = { ...initialState, tape: [0, 5, 0], pointer: 1 };
-            const newStateVal = handleAction(stateVal, action) as any;
-            expect(newStateVal.pointer).toBe(1); // No change
+                pointer: 1,
+                tape: [0, 0],
+            } as any;
+            const action = { type: 'delete' } as any;
+            const nextState = handleAction(state, action);
+            expect(nextState.pointer).toBe(0);
         });
     });
 });

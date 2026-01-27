@@ -1,24 +1,28 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import Suffolk, { getState, cleanInput, SuffolkState } from '../Suffolk';
-import TextEditor from '../TextEditor';
+import React from 'react';
+import Suffolk, { cleanInput, getState, SuffolkState } from '../Suffolk';
 
-// Mocks
-// Mocks
-jest.mock('../TextEditor', () =>
-    jest.fn(() => <div data-testid="text-editor" />)
-);
+// Mock TextEditor to avoid full rendering logic
+jest.mock('../TextEditor', () => ({
+    __esModule: true,
+    default: ({ name }: { name: string }) => (
+        <div data-testid="text-editor">{name}</div>
+    ),
+}));
 
-describe('Suffolk', () => {
+describe('Suffolk Interpreter Logic', () => {
     describe('cleanInput', () => {
-        test('removes non-command characters', () => {
-            expect(cleanInput('abc>!<,.')).toBe('>!<,.');
+        test('removes invalid characters', () => {
+            expect(cleanInput('abc>def<ghi!jkl,mno.pqr')).toBe('><!,.');
+        });
+
+        test('handles empty input', () => {
             expect(cleanInput('')).toBe('');
         });
     });
 
     describe('getState', () => {
-        const defaultState: SuffolkState = {
+        const initialState: SuffolkState = {
             register: 0,
             pointer: 0,
             output: '',
@@ -28,118 +32,124 @@ describe('Suffolk', () => {
             code: '><!,.',
         };
 
-        test('handles > command', () => {
-            const state = { ...defaultState, code: '>', index: 0 };
-            const newState = getState(state);
-            expect(newState.pointer).toBe(1);
-            expect(newState.tape.length).toBe(2);
+        test('handles > (increment pointer)', () => {
+            const state = { ...initialState, code: '>' };
+            const nextState = getState(state);
+            expect(nextState.pointer).toBe(1);
+            expect(nextState.tape).toHaveLength(2);
+            expect(nextState.tape[1]).toBe(0);
         });
 
-        test('handles < command', () => {
-            // register += tape[pointer], pointer = 0
+        test('handles < (add tape value to register and reset pointer)', () => {
             const state = {
-                ...defaultState,
+                ...initialState,
                 code: '<',
-                index: 0,
-                tape: [0, 5],
+                tape: [5, 10],
                 pointer: 1,
                 register: 2,
             };
-            const newState = getState(state);
-            expect(newState.register).toBe(7);
-            expect(newState.pointer).toBe(0);
+            const nextState = getState(state);
+            expect(nextState.register).toBe(12); // 2 + 10
+            expect(nextState.pointer).toBe(0);
         });
 
-        test('handles ! command', () => {
-            // tape[pointer] -= register - 1; if < 0 -> 0; reg=0; ptr=0
+        test('handles ! (decrement tape, reset register and pointer)', () => {
             const state = {
-                ...defaultState,
+                ...initialState,
                 code: '!',
-                index: 0,
-                tape: [10],
+                tape: [20],
                 pointer: 0,
                 register: 5,
             };
-            const newState = getState(state);
-            // 10 - (5 - 1) = 10 - 4 = 6
-            expect(newState.tape[0]).toBe(6);
-            expect(newState.register).toBe(0);
-            expect(newState.pointer).toBe(0);
+            const nextState = getState(state);
+            expect(nextState.tape[0]).toBe(16); // 20 - (5 - 1)
+            expect(nextState.register).toBe(0);
+            expect(nextState.pointer).toBe(0);
         });
 
-        test('handles . command', () => {
-            // output += char(reg-1) if reg > 0
+        test('handles ! with negative result (clamped to 0)', () => {
             const state = {
-                ...defaultState,
-                code: '.',
-                index: 0,
-                register: 66,
-            }; // 66-1 = 65 ('A')
-            const newState = getState(state);
-            expect(newState.output).toBe('A');
-        });
-
-        test('handles , command', () => {
-            const promptSpy = jest.spyOn(window, 'prompt').mockReturnValue('A');
-            const state = { ...defaultState, code: ',', index: 0 };
-            const newState = getState(state);
-            expect(newState.register).toBe(65);
-            promptSpy.mockRestore();
-        });
-
-        test('handles , command with no input', () => {
-            const promptSpy = jest
-                .spyOn(window, 'prompt')
-                .mockReturnValue(null);
-            const state = {
-                ...defaultState,
-                code: ',',
-                index: 0,
-                register: 10,
+                ...initialState,
+                code: '!',
+                tape: [2],
+                pointer: 0,
+                register: 5,
             };
-            const newState = getState(state);
-            expect(newState.register).toBe(0);
-            promptSpy.mockRestore();
+            const nextState = getState(state);
+            expect(nextState.tape[0]).toBe(0); // Clamped
         });
 
-        test('handles end loop', () => {
-            const state = { ...defaultState, code: '>', index: 1 };
-            const newState = getState(state);
-            expect(newState.index).toBe(0);
-            expect(newState.end).toBe(true);
+        test('handles . (output char if register > 0)', () => {
+            const state = {
+                ...initialState,
+                code: '.',
+                register: 66, // 'A' is 65, so 66 - 1 = 65
+            };
+            const nextState = getState(state);
+            expect(nextState.output).toBe('A');
+        });
+
+        test('handles . with register 0 (no output)', () => {
+            const state = {
+                ...initialState,
+                code: '.',
+                register: 0,
+            };
+            const nextState = getState(state);
+            expect(nextState.output).toBe('');
+        });
+
+        test('handles , (input - mock prompt)', () => {
+            const originalPrompt = window.prompt;
+            window.prompt = jest.fn().mockReturnValue('K');
+
+            const state = { ...initialState, code: ',' };
+            const nextState = getState(state);
+
+            expect(window.prompt).toHaveBeenCalled();
+            expect(nextState.register).toBe(75); // 'K'.charCodeAt(0)
+
+            window.prompt = originalPrompt;
+        });
+
+        test('handles , with no input', () => {
+            const originalPrompt = window.prompt;
+            window.prompt = jest.fn().mockReturnValue('');
+
+            const state = { ...initialState, code: ',' };
+            const nextState = getState(state);
+
+            expect(nextState.register).toBe(0);
+
+            window.prompt = originalPrompt;
+        });
+
+        test('handles end of code', () => {
+            const state = {
+                ...initialState,
+                index: 5,
+                code: '><!,.',
+                end: false,
+            };
+            const nextState = getState(state);
+            expect(nextState.index).toBe(0);
+            expect(nextState.end).toBe(true);
+        });
+
+        test('resets end flag if called while end is true', () => {
+            const state = { ...initialState, index: 0, code: '>', end: true };
+            const nextState = getState(state);
+            expect(nextState.end).toBe(false);
+            expect(nextState.pointer).toBe(1);
         });
     });
 
-    describe('Component', () => {
-        test('renders TextEditor with correct props', () => {
+    describe('Editor Component', () => {
+        test('renders TextEditor with correct name', () => {
             render(<Suffolk />);
-            const props = (TextEditor as jest.Mock).mock.calls[
-                (TextEditor as jest.Mock).mock.calls.length - 1
-            ][0];
-            expect(props.name).toBe('Suffolk');
-        });
-
-        test('invokes runner and clean callbacks', () => {
-            render(<Suffolk />);
-            const props = (TextEditor as jest.Mock).mock.calls[
-                (TextEditor as jest.Mock).mock.calls.length - 1
-            ][0];
-
-            // Verify clean callback
-            expect(props.clean('>!<,.abc')).toBe('>!<,.');
-
-            // Verify runner callback
-            const state = {
-                register: 0,
-                pointer: 0,
-                output: '',
-                index: 0,
-                tape: [0],
-                end: false,
-                code: '>',
-            };
-            const newState = props.runner(state);
-            expect(newState.pointer).toBe(1);
+            expect(screen.getByTestId('text-editor')).toHaveTextContent(
+                'Suffolk'
+            );
         });
     });
 });
