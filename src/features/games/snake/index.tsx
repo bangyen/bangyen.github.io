@@ -74,12 +74,11 @@ export default function Snake(): React.ReactElement {
     const handleTap = useCallback(
         (event: React.PointerEvent) => {
             const { clientX, clientY } = event;
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
+            const centerX = width / 2;
+            const centerY = height / 2;
 
             const dx = clientX - centerX;
             const dy = clientY - centerY;
-
             const currentDir =
                 state.buffer.length > 0
                     ? state.buffer[state.buffer.length - 1]
@@ -100,7 +99,7 @@ export default function Snake(): React.ReactElement {
                 payload: { key },
             });
         },
-        [dispatch, state.velocity, state.buffer]
+        [dispatch, state.velocity, state.buffer, width, height]
     );
 
     const chooseColor = useCallback(
