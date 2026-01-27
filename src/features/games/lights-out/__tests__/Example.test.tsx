@@ -16,7 +16,7 @@ jest.mock('../../../../components/ui/CustomGrid', () => ({
                 const r = Math.floor(i / cols);
                 const c = i % cols;
                 const props = cellProps(r, c);
-                // eslint-disable-next-line react/no-array-index-key
+
                 return (
                     <div key={i} data-testid={`cell-${r}-${c}`} {...props} />
                 );
@@ -42,9 +42,22 @@ describe('Lights Out Example Component', () => {
         });
     });
 
-    it('renders without crashing', () => {
+    it('renders board, input, and output grids with correct dimensions', () => {
         render(<Example size={100} palette={mockPalette} />);
-        expect(screen.getAllByTestId('custom-grid').length).toBeGreaterThan(0);
+
+        // Should render exactly 3 grids: 1 board (3x3) + 1 input (1x3) + 1 output (1x3)
+        const grids = screen.getAllByTestId('custom-grid');
+        expect(grids).toHaveLength(3);
+
+        // Verify cells are rendered (multiple grids have cells with same IDs)
+        // Board grid has 9 cells (3x3), input has 3 cells (1x3), output has 3 cells (1x3)
+        // cell-0-0, cell-0-1, cell-0-2 appear in all 3 grids
+        const cell00Elements = screen.getAllByTestId('cell-0-0');
+        expect(cell00Elements).toHaveLength(3); // One in each grid
+
+        // Verify board-specific cells (only in 3x3 board grid)
+        const cell22Elements = screen.getAllByTestId('cell-2-2');
+        expect(cell22Elements).toHaveLength(1); // Only in board grid
     });
 
     it('calls getStates with correct start and dims', () => {
