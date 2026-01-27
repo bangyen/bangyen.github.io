@@ -1,234 +1,170 @@
-import * as logic from '../logic';
-import { gridMove, getDirection } from '../../../interpreters/utils/gridUtils';
+import {
+    handleAction,
+    handleResize,
+    reduceBoard,
+    getRandom,
+    addNext,
+    mapBoard,
+} from '../logic';
 
-// Mock utils
-jest.mock('../../../interpreters/utils/gridUtils', () => ({
-    gridMove: jest.fn(),
-    getDirection: jest.fn(),
-}));
-
-describe('Snake Logic', () => {
-    beforeEach(() => {
-        jest.clearAllMocks();
-    });
-
+describe('Snake Game Logic', () => {
     describe('getRandom', () => {
-        test('returns a number within range', () => {
-            const max = 10;
-            const val = logic.getRandom(max);
-            expect(val).toBeGreaterThanOrEqual(0);
-            expect(val).toBeLessThan(max);
+        test('returns floor of random * max', () => {
+            jest.spyOn(Math, 'random').mockReturnValue(0.5);
+            expect(getRandom(10)).toBe(5);
+            jest.spyOn(Math, 'random').mockReturnValue(0.999);
+            expect(getRandom(10)).toBe(9);
+            jest.restoreAllMocks();
         });
     });
 
     describe('addNext', () => {
-        test('adds food to a free spot', () => {
-            const randomSpy = jest
-                .spyOn(Math, 'random')
-                .mockReturnValueOnce(0.1) // 10 * 0.1 = 1 (Occupied)
-                .mockReturnValueOnce(0.5); // 10 * 0.5 = 5 (Free)
-
-            const exclude = { 1: 5 };
-            const result = logic.addNext(10, exclude);
-
-            expect(result[1]).toBe(5); // Original preserved
-            expect(result[2]).toBe(-1); // New food (1 occupied -> 2)
-
-            randomSpy.mockRestore();
+        test('adds food to a clear spot', () => {
+            jest.spyOn(Math, 'random').mockReturnValue(0.1); // pos 1 for max 10
+            const board = { 0: 3 }; // head at 0
+            const next = addNext(10, board);
+            expect(next[1]).toBe(-1);
+            jest.restoreAllMocks();
         });
 
-        test('wraps around if max reached', () => {
-            const randomSpy = jest.spyOn(Math, 'random').mockReturnValue(0.9); // 9.
-            const exclude = { 9: 5 };
-            const result = logic.addNext(10, exclude);
-            expect(result[0]).toBe(-1);
+        test('skips occupied spots', () => {
+            jest.spyOn(Math, 'random').mockReturnValue(0); // target pos 0
+            const board = { 0: 3, 1: 2, 2: 1 }; // spots 0,1,2 occupied
+            const next = addNext(10, board);
+            expect(next[3]).toBe(-1); // skips to first available
+            jest.restoreAllMocks();
+        });
 
-            randomSpy.mockRestore();
+        test('wraps around if end of board reached while skipping', () => {
+            jest.spyOn(Math, 'random').mockReturnValue(0.8); // target pos 8 for max 10
+            const board = { 8: 1, 9: 1 }; // 8 and 9 occupied
+            const next = addNext(10, board);
+            expect(next[0]).toBe(-1); // wraps to 0
+            jest.restoreAllMocks();
+        });
+    });
+
+    describe('mapBoard', () => {
+        test('decrements segments and keeps food', () => {
+            const board = { 1: 3, 2: 2, 3: -1 };
+            const next = mapBoard(board, -1);
+            expect(next).toEqual({ 1: 2, 2: 1, 3: -1 });
+        });
+
+        test('removes expired segments', () => {
+            const board = { 1: 1, 2: 0 };
+            const next = mapBoard(board, -1);
+            expect(next).toEqual({});
         });
     });
 
     describe('handleResize', () => {
-        test('resets state with new dimensions', () => {
-            const state: logic.SnakeState = {
-                rows: 5,
-                cols: 5,
-                velocity: 1,
-                buffer: [],
-                length: 5,
+        test('initializes state with head and food', () => {
+            jest.spyOn(Math, 'random')
+                .mockReturnValueOnce(0)
+                .mockReturnValueOnce(0.5);
+            const state: any = { length: 3 };
+            const next = handleResize(state, 10, 10);
+            expect(next.rows).toBe(10);
+            expect(next.cols).toBe(10);
+            expect(next.head).toBe(0);
+            expect(next.board[0]).toBe(3);
+            expect(next.board[50]).toBe(-1); // 0.5 * 100
+            jest.restoreAllMocks();
+        });
+    });
+
+    describe('reduceBoard (movement loop)', () => {
+        let initialState: any;
+
+        beforeEach(() => {
+            initialState = {
+                rows: 10,
+                cols: 10,
                 head: 0,
-                board: {},
+                velocity: 1, // Moving right
+                length: 3,
+                board: { 0: 3, 5: -1 },
+                buffer: [],
             };
-            const newState = logic.handleResize(state, 10, 10);
-            expect(newState.rows).toBe(10);
-            expect(newState.cols).toBe(10);
-            expect(Object.keys(newState.board)).toHaveLength(2); // Head + Food
         });
 
-        test('resolves head/food collision', () => {
-            const randomSpy = jest.spyOn(Math, 'random').mockReturnValue(0.1);
+        test('moves head according to velocity', () => {
+            const next = reduceBoard(initialState);
+            expect(next.head).toBe(1);
+            expect(next.board[1]).toBe(3);
+            expect(next.board[0]).toBe(2);
+        });
 
-            const state: logic.SnakeState = {
-                rows: 5,
-                cols: 5,
-                velocity: 1,
-                buffer: [],
-                length: 5,
-                head: 0,
-                board: {},
-            };
+        test('eats food and grows', () => {
+            initialState.head = 4;
+            initialState.velocity = 1; // move to 5
+            const next = reduceBoard(initialState);
+            expect(next.head).toBe(5);
+            expect(next.board[5]).toBe(4); // was 3, +1 from eating food
+            expect(next.length).toBe(4);
+        });
 
-            const newState = logic.handleResize(state, 10, 10);
-            expect(newState.head).toBe(10);
-            expect(newState.board[11]).toBe(-1);
+        test('processes velocity buffer', () => {
+            initialState.buffer = [2]; // change to down
+            const next = reduceBoard(initialState);
+            expect(next.velocity).toBe(2);
+            expect(next.head).toBe(1); // Moved right (0 -> 1)
+            expect(next.buffer).toEqual([]);
+        });
 
-            randomSpy.mockRestore();
+        test('ignores opposite directions in buffer', () => {
+            initialState.buffer = [-1]; // moving right (1), ignore left (-1)
+            const next = reduceBoard(initialState);
+            expect(next.velocity).toBe(1);
+            expect(next.head).toBe(1);
+        });
+
+        test('handles self-collision', () => {
+            initialState.head = 0;
+            initialState.velocity = 1; // move to 1
+            initialState.board = { 0: 3, 1: 2 }; // segment at 1 (value 2)
+            const next = reduceBoard(initialState);
+            expect(next.length).toBe(2); // Initial length 3 - segment value 1 = 2
         });
     });
 
     describe('handleAction', () => {
-        test('resize action matches handleResize', () => {
-            const state = { rows: 5, cols: 5 } as logic.SnakeState;
-            const newState = logic.handleAction(state, {
+        test('steer action adds to buffer', () => {
+            const state: any = { buffer: [] };
+            const next = handleAction(state, {
+                type: 'steer',
+                payload: { key: 'ArrowDown' },
+            });
+            expect(next.buffer).toEqual([2]);
+        });
+
+        test('resize action calls handleResize', () => {
+            const state: any = { length: 3 };
+            const next = handleAction(state, {
                 type: 'resize',
-                payload: { rows: 10, cols: 10 },
+                payload: { rows: 5, cols: 5 },
             });
-            expect(newState.rows).toBe(10);
-        });
-
-        test('steer action adds to buffer if valid direction', () => {
-            const state = { buffer: [] } as unknown as logic.SnakeState;
-            (getDirection as jest.Mock).mockReturnValue(2); // Valid
-
-            const newState = logic.handleAction(state, {
-                type: 'steer',
-                payload: { key: 'down' },
-            });
-            expect(newState.buffer).toEqual([2]);
-        });
-
-        test('steer action ignores invalid direction', () => {
-            const state = { buffer: [] } as unknown as logic.SnakeState;
-            (getDirection as jest.Mock).mockReturnValue(0); // Invalid/Null
-
-            const newState = logic.handleAction(state, {
-                type: 'steer',
-                payload: { key: 'invalid' },
-            });
-            expect(newState.buffer).toEqual([]);
+            expect(next.rows).toBe(5);
         });
 
         test('move action calls reduceBoard', () => {
-            const state = {
-                rows: 5,
-                cols: 5,
-                board: {},
+            const state: any = {
+                rows: 10,
+                cols: 10,
+                head: 0,
+                velocity: 1,
+                board: { 0: 3 },
                 buffer: [],
-                length: 1,
-                head: 0,
-                velocity: 1,
-            } as logic.SnakeState;
-            const newState = logic.handleAction(state, { type: 'move' });
-            expect(newState).not.toBe(state);
-        });
-
-        test('default action returns state', () => {
-            const state = { rows: 5 } as unknown as logic.SnakeState;
-            const newState = logic.handleAction(state, {
-                type: 'unknown',
-            } as unknown as logic.Action);
-            expect(newState).toBe(state);
-        });
-    });
-
-    describe('reduceBoard', () => {
-        test('moves head and decrements values', () => {
-            (gridMove as jest.Mock).mockReturnValue(1); // 0 -> 1
-
-            const state: logic.SnakeState = {
-                rows: 10,
-                cols: 10,
-                length: 5,
-                head: 0,
-                velocity: 1,
-                buffer: [],
-                board: { 0: 5, 2: 4 }, // Head at 0 (val 5), Body at 2 (val 4)
             };
-
-            const newState = logic.reduceBoard(state);
-            expect(newState.head).toBe(1);
-            expect(newState.board[1]).toBe(5);
-            expect(newState.board[0]).toBe(4);
-            expect(newState.board[2]).toBe(3);
+            const next = handleAction(state, { type: 'move' });
+            expect(next.head).toBe(1);
         });
 
-        test('handles food consumption', () => {
-            (gridMove as jest.Mock).mockReturnValue(1);
-            const state: logic.SnakeState = {
-                rows: 10,
-                cols: 10,
-                length: 5,
-                head: 0,
-                velocity: 1,
-                buffer: [],
-                board: { 0: 5, 1: -1 }, // Food at 1
-            };
-
-            const newState = logic.reduceBoard(state);
-            expect(newState.length).toBe(6);
-            expect(newState.board[1]).toBe(6);
-            const hasFood = Object.values(newState.board).some(v => v < 0);
-            expect(hasFood).toBe(true);
-        });
-
-        test('handles collision (crash)', () => {
-            (gridMove as jest.Mock).mockReturnValue(1);
-            const state: logic.SnakeState = {
-                rows: 10,
-                cols: 10,
-                length: 5,
-                head: 0,
-                velocity: 1,
-                buffer: [],
-                board: { 0: 5, 1: 4 }, // Body at 1
-            };
-
-            const newState = logic.reduceBoard(state);
-            expect(newState.head).toBe(1);
-            expect(newState.board[1]).toBeLessThan(5);
-        });
-
-        test('consumes buffer/velocity update', () => {
-            (gridMove as jest.Mock).mockReturnValue(1);
-            const state: logic.SnakeState = {
-                rows: 10,
-                cols: 10,
-                length: 5,
-                head: 0,
-                velocity: 1,
-                buffer: [2, 3], // Buffer has turns
-                board: {},
-            };
-
-            const newState = logic.reduceBoard(state);
-            expect(newState.buffer).toEqual([3]);
-            expect(newState.velocity).toBe(2);
-        });
-
-        test('prevents 180 turn', () => {
-            (gridMove as jest.Mock).mockReturnValue(1);
-            const state: logic.SnakeState = {
-                rows: 10,
-                cols: 10,
-                length: 5,
-                head: 0,
-                velocity: 1,
-                buffer: [-1], // Opposite direction
-                board: {},
-            };
-
-            const newState = logic.reduceBoard(state);
-            expect(newState.velocity).toBe(1); // Unchanged
-            expect(newState.buffer).toEqual([]); // Consumed
+        test('ignores unknown actions', () => {
+            const state: any = { head: 0 };
+            const next = handleAction(state, { type: 'unknown' } as any);
+            expect(next).toBe(state);
         });
     });
 });
