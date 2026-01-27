@@ -150,6 +150,14 @@ describe('Toolbar', () => {
             });
             handleToolbar(initialState, action);
             expect(navigator.clipboard.writeText).toHaveBeenCalled();
+            handleToolbar(initialState, action);
+            expect(navigator.clipboard.writeText).toHaveBeenCalled();
+        });
+
+        test('handles unknown action (returns empty state)', () => {
+            const action = { type: 'unknown', payload: mockPayload };
+            const result = handleToolbar(initialState, action);
+            expect(result).toEqual({});
         });
     });
 
