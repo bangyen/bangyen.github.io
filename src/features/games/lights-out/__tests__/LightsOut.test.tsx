@@ -180,7 +180,7 @@ describe('LightsOut', () => {
         );
     });
 
-    it.skip('handles queueing moves in auto play', () => {
+    it.skip('handles queueing moves in auto play', async () => {
         // Return multiple moves consistently
         mockGetNextMove.mockReturnValue([
             { row: 0, col: 0 },
@@ -190,29 +190,27 @@ describe('LightsOut', () => {
         render(<LightsOut />);
         fireEvent.click(screen.getByLabelText('Auto Play'));
 
+        // 1. Initial wait for first timeout (300ms) -> triggers getNextMove & setMoveQueue
         act(() => {
-            jest.advanceTimersByTime(310);
+            jest.advanceTimersByTime(350);
+        });
+        expect(mockGetNextMove).toHaveBeenCalled();
+
+        // 2. Wait for second timeout (300ms) -> triggers dispatch(0,0) & setMoveQueue
+        act(() => {
+            jest.advanceTimersByTime(350);
         });
 
-        act(() => {
-            jest.advanceTimersByTime(310);
-        });
-
-        // Wait for next tick to process queue
-        act(() => {
-            jest.advanceTimersByTime(300);
-        });
-
-        // Should start with first move
         expect(mockHandleBoard).toHaveBeenCalledWith(
             expect.anything(),
             expect.objectContaining({ type: 'adjacent', row: 0, col: 0 })
         );
 
-        // Next tick should handle queued move
+        // 3. Wait for third timeout (300ms) -> triggers dispatch(0,1)
         act(() => {
-            jest.advanceTimersByTime(300);
+            jest.advanceTimersByTime(350);
         });
+
         expect(mockHandleBoard).toHaveBeenCalledWith(
             expect.anything(),
             expect.objectContaining({ type: 'adjacent', row: 0, col: 1 })
