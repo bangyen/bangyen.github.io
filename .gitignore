@@ -38,3 +38,4 @@ temp_research_repos/
 *.tsbuildinfo
 __pycache__/
 coverage_output_*.txt
+*.txt

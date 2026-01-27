@@ -1,7 +1,7 @@
 import TextEditor from './TextEditor';
 import React, { useCallback } from 'react';
 
-interface SuffolkState {
+export interface SuffolkState {
     register: number;
     pointer: number;
     output: string;
@@ -21,7 +21,7 @@ interface SuffolkStart {
     code: string;
 }
 
-function cleanInput(input: string): string {
+export function cleanInput(input: string): string {
     let code = '';
 
     for (const char of input) if ('><!,.'.includes(char)) code += char;
@@ -29,7 +29,7 @@ function cleanInput(input: string): string {
     return code;
 }
 
-function getState(state: SuffolkState): SuffolkState {
+export function getState(state: SuffolkState): SuffolkState {
     let { register, pointer, output, index, tape, end } = state;
     const { code } = state;
 

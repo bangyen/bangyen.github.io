@@ -12,7 +12,7 @@ interface BackState extends GridState {
     // position, grid, rows, cols are inherited from GridState
 }
 
-function getState(state: BackState): BackState {
+export function getState(state: BackState): BackState {
     let { velocity, position, pointer, tape } = state;
     const { grid, rows, cols, end } = state;
 

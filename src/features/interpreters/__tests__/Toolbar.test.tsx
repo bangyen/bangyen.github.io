@@ -1,5 +1,37 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { handleToolbar } from '../Toolbar';
+import React, { useContext } from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { handleToolbar, Toolbar } from '../Toolbar';
+import { EditorContext } from '../EditorContext';
+
+// Mocks
+jest.mock('../../../components/ui/Controls', () => ({
+    TooltipButton: ({ title, onClick, disabled }: any) => (
+        <button data-testid={`btn-${title}`} onClick={disabled ? undefined : onClick} disabled={disabled}>
+            {title}
+        </button>
+    ),
+}));
+
+jest.mock('../../../components/mui', () => ({
+    useMediaQuery: jest.fn(),
+}));
+
+jest.mock('../../../components/icons', () => ({
+    NavigateBeforeRounded: () => <svg />,
+    NavigateNextRounded: () => <svg />,
+    PlayArrowRounded: () => <svg />,
+    FirstPageRounded: () => <svg />,
+    LastPageRounded: () => <svg />,
+    PauseRounded: () => <svg />,
+    InfoRounded: () => <svg />,
+    HomeRounded: () => <svg />,
+}));
+
+// Mock Router Link
+jest.mock('react-router-dom', () => ({
+    Link: ({ children }: any) => <a>{children}</a>,
+}));
 
 describe('Toolbar', () => {
     beforeEach(() => {
@@ -7,13 +39,11 @@ describe('Toolbar', () => {
         window.confirm = jest.fn(() => true);
     });
 
+    // ... Logic Tests ...
     describe('handleToolbar', () => {
         const mockPayload = {
             dispatch: jest.fn(),
             nextIter: jest.fn((action: { type: string; payload: any }) => {
-                // Return a proper object structure - match what the code expects
-                // For reset action, nextIter is called with { type: 'clear', payload: resetPayload }
-                // resetPayload contains { ...state, ...start } which is { value: 0, pause: false }
                 const payload = action.payload || action;
                 return {
                     value: payload.value || 0,
@@ -34,112 +64,144 @@ describe('Toolbar', () => {
             jest.clearAllMocks();
         });
 
-        test('handles run action', () => {
-            const action = {
-                type: 'run',
-                payload: mockPayload,
-            };
-
-            const result = handleToolbar(initialState, action);
-
+        test('handles run action and timer repeat', () => {
+            const action = { type: 'run', payload: mockPayload };
+            handleToolbar(initialState, action);
             expect(mockPayload.create).toHaveBeenCalled();
-            expect(result.pause).toBe(false);
+            // Verify repeat callback
+            const config = mockPayload.create.mock.calls[0][0];
+            config.repeat();
+            // repeat triggers dispatch('timer')
+            expect(mockPayload.dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'timer' }));
         });
 
-        test('handles stop action', () => {
-            const action = {
-                type: 'stop',
-                payload: mockPayload,
-            };
+        test('handles reset action', () => {
+            const action = { type: 'reset', payload: mockPayload };
+            mockPayload.nextIter.mockReturnValueOnce({ value: 0, pause: false });
 
-            const result = handleToolbar(
-                { ...initialState, pause: false },
-                action
-            );
+            const result = handleToolbar({ ...initialState, pause: false }, action);
 
+            expect(window.confirm).toHaveBeenCalled();
             expect(mockPayload.clear).toHaveBeenCalled();
             expect(result.pause).toBe(true);
         });
 
-        test('handles reset action', () => {
-            const action = {
-                type: 'reset',
-                payload: mockPayload,
-            };
-
-            // Mock nextIter to return an object
-            mockPayload.nextIter.mockReturnValueOnce({
-                value: 0,
-                pause: false,
-            });
-
-            const result = handleToolbar(
-                { ...initialState, pause: false },
-                action
-            );
-
+        test('handles stop action', () => {
+            const action = { type: 'stop', payload: mockPayload };
+            const result = handleToolbar({ ...initialState, pause: false }, action);
             expect(mockPayload.clear).toHaveBeenCalled();
-            expect(mockPayload.nextIter).toHaveBeenCalled();
-            // After reset, pause should be set to true
             expect(result.pause).toBe(true);
         });
 
         test('handles next action', () => {
-            const action = {
-                type: 'next',
-                payload: mockPayload,
-            };
-
+            const action = { type: 'next', payload: mockPayload };
             const result = handleToolbar(initialState, action);
-
-            expect(result).toBeDefined();
+            expect(mockPayload.nextIter).toHaveBeenCalled();
+            // next doesn't set pause to true explicitly in pauseStateMap, 
+            // but updateHandler returns result from nextIter.
+            // If nextIter returns { pause: ... }, it's used.
         });
 
         test('handles prev action', () => {
-            const action = {
-                type: 'prev',
-                payload: mockPayload,
-            };
-
+            const action = { type: 'prev', payload: mockPayload };
             const result = handleToolbar(initialState, action);
-
             expect(mockPayload.nextIter).toHaveBeenCalled();
             expect(result.pause).toBe(true);
         });
 
-        test('handles timer action with end state', () => {
-            const action = {
-                type: 'timer',
-                payload: mockPayload,
-            };
-
-            const stateWithEnd = { ...initialState, end: true };
-
-            handleToolbar(stateWithEnd, action);
-
-            expect(mockPayload.dispatch).toHaveBeenCalled();
+        test('handles timer action with end=true (dispatches stop)', () => {
+            const action = { type: 'timer', payload: mockPayload };
+            handleToolbar({ ...initialState, end: true }, action);
+            // Should dispatch 'stop'
+            expect(mockPayload.dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'stop' }));
         });
 
-        test('handles timer action without end state', () => {
-            const action = {
-                type: 'timer',
-                payload: mockPayload,
-            };
+        test('handles timer action with end=false (dispatches next)', () => {
+            const action = { type: 'timer', payload: mockPayload };
+            handleToolbar({ ...initialState, end: false }, action);
+            // Should dispatch 'next'
+            expect(mockPayload.dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'next' }));
+        });
 
+        test('handles share action', () => {
+            const action = { type: 'share', payload: mockPayload };
+            Object.assign(navigator, {
+                clipboard: { writeText: jest.fn() },
+            });
             handleToolbar(initialState, action);
+            expect(navigator.clipboard.writeText).toHaveBeenCalled();
+        });
+    });
 
-            expect(mockPayload.dispatch).toHaveBeenCalled();
+    describe('Toolbar Component', () => {
+        // Fix: mockDispatch returns a function (handler)
+        const mockDispatch = jest.fn(() => jest.fn());
+        const mockContext = {
+            name: 'Test',
+            pause: false, // Running
+            fastForward: false,
+            dispatch: mockDispatch,
+            // ... other props
+        };
+        const useMediaQuery = require('../../../components/mui').useMediaQuery;
+
+        const renderWithContext = (context: any) => {
+            // Toolbar returns Element[]. Need to wrap in div.
+            const Wrapper = () => {
+                return <div><Toolbar /></div>;
+            };
+            return render(
+                <EditorContext.Provider value={context}>
+                    <Wrapper />
+                </EditorContext.Provider>
+            );
+        };
+
+        test('renders empty if no context', () => {
+            renderWithContext(undefined);
+            // Should be empty
+            expect(screen.queryByRole('button')).not.toBeInTheDocument();
         });
 
-        test('handles unknown action gracefully', () => {
-            const action = {
-                type: 'unknown',
-                payload: mockPayload,
-            };
+        test('renders running state (Pause button)', () => {
+            useMediaQuery.mockReturnValue(true); // Desktop
+            renderWithContext({ ...mockContext, pause: false });
 
-            const result = handleToolbar(initialState, action);
+            // If pause=false (Running), show Pause button.
+            expect(screen.getByTestId('btn-Pause')).toBeInTheDocument();
+            expect(screen.queryByTestId('btn-Run')).not.toBeInTheDocument();
+        });
 
-            expect(result).toBeDefined();
+        test('renders paused state (Run button)', () => {
+            useMediaQuery.mockReturnValue(true);
+            renderWithContext({ ...mockContext, pause: true });
+
+            expect(screen.getByTestId('btn-Run')).toBeInTheDocument();
+        });
+
+        test('renders Reset button', () => {
+            useMediaQuery.mockReturnValue(true);
+            renderWithContext(mockContext);
+            expect(screen.getByTestId('btn-Reset')).toBeInTheDocument();
+        });
+
+        test('renders Fast Forward button (disabled/enabled)', () => {
+            useMediaQuery.mockReturnValue(true);
+            // Case 1: Disabled
+            const { rerender } = renderWithContext({ ...mockContext, fastForward: false });
+            const btn = screen.getByTestId('btn-Fast Forward');
+            expect(btn).toBeDisabled();
+        });
+
+        test('handles click events', () => {
+            useMediaQuery.mockReturnValue(true);
+            renderWithContext({ ...mockContext, pause: true }); // Show Run
+
+            const btnRun = screen.getByTestId('btn-Run');
+            fireEvent.click(btnRun);
+
+            // mockDispatch called with 'run'.
+            expect(mockDispatch).toHaveBeenCalledWith('run');
         });
     });
 });

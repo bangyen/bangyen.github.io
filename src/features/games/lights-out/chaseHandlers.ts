@@ -1,7 +1,7 @@
 import { getGrid, flipAdj } from './boardHandlers';
 import { getProduct } from './matrices';
 
-function chaseLights(states: number[][][], dims: number): number[][][] {
+export function chaseLights(states: number[][][], dims: number): number[][][] {
     const newStates = [...states];
     let prev = states.at(-1);
 
@@ -21,7 +21,7 @@ function chaseLights(states: number[][][], dims: number): number[][][] {
     return newStates;
 }
 
-function fillRow(
+export function fillRow(
     row: number[],
     dims: number
 ): {
@@ -52,7 +52,7 @@ function fillRow(
     };
 }
 
-function extendBack(states: number[][], size: number): number[][] {
+export function extendBack(states: number[][], size: number): number[][] {
     const back = states.at(-1);
     if (!back) return states;
 
