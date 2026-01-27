@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import LightsOut from '../LightsOut';
@@ -16,7 +17,8 @@ jest.mock('../boardHandlers', () => ({
     handleBoard: jest.fn((state, action) => {
         // Simple reducer mock that updates state based on action
         if (action.type === 'auto') return { ...state, auto: !state.auto };
-        if (action.type === 'resize') return { ...state, rows: action.newRows, cols: action.newCols };
+        if (action.type === 'resize')
+            return { ...state, rows: action.newRows, cols: action.newCols };
         return state;
     }),
     getNextMove: jest.fn(),
@@ -87,9 +89,13 @@ jest.mock('../../../../components/ui/Controls', () => ({
     },
 }));
 
-jest.mock('../Info', () => function MockInfo() {
-    return <div data-testid="info-modal">Info</div>;
-});
+jest.mock(
+    '../Info',
+    () =>
+        function MockInfo() {
+            return <div data-testid="info-modal">Info</div>;
+        }
+);
 
 // Mock ThemeProvider
 jest.mock('../../../../hooks/useTheme', () => ({
@@ -109,7 +115,8 @@ describe('LightsOut', () => {
         jest.useFakeTimers();
         mockHandleBoard.mockImplementation((state, action) => {
             if (action.type === 'auto') return { ...state, auto: !state.auto };
-            if (action.type === 'resize') return { ...state, rows: action.newRows, cols: action.newCols };
+            if (action.type === 'resize')
+                return { ...state, rows: action.newRows, cols: action.newCols };
             return state;
         });
     });
@@ -175,7 +182,10 @@ describe('LightsOut', () => {
 
     it.skip('handles queueing moves in auto play', () => {
         // Return multiple moves consistently
-        mockGetNextMove.mockReturnValue([{ row: 0, col: 0 }, { row: 0, col: 1 }]);
+        mockGetNextMove.mockReturnValue([
+            { row: 0, col: 0 },
+            { row: 0, col: 1 },
+        ]);
 
         render(<LightsOut />);
         fireEvent.click(screen.getByLabelText('Auto Play'));

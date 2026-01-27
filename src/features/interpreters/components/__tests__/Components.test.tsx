@@ -18,12 +18,26 @@ jest.mock('@mui/material', () => ({
     MenuItem: ({ children, value }: any) => (
         <option value={value}>{children}</option>
     ),
-    FormControl: ({ children }: any) => <div data-testid="form-control">{children}</div>,
+    FormControl: ({ children }: any) => (
+        <div data-testid="form-control">{children}</div>
+    ),
 }));
 
 jest.mock('../../../../components/mui', () => ({
-    Typography: ({ children, ...props }: any) => <span data-testid="typography" {...props}>{children}</span>,
-    TextField: ({ onChange, value, defaultValue, label, fullWidth, multiline, rows }: any) => (
+    Typography: ({ children, ...props }: any) => (
+        <span data-testid="typography" {...props}>
+            {children}
+        </span>
+    ),
+    TextField: ({
+        onChange,
+        value,
+        defaultValue,
+        label,
+        fullWidth,
+        multiline,
+        rows,
+    }: any) => (
         <div data-testid="textfield">
             <label>{label}</label>
             <textarea
@@ -36,8 +50,12 @@ jest.mock('../../../../components/mui', () => ({
         </div>
     ),
     Box: ({ children }: any) => <div data-testid="box">{children}</div>,
-    Button: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button>,
-    Grid: ({ children }: any) => <div data-testid="grid-container">{children}</div>,
+    Button: ({ children, onClick }: any) => (
+        <button onClick={onClick}>{children}</button>
+    ),
+    Grid: ({ children }: any) => (
+        <div data-testid="grid-container">{children}</div>
+    ),
 }));
 
 jest.mock('../../../../hooks', () => ({
@@ -52,15 +70,19 @@ jest.mock('../../../../components/ui/CustomGrid', () => ({
                 const col = i % cols;
                 const props = cellProps(row, col);
                 return (
-                    <div
+                    <button
                         key={i}
+                        type="button"
                         data-testid={`cell-${i}`}
                         onClick={props.onClick}
-                        style={{ color: props.color, backgroundColor: props.backgroundColor }}
+                        style={{
+                            color: props.color,
+                            backgroundColor: props.backgroundColor,
+                        }}
                     >
                         {props.children}
-                    </div>
-                )
+                    </button>
+                );
             })}
         </div>
     ),
@@ -73,11 +95,12 @@ const mockContext = {
 };
 
 describe('Interpreter Components', () => {
-
     describe('InterpreterNavigation', () => {
         test('renders select with active value', () => {
             const onChange = jest.fn();
-            render(<InterpreterNavigation active="wii2d" onChange={onChange} />);
+            render(
+                <InterpreterNavigation active="wii2d" onChange={onChange} />
+            );
 
             const select = screen.getByTestId('select') as HTMLSelectElement;
             expect(select.value).toBe('wii2d');
@@ -85,7 +108,9 @@ describe('Interpreter Components', () => {
 
         test('calls onChange when changed', () => {
             const onChange = jest.fn();
-            render(<InterpreterNavigation active="wii2d" onChange={onChange} />);
+            render(
+                <InterpreterNavigation active="wii2d" onChange={onChange} />
+            );
 
             const select = screen.getByTestId('select');
             fireEvent.change(select, { target: { value: 'back' } });
@@ -96,7 +121,13 @@ describe('Interpreter Components', () => {
 
     describe('Text', () => {
         test('renders text with props', () => {
-            render(<Text text="Hello" className="test-class" sx={{ color: 'red' }} />);
+            render(
+                <Text
+                    text="Hello"
+                    className="test-class"
+                    sx={{ color: 'red' }}
+                />
+            );
 
             const text = screen.getByTestId('typography');
             expect(text).toHaveTextContent('Hello');
@@ -107,6 +138,7 @@ describe('Interpreter Components', () => {
     describe('GridArea', () => {
         const renderWithContext = (ui: React.ReactNode, ctx = mockContext) => {
             return render(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 <EditorContext.Provider value={ctx as any}>
                     {ui}
                 </EditorContext.Provider>
@@ -114,23 +146,31 @@ describe('Interpreter Components', () => {
         };
 
         const defaultProps = {
-            handleClick: (pos: number) => jest.fn(),
-            chooseColor: (pos: number) => 'secondary',
+            handleClick: (_: number) => jest.fn(),
+            chooseColor: (_: number) => 'secondary',
             options: ['A', 'B', 'C', 'D'],
             rows: 2,
-            cols: 2
+            cols: 2,
         };
 
         test('throws if no context', () => {
-            const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
-            expect(() => render(<GridArea {...defaultProps} />)).toThrow('GridArea must be used within EditorContext.Provider');
+            const consoleSpy = jest
+                .spyOn(console, 'error')
+                .mockImplementation(() => {});
+            expect(() => render(<GridArea {...defaultProps} />)).toThrow(
+                'GridArea must be used within EditorContext.Provider'
+            );
             consoleSpy.mockRestore();
         });
 
         test('renders grid cells with correct styles', () => {
-            const chooseColor = jest.fn((pos) => pos === 0 ? 'primary' : 'secondary');
+            const chooseColor = jest.fn(pos =>
+                pos === 0 ? 'primary' : 'secondary'
+            );
 
-            renderWithContext(<GridArea {...defaultProps} chooseColor={chooseColor} />);
+            renderWithContext(
+                <GridArea {...defaultProps} chooseColor={chooseColor} />
+            );
 
             const cell0 = screen.getByTestId('cell-0');
             expect(cell0).toBeInTheDocument();
@@ -141,21 +181,27 @@ describe('Interpreter Components', () => {
             const clickHandler = jest.fn();
             const handleClick = (pos: number) => () => clickHandler(pos);
 
-            renderWithContext(<GridArea {...defaultProps} handleClick={handleClick} />);
+            renderWithContext(
+                <GridArea {...defaultProps} handleClick={handleClick} />
+            );
 
             fireEvent.click(screen.getByTestId('cell-1'));
             expect(clickHandler).toHaveBeenCalledWith(1);
         });
 
         test('handles info color', () => {
-            const chooseColor = (pos: number) => 'info';
-            renderWithContext(<GridArea {...defaultProps} chooseColor={chooseColor} />);
+            const chooseColor = (_: number) => 'info';
+            renderWithContext(
+                <GridArea {...defaultProps} chooseColor={chooseColor} />
+            );
             expect(screen.getByTestId('cell-0')).toBeInTheDocument();
         });
 
         test('handles unknown color fallback', () => {
-            const chooseColor = (pos: number) => 'unknown-color';
-            renderWithContext(<GridArea {...defaultProps} chooseColor={chooseColor} />);
+            const chooseColor = (_: number) => 'unknown-color';
+            renderWithContext(
+                <GridArea {...defaultProps} chooseColor={chooseColor} />
+            );
             expect(screen.getByTestId('cell-0')).toBeInTheDocument();
         });
 
@@ -204,6 +250,7 @@ describe('Interpreter Components', () => {
     describe('TextArea', () => {
         const renderWithContext = (ui: React.ReactNode, ctx = mockContext) => {
             return render(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 <EditorContext.Provider value={ctx as any}>
                     {ui}
                 </EditorContext.Provider>
@@ -211,14 +258,20 @@ describe('Interpreter Components', () => {
         };
 
         test('throws if no context', () => {
-            const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
-            expect(() => render(<TextArea />)).toThrow('TextArea must be used within EditorContext.Provider');
+            const consoleSpy = jest
+                .spyOn(console, 'error')
+                .mockImplementation(() => {});
+            expect(() => render(<TextArea />)).toThrow(
+                'TextArea must be used within EditorContext.Provider'
+            );
             consoleSpy.mockRestore();
         });
 
         test('renders controlled input', () => {
             const handleChange = jest.fn();
-            renderWithContext(<TextArea value="Content" handleChange={handleChange} />);
+            renderWithContext(
+                <TextArea value="Content" handleChange={handleChange} />
+            );
 
             const area = screen.getByTestId('textarea') as HTMLTextAreaElement;
             expect(area.value).toBe('Content');
@@ -253,5 +306,4 @@ describe('Interpreter Components', () => {
             expect(area).toHaveAttribute('rows', '20');
         });
     });
-
 });

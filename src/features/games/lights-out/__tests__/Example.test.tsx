@@ -16,7 +16,10 @@ jest.mock('../../../../components/ui/CustomGrid', () => ({
                 const r = Math.floor(i / cols);
                 const c = i % cols;
                 const props = cellProps(r, c);
-                return <div key={i} data-testid={`cell-${r}-${c}`} {...props} />;
+                // eslint-disable-next-line react/no-array-index-key
+                return (
+                    <div key={i} data-testid={`cell-${r}-${c}`} {...props} />
+                );
             })}
         </div>
     )),
@@ -30,7 +33,7 @@ describe('Lights Out Example Component', () => {
         const grid3x3 = [
             [0, 0, 0],
             [0, 0, 0],
-            [0, 0, 0]
+            [0, 0, 0],
         ];
         mockGetStates.mockReturnValue({
             boardStates: [grid3x3, grid3x3],
@@ -46,7 +49,9 @@ describe('Lights Out Example Component', () => {
 
     it('calls getStates with correct start and dims', () => {
         const start = [1, 2, 3];
-        render(<Example size={100} palette={mockPalette} start={start} dims={3} />);
+        render(
+            <Example size={100} palette={mockPalette} start={start} dims={3} />
+        );
         expect(mockGetStates).toHaveBeenCalledWith(start, 3);
     });
 

@@ -3,9 +3,18 @@ import { render, screen } from '@testing-library/react';
 import Suffolk, { getState, cleanInput, SuffolkState } from '../Suffolk';
 
 // Mocks
-jest.mock('../TextEditor', () => (props: any) => (
-    <div data-testid="text-editor" data-props={JSON.stringify(props)} />
-));
+jest.mock(
+    '../TextEditor',
+    () =>
+        function MockTextEditor(props: any) {
+            return (
+                <div
+                    data-testid="text-editor"
+                    data-props={JSON.stringify(props)}
+                />
+            );
+        }
+);
 
 describe('Suffolk', () => {
     describe('cleanInput', () => {
@@ -35,7 +44,14 @@ describe('Suffolk', () => {
 
         test('handles < command', () => {
             // register += tape[pointer], pointer = 0
-            const state = { ...defaultState, code: '<', index: 0, tape: [0, 5], pointer: 1, register: 2 };
+            const state = {
+                ...defaultState,
+                code: '<',
+                index: 0,
+                tape: [0, 5],
+                pointer: 1,
+                register: 2,
+            };
             const newState = getState(state);
             expect(newState.register).toBe(7);
             expect(newState.pointer).toBe(0);
@@ -43,7 +59,14 @@ describe('Suffolk', () => {
 
         test('handles ! command', () => {
             // tape[pointer] -= register - 1; if < 0 -> 0; reg=0; ptr=0
-            const state = { ...defaultState, code: '!', index: 0, tape: [10], pointer: 0, register: 5 };
+            const state = {
+                ...defaultState,
+                code: '!',
+                index: 0,
+                tape: [10],
+                pointer: 0,
+                register: 5,
+            };
             const newState = getState(state);
             // 10 - (5 - 1) = 10 - 4 = 6
             expect(newState.tape[0]).toBe(6);
@@ -53,7 +76,12 @@ describe('Suffolk', () => {
 
         test('handles . command', () => {
             // output += char(reg-1) if reg > 0
-            const state = { ...defaultState, code: '.', index: 0, register: 66 }; // 66-1 = 65 ('A')
+            const state = {
+                ...defaultState,
+                code: '.',
+                index: 0,
+                register: 66,
+            }; // 66-1 = 65 ('A')
             const newState = getState(state);
             expect(newState.output).toBe('A');
         });
@@ -67,8 +95,15 @@ describe('Suffolk', () => {
         });
 
         test('handles , command with no input', () => {
-            const promptSpy = jest.spyOn(window, 'prompt').mockReturnValue(null);
-            const state = { ...defaultState, code: ',', index: 0, register: 10 };
+            const promptSpy = jest
+                .spyOn(window, 'prompt')
+                .mockReturnValue(null);
+            const state = {
+                ...defaultState,
+                code: ',',
+                index: 0,
+                register: 10,
+            };
             const newState = getState(state);
             expect(newState.register).toBe(0);
             promptSpy.mockRestore();

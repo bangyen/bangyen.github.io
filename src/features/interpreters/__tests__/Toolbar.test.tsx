@@ -3,11 +3,16 @@ import React, { useContext } from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { handleToolbar, Toolbar } from '../Toolbar';
 import { EditorContext } from '../EditorContext';
+import { useMediaQuery } from '../../../components/mui';
 
 // Mocks
 jest.mock('../../../components/ui/Controls', () => ({
     TooltipButton: ({ title, onClick, disabled }: any) => (
-        <button data-testid={`btn-${title}`} onClick={disabled ? undefined : onClick} disabled={disabled}>
+        <button
+            data-testid={`btn-${title}`}
+            onClick={disabled ? undefined : onClick}
+            disabled={disabled}
+        >
             {title}
         </button>
     ),
@@ -72,14 +77,22 @@ describe('Toolbar', () => {
             const config = mockPayload.create.mock.calls[0][0];
             config.repeat();
             // repeat triggers dispatch('timer')
-            expect(mockPayload.dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'timer' }));
+            expect(mockPayload.dispatch).toHaveBeenCalledWith(
+                expect.objectContaining({ type: 'timer' })
+            );
         });
 
         test('handles reset action', () => {
             const action = { type: 'reset', payload: mockPayload };
-            mockPayload.nextIter.mockReturnValueOnce({ value: 0, pause: false });
+            mockPayload.nextIter.mockReturnValueOnce({
+                value: 0,
+                pause: false,
+            });
 
-            const result = handleToolbar({ ...initialState, pause: false }, action);
+            const result = handleToolbar(
+                { ...initialState, pause: false },
+                action
+            );
 
             expect(window.confirm).toHaveBeenCalled();
             expect(mockPayload.clear).toHaveBeenCalled();
@@ -88,7 +101,10 @@ describe('Toolbar', () => {
 
         test('handles stop action', () => {
             const action = { type: 'stop', payload: mockPayload };
-            const result = handleToolbar({ ...initialState, pause: false }, action);
+            const result = handleToolbar(
+                { ...initialState, pause: false },
+                action
+            );
             expect(mockPayload.clear).toHaveBeenCalled();
             expect(result.pause).toBe(true);
         });
@@ -97,7 +113,7 @@ describe('Toolbar', () => {
             const action = { type: 'next', payload: mockPayload };
             const result = handleToolbar(initialState, action);
             expect(mockPayload.nextIter).toHaveBeenCalled();
-            // next doesn't set pause to true explicitly in pauseStateMap, 
+            // next doesn't set pause to true explicitly in pauseStateMap,
             // but updateHandler returns result from nextIter.
             // If nextIter returns { pause: ... }, it's used.
         });
@@ -113,14 +129,18 @@ describe('Toolbar', () => {
             const action = { type: 'timer', payload: mockPayload };
             handleToolbar({ ...initialState, end: true }, action);
             // Should dispatch 'stop'
-            expect(mockPayload.dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'stop' }));
+            expect(mockPayload.dispatch).toHaveBeenCalledWith(
+                expect.objectContaining({ type: 'stop' })
+            );
         });
 
         test('handles timer action with end=false (dispatches next)', () => {
             const action = { type: 'timer', payload: mockPayload };
             handleToolbar({ ...initialState, end: false }, action);
             // Should dispatch 'next'
-            expect(mockPayload.dispatch).toHaveBeenCalledWith(expect.objectContaining({ type: 'next' }));
+            expect(mockPayload.dispatch).toHaveBeenCalledWith(
+                expect.objectContaining({ type: 'next' })
+            );
         });
 
         test('handles share action', () => {
@@ -143,12 +163,16 @@ describe('Toolbar', () => {
             dispatch: mockDispatch,
             // ... other props
         };
-        const useMediaQuery = require('../../../components/mui').useMediaQuery;
+        const mockUseMediaQuery = useMediaQuery as unknown as jest.Mock;
 
         const renderWithContext = (context: any) => {
             // Toolbar returns Element[]. Need to wrap in div.
             const Wrapper = () => {
-                return <div><Toolbar /></div>;
+                return (
+                    <div>
+                        <Toolbar />
+                    </div>
+                );
             };
             return render(
                 <EditorContext.Provider value={context}>
@@ -164,7 +188,7 @@ describe('Toolbar', () => {
         });
 
         test('renders running state (Pause button)', () => {
-            useMediaQuery.mockReturnValue(true); // Desktop
+            mockUseMediaQuery.mockReturnValue(true); // Desktop
             renderWithContext({ ...mockContext, pause: false });
 
             // If pause=false (Running), show Pause button.
@@ -173,28 +197,31 @@ describe('Toolbar', () => {
         });
 
         test('renders paused state (Run button)', () => {
-            useMediaQuery.mockReturnValue(true);
+            mockUseMediaQuery.mockReturnValue(true);
             renderWithContext({ ...mockContext, pause: true });
 
             expect(screen.getByTestId('btn-Run')).toBeInTheDocument();
         });
 
         test('renders Reset button', () => {
-            useMediaQuery.mockReturnValue(true);
+            mockUseMediaQuery.mockReturnValue(true);
             renderWithContext(mockContext);
             expect(screen.getByTestId('btn-Reset')).toBeInTheDocument();
         });
 
         test('renders Fast Forward button (disabled/enabled)', () => {
-            useMediaQuery.mockReturnValue(true);
+            mockUseMediaQuery.mockReturnValue(true);
             // Case 1: Disabled
-            const { rerender } = renderWithContext({ ...mockContext, fastForward: false });
+            const { rerender } = renderWithContext({
+                ...mockContext,
+                fastForward: false,
+            });
             const btn = screen.getByTestId('btn-Fast Forward');
             expect(btn).toBeDisabled();
         });
 
         test('handles click events', () => {
-            useMediaQuery.mockReturnValue(true);
+            mockUseMediaQuery.mockReturnValue(true);
             renderWithContext({ ...mockContext, pause: true }); // Show Run
 
             const btnRun = screen.getByTestId('btn-Run');

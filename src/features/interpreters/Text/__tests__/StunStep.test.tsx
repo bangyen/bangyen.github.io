@@ -3,9 +3,18 @@ import { render, screen } from '@testing-library/react';
 import StunStep, { getState, clean, StunStepState } from '../StunStep';
 
 // Mocks
-jest.mock('../TextEditor', () => (props: any) => (
-    <div data-testid="text-editor" data-props={JSON.stringify(props)} />
-));
+jest.mock(
+    '../TextEditor',
+    () =>
+        function MockTextEditor(props: any) {
+            return (
+                <div
+                    data-testid="text-editor"
+                    data-props={JSON.stringify(props)}
+                />
+            );
+        }
+);
 
 describe('StunStep', () => {
     describe('clean', () => {
@@ -70,7 +79,13 @@ describe('StunStep', () => {
             // But logic doesn't explicitly check `<`.
             // So `<` falls into `else if (pointer) pointer--`.
 
-            const state = { ...defaultState, code: '<', index: 0, tape: [1, 1], pointer: 1 };
+            const state = {
+                ...defaultState,
+                code: '<',
+                index: 0,
+                tape: [1, 1],
+                pointer: 1,
+            };
             const newState = getState(state);
             expect(newState.pointer).toBe(0);
         });
@@ -94,7 +109,7 @@ describe('StunStep', () => {
             const state = { ...defaultState, end: true, tape: [1] };
             const newState = getState(state);
             expect(newState.end).toBe(false);
-            // Should verify it didn't process command yet? 
+            // Should verify it didn't process command yet?
             // The function continues to process command after un-ending?
             // "if (end) { if (!tape) return; else end = false; }"
             // Then it continues.

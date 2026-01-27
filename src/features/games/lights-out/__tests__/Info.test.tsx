@@ -3,9 +3,18 @@ import Info from '../Info';
 import * as calculator from '../calculator';
 
 // Mock dependencies
-jest.mock('../Example', () => () => <div data-testid="example-component" />);
+jest.mock(
+    '../Example',
+    () =>
+        function MockExample() {
+            return <div data-testid="example-component" />;
+        }
+);
 jest.mock('../../../../components/ui/GlassCard', () => ({
-    GlassCard: ({ children }: any) => <div>{children}</div>,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    GlassCard: function MockGlassCard({ children }: any) {
+        return <div>{children}</div>;
+    },
 }));
 jest.mock('../../../../hooks', () => ({
     useMobile: () => false,
@@ -53,7 +62,9 @@ describe('Lights Out Info Component', () => {
     it('renders instruction step initially', () => {
         render(<Info {...defaultProps} />);
         expect(screen.getByText('Chase to Bottom')).toBeInTheDocument();
-        expect(screen.queryByTestId('example-component')).not.toBeInTheDocument();
+        expect(
+            screen.queryByTestId('example-component')
+        ).not.toBeInTheDocument();
     });
 
     it('navigates to next step (Example)', () => {
@@ -84,7 +95,7 @@ describe('Lights Out Info Component', () => {
         const cell0 = screen.getByTestId('input-cell-0');
         fireEvent.click(cell0);
 
-        // This should trigger state update. 
+        // This should trigger state update.
         // We can verify getProduct is called with updated row?
         // getProduct is called during render.
         // It's hard to verify internal state directly without inspecting effect or rerender.
