@@ -6,6 +6,23 @@ export default defineConfig({
     plugins: [react(), tsconfigPaths()],
     build: {
         outDir: 'build', // Maintain 'build' for gh-pages compatibility
+        // Enable source maps for production debugging (can be disabled for smaller builds)
+        sourcemap: false,
+        // Minification options
+        minify: 'terser',
+        terserOptions: {
+            compress: {
+                drop_console: true, // Remove console.logs in production
+                drop_debugger: true,
+                pure_funcs: ['console.log', 'console.info'], // Remove specific console methods
+            },
+        },
+        // CSS code splitting
+        cssCodeSplit: true,
+        // Chunk size warnings
+        chunkSizeWarningLimit: 500, // Warn if chunks exceed 500KB
+        // Asset inlining threshold (assets smaller than this will be inlined as base64)
+        assetsInlineLimit: 4096, // 4KB
         rollupOptions: {
             output: {
                 manualChunks: {
@@ -13,8 +30,21 @@ export default defineConfig({
                     vendor_mui: ['@mui/material', '@mui/icons-material', '@emotion/react', '@emotion/styled'],
                     vendor_recharts: ['recharts'],
                 },
+                // Optimize chunk file names
+                chunkFileNames: 'assets/[name]-[hash].js',
+                entryFileNames: 'assets/[name]-[hash].js',
+                assetFileNames: 'assets/[name]-[hash].[ext]',
+            },
+            // Tree-shaking optimizations
+            treeshake: {
+                moduleSideEffects: false,
+                propertyReadSideEffects: false,
             },
         },
+    },
+    // Optimize dependencies
+    optimizeDeps: {
+        include: ['react', 'react-dom', 'react-router-dom'],
     },
     server: {
         open: true,
