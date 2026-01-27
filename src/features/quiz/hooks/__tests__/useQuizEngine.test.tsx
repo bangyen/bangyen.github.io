@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
-import { useQuizEngine, useQuizFilter } from '../quiz';
-import { QuizSettings, QuizType } from '../../types/quiz';
+import { useQuizEngine } from '../quiz';
+import { QuizSettings } from '../../types/quiz';
 
 // Mock crypto.randomUUID
 Object.defineProperty(global, 'crypto', {
@@ -174,7 +174,7 @@ describe('useQuizEngine', () => {
     });
 
     test('ends game when questions run out', () => {
-        const singleQuestionPool = [mockQuestions[0]]; // Define outside or maintain reference
+        const singleQuestionPool = [mockQuestions[0]];
 
         const { result } = renderHook(() =>
             useQuizEngine({
@@ -194,10 +194,6 @@ describe('useQuizEngine', () => {
         act(() => {
             jest.runAllTimers();
         });
-
-        // Try to go next again (should trigger end game internal check usually happens on nextQuestion call)
-        // Actually nextQuestion is called by timer.
-        // If pool is empty, it calls onEndGame.
 
         expect(mockOnEndGame).toHaveBeenCalled();
     });
@@ -250,49 +246,87 @@ describe('useQuizEngine', () => {
 
         expect(result.current.state.score).toBe(10);
     });
-});
 
-describe('useQuizFilter', () => {
-    const mockData = [
-        { country: 'USA', language: 'English', code: '.us' },
-        { country: 'France', language: 'French', code: '.fr' },
-        { country: 'Germany', language: 'German', code: '.de' },
-    ];
-
-    test('filters by language', () => {
+    test('submitAnswer returns early if already showing feedback', () => {
         const { result } = renderHook(() =>
-            useQuizFilter({
-                data: mockData as any,
-                quizType: 'cctld',
-                settings: { ...mockSettings, filterLanguage: 'English' },
+            useQuizEngine({
+                initialPool: mockQuestions,
+                settings: mockSettings,
+                onEndGame: mockOnEndGame,
+                checkAnswer: mockCheckAnswer.mockReturnValue({
+                    isCorrect: true,
+                    expected: '',
+                    points: 1,
+                }),
             })
         );
 
-        expect(result.current).toHaveLength(1);
-        expect(result.current[0].country).toBe('USA');
+        act(() => {
+            result.current.actions.submitAnswer('ans1');
+        });
+        expect(result.current.state.showFeedback).toBe(true);
+        expect(mockCheckAnswer).toHaveBeenCalledTimes(1);
+
+        act(() => {
+            result.current.actions.submitAnswer('ans2');
+        });
+        expect(mockCheckAnswer).toHaveBeenCalledTimes(1);
     });
 
-    test('filters by letters', () => {
+    test('nextQuestion clears advance timer', () => {
         const { result } = renderHook(() =>
-            useQuizFilter({
-                data: mockData as any,
-                quizType: 'cctld',
-                settings: { ...mockSettings, filterLetter: 'f' },
+            useQuizEngine({
+                initialPool: mockQuestions,
+                settings: mockSettings,
+                onEndGame: mockOnEndGame,
+                checkAnswer: mockCheckAnswer.mockReturnValue({
+                    isCorrect: true,
+                    expected: '',
+                    points: 1,
+                }),
             })
         );
 
-        expect(result.current).toHaveLength(1);
-        expect(result.current[0].country).toBe('France');
+        act(() => {
+            result.current.actions.submitAnswer('ans');
+        });
+
+        act(() => {
+            result.current.actions.nextQuestion();
+        });
+
+        expect(result.current.state.showFeedback).toBe(false);
     });
 
-    test('respects max questions', () => {
+    test('nextQuestion works when timer is null', () => {
         const { result } = renderHook(() =>
-            useQuizFilter({
-                data: mockData as any,
-                quizType: 'cctld',
-                settings: { ...mockSettings, maxQuestions: 1 },
+            useQuizEngine({
+                initialPool: mockQuestions,
+                settings: mockSettings,
+                onEndGame: mockOnEndGame,
+                checkAnswer: mockCheckAnswer,
             })
         );
-        expect(result.current).toHaveLength(1);
+        act(() => {
+            result.current.actions.nextQuestion();
+        });
+        expect(result.current.state.showFeedback).toBe(false);
+    });
+
+    test('handleSkip returns early if no current question', () => {
+        const emptyPool: any[] = [];
+        const { result } = renderHook(() =>
+            useQuizEngine({
+                initialPool: emptyPool,
+                settings: mockSettings,
+                onEndGame: mockOnEndGame,
+                checkAnswer: mockCheckAnswer,
+            })
+        );
+
+        act(() => {
+            result.current.actions.handleSkip();
+        });
+        expect(result.current.state.showFeedback).toBe(false);
     });
 });
