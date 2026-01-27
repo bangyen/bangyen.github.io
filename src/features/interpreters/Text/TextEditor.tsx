@@ -23,14 +23,14 @@ interface TextEditorProps {
     navigation?: React.ReactNode;
 }
 
-interface TextState extends ToolbarState {
+export interface TextState extends ToolbarState {
     text: string;
     code: string;
     tape?: number[];
     output?: string;
 }
 
-interface TextActionPayload {
+export interface TextActionPayload {
     nextIter: (action: {
         type: string;
         payload: unknown;
@@ -43,7 +43,7 @@ interface TextActionPayload {
     clean?: (text: string) => string;
 }
 
-function handleAction(
+export function handleAction(
     state: TextState,
     action: { type: string; payload: TextActionPayload }
 ): TextState {
