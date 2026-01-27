@@ -19,21 +19,30 @@ export default defineConfig({
         },
         // CSS code splitting
         cssCodeSplit: true,
-        // Chunk size warnings
-        chunkSizeWarningLimit: 500, // Warn if chunks exceed 500KB
+        // Chunk size warnings - reduced to catch issues earlier
+        chunkSizeWarningLimit: 400, // Warn if chunks exceed 400KB
         // Asset inlining threshold (assets smaller than this will be inlined as base64)
         assetsInlineLimit: 4096, // 4KB
         rollupOptions: {
             output: {
-                manualChunks: {
-                    vendor_react: ['react', 'react-dom', 'react-router', 'react-router-dom'],
-                    vendor_mui: ['@mui/material', '@mui/icons-material', '@emotion/react', '@emotion/styled'],
-                    vendor_recharts: ['recharts'],
-                },
                 // Optimize chunk file names
                 chunkFileNames: 'assets/[name]-[hash].js',
                 entryFileNames: 'assets/[name]-[hash].js',
                 assetFileNames: 'assets/[name]-[hash].[ext]',
+                // Manual chunk splitting for better caching
+                manualChunks(id) {
+                    if (id.includes('node_modules')) {
+                        if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
+                            return 'vendor_react';
+                        }
+                        if (id.includes('@mui') || id.includes('@emotion')) {
+                            return 'vendor_mui';
+                        }
+                        if (id.includes('recharts')) {
+                            return 'vendor_recharts';
+                        }
+                    }
+                },
             },
             // Tree-shaking optimizations
             treeshake: {
