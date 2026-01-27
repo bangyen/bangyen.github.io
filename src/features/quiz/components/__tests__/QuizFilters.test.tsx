@@ -245,7 +245,7 @@ describe('QuizFilters', () => {
             <QuizFilters
                 {...defaultProps}
                 selectedQuiz="driving_side"
-                settings={{ ...mockSettings, mode: 'guessing' }}
+                settings={{ ...mockSettings, mode: 'otherMode' }}
             />
         );
         const comboboxes = screen.getAllByRole('combobox');

@@ -140,7 +140,7 @@ export function Toolbar(): React.ReactElement[] {
     // Secondary Controls: Previous, Next
     const secondaryKeys = ['Previous', 'Next'];
     secondaryKeys.forEach(key => {
-        const { icon, flag, action, props } = buttonData[key];
+        const { icon, flag, action } = buttonData[key];
 
         if (action && flag) {
             buttons.push(
@@ -150,10 +150,6 @@ export function Toolbar(): React.ReactElement[] {
                     Icon={icon}
                     onClick={dispatch(action)}
                 />
-            );
-        } else if (props) {
-            buttons.push(
-                <TooltipButton key={key} title={key} Icon={icon} {...props} />
             );
         }
     });

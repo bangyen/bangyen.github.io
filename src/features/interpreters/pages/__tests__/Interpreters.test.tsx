@@ -114,6 +114,11 @@ describe('Interpreters Page Integration', () => {
         expect(screen.getByTestId('back')).toBeInTheDocument();
     });
 
+    test('renders default interpreter (StunStep) for unknown param', () => {
+        renderWithRouter('/interpreters?type=unknown');
+        expect(screen.getByTestId('stun-step')).toBeInTheDocument();
+    });
+
     test('switches interpreter when navigation changes', () => {
         renderWithRouter();
 

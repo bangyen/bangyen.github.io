@@ -10,6 +10,7 @@ import { Text } from '../components/Text';
 const theme = createTheme();
 
 // Mock EditorContext data
+// Mock EditorContext data
 const mockEditorContext = {
     name: 'Test Interpreter',
     tapeFlag: true,
@@ -28,9 +29,29 @@ const mockEditorContext = {
     pause: false,
 };
 
-const EditorProvider = ({ children }: { children: React.ReactNode }) => (
+// Mock Display components to verify conditional rendering
+jest.mock('../Display', () => ({
+    Program: () => <div data-testid="program-display" />,
+    Tape: () => <div data-testid="tape-display" />,
+    Output: () => <div data-testid="output-display" />,
+    Register: () => <div data-testid="register-display" />,
+}));
+
+// Mock Toolbar
+jest.mock('../Toolbar', () => ({
+    Toolbar: () => <div data-testid="toolbar" />,
+}));
+
+const EditorProvider = ({
+    children,
+    value = mockEditorContext,
+}: {
+    children: React.ReactNode;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    value?: any;
+}) => (
     <ThemeProvider theme={theme}>
-        <EditorContext.Provider value={mockEditorContext}>
+        <EditorContext.Provider value={value}>
             {children}
         </EditorContext.Provider>
     </ThemeProvider>
@@ -64,44 +85,115 @@ describe('Editor Components', () => {
     });
 
     describe('Editor', () => {
-        test('renders with children', () => {
-            // Editor component renders Toolbar which needs ThemeProvider
-            // Just verify the component structure without full rendering
-            expect(Editor).toBeDefined();
-            expect(typeof Editor).toBe('function');
+        // Mock Display components to verify conditional rendering
+        jest.mock('../Display', () => ({
+            Program: () => <div data-testid="program-display" />,
+            Tape: () => <div data-testid="tape-display" />,
+            Output: () => <div data-testid="output-display" />,
+            Register: () => <div data-testid="register-display" />,
+        }));
+
+        // Mock Toolbar
+        jest.mock('../Toolbar', () => ({
+            Toolbar: () => <div data-testid="toolbar" />,
+        }));
+
+        test('renders all sections when flags are true', () => {
+            render(
+                <EditorProvider>
+                    <Editor>
+                        <div data-testid="child-content">Child</div>
+                    </Editor>
+                </EditorProvider>
+            );
+
+            // screen.debug();
+
+            expect(screen.getByText('Interpreters')).toBeInTheDocument();
+            expect(screen.getByTestId('child-content')).toBeInTheDocument();
+            // Default mock context has all flags true and code present
+            expect(screen.getByTestId('program-display')).toBeInTheDocument();
+            expect(screen.getByTestId('tape-display')).toBeInTheDocument();
+            expect(screen.getByTestId('output-display')).toBeInTheDocument();
+            expect(screen.getByTestId('register-display')).toBeInTheDocument();
         });
 
-        test('renders title from context', () => {
-            // Editor component renders Toolbar which needs ThemeProvider
-            // Just verify the component structure without full rendering
-            expect(Editor).toBeDefined();
-            expect(typeof Editor).toBe('function');
+        test('renders minimal sections when flags are false', () => {
+            const minimalContext = {
+                ...mockEditorContext,
+                tapeFlag: false,
+                outFlag: false,
+                regFlag: false,
+                code: undefined, // Should hide Program
+            };
+
+            render(
+                <EditorProvider value={minimalContext}>
+                    <Editor>
+                        <div>Child</div>
+                    </Editor>
+                </EditorProvider>
+            );
+
+            expect(
+                screen.queryByTestId('program-display')
+            ).not.toBeInTheDocument();
+            expect(
+                screen.queryByTestId('tape-display')
+            ).not.toBeInTheDocument();
+            expect(
+                screen.queryByTestId('output-display')
+            ).not.toBeInTheDocument();
+            expect(
+                screen.queryByTestId('register-display')
+            ).not.toBeInTheDocument();
         });
 
-        test('throws error when used outside EditorContext', () => {
-            // Suppress console.error for this test
-            const consoleError = jest
+        test('hides side panel when hide is true', () => {
+            render(
+                <EditorProvider>
+                    <Editor hide={true}>
+                        <div>Child</div>
+                    </Editor>
+                </EditorProvider>
+            );
+            // We can check if TextArea is hidden or layout props changed.
+            // TextArea is rendered in the "right" column.
+            // Based on code: <Grid display={display} ...> <TextArea ... /> </Grid>
+            // display is 'none' if hide is true.
+            // But checking styles on a Grid (MUI) might be tricky without internal structure knowledge.
+            // Alternatively, check if TextArea is not visible.
+            const textarea = screen.getByLabelText('Program code');
+            expect(textarea).not.toBeVisible();
+        });
+
+        test('renders navigation when provided', () => {
+            render(
+                <EditorProvider>
+                    <Editor
+                        navigation={<div data-testid="nav-element">Nav</div>}
+                    >
+                        <div>Child</div>
+                    </Editor>
+                </EditorProvider>
+            );
+            expect(screen.getByTestId('nav-element')).toBeInTheDocument();
+        });
+
+        test('throws error when used outside of EditorContext', () => {
+            const consoleSpy = jest
                 .spyOn(console, 'error')
-                .mockImplementation(() => {
-                    // Intentionally empty
-                });
+                .mockImplementation(() => {});
 
             expect(() => {
                 render(
                     <Editor>
-                        <div>Test Content</div>
+                        <div>Child</div>
                     </Editor>
                 );
             }).toThrow('Editor must be used within EditorContext.Provider');
 
-            consoleError.mockRestore();
-        });
-
-        test('hides side panel when hide is true', () => {
-            // Editor component renders Toolbar which needs ThemeProvider
-            // Just verify the component structure without full rendering
-            expect(Editor).toBeDefined();
-            expect(typeof Editor).toBe('function');
+            consoleSpy.mockRestore();
         });
     });
 

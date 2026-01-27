@@ -1,8 +1,7 @@
 import React from 'react';
 import { Box, Typography, Fade } from '../../../../components/mui';
 import { GlassCard } from '../../../../components/ui/GlassCard';
-import { Work } from '../../../../components/icons';
-import { ICON_MAP } from '../../../../components/ui/Controls';
+import { Work, Code, Psychology, Cloud } from '../../../../components/icons';
 import { SKILLS } from '../../../../config/constants';
 import {
     COLORS,
@@ -10,6 +9,13 @@ import {
     SPACING,
     ANIMATIONS,
 } from '../../../../config/theme';
+
+const ICON_MAP: Record<string, React.ElementType> = {
+    Code,
+    Psychology,
+    Cloud,
+    Work,
+};
 
 export function TechStack(): React.ReactElement {
     return (

@@ -1,7 +1,7 @@
 import TextEditor from './TextEditor';
 import React, { useCallback } from 'react';
 
-interface StunStepState {
+export interface StunStepState {
     pointer: number;
     index: number;
     tape: number[];
@@ -17,7 +17,7 @@ interface StunStepStart {
     code: string;
 }
 
-function clean(input: string): string {
+export function clean(input: string): string {
     let code = '';
 
     for (const char of input) if ('+-><'.includes(char)) code += char;
@@ -25,7 +25,7 @@ function clean(input: string): string {
     return code;
 }
 
-function getState(state: StunStepState): StunStepState {
+export function getState(state: StunStepState): StunStepState {
     let { pointer, index, tape, end } = state;
     const { code } = state;
 

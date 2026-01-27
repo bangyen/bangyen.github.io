@@ -27,15 +27,17 @@ export default function Home(): React.ReactElement {
         >
             <GlobalHeader />
 
-            <Box
-                sx={{
-                    height: { xs: '10rem', md: '5rem' },
-                }}
-            />
+            <Box component="main" sx={{ width: '100%', flex: 1 }}>
+                <Box
+                    sx={{
+                        height: { xs: '10rem', md: '5rem' },
+                    }}
+                />
 
-            <HeroSection />
+                <HeroSection />
 
-            <FeaturedWork />
+                <FeaturedWork />
+            </Box>
         </Grid>
     );
 }

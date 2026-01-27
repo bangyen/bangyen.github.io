@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Menu } from '../../../components/mui';
-import { TooltipButton } from '../../../components/ui/Controls';
+import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { ViewModuleRounded } from '../../../components/icons';
 import { COLORS, SHADOWS } from '../../../config/theme';
 import { ProjectDropdown } from './ProjectMenu/ProjectDropdown';

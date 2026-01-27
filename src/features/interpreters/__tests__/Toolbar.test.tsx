@@ -1,145 +1,200 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { handleToolbar } from '../Toolbar';
+import React from 'react';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { Toolbar, handleToolbar } from '../Toolbar';
+import { EditorContext } from '../EditorContext';
 
-describe('Toolbar', () => {
+// Mock components
+jest.mock('../../../components/ui/Controls', () => ({
+    TooltipButton: ({ title, onClick, disabled }: any) => (
+        <button
+            data-testid={`btn-${title}`}
+            onClick={onClick}
+            disabled={disabled}
+        >
+            {title}
+        </button>
+    ),
+}));
+
+// Mock icons
+jest.mock('../../../components/icons', () => ({
+    FirstPageRounded: () => <span>First</span>,
+    LastPageRounded: () => <span>Last</span>,
+    NavigateBeforeRounded: () => <span>Prev</span>,
+    NavigateNextRounded: () => <span>Next</span>,
+    PlayArrowRounded: () => <span>Play</span>,
+    PauseRounded: () => <span>Pause</span>,
+}));
+
+// Mock useMediaQuery
+jest.mock('../../../components/mui', () => ({
+    useMediaQuery: jest.fn(() => true), // Desktop by default
+}));
+
+describe('Toolbar Component and handleToolbar', () => {
+    const mockDispatch = jest.fn();
+    const mockCreate = jest.fn();
+    const mockClear = jest.fn();
+    const mockNextIter = jest.fn();
+
+    const mockPayload = {
+        dispatch: mockDispatch,
+        create: mockCreate,
+        clear: mockClear,
+        nextIter: mockNextIter,
+        start: {},
+    };
+
     beforeEach(() => {
         jest.clearAllMocks();
         window.confirm = jest.fn(() => true);
+        Object.assign(navigator, {
+            clipboard: {
+                writeText: jest.fn().mockResolvedValue(undefined),
+            },
+        });
     });
 
     describe('handleToolbar', () => {
-        const mockPayload = {
-            dispatch: jest.fn(),
-            nextIter: jest.fn((action: { type: string; payload: any }) => {
-                // Return a proper object structure - match what the code expects
-                // For reset action, nextIter is called with { type: 'clear', payload: resetPayload }
-                // resetPayload contains { ...state, ...start } which is { value: 0, pause: false }
-                const payload = action.payload || action;
-                return {
-                    value: payload.value || 0,
-                    pause: payload.pause || false,
-                };
-            }),
-            create: jest.fn(),
-            clear: jest.fn(),
-            start: { value: 0 },
-        };
-
-        const initialState = {
-            value: 0,
-            pause: true,
-        };
-
-        beforeEach(() => {
-            jest.clearAllMocks();
-        });
-
         test('handles run action', () => {
-            const action = {
-                type: 'run',
-                payload: mockPayload,
-            };
-
-            const result = handleToolbar(initialState, action);
-
-            expect(mockPayload.create).toHaveBeenCalled();
+            const result = handleToolbar(
+                {},
+                { type: 'run', payload: mockPayload as any }
+            );
+            expect(mockCreate).toHaveBeenCalled();
             expect(result.pause).toBe(false);
         });
 
         test('handles stop action', () => {
-            const action = {
-                type: 'stop',
-                payload: mockPayload,
-            };
-
             const result = handleToolbar(
-                { ...initialState, pause: false },
-                action
+                {},
+                { type: 'stop', payload: mockPayload as any }
             );
-
-            expect(mockPayload.clear).toHaveBeenCalled();
+            expect(mockClear).toHaveBeenCalled();
             expect(result.pause).toBe(true);
         });
 
-        test('handles reset action', () => {
-            const action = {
-                type: 'reset',
-                payload: mockPayload,
-            };
-
-            // Mock nextIter to return an object
-            mockPayload.nextIter.mockReturnValueOnce({
-                value: 0,
-                pause: false,
-            });
-
+        test('handles reset action with confirmation', () => {
+            (window.confirm as jest.Mock).mockReturnValue(true);
             const result = handleToolbar(
-                { ...initialState, pause: false },
-                action
+                {},
+                { type: 'reset', payload: mockPayload as any }
             );
+            expect(window.confirm).toHaveBeenCalled();
+            expect(mockNextIter).toHaveBeenCalledWith(
+                expect.objectContaining({ type: 'clear' })
+            );
+            expect(result.pause).toBe(true);
+        });
 
-            expect(mockPayload.clear).toHaveBeenCalled();
-            expect(mockPayload.nextIter).toHaveBeenCalled();
-            // After reset, pause should be set to true
+        test('handles reset action without confirmation', () => {
+            (window.confirm as jest.Mock).mockReturnValue(false);
+            const result = handleToolbar(
+                {},
+                { type: 'reset', payload: mockPayload as any }
+            );
+            expect(mockNextIter).not.toHaveBeenCalled();
+        });
+
+        test('handles timer action (next)', () => {
+            handleToolbar(
+                { end: false },
+                { type: 'timer', payload: mockPayload as any }
+            );
+            expect(mockDispatch).toHaveBeenCalledWith(
+                expect.objectContaining({ type: 'next' })
+            );
+        });
+
+        test('handles timer action (stop)', () => {
+            handleToolbar(
+                { end: true },
+                { type: 'timer', payload: mockPayload as any }
+            );
+            expect(mockDispatch).toHaveBeenCalledWith(
+                expect.objectContaining({ type: 'stop' })
+            );
+        });
+
+        test('handles prev action', () => {
+            const result = handleToolbar(
+                {},
+                { type: 'prev', payload: mockPayload as any }
+            );
+            expect(mockNextIter).toHaveBeenCalledWith(
+                expect.objectContaining({ type: 'prev' })
+            );
             expect(result.pause).toBe(true);
         });
 
         test('handles next action', () => {
-            const action = {
-                type: 'next',
-                payload: mockPayload,
-            };
-
-            const result = handleToolbar(initialState, action);
-
-            expect(result).toBeDefined();
+            const result = handleToolbar(
+                {},
+                { type: 'next', payload: mockPayload as any }
+            );
+            expect(mockNextIter).toHaveBeenCalledWith(
+                expect.objectContaining({ type: 'next' })
+            );
         });
 
-        test('handles prev action', () => {
-            const action = {
-                type: 'prev',
-                payload: mockPayload,
-            };
+        test('handles share action', () => {
+            handleToolbar({}, { type: 'share', payload: mockPayload as any });
+            expect(navigator.clipboard.writeText).toHaveBeenCalled();
+        });
+    });
 
-            const result = handleToolbar(initialState, action);
+    describe('Toolbar Component', () => {
+        const renderToolbar = (contextValue: any) => {
+            return render(
+                <EditorContext.Provider value={contextValue}>
+                    <Toolbar />
+                </EditorContext.Provider>
+            );
+        };
 
-            expect(mockPayload.nextIter).toHaveBeenCalled();
-            expect(result.pause).toBe(true);
+        test('renders nothing without context', () => {
+            const { container } = render(
+                <EditorContext.Provider value={null}>
+                    <Toolbar />
+                </EditorContext.Provider>
+            );
+            expect(container).toBeEmptyDOMElement();
         });
 
-        test('handles timer action with end state', () => {
-            const action = {
-                type: 'timer',
-                payload: mockPayload,
+        test('renders buttons correctly', () => {
+            const context = {
+                name: 'Test Lang',
+                pause: true,
+                dispatch: jest.fn(() => jest.fn()),
+                fastForward: true,
             };
-
-            const stateWithEnd = { ...initialState, end: true };
-
-            handleToolbar(stateWithEnd, action);
-
-            expect(mockPayload.dispatch).toHaveBeenCalled();
+            renderToolbar(context);
+            expect(screen.getByTestId('btn-Run')).toBeInTheDocument();
+            expect(screen.getByTestId('btn-Reset')).toBeInTheDocument();
+            expect(screen.getByTestId('btn-Fast Forward')).toBeInTheDocument();
+            expect(screen.getByTestId('btn-Previous')).toBeInTheDocument();
+            expect(screen.getByTestId('btn-Next')).toBeInTheDocument();
         });
 
-        test('handles timer action without end state', () => {
-            const action = {
-                type: 'timer',
-                payload: mockPayload,
+        test('renders Pause button when not paused', () => {
+            const context = {
+                name: 'Test Lang',
+                pause: false,
+                dispatch: jest.fn(() => jest.fn()),
             };
-
-            handleToolbar(initialState, action);
-
-            expect(mockPayload.dispatch).toHaveBeenCalled();
+            renderToolbar(context);
+            expect(screen.getByTestId('btn-Pause')).toBeInTheDocument();
         });
 
-        test('handles unknown action gracefully', () => {
-            const action = {
-                type: 'unknown',
-                payload: mockPayload,
+        test('disables Fast Forward when flag is false', () => {
+            const context = {
+                name: 'Test Lang',
+                pause: true,
+                dispatch: jest.fn(() => jest.fn()),
+                fastForward: false,
             };
-
-            const result = handleToolbar(initialState, action);
-
-            expect(result).toBeDefined();
+            renderToolbar(context);
+            expect(screen.getByTestId('btn-Fast Forward')).toBeDisabled();
         });
     });
 });

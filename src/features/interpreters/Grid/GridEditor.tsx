@@ -150,11 +150,6 @@ export default function GridEditor<T extends GridState>(
     height = (height || 400) * (mobile ? 1 : 0.8);
     width = (width || 600) * 0.95;
 
-    if (!hide) {
-        if (mobile) width /= 2;
-        else width /= 1.5;
-    }
-
     // Module-level cache for grid dimensions to prevent flash triggers
     // on interpreter switch. This assumes the layout size for grid editors
     // is consistent across different interpreters.

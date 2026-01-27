@@ -1,4 +1,4 @@
-function getMatrix(cols: number): number[] {
+export function getMatrix(cols: number): number[] {
     const first = 7 << (cols - 2);
     const matrix = [first];
 
@@ -12,7 +12,7 @@ function getMatrix(cols: number): number[] {
     return matrix;
 }
 
-function countBits(num: number): number {
+export function countBits(num: number): number {
     let count = 0;
 
     while (num) {
@@ -23,7 +23,7 @@ function countBits(num: number): number {
     return count;
 }
 
-function multiplySym(matrixA: number[], matrixB: number[]): number[] {
+export function multiplySym(matrixA: number[], matrixB: number[]): number[] {
     const size = matrixA.length;
     const output: number[] = [];
 
@@ -46,7 +46,7 @@ function multiplySym(matrixA: number[], matrixB: number[]): number[] {
     return output;
 }
 
-function getIdentity(size: number): number[] {
+export function getIdentity(size: number): number[] {
     const output = Array(size).fill(1);
 
     for (let r = 0; r < size; r++) output[r] <<= size - r - 1;
@@ -54,7 +54,7 @@ function getIdentity(size: number): number[] {
     return output;
 }
 
-function symmetricPow(matrix: number[], power: number): number[] {
+export function symmetricPow(matrix: number[], power: number): number[] {
     const size = matrix.length;
     let output = getIdentity(size);
 
@@ -63,7 +63,7 @@ function symmetricPow(matrix: number[], power: number): number[] {
     return output;
 }
 
-function addSym(matrixA: number[], matrixB: number[]): number[] {
+export function addSym(matrixA: number[], matrixB: number[]): number[] {
     const size = matrixA.length;
     const output: number[] = [];
 
@@ -77,7 +77,7 @@ function addSym(matrixA: number[], matrixB: number[]): number[] {
     return output;
 }
 
-function getPolynomial(index: number): number {
+export function getPolynomial(index: number): number {
     const output = [0, 1];
 
     for (let k = 1; k < index; k++) {
@@ -91,7 +91,7 @@ function getPolynomial(index: number): number {
     return output[index];
 }
 
-function evalPolynomial(matrix: number[], poly: number): number[] {
+export function evalPolynomial(matrix: number[], poly: number): number[] {
     const size = matrix.length;
     let output = Array(size).fill(0);
     let degree = 0;
@@ -110,7 +110,7 @@ function evalPolynomial(matrix: number[], poly: number): number[] {
     return output;
 }
 
-function sortMatrices(
+export function sortMatrices(
     matrix: number[],
     identity: number[]
 ): [number[], number[]] {
@@ -125,7 +125,7 @@ function sortMatrices(
     return [original, inverted];
 }
 
-function invertMatrix(matrix: number[]): number[] {
+export function invertMatrix(matrix: number[]): number[] {
     const size = matrix.length;
     const identity = getIdentity(size);
 

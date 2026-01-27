@@ -34,30 +34,8 @@ export const ICON_MAP: IconMap = {
     Work: Work,
 };
 
-interface TooltipButtonProps {
-    Icon: IconComponent;
-    title: string;
-    [key: string]: unknown;
-}
-
-export function TooltipButton({
-    Icon,
-    title,
-    size = 'large',
-    ...rest
-}: TooltipButtonProps) {
-    return (
-        <Tooltip title={title}>
-            <IconButton
-                size={size as unknown as 'small'}
-                aria-label={title}
-                {...rest}
-            >
-                <Icon fontSize="inherit" aria-hidden="true" />
-            </IconButton>
-        </Tooltip>
-    );
-}
+import { TooltipButton } from './TooltipButton';
+export { TooltipButton };
 
 interface HomeButtonProps {
     hide?: boolean;

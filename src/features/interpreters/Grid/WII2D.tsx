@@ -45,7 +45,7 @@ function getClosest(position: number, grid: string, cols: number): number {
     return warp[1];
 }
 
-function getState(state: WII2DState): WII2DState {
+export function getState(state: WII2DState): WII2DState {
     const arrows = '^<>v';
 
     let { position, velocity, output, register, end } = state;

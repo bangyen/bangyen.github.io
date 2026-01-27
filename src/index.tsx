@@ -14,22 +14,17 @@ import { COLORS, createAppTheme } from './config/theme';
 import { ThemeProvider, useThemeContext } from './hooks/useTheme';
 
 // Lazy load pages
-// ... (omitting lazy loads for brevity in ReplacementContent, but they must be kept)
-const Home = lazy(() => import('./pages').then(m => ({ default: m.Home })));
-const Error = lazy(() => import('./pages').then(m => ({ default: m.Error })));
-const Snake = lazy(() => import('./pages').then(m => ({ default: m.Snake })));
-const LightsOut = lazy(() =>
-    import('./pages').then(m => ({ default: m.Lights_Out }))
+const Home = lazy(() => import('./features/home/pages/Home'));
+const Error = lazy(() => import('./pages/Error'));
+const Snake = lazy(() => import('./features/games/snake'));
+const LightsOut = lazy(() => import('./features/games/lights-out/LightsOut'));
+const ZSharp = lazy(() => import('./features/research/pages/ZSharp'));
+const Oligopoly = lazy(() => import('./features/research/pages/Oligopoly'));
+const Interpreters = lazy(
+    () => import('./features/interpreters/pages/Interpreters')
 );
-const ZSharp = lazy(() => import('./pages').then(m => ({ default: m.ZSharp })));
-const Oligopoly = lazy(() =>
-    import('./pages').then(m => ({ default: m.Oligopoly }))
-);
-const Interpreters = lazy(() =>
-    import('./pages').then(m => ({ default: m.Interpreters }))
-);
-const WikipediaQuiz = lazy(() =>
-    import('./pages').then(m => ({ default: m.WikipediaQuiz }))
+const WikipediaQuiz = lazy(
+    () => import('./features/quiz/pages/WikipediaQuizPage')
 );
 
 const App = (): React.ReactElement => {

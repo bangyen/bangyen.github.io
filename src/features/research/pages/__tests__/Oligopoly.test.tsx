@@ -1,140 +1,282 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
 import {
-    ThemeProvider,
-    createTheme,
-    grey,
-    blueGrey,
-} from '../../../../components/mui';
+    render,
+    screen,
+    fireEvent,
+    act,
+    waitFor,
+} from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import Oligopoly from '../Oligopoly';
 
-// Create a test theme
-const testTheme = createTheme({
-    palette: {
-        primary: blueGrey,
-        secondary: grey,
-        mode: 'dark',
+// Mocks
+jest.mock('../../ResearchDemo', () => ({
+    __esModule: true,
+    default: ({
+        title,
+        chartData,
+        chartConfig,
+        controls,
+        onReset,
+        loading,
+    }: any) => {
+        if (chartConfig) {
+            if (chartConfig.yAxisFormatter) chartConfig.yAxisFormatter(0);
+            if (chartConfig.rightYAxisFormatter)
+                chartConfig.rightYAxisFormatter(0);
+            if (chartConfig.tooltipLabelFormatter)
+                chartConfig.tooltipLabelFormatter(0);
+            if (chartConfig.tooltipFormatter)
+                chartConfig.tooltipFormatter(0, 'Market Price');
+            if (chartConfig.tooltipFormatter)
+                chartConfig.tooltipFormatter(0, 'Other');
+        }
+        return (
+            <div data-testid="research-demo">
+                <h1>{title}</h1>
+                {loading && <div data-testid="loading">Loading...</div>}
+                <div data-testid="chart-data-count">{chartData.length}</div>
+                <div data-testid="controls">
+                    {controls.map((c: any) => (
+                        <div key={c.label}>
+                            <span>{c.label}</span>
+                            <button
+                                data-testid={`change-${c.label}`}
+                                onClick={() => c.onChange(c.options[0].value)}
+                            >
+                                Change
+                            </button>
+                        </div>
+                    ))}
+                </div>
+                <button data-testid="reset-btn" onClick={onReset}>
+                    Reset
+                </button>
+            </div>
+        );
     },
-    typography: {
-        fontFamily: 'monospace',
-    },
-});
-
-// Test wrapper component
-const TestWrapper = ({ children }: { children: React.ReactNode }) => (
-    <BrowserRouter>
-        <ThemeProvider theme={testTheme}>{children}</ThemeProvider>
-    </BrowserRouter>
-);
-
-// Mock Material-UI icons
-jest.mock('@mui/icons-material', () => ({
-    GitHub: () => <div data-testid="github-icon">GitHub</div>,
-    Home: () => <div data-testid="home-icon">Home</div>,
-    Refresh: () => <div data-testid="refresh-icon">Refresh</div>,
 }));
 
-// Mock fetch for data loading
-global.fetch = jest.fn();
-
-// Mock the Oligopoly component with a simple version for testing
-const MockOligopoly = () => {
-    React.useEffect(() => {
-        document.title = 'Oligopoly - Cournot Competition';
-    }, []);
-
-    return (
-        <div>
-            <h1>Oligopoly</h1>
-            <p>Cournot Competition Simulation</p>
-            <div data-testid="github-icon">GitHub</div>
-            <div data-testid="home-icon">Home</div>
-            <div>Number of Firms</div>
-            <div>Demand Elasticity</div>
-            <div>Base Price</div>
-        </div>
-    );
+// Better Response mock for this test
+const originalResponse = (global as any).Response;
+(global as any).Response = class extends originalResponse {
+    async text() {
+        if (this._data instanceof ReadableStream) {
+            return '[{"round":1, "price":10, "hhi":0.5, "num_firms":3, "model_type":"cournot", "demand_elasticity":2.0, "base_price":40, "collusion_enabled":false}]';
+        }
+        return super.text ? await super.text() : '[{}]';
+    }
 };
 
 describe('Oligopoly Component', () => {
-    /**
-     * Tests the Oligopoly page component for proper rendering and functionality
-     * to ensure the economic simulation demo displays correctly.
-     */
     beforeEach(() => {
-        // Mock document.title
-        Object.defineProperty(document, 'title', {
-            writable: true,
-            value: '',
+        jest.clearAllMocks();
+        global.fetch = jest.fn();
+    });
+
+    const renderOligopoly = async () => {
+        let result: any;
+        await act(async () => {
+            result = render(
+                <BrowserRouter>
+                    <ThemeProvider theme={createTheme()}>
+                        <Oligopoly />
+                    </ThemeProvider>
+                </BrowserRouter>
+            );
+        });
+        return result;
+    };
+
+    test('renders correctly and loads gzipped data', async () => {
+        (global.fetch as jest.Mock).mockResolvedValue({
+            ok: true,
+            arrayBuffer: () =>
+                Promise.resolve(new Uint8Array([0x1f, 0x8b, 0, 0]).buffer),
         });
 
-        // Reset fetch mock
-        (fetch as jest.Mock).mockClear();
-    });
-
-    afterEach(() => {
-        jest.clearAllMocks();
-    });
-
-    test('renders main title and navigation', () => {
-        render(
-            <TestWrapper>
-                <MockOligopoly />
-            </TestWrapper>
-        );
-
-        // Check main title
+        await renderOligopoly();
         expect(screen.getByText('Oligopoly')).toBeInTheDocument();
 
-        // Check navigation buttons
-        expect(screen.getByTestId('github-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('home-icon')).toBeInTheDocument();
+        await waitFor(() => {
+            expect(
+                screen.getByTestId('chart-data-count')
+            ).not.toHaveTextContent('0');
+        });
     });
 
-    test('sets document title on mount', () => {
-        render(
-            <TestWrapper>
-                <MockOligopoly />
-            </TestWrapper>
+    test('handles fetch failure and uses fallback data', async () => {
+        (global.fetch as jest.Mock).mockRejectedValue(
+            new Error('Fetch failed')
         );
 
-        expect(document.title).toBe('Oligopoly - Cournot Competition');
+        await renderOligopoly();
+        await waitFor(() => {
+            const count = parseInt(
+                screen.getByTestId('chart-data-count').textContent || '0'
+            );
+            expect(count).toBeGreaterThan(0);
+        });
     });
 
-    test('renders description text', () => {
-        render(
-            <TestWrapper>
-                <MockOligopoly />
-            </TestWrapper>
-        );
+    test('handles non-gzipped data', async () => {
+        const data = [
+            {
+                round: 1,
+                price: 50,
+                hhi: 0.5,
+                num_firms: 3,
+                model_type: 'cournot',
+                demand_elasticity: 2.0,
+                base_price: 40,
+                collusion_enabled: false,
+            },
+        ];
+        (global.fetch as jest.Mock).mockResolvedValue({
+            ok: true,
+            arrayBuffer: () =>
+                Promise.resolve(
+                    new TextEncoder().encode(JSON.stringify(data)).buffer
+                ),
+        });
 
-        // Check description
-        expect(
-            screen.getByText(/Cournot Competition Simulation/)
-        ).toBeInTheDocument();
+        await renderOligopoly();
+        await waitFor(() => {
+            expect(
+                screen.getByTestId('chart-data-count')
+            ).not.toHaveTextContent('0');
+        });
     });
 
-    test('renders parameter controls', () => {
-        render(
-            <TestWrapper>
-                <MockOligopoly />
-            </TestWrapper>
-        );
+    test('handles control changes and reset', async () => {
+        (global.fetch as jest.Mock).mockResolvedValue({
+            ok: true,
+            arrayBuffer: () =>
+                Promise.resolve(new TextEncoder().encode('[]').buffer),
+        });
 
-        // Check parameter controls
-        expect(screen.getByText('Number of Firms')).toBeInTheDocument();
-        expect(screen.getByText('Demand Elasticity')).toBeInTheDocument();
-        expect(screen.getByText('Base Price')).toBeInTheDocument();
-    });
+        await renderOligopoly();
 
-    test('renders with proper accessibility attributes', () => {
-        render(
-            <TestWrapper>
-                <MockOligopoly />
-            </TestWrapper>
-        );
+        await act(async () => {
+            const changeBtn = screen.getByTestId('change-Number of Firms');
+            fireEvent.click(changeBtn);
+        });
 
-        // Check that the component renders
+        await act(async () => {
+            const resetBtn = screen.getByTestId('reset-btn');
+            fireEvent.click(resetBtn);
+        });
+
         expect(screen.getByText('Oligopoly')).toBeInTheDocument();
+    });
+
+    test('sets document title', async () => {
+        (global.fetch as jest.Mock).mockResolvedValue({
+            ok: true,
+            arrayBuffer: () =>
+                Promise.resolve(new TextEncoder().encode('[]').buffer),
+        });
+
+        await renderOligopoly();
+        expect(document.title).toContain('Oligopoly');
+    });
+
+    test('handles edge case: data format error', async () => {
+        (global.fetch as jest.Mock).mockResolvedValue({
+            ok: true,
+            arrayBuffer: () =>
+                Promise.resolve(new TextEncoder().encode('not-json').buffer),
+        });
+
+        await renderOligopoly();
+        await waitFor(() => {
+            const count = parseInt(
+                screen.getByTestId('chart-data-count').textContent || '0'
+            );
+            expect(count).toBeGreaterThan(0);
+        });
+    });
+
+    test('handles HTTP error 404', async () => {
+        (global.fetch as jest.Mock).mockResolvedValue({
+            ok: false,
+            status: 404,
+        });
+
+        await renderOligopoly();
+        await waitFor(() => {
+            expect(
+                screen.getByTestId('chart-data-count')
+            ).not.toHaveTextContent('0');
+        });
+    });
+
+    test('handles missing DecompressionStream', async () => {
+        const originalDS = (global as any).DecompressionStream;
+        delete (global as any).DecompressionStream;
+
+        (global.fetch as jest.Mock).mockResolvedValue({
+            ok: true,
+            arrayBuffer: () =>
+                Promise.resolve(new Uint8Array([0x1f, 0x8b, 0, 0]).buffer),
+        });
+
+        await renderOligopoly();
+        await waitFor(() => {
+            expect(
+                screen.getByTestId('chart-data-count')
+            ).not.toHaveTextContent('0');
+        });
+
+        (global as any).DecompressionStream = originalDS;
+    });
+
+    test('handles non-array matrix data', async () => {
+        (global.fetch as jest.Mock).mockResolvedValue({
+            ok: true,
+            arrayBuffer: () =>
+                Promise.resolve(
+                    new TextEncoder().encode('{"not": "an-array"}').buffer
+                ),
+        });
+
+        await renderOligopoly();
+        await waitFor(() => {
+            expect(
+                screen.getByTestId('chart-data-count')
+            ).not.toHaveTextContent('0');
+        });
+    });
+
+    test('fallbacks to closest data when no exact match is found', async () => {
+        const data = [
+            {
+                round: 1,
+                price: 50,
+                hhi: 0.5,
+                num_firms: 3, // Match default numFirms
+                model_type: 'cournot', // Match default modelType
+                demand_elasticity: 9.9, // Not matching elasticity
+                base_price: 40,
+                collusion_enabled: false,
+            },
+        ];
+        (global.fetch as jest.Mock).mockResolvedValue({
+            ok: true,
+            arrayBuffer: () =>
+                Promise.resolve(
+                    new TextEncoder().encode(JSON.stringify(data)).buffer
+                ),
+        });
+
+        await renderOligopoly();
+
+        await waitFor(() => {
+            expect(
+                screen.getByTestId('chart-data-count')
+            ).not.toHaveTextContent('0');
+        });
     });
 });

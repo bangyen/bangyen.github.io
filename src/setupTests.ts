@@ -53,9 +53,61 @@ global.TextDecoder = class TextDecoder {
     encoding = 'utf-8';
     fatal = false;
     ignoreBOM = false;
-    decode(bytes: Uint8Array): string {
-        return String.fromCharCode(...bytes);
+    decode(bytes: Uint8Array | ArrayBuffer): string {
+        const array =
+            bytes instanceof ArrayBuffer ? new Uint8Array(bytes) : bytes;
+        return Buffer.from(array).toString('utf-8');
     }
 } as unknown as typeof TextDecoder;
+
+// Mock Response for fetch and decompression
+(global as any).Response = class Response {
+    _data: any;
+    constructor(data: any) {
+        this._data = data;
+    }
+    async text() {
+        if (this._data instanceof ReadableStream) {
+            return '[]';
+        }
+        return String(this._data);
+    }
+    async json() {
+        return JSON.parse(await this.text());
+    }
+};
+
+// Mock ReadableStream
+(global as any).ReadableStream = class ReadableStream {
+    constructor(options: any) {
+        if (options && options.start) {
+            const controller = {
+                enqueue: jest.fn(),
+                close: jest.fn(),
+            };
+            options.start(controller);
+        }
+    }
+    getReader() {
+        return {
+            read: jest.fn().mockResolvedValue({ done: true }),
+        };
+    }
+};
+
+// Mock DecompressionStream
+(global as any).DecompressionStream = class DecompressionStream {
+    writable = {
+        getWriter: () => ({
+            write: jest.fn().mockResolvedValue(undefined),
+            close: jest.fn().mockResolvedValue(undefined),
+        }),
+    };
+    readable = {
+        getReader: () => ({
+            read: jest.fn().mockResolvedValue({ done: true }),
+        }),
+    };
+};
 
 // All warnings have been fixed at the root cause - no suppressions needed!

@@ -14,6 +14,9 @@ function Cell({ size, children, ...rest }: CellProps) {
     const remSize = `${size}rem`;
     const radius = `${size / GRID_CONFIG.cellSize.divisor}rem`;
 
+    const { backgroundColor, color, boxShadow, border, opacity, ...domProps } =
+        rest as any;
+
     const props = {
         ...COMPONENT_VARIANTS.flexCenter,
         borderRadius: radius,
@@ -25,12 +28,21 @@ function Cell({ size, children, ...rest }: CellProps) {
         transition: ANIMATIONS.transition,
     };
 
-    const combined = {
-        ...props,
-        ...rest,
-    };
-
-    return <Box {...combined}>{children}</Box>;
+    return (
+        <Box
+            {...props}
+            {...domProps}
+            sx={{
+                backgroundColor,
+                color,
+                boxShadow,
+                border,
+                opacity,
+            }}
+        >
+            {children}
+        </Box>
+    );
 }
 
 interface CellOptions {
