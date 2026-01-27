@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-require-imports */
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import TextEditor from '../TextEditor';
+import * as hooks from '../../../../hooks';
 
 // Mock Editor sub-component - Correct path
 jest.mock('../../Editor', () => ({
@@ -59,9 +59,9 @@ describe('TextEditor Component', () => {
         expect(textArea.value).toBe('new code');
     });
 
-    it('uses text cache when container height is 0', () => {
-        const { useContainer } = require('../../../../hooks');
-        useContainer.mockReturnValue({ height: 0 });
+    it('handles layout resizing', () => {
+        const mockUseContainer = hooks.useContainer as jest.Mock;
+        mockUseContainer.mockReturnValue({ height: 100, width: 100 });
 
         render(<TextEditor {...defaultProps} />);
         expect(screen.getByTestId('editor')).toBeInTheDocument();

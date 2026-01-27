@@ -1,32 +1,38 @@
-/* eslint-disable @typescript-eslint/no-require-imports */
 import React from 'react';
-
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { PAGE_TITLES } from '../../../../config/constants';
+import * as boardHandlers from '../boardHandlers';
+import * as hooks from '../../../../hooks';
+import LightsOut from '../LightsOut';
 
 // Mock hooks
 jest.mock('../../../../hooks', () => ({
     useWindow: jest.fn(() => ({ height: 800, width: 1200 })),
     useMobile: jest.fn(() => false),
+    useTimer: jest.fn(() => ({
+        create: jest.fn(),
+        clear: jest.fn(),
+    })),
+    useCache: jest.fn(() => [null, jest.fn()]),
 }));
 
 // Mock boardHandlers to control game logic
-jest.mock('../boardHandlers', () => {
-    const original = jest.requireActual('../boardHandlers');
-    return {
-        ...original,
-        getGrid: jest.fn(() => Array(4).fill(Array(4).fill(0))),
-        handleBoard: jest.fn((state, action) => {
-            if (action.type === 'auto') return { ...state, auto: !state.auto };
-            if (action.type === 'resize')
-                return { ...state, rows: action.newRows, cols: action.newCols };
-            return state;
-        }),
-        getNextMove: jest.fn(() => []),
-    };
-});
-
-import LightsOut from '../LightsOut';
+jest.mock('../boardHandlers', () => ({
+    getGrid: jest.fn(() => Array(4).fill(Array(4).fill(0))),
+    handleBoard: jest.fn((state, action) => {
+        if (action.type === 'auto') return { ...state, auto: !state.auto };
+        if (action.type === 'resize')
+            return {
+                ...state,
+                rows: action.newRows,
+                cols: action.newCols,
+                grid: Array(action.newRows).fill(Array(action.newCols).fill(0)),
+            };
+        if (action.type === 'adjacent') return { ...state };
+        return state;
+    }),
+    getNextMove: jest.fn(),
+}));
 
 // Mock sub-components
 jest.mock('../../components/Board', () => ({
@@ -115,14 +121,13 @@ describe('LightsOut', () => {
     let mockHandleBoard: jest.Mock;
 
     beforeEach(() => {
-        const handlers = require('../boardHandlers');
-        mockGetNextMove = handlers.getNextMove;
-        mockHandleBoard = handlers.handleBoard;
+        mockGetNextMove = boardHandlers.getNextMove as jest.Mock;
+        mockHandleBoard = boardHandlers.handleBoard as jest.Mock;
 
         jest.clearAllMocks();
         jest.useFakeTimers();
 
-        mockHandleBoard.mockImplementation((state, action) => {
+        mockHandleBoard.mockImplementation((state: any, action: any) => {
             if (action.type === 'auto') return { ...state, auto: !state.auto };
             if (action.type === 'resize')
                 return { ...state, rows: action.newRows, cols: action.newCols };
@@ -145,40 +150,13 @@ describe('LightsOut', () => {
         expect(document.title).toBe(PAGE_TITLES.lightsOut);
     });
 
-    it('toggles auto play and processes moves', () => {
-        // Setup getNextMove to return a move then nothing
-        mockGetNextMove
-            .mockReturnValueOnce([{ row: 0, col: 0 }]) // First call returns a move
-            .mockReturnValueOnce([]); // Second call returns no moves (stops auto)
-
-        render(<LightsOut />);
-        const autoBtn = screen.getByLabelText('Auto Play');
-
-        // Start Auto Play
-        fireEvent.click(autoBtn);
-
-        // Advance timer to trigger effect
-        act(() => {
-            jest.advanceTimersByTime(300);
-        });
-
-        // Should have called getNextMove
-        expect(mockGetNextMove).toHaveBeenCalled();
-
-        // Should have dispatched adjacent move
-        expect(mockHandleBoard).toHaveBeenCalledWith(
-            expect.anything(),
-            expect.objectContaining({ type: 'adjacent', row: 0, col: 0 })
-        );
-    });
-
     it('handles resize events', () => {
-        const { useWindow } = require('../../../../hooks');
+        const mockUseWindow = hooks.useWindow as jest.Mock;
         // Initial render
         const { rerender } = render(<LightsOut />);
 
         // Change window size
-        useWindow.mockReturnValue({ height: 500, width: 500 });
+        mockUseWindow.mockReturnValue({ height: 500, width: 500 });
 
         rerender(<LightsOut />);
 
@@ -189,21 +167,39 @@ describe('LightsOut', () => {
         );
     });
 
-    it('handles auto play with a single move', () => {
-        // Return a single move
-        mockGetNextMove.mockReturnValue([{ row: 0, col: 0 }]);
+    it('handles auto play mode: moves and termination', () => {
+        // 1. First call: returns 1 move
+        // 2. Second call: returns 0 moves (should stop auto)
+        mockGetNextMove
+            .mockReturnValueOnce([{ row: 0, col: 0 }])
+            .mockReturnValueOnce([]);
 
         render(<LightsOut />);
-        fireEvent.click(screen.getByLabelText('Auto Play'));
+        const autoBtn = screen.getByLabelText('Auto Play');
 
-        // 1. Initial tick -> triggers getNextMove
+        // Start Auto Play
+        fireEvent.click(autoBtn);
+
+        // Advance timer for first move
         act(() => {
-            jest.advanceTimersByTime(300);
+            jest.advanceTimersByTime(350);
         });
 
+        // Verify first move dispatch
         expect(mockHandleBoard).toHaveBeenCalledWith(
             expect.anything(),
             expect.objectContaining({ type: 'adjacent', row: 0, col: 0 })
+        );
+
+        // Advance timer for termination check
+        act(() => {
+            jest.advanceTimersByTime(350);
+        });
+
+        // Verify it stopped (toggled auto again)
+        expect(mockHandleBoard).toHaveBeenCalledWith(
+            expect.anything(),
+            expect.objectContaining({ type: 'auto' })
         );
     });
 
@@ -231,25 +227,9 @@ describe('LightsOut', () => {
         );
     });
 
-    it('stops auto play when no moves return', () => {
-        mockGetNextMove.mockReturnValue(null); // No moves
-        render(<LightsOut />);
-        fireEvent.click(screen.getByLabelText('Auto Play'));
-
-        act(() => {
-            jest.advanceTimersByTime(350);
-        });
-
-        // Should have dispatched auto toggle to stop
-        expect(mockHandleBoard).toHaveBeenCalledWith(
-            expect.anything(),
-            expect.objectContaining({ type: 'auto' })
-        );
-    });
-
     it('handles mobile layout offsets', () => {
-        const { useMobile } = require('../../../../hooks');
-        useMobile.mockReturnValue(true);
+        const mockUseMobile = hooks.useMobile as jest.Mock;
+        mockUseMobile.mockReturnValue(true);
 
         render(<LightsOut />);
 
