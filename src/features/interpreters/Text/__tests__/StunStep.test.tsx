@@ -1,19 +1,12 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import StunStep, { getState, clean, StunStepState } from '../StunStep';
+import TextEditor from '../TextEditor';
 
 // Mocks
-jest.mock(
-    '../TextEditor',
-    () =>
-        function MockTextEditor(props: any) {
-            return (
-                <div
-                    data-testid="text-editor"
-                    data-props={JSON.stringify(props)}
-                />
-            );
-        }
+// Mocks
+jest.mock('../TextEditor', () =>
+    jest.fn(() => <div data-testid="text-editor" />)
 );
 
 describe('StunStep', () => {
@@ -119,10 +112,32 @@ describe('StunStep', () => {
     describe('Component', () => {
         test('renders TextEditor with correct props', () => {
             render(<StunStep />);
-            const editor = screen.getByTestId('text-editor');
-            const props = JSON.parse(editor.getAttribute('data-props') || '{}');
+            const props = (TextEditor as jest.Mock).mock.calls[
+                (TextEditor as jest.Mock).mock.calls.length - 1
+            ][0];
             expect(props.name).toBe('Stun Step');
             expect(props.tape).toBe(true);
+        });
+
+        test('invokes runner and clean callbacks', () => {
+            render(<StunStep />);
+            const props = (TextEditor as jest.Mock).mock.calls[
+                (TextEditor as jest.Mock).mock.calls.length - 1
+            ][0];
+
+            // Verify clean callback
+            expect(props.clean('a+b-')).toBe('+-');
+
+            // Verify runner callback
+            const state = {
+                pointer: 0,
+                index: 0,
+                tape: [0],
+                end: false,
+                code: '+',
+            };
+            const newState = props.runner(state);
+            expect(newState.tape[0]).toBe(1);
         });
     });
 });

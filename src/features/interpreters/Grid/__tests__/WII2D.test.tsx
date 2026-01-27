@@ -42,10 +42,16 @@ describe('WII2D Interpreter', () => {
         expect(newStateDouble.end).toBe(true);
     });
 
+    test('returns state if already ended', () => {
+        const state = { ...initialState, end: true };
+        const newState = getState(state);
+        expect(newState).toBe(state);
+    });
+
     test('handles arrows for velocity', () => {
         // Arrows: ^ < > v
         // ^: index 0. vel = 0%2 + 1 = 1. index<2 -> vel -= 3 -> -2?
-        // ^ at index 0 of arrows string? No, arrows="^<>v". 
+        // ^ at index 0 of arrows string? No, arrows="^<>v".
         // ^ is index 0. vel = 1. -> -2.
         // < is index 1. vel = 2. -> -1.
         // > is index 2. vel = 1.
@@ -96,7 +102,13 @@ describe('WII2D Interpreter', () => {
     });
 
     test('handles output ~', () => {
-        const state = { ...initialState, position: 0, grid: '~', register: 65, output: '' };
+        const state = {
+            ...initialState,
+            position: 0,
+            grid: '~',
+            register: 65,
+            output: '',
+        };
         const newState = getState(state);
         expect(newState.output).toBe('A');
     });
@@ -141,7 +153,7 @@ describe('WII2D Interpreter', () => {
             grid: '@   @', // index 0 and 4.
             rows: 1,
             cols: 5,
-            position: 0
+            position: 0,
         };
         // closest to 0 is 4.
         // newPos = 4 - cols(5) = -1.
@@ -158,7 +170,7 @@ describe('WII2D Interpreter', () => {
             grid: '@',
             rows: 1,
             cols: 1,
-            position: 0
+            position: 0,
         };
         // Only 1 @. getClosest returns position (0).
         // Then position -= cols (1) -> -1.
@@ -173,15 +185,34 @@ describe('WII2D Interpreter', () => {
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import WII2DEditor from '../WII2D';
+import GridEditor from '../GridEditor';
 
-jest.mock('../GridEditor', () => ({
-    __esModule: true,
-    default: () => <div data-testid="grid-editor-mock" />,
-}));
+jest.mock('../GridEditor', () =>
+    jest.fn(() => <div data-testid="grid-editor-mock" />)
+);
 
 describe('WII2D Component', () => {
-    test('renders GridEditor', () => {
+    test('renders GridEditor and invokes runner', () => {
         render(<WII2DEditor />);
         expect(screen.getByTestId('grid-editor-mock')).toBeInTheDocument();
+
+        const props = (GridEditor as jest.Mock).mock.calls[
+            (GridEditor as jest.Mock).mock.calls.length - 1
+        ][0];
+        expect(props.name).toBe('WII2D');
+
+        // Verify runner
+        const state = {
+            velocity: 1,
+            position: 0,
+            output: '',
+            register: 0,
+            end: false,
+            grid: '+',
+            rows: 1,
+            cols: 1,
+        };
+        const newState = props.runner(state);
+        expect(newState.register).toBe(1);
     });
 });

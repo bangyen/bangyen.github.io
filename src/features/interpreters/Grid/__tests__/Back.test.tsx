@@ -112,7 +112,7 @@ describe('Back Interpreter', () => {
             grid: '+..-', // + at 0. - at 3.
             position: 0,
             velocity: 1,
-            tape: [0]
+            tape: [0],
         };
         const newState = getState(state);
 
@@ -128,7 +128,7 @@ describe('Back Interpreter', () => {
             grid: '+..-',
             position: 0,
             velocity: 1,
-            tape: [1]
+            tape: [1],
         };
         const newState = getState(state);
         // No loop.
@@ -142,15 +142,45 @@ describe('Back Interpreter', () => {
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import BackEditor from '../Back';
+import GridEditor from '../GridEditor';
 
-jest.mock('../GridEditor', () => ({
-    __esModule: true,
-    default: () => <div data-testid="grid-editor-mock" />,
-}));
+jest.mock('../GridEditor', () =>
+    jest.fn(() => <div data-testid="grid-editor-mock" />)
+);
 
 describe('Back Component', () => {
-    test('renders GridEditor', () => {
+    test('renders GridEditor and invokes runner', () => {
         render(<BackEditor />);
         expect(screen.getByTestId('grid-editor-mock')).toBeInTheDocument();
+
+        const props = (GridEditor as jest.Mock).mock.calls[
+            (GridEditor as jest.Mock).mock.calls.length - 1
+        ][0];
+        expect(props.name).toBe('Back');
+        expect(props.tape).toBe(true);
+
+        // Verify runner
+        const state = {
+            velocity: 1,
+            pointer: 0,
+            position: 0,
+            tape: [0],
+            end: false,
+            grid: '>',
+            rows: 1,
+            cols: 1,
+        };
+        // We can check if runner is the getState function.
+        // Or execute it.
+        const newState = props.runner(state);
+        // Using getState logic (mocked or real?)
+        // Back.tsx imports getState from itself (same file logic).
+        // Since we are importing from '../Back', it uses the real getState logic unless mocked?
+        // Wait, verifying: BackTest imports { getState } from '../Back'.
+        // This suggests getState IS exported.
+        // Yes, verify logic runs.
+
+        // Input: '>' logic -> pointer++ and tape grow
+        expect(newState.pointer).toBe(1);
     });
 });
