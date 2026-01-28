@@ -21,7 +21,8 @@ import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { getProduct } from './matrices';
 import { useMobile } from '../../../hooks';
 import Example from './Example';
-import { getInput, getOutput, useHandler, Palette } from './calculator';
+import { getInput, getOutput, useHandler } from './calculator';
+import { Palette, Getters, PropsFactory } from '../components/Board';
 import { StepTitle, InstructionItem, INFO_TITLES } from './content';
 
 // Type assertion for GlassCard component
@@ -38,10 +39,21 @@ interface InfoProps {
     open: boolean;
     palette: Palette;
     toggleOpen: () => void;
+    getFrontProps: PropsFactory;
+    getBackProps: PropsFactory;
 }
 
 export default function Info(props: InfoProps): React.ReactElement {
-    const { rows, cols, size, open, palette, toggleOpen } = props;
+    const {
+        rows,
+        cols,
+        size,
+        open,
+        palette,
+        toggleOpen,
+        getFrontProps,
+        getBackProps,
+    } = props;
     const isMobile = useMobile('md');
 
     // 0: Instructions, 1: Example, 2: Calculator
@@ -207,6 +219,8 @@ export default function Info(props: InfoProps): React.ReactElement {
                                     size={size * 0.7} // Adjust size for responsiveness
                                     start={[1, 3, 8]}
                                     palette={palette}
+                                    getFrontProps={getFrontProps}
+                                    getBackProps={getBackProps}
                                 />
                             </Box>
                         </Box>

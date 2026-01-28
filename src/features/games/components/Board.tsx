@@ -12,15 +12,21 @@ interface BoardProps {
     cols: number;
 }
 
-interface Palette {
+export interface Palette {
     primary: string;
     secondary: string;
 }
 
-interface Getters {
+export interface Getters {
     getColor: (row: number, col: number) => { front: string; back: string };
-    getBorder: (row: number, col: number) => Record<string, unknown>;
+    getBorder: (row: number, col: number) => React.CSSProperties;
     getFiller: (row: number, col: number) => string;
+}
+
+export type CellProps = Record<string, unknown>;
+
+export interface PropsFactory {
+    (getters: Getters): (row: number, col: number) => CellProps;
 }
 
 interface GridState {

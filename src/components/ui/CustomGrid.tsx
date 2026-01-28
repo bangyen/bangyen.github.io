@@ -14,8 +14,15 @@ function Cell({ size, children, ...rest }: CellProps) {
     const remSize = `${size}rem`;
     const radius = `${size / GRID_CONFIG.cellSize.divisor}rem`;
 
-    const { backgroundColor, color, boxShadow, border, opacity, ...domProps } =
-        rest as any;
+    const {
+        backgroundColor,
+        color,
+        boxShadow,
+        border,
+        opacity,
+        sx,
+        ...domProps
+    } = rest as any;
 
     const props = {
         ...COMPONENT_VARIANTS.flexCenter,
@@ -38,6 +45,7 @@ function Cell({ size, children, ...rest }: CellProps) {
                 boxShadow,
                 border,
                 opacity,
+                ...sx,
             }}
         >
             {children}

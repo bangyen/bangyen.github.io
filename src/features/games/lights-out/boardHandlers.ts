@@ -22,6 +22,11 @@ export function flipAdj(
     return newGrid;
 }
 
+export function isSolved(grid: number[][]): boolean {
+    const flat = grid.flat();
+    return !flat.includes(1) || !flat.includes(0);
+}
+
 function randomize(rows: number, cols: number): number[][] {
     let grid = getGrid(rows, cols);
 
@@ -151,10 +156,8 @@ export function handleBoard(
         case 'adjacent': {
             if (row !== undefined && col !== undefined) {
                 grid = flipAdj(row, col, grid);
-                // Check win condition...
-                const flat = grid.flatMap(r => r);
-                const done = !flat.includes(1) || !flat.includes(0);
-                if (done) {
+
+                if (isSolved(grid)) {
                     grid = randomize(rows, cols);
                     score += 1;
                 }
@@ -166,19 +169,14 @@ export function handleBoard(
                 moves.forEach(m => {
                     grid = flipAdj(m.row, m.col, grid);
                 });
-                // Check win condition...
-                const flat = grid.flatMap(r => r);
-                const done = !flat.includes(1) || !flat.includes(0);
-                if (done) {
+
+                if (isSolved(grid)) {
                     grid = randomize(rows, cols);
                     score += 1;
                 }
             }
             break;
         case 'random':
-            grid = randomize(rows, cols);
-            auto = false;
-            break;
         case 'randomize': {
             grid = randomize(rows, cols);
             auto = false;

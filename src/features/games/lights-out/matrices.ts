@@ -157,16 +157,24 @@ export function invertMatrix(matrix: number[]): number[] {
     https://en.wikipedia.org/wiki/Fibonacci_polynomials
     https://graphics.stanford.edu/~seander/bithacks.html#:~:text=Brian%20Kernighan
 */
+// Cache for matrix inversions: "rows,cols" -> inverse matrix
+const inverseCache: Record<string, number[]> = {};
+
 export function getProduct(
     input: number[],
     rows: number,
     cols: number
 ): number[] {
-    const matrix = getMatrix(cols);
-    const weights = getPolynomial(rows + 1);
-    const product = evalPolynomial(matrix, weights);
-    const inverse = invertMatrix(product);
+    const key = `${rows},${cols}`;
 
+    if (!inverseCache[key]) {
+        const matrix = getMatrix(cols);
+        const weights = getPolynomial(rows + 1);
+        const product = evalPolynomial(matrix, weights);
+        inverseCache[key] = invertMatrix(product);
+    }
+
+    const inverse = inverseCache[key];
     const binary = parseInt(input.join(''), 2);
 
     const getParity = (row: number): number => {

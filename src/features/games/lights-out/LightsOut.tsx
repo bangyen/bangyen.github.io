@@ -2,8 +2,15 @@ import React, { useMemo, useEffect, useReducer } from 'react';
 import { Grid, Box } from '../../../components/mui';
 import { InfoRounded, CircleRounded } from '../../../components/icons';
 
-import { Controls, TooltipButton } from '../../../components/ui/Controls';
-import { Board, useHandler, usePalette } from '../components/Board';
+import { Controls } from '../../../components/ui/Controls';
+import { TooltipButton } from '../../../components/ui/TooltipButton';
+import {
+    Board,
+    useHandler,
+    usePalette,
+    Getters,
+    PropsFactory,
+} from '../components/Board';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
 import { LAYOUT, COLORS } from '../../../config/theme';
@@ -17,27 +24,6 @@ import { useWindow, useMobile } from '../../../hooks';
 import { convertPixels } from '../../interpreters/utils/gridUtils';
 import Info from './Info';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
-
-interface Getters {
-    getColor: (row: number, col: number) => { front: string; back: string };
-    getBorder: (row: number, col: number) => React.CSSProperties;
-    getFiller: (row: number, col: number) => string;
-}
-
-interface FrontProps {
-    onClick: () => void;
-    children: React.ReactElement;
-    backgroundColor: string;
-    color: string;
-    style: React.CSSProperties;
-    sx: {
-        '&:hover': {
-            cursor: string;
-            color: string;
-        };
-    };
-    [key: string]: unknown;
-}
 
 function getFrontProps(
     getters: Getters,
@@ -53,7 +39,7 @@ function getFrontProps(
         });
     };
 
-    return (row: number, col: number): FrontProps => {
+    return (row: number, col: number) => {
         const style = getBorder(row, col);
         const { front, back } = getColor(row, col);
 
@@ -69,6 +55,27 @@ function getFrontProps(
                     color: back,
                 },
             },
+        };
+    };
+}
+
+function getBackProps(getters: Getters) {
+    return (row: number, col: number) => {
+        return {
+            backgroundColor: getters.getFiller(row, col),
+        };
+    };
+}
+
+function getExampleProps(getters: Getters) {
+    const frontProps = getFrontProps(getters, () => {});
+
+    return (row: number, col: number) => {
+        const props = frontProps(row, col);
+        return {
+            ...props,
+            onClick: undefined,
+            sx: undefined,
         };
     };
 }
@@ -164,12 +171,7 @@ export default function LightsOut(): React.ReactElement {
     const getters = useHandler(state, palette);
 
     const frontProps = getFrontProps(getters, action => dispatch(action));
-
-    const backProps = (row: number, col: number) => {
-        return {
-            backgroundColor: getters.getFiller(row, col),
-        };
-    };
+    const backProps = getBackProps(getters);
 
     return (
         <Grid
@@ -223,6 +225,8 @@ export default function LightsOut(): React.ReactElement {
                 open={open}
                 palette={palette}
                 toggleOpen={toggleOpen}
+                getFrontProps={getExampleProps}
+                getBackProps={getBackProps}
             />
         </Grid>
     );
