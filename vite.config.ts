@@ -32,14 +32,19 @@ export default defineConfig({
                 // Manual chunk splitting for better caching
                 manualChunks(id) {
                     if (id.includes('node_modules')) {
-                        if (id.includes('react') || id.includes('react-dom') || id.includes('react-router')) {
-                            return 'vendor_react';
-                        }
                         if (id.includes('@mui') || id.includes('@emotion')) {
                             return 'vendor_mui';
                         }
                         if (id.includes('recharts')) {
                             return 'vendor_recharts';
+                        }
+                        if (
+                            id.includes('/node_modules/react/') ||
+                            id.includes('/node_modules/react-dom/') ||
+                            id.includes('/node_modules/react-router/') ||
+                            id.includes('/node_modules/react-router-dom/')
+                        ) {
+                            return 'vendor_react';
                         }
                     }
                 },
