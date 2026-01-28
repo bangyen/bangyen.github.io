@@ -32,8 +32,14 @@ export default defineConfig({
                 // Manual chunk splitting for better caching
                 manualChunks(id) {
                     if (id.includes('node_modules')) {
-                        if (id.includes('@mui') || id.includes('@emotion')) {
-                            return 'vendor_mui';
+                        if (id.includes('@mui/icons-material')) {
+                            return 'vendor_mui_icons';
+                        }
+                        if (
+                            id.includes('@mui') ||
+                            id.includes('@emotion')
+                        ) {
+                            return 'vendor_mui_core';
                         }
                         if (id.includes('recharts')) {
                             return 'vendor_recharts';

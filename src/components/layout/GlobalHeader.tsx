@@ -2,7 +2,7 @@ import React from 'react';
 import { Box } from '../mui';
 import { MenuButton } from '../../features/home/components/ProjectMenu';
 import { ThemeToggle } from '../ui/ThemeToggle';
-import { TooltipButton } from '../ui/Controls';
+import { TooltipButton } from '../ui/TooltipButton';
 import { GitHub, HomeRounded as Home, InfoRounded as Info } from '../icons';
 import { URLS } from '../../config/constants';
 import { COLORS, LAYOUT } from '../../config/theme';
