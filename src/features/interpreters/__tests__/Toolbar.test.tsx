@@ -5,7 +5,7 @@ import { EditorContext } from '../EditorContext';
 
 // Mock components
 jest.mock('../../../components/ui/Controls', () => ({
-    TooltipButton: ({ title, onClick, disabled, icon: Icon }: any) => (
+    TooltipButton: ({ title, onClick, disabled }: any) => (
         <button
             data-testid={`btn-${title}`}
             onClick={onClick}

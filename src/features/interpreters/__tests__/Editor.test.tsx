@@ -107,7 +107,7 @@ describe('Editor Components', () => {
                 </EditorProvider>
             );
 
-            screen.debug();
+            // screen.debug();
 
             expect(screen.getByText('Interpreters')).toBeInTheDocument();
             expect(screen.getByTestId('child-content')).toBeInTheDocument();

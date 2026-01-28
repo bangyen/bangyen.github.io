@@ -51,7 +51,12 @@ jest.mock('../../../../components/mui', () => ({
     ),
     Box: ({ children }: any) => <div data-testid="box">{children}</div>,
     Button: ({ children, onClick }: any) => (
-        <button onClick={onClick}>{children}</button>
+        <button
+            onClick={onClick}
+            onKeyDown={e => e.key === 'Enter' && onClick(e)}
+        >
+            {children}
+        </button>
     ),
     Grid: ({ children }: any) => (
         <div data-testid="grid-container">{children}</div>
