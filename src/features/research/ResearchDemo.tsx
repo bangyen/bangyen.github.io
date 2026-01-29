@@ -190,7 +190,13 @@ const ResearchDemo = <T,>({
                                           )?.chartTitle || 'Data Visualization'
                                         : 'Data Visualization')}
                             </Typography>
-                            <Box sx={{ height: CHART_DIMENSIONS.height }}>
+                            <Box
+                                sx={{
+                                    height: CHART_DIMENSIONS.height,
+                                    width: '100%',
+                                    position: 'relative',
+                                }}
+                            >
                                 {loading ? (
                                     <Box
                                         sx={{
@@ -208,7 +214,10 @@ const ResearchDemo = <T,>({
                                 ) : (
                                     <ResponsiveContainer
                                         width="100%"
-                                        height="100%"
+                                        height={CHART_DIMENSIONS.height}
+                                        minWidth={0}
+                                        minHeight={0}
+                                        debounce={1}
                                     >
                                         <LineChart data={currentData}>
                                             <CartesianGrid
