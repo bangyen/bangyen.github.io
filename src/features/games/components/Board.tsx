@@ -23,6 +23,12 @@ export interface Getters {
     getFiller: (row: number, col: number) => string;
 }
 
+export type CellProps = Record<string, unknown>;
+
+export interface PropsFactory {
+    (getters: Getters): (row: number, col: number) => CellProps;
+}
+
 interface GridState {
     grid: number[][];
     rows: number;

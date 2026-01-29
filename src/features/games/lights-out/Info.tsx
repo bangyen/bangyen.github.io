@@ -22,7 +22,7 @@ import { getProduct } from './matrices';
 import { useMobile } from '../../../hooks';
 import Example from './Example';
 import { getInput, getOutput, useHandler } from './calculator';
-import { Palette, Getters } from '../components/Board';
+import { Palette, Getters, PropsFactory } from '../components/Board';
 import { StepTitle, InstructionItem, INFO_TITLES } from './content';
 
 // Type assertion for GlassCard component
@@ -39,12 +39,8 @@ interface InfoProps {
     open: boolean;
     palette: Palette;
     toggleOpen: () => void;
-    getFrontProps: (
-        getters: Getters
-    ) => (row: number, col: number) => Record<string, unknown>;
-    getBackProps: (
-        getters: Getters
-    ) => (row: number, col: number) => Record<string, unknown>;
+    getFrontProps: PropsFactory;
+    getBackProps: PropsFactory;
 }
 
 export default function Info(props: InfoProps): React.ReactElement {

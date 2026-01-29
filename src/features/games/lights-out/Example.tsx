@@ -7,6 +7,7 @@ import {
     Board,
     Palette,
     Getters,
+    PropsFactory,
 } from '../components/Board';
 import { getOutput, useHandler as useCalculatorHandler } from './calculator';
 import { COLORS } from '../../../config/theme';
@@ -16,12 +17,8 @@ interface ExampleProps {
     size: number;
     dims?: number;
     start?: number[];
-    getFrontProps: (
-        getters: Getters
-    ) => (row: number, col: number) => Record<string, unknown>;
-    getBackProps: (
-        getters: Getters
-    ) => (row: number, col: number) => Record<string, unknown>;
+    getFrontProps: PropsFactory;
+    getBackProps: PropsFactory;
 }
 
 // Helper functions removed as we pass states directly
