@@ -38,7 +38,6 @@ function Cell({ size, children, ...rest }: CellProps) {
         fontSize: `${size * GRID_CONFIG.cellSize.fontSizeMultiplier}rem`,
         fontWeight: TYPOGRAPHY.fontWeight.semibold,
         fontFamily: 'monospace',
-        transition: ANIMATIONS.transition,
     };
 
     return (
@@ -51,6 +50,7 @@ function Cell({ size, children, ...rest }: CellProps) {
                 boxShadow,
                 border,
                 opacity,
+                transition: ANIMATIONS.transition,
                 ...sx,
             }}
         >

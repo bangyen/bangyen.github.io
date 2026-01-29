@@ -35,7 +35,9 @@ export function getOutput({ getColor, getBorder }: Getters) {
         return {
             backgroundColor: front,
             style: getBorder(r, c),
-            transition: 'all 200ms ease',
+            sx: {
+                transition: 'all 200ms ease',
+            },
         };
     };
 }

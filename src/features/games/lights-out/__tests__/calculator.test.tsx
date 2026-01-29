@@ -51,7 +51,7 @@ describe('Lights Out Calculator UI Helpers', () => {
 
             expect(props.backgroundColor).toBe('red');
             expect(props.style).toEqual({ border: '1px solid' });
-            expect(props.transition).toBeDefined();
+            expect(props.sx.transition).toBeDefined();
         });
     });
 
