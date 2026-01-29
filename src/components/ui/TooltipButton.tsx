@@ -20,9 +20,11 @@ export function TooltipButton({
 
     return (
         <Tooltip title={title}>
-            <IconButton size={iconButtonSize} aria-label={title} {...rest}>
-                <Icon fontSize="inherit" aria-hidden="true" />
-            </IconButton>
+            <span>
+                <IconButton size={iconButtonSize} aria-label={title} {...rest}>
+                    <Icon fontSize="inherit" aria-hidden="true" />
+                </IconButton>
+            </span>
         </Tooltip>
     );
 }
