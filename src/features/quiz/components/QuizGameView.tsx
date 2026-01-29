@@ -19,7 +19,7 @@ import {
 } from '../../../config/theme';
 import { Question } from '../types/quiz';
 
-interface QuizGameViewProps<T> {
+export interface QuizGameViewProps<T> {
     gameState: {
         history: Question<T>[];
         currentQuestion: T | null;

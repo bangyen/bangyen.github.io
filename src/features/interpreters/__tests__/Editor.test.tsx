@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Editor from '../Editor';
-import { EditorContext } from '../EditorContext';
+import { EditorContext, EditorContextType } from '../EditorContext';
 import { GridArea } from '../components/GridArea';
 import { TextArea } from '../components/TextArea';
 import { Text } from '../components/Text';
@@ -44,14 +44,13 @@ jest.mock('../Toolbar', () => ({
 
 const EditorProvider = ({
     children,
-    value = mockEditorContext,
+    value = mockEditorContext as EditorContextType,
 }: {
     children: React.ReactNode;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    value?: any;
+    value?: Partial<EditorContextType>;
 }) => (
     <ThemeProvider theme={theme}>
-        <EditorContext.Provider value={value}>
+        <EditorContext.Provider value={value as EditorContextType}>
             {children}
         </EditorContext.Provider>
     </ThemeProvider>

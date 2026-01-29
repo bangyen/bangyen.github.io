@@ -91,30 +91,38 @@ class MockDecompressionStream {
     };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-(global as any).DecompressionStream = MockDecompressionStream;
+const originalResponse = (global as unknown as { Response: typeof Response })
+    .Response;
 
-// Overwrite Response for this test
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const originalResponse = (global as any).Response;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-(global as any).Response = class extends originalResponse {
-    async text() {
-        if (this._data instanceof ReadableStream) {
-            return JSON.stringify({
-                'SGD Baseline': {
-                    train_accuracies: [80, 85],
-                    train_losses: [0.5, 0.4],
-                },
-                ZSharp: {
-                    train_accuracies: [82, 87],
-                    train_losses: [0.45, 0.35],
-                },
-            });
+Object.defineProperty(global, 'DecompressionStream', {
+    value: MockDecompressionStream,
+    writable: true,
+});
+
+Object.defineProperty(global, 'Response', {
+    value: class extends originalResponse {
+        async text() {
+            const self = this as unknown as { _data: unknown };
+            if (self._data instanceof ReadableStream) {
+                return JSON.stringify({
+                    'SGD Baseline': {
+                        train_accuracies: [80, 85],
+                        train_losses: [0.5, 0.4],
+                    },
+                    ZSharp: {
+                        train_accuracies: [82, 87],
+                        train_losses: [0.45, 0.35],
+                    },
+                });
+            }
+            const proto = originalResponse.prototype as unknown as {
+                text?: () => Promise<string>;
+            };
+            return proto.text ? await proto.text.call(this) : '{}';
         }
-        return super.text ? await super.text() : '{}';
-    }
-};
+    },
+    writable: true,
+});
 
 describe('ZSharp Component', () => {
     beforeEach(() => {

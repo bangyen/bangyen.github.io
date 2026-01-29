@@ -7,6 +7,12 @@ import { GRID_CONFIG } from '../../features/interpreters/config/interpretersConf
 interface CellProps {
     size: number;
     children?: ReactNode;
+    backgroundColor?: string;
+    color?: string;
+    boxShadow?: string;
+    border?: string;
+    opacity?: number;
+    sx?: object;
     [key: string]: unknown;
 }
 
@@ -22,8 +28,7 @@ function Cell({ size, children, ...rest }: CellProps) {
         opacity,
         sx,
         ...domProps
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } = rest as any;
+    } = rest;
 
     const props = {
         ...COMPONENT_VARIANTS.flexCenter,

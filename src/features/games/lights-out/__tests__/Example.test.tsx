@@ -15,13 +15,16 @@ jest.mock('../../../../components/ui/CustomGrid', () => ({
             {Array.from({ length: rows * cols }).map((_, i) => {
                 const r = Math.floor(i / cols);
                 const c = i % cols;
-                const props = cellProps(r, c);
+                const { backgroundColor, color, ...domProps } = cellProps(r, c);
 
                 return (
                     <div
                         key={`${r}-${c}`}
                         data-testid={`cell-${r}-${c}`}
-                        {...props}
+                        style={
+                            { backgroundColor, color } as React.CSSProperties
+                        }
+                        {...domProps}
                     />
                 );
             })}

@@ -7,6 +7,7 @@ import {
     InputLabel,
     TextField,
     Box,
+    SelectProps,
 } from '@mui/material';
 import { COLORS } from '../../../config/theme';
 import {
@@ -27,8 +28,7 @@ interface QuizFiltersProps {
         QuizConfig,
         'hasModeSelect' | 'modes' | 'maxQuestionOptions'
     >;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    commonSelectProps: any;
+    commonSelectProps: Partial<SelectProps>;
     onEnterKey: () => void;
 }
 

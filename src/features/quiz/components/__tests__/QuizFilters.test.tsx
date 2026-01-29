@@ -146,7 +146,7 @@ describe('QuizFilters', () => {
 
         expect(mockOnChange).toHaveBeenCalledWith(
             expect.objectContaining({
-                mode: 'mode2',
+                mode: 'toCode',
             })
         );
     });

@@ -104,8 +104,15 @@ jest.mock('../../../../components/ui/CustomGrid', () => ({
         rows,
         cols,
     }: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        cellProps: (r: number, c: number) => any;
+        cellProps: (
+            r: number,
+            c: number
+        ) => {
+            onClick?: () => void;
+            color?: string;
+            backgroundColor?: string;
+            children?: React.ReactNode;
+        };
         rows: number;
         cols: number;
     }) => (
