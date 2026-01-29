@@ -1,21 +1,13 @@
-import React, {
-    useMemo,
-    useCallback,
-    useReducer,
-    useEffect,
-    useState,
-    useRef,
-} from 'react';
+import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { Grid } from '../../../components/mui';
 
-import { gridMove, getDirection } from '../../interpreters/utils/gridUtils';
+import { gridMove } from '../../interpreters/utils/gridUtils';
 import { useWindow, useTimer, useKeys, useMobile } from '../../../hooks';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
-import { Controls, ArrowsButton } from '../../../components/ui/Controls';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
 import { LAYOUT, COLORS, COMPONENT_VARIANTS } from '../../../config/theme';
-import { handleAction, handleResize, getRandom } from './logic';
+import { handleAction, handleResize } from './logic';
 import { GRID_CONFIG } from '../../interpreters/config/interpretersConfig';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 import { EggRounded as FoodIcon } from '../../../components/icons';
@@ -30,11 +22,6 @@ export default function Snake(): React.ReactElement {
     const size = mobile
         ? GAME_CONSTANTS.gridSizes.mobile
         : GAME_CONSTANTS.gridSizes.desktop;
-
-    const [randomMovesEnabled, setRandomMovesEnabled] = useState(false);
-    const randomMovesRef = useRef(false);
-
-    const [showArrows, setShowArrows] = useState(false);
 
     const { rows, cols } = useMemo(() => {
         const headerOffset = mobile
@@ -63,18 +50,6 @@ export default function Snake(): React.ReactElement {
     const [state, dispatch] = useReducer(
         handleAction,
         handleResize(initial, rows, cols)
-    );
-
-    const controlHandler = useCallback(
-        (event: string) => () => {
-            const key = GAME_CONSTANTS.controls.arrowPrefix + event;
-
-            dispatch({
-                type: 'steer',
-                payload: { key },
-            });
-        },
-        []
     );
 
     const handleTap = useCallback(
@@ -172,20 +147,9 @@ export default function Snake(): React.ReactElement {
 
     useEffect(() => {
         const wrapDispatch = () => {
-            const directions = 'wasd';
-            const index = getRandom(4);
-            const key = directions[index];
-
             dispatch({
                 type: 'move',
             });
-
-            if (getRandom(2) && randomMovesRef.current) {
-                dispatch({
-                    type: 'steer',
-                    payload: { key },
-                });
-            }
         };
 
         const wrapDirection = (event: KeyboardEvent) =>
@@ -199,15 +163,11 @@ export default function Snake(): React.ReactElement {
     }, [createTimer, createKeys]);
 
     useEffect(() => {
-        randomMovesRef.current = randomMovesEnabled;
-    }, [randomMovesEnabled]);
-
-    useEffect(() => {
         dispatch({
             type: 'resize',
             payload: { rows, cols },
         });
-    }, [rows, cols]);
+    }, [rows, cols, dispatch]);
 
     useEffect(() => {
         document.title = PAGE_TITLES.snake;
@@ -249,18 +209,6 @@ export default function Snake(): React.ReactElement {
                     })}
                 />
             </Grid>
-            <Controls
-                handler={controlHandler}
-                onAutoPlay={() => setRandomMovesEnabled(!randomMovesEnabled)}
-                autoPlayEnabled={randomMovesEnabled}
-                hide={showArrows}
-            >
-                <ArrowsButton
-                    show={showArrows}
-                    setShow={setShowArrows}
-                    handler={controlHandler}
-                />
-            </Controls>
         </Grid>
     );
 }
