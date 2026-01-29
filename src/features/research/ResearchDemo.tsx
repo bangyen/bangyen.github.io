@@ -37,7 +37,7 @@ const ResearchDemo = <T,>({
         rightYAxisFormatter: (value: number) => value.toFixed(2),
         rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
         tooltipLabelFormatter: (value: number) => `Round ${value}`,
-        tooltipFormatter: (value: unknown, name: unknown) => [
+        tooltipFormatter: (value: number, name: string) => [
             typeof value === 'number' ? value.toFixed(2) : String(value),
             String(name),
         ],
@@ -307,9 +307,25 @@ const ResearchDemo = <T,>({
                                                 labelFormatter={
                                                     currentChartConfig.tooltipLabelFormatter
                                                 }
-                                                formatter={
-                                                    currentChartConfig.tooltipFormatter
-                                                }
+                                                formatter={(
+                                                    value: number | undefined,
+                                                    name: string | undefined
+                                                ) => {
+                                                    if (value === undefined) {
+                                                        throw new Error(
+                                                            'Value is undefined'
+                                                        );
+                                                    }
+                                                    if (name === undefined) {
+                                                        throw new Error(
+                                                            'Name is undefined'
+                                                        );
+                                                    }
+                                                    return currentChartConfig.tooltipFormatter(
+                                                        value,
+                                                        name
+                                                    );
+                                                }}
                                             />
                                             {currentChartConfig.lines.map(
                                                 (line, _index) => (
