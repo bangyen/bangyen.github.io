@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import { Grid } from '../../../components/mui';
 
-import { convertPixels } from '../../interpreters/utils/gridUtils';
+import { gridMove, getDirection } from '../../interpreters/utils/gridUtils';
 import { useWindow, useTimer, useKeys, useMobile } from '../../../hooks';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { Controls, ArrowsButton } from '../../../components/ui/Controls';
@@ -16,7 +16,9 @@ import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
 import { LAYOUT, COLORS, COMPONENT_VARIANTS } from '../../../config/theme';
 import { handleAction, handleResize, getRandom } from './logic';
+import { GRID_CONFIG } from '../../interpreters/config/interpretersConfig';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
+import { EggRounded as FoodIcon } from '../../../components/icons';
 
 export default function Snake(): React.ReactElement {
     const { create: createTimer } = useTimer(0);
@@ -38,7 +40,11 @@ export default function Snake(): React.ReactElement {
         const headerOffset = mobile
             ? LAYOUT.headerHeight.xs
             : LAYOUT.headerHeight.md;
-        return convertPixels(size, height - headerOffset, width);
+        const availableHeight = height - headerOffset;
+        const pixel = size * GRID_CONFIG.calculation.pixelMultiplier;
+        const rows = Math.floor(availableHeight / pixel);
+        const cols = Math.floor(width / pixel);
+        return { rows, cols };
     }, [size, height, width, mobile]);
 
     const initial = useMemo(
@@ -113,17 +119,55 @@ export default function Snake(): React.ReactElement {
                 else color = COLORS.primary.dark;
             }
 
+            const up = gridMove(index, -2, rows, cols);
+            const down = gridMove(index, 2, rows, cols);
+            const left = gridMove(index, -1, rows, cols);
+            const right = gridMove(index, 1, rows, cols);
+
+            const hasUp = board[up] > 0;
+            const hasDown = board[down] > 0;
+            const hasLeft = board[left] > 0;
+            const hasRight = board[right] > 0;
+
+            const radius = `${size / GRID_CONFIG.cellSize.divisor}rem`;
+
+            if (color === 'inherit') {
+                return { backgroundColor: color };
+            }
+
+            if (board[index] === -1) {
+                // Food is an icon
+                return {
+                    backgroundColor: 'transparent',
+                    children: (
+                        <FoodIcon
+                            sx={{ color: color, fontSize: `${size * 0.7}rem` }}
+                        />
+                    ),
+                };
+            }
+
+            // Snake Body: Round ONLY outside corners and ends
+            const borderRadius = [0, 0, 0, 0]; // tl, tr, br, bl
+
+            // Corner TL: No Up and No Left
+            if (!hasUp && !hasLeft) borderRadius[0] = 1;
+            // Corner TR: No Up and No Right
+            if (!hasUp && !hasRight) borderRadius[1] = 1;
+            // Corner BR: No Down and No Right
+            if (!hasDown && !hasRight) borderRadius[2] = 1;
+            // Corner BL: No Down and No Left
+            if (!hasDown && !hasLeft) borderRadius[3] = 1;
+
+            const br = borderRadius.map(r => (r ? radius : '0')).join(' ');
+
             return {
                 backgroundColor: color,
-                boxShadow:
-                    color !== 'inherit'
-                        ? `0 0 1.25rem ${color.replace('hsl', 'hsla').replace(')', ', 0.25)')}`
-                        : 'none',
-                border:
-                    color !== 'inherit' ? `0.0625rem solid ${color}` : 'none',
+                boxShadow: `0 0 1.25rem ${color.replace('hsl', 'hsla').replace(')', ', 0.25)')}`,
+                borderRadius: br,
             };
         },
-        [state, cols]
+        [state, rows, cols, size]
     );
 
     useEffect(() => {
@@ -198,6 +242,7 @@ export default function Snake(): React.ReactElement {
                     size={size}
                     rows={rows}
                     cols={cols}
+                    space={0}
                     cellProps={(r: number, c: number) => ({
                         ...chooseColor(r, c),
                         transition: false,
