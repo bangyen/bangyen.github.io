@@ -10,8 +10,8 @@ export const GAME_CONSTANTS: GameConfig = {
         defaultSize: 5,
     },
     gridSizes: {
-        mobile: 3,
-        desktop: 5,
+        mobile: 2.5,
+        desktop: 4,
     },
     controls: {
         arrowPrefix: 'arrow',
