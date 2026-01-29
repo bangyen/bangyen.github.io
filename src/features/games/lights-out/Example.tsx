@@ -19,19 +19,23 @@ function getIconFrames(
     col: number,
     dims: number,
     palette: Palette
-): Record<string, { opacity: number; color: string }> {
+): Record<string, { opacity: number; content: string; color: string }> {
     const length = states.length;
-    const frames: Record<string, { opacity: number; color: string }> = {};
+    const frames: Record<
+        string,
+        { opacity: number; content: string; color: string }
+    > = {};
 
-    for (let k = 0; k < length + 1; k++) {
+    for (let k = 0; k < length; k++) {
         const percent = (100 * k) / length;
         const floor = Math.floor(percent);
 
         let opacity = 0;
+        let content = '""';
         let color = palette.secondary; // Default
 
-        const currentState = k > 0 && k <= length ? states[k - 1] : null;
-        const nextState = k > 0 && k < length ? states[k] : null;
+        const currentState = states[k];
+        const nextState = k + 1 < length ? states[k + 1] : null;
 
         if (currentState && nextState) {
             // Predict if clicking (row, col) results in nextState
@@ -55,10 +59,11 @@ function getIconFrames(
                 // If cell is 0 (OFF), bg is secondary, icon is primary
                 const isOne = currentState[row][col] === 1;
                 color = isOne ? palette.secondary : palette.primary;
+                content = `"${k + 1}"`;
             }
         }
 
-        frames[`${floor}%`] = { opacity, color };
+        frames[`${floor}%`] = { opacity, content, color };
     }
 
     return frames;
@@ -80,7 +85,7 @@ function iconHandler(
         const animation = `
             ${name}
             ${length * 2}s
-            steps(1, start)
+            steps(1, end)
             infinite
         `;
 
@@ -88,18 +93,23 @@ function iconHandler(
             children: (
                 <Box
                     sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
                         width: '100%',
                         height: '100%',
-                        [index]: frames,
-                        animation,
-                        fontSize: '120%',
+                        position: 'relative',
+                        '&::after': {
+                            content: '""',
+                            position: 'absolute',
+                            inset: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '1.2rem',
+                            fontWeight: 'bold',
+                            [index]: frames,
+                            animation,
+                        },
                     }}
-                >
-                    <CircleRounded sx={{ fontSize: 'inherit' }} />
-                </Box>
+                />
             ),
         };
     };
@@ -113,17 +123,21 @@ function inputIconHandler(
 ) {
     return (row: number, col: number): Record<string, unknown> => {
         const length = states.length;
-        const frames: Record<string, { opacity: number; color: string }> = {};
+        const frames: Record<
+            string,
+            { opacity: number; content: string; color: string }
+        > = {};
 
-        for (let k = 0; k < length + 1; k++) {
+        for (let k = 0; k < length; k++) {
             const percent = (100 * k) / length;
             const floor = Math.floor(percent);
 
             let opacity = 0;
+            let content = '""';
             let color = palette.secondary;
 
-            const currentState = k > 0 && k <= length ? states[k - 1] : null;
-            const nextState = k > 0 && k < length ? states[k] : null;
+            const currentState = states[k];
+            const nextState = k + 1 < length ? states[k + 1] : null;
 
             if (currentState && nextState) {
                 // Check if this cell is about to be toggled
@@ -133,10 +147,11 @@ function inputIconHandler(
                     // Use inverse color for visibility
                     const isOne = currentState[col] === 1;
                     color = isOne ? palette.secondary : palette.primary;
+                    content = `"${k + 1}"`;
                 }
             }
 
-            frames[`${floor}%`] = { opacity, color };
+            frames[`${floor}%`] = { opacity, content, color };
         }
 
         const name = `${id}-icon-${row}-${col}`;
@@ -145,7 +160,7 @@ function inputIconHandler(
         const animation = `
             ${name}
             ${length * 2}s
-            steps(1, start)
+            steps(1, end)
             infinite
         `;
 
@@ -153,18 +168,23 @@ function inputIconHandler(
             children: (
                 <Box
                     sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
                         width: '100%',
                         height: '100%',
-                        [index]: frames,
-                        animation,
-                        fontSize: '120%',
+                        position: 'relative',
+                        '&::after': {
+                            content: '""',
+                            position: 'absolute',
+                            inset: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '1.2rem',
+                            fontWeight: 'bold',
+                            [index]: frames,
+                            animation,
+                        },
                     }}
-                >
-                    <CircleRounded sx={{ fontSize: 'inherit' }} />
-                </Box>
+                />
             ),
         };
     };
