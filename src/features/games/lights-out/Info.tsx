@@ -22,14 +22,8 @@ import { getProduct } from './matrices';
 import { useMobile } from '../../../hooks';
 import Example from './Example';
 import { getInput, getOutput, useHandler } from './calculator';
-import { Palette } from '../components/Board';
+import { Palette, Getters } from '../components/Board';
 import { StepTitle, InstructionItem, INFO_TITLES } from './content';
-
-interface Getters {
-    getColor: (row: number, col: number) => { front: string; back: string };
-    getBorder: (row: number, col: number) => React.CSSProperties;
-    getFiller: (row: number, col: number) => string;
-}
 
 // Type assertion for GlassCard component
 const TypedGlassCard = GlassCard as React.ComponentType<{

@@ -19,7 +19,7 @@ export interface Palette {
 
 export interface Getters {
     getColor: (row: number, col: number) => { front: string; back: string };
-    getBorder: (row: number, col: number) => Record<string, unknown>;
+    getBorder: (row: number, col: number) => React.CSSProperties;
     getFiller: (row: number, col: number) => string;
 }
 

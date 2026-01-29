@@ -1,84 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Grid, Box } from '../../../components/mui';
-import { CircleRounded } from '../../../components/icons';
-
 import { getStates } from './chaseHandlers';
-import { flipAdj } from './boardHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
-
 import {
     useHandler as useBoardHandler,
     Board,
     Palette,
+    Getters,
 } from '../components/Board';
 import { getOutput, useHandler as useCalculatorHandler } from './calculator';
 import { COLORS } from '../../../config/theme';
 
-interface Getters {
-    getColor: (row: number, col: number) => { front: string; back: string };
-    getBorder: (row: number, col: number) => React.CSSProperties;
-    getFiller: (row: number, col: number) => string;
-}
-
-function getIconFrames(
-    states: number[][][],
-    row: number,
-    col: number,
-    dims: number,
-    palette: Palette
-): Record<string, { opacity: number; color: string }> {
-    // const newStates = [[], ...states, []]; // Padding to match propHandler timing
-    const length = states.length;
-    const frames: Record<string, { opacity: number; color: string }> = {};
-
-    for (let k = 0; k < length + 1; k++) {
-        const percent = (100 * k) / length;
-        const floor = Math.floor(percent);
-
-        let opacity = 0;
-        let color = palette.secondary; // Default
-
-        const currentState = k > 0 && k <= length ? states[k - 1] : null;
-        const nextState = k > 0 && k < length ? states[k] : null;
-
-        if (currentState && nextState) {
-            // Predict if clicking (row, col) results in nextState
-            const predicted = flipAdj(row, col, currentState);
-
-            // Compare predicted with nextState
-            let match = true;
-            loop: for (let r = 0; r < dims; r++) {
-                for (let c = 0; c < dims; c++) {
-                    if (predicted[r][c] !== nextState[r][c]) {
-                        match = false;
-                        break loop;
-                    }
-                }
-            }
-
-            if (match) {
-                opacity = 1;
-                // Inverse of background color
-                // If cell is 1 (ON), bg is primary, icon is secondary
-                // If cell is 0 (OFF), bg is secondary, icon is primary
-                const isOne = currentState[row][col] === 1;
-                color = isOne ? palette.secondary : palette.primary;
-            }
-        }
-
-        frames[`${floor}%`] = { opacity, color };
-    }
-
-    return frames;
-}
-
 interface ExampleProps {
-    states?: unknown[];
-    getter?: (states: unknown[], row: number, col: number) => unknown[];
     palette: Palette;
-    id?: string;
-    rows?: number;
-    cols?: number;
     size: number;
     dims?: number;
     start?: unknown[];

@@ -3,7 +3,7 @@ import { Grid, Box } from '../../../components/mui';
 import { InfoRounded, CircleRounded } from '../../../components/icons';
 
 import { Controls, TooltipButton } from '../../../components/ui/Controls';
-import { Board, useHandler, usePalette } from '../components/Board';
+import { Board, useHandler, usePalette, Getters } from '../components/Board';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
 import { LAYOUT, COLORS } from '../../../config/theme';
@@ -17,12 +17,6 @@ import { useWindow, useMobile } from '../../../hooks';
 import { convertPixels } from '../../interpreters/utils/gridUtils';
 import Info from './Info';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
-
-interface Getters {
-    getColor: (row: number, col: number) => { front: string; back: string };
-    getBorder: (row: number, col: number) => React.CSSProperties;
-    getFiller: (row: number, col: number) => string;
-}
 
 function getFrontProps(
     getters: Getters,
