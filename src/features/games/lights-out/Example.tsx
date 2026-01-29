@@ -15,7 +15,7 @@ interface ExampleProps {
     palette: Palette;
     size: number;
     dims?: number;
-    start?: unknown[];
+    start?: number[];
     getFrontProps: (
         getters: Getters
     ) => (row: number, col: number) => Record<string, unknown>;
@@ -44,7 +44,7 @@ export default function Example({
         return () => clearInterval(interval);
     }, []);
 
-    const states = getStates(start as number[], dims);
+    const states = getStates(start, dims);
     const width = size;
 
     const { boardStates, inputStates, outputStates } = states;

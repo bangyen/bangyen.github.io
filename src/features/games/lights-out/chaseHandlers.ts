@@ -126,12 +126,14 @@ export function getStates(
     };
 }
 
+interface ChaseAction {
+    type: string;
+    dims: number;
+    grid: number[];
+}
+
 export function handleChase(state: unknown, action: unknown): unknown {
-    const { type, dims, grid } = action as {
-        type: string;
-        dims: number;
-        grid: number[];
-    };
+    const { type, dims, grid } = action as ChaseAction;
 
     if (type === 'chase') {
         return getStates(grid, dims);

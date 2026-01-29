@@ -5,6 +5,12 @@ import * as boardHandlers from '../boardHandlers';
 import * as hooks from '../../../../hooks';
 import LightsOut from '../LightsOut';
 
+// Mock icons
+jest.mock('../../../../components/icons', () => ({
+    InfoRounded: () => <div data-testid="info-icon" />,
+    CircleRounded: () => <div data-testid="circle-icon" />,
+}));
+
 // Mock hooks
 jest.mock('../../../../hooks', () => ({
     useWindow: jest.fn(() => ({ height: 800, width: 1200 })),
@@ -84,6 +90,9 @@ jest.mock('../../../../components/ui/Controls', () => ({
             </div>
         );
     },
+}));
+
+jest.mock('../../../../components/ui/TooltipButton', () => ({
     TooltipButton: function MockTooltipButton({
         title,
         onClick,
