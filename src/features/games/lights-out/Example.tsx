@@ -19,51 +19,100 @@ function getIconFrames(
     col: number,
     dims: number,
     palette: Palette
-): Record<string, { opacity: number; content: string; color: string }> {
+): Record<
+    string,
+    { opacity: number; content: string; color: string; transform: string }
+> {
     const length = states.length;
     const frames: Record<
         string,
-        { opacity: number; content: string; color: string }
+        { opacity: number; content: string; color: string; transform: string }
     > = {};
 
-    for (let k = 0; k < length; k++) {
-        const percent = (100 * k) / length;
-        const floor = Math.floor(percent);
+    const stepSize = 100 / length;
 
-        let opacity = 0;
-        let content = '""';
-        let color = palette.secondary; // Default
+    for (let k = 0; k < length; k++) {
+        const start = k * stepSize;
+        const end = (k + 1) * stepSize;
+
+        const content = '""';
+        let color = palette.secondary;
+        let match = false;
+        let predictedContent = '';
 
         const currentState = states[k];
         const nextState = k + 1 < length ? states[k + 1] : null;
 
         if (currentState && nextState) {
-            // Predict if clicking (row, col) results in nextState
             const predicted = flipAdj(row, col, currentState);
-
-            // Compare predicted with nextState
-            let match = true;
-            loop: for (let r = 0; r < dims; r++) {
+            match = true;
+            for (let r = 0; r < dims; r++) {
                 for (let c = 0; c < dims; c++) {
                     if (predicted[r][c] !== nextState[r][c]) {
                         match = false;
-                        break loop;
+                        break;
                     }
                 }
             }
 
             if (match) {
-                opacity = 1;
-                // Inverse of background color
-                // If cell is 1 (ON), bg is primary, icon is secondary
-                // If cell is 0 (OFF), bg is secondary, icon is primary
                 const isOne = currentState[row][col] === 1;
                 color = isOne ? palette.secondary : palette.primary;
-                content = `"${k + 1}"`;
+                predictedContent = `"${k + 1}"`;
             }
         }
 
-        frames[`${floor}%`] = { opacity, content, color };
+        if (match) {
+            // Entrance (Pop In)
+            frames[`${start}%`] = {
+                opacity: 0,
+                content: predictedContent,
+                color,
+                transform: 'scale(0.5)',
+            };
+            frames[`${start + stepSize * 0.1}%`] = {
+                opacity: 1,
+                content: predictedContent,
+                color,
+                transform: 'scale(1.2)',
+            };
+            frames[`${start + stepSize * 0.2}%`] = {
+                opacity: 1,
+                content: predictedContent,
+                color,
+                transform: 'scale(1)',
+            };
+
+            // Hold
+            frames[`${end - stepSize * 0.1}%`] = {
+                opacity: 1,
+                content: predictedContent,
+                color,
+                transform: 'scale(1)',
+            };
+
+            // Exit (Fade Out)
+            frames[`${end}%`] = {
+                opacity: 0,
+                content: predictedContent,
+                color,
+                transform: 'scale(0.5)',
+            };
+        } else {
+            // Keep hidden
+            frames[`${start}%`] = {
+                opacity: 0,
+                content: '""',
+                color,
+                transform: 'scale(0.5)',
+            };
+            frames[`${end}%`] = {
+                opacity: 0,
+                content: '""',
+                color,
+                transform: 'scale(0.5)',
+            };
+        }
     }
 
     return frames;
@@ -85,7 +134,7 @@ function iconHandler(
         const animation = `
             ${name}
             ${length * 2}s
-            steps(1, end)
+            linear
             infinite
         `;
 
@@ -161,7 +210,7 @@ function inputIconHandler(
         const animation = `
             ${name}
             ${length * 2}s
-            steps(1, end)
+            linear
             infinite
         `;
 
