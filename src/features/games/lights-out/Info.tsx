@@ -21,7 +21,8 @@ import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { getProduct } from './matrices';
 import { useMobile } from '../../../hooks';
 import Example from './Example';
-import { getInput, getOutput, useHandler, Palette } from './calculator';
+import { getInput, getOutput, useHandler } from './calculator';
+import { Palette } from '../components/Board';
 import { StepTitle, InstructionItem, INFO_TITLES } from './content';
 
 // Type assertion for GlassCard component

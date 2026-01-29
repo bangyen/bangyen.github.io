@@ -1,16 +1,6 @@
 import React, { useCallback } from 'react';
 import { CircleRounded } from '../../../components/icons';
-import { useGetters } from '../components/Board';
-
-export interface Palette {
-    primary: string;
-    secondary: string;
-}
-
-export interface Getters {
-    getColor: (row: number, col: number) => { front: string; back: string };
-    getBorder: (row: number, col: number) => Record<string, unknown>;
-}
+import { useGetters, Getters, Palette } from '../components/Board';
 
 export function getInput(
     getters: Getters,
