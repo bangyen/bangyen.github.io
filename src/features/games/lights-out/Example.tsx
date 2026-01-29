@@ -104,6 +104,70 @@ function iconHandler(
     };
 }
 
+function inputIconHandler(
+    states: number[][],
+    dims: number,
+    id: string,
+    palette: Palette
+) {
+    return (row: number, col: number): Record<string, unknown> => {
+        const length = states.length;
+        const frames: Record<string, { opacity: number; color: string }> = {};
+
+        for (let k = 0; k < length + 1; k++) {
+            const percent = (100 * k) / length;
+            const floor = Math.floor(percent);
+
+            let opacity = 0;
+            let color = palette.secondary;
+
+            const currentState = k > 0 && k <= length ? states[k - 1] : null;
+            const nextState = k > 0 && k < length ? states[k] : null;
+
+            if (currentState && nextState) {
+                // Check if this cell is about to be toggled
+                // (current is 0 and next is 1, or current is 1 and next is 0)
+                if (currentState[col] !== nextState[col]) {
+                    opacity = 1;
+                    // Use inverse color for visibility
+                    const isOne = currentState[col] === 1;
+                    color = isOne ? palette.secondary : palette.primary;
+                }
+            }
+
+            frames[`${floor}%`] = { opacity, color };
+        }
+
+        const name = `${id}-icon-${row}-${col}`;
+        const index = `@keyframes ${name}`;
+
+        const animation = `
+            ${name}
+            ${length * 2}s
+            steps(1, start)
+            infinite
+        `;
+
+        return {
+            children: (
+                <Box
+                    sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '100%',
+                        height: '100%',
+                        [index]: frames,
+                        animation,
+                    }}
+                >
+                    <CircleRounded sx={{ fontSize: 'inherit' }} />
+                </Box>
+            ),
+        };
+    };
+}
+
 interface ExampleProps {
     palette: Palette;
     size: number;
@@ -170,8 +234,21 @@ export default function Example({
         dims,
         palette
     );
-    const inputProps = getOutput(inputGetters);
+    const baseInputProps = getOutput(inputGetters);
     const outputProps = getOutput(outputGetters);
+
+    // Icon animation handler for input row
+    const getInputIcon = inputIconHandler(inputStates, dims, 'input', palette);
+
+    // Merge props to add icons to input
+    const inputProps = (row: number, col: number) => {
+        const baseProps = baseInputProps(row, col);
+        const iconProps = getInputIcon(row, col);
+        return {
+            ...baseProps,
+            ...iconProps,
+        };
+    };
 
     return (
         <Grid container size={12} spacing={2} sx={{ height: '100%' }}>
