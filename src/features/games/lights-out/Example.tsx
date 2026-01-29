@@ -95,6 +95,7 @@ function iconHandler(
                         height: '100%',
                         [index]: frames,
                         animation,
+                        fontSize: '120%',
                     }}
                 >
                     <CircleRounded sx={{ fontSize: 'inherit' }} />
@@ -159,6 +160,7 @@ function inputIconHandler(
                         height: '100%',
                         [index]: frames,
                         animation,
+                        fontSize: '120%',
                     }}
                 >
                     <CircleRounded sx={{ fontSize: 'inherit' }} />
