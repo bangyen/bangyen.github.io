@@ -198,7 +198,10 @@ export default function Snake(): React.ReactElement {
                     size={size}
                     rows={rows}
                     cols={cols}
-                    cellProps={chooseColor}
+                    cellProps={(r: number, c: number) => ({
+                        ...chooseColor(r, c),
+                        transition: false,
+                    })}
                 />
             </Grid>
             <Controls

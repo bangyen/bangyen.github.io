@@ -12,6 +12,7 @@ interface CellProps {
     boxShadow?: string;
     border?: string;
     opacity?: number;
+    transition?: string | boolean;
     sx?: object;
     [key: string]: unknown;
 }
@@ -26,9 +27,17 @@ function Cell({ size, children, ...rest }: CellProps) {
         boxShadow,
         border,
         opacity,
+        transition: transitionProp = true,
         sx,
         ...domProps
     } = rest;
+
+    const transition =
+        transitionProp === false
+            ? 'none'
+            : typeof transitionProp === 'string'
+              ? transitionProp
+              : ANIMATIONS.transition;
 
     const props = {
         ...COMPONENT_VARIANTS.flexCenter,
@@ -50,7 +59,7 @@ function Cell({ size, children, ...rest }: CellProps) {
                 boxShadow,
                 border,
                 opacity,
-                transition: ANIMATIONS.transition,
+                transition,
                 ...sx,
             }}
         >
