@@ -101,6 +101,7 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
             >
                 <Typography
                     variant="body2"
+                    component="div"
                     sx={{
                         color:
                             q.pointsEarned === 1
