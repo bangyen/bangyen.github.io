@@ -15,7 +15,6 @@ jest.mock('../../../../hooks', () => ({
 }));
 
 let lastCellProps: ((p1: number, p2: number) => React.ReactNode) | null = null;
-let lastControlHandler: ((p: string) => () => void) | null = null;
 
 jest.mock('../../../../components/ui/CustomGrid', () => ({
     CustomGrid: ({
@@ -28,32 +27,7 @@ jest.mock('../../../../components/ui/CustomGrid', () => ({
     },
 }));
 
-jest.mock('../../../../components/ui/Controls', () => ({
-    Controls: ({
-        children,
-        onAutoPlay,
-        autoPlayEnabled,
-        handler,
-    }: {
-        children: React.ReactNode;
-        onAutoPlay: () => void;
-        autoPlayEnabled: boolean;
-        handler: (p: string) => () => void;
-    }) => {
-        lastControlHandler = handler;
-        return (
-            <div data-testid="snake-controls">
-                <button data-testid="autoplay-btn" onClick={onAutoPlay}>
-                    Auto {autoPlayEnabled ? 'On' : 'Off'}
-                </button>
-                {children}
-            </div>
-        );
-    },
-    ArrowsButton: ({ handler }: { handler: (p: string) => () => void }) => (
-        <button data-testid="arrows-btn" onClick={() => handler('up')()} />
-    ),
-}));
+// No controls
 
 jest.mock('../../../../components/layout/GlobalHeader', () => ({
     GlobalHeader: () => <div data-testid="global-header" />,
@@ -83,14 +57,6 @@ describe('Snake Component', () => {
 
         expect(lastCellProps).toBeDefined();
         expect(lastCellProps?.(0, 0)).toBeDefined();
-
-        // Interaction
-        act(() => {
-            lastControlHandler?.('left')();
-        });
-        act(() => {
-            fireEvent.click(screen.getByTestId('arrows-btn'));
-        });
 
         const keyHandler = mockCreateKeys.mock.calls[0][0];
         act(() => {
@@ -122,10 +88,6 @@ describe('Snake Component', () => {
             });
         });
 
-        jest.spyOn(logic, 'getRandom').mockReturnValue(1);
-        act(() => {
-            fireEvent.click(screen.getByTestId('autoplay-btn'));
-        });
         const nextIter = mockCreateTimer.mock.calls[0][0].repeat;
         act(() => {
             nextIter();
