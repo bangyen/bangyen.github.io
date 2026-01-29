@@ -18,7 +18,8 @@ function getIconFrames(
     row: number,
     col: number,
     dims: number,
-    palette: Palette
+    palette: Palette,
+    speed: number = 1
 ): Record<
     string,
     { opacity: number; content: string; color: string; transform: string }
@@ -70,13 +71,13 @@ function getIconFrames(
                 color,
                 transform: 'scale(0.5)',
             };
-            frames[`${start + stepSize * 0.1}%`] = {
+            frames[`${start + stepSize * (0.1 / speed)}%`] = {
                 opacity: 1,
                 content: predictedContent,
                 color,
                 transform: 'scale(1.2)',
             };
-            frames[`${start + stepSize * 0.2}%`] = {
+            frames[`${start + stepSize * (0.2 / speed)}%`] = {
                 opacity: 1,
                 content: predictedContent,
                 color,
@@ -84,7 +85,7 @@ function getIconFrames(
             };
 
             // Hold
-            frames[`${end - stepSize * 0.1}%`] = {
+            frames[`${end - stepSize * (0.1 / speed)}%`] = {
                 opacity: 1,
                 content: predictedContent,
                 color,
@@ -175,33 +176,89 @@ function inputIconHandler(
         const length = states.length;
         const frames: Record<
             string,
-            { opacity: number; content: string; color: string }
+            {
+                opacity: number;
+                content: string;
+                color: string;
+                transform: string;
+            }
         > = {};
 
-        for (let k = 0; k < length; k++) {
-            const percent = (100 * k) / length;
-            const floor = Math.floor(percent);
+        const stepSize = 100 / length;
+        const speed = 2; // 2x speed for input
 
-            let opacity = 0;
-            let content = '""';
+        for (let k = 0; k < length; k++) {
+            const start = k * stepSize;
+            const end = (k + 1) * stepSize;
+
+            const content = '""';
             let color = palette.secondary;
+            let match = false;
+            let predictedContent = '';
 
             const currentState = states[k];
             const nextState = k + 1 < length ? states[k + 1] : null;
 
             if (currentState && nextState) {
-                // Check if this cell is about to be toggled
-                // (current is 0 and next is 1, or current is 1 and next is 0)
+                // Input states are just rows (number[]), so we check the specific cell
                 if (currentState[col] !== nextState[col]) {
-                    opacity = 1;
-                    // Use inverse color for visibility
+                    match = true;
                     const isOne = currentState[col] === 1;
                     color = isOne ? palette.secondary : palette.primary;
-                    content = `"${k + 1}"`;
+                    predictedContent = `"${k + 1}"`;
                 }
             }
 
-            frames[`${floor}%`] = { opacity, content, color };
+            if (match) {
+                // Entrance (Pop In) - Faster for input
+                frames[`${start}%`] = {
+                    opacity: 0,
+                    content: predictedContent,
+                    color,
+                    transform: 'scale(0.5)',
+                };
+                frames[`${start + stepSize * (0.1 / speed)}%`] = {
+                    opacity: 1,
+                    content: predictedContent,
+                    color,
+                    transform: 'scale(1.2)',
+                };
+                frames[`${start + stepSize * (0.2 / speed)}%`] = {
+                    opacity: 1,
+                    content: predictedContent,
+                    color,
+                    transform: 'scale(1)',
+                };
+
+                // Hold (End sooner for input to feel snappier)
+                frames[`${end - stepSize * (0.1 / speed)}%`] = {
+                    opacity: 1,
+                    content: predictedContent,
+                    color,
+                    transform: 'scale(1)',
+                };
+
+                // Exit (Fade Out)
+                frames[`${end}%`] = {
+                    opacity: 0,
+                    content: predictedContent,
+                    color,
+                    transform: 'scale(0.5)',
+                };
+            } else {
+                frames[`${start}%`] = {
+                    opacity: 0,
+                    content: '""',
+                    color,
+                    transform: 'scale(0.5)',
+                };
+                frames[`${end}%`] = {
+                    opacity: 0,
+                    content: '""',
+                    color,
+                    transform: 'scale(0.5)',
+                };
+            }
         }
 
         const name = `${id}-icon-${row}-${col}`;
