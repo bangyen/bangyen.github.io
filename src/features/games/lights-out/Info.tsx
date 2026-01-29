@@ -23,7 +23,7 @@ import { getProduct } from './matrices';
 import { useMobile } from '../../../hooks';
 import Example from './Example';
 import { getInput, getOutput, useHandler } from './calculator';
-import { Palette, Getters, PropsFactory } from '../components/Board';
+import { Palette, PropsFactory } from '../components/Board';
 import { StepTitle, InstructionItem, INFO_TITLES } from './content';
 
 // Type assertion for GlassCard component

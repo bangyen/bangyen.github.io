@@ -8,7 +8,6 @@ import {
     useHandler as useBoardHandler,
     Board,
     Palette,
-    Getters,
     PropsFactory,
 } from '../components/Board';
 import { getOutput, useHandler as useCalculatorHandler } from './calculator';

@@ -96,7 +96,7 @@ describe('Lights Out Chase Handlers', () => {
             // Actually getStates handles empty returns from internals
 
             getStates([], 3); // invalid grid size likely
-            // getGrid will make 3x3. grid loop will fail if empty? 
+            // getGrid will make 3x3. grid loop will fail if empty?
             // no, grid loop iterates over empty array.
             // then calls chaseLights on empty board.
         });

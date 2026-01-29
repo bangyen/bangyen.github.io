@@ -4,13 +4,7 @@ import { InfoRounded, CircleRounded } from '../../../components/icons';
 
 import { Controls } from '../../../components/ui/Controls';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
-import {
-    Board,
-    useHandler,
-    usePalette,
-    Getters,
-    PropsFactory,
-} from '../components/Board';
+import { Board, useHandler, usePalette, Getters } from '../components/Board';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
 import { LAYOUT, COLORS } from '../../../config/theme';

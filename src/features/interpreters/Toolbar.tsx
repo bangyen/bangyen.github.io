@@ -1,5 +1,4 @@
 import React, { useContext, useMemo } from 'react';
-import { Link } from 'react-router-dom';
 
 import { TooltipButton } from '../../components/ui/Controls';
 import { EditorContext } from './EditorContext';
@@ -13,8 +12,6 @@ import {
     FirstPageRounded,
     LastPageRounded,
     PauseRounded,
-    InfoRounded,
-    HomeRounded,
 } from '../../components/icons';
 
 interface ButtonData {
@@ -50,9 +47,6 @@ export function Toolbar(): React.ReactElement[] {
     const editorContext = useContext(EditorContext);
     const notMobile = useMediaQuery('(min-width:650px)');
 
-    const link = editorContext
-        ? 'https://esolangs.org/wiki/' + editorContext.name.replace(' ', '_')
-        : '';
     const pause = editorContext?.pause || false;
     const dispatch = useMemo(
         () => editorContext?.dispatch || (() => undefined),

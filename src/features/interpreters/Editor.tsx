@@ -39,15 +39,6 @@ export default function Editor({
         display = 'flex';
     }
 
-    const titleProps = {
-        sx: {
-            display: {
-                xs: 'none',
-                md: 'block',
-            },
-        },
-    };
-
     const contentProps = {
         flex: { xs: 'none', md: 1 },
         spacing: 2,
@@ -155,12 +146,6 @@ export default function Editor({
                 >
                     {(() => {
                         const fields: ReactNode[] = [];
-                        const _fieldCount = [
-                            code !== undefined,
-                            tapeFlag,
-                            outFlag,
-                            regFlag,
-                        ].filter(Boolean).length;
                         const gridSize = { xs: 12, md: 6 };
 
                         if (code !== undefined) {
