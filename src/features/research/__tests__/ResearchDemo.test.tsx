@@ -39,6 +39,21 @@ jest.mock('../../../components/ui/GlassCard', () => ({
     ),
 }));
 
+jest.mock('../../../components/ui/TooltipButton', () => ({
+    TooltipButton: ({
+        title,
+        Icon,
+    }: {
+        title: string;
+        Icon: React.ElementType;
+    }) => (
+        <button aria-label={title}>
+            {title}
+            {Icon && <Icon />}
+        </button>
+    ),
+}));
+
 jest.mock('../../../components/ui/Controls', () => ({
     TooltipButton: ({
         title,

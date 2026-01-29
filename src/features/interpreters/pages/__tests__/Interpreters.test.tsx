@@ -64,6 +64,11 @@ jest.mock('../../components/InterpreterNavigation', () => ({
         </select>
     ),
 }));
+jest.mock('../../../../components/ui/TooltipButton', () => ({
+    TooltipButton: ({ title }: { title: string }) => (
+        <button aria-label={title}>{title}</button>
+    ),
+}));
 
 jest.mock('../../../../components/ui/Controls', () => ({
     TooltipButton: ({ title }: { title: string }) => (

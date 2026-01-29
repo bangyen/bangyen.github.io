@@ -35,7 +35,9 @@ describe('Helper Components', () => {
                 </TestWrapper>
             );
 
-            expect(screen.getByLabelText('Test Button')).toBeInTheDocument();
+            expect(
+                screen.getAllByLabelText('Test Button')[0]
+            ).toBeInTheDocument();
         });
 
         test('passes through props', () => {
@@ -50,8 +52,8 @@ describe('Helper Components', () => {
                 />
             );
 
-            const button = screen.getByLabelText('Clickable');
-            button.click();
+            const buttons = screen.getAllByLabelText('Clickable');
+            buttons[1].click(); // Click the actual button, not the span wrapper
 
             expect(handleClick).toHaveBeenCalledTimes(1);
         });
@@ -139,7 +141,9 @@ describe('Helper Components', () => {
 
             render(<RandomButton onClick={handleClick} />);
 
-            expect(screen.getByLabelText('Randomize')).toBeInTheDocument();
+            expect(
+                screen.getAllByLabelText('Randomize')[0]
+            ).toBeInTheDocument();
         });
 
         test('renders with custom title', () => {
@@ -149,7 +153,9 @@ describe('Helper Components', () => {
                 <RandomButton onClick={handleClick} title="Custom Random" />
             );
 
-            expect(screen.getByLabelText('Custom Random')).toBeInTheDocument();
+            expect(
+                screen.getAllByLabelText('Custom Random')[0]
+            ).toBeInTheDocument();
         });
 
         test('shows enabled state when enabled', () => {
@@ -163,7 +169,9 @@ describe('Helper Components', () => {
                 />
             );
 
-            expect(screen.getByLabelText('Disable Random')).toBeInTheDocument();
+            expect(
+                screen.getAllByLabelText('Disable Random')[0]
+            ).toBeInTheDocument();
         });
 
         test('shows disabled state when disabled', () => {
@@ -177,7 +185,9 @@ describe('Helper Components', () => {
                 />
             );
 
-            expect(screen.getByLabelText('Enable Random')).toBeInTheDocument();
+            expect(
+                screen.getAllByLabelText('Enable Random')[0]
+            ).toBeInTheDocument();
         });
 
         test('does not render when hidden', () => {
@@ -195,8 +205,8 @@ describe('Helper Components', () => {
 
             render(<RandomButton onClick={handleClick} />);
 
-            const button = screen.getByLabelText('Randomize');
-            button.click();
+            const buttons = screen.getAllByLabelText('Randomize');
+            buttons[1].click(); // Click the actual button, not the span wrapper
 
             expect(handleClick).toHaveBeenCalledTimes(1);
         });
@@ -240,7 +250,9 @@ describe('Helper Components', () => {
                 </TestWrapper>
             );
 
-            expect(screen.getByLabelText('Randomize')).toBeInTheDocument();
+            expect(
+                screen.getAllByLabelText('Randomize')[0]
+            ).toBeInTheDocument();
         });
 
         test('does not include RandomButton when onRandom not provided', () => {
