@@ -58,6 +58,7 @@ export {
     CodeRounded,
     DataArrayRounded,
     PlusOneRounded,
+    EmojiEventsRounded,
 } from '@mui/icons-material';
 
 // Dashboard & Charts Icons

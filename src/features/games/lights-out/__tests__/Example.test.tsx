@@ -8,6 +8,18 @@ jest.mock('../chaseHandlers', () => ({
     getStates: jest.fn(),
 }));
 
+// Mock calculator to avoid real implementation issues
+jest.mock('../calculator', () => ({
+    getOutput: jest.fn(() => () => ({})),
+    useHandler: jest.fn(() => ({})),
+    getInput: jest.fn(() => () => ({})),
+}));
+
+// Mock icons
+jest.mock('../../../../components/icons', () => ({
+    EmojiEventsRounded: () => <div data-testid="emoji-events-rounded" />,
+}));
+
 // Mock CustomGrid to avoid complex rendering and animations
 jest.mock('../../../../components/ui/CustomGrid', () => ({
     CustomGrid: jest.fn(({ cellProps, rows, cols }) => (
@@ -15,7 +27,8 @@ jest.mock('../../../../components/ui/CustomGrid', () => ({
             {Array.from({ length: rows * cols }).map((_, i) => {
                 const r = Math.floor(i / cols);
                 const c = i % cols;
-                const { backgroundColor, color, ...domProps } = cellProps(r, c);
+                const props = cellProps(r, c) || {};
+                const { backgroundColor, color, ...domProps } = props;
 
                 return (
                     <div

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Grid, Box } from '../../../components/mui';
-import { CircleRounded } from '../../../components/icons';
+import { EmojiEventsRounded } from '../../../components/icons';
 import { getStates } from './chaseHandlers';
 import { flipAdj } from './boardHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
@@ -222,6 +222,7 @@ export default function Example({
 
     const { boardStates, inputStates, outputStates } = states;
     const remainder = frame % inputStates.length;
+    const isSolved = remainder === inputStates.length - 1;
 
     const gridState = {
         grid: boardStates[remainder],
@@ -287,7 +288,11 @@ export default function Example({
             >
                 <Grid
                     size={6}
-                    sx={{ display: 'flex', justifyContent: 'center' }}
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        position: 'relative',
+                    }}
                 >
                     <Board
                         size={width}
@@ -296,6 +301,29 @@ export default function Example({
                         frontProps={frontProps}
                         backProps={backProps}
                     />
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            inset: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: isSolved ? 1 : 0,
+                            transform: isSolved ? 'scale(1)' : 'scale(0.5)',
+                            transition:
+                                'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                            pointerEvents: 'none',
+                            zIndex: 2,
+                        }}
+                    >
+                        <EmojiEventsRounded
+                            sx={{
+                                fontSize: '4rem',
+                                color: COLORS.primary.main,
+                                filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))',
+                            }}
+                        />
+                    </Box>
                 </Grid>
                 <Grid
                     container
