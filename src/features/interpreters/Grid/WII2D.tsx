@@ -4,7 +4,7 @@ import React from 'react';
 
 import { GridState } from './eventHandlers';
 
-interface WII2DState extends GridState {
+export interface WII2DState extends GridState {
     velocity: number;
     output: string;
     register: number;

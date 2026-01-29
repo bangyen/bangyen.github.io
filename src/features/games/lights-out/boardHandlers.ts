@@ -124,7 +124,7 @@ export function getNextMove(
     return null;
 }
 
-interface BoardState {
+export interface BoardState {
     grid: number[][];
     score: number;
     rows: number;

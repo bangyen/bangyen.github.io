@@ -6,12 +6,20 @@ import * as hooks from '../../../../hooks';
 // Mock Editor sub-component - Correct path
 jest.mock('../../Editor', () => ({
     __esModule: true,
-    default: ({ children }: any) => <div data-testid="editor">{children}</div>,
+    default: ({ children }: { children: React.ReactNode }) => (
+        <div data-testid="editor">{children}</div>
+    ),
 }));
 
 // Mock TextArea sub-component - Correct path
 jest.mock('../../components/TextArea', () => ({
-    TextArea: ({ value, handleChange }: any) => (
+    TextArea: ({
+        value,
+        handleChange,
+    }: {
+        value: string;
+        handleChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+    }) => (
         <textarea
             data-testid="text-area"
             value={value}
@@ -35,7 +43,7 @@ describe('TextEditor Component', () => {
     const defaultProps = {
         name: 'TextTest',
         start: { text: '', code: '' },
-        runner: (state: any) => state,
+        runner: (state: Record<string, unknown>) => state,
         clean: (text: string) => text,
     };
 

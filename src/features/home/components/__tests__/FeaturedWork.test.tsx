@@ -1,18 +1,16 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { FeaturedWork } from '../FeaturedWork';
-import { PublicationCard } from '../FeaturedWork/PublicationCard';
+import { PublicationCard, Publication } from '../FeaturedWork/PublicationCard';
 import { ProjectCard, Project } from '../FeaturedWork/ProjectCard';
 import { BrowserRouter } from 'react-router-dom';
 
 describe('FeaturedWork Components', () => {
-    const mockPublication = {
+    const mockPublication: Publication = {
         title: 'Pub Title',
-        authors: 'Author Names',
-        venue: 'Conference Name',
-        date: '2023',
+        conference: 'Conference Name',
+        url: 'https://example.com',
         description: 'Publication Description',
-        link: 'https://example.com',
     };
 
     const mockProject: Project = {
@@ -35,7 +33,7 @@ describe('FeaturedWork Components', () => {
 
     describe('PublicationCard', () => {
         test('renders publication details', () => {
-            render(<PublicationCard publication={mockPublication as any} />);
+            render(<PublicationCard publication={mockPublication} />);
             expect(screen.getByText(mockPublication.title)).toBeInTheDocument();
             expect(
                 screen.getByText(mockPublication.description)

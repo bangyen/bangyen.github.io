@@ -1,10 +1,5 @@
-import React from 'react';
-import { Box, Typography, Grid, IconButton } from '@mui/material';
+import { Box, Typography, Grid } from '@mui/material';
 
-import {
-    InfoRounded as InfoIcon,
-    HomeRounded as HomeIcon,
-} from '@mui/icons-material';
 import { Grid as MuiGrid } from '../../../components/mui';
 import { COLORS, TYPOGRAPHY } from '../../../config/theme';
 

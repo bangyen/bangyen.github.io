@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import QuizHistoryItem from '../QuizHistoryItem';
-import { QuizItem, QuizSettings, Question } from '../../types/quiz';
+import { QuizSettings, Question } from '../../types/quiz';
 
 // Mock dependencies
 const SkippedBadgeMock = () => <span data-testid="skipped-badge">Skipped</span>;

@@ -15,7 +15,7 @@ export interface ChartConfig {
     rightYAxisFormatter?: (value: number) => string;
     rightYAxisDomain?: string[];
     tooltipLabelFormatter: (value: number) => string;
-    tooltipFormatter: (value: number, name: string) => [string, string];
+    tooltipFormatter: (value: unknown, name: unknown) => [string, string];
 }
 
 export interface ViewType<T> {

@@ -1,28 +1,41 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Program, Tape, Output, Register, DisplayModeToggle } from '../Display';
-import { EditorContext } from '../EditorContext';
+import { EditorContext, EditorContextType } from '../EditorContext';
 
 // Mocks
 jest.mock('../../../components/mui', () => ({
-    Box: ({ children, sx, ...props }: any) => (
+    Box: ({
+        children,
+        sx: _sx,
+        ...props
+    }: {
+        children: React.ReactNode;
+        sx?: object;
+    }) => (
         <div data-testid="box" {...props}>
             {children}
         </div>
     ),
-    Typography: ({ children, ...props }: any) => (
+    Typography: ({ children, ...props }: { children: React.ReactNode }) => (
         <span data-testid="typography" {...props}>
             {children}
         </span>
     ),
-    Chip: ({ label }: any) => <div data-testid="chip">{label}</div>,
-    IconButton: ({ children, onClick }: any) => (
-        <button onClick={onClick}>{children}</button>
+    Chip: ({ label }: { label: React.ReactNode }) => (
+        <div data-testid="chip">{label}</div>
     ),
+    IconButton: ({
+        children,
+        onClick,
+    }: {
+        children: React.ReactNode;
+        onClick: () => void;
+    }) => <button onClick={onClick}>{children}</button>,
 }));
 
 jest.mock('../components/Text', () => ({
-    Text: ({ text, color }: any) => (
+    Text: ({ text, color }: { text: string; color?: string }) => (
         <span data-testid="text-comp" data-color={color}>
             {text}
         </span>
@@ -30,7 +43,7 @@ jest.mock('../components/Text', () => ({
 }));
 
 jest.mock('../../../components/ui/GlassCard', () => ({
-    GlassCard: ({ children }: any) => (
+    GlassCard: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="glass-card">{children}</div>
     ),
 }));
@@ -45,7 +58,7 @@ jest.mock('../../../components/icons', () => ({
 }));
 
 const mockContextValue = {
-    code: 'ABC',
+    code: ['A', 'B', 'C'],
     index: 0,
     tape: [1, 2, 3],
     pointer: 1,
@@ -59,10 +72,10 @@ const mockContextValue = {
 describe('Display Components', () => {
     const renderWithContext = (
         ui: React.ReactNode,
-        contextValue: any = mockContextValue
+        contextValue: Partial<EditorContextType> = mockContextValue
     ) => {
         return render(
-            <EditorContext.Provider value={contextValue}>
+            <EditorContext.Provider value={contextValue as EditorContextType}>
                 {ui}
             </EditorContext.Provider>
         );

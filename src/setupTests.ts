@@ -61,9 +61,10 @@ global.TextDecoder = class TextDecoder {
 } as unknown as typeof TextDecoder;
 
 // Mock Response for fetch and decompression
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).Response = class Response {
-    _data: any;
-    constructor(data: any) {
+    _data: unknown;
+    constructor(data: unknown) {
         this._data = data;
     }
     async text() {
@@ -78,8 +79,9 @@ global.TextDecoder = class TextDecoder {
 };
 
 // Mock ReadableStream
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).ReadableStream = class ReadableStream {
-    constructor(options: any) {
+    constructor(options: { start?: (controller: unknown) => void } = {}) {
         if (options && options.start) {
             const controller = {
                 enqueue: jest.fn(),
@@ -96,6 +98,7 @@ global.TextDecoder = class TextDecoder {
 };
 
 // Mock DecompressionStream
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).DecompressionStream = class DecompressionStream {
     writable = {
         getWriter: () => ({

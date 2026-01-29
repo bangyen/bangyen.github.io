@@ -91,31 +91,27 @@ export const DRIVING_SIDE_OPTIONS = [
     { label: 'Right', value: 'Right' },
 ];
 
-export const QUIZ_CONFIGS: Record<
-    QuizType,
-    {
-        title: string;
-        subtitle: string;
-        infoUrl: string;
-        data: QuizItem[];
-        defaultSettings: QuizSettings;
-        hasModeSelect: boolean;
-        modes?: { value: GameMode; label: string }[];
-        maxQuestionOptions: number[];
-        renderQuestionPrompt: (mode: string) => string;
-        renderQuestionContent: (
-            item: QuizItem,
-            mode: string
-        ) => React.ReactNode;
-        checkAnswer: (
-            input: string,
-            item: QuizItem,
-            settings: QuizSettings
-        ) => { isCorrect: boolean; expected: string; points: number };
-        renderFeedbackOrigin?: (item: QuizItem) => React.ReactNode;
-        customGameRender?: (props: unknown) => React.ReactNode; // For driving side special buttons
-    }
-> = {
+export interface QuizConfig {
+    title: string;
+    subtitle: string;
+    infoUrl: string;
+    data: QuizItem[];
+    defaultSettings: QuizSettings;
+    hasModeSelect: boolean;
+    modes?: { value: GameMode; label: string }[];
+    maxQuestionOptions: number[];
+    renderQuestionPrompt: (mode: string) => string;
+    renderQuestionContent: (item: QuizItem, mode: string) => React.ReactNode;
+    checkAnswer: (
+        input: string,
+        item: QuizItem,
+        settings: QuizSettings
+    ) => { isCorrect: boolean; expected: string; points: number };
+    renderFeedbackOrigin?: (item: QuizItem) => React.ReactNode;
+    customGameRender?: (props: unknown) => React.ReactNode;
+}
+
+export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
     cctld: {
         title: 'Internet Domain Quiz',
         subtitle: 'Test your knowledge of Internet country codes',

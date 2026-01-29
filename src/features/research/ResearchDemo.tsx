@@ -37,9 +37,9 @@ const ResearchDemo = <T,>({
         rightYAxisFormatter: (value: number) => value.toFixed(2),
         rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
         tooltipLabelFormatter: (value: number) => `Round ${value}`,
-        tooltipFormatter: (value: number, name: string) => [
-            value.toFixed(2),
-            name,
+        tooltipFormatter: (value: unknown, name: unknown) => [
+            typeof value === 'number' ? value.toFixed(2) : String(value),
+            String(name),
         ],
     },
     viewTypes = [],
@@ -308,7 +308,7 @@ const ResearchDemo = <T,>({
                                                     currentChartConfig.tooltipLabelFormatter
                                                 }
                                                 formatter={
-                                                    currentChartConfig.tooltipFormatter as any
+                                                    currentChartConfig.tooltipFormatter
                                                 }
                                             />
                                             {currentChartConfig.lines.map(

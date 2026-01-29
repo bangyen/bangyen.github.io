@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import Snake from '../index';
 import * as logic from '../logic';
-import { useWindow, useTimer, useKeys, useMobile } from '../../../../hooks';
 
 // Mocks
 const mockCreateTimer = jest.fn();
@@ -15,18 +14,32 @@ jest.mock('../../../../hooks', () => ({
     useMobile: jest.fn(() => false),
 }));
 
-let lastCellProps: any = null;
-let lastControlHandler: any = null;
+let lastCellProps: ((p1: number, p2: number) => React.ReactNode) | null = null;
+let lastControlHandler: ((p: string) => () => void) | null = null;
 
 jest.mock('../../../../components/ui/CustomGrid', () => ({
-    CustomGrid: ({ cellProps }: any) => {
+    CustomGrid: ({
+        cellProps,
+    }: {
+        cellProps: (p1: number, p2: number) => React.ReactNode;
+    }) => {
         lastCellProps = cellProps;
         return <div data-testid="snake-grid">Grid</div>;
     },
 }));
 
 jest.mock('../../../../components/ui/Controls', () => ({
-    Controls: ({ children, onAutoPlay, autoPlayEnabled, handler }: any) => {
+    Controls: ({
+        children,
+        onAutoPlay,
+        autoPlayEnabled,
+        handler,
+    }: {
+        children: React.ReactNode;
+        onAutoPlay: () => void;
+        autoPlayEnabled: boolean;
+        handler: (p: string) => () => void;
+    }) => {
         lastControlHandler = handler;
         return (
             <div data-testid="snake-controls">
@@ -37,7 +50,7 @@ jest.mock('../../../../components/ui/Controls', () => ({
             </div>
         );
     },
-    ArrowsButton: ({ handler }: any) => (
+    ArrowsButton: ({ handler }: { handler: (p: string) => () => void }) => (
         <button data-testid="arrows-btn" onClick={() => handler('up')()} />
     ),
 }));
@@ -69,11 +82,11 @@ describe('Snake Component', () => {
         const { rerender } = render(<Snake />);
 
         expect(lastCellProps).toBeDefined();
-        expect(lastCellProps(0, 0)).toBeDefined();
+        expect(lastCellProps?.(0, 0)).toBeDefined();
 
         // Interaction
         act(() => {
-            lastControlHandler('left')();
+            lastControlHandler?.('left')();
         });
         act(() => {
             fireEvent.click(screen.getByTestId('arrows-btn'));

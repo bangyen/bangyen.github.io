@@ -22,6 +22,7 @@ function Cell({ size, children, ...rest }: CellProps) {
         opacity,
         sx,
         ...domProps
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } = rest as any;
 
     const props = {

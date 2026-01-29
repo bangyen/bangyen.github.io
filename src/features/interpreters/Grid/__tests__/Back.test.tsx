@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
-import Back, { getState } from '../Back';
+import Back, { getState, BackState } from '../Back';
 
 // Mock GridEditor to avoid full rendering logic
 jest.mock('../GridEditor', () => ({
@@ -24,36 +24,36 @@ describe('Back Interpreter Logic', () => {
 
     test('handles \\ (velocity shift)', () => {
         const state = { ...initialState, grid: '\\        ', velocity: 1 };
-        const nextState = getState(state as any);
+        const nextState = getState(state as BackState);
         expect(nextState.velocity).toBe(2);
     });
 
     test('handles / (velocity decrement)', () => {
         const state = { ...initialState, grid: '/        ', velocity: 1 };
-        const nextState = getState(state as any);
+        const nextState = getState(state as BackState);
         expect(nextState.velocity).toBe(-2);
     });
 
     test('handles < and > (pointer move)', () => {
         const state = { ...initialState, grid: '>        ' };
-        const next = getState(state as any);
+        const next = getState(state as BackState);
         expect(next.pointer).toBe(1);
         expect(next.tape).toHaveLength(2);
 
         next.grid = '<        ';
         next.position = 0;
-        const final = getState(next as any);
+        const final = getState(next as BackState);
         expect(final.pointer).toBe(0);
     });
 
     test('handles - (xor current tape value)', () => {
         const state = { ...initialState, grid: '-        ', tape: [0] };
-        const next = getState(state as any);
+        const next = getState(state as BackState);
         expect(next.tape[0]).toBe(1);
 
         next.grid = '-        ';
         next.position = 0;
-        const final = getState(next as any);
+        const final = getState(next as BackState);
         expect(final.tape[0]).toBe(0);
     });
 
@@ -66,13 +66,13 @@ describe('Back Interpreter Logic', () => {
             cols: 9,
             rows: 1,
         };
-        const nextState = getState(state as any);
+        const nextState = getState(state as BackState);
         expect(nextState.position).toBe(4);
     });
 
     test('returns immediately if end is true', () => {
         const state = { ...initialState, end: true };
-        const nextState = getState(state as any);
+        const nextState = getState(state as BackState);
         expect(nextState).toEqual(state);
     });
 
