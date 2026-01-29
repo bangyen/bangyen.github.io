@@ -1,11 +1,19 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { Toolbar, handleToolbar } from '../Toolbar';
-import { EditorContext } from '../EditorContext';
+import { render, screen } from '@testing-library/react';
+import { Toolbar, handleToolbar, ToolbarPayload } from '../Toolbar';
+import { EditorContext, EditorContextType } from '../EditorContext';
 
 // Mock components
 jest.mock('../../../components/ui/Controls', () => ({
-    TooltipButton: ({ title, onClick, disabled }: any) => (
+    TooltipButton: ({
+        title,
+        onClick,
+        disabled,
+    }: {
+        title: string;
+        onClick: () => void;
+        disabled?: boolean;
+    }) => (
         <button
             data-testid={`btn-${title}`}
             onClick={onClick}
@@ -59,7 +67,10 @@ describe('Toolbar Component and handleToolbar', () => {
         test('handles run action', () => {
             const result = handleToolbar(
                 {},
-                { type: 'run', payload: mockPayload as any }
+                {
+                    type: 'run',
+                    payload: mockPayload as unknown as ToolbarPayload,
+                }
             );
             expect(mockCreate).toHaveBeenCalled();
             expect(result.pause).toBe(false);
@@ -68,7 +79,10 @@ describe('Toolbar Component and handleToolbar', () => {
         test('handles stop action', () => {
             const result = handleToolbar(
                 {},
-                { type: 'stop', payload: mockPayload as any }
+                {
+                    type: 'stop',
+                    payload: mockPayload as unknown as ToolbarPayload,
+                }
             );
             expect(mockClear).toHaveBeenCalled();
             expect(result.pause).toBe(true);
@@ -78,7 +92,10 @@ describe('Toolbar Component and handleToolbar', () => {
             (window.confirm as jest.Mock).mockReturnValue(true);
             const result = handleToolbar(
                 {},
-                { type: 'reset', payload: mockPayload as any }
+                {
+                    type: 'reset',
+                    payload: mockPayload as unknown as ToolbarPayload,
+                }
             );
             expect(window.confirm).toHaveBeenCalled();
             expect(mockNextIter).toHaveBeenCalledWith(
@@ -89,9 +106,12 @@ describe('Toolbar Component and handleToolbar', () => {
 
         test('handles reset action without confirmation', () => {
             (window.confirm as jest.Mock).mockReturnValue(false);
-            const result = handleToolbar(
+            handleToolbar(
                 {},
-                { type: 'reset', payload: mockPayload as any }
+                {
+                    type: 'reset',
+                    payload: mockPayload as unknown as ToolbarPayload,
+                }
             );
             expect(mockNextIter).not.toHaveBeenCalled();
         });
@@ -99,7 +119,10 @@ describe('Toolbar Component and handleToolbar', () => {
         test('handles timer action (next)', () => {
             handleToolbar(
                 { end: false },
-                { type: 'timer', payload: mockPayload as any }
+                {
+                    type: 'timer',
+                    payload: mockPayload as unknown as ToolbarPayload,
+                }
             );
             expect(mockDispatch).toHaveBeenCalledWith(
                 expect.objectContaining({ type: 'next' })
@@ -109,7 +132,10 @@ describe('Toolbar Component and handleToolbar', () => {
         test('handles timer action (stop)', () => {
             handleToolbar(
                 { end: true },
-                { type: 'timer', payload: mockPayload as any }
+                {
+                    type: 'timer',
+                    payload: mockPayload as unknown as ToolbarPayload,
+                }
             );
             expect(mockDispatch).toHaveBeenCalledWith(
                 expect.objectContaining({ type: 'stop' })
@@ -119,7 +145,10 @@ describe('Toolbar Component and handleToolbar', () => {
         test('handles prev action', () => {
             const result = handleToolbar(
                 {},
-                { type: 'prev', payload: mockPayload as any }
+                {
+                    type: 'prev',
+                    payload: mockPayload as unknown as ToolbarPayload,
+                }
             );
             expect(mockNextIter).toHaveBeenCalledWith(
                 expect.objectContaining({ type: 'prev' })
@@ -128,9 +157,12 @@ describe('Toolbar Component and handleToolbar', () => {
         });
 
         test('handles next action', () => {
-            const result = handleToolbar(
+            handleToolbar(
                 {},
-                { type: 'next', payload: mockPayload as any }
+                {
+                    type: 'next',
+                    payload: mockPayload as unknown as ToolbarPayload,
+                }
             );
             expect(mockNextIter).toHaveBeenCalledWith(
                 expect.objectContaining({ type: 'next' })
@@ -138,15 +170,23 @@ describe('Toolbar Component and handleToolbar', () => {
         });
 
         test('handles share action', () => {
-            handleToolbar({}, { type: 'share', payload: mockPayload as any });
+            handleToolbar(
+                {},
+                {
+                    type: 'share',
+                    payload: mockPayload as unknown as ToolbarPayload,
+                }
+            );
             expect(navigator.clipboard.writeText).toHaveBeenCalled();
         });
     });
 
     describe('Toolbar Component', () => {
-        const renderToolbar = (contextValue: any) => {
+        const renderToolbar = (contextValue: Partial<EditorContextType>) => {
             return render(
-                <EditorContext.Provider value={contextValue}>
+                <EditorContext.Provider
+                    value={contextValue as EditorContextType}
+                >
                     <Toolbar />
                 </EditorContext.Provider>
             );

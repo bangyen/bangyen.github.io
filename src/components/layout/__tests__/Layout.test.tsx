@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Section, BackgroundBox, HeroContainer, PageLayout } from '../Layout';
-import { SPACING, COLORS } from '../../config/theme';
 
 describe('Layout Components', () => {
     describe('Section', () => {

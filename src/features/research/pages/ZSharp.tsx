@@ -8,7 +8,8 @@ import {
 import { URLS, PAGE_TITLES } from '../../../config/constants';
 import { RESEARCH_CONSTANTS, PERCENTAGE } from '../config/researchConfig';
 import { COLORS } from '../../../config/theme';
-import ResearchDemo, { ViewType } from '../ResearchDemo';
+import ResearchDemo from '../ResearchDemo';
+import { ViewType } from '../types';
 
 interface DataPoint {
     epoch: number;

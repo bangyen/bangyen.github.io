@@ -38,8 +38,8 @@ const ResearchDemo = <T,>({
         rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
         tooltipLabelFormatter: (value: number) => `Round ${value}`,
         tooltipFormatter: (value: number, name: string) => [
-            value.toFixed(2),
-            name,
+            typeof value === 'number' ? value.toFixed(2) : String(value),
+            String(name),
         ],
     },
     viewTypes = [],
@@ -190,7 +190,13 @@ const ResearchDemo = <T,>({
                                           )?.chartTitle || 'Data Visualization'
                                         : 'Data Visualization')}
                             </Typography>
-                            <Box sx={{ height: CHART_DIMENSIONS.height }}>
+                            <Box
+                                sx={{
+                                    height: CHART_DIMENSIONS.height,
+                                    width: '100%',
+                                    position: 'relative',
+                                }}
+                            >
                                 {loading ? (
                                     <Box
                                         sx={{
@@ -208,7 +214,10 @@ const ResearchDemo = <T,>({
                                 ) : (
                                     <ResponsiveContainer
                                         width="100%"
-                                        height="100%"
+                                        height={CHART_DIMENSIONS.height}
+                                        minWidth={0}
+                                        minHeight={0}
+                                        debounce={1}
                                     >
                                         <LineChart data={currentData}>
                                             <CartesianGrid
@@ -298,9 +307,25 @@ const ResearchDemo = <T,>({
                                                 labelFormatter={
                                                     currentChartConfig.tooltipLabelFormatter
                                                 }
-                                                formatter={
-                                                    currentChartConfig.tooltipFormatter as any
-                                                }
+                                                formatter={(
+                                                    value: number | undefined,
+                                                    name: string | undefined
+                                                ) => {
+                                                    if (value === undefined) {
+                                                        throw new Error(
+                                                            'Value is undefined'
+                                                        );
+                                                    }
+                                                    if (name === undefined) {
+                                                        throw new Error(
+                                                            'Name is undefined'
+                                                        );
+                                                    }
+                                                    return currentChartConfig.tooltipFormatter(
+                                                        value,
+                                                        name
+                                                    );
+                                                }}
                                             />
                                             {currentChartConfig.lines.map(
                                                 (line, _index) => (

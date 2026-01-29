@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
 import {
     render,
     screen,
@@ -10,18 +8,19 @@ import {
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Oligopoly from '../Oligopoly';
+import { ResearchDemoProps, Control } from '../../types';
 
 // Mocks
 jest.mock('../../ResearchDemo', () => ({
     __esModule: true,
     default: ({
         title,
-        chartData,
+        chartData = [],
         chartConfig,
-        controls,
+        controls = [],
         onReset,
         loading,
-    }: any) => {
+    }: ResearchDemoProps<unknown>) => {
         if (chartConfig) {
             if (chartConfig.yAxisFormatter) chartConfig.yAxisFormatter(0);
             if (chartConfig.rightYAxisFormatter)
@@ -39,7 +38,7 @@ jest.mock('../../ResearchDemo', () => ({
                 {loading && <div data-testid="loading">Loading...</div>}
                 <div data-testid="chart-data-count">{chartData.length}</div>
                 <div data-testid="controls">
-                    {controls.map((c: any) => (
+                    {controls.map((c: Control) => (
                         <div key={c.label}>
                             <span>{c.label}</span>
                             <button
@@ -60,15 +59,20 @@ jest.mock('../../ResearchDemo', () => ({
 }));
 
 // Better Response mock for this test
-const originalResponse = (global as any).Response;
-(global as any).Response = class extends originalResponse {
-    async text() {
-        if (this._data instanceof ReadableStream) {
-            return '[{"round":1, "price":10, "hhi":0.5, "num_firms":3, "model_type":"cournot", "demand_elasticity":2.0, "base_price":40, "collusion_enabled":false}]';
+const originalResponse = (global as unknown as { Response: typeof Response })
+    .Response;
+Object.defineProperty(global, 'Response', {
+    value: class extends originalResponse {
+        async text() {
+            const self = this as unknown as { _data: unknown };
+            if (self._data instanceof ReadableStream) {
+                return '[{"round":1, "price":10, "hhi":0.5, "num_firms":3, "model_type":"cournot", "demand_elasticity":2.0, "base_price":40, "collusion_enabled":false}]';
+            }
+            return await super.text();
         }
-        return super.text ? await super.text() : '[{}]';
-    }
-};
+    },
+    writable: true,
+});
 
 describe('Oligopoly Component', () => {
     beforeEach(() => {
@@ -77,9 +81,8 @@ describe('Oligopoly Component', () => {
     });
 
     const renderOligopoly = async () => {
-        let result: any;
         await act(async () => {
-            result = render(
+            render(
                 <BrowserRouter>
                     <ThemeProvider theme={createTheme()}>
                         <Oligopoly />
@@ -87,7 +90,6 @@ describe('Oligopoly Component', () => {
                 </BrowserRouter>
             );
         });
-        return result;
     };
 
     test('renders correctly and loads gzipped data', async () => {
@@ -214,8 +216,13 @@ describe('Oligopoly Component', () => {
     });
 
     test('handles missing DecompressionStream', async () => {
-        const originalDS = (global as any).DecompressionStream;
-        delete (global as any).DecompressionStream;
+        const originalDS = (
+            global as unknown as { DecompressionStream: unknown }
+        ).DecompressionStream;
+        Object.defineProperty(global, 'DecompressionStream', {
+            value: undefined,
+            writable: true,
+        });
 
         (global.fetch as jest.Mock).mockResolvedValue({
             ok: true,
@@ -230,7 +237,10 @@ describe('Oligopoly Component', () => {
             ).not.toHaveTextContent('0');
         });
 
-        (global as any).DecompressionStream = originalDS;
+        Object.defineProperty(global, 'DecompressionStream', {
+            value: originalDS,
+            writable: true,
+        });
     });
 
     test('handles non-array matrix data', async () => {

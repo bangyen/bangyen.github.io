@@ -5,26 +5,45 @@ import { Text } from '../Text';
 import { TextArea } from '../TextArea';
 import { GridArea } from '../GridArea';
 import { KeySelector } from '../KeySelector';
-import { EditorContext } from '../../EditorContext';
+import { EditorContext, EditorContextType } from '../../EditorContext';
 import { useMobile } from '../../../../hooks';
 
 // Mocks
 jest.mock('@mui/material', () => ({
-    Select: ({ children, value, onChange }: any) => (
+    Select: ({
+        children,
+        value,
+        onChange,
+    }: {
+        children: React.ReactNode;
+        value: string;
+        onChange: (e: { target: { value: string } }) => void;
+    }) => (
         <select data-testid="select" value={value} onChange={onChange}>
             {children}
         </select>
     ),
-    MenuItem: ({ children, value }: any) => (
-        <option value={value}>{children}</option>
-    ),
-    FormControl: ({ children }: any) => (
+    MenuItem: ({
+        children,
+        value,
+    }: {
+        children: React.ReactNode;
+        value: string;
+    }) => <option value={value}>{children}</option>,
+    FormControl: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="form-control">{children}</div>
     ),
 }));
 
 jest.mock('../../../../components/mui', () => ({
-    Typography: ({ children, ...props }: any) => (
+    Typography: ({
+        children,
+        ...props
+    }: {
+        children: React.ReactNode;
+        className?: string;
+        sx?: object;
+    }) => (
         <span data-testid="typography" {...props}>
             {children}
         </span>
@@ -34,10 +53,14 @@ jest.mock('../../../../components/mui', () => ({
         value,
         defaultValue,
         label,
-        fullWidth,
-        multiline,
         rows,
-    }: any) => (
+    }: {
+        onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+        value?: string;
+        defaultValue?: string;
+        label?: string;
+        rows?: number;
+    }) => (
         <div data-testid="textfield">
             <label>{label}</label>
             <textarea
@@ -49,8 +72,16 @@ jest.mock('../../../../components/mui', () => ({
             />
         </div>
     ),
-    Box: ({ children }: any) => <div data-testid="box">{children}</div>,
-    Button: ({ children, onClick }: any) => (
+    Box: ({ children }: { children: React.ReactNode }) => (
+        <div data-testid="box">{children}</div>
+    ),
+    Button: ({
+        children,
+        onClick,
+    }: {
+        children: React.ReactNode;
+        onClick: (e: React.MouseEvent | React.KeyboardEvent) => void;
+    }) => (
         <button
             onClick={onClick}
             onKeyDown={e => e.key === 'Enter' && onClick(e)}
@@ -58,7 +89,7 @@ jest.mock('../../../../components/mui', () => ({
             {children}
         </button>
     ),
-    Grid: ({ children }: any) => (
+    Grid: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="grid-container">{children}</div>
     ),
 }));
@@ -68,7 +99,23 @@ jest.mock('../../../../hooks', () => ({
 }));
 
 jest.mock('../../../../components/ui/CustomGrid', () => ({
-    CustomGrid: ({ cellProps, rows, cols }: any) => (
+    CustomGrid: ({
+        cellProps,
+        rows,
+        cols,
+    }: {
+        cellProps: (
+            r: number,
+            c: number
+        ) => {
+            onClick?: () => void;
+            color?: string;
+            backgroundColor?: string;
+            children?: React.ReactNode;
+        };
+        rows: number;
+        cols: number;
+    }) => (
         <div data-testid="custom-grid">
             {Array.from({ length: rows * cols }).map((_, i) => {
                 const row = Math.floor(i / cols);
@@ -76,7 +123,7 @@ jest.mock('../../../../components/ui/CustomGrid', () => ({
                 const props = cellProps(row, col);
                 return (
                     <button
-                        key={i}
+                        key={`${row}-${col}`}
                         type="button"
                         data-testid={`cell-${i}`}
                         onClick={props.onClick}
@@ -141,10 +188,12 @@ describe('Interpreter Components', () => {
     });
 
     describe('GridArea', () => {
-        const renderWithContext = (ui: React.ReactNode, ctx = mockContext) => {
+        const renderWithContext = (
+            ui: React.ReactNode,
+            ctx = mockContext as Partial<EditorContextType>
+        ) => {
             return render(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                <EditorContext.Provider value={ctx as any}>
+                <EditorContext.Provider value={ctx as EditorContextType}>
                     {ui}
                 </EditorContext.Provider>
             );
@@ -253,10 +302,12 @@ describe('Interpreter Components', () => {
     });
 
     describe('TextArea', () => {
-        const renderWithContext = (ui: React.ReactNode, ctx = mockContext) => {
+        const renderWithContext = (
+            ui: React.ReactNode,
+            ctx = mockContext as Partial<EditorContextType>
+        ) => {
             return render(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                <EditorContext.Provider value={ctx as any}>
+                <EditorContext.Provider value={ctx as EditorContextType}>
                     {ui}
                 </EditorContext.Provider>
             );

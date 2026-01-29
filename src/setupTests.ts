@@ -61,53 +61,62 @@ global.TextDecoder = class TextDecoder {
 } as unknown as typeof TextDecoder;
 
 // Mock Response for fetch and decompression
-(global as any).Response = class Response {
-    _data: any;
-    constructor(data: any) {
-        this._data = data;
-    }
-    async text() {
-        if (this._data instanceof ReadableStream) {
-            return '[]';
+Object.defineProperty(global, 'Response', {
+    value: class Response {
+        _data: unknown;
+        constructor(data: unknown) {
+            this._data = data;
         }
-        return String(this._data);
-    }
-    async json() {
-        return JSON.parse(await this.text());
-    }
-};
+        async text() {
+            if (this._data instanceof ReadableStream) {
+                return '[]';
+            }
+            return String(this._data);
+        }
+        async json() {
+            return JSON.parse(await this.text());
+        }
+    },
+    writable: true,
+});
 
 // Mock ReadableStream
-(global as any).ReadableStream = class ReadableStream {
-    constructor(options: any) {
-        if (options && options.start) {
-            const controller = {
-                enqueue: jest.fn(),
-                close: jest.fn(),
-            };
-            options.start(controller);
+Object.defineProperty(global, 'ReadableStream', {
+    value: class ReadableStream {
+        constructor(options: { start?: (controller: unknown) => void } = {}) {
+            if (options && options.start) {
+                const controller = {
+                    enqueue: jest.fn(),
+                    close: jest.fn(),
+                };
+                options.start(controller);
+            }
         }
-    }
-    getReader() {
-        return {
-            read: jest.fn().mockResolvedValue({ done: true }),
-        };
-    }
-};
+        getReader() {
+            return {
+                read: jest.fn().mockResolvedValue({ done: true }),
+            };
+        }
+    },
+    writable: true,
+});
 
 // Mock DecompressionStream
-(global as any).DecompressionStream = class DecompressionStream {
-    writable = {
-        getWriter: () => ({
-            write: jest.fn().mockResolvedValue(undefined),
-            close: jest.fn().mockResolvedValue(undefined),
-        }),
-    };
-    readable = {
-        getReader: () => ({
-            read: jest.fn().mockResolvedValue({ done: true }),
-        }),
-    };
-};
+Object.defineProperty(global, 'DecompressionStream', {
+    value: class DecompressionStream {
+        writable = {
+            getWriter: () => ({
+                write: jest.fn().mockResolvedValue(undefined),
+                close: jest.fn().mockResolvedValue(undefined),
+            }),
+        };
+        readable = {
+            getReader: () => ({
+                read: jest.fn().mockResolvedValue({ done: true }),
+            }),
+        };
+    },
+    writable: true,
+});
 
 // All warnings have been fixed at the root cause - no suppressions needed!

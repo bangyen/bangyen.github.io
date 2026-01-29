@@ -18,6 +18,7 @@ describe('Lights Out Calculator UI Helpers', () => {
     const mockGetters = {
         getColor: jest.fn(() => ({ front: 'red', back: 'blue' })),
         getBorder: jest.fn(() => ({ border: '1px solid' })),
+        getFiller: jest.fn(() => 'red'),
     };
 
     describe('getInput', () => {
@@ -50,7 +51,7 @@ describe('Lights Out Calculator UI Helpers', () => {
 
             expect(props.backgroundColor).toBe('red');
             expect(props.style).toEqual({ border: '1px solid' });
-            expect(props.transition).toBeDefined();
+            expect(props.sx.transition).toBeDefined();
         });
     });
 

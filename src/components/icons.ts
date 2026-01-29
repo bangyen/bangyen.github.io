@@ -31,6 +31,11 @@ export {
     KeyboardArrowDownRounded,
     KeyboardArrowLeftRounded,
     KeyboardArrowRightRounded,
+    Lens,
+    EggRounded,
+    GrassRounded,
+    StarRounded,
+    DiamondRounded,
 } from '@mui/icons-material';
 
 // Content Icons
@@ -43,6 +48,8 @@ export {
     Calculate,
     Replay,
     InfoRounded,
+    MenuBookRounded,
+    HelpRounded,
     GridView,
     TextFields,
     TextFieldsRounded,
@@ -56,6 +63,7 @@ export {
     CodeRounded,
     DataArrayRounded,
     PlusOneRounded,
+    EmojiEventsRounded,
 } from '@mui/icons-material';
 
 // Dashboard & Charts Icons

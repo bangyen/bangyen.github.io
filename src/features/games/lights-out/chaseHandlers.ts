@@ -89,7 +89,7 @@ export function getStates(
 
     const { input, output } = fillRow(row, dims);
 
-    const before = states.length + input.length - 1;
+    const before = states.length + input.length + 1;
 
     const top = output.at(-1);
     if (!top) return { boardStates: [], inputStates: [], outputStates: [] };

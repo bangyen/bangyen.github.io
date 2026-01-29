@@ -6,7 +6,8 @@ import {
     Grid,
     InputLabel,
     TextField,
-    SelectChangeEvent,
+    Box,
+    SelectProps,
 } from '@mui/material';
 import { COLORS } from '../../../config/theme';
 import {
@@ -15,6 +16,7 @@ import {
     VEHICLE_CONVENTIONS,
     DRIVING_SIDE_FILTERS,
     DRIVING_SIDE_OPTIONS,
+    QuizConfig,
 } from '../config/quizConfig';
 import { QuizSettings, QuizType, GameMode } from '../types/quiz';
 
@@ -22,8 +24,11 @@ interface QuizFiltersProps {
     selectedQuiz: QuizType;
     settings: QuizSettings;
     onSettingsChange: (newSettings: QuizSettings) => void;
-    activeConfig: any; // Using any for config object as full typing might be circular or complex
-    commonSelectProps: any;
+    activeConfig: Pick<
+        QuizConfig,
+        'hasModeSelect' | 'modes' | 'maxQuestionOptions'
+    >;
+    commonSelectProps: Partial<SelectProps>;
     onEnterKey: () => void;
 }
 
@@ -43,7 +48,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                     <FormControl fullWidth>
                         <InputLabel>Game Mode</InputLabel>
                         <Select
-                            value={settings.mode || ''}
+                            value={settings.mode}
                             label="Game Mode"
                             onChange={e =>
                                 onSettingsChange({
@@ -59,11 +64,13 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                             }}
                             {...commonSelectProps}
                         >
-                            {activeConfig.modes.map((m: any) => (
-                                <MenuItem key={m.value} value={m.value}>
-                                    {m.label}
-                                </MenuItem>
-                            ))}
+                            {activeConfig.modes.map(
+                                (m: { value: GameMode; label: string }) => (
+                                    <MenuItem key={m.value} value={m.value}>
+                                        {m.label}
+                                    </MenuItem>
+                                )
+                            )}
                         </Select>
                     </FormControl>
                 </Grid>
@@ -198,7 +205,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                                 onChange={e =>
                                     onSettingsChange({
                                         ...settings,
-                                        filterSide: e.target.value,
+                                        filterSide: e.target.value as string,
                                     })
                                 }
                                 sx={{
@@ -227,7 +234,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                                 onChange={e =>
                                     onSettingsChange({
                                         ...settings,
-                                        filterSwitch: e.target.value,
+                                        filterSwitch: e.target.value as string,
                                     })
                                 }
                                 sx={{
@@ -322,8 +329,5 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
         </>
     );
 };
-
-// Box is used but not imported in the component code above, adding import
-import { Box } from '@mui/material';
 
 export default QuizFilters;

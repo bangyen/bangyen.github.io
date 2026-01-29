@@ -4,7 +4,7 @@ import React from 'react';
 
 import { GridState } from './eventHandlers';
 
-interface BackState extends GridState {
+export interface BackState extends GridState {
     velocity: number;
     pointer: number;
     tape: number[];

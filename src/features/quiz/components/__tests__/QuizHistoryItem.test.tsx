@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import QuizHistoryItem from '../QuizHistoryItem';
-import { QuizItem, QuizSettings, Question } from '../../types/quiz';
+import { QuizSettings, Question, QuizItem } from '../../types/quiz';
 
 // Mock dependencies
 const SkippedBadgeMock = () => <span data-testid="skipped-badge">Skipped</span>;
@@ -14,22 +14,24 @@ jest.mock('@mui/icons-material', () => ({
     CheckCircleRounded: CheckCircleIconMock,
 }));
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mockItem: any = {
+const mockItem = {
     country: 'Test Country',
     flag: 'test-flag.png',
 };
 
 // We need to typecase loosely to test specific modes like CCTLD without strict type constraints in tests
-const mockCCTLDItem = { ...mockItem, code: '.tc' };
+const mockCCTLDItem = { ...mockItem, code: '.tc', language: 'Test' };
 const mockPhoneItem = { ...mockItem, code: '+1' };
 const mockVehicleItem = { ...mockItem, code: 'TC' };
-const mockDrivingSideItem = { ...mockItem, side: 'left', switched: false };
+const mockDrivingSideItem = {
+    ...mockItem,
+    side: 'Left' as const,
+    switched: false,
+};
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const mockQuestion: Question<any> = {
+const mockQuestion: Question<QuizItem> = {
     id: '1',
-    item: mockCCTLDItem,
+    item: mockCCTLDItem as unknown as QuizItem,
     userAnswer: 'result',
     isCorrect: true,
     pointsEarned: 1,
@@ -152,9 +154,9 @@ describe('QuizHistoryItem', () => {
     });
 
     test('renders Driving Side quiz', () => {
-        const q = {
+        const q: Question<QuizItem> = {
             ...mockQuestion,
-            item: mockDrivingSideItem,
+            item: mockDrivingSideItem as unknown as QuizItem,
             userAnswer: 'left',
         };
         render(

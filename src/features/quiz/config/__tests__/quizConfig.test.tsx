@@ -43,7 +43,7 @@ describe('QUIZ_CONFIGS', () => {
                     'cctld',
                     'United States',
                     mockItem,
-                    { mode: 'toCountry' } as any,
+                    { mode: 'toCountry' } as QuizSettings,
                     true
                 );
             });
@@ -52,7 +52,7 @@ describe('QUIZ_CONFIGS', () => {
                     'cctld',
                     'united states',
                     mockItem,
-                    { mode: 'toCountry' } as any,
+                    { mode: 'toCountry' } as QuizSettings,
                     true
                 );
             });
@@ -61,7 +61,7 @@ describe('QUIZ_CONFIGS', () => {
                     'cctld',
                     'USA',
                     mockItem,
-                    { mode: 'toCountry' } as any,
+                    { mode: 'toCountry' } as QuizSettings,
                     true
                 );
             });
@@ -70,7 +70,7 @@ describe('QUIZ_CONFIGS', () => {
                     'cctld',
                     'Canada',
                     mockItem,
-                    { mode: 'toCountry' } as any,
+                    { mode: 'toCountry' } as QuizSettings,
                     false
                 );
             });
@@ -80,7 +80,7 @@ describe('QUIZ_CONFIGS', () => {
                     'cctld',
                     '.us',
                     mockItem,
-                    { mode: 'toCode' } as any,
+                    { mode: 'toCode' } as QuizSettings,
                     true
                 );
             });
@@ -89,7 +89,7 @@ describe('QUIZ_CONFIGS', () => {
                     'cctld',
                     'us',
                     mockItem,
-                    { mode: 'toCode' } as any,
+                    { mode: 'toCode' } as QuizSettings,
                     true
                 );
             });
@@ -98,7 +98,7 @@ describe('QUIZ_CONFIGS', () => {
                     'cctld',
                     'US',
                     mockItem,
-                    { mode: 'toCode' } as any,
+                    { mode: 'toCode' } as QuizSettings,
                     true
                 );
             });
@@ -162,7 +162,7 @@ describe('QUIZ_CONFIGS', () => {
                     'telephone',
                     'United States',
                     mockItem,
-                    { mode: 'toCountry' } as any,
+                    { mode: 'toCountry' } as QuizSettings,
                     true
                 );
             });
@@ -172,7 +172,7 @@ describe('QUIZ_CONFIGS', () => {
                     'telephone',
                     '+1',
                     mockItem,
-                    { mode: 'toCode' } as any,
+                    { mode: 'toCode' } as QuizSettings,
                     true
                 );
             });
@@ -181,7 +181,7 @@ describe('QUIZ_CONFIGS', () => {
                     'telephone',
                     '1',
                     mockItem,
-                    { mode: 'toCode' } as any,
+                    { mode: 'toCode' } as QuizSettings,
                     true
                 );
             });
@@ -191,7 +191,7 @@ describe('QUIZ_CONFIGS', () => {
                     'telephone',
                     ' + 1 ',
                     mockItem,
-                    { mode: 'toCode' } as any,
+                    { mode: 'toCode' } as QuizSettings,
                     true
                 );
             });
@@ -232,7 +232,7 @@ describe('QUIZ_CONFIGS', () => {
                     'vehicle',
                     'USA',
                     mockItem,
-                    { mode: 'toCode' } as any,
+                    { mode: 'toCode' } as QuizSettings,
                     true
                 );
             });
@@ -241,7 +241,7 @@ describe('QUIZ_CONFIGS', () => {
                     'vehicle',
                     'usa',
                     mockItem,
-                    { mode: 'toCode' } as any,
+                    { mode: 'toCode' } as QuizSettings,
                     true
                 );
             });
@@ -250,7 +250,7 @@ describe('QUIZ_CONFIGS', () => {
                     'vehicle',
                     'United States',
                     mockItem,
-                    { mode: 'toCountry' } as any,
+                    { mode: 'toCountry' } as QuizSettings,
                     true
                 );
             });
@@ -282,7 +282,7 @@ describe('QUIZ_CONFIGS', () => {
                     'driving_side',
                     'Right',
                     mockItem,
-                    { mode: 'guessing' } as any,
+                    { mode: 'guessing' } as QuizSettings,
                     true
                 );
             });
@@ -291,7 +291,7 @@ describe('QUIZ_CONFIGS', () => {
                     'driving_side',
                     'right',
                     mockItem,
-                    { mode: 'guessing' } as any,
+                    { mode: 'guessing' } as QuizSettings,
                     true
                 );
             });
@@ -300,7 +300,7 @@ describe('QUIZ_CONFIGS', () => {
                     'driving_side',
                     'left',
                     mockItem,
-                    { mode: 'guessing' } as any,
+                    { mode: 'guessing' } as QuizSettings,
                     false
                 );
             });
@@ -310,7 +310,7 @@ describe('QUIZ_CONFIGS', () => {
                     'driving_side',
                     'United States',
                     mockItem,
-                    { mode: 'toCountry' } as any,
+                    { mode: 'toCountry' } as QuizSettings,
                     true
                 );
             });

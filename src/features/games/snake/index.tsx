@@ -1,22 +1,22 @@
-import React, {
-    useMemo,
-    useCallback,
-    useReducer,
-    useEffect,
-    useState,
-    useRef,
-} from 'react';
-import { Grid } from '../../../components/mui';
+import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
+import { Grid, keyframes } from '../../../components/mui';
 
-import { convertPixels } from '../../interpreters/utils/gridUtils';
+import { gridMove } from '../../interpreters/utils/gridUtils';
 import { useWindow, useTimer, useKeys, useMobile } from '../../../hooks';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
-import { Controls, ArrowsButton } from '../../../components/ui/Controls';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
 import { LAYOUT, COLORS, COMPONENT_VARIANTS } from '../../../config/theme';
-import { handleAction, handleResize, getRandom } from './logic';
+import { handleAction, handleResize } from './logic';
+import { GRID_CONFIG } from '../../interpreters/config/interpretersConfig';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
+import { StarRounded as FoodIcon } from '../../../components/icons';
+
+const pulseRotate = keyframes`
+  0% { transform: scale(0.8) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(180deg); }
+  100% { transform: scale(0.8) rotate(360deg); }
+`;
 
 export default function Snake(): React.ReactElement {
     const { create: createTimer } = useTimer(0);
@@ -29,16 +29,15 @@ export default function Snake(): React.ReactElement {
         ? GAME_CONSTANTS.gridSizes.mobile
         : GAME_CONSTANTS.gridSizes.desktop;
 
-    const [randomMovesEnabled, setRandomMovesEnabled] = useState(false);
-    const randomMovesRef = useRef(false);
-
-    const [showArrows, setShowArrows] = useState(false);
-
     const { rows, cols } = useMemo(() => {
         const headerOffset = mobile
             ? LAYOUT.headerHeight.xs
             : LAYOUT.headerHeight.md;
-        return convertPixels(size, height - headerOffset, width);
+        const availableHeight = height - headerOffset;
+        const pixel = size * GRID_CONFIG.calculation.pixelMultiplier;
+        const rows = Math.floor(availableHeight / pixel);
+        const cols = Math.floor(width / pixel);
+        return { rows, cols };
     }, [size, height, width, mobile]);
 
     const initial = useMemo(
@@ -57,18 +56,6 @@ export default function Snake(): React.ReactElement {
     const [state, dispatch] = useReducer(
         handleAction,
         handleResize(initial, rows, cols)
-    );
-
-    const controlHandler = useCallback(
-        (event: string) => () => {
-            const key = GAME_CONSTANTS.controls.arrowPrefix + event;
-
-            dispatch({
-                type: 'steer',
-                payload: { key },
-            });
-        },
-        []
     );
 
     const handleTap = useCallback(
@@ -113,35 +100,66 @@ export default function Snake(): React.ReactElement {
                 else color = COLORS.primary.dark;
             }
 
+            const up = gridMove(index, -2, rows, cols);
+            const down = gridMove(index, 2, rows, cols);
+            const left = gridMove(index, -1, rows, cols);
+            const right = gridMove(index, 1, rows, cols);
+
+            const hasUp = board[up] > 0;
+            const hasDown = board[down] > 0;
+            const hasLeft = board[left] > 0;
+            const hasRight = board[right] > 0;
+
+            const radius = `${size / GRID_CONFIG.cellSize.divisor}rem`;
+
+            if (color === 'inherit') {
+                return { backgroundColor: color };
+            }
+
+            if (board[index] === -1) {
+                // Food is an icon
+                return {
+                    backgroundColor: 'transparent',
+                    children: (
+                        <FoodIcon
+                            sx={{
+                                color: color,
+                                fontSize: `${size * 0.7}rem`,
+                                animation: `${pulseRotate} 2s infinite ease-in-out`,
+                            }}
+                        />
+                    ),
+                };
+            }
+
+            // Snake Body: Round ONLY outside corners and ends
+            const borderRadius = [0, 0, 0, 0]; // tl, tr, br, bl
+
+            // Corner TL: No Up and No Left
+            if (!hasUp && !hasLeft) borderRadius[0] = 1;
+            // Corner TR: No Up and No Right
+            if (!hasUp && !hasRight) borderRadius[1] = 1;
+            // Corner BR: No Down and No Right
+            if (!hasDown && !hasRight) borderRadius[2] = 1;
+            // Corner BL: No Down and No Left
+            if (!hasDown && !hasLeft) borderRadius[3] = 1;
+
+            const br = borderRadius.map(r => (r ? radius : '0')).join(' ');
+
             return {
                 backgroundColor: color,
-                boxShadow:
-                    color !== 'inherit'
-                        ? `0 0 1.25rem ${color.replace('hsl', 'hsla').replace(')', ', 0.25)')}`
-                        : 'none',
-                border:
-                    color !== 'inherit' ? `0.0625rem solid ${color}` : 'none',
+                boxShadow: `0 0 1.25rem ${color.replace('hsl', 'hsla').replace(')', ', 0.25)')}`,
+                borderRadius: br,
             };
         },
-        [state, cols]
+        [state, rows, cols, size]
     );
 
     useEffect(() => {
         const wrapDispatch = () => {
-            const directions = 'wasd';
-            const index = getRandom(4);
-            const key = directions[index];
-
             dispatch({
                 type: 'move',
             });
-
-            if (getRandom(2) && randomMovesRef.current) {
-                dispatch({
-                    type: 'steer',
-                    payload: { key },
-                });
-            }
         };
 
         const wrapDirection = (event: KeyboardEvent) =>
@@ -155,15 +173,11 @@ export default function Snake(): React.ReactElement {
     }, [createTimer, createKeys]);
 
     useEffect(() => {
-        randomMovesRef.current = randomMovesEnabled;
-    }, [randomMovesEnabled]);
-
-    useEffect(() => {
         dispatch({
             type: 'resize',
             payload: { rows, cols },
         });
-    }, [rows, cols]);
+    }, [rows, cols, dispatch]);
 
     useEffect(() => {
         document.title = PAGE_TITLES.snake;
@@ -198,21 +212,13 @@ export default function Snake(): React.ReactElement {
                     size={size}
                     rows={rows}
                     cols={cols}
-                    cellProps={chooseColor}
+                    space={0}
+                    cellProps={(r: number, c: number) => ({
+                        ...chooseColor(r, c),
+                        transition: false,
+                    })}
                 />
             </Grid>
-            <Controls
-                handler={controlHandler}
-                onAutoPlay={() => setRandomMovesEnabled(!randomMovesEnabled)}
-                autoPlayEnabled={randomMovesEnabled}
-                hide={showArrows}
-            >
-                <ArrowsButton
-                    show={showArrows}
-                    setShow={setShowArrows}
-                    handler={controlHandler}
-                />
-            </Controls>
         </Grid>
     );
 }

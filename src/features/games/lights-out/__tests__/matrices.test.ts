@@ -23,7 +23,7 @@ describe('Lights Out Matrix Utilities', () => {
 
     test('getIdentity returns identity matrix', () => {
         const id3 = getIdentity(3);
-        // Size 3: 
+        // Size 3:
         // 100 -> 4
         // 010 -> 2
         // 001 -> 1

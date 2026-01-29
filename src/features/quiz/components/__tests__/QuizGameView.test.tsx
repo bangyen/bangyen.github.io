@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import QuizGameView from '../QuizGameView';
-import { COLORS } from '../../../../config/theme';
 
 // Mock the icon to prevent rendering issues
 jest.mock('@mui/icons-material', () => ({

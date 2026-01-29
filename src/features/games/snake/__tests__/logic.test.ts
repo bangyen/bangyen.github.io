@@ -5,6 +5,8 @@ import {
     getRandom,
     addNext,
     mapBoard,
+    SnakeState,
+    Action,
 } from '../logic';
 
 describe('Snake Game Logic', () => {
@@ -63,7 +65,7 @@ describe('Snake Game Logic', () => {
             jest.spyOn(Math, 'random')
                 .mockReturnValueOnce(0)
                 .mockReturnValueOnce(0.5);
-            const state: any = { length: 3 };
+            const state = { length: 3 } as unknown as SnakeState;
             const next = handleResize(state, 10, 10);
             expect(next.rows).toBe(10);
             expect(next.cols).toBe(10);
@@ -75,7 +77,7 @@ describe('Snake Game Logic', () => {
     });
 
     describe('reduceBoard (movement loop)', () => {
-        let initialState: any;
+        let initialState: SnakeState;
 
         beforeEach(() => {
             initialState = {
@@ -131,7 +133,7 @@ describe('Snake Game Logic', () => {
 
     describe('handleAction', () => {
         test('steer action adds to buffer', () => {
-            const state: any = { buffer: [] };
+            const state = { buffer: [] } as unknown as SnakeState;
             const next = handleAction(state, {
                 type: 'steer',
                 payload: { key: 'ArrowDown' },
@@ -140,7 +142,7 @@ describe('Snake Game Logic', () => {
         });
 
         test('resize action calls handleResize', () => {
-            const state: any = { length: 3 };
+            const state = { length: 3 } as unknown as SnakeState;
             const next = handleAction(state, {
                 type: 'resize',
                 payload: { rows: 5, cols: 5 },
@@ -149,21 +151,24 @@ describe('Snake Game Logic', () => {
         });
 
         test('move action calls reduceBoard', () => {
-            const state: any = {
+            const state = {
                 rows: 10,
                 cols: 10,
                 head: 0,
                 velocity: 1,
+                length: 3,
                 board: { 0: 3 },
                 buffer: [],
-            };
+            } as SnakeState;
             const next = handleAction(state, { type: 'move' });
             expect(next.head).toBe(1);
         });
 
         test('ignores unknown actions', () => {
-            const state: any = { head: 0 };
-            const next = handleAction(state, { type: 'unknown' } as any);
+            const state = { head: 0 } as unknown as SnakeState;
+            const next = handleAction(state, {
+                type: 'unknown',
+            } as unknown as Action);
             expect(next).toBe(state);
         });
     });

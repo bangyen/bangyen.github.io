@@ -7,6 +7,13 @@ import { GRID_CONFIG } from '../../features/interpreters/config/interpretersConf
 interface CellProps {
     size: number;
     children?: ReactNode;
+    backgroundColor?: string;
+    color?: string;
+    boxShadow?: string;
+    border?: string;
+    opacity?: number;
+    transition?: string | boolean;
+    sx?: object;
     [key: string]: unknown;
 }
 
@@ -20,9 +27,17 @@ function Cell({ size, children, ...rest }: CellProps) {
         boxShadow,
         border,
         opacity,
+        transition: transitionProp = true,
         sx,
         ...domProps
-    } = rest as any;
+    } = rest;
+
+    const transition =
+        transitionProp === false
+            ? 'none'
+            : typeof transitionProp === 'string'
+              ? transitionProp
+              : ANIMATIONS.transition;
 
     const props = {
         ...COMPONENT_VARIANTS.flexCenter,
@@ -32,7 +47,6 @@ function Cell({ size, children, ...rest }: CellProps) {
         fontSize: `${size * GRID_CONFIG.cellSize.fontSizeMultiplier}rem`,
         fontWeight: TYPOGRAPHY.fontWeight.semibold,
         fontFamily: 'monospace',
-        transition: ANIMATIONS.transition,
     };
 
     return (
@@ -45,6 +59,7 @@ function Cell({ size, children, ...rest }: CellProps) {
                 boxShadow,
                 border,
                 opacity,
+                transition,
                 ...sx,
             }}
         >

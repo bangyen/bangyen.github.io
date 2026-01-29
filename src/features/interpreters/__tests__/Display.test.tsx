@@ -1,22 +1,51 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Program, Tape, Output, Register, DisplayModeToggle } from '../Display';
-import { EditorContext } from '../EditorContext';
+import { EditorContext, EditorContextType } from '../EditorContext';
 
 // Mocks
 jest.mock('../../../components/mui', () => ({
-    Box: ({ children, sx, ...props }: any) => <div data-testid="box" {...props}>{children}</div>,
-    Typography: ({ children, ...props }: any) => <span data-testid="typography" {...props}>{children}</span>,
-    Chip: ({ label }: any) => <div data-testid="chip">{label}</div>,
-    IconButton: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button>,
+    Box: ({
+        children,
+        sx: _sx,
+        ...props
+    }: {
+        children: React.ReactNode;
+        sx?: object;
+    }) => (
+        <div data-testid="box" {...props}>
+            {children}
+        </div>
+    ),
+    Typography: ({ children, ...props }: { children: React.ReactNode }) => (
+        <span data-testid="typography" {...props}>
+            {children}
+        </span>
+    ),
+    Chip: ({ label }: { label: React.ReactNode }) => (
+        <div data-testid="chip">{label}</div>
+    ),
+    IconButton: ({
+        children,
+        onClick,
+    }: {
+        children: React.ReactNode;
+        onClick: () => void;
+    }) => <button onClick={onClick}>{children}</button>,
 }));
 
 jest.mock('../components/Text', () => ({
-    Text: ({ text, color }: any) => <span data-testid="text-comp" data-color={color}>{text}</span>,
+    Text: ({ text, color }: { text: string; color?: string }) => (
+        <span data-testid="text-comp" data-color={color}>
+            {text}
+        </span>
+    ),
 }));
 
 jest.mock('../../../components/ui/GlassCard', () => ({
-    GlassCard: ({ children }: any) => <div data-testid="glass-card">{children}</div>,
+    GlassCard: ({ children }: { children: React.ReactNode }) => (
+        <div data-testid="glass-card">{children}</div>
+    ),
 }));
 
 jest.mock('../../../components/icons', () => ({
@@ -29,7 +58,7 @@ jest.mock('../../../components/icons', () => ({
 }));
 
 const mockContextValue = {
-    code: 'ABC',
+    code: ['A', 'B', 'C'],
     index: 0,
     tape: [1, 2, 3],
     pointer: 1,
@@ -41,9 +70,12 @@ const mockContextValue = {
 };
 
 describe('Display Components', () => {
-    const renderWithContext = (ui: React.ReactNode, contextValue: any = mockContextValue) => {
+    const renderWithContext = (
+        ui: React.ReactNode,
+        contextValue: Partial<EditorContextType> = mockContextValue
+    ) => {
         return render(
-            <EditorContext.Provider value={contextValue}>
+            <EditorContext.Provider value={contextValue as EditorContextType}>
                 {ui}
             </EditorContext.Provider>
         );
@@ -56,7 +88,10 @@ describe('Display Components', () => {
         });
 
         test('renders nothing if code undefined', () => {
-            renderWithContext(<Program />, { ...mockContextValue, code: undefined });
+            renderWithContext(<Program />, {
+                ...mockContextValue,
+                code: undefined,
+            });
             expect(screen.queryByTestId('glass-card')).not.toBeInTheDocument();
         });
 
@@ -85,7 +120,10 @@ describe('Display Components', () => {
         });
 
         test('renders nothing if flag false', () => {
-            renderWithContext(<Tape />, { ...mockContextValue, tapeFlag: false });
+            renderWithContext(<Tape />, {
+                ...mockContextValue,
+                tapeFlag: false,
+            });
             expect(screen.queryByTestId('glass-card')).not.toBeInTheDocument();
         });
 
@@ -109,7 +147,10 @@ describe('Display Components', () => {
         });
 
         test('renders nothing if flag false', () => {
-            renderWithContext(<Output />, { ...mockContextValue, outFlag: false });
+            renderWithContext(<Output />, {
+                ...mockContextValue,
+                outFlag: false,
+            });
             expect(screen.queryByTestId('glass-card')).not.toBeInTheDocument();
         });
 
@@ -122,7 +163,10 @@ describe('Display Components', () => {
         });
 
         test('renders compact mode (array)', () => {
-            renderWithContext(<Output compact={true} />, { ...mockContextValue, output: ['A', 'B'] });
+            renderWithContext(<Output compact={true} />, {
+                ...mockContextValue,
+                output: ['A', 'B'],
+            });
             expect(screen.getAllByTestId('chip')).toHaveLength(2);
         });
     });
@@ -134,7 +178,10 @@ describe('Display Components', () => {
         });
 
         test('renders nothing if flag false', () => {
-            renderWithContext(<Register />, { ...mockContextValue, regFlag: false });
+            renderWithContext(<Register />, {
+                ...mockContextValue,
+                regFlag: false,
+            });
             expect(screen.queryByTestId('glass-card')).not.toBeInTheDocument();
         });
 
@@ -154,7 +201,12 @@ describe('Display Components', () => {
     describe('DisplayModeToggle', () => {
         test('toggles mode', () => {
             const setCompact = jest.fn();
-            render(<DisplayModeToggle compactMode={false} setCompactMode={setCompact} />);
+            render(
+                <DisplayModeToggle
+                    compactMode={false}
+                    setCompactMode={setCompact}
+                />
+            );
 
             const btn = screen.getByRole('button');
             fireEvent.click(btn);
@@ -162,10 +214,20 @@ describe('Display Components', () => {
         });
 
         test('shows correct icon', () => {
-            const { rerender } = render(<DisplayModeToggle compactMode={false} setCompactMode={() => { }} />);
+            const { rerender } = render(
+                <DisplayModeToggle
+                    compactMode={false}
+                    setCompactMode={() => {}}
+                />
+            );
             expect(screen.getByTestId('icon-module')).toBeInTheDocument();
 
-            rerender(<DisplayModeToggle compactMode={true} setCompactMode={() => { }} />);
+            rerender(
+                <DisplayModeToggle
+                    compactMode={true}
+                    setCompactMode={() => {}}
+                />
+            );
             expect(screen.getByTestId('icon-list')).toBeInTheDocument();
         });
     });

@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import QuizGame from '../QuizGame';
+import type { QuizGameViewProps } from '../QuizGameView';
 import { useQuizEngine } from '../../hooks/quiz';
 
 // Mock the hook
@@ -8,11 +9,12 @@ jest.mock('../../hooks/quiz');
 
 // Mock QuizGameView to simplify finding it and check props
 jest.mock('../QuizGameView', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const MockQuizGameView = (props: any) => (
+    const MockQuizGameView = <T,>(props: QuizGameViewProps<T>) => (
         <div
             data-testid="quiz-game-view"
-            onKeyDown={props.onKeyDown}
+            onKeyDown={e =>
+                props.onKeyDown?.(e.nativeEvent as unknown as KeyboardEvent)
+            }
             tabIndex={0}
             role="button"
         >
@@ -26,17 +28,20 @@ jest.mock('../QuizGameView', () => {
                 {props.renderQuestionPrompt && props.renderQuestionPrompt()}
             </div>
             <div data-testid="question-content">
-                {props.renderQuestionContent &&
+                {props.gameState.currentQuestion &&
+                    props.renderQuestionContent &&
                     props.renderQuestionContent(
                         props.gameState.currentQuestion
                     )}
             </div>
             <div data-testid="hint">
-                {props.renderHint &&
+                {props.gameState.currentQuestion &&
+                    props.renderHint &&
                     props.renderHint(props.gameState.currentQuestion)}
             </div>
             <div data-testid="feedback-flag">
-                {props.renderFeedbackFlag &&
+                {props.gameState.currentQuestion &&
+                    props.renderFeedbackFlag &&
                     props.renderFeedbackFlag(props.gameState.currentQuestion)}
             </div>
             <button onClick={props.onBackToMenu}>Back</button>

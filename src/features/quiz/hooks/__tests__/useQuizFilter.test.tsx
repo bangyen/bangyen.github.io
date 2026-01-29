@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { useQuizFilter } from '../quiz';
-import { QuizSettings } from '../../types/quiz';
+import { QuizSettings, QuizItem, QuizType } from '../../types/quiz';
 
 const mockSettings: QuizSettings = {
     mode: 'guessing',
@@ -16,7 +16,7 @@ describe('useQuizFilter', () => {
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'cctld',
                 settings: { ...mockSettings, filterLanguage: 'English' },
             })
@@ -32,7 +32,7 @@ describe('useQuizFilter', () => {
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'cctld',
                 settings: { ...mockSettings, filterLanguage: 'French' },
             })
@@ -48,7 +48,7 @@ describe('useQuizFilter', () => {
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'cctld',
                 settings: { ...mockSettings, filterLanguage: 'Non-English' },
             })
@@ -64,7 +64,7 @@ describe('useQuizFilter', () => {
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'telephone',
                 settings: { ...mockSettings, filterZone: '1' },
             })
@@ -81,7 +81,7 @@ describe('useQuizFilter', () => {
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'telephone',
                 settings: { ...mockSettings, filterZone: '1,44' },
             })
@@ -96,7 +96,7 @@ describe('useQuizFilter', () => {
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'vehicle',
                 settings: { ...mockSettings, filterConvention: '1909' },
             })
@@ -112,7 +112,7 @@ describe('useQuizFilter', () => {
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'driving_side',
                 settings: {
                     ...mockSettings,
@@ -126,7 +126,7 @@ describe('useQuizFilter', () => {
 
         const { result: result2 } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'driving_side',
                 settings: {
                     ...mockSettings,
@@ -147,7 +147,7 @@ describe('useQuizFilter', () => {
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'driving_side',
                 settings: {
                     ...mockSettings,
@@ -170,7 +170,7 @@ describe('useQuizFilter', () => {
         // Space separated
         const { result: res1 } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'cctld',
                 settings: {
                     ...mockSettings,
@@ -184,7 +184,7 @@ describe('useQuizFilter', () => {
         // Individual letters (no comma/space)
         const { result: res2 } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'cctld',
                 settings: {
                     ...mockSettings,
@@ -203,7 +203,7 @@ describe('useQuizFilter', () => {
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: vehicles as any,
+                data: vehicles as unknown as QuizItem[],
                 quizType: 'vehicle',
                 settings: {
                     ...mockSettings,
@@ -224,7 +224,7 @@ describe('useQuizFilter', () => {
         // Telephone
         const { result: res1 } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'telephone',
                 settings: { ...mockSettings, filterLetter: 'u' },
             })
@@ -234,7 +234,10 @@ describe('useQuizFilter', () => {
         // Driving side
         const { result: res2 } = renderHook(() =>
             useQuizFilter({
-                data: [{ country: 'Albania' }, { country: 'Belgium' }] as any,
+                data: [
+                    { country: 'Albania' },
+                    { country: 'Belgium' },
+                ] as unknown as QuizItem[],
                 quizType: 'driving_side',
                 settings: { ...mockSettings, filterLetter: 'a' },
             })
@@ -246,7 +249,7 @@ describe('useQuizFilter', () => {
         const data = [{ country: 'A' }, { country: 'B' }];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'cctld',
                 settings: { ...mockSettings, maxQuestions: 'All' },
             })
@@ -261,7 +264,7 @@ describe('useQuizFilter', () => {
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'driving_side',
                 settings: {
                     ...mockSettings,
@@ -278,7 +281,7 @@ describe('useQuizFilter', () => {
         const data = [{ country: 'A' }];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'cctld',
                 settings: { ...mockSettings, filterLetter: ' ' },
             })
@@ -290,7 +293,7 @@ describe('useQuizFilter', () => {
         const data = [{ country: 'Albania', code: 'AL' }];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'vehicle',
                 settings: {
                     ...mockSettings,
@@ -306,7 +309,7 @@ describe('useQuizFilter', () => {
         const data = [{ country: 'Apple' }, { country: 'Banana' }];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'cctld',
                 settings: { ...mockSettings, filterLetter: 'a,b' },
             })
@@ -321,7 +324,7 @@ describe('useQuizFilter', () => {
         // cctld guessing mode
         const { result: res1 } = renderHook(() =>
             useQuizFilter({
-                data: cctlds as any,
+                data: cctlds as unknown as QuizItem[],
                 quizType: 'cctld',
                 settings: {
                     ...mockSettings,
@@ -335,7 +338,7 @@ describe('useQuizFilter', () => {
         // vehicle guessing mode
         const { result: res2 } = renderHook(() =>
             useQuizFilter({
-                data: vehicles as any,
+                data: vehicles as unknown as QuizItem[],
                 quizType: 'vehicle',
                 settings: {
                     ...mockSettings,
@@ -349,8 +352,8 @@ describe('useQuizFilter', () => {
         // non-specialized quiz (capitals)
         const { result: res3 } = renderHook(() =>
             useQuizFilter({
-                data: [{ country: 'France' }] as any,
-                quizType: 'capitals' as any,
+                data: [{ country: 'France' }] as unknown as QuizItem[],
+                quizType: 'capitals' as unknown as QuizType,
                 settings: { ...mockSettings, filterLetter: 'f' },
             })
         );
@@ -360,7 +363,9 @@ describe('useQuizFilter', () => {
         // cctld toCountry mode
         const { result: res4 } = renderHook(() =>
             useQuizFilter({
-                data: [{ country: 'Albania', code: '.al' }] as any,
+                data: [
+                    { country: 'Albania', code: '.al' },
+                ] as unknown as QuizItem[],
                 quizType: 'cctld',
                 settings: {
                     ...mockSettings,
@@ -376,7 +381,7 @@ describe('useQuizFilter', () => {
         const data = [{ country: 'A' }, { country: 'B' }, { country: 'C' }];
         const { result } = renderHook(() =>
             useQuizFilter({
-                data: data as any,
+                data: data as unknown as QuizItem[],
                 quizType: 'cctld',
                 settings: { ...mockSettings, maxQuestions: 2 },
             })

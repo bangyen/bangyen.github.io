@@ -22,7 +22,7 @@ export {
 export { Menu, MenuItem } from '@mui/material';
 
 // Feedback Components
-export { Tooltip, Fade, Backdrop } from '@mui/material';
+export { Tooltip, Fade, Backdrop, Modal } from '@mui/material';
 
 // Data Display Components
 export { Chip } from '@mui/material';
@@ -31,7 +31,12 @@ export { Chip } from '@mui/material';
 export { TextField } from '@mui/material';
 
 // Theme Components
-export { ThemeProvider, createTheme } from '@mui/material/styles';
+export {
+    ThemeProvider,
+    createTheme,
+    styled,
+    keyframes,
+} from '@mui/material/styles';
 
 // Core Styles
 export { CssBaseline } from '@mui/material';

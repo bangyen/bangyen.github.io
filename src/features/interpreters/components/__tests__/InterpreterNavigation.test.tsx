@@ -4,17 +4,33 @@ import { InterpreterNavigation } from '../InterpreterNavigation';
 
 // Mock MUI Select/MenuItem to avoid complex DOM structure testing
 jest.mock('@mui/material', () => ({
-    FormControl: ({ children }: any) => (
+    FormControl: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="form-control">{children}</div>
     ),
-    Select: ({ value, onChange, children }: any) => (
-        <select data-testid="select" value={value} onChange={onChange}>
+    Select: ({
+        value,
+        onChange,
+        children,
+    }: {
+        value: string;
+        onChange: (e: { target: { value: string } }) => void;
+        children: React.ReactNode;
+    }) => (
+        <select
+            data-testid="select"
+            value={value}
+            onChange={onChange as unknown as React.ChangeEventHandler}
+        >
             {children}
         </select>
     ),
-    MenuItem: ({ value, children }: any) => (
-        <option value={value}>{children}</option>
-    ),
+    MenuItem: ({
+        value,
+        children,
+    }: {
+        value: string;
+        children: React.ReactNode;
+    }) => <option value={value}>{children}</option>,
 }));
 
 describe('InterpreterNavigation', () => {

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { render, screen, renderHook } from '@testing-library/react';
 import ResearchDemo from '../ResearchDemo';
@@ -36,6 +35,21 @@ jest.mock('../../../components/ui/GlassCard', () => ({
         <div data-testid="glass-card" {...props}>
             {children}
         </div>
+    ),
+}));
+
+jest.mock('../../../components/ui/TooltipButton', () => ({
+    TooltipButton: ({
+        title,
+        Icon,
+    }: {
+        title: string;
+        Icon: React.ElementType;
+    }) => (
+        <button aria-label={title}>
+            {title}
+            {Icon && <Icon />}
+        </button>
     ),
 }));
 
@@ -81,7 +95,7 @@ jest.mock('recharts', () => ({
             XAxis
         </div>
     ),
-    YAxis: ({ tickFormatter }: { tickFormatter?: (val: any) => any }) => {
+    YAxis: ({ tickFormatter }: { tickFormatter?: (val: number) => string }) => {
         if (tickFormatter) tickFormatter(0);
         return <div data-testid="y-axis">YAxis</div>;
     },
@@ -90,8 +104,8 @@ jest.mock('recharts', () => ({
         labelFormatter,
         formatter,
     }: {
-        labelFormatter?: (val: any) => any;
-        formatter?: (val: any, name: any) => any;
+        labelFormatter?: (val: number) => string;
+        formatter?: (val: unknown, name: unknown) => [string, string];
     }) => {
         if (labelFormatter) labelFormatter(0);
         if (formatter) formatter(0, 'test');
@@ -102,308 +116,304 @@ jest.mock('recharts', () => ({
     ),
 }));
 
-describe('ResearchDemo', () => {
-    const mockChartData = [
-        { x: 1, y: 10, z: 5 },
-        { x: 2, y: 15, z: 8 },
-        { x: 3, y: 12, z: 6 },
+// describe('ResearchDemo', () => {
+const mockChartData = [
+    { x: 1, y: 10, z: 5 },
+    { x: 2, y: 15, z: 8 },
+    { x: 3, y: 12, z: 6 },
+];
+
+const defaultProps = {
+    title: 'Test Demo',
+    subtitle: 'Test Subtitle',
+    githubUrl: URLS.zsharpRepo,
+    chartData: mockChartData,
+    chartConfig: {
+        type: 'line' as const,
+        xAxisKey: 'x',
+        yAxisFormatter: (value: number) => `${value}% `,
+        yAxisDomain: ['dataMin - 1', 'dataMax + 1'],
+        tooltipLabelFormatter: (value: number) => `Round ${value} `,
+        tooltipFormatter: (value: number, name: string): [string, string] => [
+            String(value),
+            name,
+        ],
+        lines: [
+            { dataKey: 'y', name: 'Metric Y', color: '#4C78FF' },
+            { dataKey: 'z', name: 'Metric Z', color: '#2E7D32' },
+        ],
+    },
+};
+// });
+
+it('renders the title and subtitle correctly', () => {
+    render(<ResearchDemo {...defaultProps} />);
+
+    expect(screen.getByText('Test Demo')).toBeInTheDocument();
+    expect(screen.getByText('Test Subtitle')).toBeInTheDocument();
+});
+
+it('renders GitHub and Home icons', () => {
+    render(<ResearchDemo {...defaultProps} />);
+
+    expect(screen.getByTestId('github-icon')).toBeInTheDocument();
+    expect(screen.getByTestId('home-icon')).toBeInTheDocument();
+});
+
+it('renders the chart with correct data', () => {
+    render(<ResearchDemo {...defaultProps} />);
+
+    const chart = screen.getByTestId('line-chart');
+    expect(chart).toBeInTheDocument();
+    expect(chart).toHaveAttribute(
+        'data-chart-data',
+        JSON.stringify(mockChartData)
+    );
+});
+
+it('renders chart lines based on configuration', () => {
+    render(<ResearchDemo {...defaultProps} />);
+
+    expect(screen.getByTestId('line-y')).toBeInTheDocument();
+    expect(screen.getByTestId('line-z')).toBeInTheDocument();
+    expect(screen.getByTestId('line-y')).toHaveAttribute(
+        'data-name',
+        'Metric Y'
+    );
+    expect(screen.getByTestId('line-z')).toHaveAttribute(
+        'data-name',
+        'Metric Z'
+    );
+});
+
+it('shows loading state when loading is true', () => {
+    render(
+        <ResearchDemo
+            {...defaultProps}
+            loading={true}
+            loadingMessage="Loading test data..."
+        />
+    );
+
+    expect(screen.getByText('Loading test data...')).toBeInTheDocument();
+});
+
+it('renders view type buttons when viewTypes are provided', () => {
+    const viewTypes = [
+        {
+            key: 'view1',
+            label: 'View 1',
+            icon: () => <div>Icon1</div>,
+            chartTitle: 'View 1 Chart',
+            dataProcessor: (data: unknown[]) => data,
+            chartConfig: defaultProps.chartConfig,
+        },
+        {
+            key: 'view2',
+            label: 'View 2',
+            icon: () => <div>Icon2</div>,
+            chartTitle: 'View 2 Chart',
+            dataProcessor: (data: unknown[]) => data,
+            chartConfig: defaultProps.chartConfig,
+        },
     ];
 
-    const defaultProps = {
-        title: 'Test Demo',
-        subtitle: 'Test Subtitle',
-        githubUrl: URLS.zsharpRepo,
-        chartData: mockChartData,
-        chartConfig: {
-            type: 'line' as const,
-            xAxisKey: 'x',
-            yAxisFormatter: (value: number) => `${value}% `,
-            yAxisDomain: ['dataMin - 1', 'dataMax + 1'],
-            tooltipLabelFormatter: (value: number) => `Round ${value} `,
-            tooltipFormatter: (
-                value: number,
-                name: string
-            ): [string, string] => [String(value), name],
-            lines: [
-                { dataKey: 'y', name: 'Metric Y', color: '#4C78FF' },
-                { dataKey: 'z', name: 'Metric Z', color: '#2E7D32' },
+    render(
+        <ResearchDemo
+            {...defaultProps}
+            viewTypes={viewTypes}
+            currentViewType="view1"
+            onViewTypeChange={() => {
+                /* empty */
+            }}
+        />
+    );
+
+    expect(screen.getByText('View 1')).toBeInTheDocument();
+    expect(screen.getByText('View 2')).toBeInTheDocument();
+});
+
+it('renders controls when provided', () => {
+    const controls = [
+        {
+            label: 'Test Control',
+            icon: () => <div>ControlIcon</div>,
+            color: '#4C78FF',
+            value: 1,
+            onChange: () => {
+                /* empty */
+            },
+            options: [
+                { value: 1, label: 'Option 1' },
+                { value: 2, label: 'Option 2' },
             ],
         },
+    ];
+
+    render(<ResearchDemo {...defaultProps} controls={controls} />);
+
+    expect(screen.getByText('Test Control')).toBeInTheDocument();
+    expect(screen.getByText('Option 1')).toBeInTheDocument();
+    expect(screen.getByText('Option 2')).toBeInTheDocument();
+});
+
+it('renders reset button when onReset is provided', () => {
+    const mockReset = jest.fn();
+    const controls = [
+        {
+            label: 'Test Control',
+            icon: () => <div>ControlIcon</div>,
+            color: '#4C78FF',
+            value: 1,
+            onChange: () => {
+                /* empty */
+            },
+            options: [
+                { value: 1, label: 'Option 1' },
+                { value: 2, label: 'Option 2' },
+            ],
+        },
+    ];
+
+    render(
+        <ResearchDemo
+            {...defaultProps}
+            controls={controls}
+            onReset={mockReset}
+            resetLabel="Reset Test"
+        />
+    );
+
+    expect(screen.getByText('Reset Test')).toBeInTheDocument();
+    expect(screen.getByTestId('refresh-icon')).toBeInTheDocument();
+});
+
+it('renders dual Y-axes when dualYAxis is enabled', () => {
+    const dualAxisConfig = {
+        ...defaultProps.chartConfig,
+        dualYAxis: true,
+        rightYAxisFormatter: (value: number) => `${value}% `,
+        rightYAxisDomain: ['dataMin - 1', 'dataMax + 1'],
+        lines: [
+            {
+                dataKey: 'y',
+                name: 'Metric Y',
+                color: '#4C78FF',
+                yAxisId: 'left',
+            },
+            {
+                dataKey: 'z',
+                name: 'Metric Z',
+                color: '#2E7D32',
+                yAxisId: 'right',
+            },
+        ],
+        tooltipFormatter: (value: number, name: string): [string, string] => [
+            String(value),
+            name,
+        ],
     };
 
-    it('renders the title and subtitle correctly', () => {
-        render(<ResearchDemo {...defaultProps} />);
+    render(<ResearchDemo {...defaultProps} chartConfig={dualAxisConfig} />);
 
-        expect(screen.getByText('Test Demo')).toBeInTheDocument();
-        expect(screen.getByText('Test Subtitle')).toBeInTheDocument();
-    });
+    // Should render both left and right Y-axes
+    const yAxes = screen.getAllByTestId('y-axis');
+    expect(yAxes).toHaveLength(2);
+});
 
-    it('renders GitHub and Home icons', () => {
-        render(<ResearchDemo {...defaultProps} />);
+it('uses default chartConfig values and fallback onViewTypeChange', () => {
+    const minimalProps = {
+        title: 'Minimal Demo',
+        subtitle: 'Minimal Subtitle',
+        githubUrl: URLS.zsharpRepo,
+    };
+    render(<ResearchDemo {...minimalProps} />);
+    expect(screen.getByText('Minimal Demo')).toBeInTheDocument();
 
-        expect(screen.getByTestId('github-icon')).toBeInTheDocument();
-        expect(screen.getByTestId('home-icon')).toBeInTheDocument();
-    });
+    // Trigger the default onViewTypeChange fallback
+    renderHook(() => React.useState('default'));
+});
 
-    it('renders the chart with correct data', () => {
-        render(<ResearchDemo {...defaultProps} />);
+it('processes data using viewType dataProcessor', () => {
+    const mockProcessor = jest.fn((data: { x: number }[]) =>
+        data.map(d => ({ ...d, x: d.x * 2 }))
+    );
+    const viewTypes = [
+        {
+            key: 'view1',
+            label: 'View 1',
+            icon: () => null,
+            chartTitle: 'View 1 Title',
+            dataProcessor: mockProcessor,
+            chartConfig: defaultProps.chartConfig,
+        },
+    ];
 
-        const chart = screen.getByTestId('line-chart');
-        expect(chart).toBeInTheDocument();
-        expect(chart).toHaveAttribute(
-            'data-chart-data',
-            JSON.stringify(mockChartData)
-        );
-    });
+    render(
+        <ResearchDemo
+            {...defaultProps}
+            viewTypes={viewTypes}
+            currentViewType="view1"
+        />
+    );
 
-    it('renders chart lines based on configuration', () => {
-        render(<ResearchDemo {...defaultProps} />);
+    expect(mockProcessor).toHaveBeenCalled();
+    const chart = screen.getByTestId('line-chart');
+    const processedData = JSON.parse(chart.getAttribute('data-chart-data')!);
+    expect(processedData[0].x).toBe(2); // 1 * 2
+});
 
-        expect(screen.getByTestId('line-y')).toBeInTheDocument();
-        expect(screen.getByTestId('line-z')).toBeInTheDocument();
-        expect(screen.getByTestId('line-y')).toHaveAttribute(
-            'data-name',
-            'Metric Y'
-        );
-        expect(screen.getByTestId('line-z')).toHaveAttribute(
-            'data-name',
-            'Metric Z'
-        );
-    });
+it('renders correct chartTitle based on viewTypes and props', () => {
+    const viewTypes = [
+        {
+            key: 'view1',
+            label: 'View 1',
+            icon: () => null,
+            chartTitle: 'Custom View Title',
+            dataProcessor: (data: unknown[]) => data,
+            chartConfig: defaultProps.chartConfig,
+        },
+    ];
 
-    it('shows loading state when loading is true', () => {
-        render(
-            <ResearchDemo
-                {...defaultProps}
-                loading={true}
-                loadingMessage="Loading test data..."
-            />
-        );
+    const { rerender } = render(
+        <ResearchDemo
+            {...defaultProps}
+            viewTypes={viewTypes}
+            currentViewType="view1"
+        />
+    );
+    expect(screen.getByText('Custom View Title')).toBeInTheDocument();
 
-        expect(screen.getByText('Loading test data...')).toBeInTheDocument();
-    });
+    rerender(<ResearchDemo {...defaultProps} viewTypes={[]} />);
+    expect(screen.getByText('Data Visualization')).toBeInTheDocument();
 
-    it('renders view type buttons when viewTypes are provided', () => {
-        const viewTypes = [
-            {
-                key: 'view1',
-                label: 'View 1',
-                icon: () => <div>Icon1</div>,
-                chartTitle: 'View 1 Chart',
-                dataProcessor: (data: unknown[]) => data,
-                chartConfig: defaultProps.chartConfig,
-            },
-            {
-                key: 'view2',
-                label: 'View 2',
-                icon: () => <div>Icon2</div>,
-                chartTitle: 'View 2 Chart',
-                dataProcessor: (data: unknown[]) => data,
-                chartConfig: defaultProps.chartConfig,
-            },
-        ];
+    rerender(<ResearchDemo {...defaultProps} chartTitle="Explicit Title" />);
+    expect(screen.getByText('Explicit Title')).toBeInTheDocument();
+});
 
-        render(
-            <ResearchDemo
-                {...defaultProps}
-                viewTypes={viewTypes}
-                currentViewType="view1"
-                onViewTypeChange={() => {
-                    /* empty */
-                }}
-            />
-        );
+it('handles mobile view hiding Y-axes', () => {
+    // Mock mobile view
+    mockUseMediaQuery.mockReturnValue(true);
 
-        expect(screen.getByText('View 1')).toBeInTheDocument();
-        expect(screen.getByText('View 2')).toBeInTheDocument();
-    });
+    render(<ResearchDemo {...defaultProps} />);
 
-    it('renders controls when provided', () => {
-        const controls = [
-            {
-                label: 'Test Control',
-                icon: () => <div>ControlIcon</div>,
-                color: '#4C78FF',
-                value: 1,
-                onChange: () => {
-                    /* empty */
-                },
-                options: [
-                    { value: 1, label: 'Option 1' },
-                    { value: 2, label: 'Option 2' },
-                ],
-            },
-        ];
+    // Coverage achieved by rendering with hide={isMobile}
+});
 
-        render(<ResearchDemo {...defaultProps} controls={controls} />);
+it('uses default rightYAxisFormatter and onViewTypeChange', () => {
+    const dualAxisConfig = {
+        ...defaultProps.chartConfig,
+        dualYAxis: true,
+        rightYAxisFormatter: undefined as unknown as (val: number) => string, // Trigger default
+    };
 
-        expect(screen.getByText('Test Control')).toBeInTheDocument();
-        expect(screen.getByText('Option 1')).toBeInTheDocument();
-        expect(screen.getByText('Option 2')).toBeInTheDocument();
-    });
+    render(
+        <ResearchDemo
+            {...defaultProps}
+            chartConfig={dualAxisConfig}
+            onViewTypeChange={undefined} // Trigger default
+        />
+    );
 
-    it('renders reset button when onReset is provided', () => {
-        const mockReset = jest.fn();
-        const controls = [
-            {
-                label: 'Test Control',
-                icon: () => <div>ControlIcon</div>,
-                color: '#4C78FF',
-                value: 1,
-                onChange: () => {
-                    /* empty */
-                },
-                options: [
-                    { value: 1, label: 'Option 1' },
-                    { value: 2, label: 'Option 2' },
-                ],
-            },
-        ];
-
-        render(
-            <ResearchDemo
-                {...defaultProps}
-                controls={controls}
-                onReset={mockReset}
-                resetLabel="Reset Test"
-            />
-        );
-
-        expect(screen.getByText('Reset Test')).toBeInTheDocument();
-        expect(screen.getByTestId('refresh-icon')).toBeInTheDocument();
-    });
-
-    it('renders dual Y-axes when dualYAxis is enabled', () => {
-        const dualAxisConfig = {
-            ...defaultProps.chartConfig,
-            dualYAxis: true,
-            rightYAxisFormatter: (value: number) => `${value}% `,
-            rightYAxisDomain: ['dataMin - 1', 'dataMax + 1'],
-            lines: [
-                {
-                    dataKey: 'y',
-                    name: 'Metric Y',
-                    color: '#4C78FF',
-                    yAxisId: 'left',
-                },
-                {
-                    dataKey: 'z',
-                    name: 'Metric Z',
-                    color: '#2E7D32',
-                    yAxisId: 'right',
-                },
-            ],
-            tooltipFormatter: (
-                value: number,
-                name: string
-            ): [string, string] => [String(value), name],
-        };
-
-        render(<ResearchDemo {...defaultProps} chartConfig={dualAxisConfig} />);
-
-        // Should render both left and right Y-axes
-        const yAxes = screen.getAllByTestId('y-axis');
-        expect(yAxes).toHaveLength(2);
-    });
-
-    it('uses default chartConfig values and fallback onViewTypeChange', () => {
-        const minimalProps = {
-            title: 'Minimal Demo',
-            subtitle: 'Minimal Subtitle',
-            githubUrl: URLS.zsharpRepo,
-        };
-        render(<ResearchDemo {...minimalProps} />);
-        expect(screen.getByText('Minimal Demo')).toBeInTheDocument();
-
-        // Trigger the default onViewTypeChange fallback
-        renderHook(() => React.useState('default'));
-    });
-
-    it('processes data using viewType dataProcessor', () => {
-        const mockProcessor = jest.fn(data =>
-            data.map((d: any) => ({ ...d, x: d.x * 2 }))
-        );
-        const viewTypes = [
-            {
-                key: 'view1',
-                label: 'View 1',
-                icon: () => null,
-                chartTitle: 'View 1 Title',
-                dataProcessor: mockProcessor,
-                chartConfig: defaultProps.chartConfig,
-            },
-        ];
-
-        render(
-            <ResearchDemo
-                {...defaultProps}
-                viewTypes={viewTypes}
-                currentViewType="view1"
-            />
-        );
-
-        expect(mockProcessor).toHaveBeenCalled();
-        const chart = screen.getByTestId('line-chart');
-        const processedData = JSON.parse(
-            chart.getAttribute('data-chart-data')!
-        );
-        expect(processedData[0].x).toBe(2); // 1 * 2
-    });
-
-    it('renders correct chartTitle based on viewTypes and props', () => {
-        const viewTypes = [
-            {
-                key: 'view1',
-                label: 'View 1',
-                icon: () => null,
-                chartTitle: 'Custom View Title',
-                dataProcessor: (data: any) => data,
-                chartConfig: defaultProps.chartConfig,
-            },
-        ];
-
-        const { rerender } = render(
-            <ResearchDemo
-                {...defaultProps}
-                viewTypes={viewTypes}
-                currentViewType="view1"
-            />
-        );
-        expect(screen.getByText('Custom View Title')).toBeInTheDocument();
-
-        rerender(<ResearchDemo {...defaultProps} viewTypes={[]} />);
-        expect(screen.getByText('Data Visualization')).toBeInTheDocument();
-
-        rerender(
-            <ResearchDemo {...defaultProps} chartTitle="Explicit Title" />
-        );
-        expect(screen.getByText('Explicit Title')).toBeInTheDocument();
-    });
-
-    it('handles mobile view hiding Y-axes', () => {
-        // Mock mobile view
-        mockUseMediaQuery.mockReturnValue(true);
-
-        render(<ResearchDemo {...defaultProps} />);
-
-        // Coverage achieved by rendering with hide={isMobile}
-    });
-
-    it('uses default rightYAxisFormatter and onViewTypeChange', () => {
-        const dualAxisConfig = {
-            ...defaultProps.chartConfig,
-            dualYAxis: true,
-            rightYAxisFormatter: undefined as any, // Trigger default
-        };
-
-        render(
-            <ResearchDemo
-                {...defaultProps}
-                chartConfig={dualAxisConfig}
-                onViewTypeChange={undefined} // Trigger default
-            />
-        );
-
-        // The mock Tooltip/YAxis will call the formatters if we updated them to do so
-    });
+    // The mock Tooltip/YAxis will call the formatters if we updated them to do so
 });

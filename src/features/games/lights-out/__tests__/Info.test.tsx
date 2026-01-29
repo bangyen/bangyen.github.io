@@ -11,8 +11,11 @@ jest.mock(
         }
 );
 jest.mock('../../../../components/ui/GlassCard', () => ({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    GlassCard: function MockGlassCard({ children }: any) {
+    GlassCard: function MockGlassCard({
+        children,
+    }: {
+        children: React.ReactNode;
+    }) {
         return <div>{children}</div>;
     },
 }));
@@ -40,6 +43,8 @@ describe('Lights Out Info Component', () => {
         open: true,
         palette: mockPalette,
         toggleOpen: mockToggleOpen,
+        getFrontProps: () => (_r: number, _c: number) => ({}),
+        getBackProps: () => (_r: number, _c: number) => ({}),
     };
 
     const mockGetInput = calculator.getInput as jest.Mock;

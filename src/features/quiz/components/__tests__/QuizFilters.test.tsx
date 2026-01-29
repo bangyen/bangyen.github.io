@@ -1,11 +1,10 @@
 import React from 'react';
-import { render, screen, fireEvent, within } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import QuizFilters from '../QuizFilters';
-import { COLORS } from '../../../../config/theme';
-import { QuizType, QuizSettings } from '../../types/quiz';
+import { QuizType, QuizSettings, GameMode } from '../../types/quiz';
 
 const mockSettings: QuizSettings = {
-    mode: 'mode1',
+    mode: 'toCountry',
     maxQuestions: 10,
     allowRepeats: false,
     filterLanguage: 'All',
@@ -19,10 +18,10 @@ const mockSettings: QuizSettings = {
 const mockConfig = {
     hasModeSelect: true,
     modes: [
-        { value: 'mode1', label: 'Mode 1' },
-        { value: 'mode2', label: 'Mode 2' },
-        { value: 'toCountry', label: 'To Country' },
-        { value: 'otherMode', label: 'Other Mode' },
+        { value: 'toCountry' as GameMode, label: 'Mode 1' },
+        { value: 'toCode' as GameMode, label: 'Mode 2' },
+        { value: 'toCountry' as GameMode, label: 'To Country' },
+        { value: 'guessing' as GameMode, label: 'Other Mode' },
     ],
     maxQuestionOptions: [5, 10, 20],
 };
@@ -60,7 +59,7 @@ describe('QuizFilters', () => {
         const noModeConfig = {
             ...mockConfig,
             hasModeSelect: false,
-            modes: null,
+            modes: [] as { value: GameMode; label: string }[],
         };
         render(<QuizFilters {...defaultProps} activeConfig={noModeConfig} />);
         expect(screen.queryByText('Game Mode')).not.toBeInTheDocument();
@@ -94,7 +93,7 @@ describe('QuizFilters', () => {
     });
 
     test('renders Driving Side switch filter when mode is not toCountry', () => {
-        const drivingSettings = { ...mockSettings, mode: 'otherMode' };
+        const drivingSettings = { ...mockSettings, mode: 'guessing' };
         render(
             <QuizFilters
                 {...defaultProps}
@@ -147,7 +146,7 @@ describe('QuizFilters', () => {
 
         expect(mockOnChange).toHaveBeenCalledWith(
             expect.objectContaining({
-                mode: 'mode2',
+                mode: 'toCode',
             })
         );
     });
@@ -245,7 +244,7 @@ describe('QuizFilters', () => {
             <QuizFilters
                 {...defaultProps}
                 selectedQuiz="driving_side"
-                settings={{ ...mockSettings, mode: 'otherMode' }}
+                settings={{ ...mockSettings, mode: 'guessing' }}
             />
         );
         const comboboxes = screen.getAllByRole('combobox');
@@ -331,7 +330,9 @@ describe('QuizFilters', () => {
     });
 
     test('handles empty settings for all specialized types', () => {
-        const emptySettings = { allowRepeats: false } as any;
+        const emptySettings = {
+            allowRepeats: false,
+        } as unknown as QuizSettings;
         const types: QuizType[] = [
             'cctld',
             'telephone',
@@ -357,7 +358,7 @@ describe('QuizFilters', () => {
         render(
             <QuizFilters
                 {...defaultProps}
-                settings={{ mode: 'toCountry' } as any}
+                settings={{ mode: 'toCountry' } as unknown as QuizSettings}
                 selectedQuiz="driving_side"
             />
         );

@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { PAGE_TITLES } from '../../../../config/constants';
 import * as boardHandlers from '../boardHandlers';
+import { BoardState, BoardAction } from '../boardHandlers';
 import * as hooks from '../../../../hooks';
 import LightsOut from '../LightsOut';
 
@@ -136,12 +137,23 @@ describe('LightsOut', () => {
         jest.clearAllMocks();
         jest.useFakeTimers();
 
-        mockHandleBoard.mockImplementation((state: any, action: any) => {
-            if (action.type === 'auto') return { ...state, auto: !state.auto };
-            if (action.type === 'resize')
-                return { ...state, rows: action.newRows, cols: action.newCols };
-            return state;
-        });
+        mockHandleBoard.mockImplementation(
+            (state: BoardState, action: BoardAction) => {
+                if (action.type === 'auto')
+                    return { ...state, auto: !state.auto };
+                if (
+                    action.type === 'resize' &&
+                    action.newRows &&
+                    action.newCols
+                )
+                    return {
+                        ...state,
+                        rows: action.newRows,
+                        cols: action.newCols,
+                    };
+                return state;
+            }
+        );
     });
 
     afterEach(() => {
@@ -221,7 +233,7 @@ describe('LightsOut', () => {
 
     it('toggles info modal', () => {
         render(<LightsOut />);
-        const infoBtn = screen.getByLabelText('Info');
+        const infoBtn = screen.getByLabelText('How to Play');
         fireEvent.click(infoBtn);
         expect(screen.getByTestId('info-modal')).toBeInTheDocument();
     });

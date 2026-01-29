@@ -241,7 +241,7 @@ describe('useQuizEngine', () => {
         act(() => {
             result.current.actions.handleSubmit({
                 preventDefault: jest.fn(),
-            } as any);
+            } as unknown as React.FormEvent);
         });
 
         expect(result.current.state.score).toBe(10);
@@ -314,7 +314,7 @@ describe('useQuizEngine', () => {
     });
 
     test('handleSkip returns early if no current question', () => {
-        const emptyPool: any[] = [];
+        const emptyPool: unknown[] = [];
         const { result } = renderHook(() =>
             useQuizEngine({
                 initialPool: emptyPool,

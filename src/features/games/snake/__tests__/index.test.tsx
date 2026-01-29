@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import Snake from '../index';
 import * as logic from '../logic';
-import { useWindow, useTimer, useKeys, useMobile } from '../../../../hooks';
 
 // Mocks
 const mockCreateTimer = jest.fn();
@@ -15,32 +14,20 @@ jest.mock('../../../../hooks', () => ({
     useMobile: jest.fn(() => false),
 }));
 
-let lastCellProps: any = null;
-let lastControlHandler: any = null;
+let lastCellProps: ((p1: number, p2: number) => React.ReactNode) | null = null;
 
 jest.mock('../../../../components/ui/CustomGrid', () => ({
-    CustomGrid: ({ cellProps }: any) => {
+    CustomGrid: ({
+        cellProps,
+    }: {
+        cellProps: (p1: number, p2: number) => React.ReactNode;
+    }) => {
         lastCellProps = cellProps;
         return <div data-testid="snake-grid">Grid</div>;
     },
 }));
 
-jest.mock('../../../../components/ui/Controls', () => ({
-    Controls: ({ children, onAutoPlay, autoPlayEnabled, handler }: any) => {
-        lastControlHandler = handler;
-        return (
-            <div data-testid="snake-controls">
-                <button data-testid="autoplay-btn" onClick={onAutoPlay}>
-                    Auto {autoPlayEnabled ? 'On' : 'Off'}
-                </button>
-                {children}
-            </div>
-        );
-    },
-    ArrowsButton: ({ handler }: any) => (
-        <button data-testid="arrows-btn" onClick={() => handler('up')()} />
-    ),
-}));
+// No controls
 
 jest.mock('../../../../components/layout/GlobalHeader', () => ({
     GlobalHeader: () => <div data-testid="global-header" />,
@@ -69,15 +56,7 @@ describe('Snake Component', () => {
         const { rerender } = render(<Snake />);
 
         expect(lastCellProps).toBeDefined();
-        expect(lastCellProps(0, 0)).toBeDefined();
-
-        // Interaction
-        act(() => {
-            lastControlHandler('left')();
-        });
-        act(() => {
-            fireEvent.click(screen.getByTestId('arrows-btn'));
-        });
+        expect(lastCellProps?.(0, 0)).toBeDefined();
 
         const keyHandler = mockCreateKeys.mock.calls[0][0];
         act(() => {
@@ -109,10 +88,6 @@ describe('Snake Component', () => {
             });
         });
 
-        jest.spyOn(logic, 'getRandom').mockReturnValue(1);
-        act(() => {
-            fireEvent.click(screen.getByTestId('autoplay-btn'));
-        });
         const nextIter = mockCreateTimer.mock.calls[0][0].repeat;
         act(() => {
             nextIter();
