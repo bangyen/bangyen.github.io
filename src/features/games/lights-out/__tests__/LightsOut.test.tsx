@@ -233,7 +233,7 @@ describe('LightsOut', () => {
 
     it('toggles info modal', () => {
         render(<LightsOut />);
-        const infoBtn = screen.getByLabelText('Info');
+        const infoBtn = screen.getByLabelText('How to Play');
         fireEvent.click(infoBtn);
         expect(screen.getByTestId('info-modal')).toBeInTheDocument();
     });
