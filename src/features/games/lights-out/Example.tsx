@@ -36,7 +36,6 @@ function getIconFrames(
         const start = k * stepSize;
         const end = (k + 1) * stepSize;
 
-        const content = '""';
         let color = palette.secondary;
         let match = false;
         let predictedContent = '';
@@ -153,7 +152,7 @@ function iconHandler(
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontSize: '1.2rem',
+                            fontSize: { xs: '0.9rem', sm: '1.2rem' },
                             fontWeight: 'bold',
                             filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
                             [index]: frames,
@@ -191,7 +190,6 @@ function inputIconHandler(
             const start = k * stepSize;
             const end = (k + 1) * stepSize;
 
-            const content = '""';
             let color = palette.secondary;
             let match = false;
             let predictedContent = '';
@@ -285,7 +283,7 @@ function inputIconHandler(
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            fontSize: '1.2rem',
+                            fontSize: { xs: '0.9rem', sm: '1.2rem' },
                             fontWeight: 'bold',
                             filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
                             [index]: frames,
@@ -426,7 +424,7 @@ export default function Example({
                     >
                         <EmojiEventsRounded
                             sx={{
-                                fontSize: '4rem',
+                                fontSize: { xs: '2.5rem', sm: '4rem' },
                                 color: COLORS.primary.main,
                                 filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))',
                             }}
