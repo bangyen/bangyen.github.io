@@ -1,7 +1,6 @@
 import React, { useMemo, useEffect, useReducer } from 'react';
 import { Grid, Box } from '../../../components/mui';
-import { InfoRounded, CircleRounded } from '../../../components/icons';
-
+import { MenuBookRounded, CircleRounded } from '../../../components/icons';
 import { Controls } from '../../../components/ui/Controls';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { Board, useHandler, usePalette, Getters } from '../components/Board';
@@ -207,8 +206,8 @@ export default function LightsOut(): React.ReactElement {
                 autoPlayEnabled={state.auto}
             >
                 <TooltipButton
-                    title="Info"
-                    Icon={InfoRounded}
+                    title="How to Play"
+                    Icon={MenuBookRounded}
                     onClick={toggleOpen}
                 />
             </Controls>

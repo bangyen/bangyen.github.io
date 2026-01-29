@@ -43,6 +43,8 @@ export {
     Calculate,
     Replay,
     InfoRounded,
+    MenuBookRounded,
+    HelpRounded,
     GridView,
     TextFields,
     TextFieldsRounded,
