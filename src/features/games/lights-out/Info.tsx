@@ -25,6 +25,12 @@ import { getInput, getOutput, useHandler } from './calculator';
 import { Palette } from '../components/Board';
 import { StepTitle, InstructionItem, INFO_TITLES } from './content';
 
+interface Getters {
+    getColor: (row: number, col: number) => { front: string; back: string };
+    getBorder: (row: number, col: number) => React.CSSProperties;
+    getFiller: (row: number, col: number) => string;
+}
+
 // Type assertion for GlassCard component
 const TypedGlassCard = GlassCard as React.ComponentType<{
     children?: React.ReactNode;
@@ -39,10 +45,25 @@ interface InfoProps {
     open: boolean;
     palette: Palette;
     toggleOpen: () => void;
+    getFrontProps: (
+        getters: Getters
+    ) => (row: number, col: number) => Record<string, unknown>;
+    getBackProps: (
+        getters: Getters
+    ) => (row: number, col: number) => Record<string, unknown>;
 }
 
 export default function Info(props: InfoProps): React.ReactElement {
-    const { rows, cols, size, open, palette, toggleOpen } = props;
+    const {
+        rows,
+        cols,
+        size,
+        open,
+        palette,
+        toggleOpen,
+        getFrontProps,
+        getBackProps,
+    } = props;
     const isMobile = useMobile('md');
 
     // 0: Instructions, 1: Example, 2: Calculator
@@ -208,6 +229,8 @@ export default function Info(props: InfoProps): React.ReactElement {
                                     size={size * 0.7} // Adjust size for responsiveness
                                     start={[1, 3, 8]}
                                     palette={palette}
+                                    getFrontProps={getFrontProps}
+                                    getBackProps={getBackProps}
                                 />
                             </Box>
                         </Box>

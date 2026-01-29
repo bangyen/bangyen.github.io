@@ -24,21 +24,6 @@ interface Getters {
     getFiller: (row: number, col: number) => string;
 }
 
-interface FrontProps {
-    onClick: () => void;
-    children: React.ReactElement;
-    backgroundColor: string;
-    color: string;
-    style: React.CSSProperties;
-    sx: {
-        '&:hover': {
-            cursor: string;
-            color: string;
-        };
-    };
-    [key: string]: unknown;
-}
-
 function getFrontProps(
     getters: Getters,
     dispatch: (action: BoardAction) => void
@@ -53,7 +38,7 @@ function getFrontProps(
         });
     };
 
-    return (row: number, col: number): FrontProps => {
+    return (row: number, col: number) => {
         const style = getBorder(row, col);
         const { front, back } = getColor(row, col);
 
@@ -69,6 +54,27 @@ function getFrontProps(
                     color: back,
                 },
             },
+        };
+    };
+}
+
+function getBackProps(getters: Getters) {
+    return (row: number, col: number) => {
+        return {
+            backgroundColor: getters.getFiller(row, col),
+        };
+    };
+}
+
+function getExampleProps(getters: Getters) {
+    const frontProps = getFrontProps(getters, () => {});
+
+    return (row: number, col: number) => {
+        const props = frontProps(row, col);
+        return {
+            ...props,
+            onClick: undefined,
+            sx: undefined,
         };
     };
 }
@@ -164,12 +170,7 @@ export default function LightsOut(): React.ReactElement {
     const getters = useHandler(state, palette);
 
     const frontProps = getFrontProps(getters, action => dispatch(action));
-
-    const backProps = (row: number, col: number) => {
-        return {
-            backgroundColor: getters.getFiller(row, col),
-        };
-    };
+    const backProps = getBackProps(getters);
 
     return (
         <Grid
@@ -223,6 +224,8 @@ export default function LightsOut(): React.ReactElement {
                 open={open}
                 palette={palette}
                 toggleOpen={toggleOpen}
+                getFrontProps={getExampleProps}
+                getBackProps={getBackProps}
             />
         </Grid>
     );
