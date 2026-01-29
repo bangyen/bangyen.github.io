@@ -18,7 +18,11 @@ jest.mock('../../../../components/ui/CustomGrid', () => ({
                 const props = cellProps(r, c);
 
                 return (
-                    <div key={i} data-testid={`cell-${r}-${c}`} {...props} />
+                    <div
+                        key={`${r}-${c}`}
+                        data-testid={`cell-${r}-${c}`}
+                        {...props}
+                    />
                 );
             })}
         </div>

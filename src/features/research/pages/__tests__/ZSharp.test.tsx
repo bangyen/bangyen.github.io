@@ -8,6 +8,7 @@ import {
 } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { ResearchDemoProps, ViewType } from '../../types';
 import ZSharp from '../ZSharp';
 
 // Mocks
@@ -20,10 +21,10 @@ jest.mock('../../ResearchDemo', () => ({
         currentViewType,
         onViewTypeChange,
         loading,
-    }: any) => {
+    }: ResearchDemoProps<unknown>) => {
         // Exercise data processors and formatters for coverage
-        if (chartData && chartData.length > 0) {
-            viewTypes.forEach((vt: any) => {
+        if (chartData && chartData.length > 0 && viewTypes) {
+            viewTypes.forEach((vt: ViewType<unknown>) => {
                 vt.dataProcessor(chartData);
                 if (vt.chartConfig.yAxisFormatter)
                     vt.chartConfig.yAxisFormatter(0.5);
@@ -38,13 +39,15 @@ jest.mock('../../ResearchDemo', () => ({
             <div data-testid="research-demo">
                 <h1>{title}</h1>
                 {loading && <div data-testid="loading">Loading...</div>}
-                <div data-testid="chart-data-count">{chartData.length}</div>
+                <div data-testid="chart-data-count">
+                    {chartData ? chartData.length : 0}
+                </div>
                 <div data-testid="view-types">
-                    {viewTypes.map((v: any) => (
+                    {viewTypes?.map((v: ViewType<unknown>) => (
                         <button
                             key={v.key}
                             data-testid={`view-${v.key}`}
-                            onClick={() => onViewTypeChange(v.key)}
+                            onClick={() => onViewTypeChange?.(v.key)}
                         >
                             {v.label}
                         </button>
@@ -88,10 +91,13 @@ class MockDecompressionStream {
     };
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).DecompressionStream = MockDecompressionStream;
 
 // Overwrite Response for this test
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const originalResponse = (global as any).Response;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 (global as any).Response = class extends originalResponse {
     async text() {
         if (this._data instanceof ReadableStream) {
@@ -117,7 +123,7 @@ describe('ZSharp Component', () => {
     });
 
     const renderZSharp = async () => {
-        let result: any;
+        let result: ReturnType<typeof render> | undefined;
         await act(async () => {
             result = render(
                 <BrowserRouter>

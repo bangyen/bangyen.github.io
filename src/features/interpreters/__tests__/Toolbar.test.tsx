@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Toolbar, handleToolbar, ToolbarPayload } from '../Toolbar';
-import { EditorContext } from '../EditorContext';
+import { EditorContext, EditorContextType } from '../EditorContext';
 
 // Mock components
 jest.mock('../../../components/ui/Controls', () => ({
@@ -182,9 +182,11 @@ describe('Toolbar Component and handleToolbar', () => {
     });
 
     describe('Toolbar Component', () => {
-        const renderToolbar = (contextValue: unknown) => {
+        const renderToolbar = (contextValue: Partial<EditorContextType>) => {
             return render(
-                <EditorContext.Provider value={contextValue as any}>
+                <EditorContext.Provider
+                    value={contextValue as EditorContextType}
+                >
                     <Toolbar />
                 </EditorContext.Provider>
             );
