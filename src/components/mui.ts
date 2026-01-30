@@ -31,7 +31,12 @@ export { Chip } from '@mui/material';
 export { TextField } from '@mui/material';
 
 // Theme Components
-export { ThemeProvider, createTheme } from '@mui/material/styles';
+export {
+    ThemeProvider,
+    createTheme,
+    styled,
+    keyframes,
+} from '@mui/material/styles';
 
 // Core Styles
 export { CssBaseline } from '@mui/material';

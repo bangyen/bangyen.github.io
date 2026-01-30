@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
-import { Grid } from '../../../components/mui';
+import { Grid, keyframes } from '../../../components/mui';
 
 import { gridMove } from '../../interpreters/utils/gridUtils';
 import { useWindow, useTimer, useKeys, useMobile } from '../../../hooks';
@@ -11,6 +11,11 @@ import { handleAction, handleResize } from './logic';
 import { GRID_CONFIG } from '../../interpreters/config/interpretersConfig';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 import { StarRounded as FoodIcon } from '../../../components/icons';
+const subtlePulse = keyframes`
+  0% { transform: scale(0.9); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(0.9); }
+`;
 
 export default function Snake(): React.ReactElement {
     const { create: createTimer } = useTimer(0);
@@ -116,7 +121,11 @@ export default function Snake(): React.ReactElement {
                     backgroundColor: 'transparent',
                     children: (
                         <FoodIcon
-                            sx={{ color: color, fontSize: `${size * 0.7}rem` }}
+                            sx={{
+                                color: color,
+                                fontSize: `${size * 0.7}rem`,
+                                animation: `${subtlePulse} 2s infinite ease-in-out`,
+                            }}
                         />
                     ),
                 };
