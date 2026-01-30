@@ -34,6 +34,8 @@ export {
     Lens,
     EggRounded,
     GrassRounded,
+    StarRounded,
+    DiamondRounded,
 } from '@mui/icons-material';
 
 // Content Icons

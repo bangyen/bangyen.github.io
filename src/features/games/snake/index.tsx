@@ -10,7 +10,7 @@ import { LAYOUT, COLORS, COMPONENT_VARIANTS } from '../../../config/theme';
 import { handleAction, handleResize } from './logic';
 import { GRID_CONFIG } from '../../interpreters/config/interpretersConfig';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
-import { EggRounded as FoodIcon } from '../../../components/icons';
+import { StarRounded as FoodIcon } from '../../../components/icons';
 
 export default function Snake(): React.ReactElement {
     const { create: createTimer } = useTimer(0);
