@@ -5,16 +5,20 @@ import {
     HomeRounded,
     CloseRounded,
     GamepadRounded,
-    KeyboardArrowUpRounded,
-    KeyboardArrowDownRounded,
-    KeyboardArrowLeftRounded,
-    KeyboardArrowRightRounded,
     Code,
     Psychology,
     Cloud,
     Work,
     PlayArrowRounded,
     PauseRounded,
+    NorthRounded,
+    SouthRounded,
+    EastRounded,
+    WestRounded,
+    NorthWestRounded,
+    NorthEastRounded,
+    SouthEastRounded,
+    SouthWestRounded,
 } from '../icons';
 import { Link } from 'react-router-dom';
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -32,6 +36,10 @@ export const ICON_MAP: IconMap = {
     Psychology: Psychology,
     Cloud: Cloud,
     Work: Work,
+    NorthWest: NorthWestRounded,
+    NorthEast: NorthEastRounded,
+    SouthEast: SouthEastRounded,
+    SouthWest: SouthWestRounded,
 };
 
 import { TooltipButton } from './TooltipButton';
@@ -205,7 +213,8 @@ export function ArrowsButton({
     handler,
     size = 'large',
     hide = false,
-}: ArrowsButtonProps) {
+    diagonals = false,
+}: ArrowsButtonProps & { diagonals?: boolean }) {
     const flip = useCallback(() => setShow(!show), [show, setShow]);
 
     if (hide) return null;
@@ -219,6 +228,99 @@ export function ArrowsButton({
                 aria-label="Show game controls"
                 size={size}
             />
+        );
+    }
+
+    if (diagonals) {
+        return (
+            <Grid
+                container
+                direction="column"
+                alignItems="center"
+                role="group"
+                aria-label="Directional controls"
+                sx={{
+                    width: 'fit-content',
+                    mx: 'auto',
+                    gap: 0.5,
+                }}
+            >
+                <Grid container gap={0.5}>
+                    <TooltipButton
+                        title="Move Up Left"
+                        Icon={ICON_MAP.NorthWest}
+                        onClick={handler('up-left')}
+                        aria-label="Move up left"
+                        size={size}
+                    />
+                    <TooltipButton
+                        title="Move Up"
+                        Icon={NorthRounded}
+                        onClick={handler('up')}
+                        aria-label="Move up"
+                        size={size}
+                    />
+                    <TooltipButton
+                        title="Move Up Right"
+                        Icon={ICON_MAP.NorthEast}
+                        onClick={handler('up-right')}
+                        aria-label="Move up right"
+                        size={size}
+                    />
+                </Grid>
+                <Grid container gap={0.5}>
+                    <TooltipButton
+                        title="Move Left"
+                        Icon={WestRounded}
+                        onClick={handler('left')}
+                        aria-label="Move left"
+                        size={size}
+                    />
+                    <IconButton
+                        size={size === 'inherit' ? 'large' : size}
+                        onClick={flip}
+                        aria-label="Hide controls"
+                        sx={{
+                            color: 'inherit',
+                            '&:hover': {
+                                backgroundColor: COLORS.interactive.hover,
+                            },
+                        }}
+                    >
+                        <CloseRounded fontSize="inherit" aria-hidden="true" />
+                    </IconButton>
+                    <TooltipButton
+                        title="Move Right"
+                        Icon={EastRounded}
+                        onClick={handler('right')}
+                        aria-label="Move right"
+                        size={size}
+                    />
+                </Grid>
+                <Grid container gap={0.5}>
+                    <TooltipButton
+                        title="Move Down Left"
+                        Icon={ICON_MAP.SouthWest}
+                        onClick={handler('down-left')}
+                        aria-label="Move down left"
+                        size={size}
+                    />
+                    <TooltipButton
+                        title="Move Down"
+                        Icon={SouthRounded}
+                        onClick={handler('down')}
+                        aria-label="Move down"
+                        size={size}
+                    />
+                    <TooltipButton
+                        title="Move Down Right"
+                        Icon={ICON_MAP.SouthEast}
+                        onClick={handler('down-right')}
+                        aria-label="Move down right"
+                        size={size}
+                    />
+                </Grid>
+            </Grid>
         );
     }
 
@@ -238,7 +340,7 @@ export function ArrowsButton({
             <Grid>
                 <TooltipButton
                     title="Move Up"
-                    Icon={KeyboardArrowUpRounded}
+                    Icon={NorthRounded}
                     onClick={handler('up')}
                     aria-label="Move up"
                     size={size}
@@ -253,7 +355,7 @@ export function ArrowsButton({
             >
                 <TooltipButton
                     title="Move Left"
-                    Icon={KeyboardArrowLeftRounded}
+                    Icon={WestRounded}
                     onClick={handler('left')}
                     aria-label="Move left"
                     size={size}
@@ -273,7 +375,7 @@ export function ArrowsButton({
                 </IconButton>
                 <TooltipButton
                     title="Move Right"
-                    Icon={KeyboardArrowRightRounded}
+                    Icon={EastRounded}
                     onClick={handler('right')}
                     aria-label="Move right"
                     size={size}
@@ -282,7 +384,7 @@ export function ArrowsButton({
             <Grid>
                 <TooltipButton
                     title="Move Down"
-                    Icon={KeyboardArrowDownRounded}
+                    Icon={SouthRounded}
                     onClick={handler('down')}
                     aria-label="Move down"
                     size={size}
