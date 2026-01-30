@@ -1,5 +1,6 @@
 import React, { useMemo, useCallback, useReducer, useEffect } from 'react';
 import { Grid, keyframes } from '../../../components/mui';
+import { Controls, ArrowsButton } from '../../../components/ui/Controls';
 
 import { gridMove } from '../../interpreters/utils/gridUtils';
 import { useWindow, useTimer, useKeys, useMobile } from '../../../hooks';
@@ -89,6 +90,28 @@ export default function Snake(): React.ReactElement {
         [dispatch, state.velocity, state.buffer, width, height]
     );
 
+    const [showControls, setShowControls] = React.useState(false);
+
+    const handleControls = useCallback(
+        (direction: string) => () => {
+            const keys: { [key: string]: string } = {
+                up: 'ArrowUp',
+                down: 'ArrowDown',
+                left: 'ArrowLeft',
+                right: 'ArrowRight',
+                'up-left': 'NorthWest',
+                'up-right': 'NorthEast',
+                'down-left': 'SouthWest',
+                'down-right': 'SouthEast',
+            };
+            dispatch({
+                type: 'steer',
+                payload: { key: keys[direction] || '' },
+            });
+        },
+        [dispatch]
+    );
+
     const chooseColor = useCallback(
         (row: number, col: number) => {
             const index = row * cols + col;
@@ -105,18 +128,31 @@ export default function Snake(): React.ReactElement {
             const left = gridMove(index, -1, rows, cols);
             const right = gridMove(index, 1, rows, cols);
 
-            const hasUp = board[up] > 0;
-            const hasDown = board[down] > 0;
-            const hasLeft = board[left] > 0;
-            const hasRight = board[right] > 0;
+            const currentValue = board[index];
+            const hasSequenceNeighbor = (neighborIndex: number) => {
+                const neighborValue = board[neighborIndex];
+                if (neighborValue === undefined || neighborValue === -1)
+                    return false;
+                return Math.abs(neighborValue - currentValue) === 1;
+            };
 
-            const radius = `${size / GRID_CONFIG.cellSize.divisor}rem`;
+            const hasUp = hasSequenceNeighbor(up);
+            const hasDown = hasSequenceNeighbor(down);
+            const hasLeft = hasSequenceNeighbor(left);
+            const hasRight = hasSequenceNeighbor(right);
+
+            const isHead = currentValue === state.length;
+            const isTail = currentValue === 1;
+            const isEndpoint = isHead || isTail;
+
+            const standardRadius = `${size / GRID_CONFIG.cellSize.divisor}rem`;
+            const terminalRadius = `${size / 2.5}rem`; // Slightly less than 50% for a sleeker look
 
             if (color === 'inherit') {
                 return { backgroundColor: color };
             }
 
-            if (board[index] === -1) {
+            if (currentValue === -1) {
                 // Food is an icon
                 return {
                     backgroundColor: 'transparent',
@@ -144,7 +180,11 @@ export default function Snake(): React.ReactElement {
             // Corner BL: No Down and No Left
             if (!hasDown && !hasLeft) borderRadius[3] = 1;
 
-            const br = borderRadius.map(r => (r ? radius : '0')).join(' ');
+            const br = borderRadius
+                .map(r =>
+                    r ? (isEndpoint ? terminalRadius : standardRadius) : '0'
+                )
+                .join(' ');
 
             return {
                 backgroundColor: color,
@@ -219,6 +259,14 @@ export default function Snake(): React.ReactElement {
                     })}
                 />
             </Grid>
+            <Controls>
+                <ArrowsButton
+                    show={showControls}
+                    setShow={setShowControls}
+                    handler={handleControls}
+                    diagonals={true}
+                />
+            </Controls>
         </Grid>
     );
 }
