@@ -96,7 +96,7 @@ export default function Snake(): React.ReactElement {
 
             if (index in board) {
                 if (board[index] > 0) color = COLORS.primary.main;
-                else color = COLORS.data.amber;
+                else color = COLORS.primary.dark;
             }
 
             const up = gridMove(index, -2, rows, cols);
