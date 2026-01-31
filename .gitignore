@@ -30,6 +30,7 @@ yarn-error.log*
 !/public/manifest.json
 !/public/robots.txt
 
+
 # Temporary files
 cctlds_wiki.html
 # Research Data Generation

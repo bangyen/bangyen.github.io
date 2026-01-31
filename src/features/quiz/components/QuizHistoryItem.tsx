@@ -13,6 +13,7 @@ import {
     DrivingSide,
     TelephoneCode,
     VehicleCode,
+    ArtItem,
 } from '../types/quiz';
 
 interface QuizHistoryItemProps {
@@ -65,23 +66,59 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                             }}
                         />
                     )}
+                    {selectedQuiz === 'art' && (
+                        <Box
+                            component="img"
+                            src={(q.item as ArtItem).imageUrl}
+                            sx={{
+                                height: 32,
+                                width: 'auto',
+                                borderRadius: 0.5,
+                                border: `1px solid ${COLORS.border.subtle}`,
+                            }}
+                        />
+                    )}
                     <Typography variant="body1" fontWeight="bold" noWrap>
-                        {selectedQuiz === 'driving_side'
-                            ? q.item.country
-                            : settings.mode === 'toCountry'
-                              ? (q.item as CCTLD | TelephoneCode | VehicleCode)
-                                    .code
-                              : q.item.country}
+                        {(() => {
+                            if (selectedQuiz === 'art') {
+                                return (q.item as ArtItem).title;
+                            }
+                            if (selectedQuiz === 'driving_side') {
+                                return q.item.country;
+                            }
+                            return settings.mode === 'toCountry'
+                                ? (
+                                      q.item as
+                                          | CCTLD
+                                          | TelephoneCode
+                                          | VehicleCode
+                                  ).code
+                                : q.item.country;
+                        })()}
                     </Typography>
                 </Box>
                 <Typography variant="body2" color="textSecondary" noWrap>
                     Answer:{' '}
-                    {selectedQuiz === 'driving_side'
-                        ? (q.item as DrivingSide).side
-                        : settings.mode === 'toCountry'
-                          ? q.item.country
-                          : (q.item as CCTLD | TelephoneCode | VehicleCode)
-                                .code}
+                    {(() => {
+                        if (selectedQuiz === 'art') {
+                            const item = q.item as ArtItem;
+                            switch (settings.mode) {
+                                case 'art_artist':
+                                    return item.artist;
+                                case 'art_period':
+                                    return item.period || item.year;
+                                default:
+                                    return item.title;
+                            }
+                        }
+                        if (selectedQuiz === 'driving_side') {
+                            return (q.item as DrivingSide).side;
+                        }
+                        return settings.mode === 'toCountry'
+                            ? q.item.country
+                            : (q.item as CCTLD | TelephoneCode | VehicleCode)
+                                  .code;
+                    })()}
                 </Typography>
                 {activeConfig.renderFeedbackOrigin && (
                     <Box sx={{ mt: 0.5, opacity: 0.8 }}>

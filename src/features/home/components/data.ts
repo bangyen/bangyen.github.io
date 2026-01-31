@@ -63,7 +63,7 @@ export const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
             },
             Geography: {
                 path: ROUTES.pages.Geography,
-                description: 'Wikipedia-based quizzes',
+                description: 'Geography and map quizzes',
                 technology: 'React',
             },
         },

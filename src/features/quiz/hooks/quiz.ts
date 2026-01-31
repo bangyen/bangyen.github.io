@@ -8,6 +8,7 @@ import {
     TelephoneCode,
     VehicleCode,
     DrivingSide,
+    ArtItem,
 } from '../types/quiz';
 
 // Quiz Engine Hook
@@ -359,16 +360,23 @@ export const useQuizFilter = ({
                                 ? (item as CCTLD).code
                                       .toLowerCase()
                                       .replace('.', '')
-                                : item.country.toLowerCase();
+                                : (item as CCTLD).country.toLowerCase();
                     } else if (quizType === 'driving_side') {
-                        text = item.country.toLowerCase();
+                        text = (item as DrivingSide).country.toLowerCase();
                     } else if (quizType === 'telephone') {
-                        text = item.country.toLowerCase();
+                        text = (item as TelephoneCode).country.toLowerCase();
                     } else if (quizType === 'vehicle') {
                         text =
                             settings.mode === 'toCountry'
                                 ? (item as VehicleCode).code.toLowerCase()
-                                : item.country.toLowerCase();
+                                : (item as VehicleCode).country.toLowerCase();
+                    } else if (quizType === 'art') {
+                        const artItem = item as ArtItem;
+                        if (settings.mode === 'art_artist') {
+                            text = (artItem.artist || '').toLowerCase();
+                        } else {
+                            text = artItem.title.toLowerCase();
+                        }
                     }
                     return letters.some((l: string) => text.startsWith(l));
                 });

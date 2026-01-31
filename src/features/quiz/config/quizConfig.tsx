@@ -10,7 +10,9 @@ import {
     DrivingSide,
     TelephoneCode,
     VehicleCode,
+    ArtItem,
 } from '../types/quiz';
+import ArtQuestionView from '../components/ArtQuestionView';
 
 // Data imports
 import cctldsData from '../data/cctlds.json';
@@ -111,7 +113,28 @@ export interface QuizConfig {
     customGameRender?: (props: unknown) => React.ReactNode;
 }
 
+export const ART_NATIONALITIES = [
+    'All',
+    'American',
+    'Austrian',
+    'Belgian',
+    'British',
+    'Dutch',
+    'English',
+    'Flemish',
+    'French',
+    'German',
+    'Greek',
+    'Italian',
+    'Japanese',
+    'Mexican',
+    'Norwegian',
+    'Russian',
+    'Spanish',
+];
+
 export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
+    // ... (previous configs)
     cctld: {
         title: 'Internet Domain Quiz',
         subtitle: 'Test your knowledge of Internet country codes',
@@ -414,8 +437,24 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
             let correct = false;
             let expected = '';
             if (settings.mode === 'toCountry') {
+                // Find all valid countries for this code
+                const allMatches = (vehicleData as VehicleCode[]).filter(
+                    v => v.code === vehicleItem.code
+                );
+
+                // Check if input matches ANY of the valid countries
+                correct = allMatches.some(match =>
+                    isSmartMatch(input, match.country, CCTLD_ALIASES)
+                );
+
+                // Show the current item's country as expected, or maybe a list?
+                // For simplicity, keep current item as expected, but accept alternaties.
                 expected = vehicleItem.country;
-                correct = isSmartMatch(input, expected, CCTLD_ALIASES);
+                if (!correct && allMatches.length > 1) {
+                    // If wrong, show all possibilities?
+                    // Or just show the one that was on the card.
+                    // Let's rely on the simple "expected" from the card for now.
+                }
             } else {
                 expected = vehicleItem.code;
                 const norm = (s: string) =>
@@ -426,6 +465,74 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
                 correct = norm(input) === norm(expected);
             }
             return { isCorrect: correct, expected, points: correct ? 1 : 0 };
+        },
+    },
+    art: {
+        title: 'Art History Quiz',
+        subtitle: 'Identify famous artworks, artists, and periods',
+        infoUrl: 'https://en.wikipedia.org/wiki/History_of_painting',
+        data: [], // Populated dynamically
+        defaultSettings: {
+            mode: 'art_name',
+            allowRepeats: false,
+            maxQuestions: 'All',
+        },
+        hasModeSelect: true,
+        modes: [
+            { value: 'art_name', label: 'Guess Artwork Name' },
+            { value: 'art_artist', label: 'Guess Artist' },
+            { value: 'art_period', label: 'Guess Time Period' },
+        ],
+        maxQuestionOptions: [5, 10, 20],
+        renderQuestionPrompt: mode => {
+            switch (mode) {
+                case 'art_name':
+                    return 'What is the name of this artwork?';
+                case 'art_artist':
+                    return 'Who painted this?';
+                case 'art_period':
+                    return 'What is the artistic movement or period?';
+                default:
+                    return 'Identify this artwork:';
+            }
+        },
+        renderQuestionContent: item => (
+            <ArtQuestionView item={item as ArtItem} />
+        ),
+        checkAnswer: (input, item, settings) => {
+            const artItem = item as ArtItem;
+            let expected = '';
+            switch (settings.mode) {
+                case 'art_name':
+                    expected = artItem.title;
+                    break;
+                case 'art_artist':
+                    expected = artItem.artist;
+                    break;
+                case 'art_period':
+                    expected = artItem.period || artItem.year;
+                    break;
+            }
+            const isCorrect = isSmartMatch(input, expected);
+            return { isCorrect, expected, points: isCorrect ? 1 : 0 };
+        },
+        renderFeedbackOrigin: item => {
+            const artItem = item as ArtItem;
+            return (
+                <Box>
+                    <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+                        {artItem.title}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary">
+                        By {artItem.artist}, {artItem.year}
+                    </Typography>
+                    {artItem.period && artItem.period !== 'Unknown' && (
+                        <Typography variant="caption" color="textSecondary">
+                            {artItem.period}
+                        </Typography>
+                    )}
+                </Box>
+            );
         },
     },
 };

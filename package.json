@@ -41,6 +41,7 @@
     "stylelint:fix": "stylelint \"src/**/*.{css,scss}\" --fix --config config/stylelint.config.js --allow-empty-input",
     "lint:all": "npm run lint && npm run format:check && npm run stylelint",
     "scrape:quizzes": "tsx scripts/scrapeQuizzes.ts",
+    "generate:art": "tsx scripts/generateArtData.ts",
     "data:update": "tsx scripts/updateResearchData.ts",
     "prepare": "husky install"
   },
@@ -57,7 +58,7 @@
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
+      "eslint --fix --max-warnings=0",
       "prettier --write"
     ],
     "src/**/*.{css,scss}": [

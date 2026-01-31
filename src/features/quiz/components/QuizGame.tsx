@@ -8,6 +8,7 @@ import {
     QuizSettings,
     Question,
     QuizItem,
+    ArtItem,
 } from '../types/quiz';
 import { QUIZ_CONFIGS } from '../config/quizConfig';
 import { COLORS, SHADOWS } from '../../../config/theme';
@@ -136,12 +137,24 @@ const QuizGame: React.FC<QuizGameProps> = ({
             modeLabel={
                 settings.mode === 'toCountry'
                     ? 'Guessing Country'
-                    : 'Guessing Code'
+                    : settings.mode === 'toCode'
+                      ? 'Guessing Code'
+                      : settings.mode === 'art_name'
+                        ? 'Guessing Name'
+                        : settings.mode === 'art_artist'
+                          ? 'Guessing Artist'
+                          : settings.mode === 'art_period'
+                            ? 'Guessing Period'
+                            : 'Quiz'
             }
             inputPlaceholder={
                 settings.mode === 'toCountry'
                     ? 'Type country name...'
-                    : 'Type answer...'
+                    : settings.mode === 'art_name'
+                      ? 'Type artwork name...'
+                      : settings.mode === 'art_artist'
+                        ? 'Type artist name...'
+                        : 'Type answer...'
             }
             renderQuestionPrompt={() =>
                 config.renderQuestionPrompt(settings.mode)
@@ -149,25 +162,38 @@ const QuizGame: React.FC<QuizGameProps> = ({
             renderQuestionContent={item =>
                 config.renderQuestionContent(item, settings.mode)
             }
-            renderHint={item =>
-                quizType === 'cctld' ? (
-                    <Typography
-                        variant="body2"
-                        color="textSecondary"
-                        sx={{
-                            textAlign: 'center',
-                            fontStyle: 'italic',
-                        }}
-                    >
-                        Hint: {(item as CCTLD).language} origin
-                    </Typography>
-                ) : (
+            renderHint={item => {
+                if (quizType === 'cctld') {
+                    return (
+                        <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            sx={{
+                                textAlign: 'center',
+                                fontStyle: 'italic',
+                            }}
+                        >
+                            Hint: {(item as CCTLD).language} origin
+                        </Typography>
+                    );
+                } else if (quizType === 'art') {
+                    return (
+                        <Typography
+                            variant="body2"
+                            color="textSecondary"
+                            sx={{ fontStyle: 'italic' }}
+                        >
+                            Hint: {(item as ArtItem).year}
+                        </Typography>
+                    );
+                }
+                return (
                     <Typography variant="body2" color="textSecondary">
                         Hint functionality coming soon...
                     </Typography>
-                )
-            }
-            hideHint={quizType !== 'cctld'}
+                );
+            }}
+            hideHint={quizType !== 'cctld' && quizType !== 'art'}
             renderFeedbackFlag={item =>
                 item.flag && (
                     <img
