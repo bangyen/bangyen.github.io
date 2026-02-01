@@ -231,7 +231,7 @@ export function handleToolbar(
         }
         case 'share': {
             const url = window.location.href;
-            navigator.clipboard.writeText(url);
+            void navigator.clipboard.writeText(url);
             // TODO: Toast notification
             break;
         }

@@ -62,7 +62,7 @@ export type QuizItem =
     | ArtItem;
 
 export interface QuizSettings {
-    mode: GameMode | string;
+    mode: GameMode | (string & {});
     allowRepeats: boolean;
     maxQuestions: number | 'All';
     filterSide?: string;

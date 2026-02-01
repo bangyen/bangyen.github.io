@@ -152,11 +152,11 @@ export function handleAction(state: SnakeState, action: Action): SnakeState {
                 'NorthEast',
                 'SouthWest',
                 'SouthEast',
-            ].includes(payload.key as string);
+            ].includes(payload.key);
 
             if (isDiagonal) {
                 // Determine components based on key name
-                const key = payload.key as string;
+                const key = payload.key;
                 const up = -2;
                 const down = 2;
                 const left = -1;

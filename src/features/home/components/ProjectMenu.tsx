@@ -49,10 +49,19 @@ export function MenuButton(): React.ReactElement {
                 open={open}
                 anchorEl={anchor}
                 disableAutoFocusItem={true}
-                BackdropProps={{
-                    sx: {
-                        backgroundColor: 'transparent',
-                        backdropFilter: 'none',
+                slotProps={{
+                    backdrop: {
+                        sx: {
+                            backgroundColor: 'transparent',
+                            backdropFilter: 'none',
+                        },
+                    },
+                    list: {
+                        'aria-labelledby': 'projects-menu-button',
+                        sx: {
+                            padding: 0,
+                            height: 'auto',
+                        },
                     },
                 }}
                 sx={{
@@ -76,13 +85,6 @@ export function MenuButton(): React.ReactElement {
                     },
                 }}
                 onClose={handleClose}
-                MenuListProps={{
-                    'aria-labelledby': 'projects-menu-button',
-                    sx: {
-                        padding: 0,
-                        height: 'auto',
-                    },
-                }}
                 transformOrigin={{ horizontal: 'left', vertical: 'top' }}
                 anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
             >

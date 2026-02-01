@@ -119,11 +119,10 @@ export function ErrorFallback({
                                 }}
                             >
                                 {error.toString()}
-                                {errorInfo &&
-                                    errorInfo.componentStack
-                                        ?.split('\n')
-                                        .slice(0, 5)
-                                        .join('\n')}
+                                {errorInfo?.componentStack
+                                    ?.split('\n')
+                                    .slice(0, 5)
+                                    .join('\n')}
                             </Typography>
                         </Box>
                     )}

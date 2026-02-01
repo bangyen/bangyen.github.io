@@ -27,7 +27,7 @@ export function useCache<T>(getState: (state: T) => T) {
                     GLOBAL_CONFIG.processing.doubleProcessingPrevention &&
                     processingRef.current
                 ) {
-                    return { ...(states[index.current] as T) };
+                    return { ...states[index.current] };
                 }
 
                 if (GLOBAL_CONFIG.processing.doubleProcessingPrevention) {
@@ -50,7 +50,7 @@ export function useCache<T>(getState: (state: T) => T) {
                     index.current++;
                 }
 
-                const result = { ...(states[index.current] as T) };
+                const result = { ...states[index.current] };
 
                 if (GLOBAL_CONFIG.processing.doubleProcessingPrevention) {
                     setTimeout(() => {
@@ -65,7 +65,7 @@ export function useCache<T>(getState: (state: T) => T) {
                     GLOBAL_CONFIG.processing.doubleProcessingPrevention &&
                     processingRef.current
                 ) {
-                    return { ...(states[index.current] as T) };
+                    return { ...states[index.current] };
                 }
 
                 if (GLOBAL_CONFIG.processing.doubleProcessingPrevention) {
@@ -74,7 +74,7 @@ export function useCache<T>(getState: (state: T) => T) {
 
                 if (index.current) index.current--;
 
-                const prevResult = { ...(states[index.current] as T) };
+                const prevResult = { ...states[index.current] };
 
                 if (GLOBAL_CONFIG.processing.doubleProcessingPrevention) {
                     setTimeout(() => {

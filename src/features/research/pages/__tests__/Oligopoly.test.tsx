@@ -43,7 +43,9 @@ jest.mock('../../ResearchDemo', () => ({
                             <span>{c.label}</span>
                             <button
                                 data-testid={`change-${c.label}`}
-                                onClick={() => c.onChange(c.options[0].value)}
+                                onClick={() => {
+                                    c.onChange(c.options[0].value);
+                                }}
                             >
                                 Change
                             </button>
@@ -89,6 +91,7 @@ describe('Oligopoly Component', () => {
                     </ThemeProvider>
                 </BrowserRouter>
             );
+            await Promise.resolve();
         });
     };
 
@@ -164,11 +167,13 @@ describe('Oligopoly Component', () => {
         await act(async () => {
             const changeBtn = screen.getByTestId('change-Number of Firms');
             fireEvent.click(changeBtn);
+            await Promise.resolve();
         });
 
         await act(async () => {
             const resetBtn = screen.getByTestId('reset-btn');
             fireEvent.click(resetBtn);
+            await Promise.resolve();
         });
 
         expect(screen.getByText('Oligopoly')).toBeInTheDocument();

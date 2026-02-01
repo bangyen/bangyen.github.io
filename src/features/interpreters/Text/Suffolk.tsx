@@ -64,7 +64,7 @@ export function getState(state: SuffolkState): SuffolkState {
         case ',': {
             const input = prompt('Input: ');
 
-            if (input && input.length) register = input.charCodeAt(0);
+            if (input?.length) register = input.charCodeAt(0);
             else register = 0;
             break;
         }

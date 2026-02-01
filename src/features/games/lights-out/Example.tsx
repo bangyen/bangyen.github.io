@@ -322,7 +322,9 @@ export default function Example({
             setFrame(prev => prev + 1);
         }, 2000);
 
-        return () => clearInterval(interval);
+        return () => {
+            clearInterval(interval);
+        };
     }, []);
 
     const states = getStates(start, dims);

@@ -65,7 +65,7 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
                         const writer = decompressionStream.writable.getWriter();
                         const reader = decompressionStream.readable.getReader();
 
-                        writer.write(buffer).then(() => writer.close());
+                        return writer.write(buffer).then(() => writer.close());
 
                         function pump(): Promise<void> {
                             return reader
@@ -99,9 +99,9 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
 
         const data: DataPoint[] = [];
         const sgdAccuracies = realData['SGD Baseline']?.train_accuracies || [];
-        const zsharpAccuracies = realData['ZSharp']?.train_accuracies || [];
+        const zsharpAccuracies = realData.ZSharp?.train_accuracies || [];
         const sgdLosses = realData['SGD Baseline']?.train_losses || [];
-        const zsharpLosses = realData['ZSharp']?.train_losses || [];
+        const zsharpLosses = realData.ZSharp?.train_losses || [];
 
         const maxEpochs = Math.max(
             sgdAccuracies.length,
@@ -173,7 +173,7 @@ const ZSharp: React.FC = () => {
             }
         };
 
-        loadData();
+        void loadData();
     }, []);
 
     const viewTypes: ViewType<DataPoint>[] = [

@@ -38,8 +38,8 @@ const ResearchDemo = <T,>({
         rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
         tooltipLabelFormatter: (value: number) => `Round ${value}`,
         tooltipFormatter: (value: number, name: string) => [
-            typeof value === 'number' ? value.toFixed(2) : String(value),
-            String(name),
+            value.toFixed(2),
+            name,
         ],
     },
     viewTypes = [],
@@ -48,7 +48,7 @@ const ResearchDemo = <T,>({
     controls = [],
     loading = false,
     loadingMessage = 'Loading data...',
-    onReset = undefined,
+    onReset,
     resetLabel = 'Reset',
     chartTitle = null,
 }: ResearchDemoProps<T>) => {
@@ -60,7 +60,7 @@ const ResearchDemo = <T,>({
         const currentView = viewTypes.find(
             view => view.key === currentViewType
         );
-        if (!currentView || !currentView.dataProcessor) return chartData;
+        if (!currentView?.dataProcessor) return chartData;
 
         return currentView.dataProcessor(chartData);
     };

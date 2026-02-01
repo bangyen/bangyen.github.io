@@ -45,7 +45,7 @@ describe('InterpreterNavigation', () => {
             <InterpreterNavigation active="wii2d" onChange={mockOnChange} />
         );
 
-        const select = screen.getByTestId('select') as HTMLSelectElement;
+        const select = screen.getByTestId('select');
         expect(select.value).toBe('wii2d');
     });
 

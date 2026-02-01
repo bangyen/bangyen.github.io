@@ -28,13 +28,15 @@ export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
                 ref={ref}
                 className={`glass-card ${className || ''}`}
                 sx={
-                    {
-                        ...(interactive
-                            ? COMPONENT_VARIANTS.interactiveCard
-                            : COMPONENT_VARIANTS.card),
-                        padding,
-                        ...sx,
-                    } as SxProps<Theme>
+                    [
+                        {
+                            ...(interactive
+                                ? COMPONENT_VARIANTS.interactiveCard
+                                : COMPONENT_VARIANTS.card),
+                            padding,
+                        },
+                        ...(Array.isArray(sx) ? sx : [sx]),
+                    ] as SxProps<Theme>
                 }
                 {...props}
             >

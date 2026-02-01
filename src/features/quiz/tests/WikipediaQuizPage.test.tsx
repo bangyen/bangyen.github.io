@@ -15,7 +15,9 @@ jest.mock('../components/QuizGame', () => {
         return (
             <div data-testid="quiz-game">
                 <button
-                    onClick={() => onEndGame([], 10)}
+                    onClick={() => {
+                        onEndGame([], 10);
+                    }}
                     data-testid="end-game-btn"
                 >
                     End Game

@@ -48,8 +48,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
             setResolvedMode(mode);
         }
 
-        return () =>
+        return () => {
             mediaQuery.removeEventListener('change', handleSystemChange);
+        };
     }, [mode]);
 
     // 3. Effect to persist mode and update data-theme attribute

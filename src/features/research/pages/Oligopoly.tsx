@@ -75,7 +75,7 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
                         const writer = decompressionStream.writable.getWriter();
                         const reader = decompressionStream.readable.getReader();
 
-                        writer.write(data).then(() => writer.close());
+                        return writer.write(data).then(() => writer.close());
 
                         function pump(): Promise<void> {
                             return reader
@@ -213,7 +213,7 @@ const Oligopoly: React.FC = () => {
             }
         };
 
-        loadData();
+        void loadData();
     }, [numFirms, demandElasticity, basePrice, collusionEnabled, modelType]);
 
     useEffect(() => {

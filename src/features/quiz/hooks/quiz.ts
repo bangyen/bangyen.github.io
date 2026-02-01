@@ -275,11 +275,8 @@ export const useQuizFilter = ({
         ) {
             filtered = filtered.filter((item: QuizItem) => {
                 const vehicleItem = item as VehicleCode;
-                return (
-                    vehicleItem.conventions &&
-                    vehicleItem.conventions.includes(
-                        Number(settings.filterConvention)
-                    )
+                return vehicleItem.conventions?.includes(
+                    Number(settings.filterConvention)
                 );
             });
         }
@@ -386,7 +383,7 @@ export const useQuizFilter = ({
         if (settings.maxQuestions !== 'All') {
             return [...filtered]
                 .sort(() => Math.random() - 0.5)
-                .slice(0, settings.maxQuestions as number);
+                .slice(0, settings.maxQuestions);
         }
         return filtered;
     }, [data, quizType, settings]);

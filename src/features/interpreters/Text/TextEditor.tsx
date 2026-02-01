@@ -53,7 +53,9 @@ export function handleAction(
 
     switch (type) {
         case 'ff': {
-            const repeat = () => dispatch({ type: 'timer', payload });
+            const repeat = () => {
+                dispatch({ type: 'timer', payload });
+            };
 
             if (state.pause) {
                 newState = { pause: false };
@@ -202,6 +204,7 @@ export default function TextEditor({
             tapeFlag: tape || false,
             outFlag: output || false,
             regFlag: register || false,
+            // eslint-disable-next-line @typescript-eslint/no-misused-spread
             code: state.code ? [...state.code] : [],
             index: (state.index as number) || 0,
             tape: state.tape || [],

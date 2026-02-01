@@ -95,7 +95,7 @@ const WikipediaQuizPage: React.FC = () => {
                     setIsLoadingArt(false);
                 }
             };
-            loadStaticArt();
+            void loadStaticArt();
         }
     }, [selectedQuiz, artData.length, isLoadingArt]);
 
@@ -103,7 +103,7 @@ const WikipediaQuizPage: React.FC = () => {
     const handleQuizChange = (event: SelectChangeEvent<unknown>) => {
         const newQuiz = event.target.value as QuizType;
         if (isArtQuizRoute && newQuiz !== 'art') {
-            navigate(`${ROUTES.pages.Geography}?type=${newQuiz}`);
+            void navigate(`${ROUTES.pages.Geography}?type=${newQuiz}`);
         } else {
             setSearchParams({ type: newQuiz });
         }

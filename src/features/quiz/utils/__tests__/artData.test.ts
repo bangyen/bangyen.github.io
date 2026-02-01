@@ -1,7 +1,7 @@
 import { fetchArtMetadata } from '../artData';
 
 // We mock fetch because we are in a test environment
-global.fetch = jest.fn() as jest.Mock;
+global.fetch = jest.fn();
 
 describe('artData utility', () => {
     beforeEach(() => {
@@ -11,18 +11,23 @@ describe('artData utility', () => {
     it('should fetch and parse artwork metadata correctly', async () => {
         const mockResponse = {
             ok: true,
-            json: async () => ({
-                title: 'Mona Lisa',
-                description: 'painting by Leonardo da Vinci',
-                extract:
-                    'The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci...',
-                originalimage: { source: 'https://example.com/mona_lisa.jpg' },
-                content_urls: {
-                    desktop: {
-                        page: 'https://en.wikipedia.org/wiki/Mona_Lisa',
+            json: async () => {
+                await Promise.resolve();
+                return {
+                    title: 'Mona Lisa',
+                    description: 'painting by Leonardo da Vinci',
+                    extract:
+                        'The Mona Lisa is a half-length portrait painting by Italian artist Leonardo da Vinci...',
+                    originalimage: {
+                        source: 'https://example.com/mona_lisa.jpg',
                     },
-                },
-            }),
+                    content_urls: {
+                        desktop: {
+                            page: 'https://en.wikipedia.org/wiki/Mona_Lisa',
+                        },
+                    },
+                };
+            },
         };
         (global.fetch as jest.Mock).mockResolvedValue(mockResponse);
 

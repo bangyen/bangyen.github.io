@@ -106,17 +106,19 @@ export function RandomButton({
             Icon={Refresh}
             onClick={onClick}
             aria-label={ariaLabel}
-            sx={{
-                color:
-                    showToggleState && enabled
-                        ? COLORS.primary.main
-                        : 'inherit',
-                backgroundColor:
-                    showToggleState && enabled
-                        ? `${COLORS.primary.main}20`
-                        : 'transparent',
-                ...props.sx,
-            }}
+            sx={[
+                {
+                    color:
+                        showToggleState && enabled
+                            ? COLORS.primary.main
+                            : 'inherit',
+                    backgroundColor:
+                        showToggleState && enabled
+                            ? `${COLORS.primary.main}20`
+                            : 'transparent',
+                },
+                ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+            ]}
             {...props}
         />
     );
@@ -213,7 +215,9 @@ export function ArrowsButton({
     hide = false,
     diagonals = false,
 }: ArrowsButtonProps & { diagonals?: boolean }) {
-    const flip = useCallback(() => setShow(!show), [show, setShow]);
+    const flip = useCallback(() => {
+        setShow(!show);
+    }, [show, setShow]);
 
     if (hide) return null;
 

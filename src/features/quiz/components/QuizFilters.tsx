@@ -50,12 +50,12 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                         <Select
                             value={settings.mode}
                             label="Game Mode"
-                            onChange={e =>
+                            onChange={e => {
                                 onSettingsChange({
                                     ...settings,
                                     mode: e.target.value as GameMode,
-                                })
-                            }
+                                });
+                            }}
                             sx={{
                                 color: COLORS.text.primary,
                                 '.MuiOutlinedInput-notchedOutline': {
@@ -91,12 +91,12 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                         <Select
                             value={settings.filterLanguage || 'All'}
                             label="Language Filter"
-                            onChange={e =>
+                            onChange={e => {
                                 onSettingsChange({
                                     ...settings,
                                     filterLanguage: e.target.value,
-                                })
-                            }
+                                });
+                            }}
                             sx={{
                                 color: COLORS.text.primary,
                                 '.MuiOutlinedInput-notchedOutline': {
@@ -122,12 +122,12 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                         <Select
                             value={settings.filterZone || 'All'}
                             label="Zone Filter"
-                            onChange={e =>
+                            onChange={e => {
                                 onSettingsChange({
                                     ...settings,
                                     filterZone: e.target.value,
-                                })
-                            }
+                                });
+                            }}
                             sx={{
                                 color: COLORS.text.primary,
                                 '.MuiOutlinedInput-notchedOutline': {
@@ -170,12 +170,12 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                         <Select
                             value={settings.filterConvention || 'All'}
                             label="Convention Filter"
-                            onChange={e =>
+                            onChange={e => {
                                 onSettingsChange({
                                     ...settings,
                                     filterConvention: e.target.value,
-                                })
-                            }
+                                });
+                            }}
                             sx={{
                                 color: COLORS.text.primary,
                                 '.MuiOutlinedInput-notchedOutline': {
@@ -202,12 +202,12 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                             <Select
                                 value={settings.filterSide || 'All'}
                                 label="Side Filter"
-                                onChange={e =>
+                                onChange={e => {
                                     onSettingsChange({
                                         ...settings,
                                         filterSide: e.target.value as string,
-                                    })
-                                }
+                                    });
+                                }}
                                 sx={{
                                     color: COLORS.text.primary,
                                     '.MuiOutlinedInput-notchedOutline': {
@@ -231,12 +231,12 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                             <Select
                                 value={settings.filterSwitch || 'All'}
                                 label="Switch Filter"
-                                onChange={e =>
+                                onChange={e => {
                                     onSettingsChange({
                                         ...settings,
                                         filterSwitch: e.target.value as string,
-                                    })
-                                }
+                                    });
+                                }}
                                 sx={{
                                     color: COLORS.text.primary,
                                     '.MuiOutlinedInput-notchedOutline': {
@@ -261,15 +261,17 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                     fullWidth
                     label="Filter by Letter(s)"
                     value={settings.filterLetter}
-                    onChange={e =>
+                    onChange={e => {
                         onSettingsChange({
                             ...settings,
                             filterLetter: e.target.value,
-                        })
-                    }
+                        });
+                    }}
                     helperText="Comma separated (e.g. a, b)"
-                    InputLabelProps={{
-                        style: { color: COLORS.text.secondary },
+                    slotProps={{
+                        inputLabel: {
+                            style: { color: COLORS.text.secondary },
+                        },
                     }}
                     onKeyDown={e => {
                         if (e.key === 'Enter') {
@@ -300,15 +302,15 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                     <Select
                         value={settings.maxQuestions || 'All'}
                         label="# Questions"
-                        onChange={e =>
+                        onChange={e => {
                             onSettingsChange({
                                 ...settings,
                                 maxQuestions:
                                     e.target.value === 'All'
                                         ? 'All'
-                                        : (Number(e.target.value) as number),
-                            })
-                        }
+                                        : Number(e.target.value),
+                            });
+                        }}
                         sx={{
                             color: COLORS.text.primary,
                             '.MuiOutlinedInput-notchedOutline': {

@@ -202,11 +202,12 @@ export default function Snake(): React.ReactElement {
             });
         };
 
-        const wrapDirection = (event: KeyboardEvent) =>
+        const wrapDirection = (event: KeyboardEvent) => {
             dispatch({
                 type: 'steer',
                 payload: event,
             });
+        };
 
         createTimer({ repeat: wrapDispatch, speed: 100 });
         createKeys(wrapDirection);

@@ -85,16 +85,11 @@ const mockIcons = [
     'AttachMoneyRounded',
     'BusinessRounded',
     'SettingsRounded',
-].reduce(
-    (acc, iconName) => {
-        const testId = iconNameMap[iconName] || iconName.toLowerCase();
-        acc[iconName] = () => (
-            <div data-testid={`${testId}-icon`}>{iconName}</div>
-        );
-        return acc;
-    },
-    {} as Record<string, unknown>
-);
+].reduce<Record<string, unknown>>((acc, iconName) => {
+    const testId = iconNameMap[iconName] || iconName.toLowerCase();
+    acc[iconName] = () => <div data-testid={`${testId}-icon`}>{iconName}</div>;
+    return acc;
+}, {});
 
 export const ZoomOutMap = (props: unknown) => (
     <div data-testid="ZoomOutMap" {...(props as object)} />
