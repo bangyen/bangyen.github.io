@@ -1,13 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useLocation, useNavigate } from 'react-router-dom';
-import {
-    Box,
-    Button,
-    Fade,
-    SelectChangeEvent,
-    Typography,
-} from '@mui/material';
-import { SPACING, COLORS, TYPOGRAPHY } from '../../../config/theme';
+import { Box, Button, Fade, SelectChangeEvent } from '@mui/material';
+import { SPACING, COLORS } from '../../../config/theme';
 import { ROUTES, PAGE_TITLES } from '../../../config/constants';
 import { QUIZ_CONFIGS } from '../config/quizConfig';
 import {
@@ -108,6 +102,7 @@ const WikipediaQuizPage: React.FC = () => {
                         throw new Error('Empty art data');
                     }
                 } catch (error) {
+                    // eslint-disable-next-line no-console
                     console.warn(
                         'Failed to load static art data, falling back to runtime fetch:',
                         error

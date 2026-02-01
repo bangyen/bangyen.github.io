@@ -121,6 +121,7 @@ export async function fetchArtMetadata(title: string): Promise<ArtItem | null> {
             country: '',
         };
     } catch (error) {
+        // eslint-disable-next-line no-console
         console.error(`Failed to fetch art data for ${title}:`, error);
         return null;
     }

@@ -10,7 +10,7 @@ import {
 
 // Mock gridUtils
 jest.mock('../../interpreters/utils/gridUtils', () => ({
-    gridMove: jest.fn((pos, dir, rows = 10, cols = 10) => {
+    gridMove: jest.fn((pos, dir, _rows = 10, cols = 10) => {
         // Handle abstract direction IDs
         if (dir === -2) return pos - cols; // Up
         if (dir === 2) return pos + cols; // Down
@@ -157,7 +157,7 @@ describe('Snake Logic', () => {
 
         it('should reset when hitting self', () => {
             // Setup: Obstacle at 1.
-            const state = {
+            const _state = {
                 ...baseState,
                 velocity: 1,
                 board: { 0: 5, 1: 3 }, // Obstacle at 1
