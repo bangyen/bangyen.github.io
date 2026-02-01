@@ -9,8 +9,11 @@ import {
     Question,
     GameState,
     QuizItem,
+    ArtItem,
 } from '../types/quiz';
 import { useQuizFilter } from '../hooks/quiz';
+import { fetchAllArt } from '../utils/artData';
+import pako from 'pako';
 
 import QuizLayout from '../components/QuizLayout';
 import QuizSettingsView from '../components/QuizSettingsView';
@@ -51,11 +54,60 @@ const WikipediaQuizPage: React.FC = () => {
     const [lastScore, setLastScore] = useState(0);
     const [lastHistory, setLastHistory] = useState<Question<QuizItem>[]>([]);
 
+    const [artData, setArtData] = useState<ArtItem[]>([]);
+    const [isLoadingArt, setIsLoadingArt] = useState(false);
+
     // Reset settings and game state when quiz type changes (via URL)
     useEffect(() => {
         setGameState('menu');
         setSettings(QUIZ_CONFIGS[selectedQuiz].defaultSettings);
     }, [selectedQuiz]);
+
+    // Fetch art data if needed
+    useEffect(() => {
+        if (selectedQuiz === 'art' && artData.length === 0 && !isLoadingArt) {
+            const loadStaticArt = async () => {
+                setIsLoadingArt(true);
+                try {
+                    const response = await fetch('./assets/art_data.json.gz');
+                    if (!response.ok)
+                        throw new Error('Static art data not found');
+
+                    const data = await response.arrayBuffer();
+                    const view = new Uint8Array(data);
+                    const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
+
+                    let artItems: ArtItem[] = [];
+                    if (isGzipped) {
+                        const decompressedData = pako.ungzip(
+                            new Uint8Array(data),
+                            { to: 'string' }
+                        );
+                        artItems = JSON.parse(decompressedData);
+                    } else {
+                        // Not gzipped, try as text
+                        const text = new TextDecoder().decode(data);
+                        artItems = JSON.parse(text);
+                    }
+
+                    if (artItems.length > 0) {
+                        setArtData(artItems);
+                    } else {
+                        throw new Error('Empty art data');
+                    }
+                } catch (error) {
+                    console.warn(
+                        'Failed to load static art data, falling back to runtime fetch:',
+                        error
+                    );
+                    fetchAllArt().then(data => setArtData(data));
+                } finally {
+                    setIsLoadingArt(false);
+                }
+            };
+            loadStaticArt();
+        }
+    }, [selectedQuiz, artData.length, isLoadingArt]);
 
     // URL sync
     const handleQuizChange = (event: SelectChangeEvent<unknown>) => {
@@ -67,11 +119,13 @@ const WikipediaQuizPage: React.FC = () => {
 
     // Update document title
     useEffect(() => {
-        document.title = `${activeConfig.title} | Bangyen`;
-    }, [activeConfig.title]);
+        const title =
+            selectedQuiz === 'art' ? 'Art History Quiz' : activeConfig.title;
+        document.title = `${title} | Bangyen`;
+    }, [selectedQuiz, activeConfig.title]);
 
     const filteredPool = useQuizFilter({
-        data: activeConfig.data,
+        data: selectedQuiz === 'art' ? artData : activeConfig.data,
         quizType: selectedQuiz,
         settings,
     });
@@ -94,7 +148,7 @@ const WikipediaQuizPage: React.FC = () => {
 
     return (
         <QuizLayout
-            title="Geography"
+            title="Knowledge"
             infoUrl={activeConfig.infoUrl}
             headerContent={
                 <QuizTopicSelector
@@ -159,7 +213,9 @@ const WikipediaQuizPage: React.FC = () => {
                                 }}
                             >
                                 {filteredPool.length === 0
-                                    ? 'No Questions Found'
+                                    ? isLoadingArt
+                                        ? 'Fetching Artworks...'
+                                        : 'No Questions Found'
                                     : `Start Quiz (${filteredPool.length})`}
                             </Button>
                         </Box>
