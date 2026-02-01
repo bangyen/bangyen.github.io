@@ -16,6 +16,7 @@ import {
     VEHICLE_CONVENTIONS,
     DRIVING_SIDE_FILTERS,
     DRIVING_SIDE_OPTIONS,
+    ART_NATIONALITIES,
     QuizConfig,
 } from '../config/quizConfig';
 import { QuizSettings, QuizType, GameMode } from '../types/quiz';
@@ -30,6 +31,7 @@ interface QuizFiltersProps {
     >;
     commonSelectProps: Partial<SelectProps>;
     onEnterKey: () => void;
+    data?: import('../types/quiz').QuizItem[];
 }
 
 const QuizFilters: React.FC<QuizFiltersProps> = ({
@@ -39,7 +41,23 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
     activeConfig,
     commonSelectProps,
     onEnterKey,
+    data,
 }) => {
+    const availableCountries = React.useMemo(() => {
+        if (selectedQuiz !== 'art' || !data) return ART_NATIONALITIES;
+        const validCountries = new Set(
+            (data as import('../types/quiz').ArtItem[])
+                .map(item => item.country)
+                .filter(Boolean)
+        );
+        return [
+            'All',
+            ...ART_NATIONALITIES.filter(
+                n => n !== 'All' && validCountries.has(n)
+            ),
+        ];
+    }, [selectedQuiz, data]);
+
     return (
         <>
             {/* Slot 1: Game Mode */}
@@ -254,6 +272,37 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                         </FormControl>
                     </Grid>
                 ))}
+
+            {selectedQuiz === 'art' && (
+                <Grid size={{ xs: 12, md: 6 }}>
+                    <FormControl fullWidth>
+                        <InputLabel>Region/School Filter</InputLabel>
+                        <Select
+                            value={settings.filterCountry || 'All'}
+                            label="Region/School Filter"
+                            onChange={e =>
+                                onSettingsChange({
+                                    ...settings,
+                                    filterCountry: e.target.value as string,
+                                })
+                            }
+                            sx={{
+                                color: COLORS.text.primary,
+                                '.MuiOutlinedInput-notchedOutline': {
+                                    borderColor: COLORS.border.subtle,
+                                },
+                            }}
+                            {...commonSelectProps}
+                        >
+                            {availableCountries.map(nat => (
+                                <MenuItem key={nat} value={nat}>
+                                    {nat}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
+            )}
 
             {/* Slot 3: Letter Filter */}
             <Grid size={{ xs: 12, md: 6 }}>

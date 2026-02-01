@@ -113,7 +113,28 @@ export interface QuizConfig {
     customGameRender?: (props: unknown) => React.ReactNode;
 }
 
+export const ART_NATIONALITIES = [
+    'All',
+    'American',
+    'Austrian',
+    'Belgian',
+    'British',
+    'Dutch',
+    'English',
+    'Flemish',
+    'French',
+    'German',
+    'Greek',
+    'Italian',
+    'Japanese',
+    'Mexican',
+    'Norwegian',
+    'Russian',
+    'Spanish',
+];
+
 export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
+    // ... (previous configs)
     cctld: {
         title: 'Internet Domain Quiz',
         subtitle: 'Test your knowledge of Internet country codes',
@@ -438,7 +459,8 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
         defaultSettings: {
             mode: 'art_name',
             allowRepeats: false,
-            maxQuestions: 10,
+            maxQuestions: 'All',
+            filterCountry: 'All',
         },
         hasModeSelect: true,
         modes: [

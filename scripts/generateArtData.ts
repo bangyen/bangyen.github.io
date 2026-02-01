@@ -104,6 +104,25 @@ async function fetchArtMetadata(title: string) {
             }
         }
 
+        // Attempt to extract country/nationality
+        let country = undefined;
+        const nationalities = [
+            'Italian', 'French', 'Dutch', 'Spanish', 'American', 'British', 'English',
+            'German', 'Austrian', 'Norwegian', 'Russian', 'Japanese', 'Flemish',
+            'Greek', 'Belgian', 'Mexican'
+        ];
+
+        const combinedText = `${desc} ${extract}`;
+        for (const nat of nationalities) {
+            if (combinedText.includes(nat)) {
+                // Map demonyms to countries if needed, or just use the demonym/region
+                country = nat;
+                // Special case: English/British -> United Kingdom or just keep as School
+                // Let's keep the adjective as it's often used for "School" (e.g. Italian School)
+                break;
+            }
+        }
+
         const thumbUrl = data.thumbnail?.source || '';
         const originalUrl = data.originalimage?.source || '';
 
@@ -126,7 +145,7 @@ async function fetchArtMetadata(title: string) {
             imageUrl: imageUrl,
             wikiUrl: data.content_urls?.desktop?.page || '',
             description: extract,
-            country: ''
+            country: country || ''
         };
     } catch (error) {
         console.error(`Failed to fetch art data for ${title}:`, error);

@@ -94,7 +94,6 @@ const QuizTopicSelector: React.FC<QuizTopicSelectorProps> = ({
                 <MenuItem value="driving_side">Driving Side</MenuItem>
                 <MenuItem value="telephone">Telephone Codes</MenuItem>
                 <MenuItem value="vehicle">Vehicle Registration</MenuItem>
-                <MenuItem value="art">Art History</MenuItem>
             </Select>
         </FormControl>
     );

@@ -1,7 +1,14 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import { Box, Button, Fade, SelectChangeEvent } from '@mui/material';
-import { SPACING, COLORS } from '../../../config/theme';
+import { useSearchParams, useLocation, useNavigate } from 'react-router-dom';
+import {
+    Box,
+    Button,
+    Fade,
+    SelectChangeEvent,
+    Typography,
+} from '@mui/material';
+import { SPACING, COLORS, TYPOGRAPHY } from '../../../config/theme';
+import { ROUTES, PAGE_TITLES } from '../../../config/constants';
 import { QUIZ_CONFIGS } from '../config/quizConfig';
 import {
     QuizSettings,
@@ -34,15 +41,20 @@ const commonSelectProps = {
 
 const WikipediaQuizPage: React.FC = () => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const isArtQuizRoute = location.pathname === ROUTES.pages.ArtQuiz;
 
-    // Derive selected quiz from URL
+    // Derive selected quiz from URL or Route
     const selectedQuiz = useMemo((): QuizType => {
+        if (isArtQuizRoute) return 'art';
+
         const type = searchParams.get('type');
         if (type && QUIZ_CONFIGS[type as QuizType]) {
             return type as QuizType;
         }
         return 'cctld';
-    }, [searchParams]);
+    }, [searchParams, isArtQuizRoute]);
 
     const [gameState, setGameState] = useState<GameState>('menu');
 
@@ -112,17 +124,21 @@ const WikipediaQuizPage: React.FC = () => {
     // URL sync
     const handleQuizChange = (event: SelectChangeEvent<unknown>) => {
         const newQuiz = event.target.value as QuizType;
-        setSearchParams({ type: newQuiz });
+        if (isArtQuizRoute && newQuiz !== 'art') {
+            navigate(`${ROUTES.pages.Geography}?type=${newQuiz}`);
+        } else {
+            setSearchParams({ type: newQuiz });
+        }
     };
 
     const activeConfig = QUIZ_CONFIGS[selectedQuiz];
 
     // Update document title
     useEffect(() => {
-        const title =
-            selectedQuiz === 'art' ? 'Art History Quiz' : activeConfig.title;
-        document.title = `${title} | Bangyen`;
-    }, [selectedQuiz, activeConfig.title]);
+        document.title = isArtQuizRoute
+            ? PAGE_TITLES.artQuiz
+            : `${activeConfig.title} | Bangyen`;
+    }, [isArtQuizRoute, selectedQuiz, activeConfig.title]);
 
     const filteredPool = useQuizFilter({
         data: selectedQuiz === 'art' ? artData : activeConfig.data,
@@ -148,14 +164,16 @@ const WikipediaQuizPage: React.FC = () => {
 
     return (
         <QuizLayout
-            title="Knowledge"
+            title={isArtQuizRoute ? 'Art History' : 'Knowledge'}
             infoUrl={activeConfig.infoUrl}
             headerContent={
-                <QuizTopicSelector
-                    uniqueId="quiz-topic-selector"
-                    selectedQuiz={selectedQuiz}
-                    onQuizChange={handleQuizChange}
-                />
+                !isArtQuizRoute && (
+                    <QuizTopicSelector
+                        uniqueId="quiz-topic-selector"
+                        selectedQuiz={selectedQuiz}
+                        onQuizChange={handleQuizChange}
+                    />
+                )
             }
         >
             {gameState === 'menu' && (
@@ -182,6 +200,11 @@ const WikipediaQuizPage: React.FC = () => {
                                 activeConfig={activeConfig}
                                 commonSelectProps={commonSelectProps}
                                 onEnterKey={handleStart}
+                                data={
+                                    selectedQuiz === 'art'
+                                        ? artData
+                                        : activeConfig.data
+                                }
                             />
                         </QuizSettingsView>
                         <Box

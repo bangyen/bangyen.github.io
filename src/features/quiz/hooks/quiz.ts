@@ -326,6 +326,17 @@ export const useQuizFilter = ({
             );
         }
 
+        if (
+            settings.filterCountry &&
+            settings.filterCountry !== 'All' &&
+            quizType === 'art'
+        ) {
+            filtered = filtered.filter(
+                (item: QuizItem) =>
+                    (item as ArtItem).country === settings.filterCountry
+            );
+        }
+
         if (settings.filterLetter) {
             let letters = (settings.filterLetter as string)
                 .toLowerCase()

@@ -64,6 +64,10 @@ const App = (): React.ReactElement => {
                         path={ROUTES.pages.Geography}
                         element={<WikipediaQuiz />}
                     />
+                    <Route
+                        path={ROUTES.pages.ArtQuiz}
+                        element={<WikipediaQuiz />}
+                    />
                     <Route path="*" element={<Error />} />
                 </Routes>
             </Suspense>
