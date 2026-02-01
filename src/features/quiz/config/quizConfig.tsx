@@ -437,8 +437,24 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
             let correct = false;
             let expected = '';
             if (settings.mode === 'toCountry') {
+                // Find all valid countries for this code
+                const allMatches = (vehicleData as VehicleCode[]).filter(
+                    v => v.code === vehicleItem.code
+                );
+
+                // Check if input matches ANY of the valid countries
+                correct = allMatches.some(match =>
+                    isSmartMatch(input, match.country, CCTLD_ALIASES)
+                );
+
+                // Show the current item's country as expected, or maybe a list?
+                // For simplicity, keep current item as expected, but accept alternaties.
                 expected = vehicleItem.country;
-                correct = isSmartMatch(input, expected, CCTLD_ALIASES);
+                if (!correct && allMatches.length > 1) {
+                    // If wrong, show all possibilities?
+                    // Or just show the one that was on the card.
+                    // Let's rely on the simple "expected" from the card for now.
+                }
             } else {
                 expected = vehicleItem.code;
                 const norm = (s: string) =>

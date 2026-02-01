@@ -61,7 +61,7 @@ async function generateCCTLDs() {
 
     // Find the table. Python script looked for .ad
     // We can just iterate all tables and look for one with ".ad" in the first column
-    let targetTable: cheerio.Cheerio<cheerio.Element> | null = null;
+    let targetTable: cheerio.Cheerio<any> | null = null;
 
     $('table').each((_, table) => {
         let hasAd = false;
@@ -104,7 +104,7 @@ async function generateCCTLDs() {
     const results: any[] = [];
     const seen = new Set<string>();
 
-    (targetTable as cheerio.Cheerio<cheerio.Element>).find('tr').each((_, row) => {
+    (targetTable as cheerio.Cheerio<any>).find('tr').each((_, row) => {
         const cells = $(row).find('th, td');
         if (cells.length < 3) return;
 
@@ -149,7 +149,7 @@ async function generateDrivingSides() {
     const url = 'https://en.wikipedia.org/wiki/Left-_and_right-hand_traffic';
     const $ = await fetchTableData(url);
 
-    let targetTable: cheerio.Cheerio<cheerio.Element> | null = null;
+    let targetTable: cheerio.Cheerio<any> | null = null;
     let colsMap: Record<string, number> = {};
 
     $('table').each((_, table) => {
@@ -192,7 +192,7 @@ async function generateDrivingSides() {
     const idxSide = colsMap['side'] ?? 1;
     const idxSwitch = colsMap['switch'] ?? -1;
 
-    (targetTable as cheerio.Cheerio<cheerio.Element>).find('tr').slice(1).each((_, row) => {
+    (targetTable as cheerio.Cheerio<any>).find('tr').slice(1).each((_, row) => {
         const cells = $(row).find('td, th');
         // We access by index, so we need to ensure enough cells
         // Note: Python logic checked: if len(row) <= max(idx_country, idx_side)
@@ -246,7 +246,7 @@ async function generateTelephoneCodes() {
     const url = 'https://en.wikipedia.org/wiki/List_of_country_calling_codes';
     const $ = await fetchTableData(url);
 
-    let targetTable: cheerio.Cheerio<cheerio.Element> | null = null;
+    let targetTable: cheerio.Cheerio<any> | null = null;
 
     // Find table by headers
     $('table').each((_, table) => {
@@ -283,13 +283,13 @@ async function generateTelephoneCodes() {
     let colCode = 1;
 
     // Determine cols
-    const headers = (targetTable as cheerio.Cheerio<cheerio.Element>).find('tr').first().find('th').map((_, th) => $(th).text().toLowerCase()).get();
+    const headers = (targetTable as cheerio.Cheerio<any>).find('tr').first().find('th').map((_, th) => $(th).text().toLowerCase()).get();
     headers.forEach((h, i) => {
         if (['country', 'state', 'serving'].some(k => h.includes(k))) colCountry = i;
         if (h.includes('code')) colCode = i;
     });
 
-    (targetTable as cheerio.Cheerio<cheerio.Element>).find('tr').slice(1).each((_, row) => {
+    (targetTable as cheerio.Cheerio<any>).find('tr').slice(1).each((_, row) => {
         const cells = $(row).find('td, th');
         if (cells.length <= Math.max(colCountry, colCode)) return;
 
@@ -314,63 +314,107 @@ async function generateVehicleCodes() {
     const url = 'https://en.wikipedia.org/wiki/International_vehicle_registration_code';
     const $ = await fetchTableData(url);
 
-    let targetTable: cheerio.Cheerio<cheerio.Element> | null = null;
+    const vehicleCodesMap = new Map<string, any[]>();
 
-    $('table').each((_, table) => {
-        const headers = $(table).find('tr').first().find('th').map((_, th) => $(th).text().toLowerCase()).get();
-        if (headers.includes('code') && headers.includes('country') && $(table).find('tr').length > 5) {
-            targetTable = $(table);
-            return false;
+    const upsertEntry = (code: string, country: string, flag: string | null, convention: number | null) => {
+        if (!vehicleCodesMap.has(code)) {
+            vehicleCodesMap.set(code, []);
         }
-    });
+        const entries = vehicleCodesMap.get(code)!;
 
-    if (!targetTable) {
-        // Fallback: look for AFG row
-        $('table').each((_, table) => {
-            $(table).find('tr').each((_, row) => {
-                const firstCell = $(row).find('td').first().text().trim();
-                if (firstCell === 'AFG') {
-                    targetTable = $(table);
-                    return false; // break row loop
+        // Find matching entry by country name similarity
+        // Heuristic: If one contains the other (e.g. "France" in "France, Algeria..."), merge.
+        // Special case: "French India" contains "French" but not "France".
+        // "Morocco" != "France".
+        let match = entries.find(e => {
+            const c1 = e.country.toLowerCase();
+            const c2 = country.toLowerCase();
+            return c1.includes(c2) || c2.includes(c1);
+        });
+
+        if (match) {
+            // Merge
+            if (convention && !match.conventions.includes(convention)) {
+                match.conventions.push(convention);
+            }
+            // Update metadata (prefer longer/more detailed? or prefer modern?)
+            // If convention is null (Table 3), prefer modern.
+            // If convention is 1924, and existing is 1909, maybe preserve 1909?
+            // Let's defer to "Latest update wins for Country Name" if it's a match.
+            match.country = country;
+            if (flag) match.flag = flag;
+        } else {
+            // New entry (distinct entity sharing code)
+            const newEntry = {
+                code,
+                country,
+                flag: flag || '',
+                conventions: convention ? [convention] : []
+            };
+            entries.push(newEntry);
+        }
+    };
+
+    $('table').each((i, table) => {
+        // Table 1: 1909 Paris Convention
+        if (i === 1) {
+            $(table).find('tr').slice(1).each((_, row) => {
+                const cells = $(row).find('td');
+                if (cells.length >= 2) {
+                    const country = cleanText($(cells[0]).text());
+                    const code = cleanText($(cells[1]).text());
+                    const flag = resolveFlagUrl($(cells[0]).html() || '');
                 }
             });
-            if (targetTable) return false; // break table loop
-        });
-    }
-
-    if (!targetTable) {
-        console.error("Could not find Vehicle Codes table.");
-        return;
-    }
-
-    const results: any[] = [];
-    let headerSeen = false;
-
-    (targetTable as cheerio.Cheerio<cheerio.Element>).find('tr').each((_, row) => {
-        const cells = $(row).find('td, th');
-        if (cells.length < 2) return;
-
-        const firstText = $(cells[0]).text().trim().toLowerCase();
-        if (!headerSeen) {
-            if (firstText === 'code') {
-                headerSeen = true;
-                return;
-            }
         }
 
-        const code = cleanText($(cells[0]).text());
-        const country = cleanText($(cells[1]).text());
-        const flag = resolveFlagUrl($(cells[1]).html() || '');
+        // Table 2: 1924 Paris Convention
+        if (i === 2) {
+            const rows = $(table).find('tr');
+            console.log(`Table 2 Total Trs: ${rows.length}`);
+            let rowsProcessed = 0;
+            rows.slice(1).each((_, row) => {
+                rowsProcessed++;
+                const cells = $(row).find('td');
+                if (cells.length >= 2) {
+                    const country = cleanText($(cells[0]).text());
+                    let code = cleanText($(cells[1]).text());
+                    code = code.replace(/\[.*?\]/g, '').trim();
 
-        if (!code || !country) return;
+                    const flag = resolveFlagUrl($(cells[0]).html() || '');
 
-        // Skip header if it wasn't caught
-        if (code.toLowerCase() === 'code' && country.toLowerCase() === 'country') return;
+                    if (code && country) {
+                        // console.log(`1924 Row: "${code}" - "${country}"`);
+                        upsertEntry(code, country, flag, 1924);
+                    }
+                }
+            });
+            console.log(`Table 2 Rows Processed: ${rowsProcessed}`);
+        }
 
-        results.push({ code, country, flag });
+        // Table 3: Current Codes
+        if (i === 3) {
+            $(table).find('tr').slice(1).each((_, row) => {
+                const cells = $(row).find('td, th');
+                if (cells.length >= 2) {
+                    const code = cleanText($(cells[0]).text());
+                    const country = cleanText($(cells[1]).text());
+                    const flag = resolveFlagUrl($(cells[1]).html() || '');
+
+                    if (code && country) {
+                        if (code.toLowerCase() === 'code' && country.toLowerCase() === 'country') return;
+                        upsertEntry(code, country, flag, null);
+                    }
+                }
+            });
+        }
     });
 
+    // Flatten results
+    const results: any[] = [];
+    vehicleCodesMap.forEach(entries => results.push(...entries));
     results.sort((a, b) => a.code.localeCompare(b.code));
+
     fs.writeFileSync(path.join(DATA_DIR, 'vehicle_codes.json'), JSON.stringify(results, null, 2));
     console.log(`Generated ${results.length} Vehicle Codes.`);
 }
