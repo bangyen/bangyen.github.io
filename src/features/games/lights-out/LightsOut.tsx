@@ -61,7 +61,7 @@ function getBackProps(getters: Getters) {
 }
 
 function getExampleProps(getters: Getters) {
-    const frontProps = getFrontProps(getters, () => {});
+    const frontProps = getFrontProps(getters, () => undefined);
 
     return (row: number, col: number) => {
         const props = frontProps(row, col);

@@ -2,12 +2,12 @@ import React from 'react';
 
 export interface ChartConfig {
     type: string;
-    lines: Array<{
+    lines: {
         dataKey: string;
         name: string;
         color: string;
         yAxisId?: string;
-    }>;
+    }[];
     xAxisKey: string;
     yAxisFormatter: (value: number) => string;
     yAxisDomain: string[];

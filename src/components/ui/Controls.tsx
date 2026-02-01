@@ -27,9 +27,7 @@ import { COLORS } from '../../config/theme';
 
 type IconComponent = React.ElementType;
 
-interface IconMap {
-    [key: string]: IconComponent;
-}
+type IconMap = Record<string, IconComponent>;
 
 export const ICON_MAP: IconMap = {
     Code: Code,

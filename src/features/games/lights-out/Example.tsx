@@ -19,7 +19,7 @@ function getIconFrames(
     col: number,
     dims: number,
     palette: Palette,
-    speed: number = 1
+    speed = 1
 ): Record<
     string,
     { opacity: number; content: string; color: string; transform: string }

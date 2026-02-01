@@ -1,8 +1,6 @@
 import { gridMove, getDirection } from '../../interpreters/utils/gridUtils';
 
-export interface Board {
-    [key: number]: number;
-}
+export type Board = Record<number, number>;
 
 export interface SnakeState {
     velocity: number;

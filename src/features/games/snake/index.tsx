@@ -94,7 +94,7 @@ export default function Snake(): React.ReactElement {
 
     const handleControls = useCallback(
         (direction: string) => () => {
-            const keys: { [key: string]: string } = {
+            const keys: Record<string, string> = {
                 up: 'ArrowUp',
                 down: 'ArrowDown',
                 left: 'ArrowLeft',

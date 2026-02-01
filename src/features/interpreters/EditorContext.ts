@@ -15,7 +15,7 @@ export interface EditorContextType {
     size: number;
     dispatch: (
         action: string | { type: string; payload: unknown }
-    ) => (() => void) | void;
+    ) => (() => void) | undefined;
     fastForward: boolean;
     pause: boolean;
 }
