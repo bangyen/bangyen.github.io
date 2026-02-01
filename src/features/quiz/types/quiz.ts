@@ -66,7 +66,6 @@ export interface QuizSettings {
     allowRepeats: boolean;
     maxQuestions: number | 'All';
     filterSide?: string;
-    filterCountry?: string;
     [key: string]: unknown;
 }
 

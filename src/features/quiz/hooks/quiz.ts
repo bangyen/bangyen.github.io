@@ -326,17 +326,6 @@ export const useQuizFilter = ({
             );
         }
 
-        if (
-            settings.filterCountry &&
-            settings.filterCountry !== 'All' &&
-            quizType === 'art'
-        ) {
-            filtered = filtered.filter(
-                (item: QuizItem) =>
-                    (item as ArtItem).country === settings.filterCountry
-            );
-        }
-
         if (settings.filterLetter) {
             let letters = (settings.filterLetter as string)
                 .toLowerCase()
@@ -382,7 +371,12 @@ export const useQuizFilter = ({
                                 ? (item as VehicleCode).code.toLowerCase()
                                 : (item as VehicleCode).country.toLowerCase();
                     } else if (quizType === 'art') {
-                        text = (item as ArtItem).title.toLowerCase();
+                        const artItem = item as ArtItem;
+                        if (settings.mode === 'art_artist') {
+                            text = (artItem.artist || '').toLowerCase();
+                        } else {
+                            text = artItem.title.toLowerCase();
+                        }
                     }
                     return letters.some((l: string) => text.startsWith(l));
                 });

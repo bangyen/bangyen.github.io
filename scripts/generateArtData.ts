@@ -3,154 +3,140 @@ import path from 'path';
 import zlib from 'zlib';
 import { promisify } from 'util';
 import { performance } from 'perf_hooks';
+import * as cheerio from 'cheerio';
 
-// We'll manually define the titles here to avoid path issues with tsx if src is not easily importable
-// but actually fetchArtMetadata is in src/features/quiz/utils/artData.ts
-// We'll use relative imports and hope for the best with tsx
+const HTML_CACHE_FILE = path.join(process.cwd(), 'scripts/data/most_expensive_paintings.html');
 
-const ART_SEED_TITLES = [
-    'Mona Lisa',
-    'The Starry Night',
-    'The Scream',
-    'Guernica (painting)',
-    'The Persistence of Memory',
-    'Girl with a Pearl Earring',
-    'The Night Watch',
-    'The Birth of Venus',
-    'Las Meninas',
-    'The Last Supper (Leonardo)',
-    'American Gothic',
-    'The Kiss (Klimt)',
-    'Whistler\'s Mother',
-    'The Garden of Earthly Delights',
-    'A Sunday Afternoon on the Island of La Grande Jatte',
-    'Liberty Leading the People',
-    'The Hay Wain',
-    'The Arnolfini Portrait',
-    'The Great Wave off Kanagawa',
-    'The School of Athens',
-    'Wanderer above the Sea of Fog',
-    'The Third of May 1808',
-    'Impression, Sunrise',
-    'The Gross Clinic',
-    'Nighthawks (Hopper)',
-    'Café Terrace at Night',
-    'The Swing (Fragonard)',
-    'The Gleaners',
-    'Olympia (Manet)',
-    'The Luncheon on the Grass',
-    'Portrait of Madame X',
-    'The Fighting Temeraire',
-    'Rain, Steam and Speed',
-    'The Stone Breakers',
-    'Burial at Ornans',
-    'The Raft of the Medusa',
-    'Oath of the Horatii',
-    'The Death of Marat',
-    'The Embarkation for Cythera',
-    'The Blue Boy',
-    'The Anatomy Lesson of Dr. Nicolaes Tulp',
-    'Girl before a Mirror',
-    'Flaming June',
-    'Ophelia (painting)',
-    'Lady with an Ermine',
-    'The Ambassadors (Holbein)',
-    'The Venus of Urbino',
-    'Bacchus and Ariadne',
-    'The Wedding Feast at Cana',
-    'Christ in the Storm on the Sea of Galilee'
-];
-
-const WIKI_REST_API = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
-
-async function fetchArtMetadata(title: string) {
-    try {
-        const url = `${WIKI_REST_API}${encodeURIComponent(title.replace(/ /g, '_'))}`;
-        const response = await fetch(url, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-                'Referer': 'https://en.wikipedia.org/'
-            }
-        });
-        if (!response.ok) return null;
-        const data: any = await response.json();
-
-        let artist = 'Unknown';
-        let year = 'Unknown';
-        let period = 'Unknown';
-
-        const desc = data.description || '';
-        const artistMatch = desc.match(/by ([\w\s.-]+)/i);
-        if (artistMatch) {
-            artist = artistMatch[1].trim();
-        }
-
-        const extract = data.extract || '';
-        const yearMatch = extract.match(/\b(1[4-9]\d{2}|20[0-2]\d)\b/);
-        if (yearMatch) {
-            year = yearMatch[0];
-        } else {
-            const centuryMatch = extract.match(/(\d{1,2}(st|nd|rd|th)-century)/i);
-            if (centuryMatch) {
-                year = centuryMatch[0];
-            }
-        }
-
-        const periods = ['Renaissance', 'Baroque', 'Romanticism', 'Impressionism', 'Post-Impressionism', 'Surrealism', 'Cubism', 'Modernism'];
-        for (const p of periods) {
-            if (extract.includes(p) || desc.includes(p)) {
-                period = p;
-                break;
-            }
-        }
-
-        // Attempt to extract country/nationality
-        let country = undefined;
-        const nationalities = [
-            'Italian', 'French', 'Dutch', 'Spanish', 'American', 'British', 'English',
-            'German', 'Austrian', 'Norwegian', 'Russian', 'Japanese', 'Flemish',
-            'Greek', 'Belgian', 'Mexican'
-        ];
-
-        const combinedText = `${desc} ${extract}`;
-        for (const nat of nationalities) {
-            if (combinedText.includes(nat)) {
-                // Map demonyms to countries if needed, or just use the demonym/region
-                country = nat;
-                // Special case: English/British -> United Kingdom or just keep as School
-                // Let's keep the adjective as it's often used for "School" (e.g. Italian School)
-                break;
-            }
-        }
-
-        const thumbUrl = data.thumbnail?.source || '';
-        const originalUrl = data.originalimage?.source || '';
-
-        let imageUrl = thumbUrl || originalUrl;
-
-        // If it's a Wikipedia thumbnail, upgrade to a reasonable size (800px)
-        if (imageUrl.includes('/thumb/')) {
-            imageUrl = imageUrl.replace(/\/\d+px-/, '/800px-');
-        } else if (imageUrl && !thumbUrl && imageUrl.includes('upload.wikimedia.org')) {
-            // It's an original image from Wikimedia, but no thumbnail was provided.
-            // We can try to construct a thumbnail URL if we really wanted to, 
-            // but let's just stick to what we have or skip if it's too risky.
-        }
-
-        return {
-            title: data.title,
-            artist: artist,
-            year: year,
-            period: period,
-            imageUrl: imageUrl,
-            wikiUrl: data.content_urls?.desktop?.page || '',
-            description: extract,
-            country: country || ''
-        };
-    } catch (error) {
-        console.error(`Failed to fetch art data for ${title}:`, error);
-        return null;
+// Fetch table data helper with local caching
+async function fetchTableData(url: string): Promise<cheerio.CheerioAPI> {
+    if (fs.existsSync(HTML_CACHE_FILE)) {
+        console.log(`Reading from local cache: ${HTML_CACHE_FILE}`);
+        const text = fs.readFileSync(HTML_CACHE_FILE, 'utf-8');
+        return cheerio.load(text);
     }
+
+    console.log(`Fetching ${url}...`);
+    const response = await fetch(url, {
+        headers: {
+            'User-Agent':
+                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
+        },
+    });
+    if (!response.ok) {
+        throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+    }
+    const text = await response.text();
+
+    // Save to cache
+    if (!fs.existsSync(path.dirname(HTML_CACHE_FILE))) {
+        fs.mkdirSync(path.dirname(HTML_CACHE_FILE), { recursive: true });
+    }
+    fs.writeFileSync(HTML_CACHE_FILE, text);
+    console.log(`Cached HTML to ${HTML_CACHE_FILE}`);
+
+    return cheerio.load(text);
+}
+
+// Local definition of ArtItem to allow independent execution
+// STRICT: Only columns in the table
+interface ArtItem {
+    title: string;
+    artist: string;
+    year: string;
+    imageUrl: string;
+    wikiUrl: string;
+    description: string;
+    seedTitle?: string;
+}
+
+// Scrape DATA from "List of most expensive paintings"
+async function fetchMostExpensivePaintings(): Promise<ArtItem[]> {
+    const url = 'https://en.wikipedia.org/wiki/List_of_most_expensive_paintings';
+    const $ = await fetchTableData(url);
+    const items: ArtItem[] = [];
+
+    let targetTable: cheerio.Cheerio<any> | null = null;
+    const colMap: Record<string, number> = {};
+
+    $('table').each((_, table) => {
+        const headers = $(table).find('th');
+        headers.each((index, th) => {
+            const headerText = $(th).text().trim().toLowerCase();
+            if (headerText.includes('painting') || headerText.includes('work')) colMap['title'] = index;
+            if (headerText.includes('artist')) colMap['artist'] = index;
+            if (headerText.includes('year') && !colMap['year']) colMap['year'] = index;
+            if (headerText.includes('image')) colMap['image'] = index;
+        });
+
+        // If we found the essential columns, this is our table
+        if (colMap['title'] !== undefined && colMap['artist'] !== undefined) {
+            targetTable = $(table);
+            return false;
+        }
+    });
+
+    if (!targetTable) {
+        console.error('Could not find the painting table.');
+        return [];
+    }
+
+    // Default indices if detection failed slightly (fallback to standard layout)
+    if (colMap['image'] === undefined) colMap['image'] = 1;
+
+    (targetTable as cheerio.Cheerio<any>).find('tr').slice(1).each((_: number, row: any) => {
+        const cells = $(row).find('th, td');
+        if (cells.length === 0) return;
+
+        // Title
+        let title = '';
+        if (colMap['title'] !== undefined && cells[colMap['title']]) {
+            title = $(cells[colMap['title']]).text().trim();
+            title = title.replace(/\[.*?\]/g, '').replace(/^"|"$/g, '');
+            const italicText = $(cells[colMap['title']]).find('i').text().trim();
+            if (italicText) title = italicText;
+        }
+
+        // Artist
+        let artist = 'Unknown';
+        if (colMap['artist'] !== undefined && cells[colMap['artist']]) {
+            artist = $(cells[colMap['artist']]).text().trim();
+            artist = artist.replace(/\[.*?\]/g, '');
+        }
+
+        // Year
+        let year = 'Unknown';
+        if (colMap['year'] !== undefined && cells[colMap['year']]) {
+            year = $(cells[colMap['year']]).text().trim().replace(/\[.*?\]/g, '');
+        }
+
+        // Image
+        let imageUrl = '';
+        if (colMap['image'] !== undefined && cells[colMap['image']]) {
+            const imgTag = $(cells[colMap['image']]).find('img');
+            const src = imgTag.attr('src') || '';
+            if (src) {
+                imageUrl = src.startsWith('//') ? 'https:' + src : src;
+                if (imageUrl.includes('/thumb/')) {
+                    imageUrl = imageUrl.replace(/\/\d+px-/, '/800px-');
+                }
+            }
+        }
+
+        if (title && title.length > 2 && imageUrl) {
+            items.push({
+                title,
+                artist,
+                year,
+                imageUrl,
+                wikiUrl: url,
+                description: `${title} by ${artist}`,
+                seedTitle: title
+            });
+        }
+    });
+
+    console.log(`Scraped ${items.length} items from table directly.`);
+    return items;
 }
 
 const gzip = promisify(zlib.gzip);
@@ -203,14 +189,24 @@ async function downloadImage(url: string, dest: string) {
 
 async function main() {
     const startTime = performance.now();
+
+    console.log('Scraping "List of most expensive paintings"... (Strict Mode: Columns Only)');
+    const scrapedItems = await fetchMostExpensivePaintings();
+
+    // Use scraped items as the ONLY source of truth for new data structure
+    // We will still load existing data to preserve ALREADY DOWNLOADED images/paths,
+    // but we will NOT respect old metadata that might have inferred fields if we were rebuilding strictly.
+    // However, to keep it simple, we just merge.
+
+    const ART_SEED_TITLES = scrapedItems.map(i => i.title);
+
     console.log(`Starting art data generation for ${ART_SEED_TITLES.length} items...`);
 
-    // 1. Load existing data to reuse metadata and images
     let initialData: any[] = [];
     if (fs.existsSync(DATA_FILE)) {
         try {
             initialData = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
-            console.log(`Loaded ${initialData.length} existing items from metadata.`);
+            console.log(`Loaded ${initialData.length} existing items.`);
         } catch (e) {
             console.warn('Failed to parse existing art_data.json');
         }
@@ -219,102 +215,100 @@ async function main() {
             const compressed = fs.readFileSync(GZIP_FILE);
             const decompressed = await gunzip(compressed);
             initialData = JSON.parse(decompressed.toString());
-            console.log(`Loaded ${initialData.length} existing items from ${path.basename(GZIP_FILE)}.`);
-        } catch (e) {
-            console.warn(`Failed to decompress ${path.basename(GZIP_FILE)}`);
-        }
+        } catch (e) { }
     }
 
-    // 2. Build a map for lookup. Prefer seedTitle for perfect matching with our list.
     const resultsMap = new Map();
     initialData.forEach(item => {
-        const key = item.seedTitle || item.title;
-        resultsMap.set(key, item);
-        // Also map by slug for better coverage from older versions
+        resultsMap.set(item.seedTitle || item.title, item);
         resultsMap.set(slugify(item.title), item);
     });
 
-    for (const title of ART_SEED_TITLES) {
-        const itemStartTime = performance.now();
-        const slug = slugify(title);
+    // Merge scraped data into resultsMap
+    scrapedItems.forEach(item => {
+        const slug = slugify(item.title);
+        const existing = resultsMap.get(item.title) || resultsMap.get(slug);
 
-        // Try to find in cache by seed title or slug
-        let item = resultsMap.get(title) || resultsMap.get(slug);
-
-        if (item && item.imageUrl.startsWith('./')) {
-            const localPath = path.join(PUBLIC_DIR, item.imageUrl);
-            if (fs.existsSync(localPath)) {
-                const elapsed = (performance.now() - itemStartTime).toFixed(1);
-                console.log(`[${elapsed}ms] Skipping: ${title} (fully cached)`);
-                continue;
+        if (!existing) {
+            console.log(`Adding new scraped item: ${item.title}`);
+            resultsMap.set(item.title, item);
+        } else {
+            // Force update fields from scrape to ensure strict compliance (e.g. if we had inferred before)
+            // But we keep local image path if we have it
+            const oldImage = existing.imageUrl;
+            Object.assign(existing, item); // Overwrite with strict scraped data
+            if (oldImage && oldImage.startsWith('./')) {
+                existing.imageUrl = oldImage; // Restore local path
             }
-        }
+            // Explicitly delete country/period if they exist in old data but not new?
+            // "only include scraped info". Scraped item doesn't have country/period.
+            // So Object.assign adds properties. It doesn't remove old ones.
+            // We should strip them.
+            delete existing.country;
+            delete existing.period;
 
-        // 3. If not cached, we must fetch metadata
-        if (!item) {
-            const fetchStartTime = performance.now();
-            item = await fetchArtMetadata(title);
-            if (item) item.seedTitle = title; // Record the seed title for future lookups
-            const fetchElapsed = (performance.now() - fetchStartTime).toFixed(1);
-            console.log(`[${fetchElapsed}ms] Fetched metadata for ${title}`);
-            // Small delay after network
-            await delay(300);
+            resultsMap.set(item.title, existing);
         }
+    });
 
-        if (item && item.imageUrl) {
+    // Filter resultsMap to ONLY include things in the scraped list?
+    // The user said "only include scraped info". This might mean "only items found in the scrape" AND "only columns found in the scrape".
+    // Let's assume they want to keep the "most expensive paintings" list as the canonical source.
+    // So we will only save items that are in `scrapedItems`.
+
+    const finalItemsOnlyScraped: any[] = [];
+
+    for (const item of scrapedItems) {
+        // Get the latest merged version from map
+        const merged = resultsMap.get(item.title);
+        if (merged) {
+            // ensure no inferred fields are leaking back
+            delete merged.country;
+            delete merged.period;
+            finalItemsOnlyScraped.push(merged);
+        }
+    }
+
+    console.log(`Filtered down to ${finalItemsOnlyScraped.length} items present in the scraped list.`);
+
+    // SAVE INTERMEDIATE result immediately so the file is correct even if downloads fail/hang
+    console.log(`Saving ${finalItemsOnlyScraped.length} items (pre-download)...`);
+    saveProgress(finalItemsOnlyScraped);
+
+    // Download images loop
+    for (const item of finalItemsOnlyScraped) {
+        if (item.imageUrl && !item.imageUrl.startsWith('./')) {
             const urlPath = new URL(item.imageUrl).pathname;
             let ext = path.extname(urlPath);
             if (!ext || ext.length > 5) ext = '.jpg';
-
             const filename = `${slugify(item.title)}${ext}`;
             const dest = path.join(ART_ASSETS_DIR, filename);
-            const originalImageUrl = item.imageUrl;
 
             if (fs.existsSync(dest)) {
-                const elapsed = (performance.now() - itemStartTime).toFixed(1);
-                console.log(`[${elapsed}ms] Skipping download: ${item.title} (file exists)`);
                 item.imageUrl = `./assets/art/${filename}`;
-                resultsMap.set(title, item);
-                saveProgress(Array.from(resultsMap.values()));
                 continue;
             }
 
             try {
-                const downloadStartTime = performance.now();
                 process.stdout.write(`Downloading: ${item.title}... `);
                 await downloadImage(item.imageUrl, dest);
                 item.imageUrl = `./assets/art/${filename}`;
-                const downloadElapsed = (performance.now() - downloadStartTime).toFixed(1);
-                console.log(`Done in ${downloadElapsed}ms.`);
-
-                resultsMap.set(title, item);
-                saveProgress(Array.from(resultsMap.values()));
-                // Be very nice to Wikipedia after download
-                await delay(2000);
+                console.log(`Done.`);
+                await delay(500);
             } catch (error) {
-                console.log(`Failed (keeping remote URL): ${error instanceof Error ? error.message : String(error)}`);
-                item.imageUrl = originalImageUrl;
-                resultsMap.set(title, item);
-                saveProgress(Array.from(resultsMap.values()));
+                console.log(`Failed download: ${String(error)}`);
             }
-        } else {
-            console.log(`Skipped ${title} (no metadata/image).`);
         }
     }
 
-    const uniqueByTitle = new Map();
-    resultsMap.forEach(item => uniqueByTitle.set(item.title, item));
-    const finalResults = Array.from(uniqueByTitle.values());
-    const totalElapsed = ((performance.now() - startTime) / 1000).toFixed(2);
-    console.log(`Saving final updated metadata...`);
-    saveProgress(finalResults);
+    console.log(`Saving ${finalItemsOnlyScraped.length} items...`);
+    saveProgress(finalItemsOnlyScraped);
 
-    console.log(`Compressing to ${GZIP_FILE}...`);
-    const jsonStr = JSON.stringify(finalResults, null, 2);
+    const jsonStr = JSON.stringify(finalItemsOnlyScraped, null, 2);
     const compressed = await gzip(jsonStr);
     fs.writeFileSync(GZIP_FILE, compressed);
 
-    console.log(`Generation complete in ${totalElapsed}s!`);
+    console.log(`Generation complete!`);
 }
 
 main().catch(console.error);

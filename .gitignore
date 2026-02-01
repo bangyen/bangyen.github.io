@@ -29,7 +29,7 @@ yarn-error.log*
 /public/*.csv
 !/public/manifest.json
 !/public/robots.txt
-/public/assets/art_data.json
+
 
 # Temporary files
 cctlds_wiki.html

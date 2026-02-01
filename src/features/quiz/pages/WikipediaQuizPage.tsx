@@ -13,8 +13,6 @@ import {
     ArtItem,
 } from '../types/quiz';
 import { useQuizFilter } from '../hooks/quiz';
-import { fetchAllArt } from '../utils/artData';
-import pako from 'pako';
 
 import QuizLayout from '../components/QuizLayout';
 import QuizSettingsView from '../components/QuizSettingsView';
@@ -75,39 +73,24 @@ const WikipediaQuizPage: React.FC = () => {
             const loadStaticArt = async () => {
                 setIsLoadingArt(true);
                 try {
-                    const response = await fetch('./assets/art_data.json.gz');
+                    // Fetch uncompressed JSON directly
+                    const response = await fetch('/assets/art_data.json');
                     if (!response.ok)
-                        throw new Error('Static art data not found');
-
-                    const data = await response.arrayBuffer();
-                    const view = new Uint8Array(data);
-                    const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
-
-                    let artItems: ArtItem[] = [];
-                    if (isGzipped) {
-                        const decompressedData = pako.ungzip(
-                            new Uint8Array(data),
-                            { to: 'string' }
+                        throw new Error(
+                            `Failed to load art data: ${response.statusText}`
                         );
-                        artItems = JSON.parse(decompressedData);
-                    } else {
-                        // Not gzipped, try as text
-                        const text = new TextDecoder().decode(data);
-                        artItems = JSON.parse(text);
-                    }
 
-                    if (artItems.length > 0) {
+                    const artItems: ArtItem[] = await response.json();
+
+                    if (artItems && artItems.length > 0) {
                         setArtData(artItems);
                     } else {
                         throw new Error('Empty art data');
                     }
                 } catch (error) {
                     // eslint-disable-next-line no-console
-                    console.warn(
-                        'Failed to load static art data, falling back to runtime fetch:',
-                        error
-                    );
-                    fetchAllArt().then(data => setArtData(data));
+                    console.error('Failed to load art data:', error);
+                    // Do NOT fallback to runtime fetch which uses hardcoded seeds
                 } finally {
                     setIsLoadingArt(false);
                 }
@@ -195,11 +178,6 @@ const WikipediaQuizPage: React.FC = () => {
                                 activeConfig={activeConfig}
                                 commonSelectProps={commonSelectProps}
                                 onEnterKey={handleStart}
-                                data={
-                                    selectedQuiz === 'art'
-                                        ? artData
-                                        : activeConfig.data
-                                }
                             />
                         </QuizSettingsView>
                         <Box

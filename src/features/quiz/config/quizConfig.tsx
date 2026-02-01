@@ -476,7 +476,6 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
             mode: 'art_name',
             allowRepeats: false,
             maxQuestions: 'All',
-            filterCountry: 'All',
         },
         hasModeSelect: true,
         modes: [
@@ -484,7 +483,7 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
             { value: 'art_artist', label: 'Guess Artist' },
             { value: 'art_period', label: 'Guess Time Period' },
         ],
-        maxQuestionOptions: [5, 10, 20, 50],
+        maxQuestionOptions: [5, 10, 20],
         renderQuestionPrompt: mode => {
             switch (mode) {
                 case 'art_name':
