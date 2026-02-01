@@ -36,7 +36,7 @@ const ART_SEED_TITLES = [
     'Nighthawks (Hopper)',
     'Café Terrace at Night',
     'The Swing (Fragonard)',
-    'The Gleaners (Millet)',
+    'The Gleaners',
     'Olympia (Manet)',
     'The Luncheon on the Grass',
     'Portrait of Madame X',
@@ -283,7 +283,9 @@ async function main() {
         }
     }
 
-    const finalResults = Array.from(resultsMap.values());
+    const uniqueByTitle = new Map();
+    resultsMap.forEach(item => uniqueByTitle.set(item.title, item));
+    const finalResults = Array.from(uniqueByTitle.values());
     const totalElapsed = ((performance.now() - startTime) / 1000).toFixed(2);
     console.log(`Saving final updated metadata...`);
     saveProgress(finalResults);
