@@ -37,7 +37,9 @@ function getFrontProps(
         const { front, back } = getColor(row, col);
 
         return {
-            onClick: () => flipAdj(row, col),
+            onClick: () => {
+                flipAdj(row, col);
+            },
             children: <CircleRounded />,
             backgroundColor: front,
             color: front,
@@ -61,7 +63,7 @@ function getBackProps(getters: Getters) {
 }
 
 function getExampleProps(getters: Getters) {
-    const frontProps = getFrontProps(getters, () => {});
+    const frontProps = getFrontProps(getters, () => undefined);
 
     return (row: number, col: number) => {
         const props = frontProps(row, col);
@@ -158,12 +160,16 @@ export default function LightsOut(): React.ReactElement {
                 }
             }
         }, 300);
-        return () => clearTimeout(timeout);
+        return () => {
+            clearTimeout(timeout);
+        };
     }, [state.auto, state.grid, moveQueue]);
 
     const getters = useHandler(state, palette);
 
-    const frontProps = getFrontProps(getters, action => dispatch(action));
+    const frontProps = getFrontProps(getters, action => {
+        dispatch(action);
+    });
     const backProps = getBackProps(getters);
 
     return (
@@ -202,7 +208,9 @@ export default function LightsOut(): React.ReactElement {
             </Box>
             <Controls
                 handler={() => () => undefined} // No directional controls for Lights Out
-                onAutoPlay={() => dispatch({ type: 'auto' })}
+                onAutoPlay={() => {
+                    dispatch({ type: 'auto' });
+                }}
                 autoPlayEnabled={state.auto}
             >
                 <TooltipButton

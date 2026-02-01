@@ -22,7 +22,7 @@ describe('useCache Hook', () => {
     });
 
     test('handles next action and increments index', () => {
-        const getState = jest.fn((s: Record<string, number>) => ({
+        const getState = jest.fn((s: { count: number }) => ({
             count: s.count + 1,
         }));
         const { result } = renderHook(() => useCache(getState));
@@ -41,7 +41,7 @@ describe('useCache Hook', () => {
     });
 
     test('prevents double processing', () => {
-        const getState = jest.fn((s: Record<string, number>) => ({
+        const getState = jest.fn((s: { count: number }) => ({
             count: s.count + 1,
         }));
         const { result } = renderHook(() => useCache(getState));
@@ -71,7 +71,7 @@ describe('useCache Hook', () => {
     });
 
     test('handles prev action', () => {
-        const getState = jest.fn((s: Record<string, number>) => ({
+        const getState = jest.fn((s: { count: number }) => ({
             count: s.count + 1,
         }));
         const { result } = renderHook(() => useCache(getState));
@@ -111,7 +111,7 @@ describe('useCache Hook', () => {
     });
 
     test('uses cached states when index is behind', () => {
-        const getState = jest.fn((s: Record<string, number>) => ({
+        const getState = jest.fn((s: { count: number }) => ({
             count: s.count + 1,
         }));
         const { result } = renderHook(() => useCache(getState));

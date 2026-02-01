@@ -1,40 +1,14 @@
+/* eslint-disable no-console */
 import fs from 'fs';
 import path from 'path';
 import zlib from 'zlib';
 import { promisify } from 'util';
-import { performance } from 'perf_hooks';
 import * as cheerio from 'cheerio';
-
-const HTML_CACHE_FILE = path.join(process.cwd(), 'scripts/data/most_expensive_paintings.html');
+import { fetchWithCache, slugify, delay } from './utils';
 
 // Fetch table data helper with local caching
 async function fetchTableData(url: string): Promise<cheerio.CheerioAPI> {
-    if (fs.existsSync(HTML_CACHE_FILE)) {
-        console.log(`Reading from local cache: ${HTML_CACHE_FILE}`);
-        const text = fs.readFileSync(HTML_CACHE_FILE, 'utf-8');
-        return cheerio.load(text);
-    }
-
-    console.log(`Fetching ${url}...`);
-    const response = await fetch(url, {
-        headers: {
-            'User-Agent':
-                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
-        },
-    });
-    if (!response.ok) {
-        throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-    }
-    const text = await response.text();
-
-    // Save to cache
-    if (!fs.existsSync(path.dirname(HTML_CACHE_FILE))) {
-        fs.mkdirSync(path.dirname(HTML_CACHE_FILE), { recursive: true });
-    }
-    fs.writeFileSync(HTML_CACHE_FILE, text);
-    console.log(`Cached HTML to ${HTML_CACHE_FILE}`);
-
-    return cheerio.load(text);
+    return fetchWithCache(url, 'most_expensive_paintings.html');
 }
 
 // Local definition of ArtItem to allow independent execution
@@ -55,6 +29,7 @@ async function fetchMostExpensivePaintings(): Promise<ArtItem[]> {
     const $ = await fetchTableData(url);
     const items: ArtItem[] = [];
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let targetTable: cheerio.Cheerio<any> | null = null;
     const colMap: Record<string, number> = {};
 
@@ -83,6 +58,7 @@ async function fetchMostExpensivePaintings(): Promise<ArtItem[]> {
     // Default indices if detection failed slightly (fallback to standard layout)
     if (colMap['image'] === undefined) colMap['image'] = 1;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (targetTable as cheerio.Cheerio<any>).find('tr').slice(1).each((_: number, row: any) => {
         const cells = $(row).find('th, td');
         if (cells.length === 0) return;
@@ -146,7 +122,7 @@ const ART_ASSETS_DIR = path.join(PUBLIC_DIR, 'assets/art');
 const DATA_FILE = path.join(PUBLIC_DIR, 'assets/art_data.json');
 const GZIP_FILE = path.join(PUBLIC_DIR, 'assets/art_data.json.gz');
 
-function saveProgress(results: any[]) {
+function saveProgress(results: ArtItem[]) {
     const jsonStr = JSON.stringify(results, null, 2);
     fs.writeFileSync(DATA_FILE, jsonStr);
 }
@@ -155,16 +131,7 @@ if (!fs.existsSync(ART_ASSETS_DIR)) {
     fs.mkdirSync(ART_ASSETS_DIR, { recursive: true });
 }
 
-function slugify(text: string) {
-    return text.toString().toLowerCase()
-        .replace(/\s+/g, '_')
-        .replace(/[^\w\-]+/g, '')
-        .replace(/\-\-+/g, '_')
-        .replace(/^-+/, '')
-        .replace(/-+$/, '');
-}
 
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 async function downloadImage(url: string, dest: string) {
     const response = await fetch(url, {
@@ -188,8 +155,6 @@ async function downloadImage(url: string, dest: string) {
 }
 
 async function main() {
-    const startTime = performance.now();
-
     console.log('Scraping "List of most expensive paintings"... (Strict Mode: Columns Only)');
     const scrapedItems = await fetchMostExpensivePaintings();
 
@@ -202,12 +167,12 @@ async function main() {
 
     console.log(`Starting art data generation for ${ART_SEED_TITLES.length} items...`);
 
-    let initialData: any[] = [];
+    let initialData: ArtItem[] = [];
     if (fs.existsSync(DATA_FILE)) {
         try {
             initialData = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
             console.log(`Loaded ${initialData.length} existing items.`);
-        } catch (e) {
+        } catch (_e) {
             console.warn('Failed to parse existing art_data.json');
         }
     } else if (fs.existsSync(GZIP_FILE)) {
@@ -215,7 +180,7 @@ async function main() {
             const compressed = fs.readFileSync(GZIP_FILE);
             const decompressed = await gunzip(compressed);
             initialData = JSON.parse(decompressed.toString());
-        } catch (e) { }
+        } catch (_e) { /* ignore */ }
     }
 
     const resultsMap = new Map();
@@ -235,17 +200,21 @@ async function main() {
         } else {
             // Force update fields from scrape to ensure strict compliance (e.g. if we had inferred before)
             // But we keep local image path if we have it
-            const oldImage = existing.imageUrl;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const oldImage = (existing as any).imageUrl;
             Object.assign(existing, item); // Overwrite with strict scraped data
             if (oldImage && oldImage.startsWith('./')) {
-                existing.imageUrl = oldImage; // Restore local path
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (existing as any).imageUrl = oldImage; // Restore local path
             }
             // Explicitly delete country/period if they exist in old data but not new?
             // "only include scraped info". Scraped item doesn't have country/period.
             // So Object.assign adds properties. It doesn't remove old ones.
             // We should strip them.
-            delete existing.country;
-            delete existing.period;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            delete (existing as any).country;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            delete (existing as any).period;
 
             resultsMap.set(item.title, existing);
         }
@@ -256,15 +225,17 @@ async function main() {
     // Let's assume they want to keep the "most expensive paintings" list as the canonical source.
     // So we will only save items that are in `scrapedItems`.
 
-    const finalItemsOnlyScraped: any[] = [];
+    const finalItemsOnlyScraped: ArtItem[] = [];
 
     for (const item of scrapedItems) {
         // Get the latest merged version from map
         const merged = resultsMap.get(item.title);
         if (merged) {
             // ensure no inferred fields are leaking back
-            delete merged.country;
-            delete merged.period;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            delete (merged as any).country;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            delete (merged as any).period;
             finalItemsOnlyScraped.push(merged);
         }
     }

@@ -55,7 +55,9 @@ jest.mock('../../components/InterpreterNavigation', () => ({
         <select
             data-testid="nav-select"
             value={active}
-            onChange={e => onChange(e.target.value)}
+            onChange={e => {
+                onChange(e.target.value);
+            }}
         >
             <option value="stun-step">StunStep</option>
             <option value="suffolk">Suffolk</option>

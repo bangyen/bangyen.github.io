@@ -325,7 +325,11 @@ export function DisplayModeToggle({
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 Display Mode:
             </Typography>
-            <IconButton onClick={() => setCompactMode(!compactMode)}>
+            <IconButton
+                onClick={() => {
+                    setCompactMode(!compactMode);
+                }}
+            >
                 {compactMode ? <ViewListRounded /> : <ViewModuleRounded />}
             </IconButton>
         </Box>

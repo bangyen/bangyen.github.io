@@ -27,7 +27,9 @@ export function useCache<T>(getState: (state: T) => T) {
                     GLOBAL_CONFIG.processing.doubleProcessingPrevention &&
                     processingRef.current
                 ) {
-                    return { ...(states[index.current] as T) };
+                    const s = states[index.current];
+                    if (!s) return payload as T;
+                    return { ...s } as T;
                 }
 
                 if (GLOBAL_CONFIG.processing.doubleProcessingPrevention) {
@@ -38,6 +40,8 @@ export function useCache<T>(getState: (state: T) => T) {
 
                 if (curr + 1 === states.length) {
                     const state = states[curr];
+                    if (!state) return { ...states[0] } as T; // Should not happen
+
                     const next = getStateRef.current(state);
 
                     if (next === state) {
@@ -50,7 +54,9 @@ export function useCache<T>(getState: (state: T) => T) {
                     index.current++;
                 }
 
-                const result = { ...(states[index.current] as T) };
+                const s = states[index.current];
+                if (!s) return payload as T;
+                const result = { ...s } as T;
 
                 if (GLOBAL_CONFIG.processing.doubleProcessingPrevention) {
                     setTimeout(() => {
@@ -65,7 +71,9 @@ export function useCache<T>(getState: (state: T) => T) {
                     GLOBAL_CONFIG.processing.doubleProcessingPrevention &&
                     processingRef.current
                 ) {
-                    return { ...(states[index.current] as T) };
+                    const s = states[index.current];
+                    if (!s) return payload as T;
+                    return { ...s } as T;
                 }
 
                 if (GLOBAL_CONFIG.processing.doubleProcessingPrevention) {
@@ -74,7 +82,9 @@ export function useCache<T>(getState: (state: T) => T) {
 
                 if (index.current) index.current--;
 
-                const prevResult = { ...(states[index.current] as T) };
+                const prevS = states[index.current];
+                if (!prevS) return payload as T;
+                const prevResult = { ...prevS } as T;
 
                 if (GLOBAL_CONFIG.processing.doubleProcessingPrevention) {
                     setTimeout(() => {

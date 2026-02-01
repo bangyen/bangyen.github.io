@@ -25,9 +25,9 @@ export interface Getters {
 
 export type CellProps = Record<string, unknown>;
 
-export interface PropsFactory {
-    (getters: Getters): (row: number, col: number) => CellProps;
-}
+export type PropsFactory = (
+    getters: Getters
+) => (row: number, col: number) => CellProps;
 
 interface GridState {
     grid: number[][];

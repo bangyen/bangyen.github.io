@@ -84,7 +84,9 @@ jest.mock('../../../../components/mui', () => ({
     }) => (
         <button
             onClick={onClick}
-            onKeyDown={e => e.key === 'Enter' && onClick(e)}
+            onKeyDown={e => {
+                if (e.key === 'Enter') onClick(e);
+            }}
         >
             {children}
         </button>
@@ -154,7 +156,7 @@ describe('Interpreter Components', () => {
                 <InterpreterNavigation active="wii2d" onChange={onChange} />
             );
 
-            const select = screen.getByTestId('select') as HTMLSelectElement;
+            const select = screen.getByTestId<HTMLSelectElement>('select');
             expect(select.value).toBe('wii2d');
         });
 
@@ -164,7 +166,7 @@ describe('Interpreter Components', () => {
                 <InterpreterNavigation active="wii2d" onChange={onChange} />
             );
 
-            const select = screen.getByTestId('select');
+            const select = screen.getByTestId<HTMLSelectElement>('select');
             fireEvent.change(select, { target: { value: 'back' } });
 
             expect(onChange).toHaveBeenCalledWith('back');
@@ -329,7 +331,7 @@ describe('Interpreter Components', () => {
                 <TextArea value="Content" handleChange={handleChange} />
             );
 
-            const area = screen.getByTestId('textarea') as HTMLTextAreaElement;
+            const area = screen.getByTestId<HTMLTextAreaElement>('textarea');
             expect(area.value).toBe('Content');
 
             fireEvent.change(area, { target: { value: 'New' } });
@@ -338,13 +340,13 @@ describe('Interpreter Components', () => {
 
         test('renders controlled input with empty string', () => {
             renderWithContext(<TextArea value="" handleChange={jest.fn()} />);
-            const area = screen.getByTestId('textarea') as HTMLTextAreaElement;
+            const area = screen.getByTestId<HTMLTextAreaElement>('textarea');
             expect(area.value).toBe('');
         });
 
         test('renders uncontrolled input', () => {
             renderWithContext(<TextArea fillValue="Default" />);
-            const area = screen.getByTestId('textarea') as HTMLTextAreaElement;
+            const area = screen.getByTestId<HTMLTextAreaElement>('textarea');
             expect(area.defaultValue).toBe('Default');
         });
 

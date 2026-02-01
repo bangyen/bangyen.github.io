@@ -69,7 +69,7 @@ export default function Snake(): React.ReactElement {
             const dy = clientY - centerY;
             const currentDir =
                 state.buffer.length > 0
-                    ? state.buffer[state.buffer.length - 1]
+                    ? (state.buffer[state.buffer.length - 1] ?? state.velocity)
                     : state.velocity;
 
             let direction = '';
@@ -94,7 +94,7 @@ export default function Snake(): React.ReactElement {
 
     const handleControls = useCallback(
         (direction: string) => () => {
-            const keys: { [key: string]: string } = {
+            const keys: Record<string, string> = {
                 up: 'ArrowUp',
                 down: 'ArrowDown',
                 left: 'ArrowLeft',
@@ -119,8 +119,11 @@ export default function Snake(): React.ReactElement {
             let color = 'inherit';
 
             if (index in board) {
-                if (board[index] > 0) color = COLORS.primary.main;
-                else color = COLORS.primary.dark;
+                const val = board[index];
+                if (val !== undefined) {
+                    if (val > 0) color = COLORS.primary.main;
+                    else color = COLORS.primary.dark;
+                }
             }
 
             const up = gridMove(index, -2, rows, cols);
@@ -133,6 +136,7 @@ export default function Snake(): React.ReactElement {
                 const neighborValue = board[neighborIndex];
                 if (neighborValue === undefined || neighborValue === -1)
                     return false;
+                if (currentValue === undefined) return false;
                 return Math.abs(neighborValue - currentValue) === 1;
             };
 
@@ -202,11 +206,12 @@ export default function Snake(): React.ReactElement {
             });
         };
 
-        const wrapDirection = (event: KeyboardEvent) =>
+        const wrapDirection = (event: KeyboardEvent) => {
             dispatch({
                 type: 'steer',
                 payload: event,
             });
+        };
 
         createTimer({ repeat: wrapDispatch, speed: 100 });
         createKeys(wrapDirection);

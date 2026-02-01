@@ -1,7 +1,9 @@
 
+/* eslint-disable no-console */
 import fs from 'fs';
 import path from 'path';
 import * as cheerio from 'cheerio';
+import { fetchWithCache, cleanText } from './utils';
 
 const DATA_DIR = path.join(process.cwd(), 'src/features/quiz/data');
 
@@ -11,10 +13,38 @@ if (!fs.existsSync(DATA_DIR)) {
 }
 
 // Helpers
-function cleanText(text: string): string {
-    // Remove citations [1], [a], etc.
-    return text.replace(/\[.*?\]/g, '').trim();
+
+interface CCTLD {
+    code: string;
+    country: string;
+    flag: string;
+    explanation: string;
+    notes: string;
+    language: string;
 }
+
+interface DrivingSide {
+    country: string;
+    side: string;
+    flag: string;
+    explanation: string;
+    switched: boolean;
+}
+
+interface PhoneCode {
+    code: string;
+    country: string;
+    flag: string;
+}
+
+interface VehicleCode {
+    code: string;
+    country: string;
+    flag: string;
+    conventions: number[];
+}
+
+
 
 function resolveFlagUrl(html: string): string {
     if (!html) return '';
@@ -39,18 +69,7 @@ function resolveFlagUrl(html: string): string {
 }
 
 async function fetchTableData(url: string): Promise<cheerio.CheerioAPI> {
-    console.log(`Fetching ${url}...`);
-    const response = await fetch(url, {
-        headers: {
-            'User-Agent':
-                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
-        },
-    });
-    if (!response.ok) {
-        throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-    }
-    const text = await response.text();
-    return cheerio.load(text);
+    return fetchWithCache(url);
 }
 
 // Generators
@@ -61,7 +80,9 @@ async function generateCCTLDs() {
 
     // Find the table. Python script looked for .ad
     // We can just iterate all tables and look for one with ".ad" in the first column
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let targetTable: cheerio.Cheerio<any> | null = null;
+
 
     $('table').each((_, table) => {
         let hasAd = false;
@@ -101,9 +122,10 @@ async function generateCCTLDs() {
         }
     }
 
-    const results: any[] = [];
+    const results: CCTLD[] = [];
     const seen = new Set<string>();
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (targetTable as cheerio.Cheerio<any>).find('tr').each((_, row) => {
         const cells = $(row).find('th, td');
         if (cells.length < 3) return;
@@ -149,6 +171,7 @@ async function generateDrivingSides() {
     const url = 'https://en.wikipedia.org/wiki/Left-_and_right-hand_traffic';
     const $ = await fetchTableData(url);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let targetTable: cheerio.Cheerio<any> | null = null;
     let colsMap: Record<string, number> = {};
 
@@ -187,11 +210,12 @@ async function generateDrivingSides() {
         return;
     }
 
-    const results: any[] = [];
+    const results: DrivingSide[] = [];
     const idxCountry = colsMap['country'] ?? 0;
     const idxSide = colsMap['side'] ?? 1;
     const idxSwitch = colsMap['switch'] ?? -1;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (targetTable as cheerio.Cheerio<any>).find('tr').slice(1).each((_, row) => {
         const cells = $(row).find('td, th');
         // We access by index, so we need to ensure enough cells
@@ -199,6 +223,7 @@ async function generateDrivingSides() {
         // which implies we need at least max_idx + 1 cells.
         const maxIdx = Math.max(idxCountry, idxSide);
         if (cells.length <= maxIdx) return;
+
 
         const countryText = cleanText($(cells[idxCountry]).text());
         const flagHtml = $(cells[idxCountry]).html() || '';
@@ -246,6 +271,7 @@ async function generateTelephoneCodes() {
     const url = 'https://en.wikipedia.org/wiki/List_of_country_calling_codes';
     const $ = await fetchTableData(url);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let targetTable: cheerio.Cheerio<any> | null = null;
 
     // Find table by headers
@@ -278,17 +304,19 @@ async function generateTelephoneCodes() {
         return;
     }
 
-    const results: any[] = [];
+    const results: PhoneCode[] = [];
     let colCountry = 0;
     let colCode = 1;
 
     // Determine cols
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const headers = (targetTable as cheerio.Cheerio<any>).find('tr').first().find('th').map((_, th) => $(th).text().toLowerCase()).get();
     headers.forEach((h, i) => {
         if (['country', 'state', 'serving'].some(k => h.includes(k))) colCountry = i;
         if (h.includes('code')) colCode = i;
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (targetTable as cheerio.Cheerio<any>).find('tr').slice(1).each((_, row) => {
         const cells = $(row).find('td, th');
         if (cells.length <= Math.max(colCountry, colCode)) return;
@@ -297,7 +325,7 @@ async function generateTelephoneCodes() {
         const codeRaw = cleanText($(cells[colCode]).text());
         const flag = resolveFlagUrl($(cells[colCountry]).html() || '');
 
-        const match = codeRaw.match(/[\+\d][\d\s\-\(\),]* /); // Removed invalid possessive quantifier
+        const match = codeRaw.match(/[+\d][\d\s\-(),]* /); // Removed invalid possessive quantifier
         if (match) {
             let code = match[0].trim();
             if (!code.startsWith('+')) code = '+' + code;
@@ -314,7 +342,7 @@ async function generateVehicleCodes() {
     const url = 'https://en.wikipedia.org/wiki/International_vehicle_registration_code';
     const $ = await fetchTableData(url);
 
-    const vehicleCodesMap = new Map<string, any[]>();
+    const vehicleCodesMap = new Map<string, VehicleCode[]>();
 
     const upsertEntry = (code: string, country: string, flag: string | null, convention: number | null) => {
         if (!vehicleCodesMap.has(code)) {
@@ -326,7 +354,7 @@ async function generateVehicleCodes() {
         // Heuristic: If one contains the other (e.g. "France" in "France, Algeria..."), merge.
         // Special case: "French India" contains "French" but not "France".
         // "Morocco" != "France".
-        let match = entries.find(e => {
+        const match = entries.find(e => {
             const c1 = e.country.toLowerCase();
             const c2 = country.toLowerCase();
             return c1.includes(c2) || c2.includes(c1);
@@ -361,9 +389,9 @@ async function generateVehicleCodes() {
             $(table).find('tr').slice(1).each((_, row) => {
                 const cells = $(row).find('td');
                 if (cells.length >= 2) {
-                    const country = cleanText($(cells[0]).text());
-                    const code = cleanText($(cells[1]).text());
-                    const flag = resolveFlagUrl($(cells[0]).html() || '');
+                    const _country = cleanText($(cells[0]).text());
+                    const _code = cleanText($(cells[1]).text());
+                    const _flag = resolveFlagUrl($(cells[0]).html() || '');
                 }
             });
         }
@@ -411,7 +439,7 @@ async function generateVehicleCodes() {
     });
 
     // Flatten results
-    const results: any[] = [];
+    const results: VehicleCode[] = [];
     vehicleCodesMap.forEach(entries => results.push(...entries));
     results.sort((a, b) => a.code.localeCompare(b.code));
 

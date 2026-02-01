@@ -140,6 +140,7 @@ describe('ZSharp Component', () => {
                     </ThemeProvider>
                 </BrowserRouter>
             );
+            await Promise.resolve();
         });
         return result;
     };
@@ -191,6 +192,7 @@ describe('ZSharp Component', () => {
 
         await act(async () => {
             fireEvent.click(screen.getByTestId('view-loss'));
+            await Promise.resolve();
         });
         expect(screen.getByTestId('current-view')).toHaveTextContent('loss');
     });

@@ -77,7 +77,9 @@ describe('ErrorBoundary', () => {
                 <div>
                     <button
                         data-testid="fix-logic"
-                        onClick={() => setShouldThrow(false)}
+                        onClick={() => {
+                            setShouldThrow(false);
+                        }}
                     >
                         Fix Logic
                     </button>

@@ -22,16 +22,21 @@ export function useSwipe({
     const minSwipeDistance = 50;
 
     const onTouchStart = (e: TouchEvent) => {
+        const touch = e.targetTouches[0];
+        if (!touch) return;
+
         touchEnd.current = null;
         touchYEnd.current = null;
-        touchStart.current = e.targetTouches[0].clientX;
-        touchYStart.current = e.targetTouches[0].clientY;
+        touchStart.current = touch.clientX;
+        touchYStart.current = touch.clientY;
     };
 
     const onTouchMove = (e: TouchEvent) => {
         if (e.cancelable) e.preventDefault();
-        touchEnd.current = e.targetTouches[0].clientX;
-        touchYEnd.current = e.targetTouches[0].clientY;
+        const touch = e.targetTouches[0];
+        if (!touch) return;
+        touchEnd.current = touch.clientX;
+        touchYEnd.current = touch.clientY;
     };
 
     const onTouchEnd = () => {

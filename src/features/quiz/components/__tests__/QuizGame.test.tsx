@@ -25,24 +25,21 @@ jest.mock('../QuizGameView', () => {
                 </div>
             )}
             <div data-testid="question-prompt">
-                {props.renderQuestionPrompt && props.renderQuestionPrompt()}
+                {props.renderQuestionPrompt?.()}
             </div>
             <div data-testid="question-content">
                 {props.gameState.currentQuestion &&
-                    props.renderQuestionContent &&
-                    props.renderQuestionContent(
+                    props.renderQuestionContent?.(
                         props.gameState.currentQuestion
                     )}
             </div>
             <div data-testid="hint">
                 {props.gameState.currentQuestion &&
-                    props.renderHint &&
-                    props.renderHint(props.gameState.currentQuestion)}
+                    props.renderHint?.(props.gameState.currentQuestion)}
             </div>
             <div data-testid="feedback-flag">
                 {props.gameState.currentQuestion &&
-                    props.renderFeedbackFlag &&
-                    props.renderFeedbackFlag(props.gameState.currentQuestion)}
+                    props.renderFeedbackFlag?.(props.gameState.currentQuestion)}
             </div>
             <button onClick={props.onBackToMenu}>Back</button>
             <input ref={props.inputRef} placeholder={props.inputPlaceholder} />

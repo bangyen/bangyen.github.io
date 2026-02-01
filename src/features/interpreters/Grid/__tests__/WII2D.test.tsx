@@ -51,7 +51,7 @@ describe('WII2D Interpreter Logic', () => {
 
         next.grid = 'v!                       ';
         next.position = 0;
-        const final = getState(next as WII2DState);
+        const final = getState(next);
         expect(final.velocity).toBe(2);
     });
 
@@ -78,23 +78,23 @@ describe('WII2D Interpreter Logic', () => {
         expect(next.register).toBe(6); // +
 
         next.position = 1; // -
-        next = getState(next as WII2DState);
+        next = getState(next);
         expect(next.register).toBe(5);
 
         next.position = 2; // *
-        next = getState(next as WII2DState);
+        next = getState(next);
         expect(next.register).toBe(10);
 
         next.position = 3; // s
-        next = getState(next as WII2DState);
+        next = getState(next);
         expect(next.register).toBe(100);
 
         next.position = 4; // /
-        next = getState(next as WII2DState);
+        next = getState(next);
         expect(next.register).toBe(50);
 
         next.position = 5; // ~
-        next = getState(next as WII2DState);
+        next = getState(next);
         expect(next.output).toBe(String.fromCharCode(50));
     });
 

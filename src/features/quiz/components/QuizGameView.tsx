@@ -112,7 +112,9 @@ const QuizGameView = <T,>({
         };
 
         window.addEventListener('keydown', handleGlobalKeyDown);
-        return () => window.removeEventListener('keydown', handleGlobalKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleGlobalKeyDown);
+        };
     }, [
         showFeedback,
         hideInput,
@@ -304,10 +306,14 @@ const QuizGameView = <T,>({
                     >
                         {!hideInput && (
                             <TextField
-                                inputProps={{ 'aria-label': 'Answer input' }}
+                                slotProps={{
+                                    htmlInput: { 'aria-label': 'Answer input' },
+                                }}
                                 inputRef={inputRef}
                                 value={inputValue}
-                                onChange={e => setInputValue(e.target.value)}
+                                onChange={e => {
+                                    setInputValue(e.target.value);
+                                }}
                                 placeholder={inputPlaceholder}
                                 disabled={showFeedback}
                                 autoComplete="off"

@@ -40,7 +40,9 @@ export const KeySelector = ({ keys, onSelect }: KeySelectorProps) => {
                     <Grid key={key}>
                         <Button
                             variant="contained"
-                            onClick={() => onSelect(key)}
+                            onClick={() => {
+                                onSelect(key);
+                            }}
                             sx={{
                                 minWidth: '44px',
                                 width: '44px',
@@ -62,7 +64,9 @@ export const KeySelector = ({ keys, onSelect }: KeySelectorProps) => {
                 <Grid>
                     <Button
                         variant="contained"
-                        onClick={() => onSelect('Backspace')}
+                        onClick={() => {
+                            onSelect('Backspace');
+                        }}
                         sx={{
                             minWidth: '44px',
                             width: '44px',
@@ -83,7 +87,9 @@ export const KeySelector = ({ keys, onSelect }: KeySelectorProps) => {
                 <Grid>
                     <Button
                         variant="contained"
-                        onClick={() => onSelect('Escape')}
+                        onClick={() => {
+                            onSelect('Escape');
+                        }}
                         sx={{
                             minWidth: '44px',
                             width: '44px',

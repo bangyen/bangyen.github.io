@@ -16,23 +16,23 @@ export function getWindow(): Size {
 }
 
 export function getContainer(container: RefObject<HTMLElement> | null): Size {
-    if (!container || !container.current) return { width: 0, height: 0 };
+    if (!container?.current) return { width: 0, height: 0 };
     const { offsetHeight: height, offsetWidth: width } = container.current;
     return { width, height };
 }
 
 export function useSize(getSize: () => Size) {
     const [size, setSize] = useState<Size>(getSize());
-    const { addEventListener: addEvent, removeEventListener: removeEvent } =
-        window;
 
     useEffect(() => {
         function handleResize() {
             setSize(getSize());
         }
-        addEvent('resize', handleResize);
-        return () => removeEvent('resize', handleResize);
-    }, [getSize, addEvent, removeEvent]);
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [getSize]);
 
     return { size, setSize };
 }
@@ -82,7 +82,9 @@ export function useContainer(container: RefObject<HTMLElement> | null): Size {
         }
 
         window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, [container]);
 
     return size;

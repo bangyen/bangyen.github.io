@@ -1,8 +1,6 @@
 import { gridMove, getDirection } from '../../interpreters/utils/gridUtils';
 
-export interface Board {
-    [key: number]: number;
-}
+export type Board = Record<number, number>;
 
 export interface SnakeState {
     velocity: number;
@@ -39,6 +37,7 @@ export function mapBoard(board: Board, change: number): Board {
 
     for (const cell in board) {
         const value = board[cell];
+        if (value === undefined) continue;
 
         if (value + change > 0) newBoard[cell] = value + change;
         else if (value < 0) newBoard[cell] = value;
@@ -97,8 +96,9 @@ export function reduceBoard(state: SnakeState): SnakeState {
         }
 
         if (validMoves.length > 0) {
-            velocity =
+            const randMove =
                 validMoves[Math.floor(Math.random() * validMoves.length)];
+            if (randMove !== undefined) velocity = randMove;
         }
     }
 
@@ -108,14 +108,16 @@ export function reduceBoard(state: SnakeState): SnakeState {
         const value = board[head];
         board[head] = length;
 
-        if (value > 0) {
-            board = mapBoard(board, -value);
-        } else {
-            board = mapBoard(board, 1);
-            board = addNext(max, board);
+        if (value !== undefined) {
+            if (value > 0) {
+                board = mapBoard(board, -value);
+            } else {
+                board = mapBoard(board, 1);
+                board = addNext(max, board);
+            }
         }
 
-        length = board[head];
+        length = board[head] ?? length;
     } else {
         board[head] = length;
     }
@@ -124,7 +126,7 @@ export function reduceBoard(state: SnakeState): SnakeState {
         const [first, ...rest] = buffer;
         buffer = rest;
 
-        if (velocity + first) velocity = first;
+        if (first !== undefined && velocity + first) velocity = first;
     }
 
     return {
@@ -154,11 +156,11 @@ export function handleAction(state: SnakeState, action: Action): SnakeState {
                 'NorthEast',
                 'SouthWest',
                 'SouthEast',
-            ].includes(payload.key as string);
+            ].includes(payload.key);
 
             if (isDiagonal) {
                 // Determine components based on key name
-                const key = payload.key as string;
+                const key = payload.key;
                 const up = -2;
                 const down = 2;
                 const left = -1;
@@ -184,7 +186,7 @@ export function handleAction(state: SnakeState, action: Action): SnakeState {
                 // Get current actual direction (last in buffer or current velocity)
                 const current =
                     buffer.length > 0
-                        ? buffer[buffer.length - 1]
+                        ? (buffer[buffer.length - 1] ?? state.velocity)
                         : state.velocity;
 
                 // If moving vertical (up/down +/-2)

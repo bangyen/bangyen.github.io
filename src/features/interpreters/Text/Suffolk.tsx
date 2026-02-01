@@ -49,22 +49,27 @@ export function getState(state: SuffolkState): SuffolkState {
         case '>':
             if (tape.length === ++pointer) tape.push(0);
             break;
-        case '<':
-            register += tape[pointer];
+        case '<': {
+            const val = tape[pointer];
+            if (val !== undefined) register += val;
             pointer = 0;
             break;
-        case '!':
-            tape[pointer] -= register - 1;
-
-            if (tape[pointer] < 0) tape[pointer] = 0;
+        }
+        case '!': {
+            const val = tape[pointer];
+            if (val !== undefined) {
+                const newVal = val - (register - 1);
+                tape[pointer] = newVal < 0 ? 0 : newVal;
+            }
 
             register = 0;
             pointer = 0;
             break;
+        }
         case ',': {
             const input = prompt('Input: ');
 
-            if (input && input.length) register = input.charCodeAt(0);
+            if (input?.length) register = input.charCodeAt(0);
             else register = 0;
             break;
         }

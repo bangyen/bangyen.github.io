@@ -51,7 +51,7 @@ export function Section({
             sx={{
                 paddingY,
                 paddingX,
-                ...(props.sx as Record<string, unknown>),
+                ...props.sx,
             }}
             {...props}
         >
@@ -75,7 +75,7 @@ export function BackgroundBox({ children, ...props }: BackgroundBoxProps) {
                 bottom: 0,
                 background: COLORS.surface.background,
                 zIndex: -1,
-                ...(props.sx as Record<string, unknown>),
+                ...props.sx,
             }}
             {...props}
         >
@@ -108,7 +108,7 @@ export function HeroContainer({
                 },
                 maxWidth: '100%',
                 overflowX: 'hidden',
-                ...(props.sx as Record<string, unknown>),
+                ...props.sx,
             }}
             {...props}
         >
@@ -132,7 +132,7 @@ export function PageLayout({ children, ...props }: PageLayoutProps) {
                 width: '100%',
                 maxWidth: '100vw',
                 overflowX: 'hidden',
-                ...(props.sx as Record<string, unknown>),
+                ...props.sx,
             }}
             {...props}
         >

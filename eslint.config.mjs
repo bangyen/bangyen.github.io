@@ -10,7 +10,8 @@ export default tseslint.config(
 
     // Base configuration
     js.configs.recommended,
-    ...tseslint.configs.recommended,
+    ...tseslint.configs.strictTypeChecked,
+    ...tseslint.configs.stylisticTypeChecked,
 
     // React configuration
     {
@@ -27,6 +28,8 @@ export default tseslint.config(
                 ...globals.jest,
             },
             parserOptions: {
+                projectService: true,
+                tsconfigRootDir: import.meta.dirname,
                 ecmaFeatures: {
                     jsx: true,
                 },
@@ -43,25 +46,27 @@ export default tseslint.config(
             ...reactHooksPlugin.configs.recommended.rules,
             ...jsxA11yPlugin.configs.recommended.rules,
 
-            // Custom Rules from legacy config
-            '@typescript-eslint/no-explicit-any': 'warn',
+            // Custom Rules
+            '@typescript-eslint/no-explicit-any': 'error',
             '@typescript-eslint/no-unused-vars': [
-                'warn',
+                'error',
                 {
                     argsIgnorePattern: '^_',
                     varsIgnorePattern: '^_',
                     caughtErrorsIgnorePattern: '^_',
                 },
             ],
+            // Disable noisy type-checked rules for migration
+
+
             'react/prop-types': 'off',
             'react/react-in-jsx-scope': 'off',
             'react/self-closing-comp': 'error',
-            'react/no-array-index-key': 'warn',
+            'react/no-array-index-key': 'error',
             'jsx-a11y/anchor-is-valid': 'off',
-            'no-console': 'warn',
+            'no-console': 'error',
             'prefer-const': 'error',
             'no-var': 'error',
-            'no-const-assign': 'off', // As per legacy config
         },
     },
 
@@ -70,6 +75,9 @@ export default tseslint.config(
         files: ['**/*.test.{js,jsx,ts,tsx}', '**/setupTests.ts'],
         rules: {
             'no-console': 'off',
+            '@typescript-eslint/no-non-null-assertion': 'off',
+            '@typescript-eslint/no-empty-function': 'off',
+            '@typescript-eslint/unbound-method': 'off',
         },
     }
 );

@@ -27,9 +27,7 @@ import { COLORS } from '../../config/theme';
 
 type IconComponent = React.ElementType;
 
-interface IconMap {
-    [key: string]: IconComponent;
-}
+type IconMap = Record<string, IconComponent>;
 
 export const ICON_MAP: IconMap = {
     Code: Code,
@@ -108,17 +106,19 @@ export function RandomButton({
             Icon={Refresh}
             onClick={onClick}
             aria-label={ariaLabel}
-            sx={{
-                color:
-                    showToggleState && enabled
-                        ? COLORS.primary.main
-                        : 'inherit',
-                backgroundColor:
-                    showToggleState && enabled
-                        ? `${COLORS.primary.main}20`
-                        : 'transparent',
-                ...props.sx,
-            }}
+            sx={[
+                {
+                    color:
+                        showToggleState && enabled
+                            ? COLORS.primary.main
+                            : 'inherit',
+                    backgroundColor:
+                        showToggleState && enabled
+                            ? `${COLORS.primary.main}20`
+                            : 'transparent',
+                },
+                ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+            ]}
             {...props}
         />
     );
@@ -215,7 +215,9 @@ export function ArrowsButton({
     hide = false,
     diagonals = false,
 }: ArrowsButtonProps & { diagonals?: boolean }) {
-    const flip = useCallback(() => setShow(!show), [show, setShow]);
+    const flip = useCallback(() => {
+        setShow(!show);
+    }, [show, setShow]);
 
     if (hide) return null;
 
@@ -248,7 +250,7 @@ export function ArrowsButton({
                 <Grid container gap={0.5}>
                     <TooltipButton
                         title="Move Up Left"
-                        Icon={ICON_MAP.NorthWest}
+                        Icon={ICON_MAP.NorthWest!}
                         onClick={handler('up-left')}
                         aria-label="Move up left"
                         size={size}
@@ -262,7 +264,7 @@ export function ArrowsButton({
                     />
                     <TooltipButton
                         title="Move Up Right"
-                        Icon={ICON_MAP.NorthEast}
+                        Icon={ICON_MAP.NorthEast!}
                         onClick={handler('up-right')}
                         aria-label="Move up right"
                         size={size}
@@ -300,7 +302,7 @@ export function ArrowsButton({
                 <Grid container gap={0.5}>
                     <TooltipButton
                         title="Move Down Left"
-                        Icon={ICON_MAP.SouthWest}
+                        Icon={ICON_MAP.SouthWest!}
                         onClick={handler('down-left')}
                         aria-label="Move down left"
                         size={size}
@@ -314,7 +316,7 @@ export function ArrowsButton({
                     />
                     <TooltipButton
                         title="Move Down Right"
-                        Icon={ICON_MAP.SouthEast}
+                        Icon={ICON_MAP.SouthEast!}
                         onClick={handler('down-right')}
                         aria-label="Move down right"
                         size={size}

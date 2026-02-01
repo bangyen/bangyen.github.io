@@ -100,7 +100,7 @@ export function Toolbar(): React.ReactElement[] {
     };
 
     const buttons: React.ReactElement[] = [];
-    const ffData = buttonData['Fast Forward'];
+    const ffData = buttonData['Fast Forward'] as ButtonData;
 
     // Primary Playback Controls: Run/Pause, Reset, Fast Forward
     buttons.push(TimerButton);
@@ -134,7 +134,10 @@ export function Toolbar(): React.ReactElement[] {
     // Secondary Controls: Previous, Next
     const secondaryKeys = ['Previous', 'Next'];
     secondaryKeys.forEach(key => {
-        const { icon, flag, action } = buttonData[key];
+        const data = buttonData[key];
+        if (!data) return;
+
+        const { icon, flag, action } = data;
 
         if (action && flag) {
             buttons.push(
@@ -231,7 +234,7 @@ export function handleToolbar(
         }
         case 'share': {
             const url = window.location.href;
-            navigator.clipboard.writeText(url);
+            void navigator.clipboard.writeText(url);
             // TODO: Toast notification
             break;
         }

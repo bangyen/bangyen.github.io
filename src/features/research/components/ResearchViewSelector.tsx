@@ -44,7 +44,9 @@ const ResearchViewSelector = <T,>({
                             variant="outlined"
                             size="small"
                             startIcon={IconComponent ? <IconComponent /> : null}
-                            onClick={() => onViewTypeChange(viewType.key)}
+                            onClick={() => {
+                                onViewTypeChange(viewType.key);
+                            }}
                             sx={{
                                 width: '100%',
                                 color:

@@ -197,10 +197,12 @@ export default function GridEditor<T extends GridState>(
     const handleEdit = useCallback(
         (key: string) => {
             if (key === 'Escape') {
-                dispatch({
-                    type: 'click',
-                    payload: { select: state.select as number },
-                });
+                if (state.select !== null) {
+                    dispatch({
+                        type: 'click',
+                        payload: { select: state.select },
+                    });
+                }
                 return;
             }
 
@@ -224,7 +226,9 @@ export default function GridEditor<T extends GridState>(
 
         createKeys(wrapper);
 
-        return () => clearKeys();
+        return () => {
+            clearKeys();
+        };
     }, [name, createKeys, handleEdit, clearKeys]);
 
     const context = {

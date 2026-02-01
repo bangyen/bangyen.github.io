@@ -19,7 +19,7 @@ function getIconFrames(
     col: number,
     dims: number,
     palette: Palette,
-    speed: number = 1
+    speed = 1
 ): Record<
     string,
     { opacity: number; content: string; color: string; transform: string }
@@ -322,7 +322,9 @@ export default function Example({
             setFrame(prev => prev + 1);
         }, 2000);
 
-        return () => clearInterval(interval);
+        return () => {
+            clearInterval(interval);
+        };
     }, []);
 
     const states = getStates(start, dims);

@@ -68,6 +68,7 @@ Object.defineProperty(global, 'Response', {
             this._data = data;
         }
         async text() {
+            await Promise.resolve();
             if (this._data instanceof ReadableStream) {
                 return '[]';
             }
@@ -84,7 +85,7 @@ Object.defineProperty(global, 'Response', {
 Object.defineProperty(global, 'ReadableStream', {
     value: class ReadableStream {
         constructor(options: { start?: (controller: unknown) => void } = {}) {
-            if (options && options.start) {
+            if (options?.start) {
                 const controller = {
                     enqueue: jest.fn(),
                     close: jest.fn(),

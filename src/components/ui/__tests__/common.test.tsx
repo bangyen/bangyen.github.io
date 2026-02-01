@@ -53,7 +53,7 @@ describe('Helper Components', () => {
             );
 
             const buttons = screen.getAllByLabelText('Clickable');
-            buttons[1].click(); // Click the actual button, not the span wrapper
+            buttons[1]!.click(); // Click the actual button, not the span wrapper
 
             expect(handleClick).toHaveBeenCalledTimes(1);
         });
@@ -206,7 +206,7 @@ describe('Helper Components', () => {
             render(<RandomButton onClick={handleClick} />);
 
             const buttons = screen.getAllByLabelText('Randomize');
-            buttons[1].click(); // Click the actual button, not the span wrapper
+            buttons[1]!.click(); // Click the actual button, not the span wrapper
 
             expect(handleClick).toHaveBeenCalledTimes(1);
         });

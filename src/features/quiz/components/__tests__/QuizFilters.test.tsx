@@ -136,7 +136,7 @@ describe('QuizFilters', () => {
 
         const comboboxes = screen.getAllByRole('combobox');
         // Index 0: Game Mode (if active)
-        const gameModeSelect = comboboxes[0];
+        const gameModeSelect = comboboxes[0]!;
 
         fireEvent.mouseDown(gameModeSelect);
 
@@ -156,7 +156,7 @@ describe('QuizFilters', () => {
 
         // maxQuestions is combobox index 2 (Game Mode, Language Filter, # Questions)
         const comboboxes = screen.getAllByRole('combobox');
-        const countSelect = comboboxes[2];
+        const countSelect = comboboxes[2]!;
 
         fireEvent.mouseDown(countSelect);
 
@@ -173,7 +173,7 @@ describe('QuizFilters', () => {
     test('calls onSettingsChange when Language Filter changes (cctld)', () => {
         render(<QuizFilters {...defaultProps} selectedQuiz="cctld" />);
         const comboboxes = screen.getAllByRole('combobox');
-        fireEvent.mouseDown(comboboxes[1]); // Language Filter
+        fireEvent.mouseDown(comboboxes[1]!); // Language Filter
 
         // CCTLD_LANGUAGES includes 'English'
         const option = screen.getByRole('option', { name: 'English' });
@@ -189,7 +189,7 @@ describe('QuizFilters', () => {
     test('calls onSettingsChange when Zone Filter changes (telephone)', () => {
         render(<QuizFilters {...defaultProps} selectedQuiz="telephone" />);
         const comboboxes = screen.getAllByRole('combobox');
-        fireEvent.mouseDown(comboboxes[1]); // Zone Filter
+        fireEvent.mouseDown(comboboxes[1]!); // Zone Filter
 
         // TELEPHONE_ZONES includes Zone 1
         const option = screen.getByRole('option', { name: /Zone 1/ });
@@ -205,10 +205,10 @@ describe('QuizFilters', () => {
     test('calls onSettingsChange when Convention Filter changes (vehicle)', () => {
         render(<QuizFilters {...defaultProps} selectedQuiz="vehicle" />);
         const comboboxes = screen.getAllByRole('combobox');
-        fireEvent.mouseDown(comboboxes[1]); // Convention Filter
+        fireEvent.mouseDown(comboboxes[1]!); // Convention Filter
 
         // VEHICLE_CONVENTIONS includes 'Vienna' or similar
-        const option = screen.getAllByRole('option')[1]; // Pick any option
+        const option = screen.getAllByRole('option')[1]!; // Pick any option
         fireEvent.click(option);
 
         expect(mockOnChange).toHaveBeenCalledWith(
@@ -227,7 +227,7 @@ describe('QuizFilters', () => {
             />
         );
         const comboboxes = screen.getAllByRole('combobox');
-        fireEvent.mouseDown(comboboxes[1]); // Side Filter
+        fireEvent.mouseDown(comboboxes[1]!); // Side Filter
 
         const option = screen.getByRole('option', { name: 'Left' });
         fireEvent.click(option);
@@ -248,7 +248,7 @@ describe('QuizFilters', () => {
             />
         );
         const comboboxes = screen.getAllByRole('combobox');
-        fireEvent.mouseDown(comboboxes[1]); // Switch Filter
+        fireEvent.mouseDown(comboboxes[1]!); // Switch Filter
 
         const option = screen.getByRole('option', {
             name: 'Switched historically',
@@ -271,7 +271,7 @@ describe('QuizFilters', () => {
             />
         );
         const comboboxes = screen.getAllByRole('combobox');
-        fireEvent.mouseDown(comboboxes[1]);
+        fireEvent.mouseDown(comboboxes[1]!);
 
         const option = screen.getByRole('option', { name: 'Left' });
         fireEvent.click(option);
@@ -293,7 +293,7 @@ describe('QuizFilters', () => {
     test('calls onSettingsChange when Max Questions is set to All', () => {
         render(<QuizFilters {...defaultProps} />);
         const comboboxes = screen.getAllByRole('combobox');
-        fireEvent.mouseDown(comboboxes[comboboxes.length - 1]); // # Questions is last
+        fireEvent.mouseDown(comboboxes[comboboxes.length - 1]!); // # Questions is last
         const option = screen.getByRole('option', { name: 'All' });
         fireEvent.click(option);
         expect(mockOnChange).toHaveBeenCalledWith(
@@ -304,7 +304,7 @@ describe('QuizFilters', () => {
     test('calls onSettingsChange when Max Questions is set to a number', () => {
         render(<QuizFilters {...defaultProps} />);
         const comboboxes = screen.getAllByRole('combobox');
-        fireEvent.mouseDown(comboboxes[comboboxes.length - 1]);
+        fireEvent.mouseDown(comboboxes[comboboxes.length - 1]!);
         const option = screen.getByRole('option', { name: '20' });
         fireEvent.click(option);
         expect(mockOnChange).toHaveBeenCalledWith(

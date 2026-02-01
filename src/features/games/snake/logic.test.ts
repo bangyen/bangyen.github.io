@@ -10,16 +10,18 @@ import {
 
 // Mock gridUtils
 jest.mock('../../interpreters/utils/gridUtils', () => ({
-    gridMove: jest.fn((pos, dir, _rows = 10, cols = 10) => {
-        // Handle abstract direction IDs
-        if (dir === -2) return pos - cols; // Up
-        if (dir === 2) return pos + cols; // Down
-        if (dir === -1) return pos - 1; // Left
-        if (dir === 1) return pos + 1; // Right
-        // Fallback for direct offsets (though we should avoid using them)
-        return pos + dir;
-    }),
-    getDirection: jest.fn(key => {
+    gridMove: jest.fn(
+        (pos: number, dir: number, _rows = 10, cols = 10): number => {
+            // Handle abstract direction IDs
+            if (dir === -2) return pos - cols; // Up
+            if (dir === 2) return pos + (cols as number); // Down
+            if (dir === -1) return pos - 1; // Left
+            if (dir === 1) return pos + 1; // Right
+            // Fallback for direct offsets (though we should avoid using them)
+            return pos + dir;
+        }
+    ),
+    getDirection: jest.fn((key: string) => {
         if (key === 'ArrowUp') return -2;
         if (key === 'ArrowDown') return 2;
         if (key === 'ArrowLeft') return -1;

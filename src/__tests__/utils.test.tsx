@@ -186,8 +186,12 @@ describe('Test Utilities', () => {
             const restore = testUtils.suppressConsoleWarnings();
 
             // Should not throw errors
-            expect(() => console.warn('test warning')).not.toThrow();
-            expect(() => console.error('test error')).not.toThrow();
+            expect(() => {
+                console.warn('test warning');
+            }).not.toThrow();
+            expect(() => {
+                console.error('test error');
+            }).not.toThrow();
 
             restore();
         });

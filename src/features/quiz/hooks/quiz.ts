@@ -64,7 +64,7 @@ export const useQuizEngine = <T>({
     const initialize = useCallback((newPool: T[]) => {
         const shuffled = [...newPool].sort(() => Math.random() - 0.5);
         return {
-            currentQuestion: shuffled.length > 0 ? shuffled[0] : null,
+            currentQuestion: shuffled.length > 0 ? (shuffled[0] ?? null) : null,
             pool: shuffled.length > 0 ? shuffled.slice(1) : [],
             totalQuestions: shuffled.length,
         };
@@ -96,7 +96,7 @@ export const useQuizEngine = <T>({
                 advanceTimerRef.current = null;
             }
 
-            const next = prevPool[0];
+            const next = prevPool[0] ?? null;
             setCurrentQuestion(next);
             setInputValue('');
             setShowFeedback(false);
@@ -275,11 +275,8 @@ export const useQuizFilter = ({
         ) {
             filtered = filtered.filter((item: QuizItem) => {
                 const vehicleItem = item as VehicleCode;
-                return (
-                    vehicleItem.conventions &&
-                    vehicleItem.conventions.includes(
-                        Number(settings.filterConvention)
-                    )
+                return vehicleItem.conventions?.includes(
+                    Number(settings.filterConvention)
                 );
             });
         }
@@ -358,8 +355,8 @@ export const useQuizFilter = ({
                         text =
                             settings.mode === 'toCountry'
                                 ? (item as CCTLD).code
-                                      .toLowerCase()
-                                      .replace('.', '')
+                                    .toLowerCase()
+                                    .replace('.', '')
                                 : (item as CCTLD).country.toLowerCase();
                     } else if (quizType === 'driving_side') {
                         text = (item as DrivingSide).country.toLowerCase();
@@ -386,7 +383,7 @@ export const useQuizFilter = ({
         if (settings.maxQuestions !== 'All') {
             return [...filtered]
                 .sort(() => Math.random() - 0.5)
-                .slice(0, settings.maxQuestions as number);
+                .slice(0, settings.maxQuestions);
         }
         return filtered;
     }, [data, quizType, settings]);

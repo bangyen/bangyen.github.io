@@ -4,7 +4,7 @@ import { MenuButton } from '../ProjectMenu';
 import { BrowserRouter } from 'react-router-dom';
 
 describe('ProjectMenu', () => {
-    test('renders menu button and toggles menu', async () => {
+    test('renders menu button and toggles menu', () => {
         render(
             <BrowserRouter>
                 <MenuButton />

@@ -22,7 +22,7 @@ describe('useQuizFilter', () => {
             })
         );
         expect(result.current).toHaveLength(1);
-        expect(result.current[0].country).toBe('USA');
+        expect(result.current[0]!.country).toBe('USA');
     });
 
     test('filters by specific language (not All/Non-English)', () => {
@@ -38,7 +38,7 @@ describe('useQuizFilter', () => {
             })
         );
         expect(result.current).toHaveLength(1);
-        expect(result.current[0].country).toBe('France');
+        expect(result.current[0]!.country).toBe('France');
     });
 
     test('filters by non-english language (cctld)', () => {
@@ -54,7 +54,7 @@ describe('useQuizFilter', () => {
             })
         );
         expect(result.current).toHaveLength(1);
-        expect(result.current[0].country).toBe('France');
+        expect(result.current[0]!.country).toBe('France');
     });
 
     test('filters by zone (telephone)', () => {
@@ -70,7 +70,7 @@ describe('useQuizFilter', () => {
             })
         );
         expect(result.current).toHaveLength(1);
-        expect(result.current[0].country).toBe('USA');
+        expect(result.current[0]!.country).toBe('USA');
     });
 
     test('filters by multiple zones (telephone)', () => {
@@ -102,7 +102,7 @@ describe('useQuizFilter', () => {
             })
         );
         expect(result.current).toHaveLength(1);
-        expect(result.current[0].country).toBe('A');
+        expect(result.current[0]!.country).toBe('A');
     });
 
     test('filters by switch (driving_side)', () => {
@@ -122,7 +122,7 @@ describe('useQuizFilter', () => {
             })
         );
         expect(result.current).toHaveLength(1);
-        expect(result.current[0].country).toBe('A');
+        expect(result.current[0]!.country).toBe('A');
 
         const { result: result2 } = renderHook(() =>
             useQuizFilter({
@@ -136,7 +136,7 @@ describe('useQuizFilter', () => {
             })
         );
         expect(result2.current).toHaveLength(1);
-        expect(result2.current[0].country).toBe('B');
+        expect(result2.current[0]!.country).toBe('B');
     });
 
     test('filters by side in toCountry mode (driving_side)', () => {
@@ -157,7 +157,7 @@ describe('useQuizFilter', () => {
             })
         );
         expect(result.current).toHaveLength(1);
-        expect(result.current[0].country).toBe('A');
+        expect(result.current[0]!.country).toBe('A');
     });
 
     test('handles complex filterLetter logic', () => {
@@ -213,7 +213,7 @@ describe('useQuizFilter', () => {
             })
         );
         expect(result.current).toHaveLength(1);
-        expect(result.current[0].country).toBe('Albania');
+        expect(result.current[0]!.country).toBe('Albania');
     });
 
     test('filters by letters for driving_side and telephone', () => {
@@ -274,7 +274,7 @@ describe('useQuizFilter', () => {
             })
         );
         expect(result.current).toHaveLength(1);
-        expect(result.current[0].country).toBe('A');
+        expect(result.current[0]!.country).toBe('A');
     });
 
     test('filters by letters with empty/whitespace input', () => {

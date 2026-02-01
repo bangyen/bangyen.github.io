@@ -134,7 +134,9 @@ export default function Info(props: InfoProps): React.ReactElement {
                 }}
             >
                 <TypedGlassCard
-                    onClick={(e: React.MouseEvent) => e.stopPropagation()} // Prevent close on card click
+                    onClick={(e: React.MouseEvent) => {
+                        e.stopPropagation();
+                    }} // Prevent close on card click
                     sx={{
                         width: '100%',
                         maxWidth: '1000px',

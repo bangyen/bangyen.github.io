@@ -38,12 +38,12 @@ export const isSmartMatch = (
     if (ni === withoutParens) return true;
 
     // Also check first part before parens
-    const firstPartParens = normalize(expected.split('(')[0]);
+    const firstPartParens = normalize(expected.split('(')[0] ?? '');
     if (ni === firstPartParens) return true;
 
     // 4. "And" handling: Match the first part before "and"
     if (ne.includes(' and ')) {
-        const firstPart = normalize(expected.split(' and ')[0]);
+        const firstPart = normalize(expected.split(' and ')[0] ?? '');
         if (ni === firstPart) return true;
     }
 

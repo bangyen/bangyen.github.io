@@ -42,7 +42,7 @@ describe('Back Interpreter Logic', () => {
 
         next.grid = '<        ';
         next.position = 0;
-        const final = getState(next as BackState);
+        const final = getState(next);
         expect(final.pointer).toBe(0);
     });
 
@@ -53,7 +53,7 @@ describe('Back Interpreter Logic', () => {
 
         next.grid = '-        ';
         next.position = 0;
-        const final = getState(next as BackState);
+        const final = getState(next);
         expect(final.tape[0]).toBe(0);
     });
 
