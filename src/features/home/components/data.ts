@@ -66,11 +66,6 @@ export const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
                 description: 'Geography and map quizzes',
                 technology: 'React',
             },
-            Art: {
-                path: ROUTES.pages.ArtQuiz,
-                description: 'Masterpieces & history',
-                technology: 'Wikipedia API',
-            },
         },
     },
 };
