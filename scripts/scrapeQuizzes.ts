@@ -1,7 +1,9 @@
 
+/* eslint-disable no-console, @typescript-eslint/no-explicit-any */
 import fs from 'fs';
 import path from 'path';
 import * as cheerio from 'cheerio';
+import { fetchWithCache, cleanText } from './utils';
 
 const DATA_DIR = path.join(process.cwd(), 'src/features/quiz/data');
 
@@ -11,10 +13,7 @@ if (!fs.existsSync(DATA_DIR)) {
 }
 
 // Helpers
-function cleanText(text: string): string {
-    // Remove citations [1], [a], etc.
-    return text.replace(/\[.*?\]/g, '').trim();
-}
+
 
 function resolveFlagUrl(html: string): string {
     if (!html) return '';
@@ -39,18 +38,7 @@ function resolveFlagUrl(html: string): string {
 }
 
 async function fetchTableData(url: string): Promise<cheerio.CheerioAPI> {
-    console.log(`Fetching ${url}...`);
-    const response = await fetch(url, {
-        headers: {
-            'User-Agent':
-                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
-        },
-    });
-    if (!response.ok) {
-        throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-    }
-    const text = await response.text();
-    return cheerio.load(text);
+    return fetchWithCache(url);
 }
 
 // Generators
@@ -297,7 +285,7 @@ async function generateTelephoneCodes() {
         const codeRaw = cleanText($(cells[colCode]).text());
         const flag = resolveFlagUrl($(cells[colCountry]).html() || '');
 
-        const match = codeRaw.match(/[\+\d][\d\s\-\(\),]* /); // Removed invalid possessive quantifier
+        const match = codeRaw.match(/[+\d][\d\s\-(),]* /); // Removed invalid possessive quantifier
         if (match) {
             let code = match[0].trim();
             if (!code.startsWith('+')) code = '+' + code;
@@ -326,7 +314,7 @@ async function generateVehicleCodes() {
         // Heuristic: If one contains the other (e.g. "France" in "France, Algeria..."), merge.
         // Special case: "French India" contains "French" but not "France".
         // "Morocco" != "France".
-        let match = entries.find(e => {
+        const match = entries.find(e => {
             const c1 = e.country.toLowerCase();
             const c2 = country.toLowerCase();
             return c1.includes(c2) || c2.includes(c1);
@@ -361,9 +349,9 @@ async function generateVehicleCodes() {
             $(table).find('tr').slice(1).each((_, row) => {
                 const cells = $(row).find('td');
                 if (cells.length >= 2) {
-                    const country = cleanText($(cells[0]).text());
-                    const code = cleanText($(cells[1]).text());
-                    const flag = resolveFlagUrl($(cells[0]).html() || '');
+                    const _country = cleanText($(cells[0]).text());
+                    const _code = cleanText($(cells[1]).text());
+                    const _flag = resolveFlagUrl($(cells[0]).html() || '');
                 }
             });
         }

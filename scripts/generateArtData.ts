@@ -1,40 +1,14 @@
+/* eslint-disable no-console, @typescript-eslint/no-explicit-any */
 import fs from 'fs';
 import path from 'path';
 import zlib from 'zlib';
 import { promisify } from 'util';
-import { performance } from 'perf_hooks';
 import * as cheerio from 'cheerio';
-
-const HTML_CACHE_FILE = path.join(process.cwd(), 'scripts/data/most_expensive_paintings.html');
+import { fetchWithCache, slugify, delay } from './utils';
 
 // Fetch table data helper with local caching
 async function fetchTableData(url: string): Promise<cheerio.CheerioAPI> {
-    if (fs.existsSync(HTML_CACHE_FILE)) {
-        console.log(`Reading from local cache: ${HTML_CACHE_FILE}`);
-        const text = fs.readFileSync(HTML_CACHE_FILE, 'utf-8');
-        return cheerio.load(text);
-    }
-
-    console.log(`Fetching ${url}...`);
-    const response = await fetch(url, {
-        headers: {
-            'User-Agent':
-                'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
-        },
-    });
-    if (!response.ok) {
-        throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-    }
-    const text = await response.text();
-
-    // Save to cache
-    if (!fs.existsSync(path.dirname(HTML_CACHE_FILE))) {
-        fs.mkdirSync(path.dirname(HTML_CACHE_FILE), { recursive: true });
-    }
-    fs.writeFileSync(HTML_CACHE_FILE, text);
-    console.log(`Cached HTML to ${HTML_CACHE_FILE}`);
-
-    return cheerio.load(text);
+    return fetchWithCache(url, 'most_expensive_paintings.html');
 }
 
 // Local definition of ArtItem to allow independent execution
@@ -155,16 +129,7 @@ if (!fs.existsSync(ART_ASSETS_DIR)) {
     fs.mkdirSync(ART_ASSETS_DIR, { recursive: true });
 }
 
-function slugify(text: string) {
-    return text.toString().toLowerCase()
-        .replace(/\s+/g, '_')
-        .replace(/[^\w\-]+/g, '')
-        .replace(/\-\-+/g, '_')
-        .replace(/^-+/, '')
-        .replace(/-+$/, '');
-}
 
-const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
 async function downloadImage(url: string, dest: string) {
     const response = await fetch(url, {
@@ -188,8 +153,6 @@ async function downloadImage(url: string, dest: string) {
 }
 
 async function main() {
-    const startTime = performance.now();
-
     console.log('Scraping "List of most expensive paintings"... (Strict Mode: Columns Only)');
     const scrapedItems = await fetchMostExpensivePaintings();
 
@@ -207,7 +170,7 @@ async function main() {
         try {
             initialData = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
             console.log(`Loaded ${initialData.length} existing items.`);
-        } catch (e) {
+        } catch (_e) {
             console.warn('Failed to parse existing art_data.json');
         }
     } else if (fs.existsSync(GZIP_FILE)) {
@@ -215,7 +178,7 @@ async function main() {
             const compressed = fs.readFileSync(GZIP_FILE);
             const decompressed = await gunzip(compressed);
             initialData = JSON.parse(decompressed.toString());
-        } catch (e) { }
+        } catch (_e) { /* ignore */ }
     }
 
     const resultsMap = new Map();
