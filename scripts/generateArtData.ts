@@ -1,4 +1,4 @@
-/* eslint-disable no-console, @typescript-eslint/no-explicit-any */
+/* eslint-disable no-console */
 import fs from 'fs';
 import path from 'path';
 import zlib from 'zlib';
@@ -29,6 +29,7 @@ async function fetchMostExpensivePaintings(): Promise<ArtItem[]> {
     const $ = await fetchTableData(url);
     const items: ArtItem[] = [];
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let targetTable: cheerio.Cheerio<any> | null = null;
     const colMap: Record<string, number> = {};
 
@@ -57,6 +58,7 @@ async function fetchMostExpensivePaintings(): Promise<ArtItem[]> {
     // Default indices if detection failed slightly (fallback to standard layout)
     if (colMap['image'] === undefined) colMap['image'] = 1;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (targetTable as cheerio.Cheerio<any>).find('tr').slice(1).each((_: number, row: any) => {
         const cells = $(row).find('th, td');
         if (cells.length === 0) return;
@@ -120,7 +122,7 @@ const ART_ASSETS_DIR = path.join(PUBLIC_DIR, 'assets/art');
 const DATA_FILE = path.join(PUBLIC_DIR, 'assets/art_data.json');
 const GZIP_FILE = path.join(PUBLIC_DIR, 'assets/art_data.json.gz');
 
-function saveProgress(results: any[]) {
+function saveProgress(results: ArtItem[]) {
     const jsonStr = JSON.stringify(results, null, 2);
     fs.writeFileSync(DATA_FILE, jsonStr);
 }
@@ -165,7 +167,7 @@ async function main() {
 
     console.log(`Starting art data generation for ${ART_SEED_TITLES.length} items...`);
 
-    let initialData: any[] = [];
+    let initialData: ArtItem[] = [];
     if (fs.existsSync(DATA_FILE)) {
         try {
             initialData = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
@@ -198,17 +200,21 @@ async function main() {
         } else {
             // Force update fields from scrape to ensure strict compliance (e.g. if we had inferred before)
             // But we keep local image path if we have it
-            const oldImage = existing.imageUrl;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const oldImage = (existing as any).imageUrl;
             Object.assign(existing, item); // Overwrite with strict scraped data
             if (oldImage && oldImage.startsWith('./')) {
-                existing.imageUrl = oldImage; // Restore local path
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (existing as any).imageUrl = oldImage; // Restore local path
             }
             // Explicitly delete country/period if they exist in old data but not new?
             // "only include scraped info". Scraped item doesn't have country/period.
             // So Object.assign adds properties. It doesn't remove old ones.
             // We should strip them.
-            delete existing.country;
-            delete existing.period;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            delete (existing as any).country;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            delete (existing as any).period;
 
             resultsMap.set(item.title, existing);
         }
@@ -219,15 +225,17 @@ async function main() {
     // Let's assume they want to keep the "most expensive paintings" list as the canonical source.
     // So we will only save items that are in `scrapedItems`.
 
-    const finalItemsOnlyScraped: any[] = [];
+    const finalItemsOnlyScraped: ArtItem[] = [];
 
     for (const item of scrapedItems) {
         // Get the latest merged version from map
         const merged = resultsMap.get(item.title);
         if (merged) {
             // ensure no inferred fields are leaking back
-            delete merged.country;
-            delete merged.period;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            delete (merged as any).country;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            delete (merged as any).period;
             finalItemsOnlyScraped.push(merged);
         }
     }
