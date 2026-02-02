@@ -39,7 +39,7 @@ export function fillRow(
 
         last[c] = 1;
 
-        const input = [...(last)];
+        const input = [...last];
         const output = getProduct(input, dims, dims);
 
         inputStates.push(input);

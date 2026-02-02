@@ -6,7 +6,11 @@ import { GlassCard } from '../../../components/ui/GlassCard';
 import { COLORS, TYPOGRAPHY, SPACING } from '../../../config/theme';
 import { generateMaze, MazeData } from './mazeLogic';
 import { useWindow, useMobile } from '../../../hooks';
-import { createGridTexture, createGlassMaterial, createDustParticles } from './visualUtils';
+import {
+    createGridTexture,
+    createGlassMaterial,
+    createDustParticles,
+} from './visualUtils';
 
 const MAZE_SIZE = 15;
 const CELL_SIZE = 2;
@@ -27,7 +31,9 @@ export default function MazeGame(): React.ReactElement {
     } | null>(null);
 
     const [maze, setMaze] = useState<MazeData | null>(null);
-    const [gameState, setGameState] = useState<'start' | 'playing' | 'won'>('start');
+    const [gameState, setGameState] = useState<'start' | 'playing' | 'won'>(
+        'start'
+    );
     const gameStateRef = useRef(gameState);
 
     const { height, width } = useWindow();
@@ -52,8 +58,16 @@ export default function MazeGame(): React.ReactElement {
         scene.background = new THREE.Color(0x020202);
         scene.fog = new THREE.FogExp2(0x020202, 0.12);
 
-        const camera = new THREE.PerspectiveCamera(75, width / availableHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        const camera = new THREE.PerspectiveCamera(
+            75,
+            width / availableHeight,
+            0.1,
+            1000
+        );
+        const renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            alpha: true,
+        });
         renderer.setSize(width, availableHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.shadowMap.enabled = true;
@@ -67,15 +81,22 @@ export default function MazeGame(): React.ReactElement {
         // Floor
         const floorTexture = createGridTexture();
         floorTexture.repeat.set(MAZE_SIZE, MAZE_SIZE);
-        const floorGeometry = new THREE.PlaneGeometry(MAZE_SIZE * CELL_SIZE, MAZE_SIZE * CELL_SIZE);
+        const floorGeometry = new THREE.PlaneGeometry(
+            MAZE_SIZE * CELL_SIZE,
+            MAZE_SIZE * CELL_SIZE
+        );
         const floorMaterial = new THREE.MeshStandardMaterial({
             map: floorTexture,
             roughness: 0.2,
-            metalness: 0.5
+            metalness: 0.5,
         });
         const floor = new THREE.Mesh(floorGeometry, floorMaterial);
         floor.rotation.x = -Math.PI / 2;
-        floor.position.set((MAZE_SIZE * CELL_SIZE) / 2 - CELL_SIZE / 2, 0, (MAZE_SIZE * CELL_SIZE) / 2 - CELL_SIZE / 2);
+        floor.position.set(
+            (MAZE_SIZE * CELL_SIZE) / 2 - CELL_SIZE / 2,
+            0,
+            (MAZE_SIZE * CELL_SIZE) / 2 - CELL_SIZE / 2
+        );
         floor.receiveShadow = true;
         scene.add(floor);
 
@@ -88,8 +109,18 @@ export default function MazeGame(): React.ReactElement {
                 const x = c * CELL_SIZE;
                 const z = r * CELL_SIZE;
 
-                const createWall = (w: number, h: number, d: number, px: number, py: number, pz: number) => {
-                    const wall = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), glassMaterial);
+                const createWall = (
+                    w: number,
+                    h: number,
+                    d: number,
+                    px: number,
+                    py: number,
+                    pz: number
+                ) => {
+                    const wall = new THREE.Mesh(
+                        new THREE.BoxGeometry(w, h, d),
+                        glassMaterial
+                    );
                     wall.position.set(px, py, pz);
                     wall.castShadow = true;
                     wall.receiveShadow = true;
@@ -98,16 +129,52 @@ export default function MazeGame(): React.ReactElement {
 
                     // Wall top edge glow
                     const edgeGeom = new THREE.BoxGeometry(w, 0.05, d);
-                    const edgeMat = new THREE.MeshBasicMaterial({ color: COLORS.primary.main, transparent: true, opacity: 0.5 });
+                    const edgeMat = new THREE.MeshBasicMaterial({
+                        color: COLORS.primary.main,
+                        transparent: true,
+                        opacity: 0.5,
+                    });
                     const edge = new THREE.Mesh(edgeGeom, edgeMat);
                     edge.position.set(px, py + h / 2, pz);
                     scene.add(edge);
                 };
 
-                if (cell.walls.top) createWall(CELL_SIZE, WALL_HEIGHT, 0.1, x, WALL_HEIGHT / 2, z - CELL_SIZE / 2);
-                if (cell.walls.bottom) createWall(CELL_SIZE, WALL_HEIGHT, 0.1, x, WALL_HEIGHT / 2, z + CELL_SIZE / 2);
-                if (cell.walls.left) createWall(0.1, WALL_HEIGHT, CELL_SIZE, x - CELL_SIZE / 2, WALL_HEIGHT / 2, z);
-                if (cell.walls.right) createWall(0.1, WALL_HEIGHT, CELL_SIZE, x + CELL_SIZE / 2, WALL_HEIGHT / 2, z);
+                if (cell.walls.top)
+                    createWall(
+                        CELL_SIZE,
+                        WALL_HEIGHT,
+                        0.1,
+                        x,
+                        WALL_HEIGHT / 2,
+                        z - CELL_SIZE / 2
+                    );
+                if (cell.walls.bottom)
+                    createWall(
+                        CELL_SIZE,
+                        WALL_HEIGHT,
+                        0.1,
+                        x,
+                        WALL_HEIGHT / 2,
+                        z + CELL_SIZE / 2
+                    );
+                if (cell.walls.left)
+                    createWall(
+                        0.1,
+                        WALL_HEIGHT,
+                        CELL_SIZE,
+                        x - CELL_SIZE / 2,
+                        WALL_HEIGHT / 2,
+                        z
+                    );
+                if (cell.walls.right)
+                    createWall(
+                        0.1,
+                        WALL_HEIGHT,
+                        CELL_SIZE,
+                        x + CELL_SIZE / 2,
+                        WALL_HEIGHT / 2,
+                        z
+                    );
             });
         });
 
@@ -120,7 +187,7 @@ export default function MazeGame(): React.ReactElement {
                 emissive: COLORS.primary.main,
                 emissiveIntensity: 1,
                 metalness: 1,
-                roughness: 0
+                roughness: 0,
             })
         );
         playerBody.position.y = PLAYER_SIZE + 0.2;
@@ -132,7 +199,11 @@ export default function MazeGame(): React.ReactElement {
         playerLight.castShadow = true;
         playerGroup.add(playerLight);
 
-        playerGroup.position.set(maze.start[1] * CELL_SIZE, 0, maze.start[0] * CELL_SIZE);
+        playerGroup.position.set(
+            maze.start[1] * CELL_SIZE,
+            0,
+            maze.start[0] * CELL_SIZE
+        );
         scene.add(playerGroup);
 
         // Goal: Floating Knot
@@ -143,24 +214,39 @@ export default function MazeGame(): React.ReactElement {
                 emissive: 0xffd700,
                 emissiveIntensity: 0.8,
                 metalness: 1,
-                roughness: 0.1
+                roughness: 0.1,
             })
         );
-        goal.position.set(maze.end[1] * CELL_SIZE, 0.8, maze.end[0] * CELL_SIZE);
+        goal.position.set(
+            maze.end[1] * CELL_SIZE,
+            0.8,
+            maze.end[0] * CELL_SIZE
+        );
         scene.add(goal);
 
         // Particles
         const particles = createDustParticles(600, 60);
         scene.add(particles);
 
-        sceneRef.current = { scene, camera, renderer, player: playerGroup, walls, goal, light: playerLight, particles };
+        sceneRef.current = {
+            scene,
+            camera,
+            renderer,
+            player: playerGroup,
+            walls,
+            goal,
+            light: playerLight,
+            particles,
+        };
 
         // Game Loop
         let animationId: number;
         const keys: Record<string, boolean> = {};
 
-        const handleKeyDown = (e: KeyboardEvent) => (keys[e.key.toLowerCase()] = true);
-        const handleKeyUp = (e: KeyboardEvent) => (keys[e.key.toLowerCase()] = false);
+        const handleKeyDown = (e: KeyboardEvent) =>
+            (keys[e.key.toLowerCase()] = true);
+        const handleKeyUp = (e: KeyboardEvent) =>
+            (keys[e.key.toLowerCase()] = false);
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
 
@@ -169,8 +255,12 @@ export default function MazeGame(): React.ReactElement {
 
             if (gameStateRef.current === 'playing') {
                 const moveSpeed = 0.085;
-                const dx = (keys.d || keys.arrowright ? 1 : 0) - (keys.a || keys.arrowleft ? 1 : 0);
-                const dz = (keys.s || keys.arrowdown ? 1 : 0) - (keys.w || keys.arrowup ? 1 : 0);
+                const dx =
+                    (keys.d || keys.arrowright ? 1 : 0) -
+                    (keys.a || keys.arrowleft ? 1 : 0);
+                const dz =
+                    (keys.s || keys.arrowdown ? 1 : 0) -
+                    (keys.w || keys.arrowup ? 1 : 0);
 
                 if (dx !== 0 || dz !== 0) {
                     const length = Math.sqrt(dx * dx + dz * dz);
@@ -179,11 +269,22 @@ export default function MazeGame(): React.ReactElement {
 
                     const checkCollision = (pos: THREE.Vector3) => {
                         return walls.some(wall => {
-                            const wallBox = new THREE.Box3().setFromObject(wall);
-                            const playerBox = new THREE.Box3().setFromCenterAndSize(
-                                pos.clone().add(new THREE.Vector3(0, PLAYER_SIZE, 0)),
-                                new THREE.Vector3(PLAYER_SIZE * 1.5, PLAYER_SIZE * 1.5, PLAYER_SIZE * 1.5)
+                            const wallBox = new THREE.Box3().setFromObject(
+                                wall
                             );
+                            const playerBox =
+                                new THREE.Box3().setFromCenterAndSize(
+                                    pos
+                                        .clone()
+                                        .add(
+                                            new THREE.Vector3(0, PLAYER_SIZE, 0)
+                                        ),
+                                    new THREE.Vector3(
+                                        PLAYER_SIZE * 1.5,
+                                        PLAYER_SIZE * 1.5,
+                                        PLAYER_SIZE * 1.5
+                                    )
+                                );
                             return wallBox.intersectsBox(playerBox);
                         });
                     };
@@ -191,18 +292,26 @@ export default function MazeGame(): React.ReactElement {
                     if (dx !== 0) {
                         const newPosX = playerGroup.position.clone();
                         newPosX.x += moveX;
-                        if (!checkCollision(newPosX)) playerGroup.position.x = newPosX.x;
+                        if (!checkCollision(newPosX))
+                            playerGroup.position.x = newPosX.x;
                     }
                     if (dz !== 0) {
                         const newPosZ = playerGroup.position.clone();
                         newPosZ.z += moveZ;
-                        if (!checkCollision(newPosZ)) playerGroup.position.z = newPosZ.z;
+                        if (!checkCollision(newPosZ))
+                            playerGroup.position.z = newPosZ.z;
                     }
                 }
 
                 // Win condition
-                const playerPos2D = new THREE.Vector2(playerGroup.position.x, playerGroup.position.z);
-                const goalPos2D = new THREE.Vector2(goal.position.x, goal.position.z);
+                const playerPos2D = new THREE.Vector2(
+                    playerGroup.position.x,
+                    playerGroup.position.z
+                );
+                const goalPos2D = new THREE.Vector2(
+                    goal.position.x,
+                    goal.position.z
+                );
                 if (playerPos2D.distanceTo(goalPos2D) < 0.7) {
                     setGameState('won');
                 }
@@ -210,7 +319,8 @@ export default function MazeGame(): React.ReactElement {
                 // Breathing light & animation
                 playerBody.rotation.y += 0.02;
                 playerBody.rotation.z += 0.01;
-                playerBody.position.y = PLAYER_SIZE + 0.2 + Math.sin(time * 0.003) * 0.05;
+                playerBody.position.y =
+                    PLAYER_SIZE + 0.2 + Math.sin(time * 0.003) * 0.05;
                 playerLight.intensity = 15 + Math.sin(time * 0.002) * 3;
 
                 // Dust motion
@@ -221,7 +331,14 @@ export default function MazeGame(): React.ReactElement {
                 goal.position.y = 0.8 + Math.sin(time * 0.004) * 0.1;
 
                 // Camera follow
-                camera.position.lerp(new THREE.Vector3(playerGroup.position.x, 9, playerGroup.position.z + 5), 0.1);
+                camera.position.lerp(
+                    new THREE.Vector3(
+                        playerGroup.position.x,
+                        9,
+                        playerGroup.position.z + 5
+                    ),
+                    0.1
+                );
                 camera.lookAt(playerGroup.position);
             }
 
@@ -253,19 +370,59 @@ export default function MazeGame(): React.ReactElement {
     }, [width, availableHeight]);
 
     return (
-        <Grid container minHeight="100vh" flexDirection="column" sx={{ background: COLORS.surface.background, overflow: 'hidden' }}>
+        <Grid
+            container
+            minHeight="100vh"
+            flexDirection="column"
+            sx={{ background: COLORS.surface.background, overflow: 'hidden' }}
+        >
             <GlobalHeader showHome={true} />
 
-            <Box ref={containerRef} sx={{ flex: 1, position: 'relative', cursor: gameState === 'playing' ? 'none' : 'default' }} />
+            <Box
+                ref={containerRef}
+                sx={{
+                    flex: 1,
+                    position: 'relative',
+                    cursor: gameState === 'playing' ? 'none' : 'default',
+                }}
+            />
 
             {(gameState === 'start' || gameState === 'won') && (
                 <Fade in>
-                    <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 10, width: '90%', maxWidth: '400px' }}>
-                        <GlassCard sx={{ p: 4, textAlign: 'center', border: `1px solid ${COLORS.primary.main}44` }}>
-                            <Typography variant="h2" sx={{ color: COLORS.primary.main, mb: 1, fontWeight: TYPOGRAPHY.fontWeight.bold }}>
-                                {gameState === 'start' ? '3D Maze' : 'Goal Reached!'}
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            zIndex: 10,
+                            width: '90%',
+                            maxWidth: '400px',
+                        }}
+                    >
+                        <GlassCard
+                            sx={{
+                                p: 4,
+                                textAlign: 'center',
+                                border: `1px solid ${COLORS.primary.main}44`,
+                            }}
+                        >
+                            <Typography
+                                variant="h2"
+                                sx={{
+                                    color: COLORS.primary.main,
+                                    mb: 1,
+                                    fontWeight: TYPOGRAPHY.fontWeight.bold,
+                                }}
+                            >
+                                {gameState === 'start'
+                                    ? '3D Maze'
+                                    : 'Goal Reached!'}
                             </Typography>
-                            <Typography variant="body1" sx={{ color: COLORS.text.secondary, mb: 4 }}>
+                            <Typography
+                                variant="body1"
+                                sx={{ color: COLORS.text.secondary, mb: 4 }}
+                            >
                                 {gameState === 'start'
                                     ? 'Navigate the crystalline labyrinth. Use WASD or Arrows.'
                                     : 'You have mastered the path through the lights.'}
@@ -278,10 +435,12 @@ export default function MazeGame(): React.ReactElement {
                                     py: 1.5,
                                     px: 6,
                                     borderRadius: SPACING.borderRadius.full,
-                                    boxShadow: `0 0 20px ${COLORS.primary.main}44`
+                                    boxShadow: `0 0 20px ${COLORS.primary.main}44`,
                                 }}
                             >
-                                {gameState === 'start' ? 'Initialize' : 'Pulse Again'}
+                                {gameState === 'start'
+                                    ? 'Initialize'
+                                    : 'Pulse Again'}
                             </Button>
                         </GlassCard>
                     </Box>

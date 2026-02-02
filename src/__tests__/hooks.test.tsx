@@ -10,10 +10,13 @@ import {
 import * as mui from '../components/mui';
 
 // Mock useMediaQuery from MUI
-jest.mock('../components/mui', () => ({
-    ...jest.requireActual('../components/mui'),
-    useMediaQuery: jest.fn(),
-}));
+jest.mock(
+    '../components/mui',
+    (): Record<string, unknown> => ({
+        ...jest.requireActual('../components/mui'),
+        useMediaQuery: jest.fn(),
+    })
+);
 
 describe('Custom Hooks', () => {
     describe('useContainer', () => {

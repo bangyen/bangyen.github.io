@@ -36,8 +36,8 @@ function Cell({ size, children, ...rest }: CellProps) {
         transitionProp === false
             ? 'none'
             : typeof transitionProp === 'string'
-                ? transitionProp
-                : ANIMATIONS.transition;
+              ? transitionProp
+              : ANIMATIONS.transition;
 
     const props = {
         ...COMPONENT_VARIANTS.flexCenter,
@@ -83,7 +83,11 @@ interface RowProps {
 
 function Row({ cols, size, index, spacing, cellProps }: RowProps) {
     const WrappedCell = (_: unknown, j: number) => (
-        <Cell {...cellProps(index, j)} key={`${index.toString()}_${j.toString()}`} size={size} />
+        <Cell
+            {...cellProps(index, j)}
+            key={`${index.toString()}_${j.toString()}`}
+            size={size}
+        />
     );
 
     return (

@@ -44,7 +44,7 @@ describe('useTheme (ThemeProvider and useThemeContext)', () => {
     });
 
     test('initializes with dark resolvedMode if system is dark', () => {
-        (matchMediaSpy).mockImplementation(query => ({
+        matchMediaSpy.mockImplementation(query => ({
             matches: true,
             media: query as string,
             onchange: null,
@@ -111,7 +111,10 @@ describe('useTheme (ThemeProvider and useThemeContext)', () => {
     test('responds to system theme changes in system mode', () => {
         const { result } = renderHook(() => useThemeContext(), { wrapper });
 
-        const mockCalls = (addListener).mock.calls as [unknown, (e: { matches: boolean }) => void][];
+        const mockCalls = addListener.mock.calls as [
+            unknown,
+            (e: { matches: boolean }) => void,
+        ][];
         const handler = mockCalls[0][1];
 
         act(() => {
@@ -129,7 +132,7 @@ describe('useTheme (ThemeProvider and useThemeContext)', () => {
         // Prevent console.error from cluttering the output
         const consoleSpy = jest
             .spyOn(console, 'error')
-            .mockImplementation(() => { });
+            .mockImplementation(() => {});
 
         expect(() => renderHook(() => useThemeContext())).toThrow(
             'useThemeContext must be used within a ThemeProvider'

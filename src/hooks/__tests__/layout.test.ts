@@ -81,9 +81,13 @@ describe('Layout Hooks and Helpers', () => {
             const { result } = renderHook(() => useMobile('md'));
 
             expect(result.current).toBe(true);
-            const mockCalls = (useMediaQuery as jest.Mock).mock.calls as [[(theme: {
-                breakpoints: { down: (s: string) => string };
-            }) => string]];
+            const mockCalls = (useMediaQuery as jest.Mock).mock.calls as [
+                [
+                    (theme: {
+                        breakpoints: { down: (s: string) => string };
+                    }) => string,
+                ],
+            ];
             const queryFn = mockCalls[0][0];
             const mockTheme = {
                 breakpoints: { down: (s: string) => `down-${s}` },

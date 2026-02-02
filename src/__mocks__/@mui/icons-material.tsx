@@ -86,7 +86,7 @@ const mockIcons = [
     'BusinessRounded',
     'SettingsRounded',
 ].reduce<Record<string, unknown>>((acc, iconName) => {
-    const testId = iconNameMap[iconName] || iconName.toLowerCase();
+    const testId = iconNameMap[iconName] ?? iconName.toLowerCase();
     acc[iconName] = () => <div data-testid={`${testId}-icon`}>{iconName}</div>;
     return acc;
 }, {});

@@ -247,7 +247,7 @@ export default function GridEditor<T extends GridState>(
         register: 0,
         code: undefined,
         fastForward: false,
-        pause: state.pause ?? false,
+        pause: state.pause,
     };
 
     return (

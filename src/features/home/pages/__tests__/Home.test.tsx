@@ -33,7 +33,10 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => (
 
 // Mock Material-UI icons
 jest.mock('@mui/icons-material', () => ({
-    ...jest.requireActual('@mui/icons-material'),
+    ...(jest.requireActual('@mui/icons-material') as unknown as Record<
+        string,
+        unknown
+    >),
     LightModeRounded: () => <div data-testid="light-mode-icon" />,
     DarkModeRounded: () => <div data-testid="dark-mode-icon" />,
     ViewModuleRounded: () => <div data-testid="view-module-icon" />,

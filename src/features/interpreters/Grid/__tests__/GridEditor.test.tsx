@@ -52,10 +52,10 @@ jest.mock('../../components/GridArea', () => ({
         options: string[];
     }) => (
         <div data-testid="grid-area">
-            {(options || []).map((opt: string, i: number) => (
+            {options.map((opt: string, i: number) => (
                 <button
                     key={i}
-                    data-testid={`cell-${i}`}
+                    data-testid={`cell-${String(i)}`}
                     onClick={handleClick(i)}
                 >
                     {opt}
@@ -75,11 +75,13 @@ jest.mock('../../components/KeySelector', () => ({
         keys: string[];
     }) => (
         <div data-testid="key-selector">
-            {(keys || []).map((k: string) => (
+            {keys.map((k: string) => (
                 <button
                     key={k}
                     data-testid={`key-${k}`}
-                    onClick={() => onSelect(k)}
+                    onClick={() => {
+                        onSelect(k);
+                    }}
                 >
                     {k}
                 </button>

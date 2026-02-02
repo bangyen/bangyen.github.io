@@ -42,7 +42,8 @@ export function generateMaze(rows: number, cols: number): MazeData {
 
     const stack: Cell[] = [];
     const startCell = grid[0]?.[0];
-    if (!startCell) return { grid, rows, cols, start: [0, 0], end: [rows - 1, cols - 1] };
+    if (!startCell)
+        return { grid, rows, cols, start: [0, 0], end: [rows - 1, cols - 1] };
     startCell.visited = true;
     stack.push(startCell);
 
@@ -52,7 +53,8 @@ export function generateMaze(rows: number, cols: number): MazeData {
         const neighbors = getUnvisitedNeighbors(current, grid, rows, cols);
 
         if (neighbors.length > 0) {
-            const next = neighbors[Math.floor(Math.random() * neighbors.length)];
+            const next =
+                neighbors[Math.floor(Math.random() * neighbors.length)];
             if (next) {
                 removeWalls(current, next);
                 next.visited = true;

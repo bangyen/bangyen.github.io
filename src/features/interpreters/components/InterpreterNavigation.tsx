@@ -1,4 +1,9 @@
-import { Select, MenuItem, FormControl, SelectChangeEvent } from '@mui/material';
+import {
+    Select,
+    MenuItem,
+    FormControl,
+    SelectChangeEvent,
+} from '@mui/material';
 import { COLORS, SPACING, TYPOGRAPHY } from '../../../config/theme';
 
 interface InterpreterNavigationProps {

@@ -184,10 +184,10 @@ const ResearchDemo = <T,>({
                             >
                                 {chartTitle ??
                                     (viewTypes.length > 0
-                                        ? viewTypes.find(
-                                            view =>
-                                                view.key === currentViewType
-                                        )?.chartTitle ?? 'Data Visualization'
+                                        ? (viewTypes.find(
+                                              view =>
+                                                  view.key === currentViewType
+                                          )?.chartTitle ?? 'Data Visualization')
                                         : 'Data Visualization')}
                             </Typography>
                             <Box

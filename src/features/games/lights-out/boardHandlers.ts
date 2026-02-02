@@ -8,24 +8,39 @@ export function flipAdj(
     grid: number[][]
 ): number[][] {
     const rows = grid.length;
-    const firstRow = grid[0];
-    const cols = firstRow ? firstRow.length : 0;
 
     const newGrid = grid.map(row => [...row]);
     const targetRow = newGrid[row];
-    if (targetRow) (targetRow[col]!) ^= 1;
+    if (targetRow && col >= 0 && col < targetRow.length) {
+        const val = targetRow[col];
+        if (val !== undefined) targetRow[col] = val ^ 1;
+    }
 
     if (row > 0) {
         const rowAbove = newGrid[row - 1];
-        if (rowAbove) (rowAbove[col]!) ^= 1;
+        if (rowAbove && col >= 0 && col < rowAbove.length) {
+            const val = rowAbove[col];
+            if (val !== undefined) rowAbove[col] = val ^ 1;
+        }
     }
     if (row < rows - 1) {
         const rowBelow = newGrid[row + 1];
-        if (rowBelow) (rowBelow[col]!) ^= 1;
+        if (rowBelow && col >= 0 && col < rowBelow.length) {
+            const val = rowBelow[col];
+            if (val !== undefined) rowBelow[col] = val ^ 1;
+        }
     }
 
-    if (col > 0 && targetRow) targetRow[col - 1]! ^= 1;
-    if (col < cols - 1 && targetRow) targetRow[col + 1]! ^= 1;
+    if (targetRow) {
+        if (col > 0) {
+            const val = targetRow[col - 1];
+            if (val !== undefined) targetRow[col - 1] = val ^ 1;
+        }
+        if (col < targetRow.length - 1) {
+            const val = targetRow[col + 1];
+            if (val !== undefined) targetRow[col + 1] = val ^ 1;
+        }
+    }
 
     return newGrid;
 }
@@ -95,16 +110,16 @@ function solveLastRow(
 
             // Record resulting bottom row
             const finalBottomRow = grid[rows - 1];
-            const bottomStr = finalBottomRow ? finalBottomRow.join('') : '';
-            if (map[bottomStr] === undefined) {
-                map[bottomStr] = topRowIndices;
+            if (finalBottomRow) {
+                const bottomStr = finalBottomRow.join('');
+                map[bottomStr] ??= topRowIndices;
             }
         }
         solverCache[key] = map;
     }
 
     const currentBottomStr = lastRow.join('');
-    const cache = solverCache[key]!;
+    const cache = solverCache[key];
     const result = cache[currentBottomStr] ?? null;
     return result;
 }

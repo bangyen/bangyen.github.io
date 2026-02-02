@@ -159,7 +159,9 @@ describe('Grid Interpreter Event Handlers', () => {
                 pointer: 1,
             };
             const action = { type: 'delete' } as unknown as GridAction;
-            const result = handleAction(state, action) as GridState & { pointer: number };
+            const result = handleAction(state, action) as GridState & {
+                pointer: number;
+            };
             expect(result.pointer).toBe(0);
         });
 
@@ -170,7 +172,9 @@ describe('Grid Interpreter Event Handlers', () => {
                 pointer: 1,
             };
             const action = { type: 'delete' } as unknown as GridAction;
-            const result = handleAction(state, action) as GridState & { pointer: number };
+            const result = handleAction(state, action) as GridState & {
+                pointer: number;
+            };
             expect(result.pointer).toBe(1);
         });
     });

@@ -58,7 +58,10 @@ describe('Snake Component', () => {
         expect(lastCellProps).toBeDefined();
         expect(lastCellProps?.(0, 0)).toBeDefined();
 
-        const keyHandler = mockCreateKeys.mock.calls[0]?.[0] as ((args: { key: string }) => void) | undefined;
+        const calls = mockCreateKeys.mock.calls as [
+            (args: { key: string }) => void,
+        ][];
+        const keyHandler = calls[0]?.[0];
         act(() => {
             keyHandler?.({ key: 'ArrowDown' });
         });
@@ -88,7 +91,10 @@ describe('Snake Component', () => {
             });
         });
 
-        const nextIter = mockCreateTimer.mock.calls[0]?.[0] as { repeat: () => void } | undefined;
+        const timerCalls = mockCreateTimer.mock.calls as [
+            { repeat: () => void },
+        ][];
+        const nextIter = timerCalls[0]?.[0];
         act(() => {
             nextIter?.repeat();
         });

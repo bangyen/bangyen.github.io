@@ -376,8 +376,8 @@ describe('Helper Components', () => {
 
     describe('CustomGrid', () => {
         test('renders grid with correct dimensions', () => {
-            const cellProps = jest.fn((row, col) => ({
-                children: `${row}-${col}`,
+            const cellProps = jest.fn((row: number, col: number) => ({
+                children: `${String(row)}-${String(col)}`,
             }));
 
             render(
@@ -388,8 +388,8 @@ describe('Helper Components', () => {
         });
 
         test('calls cellProps for each cell', () => {
-            const cellProps = jest.fn((row, col) => ({
-                children: `${row}-${col}`,
+            const cellProps = jest.fn((row: number, col: number) => ({
+                children: `${String(row)}-${String(col)}`,
             }));
 
             render(
@@ -400,8 +400,8 @@ describe('Helper Components', () => {
         });
 
         test('uses custom space when provided', () => {
-            const cellProps = jest.fn((row, col) => ({
-                children: `${row}-${col}`,
+            const cellProps = jest.fn((row: number, col: number) => ({
+                children: `${String(row)}-${String(col)}`,
             }));
 
             render(

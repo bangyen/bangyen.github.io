@@ -25,8 +25,8 @@ jest.mock('../../../../hooks', () => ({
 
 // Mock boardHandlers to control game logic
 jest.mock('../boardHandlers', () => ({
-    getGrid: jest.fn(() => Array(4).fill(Array(4).fill(0))),
-    handleBoard: jest.fn((state, action) => {
+    getGrid: jest.fn(() => Array(4).fill(Array(4).fill(0)) as number[][]),
+    handleBoard: jest.fn((state: BoardState, action: BoardAction) => {
         if (action.type === 'auto') return { ...state, auto: !state.auto };
         if (action.type === 'resize')
             return {

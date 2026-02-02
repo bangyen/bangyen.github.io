@@ -323,17 +323,17 @@ export const useQuizFilter = ({
             );
         }
 
-        if (typeof settings.filterLetter === 'string' && settings.filterLetter !== '') {
+        if (
+            typeof settings.filterLetter === 'string' &&
+            settings.filterLetter !== ''
+        ) {
             let letters = settings.filterLetter
                 .toLowerCase()
                 .split(',')
                 .map((l: string) => l.trim())
                 .filter((l: string) => l);
 
-            if (
-                letters.length <= 1 &&
-                !settings.filterLetter.includes(',')
-            ) {
+            if (letters.length <= 1 && !settings.filterLetter.includes(',')) {
                 const spaceSplit = settings.filterLetter
                     .toLowerCase()
                     .split(/\s+/)
@@ -355,8 +355,8 @@ export const useQuizFilter = ({
                         text =
                             settings.mode === 'toCountry'
                                 ? (item as CCTLD).code
-                                    .toLowerCase()
-                                    .replace('.', '')
+                                      .toLowerCase()
+                                      .replace('.', '')
                                 : (item as CCTLD).country.toLowerCase();
                     } else if (quizType === 'driving_side') {
                         text = (item as DrivingSide).country.toLowerCase();
@@ -367,15 +367,13 @@ export const useQuizFilter = ({
                             settings.mode === 'toCountry'
                                 ? (item as VehicleCode).code.toLowerCase()
                                 : (item as VehicleCode).country.toLowerCase();
-                    } else if (quizType === 'art') {
+                    } else {
                         const artItem = item as ArtItem;
                         if (settings.mode === 'art_artist') {
-                            text = (artItem.artist ?? '').toLowerCase();
+                            text = artItem.artist.toLowerCase();
                         } else {
-                            text = (artItem.title ?? '').toLowerCase();
+                            text = artItem.title.toLowerCase();
                         }
-                    } else {
-                        text = (item.country ?? '').toLowerCase();
                     }
                     return letters.some((l: string) => text.startsWith(l));
                 });

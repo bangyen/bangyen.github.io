@@ -22,27 +22,43 @@ jest.mock('../../../../components/icons', () => ({
 
 // Mock CustomGrid to avoid complex rendering and animations
 jest.mock('../../../../components/ui/CustomGrid', () => ({
-    CustomGrid: jest.fn(({ cellProps, rows, cols }) => (
-        <div data-testid="custom-grid">
-            {Array.from({ length: rows * cols }).map((_, i) => {
-                const r = Math.floor(i / cols);
-                const c = i % cols;
-                const props = cellProps(r, c) || {};
-                const { backgroundColor, color, ...domProps } = props;
+    CustomGrid: jest.fn(
+        ({
+            cellProps,
+            rows,
+            cols,
+        }: {
+            cellProps: (
+                r: number,
+                c: number
+            ) => { backgroundColor?: string; color?: string };
+            rows: number;
+            cols: number;
+        }) => (
+            <div data-testid="custom-grid">
+                {Array.from({ length: rows * cols }).map((_, i) => {
+                    const r = Math.floor(i / cols);
+                    const c = i % cols;
+                    const props = cellProps(r, c);
+                    const { backgroundColor, color, ...domProps } = props;
 
-                return (
-                    <div
-                        key={`${r}-${c}`}
-                        data-testid={`cell-${r}-${c}`}
-                        style={
-                            { backgroundColor, color } as React.CSSProperties
-                        }
-                        {...domProps}
-                    />
-                );
-            })}
-        </div>
-    )),
+                    return (
+                        <div
+                            key={`${String(r)}-${String(c)}`}
+                            data-testid={`cell-${String(r)}-${String(c)}`}
+                            style={
+                                {
+                                    backgroundColor,
+                                    color,
+                                } as React.CSSProperties
+                            }
+                            {...domProps}
+                        />
+                    );
+                })}
+            </div>
+        )
+    ),
 }));
 
 describe('Lights Out Example Component', () => {

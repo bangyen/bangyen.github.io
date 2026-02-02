@@ -55,7 +55,7 @@ export function GridArea({
             return (
                 (cellStyles as Record<string, typeof cellStyles.secondary>)[
                     color
-                ] || cellStyles.secondary
+                ] ?? cellStyles.secondary
             );
         },
         [cellStyles]
@@ -64,7 +64,7 @@ export function GridArea({
     const cellProps = (row: number, col: number) => {
         const pos = cols * row + col;
         const color = chooseColor(pos);
-        const value = options[pos] || ' ';
+        const value = options[pos] ?? ' ';
 
         const cellStyle = getCellStyles(color);
 

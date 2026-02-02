@@ -197,7 +197,7 @@ describe('QuizFilters', () => {
 
         expect(mockOnChange).toHaveBeenCalledWith(
             expect.objectContaining({
-                filterZone: expect.any(String),
+                filterZone: expect.any(String) as unknown as string,
             })
         );
     });
@@ -213,7 +213,7 @@ describe('QuizFilters', () => {
 
         expect(mockOnChange).toHaveBeenCalledWith(
             expect.objectContaining({
-                filterConvention: expect.any(String),
+                filterConvention: expect.any(String) as unknown as string,
             })
         );
     });

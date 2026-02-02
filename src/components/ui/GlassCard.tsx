@@ -35,7 +35,9 @@ export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
                                 : COMPONENT_VARIANTS.card),
                             padding,
                         },
-                        ...(Array.isArray(sx) ? (sx as SxProps<Theme>[]) : [sx]),
+                        ...(Array.isArray(sx)
+                            ? (sx as SxProps<Theme>[])
+                            : [sx]),
                     ] as SxProps<Theme>
                 }
                 {...props}

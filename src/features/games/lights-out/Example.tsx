@@ -65,25 +65,25 @@ function getIconFrames(
             if (match) {
                 const isOne = currentState[row]?.[col] === 1;
                 color = isOne ? palette.secondary : palette.primary;
-                predictedContent = `"${(k + 1).toString()}"`;
+                predictedContent = `"${String(k + 1)}"`;
             }
         }
 
         if (match) {
             // Entrance (Pop In)
-            frames[`${start}%`] = {
+            frames[`${String(start)}%`] = {
                 opacity: 0,
                 content: predictedContent,
                 color,
                 transform: 'scale(0.5)',
             };
-            frames[`${start + stepSize * (0.1 / speed)}%`] = {
+            frames[`${String(start + stepSize * (0.1 / speed))}%`] = {
                 opacity: 1,
                 content: predictedContent,
                 color,
                 transform: 'scale(1.2)',
             };
-            frames[`${start + stepSize * (0.2 / speed)}%`] = {
+            frames[`${String(start + stepSize * (0.2 / speed))}%`] = {
                 opacity: 1,
                 content: predictedContent,
                 color,
@@ -91,7 +91,7 @@ function getIconFrames(
             };
 
             // Hold
-            frames[`${end - stepSize * (0.1 / speed)}%`] = {
+            frames[`${String(end - stepSize * (0.1 / speed))}%`] = {
                 opacity: 1,
                 content: predictedContent,
                 color,
@@ -99,7 +99,7 @@ function getIconFrames(
             };
 
             // Exit (Fade Out)
-            frames[`${end}%`] = {
+            frames[`${String(end)}%`] = {
                 opacity: 0,
                 content: predictedContent,
                 color,
@@ -107,13 +107,13 @@ function getIconFrames(
             };
         } else {
             // Keep hidden
-            frames[`${start}%`] = {
+            frames[`${String(start)}%`] = {
                 opacity: 0,
                 content: '""',
                 color,
                 transform: 'scale(0.5)',
             };
-            frames[`${end}%`] = {
+            frames[`${String(end)}%`] = {
                 opacity: 0,
                 content: '""',
                 color,
@@ -135,11 +135,11 @@ function iconHandler(
         const frames = getIconFrames(states, row, col, dims, palette);
         const length = states.length;
 
-        const name = `${id}-icon-${row.toString()}-${col.toString()}`;
+        const name = `${id}-icon-${String(row)}-${String(col)}`;
         const index = `@keyframes ${name}`;
 
         const animation = `
-            ${(length * 2).toString()}s
+            ${String(length * 2)}s
             linear
             infinite
         `;
@@ -210,25 +210,25 @@ function inputIconHandler(
                     match = true;
                     const isOne = currentState[col] === 1;
                     color = isOne ? palette.secondary : palette.primary;
-                    predictedContent = `"${(k + 1).toString()}"`;
+                    predictedContent = `"${String(k + 1)}"`;
                 }
             }
 
             if (match) {
                 // Entrance (Pop In) - Faster for input
-                frames[`${start}%`] = {
+                frames[`${String(start)}%`] = {
                     opacity: 0,
                     content: predictedContent,
                     color,
                     transform: 'scale(0.5)',
                 };
-                frames[`${start + stepSize * (0.1 / speed)}%`] = {
+                frames[`${String(start + stepSize * (0.1 / speed))}%`] = {
                     opacity: 1,
                     content: predictedContent,
                     color,
                     transform: 'scale(1.2)',
                 };
-                frames[`${start + stepSize * (0.2 / speed)}%`] = {
+                frames[`${String(start + stepSize * (0.2 / speed))}%`] = {
                     opacity: 1,
                     content: predictedContent,
                     color,
@@ -236,7 +236,7 @@ function inputIconHandler(
                 };
 
                 // Hold (End sooner for input to feel snappier)
-                frames[`${end - stepSize * (0.1 / speed)}%`] = {
+                frames[`${String(end - stepSize * (0.1 / speed))}%`] = {
                     opacity: 1,
                     content: predictedContent,
                     color,
@@ -244,20 +244,20 @@ function inputIconHandler(
                 };
 
                 // Exit (Fade Out)
-                frames[`${end}%`] = {
+                frames[`${String(end)}%`] = {
                     opacity: 0,
                     content: predictedContent,
                     color,
                     transform: 'scale(0.5)',
                 };
             } else {
-                frames[`${start}%`] = {
+                frames[`${String(start)}%`] = {
                     opacity: 0,
                     content: '""',
                     color,
                     transform: 'scale(0.5)',
                 };
-                frames[`${end}%`] = {
+                frames[`${String(end)}%`] = {
                     opacity: 0,
                     content: '""',
                     color,
@@ -266,11 +266,11 @@ function inputIconHandler(
             }
         }
 
-        const name = `${id}-icon-${row}-${col}`;
+        const name = `${id}-icon-${String(row)}-${String(col)}`;
         const index = `@keyframes ${name}`;
 
         const animation = `
-            ${(length * 2).toString()}s
+            ${String(length * 2)}s
             linear
             infinite
         `;

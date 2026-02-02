@@ -24,7 +24,7 @@ jest.mock('../../../hooks/useTheme', () => ({
 // Mock @mui/material useMediaQuery
 const mockUseMediaQuery = jest.fn() as jest.Mock<boolean, [string]>;
 jest.mock('@mui/material', () => {
-    const original = jest.requireActual('@mui/material') as Record<
+    const original = jest.requireActual('@mui/material') as unknown as Record<
         string,
         unknown
     >;

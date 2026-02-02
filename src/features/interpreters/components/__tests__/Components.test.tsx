@@ -212,7 +212,7 @@ describe('Interpreter Components', () => {
         test('throws if no context', () => {
             const consoleSpy = jest
                 .spyOn(console, 'error')
-                .mockImplementation(() => { });
+                .mockImplementation(() => {});
             expect(() => render(<GridArea {...defaultProps} />)).toThrow(
                 'GridArea must be used within EditorContext.Provider'
             );
@@ -235,7 +235,9 @@ describe('Interpreter Components', () => {
 
         test('handles click', () => {
             const clickHandler = jest.fn();
-            const handleClick = (pos: number) => (): void => clickHandler(pos);
+            const handleClick = (pos: number) => (): void => {
+                clickHandler(pos);
+            };
 
             renderWithContext(
                 <GridArea {...defaultProps} handleClick={handleClick} />
@@ -318,7 +320,7 @@ describe('Interpreter Components', () => {
         test('throws if no context', () => {
             const consoleSpy = jest
                 .spyOn(console, 'error')
-                .mockImplementation(() => { });
+                .mockImplementation(() => {});
             expect(() => render(<TextArea />)).toThrow(
                 'TextArea must be used within EditorContext.Provider'
             );

@@ -153,31 +153,31 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
                                                 backgroundColor:
                                                     control.hoverColor ??
                                                     (control.color ===
-                                                        COLORS.primary.main
+                                                    COLORS.primary.main
                                                         ? COLORS.primary.dark
                                                         : control.color ===
                                                             COLORS.data.green
-                                                            ? 'hsl(141, 64%, 39%)'
-                                                            : control.color ===
-                                                                COLORS.data.amber
-                                                                ? 'hsl(34, 95%, 48%)'
-                                                                : control.color ??
-                                                                COLORS.primary
-                                                                    .dark),
+                                                          ? 'hsl(141, 64%, 39%)'
+                                                          : control.color ===
+                                                              COLORS.data.amber
+                                                            ? 'hsl(34, 95%, 48%)'
+                                                            : (control.color ??
+                                                              COLORS.primary
+                                                                  .dark)),
                                                 borderColor:
                                                     control.hoverColor ??
                                                     (control.color ===
-                                                        COLORS.primary.main
+                                                    COLORS.primary.main
                                                         ? COLORS.primary.dark
                                                         : control.color ===
                                                             COLORS.data.green
-                                                            ? 'hsl(141, 64%, 39%)'
-                                                            : control.color ===
-                                                                COLORS.data.amber
-                                                                ? 'hsl(34, 95%, 48%)'
-                                                                : control.color ??
-                                                                COLORS.primary
-                                                                    .dark),
+                                                          ? 'hsl(141, 64%, 39%)'
+                                                          : control.color ===
+                                                              COLORS.data.amber
+                                                            ? 'hsl(34, 95%, 48%)'
+                                                            : (control.color ??
+                                                              COLORS.primary
+                                                                  .dark)),
                                                 transform: 'translateY(-1px)',
                                                 boxShadow: SHADOWS.sm,
                                             },

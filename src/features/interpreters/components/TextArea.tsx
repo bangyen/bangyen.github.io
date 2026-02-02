@@ -36,13 +36,13 @@ export function TextArea({
     const isControlled = value !== undefined;
     const textFieldProps = isControlled
         ? {
-            value: value || '',
-            onChange: handleChange,
-        }
+              value: value || '',
+              onChange: handleChange,
+          }
         : {
-            defaultValue: fillValue,
-            onChange: handleChange,
-        };
+              defaultValue: fillValue,
+              onChange: handleChange,
+          };
 
     return (
         <TextField

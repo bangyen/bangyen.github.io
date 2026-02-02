@@ -45,7 +45,9 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
 
         const response = await fetch('/zsharp_data.json.gz');
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status.toString()}`);
+            throw new Error(
+                `HTTP error! status: ${response.status.toString()}`
+            );
         }
         const buffer = await response.arrayBuffer();
         const view = new Uint8Array(buffer);
@@ -130,15 +132,15 @@ const generateFallbackData = (): DataPoint[] => {
         const sgdAccuracy =
             RESEARCH_CONSTANTS.zsharp.baseAccuracy +
             (i / RESEARCH_CONSTANTS.zsharp.maxEpochs) *
-            (RESEARCH_CONSTANTS.zsharp.maxAccuracy -
-                RESEARCH_CONSTANTS.zsharp.baseAccuracy);
+                (RESEARCH_CONSTANTS.zsharp.maxAccuracy -
+                    RESEARCH_CONSTANTS.zsharp.baseAccuracy);
         const zsharpAccuracy =
             sgdAccuracy + RESEARCH_CONSTANTS.zsharp.improvement;
         const sgdLoss =
             RESEARCH_CONSTANTS.zsharp.baseLoss -
             (i / RESEARCH_CONSTANTS.zsharp.maxEpochs) *
-            (RESEARCH_CONSTANTS.zsharp.baseLoss -
-                RESEARCH_CONSTANTS.zsharp.minLoss);
+                (RESEARCH_CONSTANTS.zsharp.baseLoss -
+                    RESEARCH_CONSTANTS.zsharp.minLoss);
         const zsharpLoss = sgdLoss - RESEARCH_CONSTANTS.zsharp.lossReduction;
 
         data.push({

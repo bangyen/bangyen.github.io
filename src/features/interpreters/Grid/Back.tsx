@@ -47,11 +47,9 @@ export function getState(state: BackState): BackState {
                 do {
                     position = gridMove(position, velocity, rows, cols);
 
-                    if (position != null) {
+                    {
                         const val = grid[position];
                         next = val ?? '';
-                    } else {
-                        next = '';
                     }
                 } while (!'\\/<>-+*'.includes(next));
             break;
@@ -60,7 +58,7 @@ export function getState(state: BackState): BackState {
             break;
     }
 
-    if (position !== null) position = gridMove(position, velocity, rows, cols);
+    position = gridMove(position, velocity, rows, cols);
 
     return {
         ...state,

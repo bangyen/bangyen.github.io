@@ -101,7 +101,9 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
                     },
                 })
             ).text();
-            const realData = JSON.parse(decompressedData) as { matrix: MatrixItem[] }[];
+            const realData = JSON.parse(decompressedData) as {
+                matrix: MatrixItem[];
+            }[];
             matrixData = realData[0]?.matrix ?? [];
         } else {
             // Assume already decompressed (Vite dev server)

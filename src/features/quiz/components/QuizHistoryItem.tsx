@@ -40,8 +40,8 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                     q.pointsEarned === 1
                         ? COLORS.surface.success
                         : q.pointsEarned === 0.5
-                            ? COLORS.surface.warning
-                            : COLORS.surface.error,
+                          ? COLORS.surface.warning
+                          : COLORS.surface.error,
                 border: `1px solid ${COLORS.border.subtle} `,
                 flexShrink: 0,
             }}
@@ -88,11 +88,11 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                             }
                             return settings.mode === 'toCountry'
                                 ? (
-                                    q.item as
-                                    | CCTLD
-                                    | TelephoneCode
-                                    | VehicleCode
-                                ).code
+                                      q.item as
+                                          | CCTLD
+                                          | TelephoneCode
+                                          | VehicleCode
+                                  ).code
                                 : q.item.country;
                         })()}
                     </Typography>
@@ -117,7 +117,7 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                         return settings.mode === 'toCountry'
                             ? q.item.country
                             : (q.item as CCTLD | TelephoneCode | VehicleCode)
-                                .code;
+                                  .code;
                     })()}
                 </Typography>
                 {activeConfig.renderFeedbackOrigin && (
@@ -145,8 +145,8 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                             q.pointsEarned === 1
                                 ? COLORS.data.green
                                 : q.pointsEarned === 0.5
-                                    ? COLORS.data.amber
-                                    : COLORS.data.red,
+                                  ? COLORS.data.amber
+                                  : COLORS.data.red,
                         fontWeight: q.pointsEarned > 0 ? 'bold' : 'normal',
                         maxWidth: '150px',
                         whiteSpace: 'nowrap',

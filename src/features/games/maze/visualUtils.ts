@@ -3,7 +3,9 @@ import * as THREE from 'three';
 /**
  * Creates a frosted glass material similar to the site's GlassCard.
  */
-export function createGlassMaterial(color: number | string = 0x388bfd): THREE.MeshPhysicalMaterial {
+export function createGlassMaterial(
+    color: number | string = 0x388bfd
+): THREE.MeshPhysicalMaterial {
     return new THREE.MeshPhysicalMaterial({
         color: color,
         metalness: 0,
@@ -20,7 +22,12 @@ export function createGlassMaterial(color: number | string = 0x388bfd): THREE.Me
 /**
  * Creates a procedural grid texture using a Canvas.
  */
-export function createGridTexture(size = 256, divisions = 8, color = '#020202', lineColor = 'rgba(56, 139, 253, 0.15)'): THREE.CanvasTexture {
+export function createGridTexture(
+    size = 256,
+    divisions = 8,
+    color = '#020202',
+    lineColor = 'rgba(56, 139, 253, 0.15)'
+): THREE.CanvasTexture {
     const canvas = document.createElement('canvas');
     canvas.width = size;
     canvas.height = size;
