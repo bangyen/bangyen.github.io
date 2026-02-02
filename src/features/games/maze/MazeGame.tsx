@@ -17,6 +17,12 @@ const CELL_SIZE = 2;
 const WALL_HEIGHT = 1.6;
 const PLAYER_SIZE = 0.4;
 
+interface JoystickState {
+    active: boolean;
+    originConfig: { x: number; y: number } | null;
+    currentConfig: { x: number; y: number } | null;
+}
+
 export default function MazeGame(): React.ReactElement {
     const containerRef = useRef<HTMLDivElement>(null);
     const sceneRef = useRef<{
@@ -40,6 +46,22 @@ export default function MazeGame(): React.ReactElement {
     const isMobile = useMobile('sm');
     const availableHeight = height - (isMobile ? 56 : 80); // Exact header heights
 
+    // Pointer/Touch Input State
+    const pointerState = useRef({
+        isDown: false,
+        startX: 0,
+        startY: 0,
+        currentX: 0,
+        currentY: 0,
+    });
+
+    const [visualJoystickState, setVisualJoystickState] =
+        useState<JoystickState>({
+            active: false,
+            originConfig: null,
+            currentConfig: null,
+        });
+
     useEffect(() => {
         gameStateRef.current = gameState;
     }, [gameState]);
@@ -49,6 +71,22 @@ export default function MazeGame(): React.ReactElement {
         setMaze(newMaze);
         setGameState('playing');
     }, []);
+
+    // Global keyboard controls (Start/Restart)
+    useEffect(() => {
+        const handleGlobalKeyDown = (e: KeyboardEvent) => {
+            if (['enter', ' '].includes(e.key.toLowerCase())) {
+                if (gameState === 'start' || gameState === 'won') {
+                    e.preventDefault();
+                    initMaze();
+                }
+            }
+        };
+        window.addEventListener('keydown', handleGlobalKeyDown);
+        return () => {
+            window.removeEventListener('keydown', handleGlobalKeyDown);
+        };
+    }, [gameState, initMaze]);
 
     // Scene setup
     useEffect(() => {
@@ -250,17 +288,105 @@ export default function MazeGame(): React.ReactElement {
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
 
+        const handlePointerDown = (e: PointerEvent) => {
+            if (gameStateRef.current !== 'playing') return;
+            pointerState.current.isDown = true;
+            pointerState.current.startX = e.clientX;
+            pointerState.current.startY = e.clientY;
+            pointerState.current.currentX = e.clientX;
+            pointerState.current.currentY = e.clientY;
+
+            setVisualJoystickState({
+                active: true,
+                originConfig: { x: e.clientX, y: e.clientY },
+                currentConfig: { x: e.clientX, y: e.clientY },
+            });
+        };
+
+        const handlePointerMove = (e: PointerEvent) => {
+            if (!pointerState.current.isDown) return;
+            pointerState.current.currentX = e.clientX;
+            pointerState.current.currentY = e.clientY;
+
+            setVisualJoystickState(prev => {
+                if (!prev.originConfig) return prev;
+
+                const VISUAL_RADIUS = 50;
+                const dx = e.clientX - prev.originConfig.x;
+                const dy = e.clientY - prev.originConfig.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+
+                let x = e.clientX;
+                let y = e.clientY;
+
+                if (distance > VISUAL_RADIUS) {
+                    const ratio = VISUAL_RADIUS / distance;
+                    x = prev.originConfig.x + dx * ratio;
+                    y = prev.originConfig.y + dy * ratio;
+                }
+
+                return {
+                    ...prev,
+                    currentConfig: { x, y },
+                };
+            });
+        };
+
+        const handlePointerUp = () => {
+            pointerState.current.isDown = false;
+            pointerState.current.startX = 0;
+            pointerState.current.startY = 0;
+            pointerState.current.currentX = 0;
+            pointerState.current.currentY = 0;
+
+            setVisualJoystickState({
+                active: false,
+                originConfig: null,
+                currentConfig: null,
+            });
+        };
+
+        // Attach pointer events to the container
+        // Attach pointer events to the container
+        containerRef.current.addEventListener('pointerdown', handlePointerDown);
+        window.addEventListener('pointermove', handlePointerMove);
+        window.addEventListener('pointerup', handlePointerUp);
+
         const animate = (time: number) => {
             animationId = requestAnimationFrame(animate);
 
             if (gameStateRef.current === 'playing') {
                 const moveSpeed = 0.085;
-                const dx =
+
+                // Keyboard input
+                const kdx =
                     (keys.d || keys.arrowright ? 1 : 0) -
                     (keys.a || keys.arrowleft ? 1 : 0);
-                const dz =
+                const kdz =
                     (keys.s || keys.arrowdown ? 1 : 0) -
                     (keys.w || keys.arrowup ? 1 : 0);
+
+                // Pointer/Touch input (Virtual Joystick)
+                let pdx = 0;
+                let pdz = 0;
+                const MAX_DRAG = 100; // Pixels to reach max speed
+
+                if (pointerState.current.isDown) {
+                    const diffX =
+                        pointerState.current.currentX -
+                        pointerState.current.startX;
+                    const diffY =
+                        pointerState.current.currentY -
+                        pointerState.current.startY;
+
+                    // Normalize roughly to -1 to 1 range based on drag distance
+                    pdx = Math.max(-1, Math.min(1, diffX / MAX_DRAG));
+                    pdz = Math.max(-1, Math.min(1, diffY / MAX_DRAG));
+                }
+
+                // Combine inputs (clamp magnitude to 1)
+                const dx = kdx + pdx;
+                const dz = kdz + pdz;
 
                 if (dx !== 0 || dz !== 0) {
                     const length = Math.sqrt(dx * dx + dz * dz);
@@ -351,10 +477,13 @@ export default function MazeGame(): React.ReactElement {
             cancelAnimationFrame(animationId);
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
+            container.removeEventListener('pointerdown', handlePointerDown);
+            window.removeEventListener('pointermove', handlePointerMove);
+            window.removeEventListener('pointerup', handlePointerUp);
             container.removeChild(renderer.domElement);
             renderer.dispose();
         };
-    }, [maze, gameState, width, availableHeight]);
+    }, [maze, gameState, width, availableHeight, initMaze]);
 
     useEffect(() => {
         document.title = '3D Maze | Bangyen';
@@ -384,8 +513,57 @@ export default function MazeGame(): React.ReactElement {
                     flex: 1,
                     position: 'relative',
                     cursor: gameState === 'playing' ? 'none' : 'default',
+                    touchAction: 'none', // Prevent scrolling while playing
                 }}
             />
+
+            {/* Visual Joystick */}
+            {visualJoystickState.active &&
+                visualJoystickState.originConfig &&
+                visualJoystickState.currentConfig && (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            left: 0,
+                            top: 0,
+                            width: '100%',
+                            height: '100%',
+                            pointerEvents: 'none',
+                            zIndex: 20,
+                        }}
+                    >
+                        {/* Base */}
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                left: visualJoystickState.originConfig.x,
+                                top: visualJoystickState.originConfig.y,
+                                width: 100,
+                                height: 100,
+                                transform: 'translate(-50%, -50%)',
+                                borderRadius: '50%',
+                                border: `2px solid ${COLORS.primary.main}`,
+                                opacity: 0.3,
+                                background: `radial-gradient(circle, ${COLORS.primary.main} 0%, transparent 70%)`,
+                            }}
+                        />
+                        {/* Stick */}
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                left: visualJoystickState.currentConfig.x,
+                                top: visualJoystickState.currentConfig.y,
+                                width: 40,
+                                height: 40,
+                                transform: 'translate(-50%, -50%)',
+                                borderRadius: '50%',
+                                background: COLORS.primary.main,
+                                boxShadow: `0 0 15px ${COLORS.primary.main}`,
+                                opacity: 0.8,
+                            }}
+                        />
+                    </Box>
+                )}
 
             {(gameState === 'start' || gameState === 'won') && (
                 <Fade in>
