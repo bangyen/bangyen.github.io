@@ -73,7 +73,9 @@ export default function Info(props: InfoProps): React.ReactElement {
     const toggleTile = (col: number) => (event: React.MouseEvent) => {
         event.stopPropagation();
         const newRow = [...calcRow];
-        newRow[col] ^= 1;
+        if (newRow[col] !== undefined) {
+            newRow[col] ^= 1;
+        }
         setCalcRow(newRow);
     };
 

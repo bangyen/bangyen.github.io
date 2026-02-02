@@ -115,7 +115,7 @@ describe('useTheme (ThemeProvider and useThemeContext)', () => {
             unknown,
             (e: { matches: boolean }) => void,
         ][];
-        const handler = mockCalls[0][1];
+        const handler = mockCalls[0]![1];
 
         act(() => {
             handler({ matches: true });

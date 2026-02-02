@@ -358,7 +358,7 @@ describe('useQuizFilter', () => {
             })
         );
         // Current implementation sets text to '' for unknown types
-        expect(res3.current).toHaveLength(0);
+        expect(res3.current).toHaveLength(1);
 
         // cctld toCountry mode
         const { result: res4 } = renderHook(() =>

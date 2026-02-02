@@ -136,21 +136,24 @@ export default function LightsOut(): React.ReactElement {
 
         const timeout = setTimeout(() => {
             if (moveQueue.length > 0) {
-                const [nextMove, ...remaining] = moveQueue;
-                dispatch({
-                    type: 'adjacent',
-                    row: nextMove.row,
-                    col: nextMove.col,
-                });
-                setMoveQueue(remaining);
+                const nextMove = moveQueue[0];
+                if (nextMove) {
+                    dispatch({
+                        type: 'adjacent',
+                        row: nextMove.row,
+                        col: nextMove.col,
+                    });
+                    setMoveQueue(moveQueue.slice(1));
+                }
             } else {
                 const moves = getNextMove(state.grid);
                 if (moves && moves.length > 0) {
-                    if (moves.length === 1) {
+                    const firstMove = moves[0];
+                    if (moves.length === 1 && firstMove) {
                         dispatch({
                             type: 'adjacent',
-                            row: moves[0].row,
-                            col: moves[0].col,
+                            row: firstMove.row,
+                            col: firstMove.col,
                         });
                     } else {
                         setMoveQueue(moves);

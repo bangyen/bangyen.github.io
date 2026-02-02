@@ -40,7 +40,7 @@ jest.mock('../../ResearchDemo', () => ({
                             <button
                                 data-testid={`change-${c.label}`}
                                 onClick={() => {
-                                    c.onChange(c.options[0].value);
+                                    c.onChange(c.options[0]!.value);
                                 }}
                             >
                                 Change

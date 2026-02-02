@@ -371,8 +371,21 @@ export const useQuizFilter = ({
                         const artItem = item as ArtItem;
                         if (settings.mode === 'art_artist') {
                             text = artItem.artist.toLowerCase();
-                        } else {
+                        } else if ('title' in artItem) {
                             text = artItem.title.toLowerCase();
+                        } else {
+                            // Fallback for types like 'capitals' which might not have title/artist
+                            const fallbackItem = item as {
+                                title?: string;
+                                artist?: string;
+                                country?: string;
+                            };
+                            text = (
+                                fallbackItem.title ??
+                                fallbackItem.artist ??
+                                fallbackItem.country ??
+                                ''
+                            ).toLowerCase();
                         }
                     }
                     return letters.some((l: string) => text.startsWith(l));
