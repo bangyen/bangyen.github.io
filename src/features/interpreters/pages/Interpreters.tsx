@@ -10,7 +10,7 @@ import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 
 export default function Interpreters(): React.ReactElement {
     const [searchParams, setSearchParams] = useSearchParams();
-    const active = searchParams.get('type') || 'stun-step';
+    const active = searchParams.get('type') ?? 'stun-step';
 
     useEffect(() => {
         document.title = PAGE_TITLES.interpreters;
@@ -28,7 +28,7 @@ export default function Interpreters(): React.ReactElement {
             wii2d: 'WII2D',
             back: 'Back',
         };
-        return nameMap[type] || 'Stun Step';
+        return nameMap[type] ?? 'Stun Step';
     };
 
     const infoUrl = `https://esolangs.org/wiki/${getInterpreterName(active).replace(' ', '_')}`;

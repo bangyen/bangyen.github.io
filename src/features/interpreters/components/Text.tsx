@@ -21,8 +21,8 @@ export function Text({ text, ...props }: TextProps) {
                     lineHeight: 1,
                     display: 'inline',
                 },
-                ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
-            ]}
+                ...(Array.isArray(props.sx) ? (props.sx as SxProps<Theme>[]) : [props.sx as SxProps<Theme>]),
+            ] as SxProps<Theme>}
         >
             {text}
         </Typography>

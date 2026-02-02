@@ -92,7 +92,7 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
                                     <control.icon
                                         sx={{
                                             color:
-                                                control.color ||
+                                                control.color ??
                                                 COLORS.primary.light,
                                             fontSize: '1.1rem',
                                         }}
@@ -114,7 +114,7 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
                                 exclusive
                                 onChange={(e, newValue) => {
                                     if (newValue !== null) {
-                                        control.onChange(newValue);
+                                        control.onChange(newValue as number);
                                     }
                                 }}
                                 size="small"
@@ -143,50 +143,50 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
                                         transition: 'all 0.2s ease-in-out',
                                         '&.Mui-selected': {
                                             backgroundColor:
-                                                control.color ||
+                                                control.color ??
                                                 COLORS.primary.main,
                                             color: '#fff',
                                             borderColor:
-                                                control.color ||
+                                                control.color ??
                                                 COLORS.primary.main,
                                             '&:hover': {
                                                 backgroundColor:
-                                                    control.hoverColor ||
+                                                    control.hoverColor ??
                                                     (control.color ===
-                                                    COLORS.primary.main
+                                                        COLORS.primary.main
                                                         ? COLORS.primary.dark
                                                         : control.color ===
                                                             COLORS.data.green
-                                                          ? 'hsl(141, 64%, 39%)'
-                                                          : control.color ===
-                                                              COLORS.data.amber
-                                                            ? 'hsl(34, 95%, 48%)'
-                                                            : control.color ||
-                                                              COLORS.primary
-                                                                  .dark),
+                                                            ? 'hsl(141, 64%, 39%)'
+                                                            : control.color ===
+                                                                COLORS.data.amber
+                                                                ? 'hsl(34, 95%, 48%)'
+                                                                : control.color ??
+                                                                COLORS.primary
+                                                                    .dark),
                                                 borderColor:
-                                                    control.hoverColor ||
+                                                    control.hoverColor ??
                                                     (control.color ===
-                                                    COLORS.primary.main
+                                                        COLORS.primary.main
                                                         ? COLORS.primary.dark
                                                         : control.color ===
                                                             COLORS.data.green
-                                                          ? 'hsl(141, 64%, 39%)'
-                                                          : control.color ===
-                                                              COLORS.data.amber
-                                                            ? 'hsl(34, 95%, 48%)'
-                                                            : control.color ||
-                                                              COLORS.primary
-                                                                  .dark),
+                                                            ? 'hsl(141, 64%, 39%)'
+                                                            : control.color ===
+                                                                COLORS.data.amber
+                                                                ? 'hsl(34, 95%, 48%)'
+                                                                : control.color ??
+                                                                COLORS.primary
+                                                                    .dark),
                                                 transform: 'translateY(-1px)',
                                                 boxShadow: SHADOWS.sm,
                                             },
                                         },
-                                        '&:hover': {
-                                            backgroundColor:
-                                                COLORS.interactive.hover,
-                                            transform: 'translateY(-1px)',
-                                        },
+                                    },
+                                    '&:hover': {
+                                        backgroundColor:
+                                            COLORS.interactive.hover,
+                                        transform: 'translateY(-1px)',
                                     },
                                 }}
                             >

@@ -138,23 +138,23 @@ const QuizGame: React.FC<QuizGameProps> = ({
                 settings.mode === 'toCountry'
                     ? 'Guessing Country'
                     : settings.mode === 'toCode'
-                      ? 'Guessing Code'
-                      : settings.mode === 'art_name'
-                        ? 'Guessing Name'
-                        : settings.mode === 'art_artist'
-                          ? 'Guessing Artist'
-                          : settings.mode === 'art_period'
-                            ? 'Guessing Period'
-                            : 'Quiz'
+                        ? 'Guessing Code'
+                        : settings.mode === 'art_name'
+                            ? 'Guessing Name'
+                            : settings.mode === 'art_artist'
+                                ? 'Guessing Artist'
+                                : settings.mode === 'art_period'
+                                    ? 'Guessing Period'
+                                    : 'Quiz'
             }
             inputPlaceholder={
                 settings.mode === 'toCountry'
                     ? 'Type country name...'
                     : settings.mode === 'art_name'
-                      ? 'Type artwork name...'
-                      : settings.mode === 'art_artist'
-                        ? 'Type artist name...'
-                        : 'Type answer...'
+                        ? 'Type artwork name...'
+                        : settings.mode === 'art_artist'
+                            ? 'Type artist name...'
+                            : 'Type answer...'
             }
             renderQuestionPrompt={() =>
                 config.renderQuestionPrompt(settings.mode)
@@ -198,7 +198,7 @@ const QuizGame: React.FC<QuizGameProps> = ({
                 item.flag && (
                     <img
                         src={item.flag}
-                        alt={`Flag of ${item.country}`}
+                        alt={`Flag of ${item.country ?? 'Unknown'}`}
                         style={{
                             height: '24px',
                             width: 'auto',

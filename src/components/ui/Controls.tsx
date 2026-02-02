@@ -117,7 +117,9 @@ export function RandomButton({
                             ? `${COLORS.primary.main}20`
                             : 'transparent',
                 },
-                ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
+                ...(Array.isArray(props.sx)
+                    ? (props.sx as SxProps<Theme>[])
+                    : [props.sx]),
             ]}
             {...props}
         />
@@ -250,7 +252,7 @@ export function ArrowsButton({
                 <Grid container gap={0.5}>
                     <TooltipButton
                         title="Move Up Left"
-                        Icon={ICON_MAP.NorthWest!}
+                        Icon={ICON_MAP.NorthWest ?? NorthWestRounded}
                         onClick={handler('up-left')}
                         aria-label="Move up left"
                         size={size}
@@ -264,7 +266,7 @@ export function ArrowsButton({
                     />
                     <TooltipButton
                         title="Move Up Right"
-                        Icon={ICON_MAP.NorthEast!}
+                        Icon={ICON_MAP.NorthEast ?? NorthEastRounded}
                         onClick={handler('up-right')}
                         aria-label="Move up right"
                         size={size}
@@ -302,7 +304,7 @@ export function ArrowsButton({
                 <Grid container gap={0.5}>
                     <TooltipButton
                         title="Move Down Left"
-                        Icon={ICON_MAP.SouthWest!}
+                        Icon={ICON_MAP.SouthWest ?? SouthWestRounded}
                         onClick={handler('down-left')}
                         aria-label="Move down left"
                         size={size}
@@ -316,7 +318,7 @@ export function ArrowsButton({
                     />
                     <TooltipButton
                         title="Move Down Right"
-                        Icon={ICON_MAP.SouthEast!}
+                        Icon={ICON_MAP.SouthEast ?? SouthEastRounded}
                         onClick={handler('down-right')}
                         aria-label="Move down right"
                         size={size}

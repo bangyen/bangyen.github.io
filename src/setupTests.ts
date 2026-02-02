@@ -75,7 +75,7 @@ Object.defineProperty(global, 'Response', {
             return String(this._data);
         }
         async json() {
-            return JSON.parse(await this.text());
+            return JSON.parse(await this.text()) as unknown;
         }
     },
     writable: true,
@@ -85,7 +85,7 @@ Object.defineProperty(global, 'Response', {
 Object.defineProperty(global, 'ReadableStream', {
     value: class ReadableStream {
         constructor(options: { start?: (controller: unknown) => void } = {}) {
-            if (options?.start) {
+            if (options.start) {
                 const controller = {
                     enqueue: jest.fn(),
                     close: jest.fn(),

@@ -62,7 +62,7 @@ describe('TextEditor Component', () => {
         render(<TextEditor {...defaultProps} />);
         const textArea = screen.getByTestId(
             'text-area'
-        ) as HTMLTextAreaElement;
+        );
         fireEvent.change(textArea, { target: { value: 'new code' } });
 
         // Check if textarea value updated

@@ -29,7 +29,7 @@ const ResearchViewSelector = <T,>({
                     display: 'grid',
                     gridTemplateColumns: {
                         xs: 'repeat(2, minmax(0, 1fr))',
-                        md: `repeat(${Math.min(viewTypes.length, 4)}, 1fr)`,
+                        md: `repeat(${Math.min(viewTypes.length, 4).toString()}, 1fr)`,
                     },
                     gap: 1.5,
                     width: '100%',
@@ -43,7 +43,7 @@ const ResearchViewSelector = <T,>({
                             key={viewType.key}
                             variant="outlined"
                             size="small"
-                            startIcon={IconComponent ? <IconComponent /> : null}
+                            startIcon={<IconComponent />}
                             onClick={() => {
                                 onViewTypeChange(viewType.key);
                             }}

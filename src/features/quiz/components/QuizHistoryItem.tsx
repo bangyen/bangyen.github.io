@@ -40,8 +40,8 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                     q.pointsEarned === 1
                         ? COLORS.surface.success
                         : q.pointsEarned === 0.5
-                          ? COLORS.surface.warning
-                          : COLORS.surface.error,
+                            ? COLORS.surface.warning
+                            : COLORS.surface.error,
                 border: `1px solid ${COLORS.border.subtle} `,
                 flexShrink: 0,
             }}
@@ -58,7 +58,7 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                     {q.item.flag && (
                         <img
                             src={q.item.flag}
-                            alt={`Flag of ${q.item.country} `}
+                            alt={`Flag of ${q.item.country ?? 'Unknown'}`}
                             style={{
                                 height: '16px',
                                 width: 'auto',
@@ -88,11 +88,11 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                             }
                             return settings.mode === 'toCountry'
                                 ? (
-                                      q.item as
-                                          | CCTLD
-                                          | TelephoneCode
-                                          | VehicleCode
-                                  ).code
+                                    q.item as
+                                    | CCTLD
+                                    | TelephoneCode
+                                    | VehicleCode
+                                ).code
                                 : q.item.country;
                         })()}
                     </Typography>
@@ -106,7 +106,7 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                                 case 'art_artist':
                                     return item.artist;
                                 case 'art_period':
-                                    return item.period || item.year;
+                                    return item.period ?? item.year;
                                 default:
                                     return item.title;
                             }
@@ -117,7 +117,7 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                         return settings.mode === 'toCountry'
                             ? q.item.country
                             : (q.item as CCTLD | TelephoneCode | VehicleCode)
-                                  .code;
+                                .code;
                     })()}
                 </Typography>
                 {activeConfig.renderFeedbackOrigin && (
@@ -145,8 +145,8 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                             q.pointsEarned === 1
                                 ? COLORS.data.green
                                 : q.pointsEarned === 0.5
-                                  ? COLORS.data.amber
-                                  : COLORS.data.red,
+                                    ? COLORS.data.amber
+                                    : COLORS.data.red,
                         fontWeight: q.pointsEarned > 0 ? 'bold' : 'normal',
                         maxWidth: '150px',
                         whiteSpace: 'nowrap',
@@ -157,7 +157,7 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                     }}
                 >
                     {(() => {
-                        const answer = q.userAnswer?.trim();
+                        const answer = q.userAnswer.trim();
                         if (!answer) return <SkippedBadge />;
 
                         let normalizedAnswer = answer;
@@ -208,7 +208,7 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                         }}
                     />
                 ) : (
-                    q.userAnswer?.trim() && (
+                    q.userAnswer.trim() && (
                         <CheckCircleIcon fontSize="small" color="error" />
                     )
                 )}

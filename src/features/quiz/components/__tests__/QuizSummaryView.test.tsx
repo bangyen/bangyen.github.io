@@ -11,7 +11,10 @@ jest.mock('@mui/icons-material', () => ({
 
 // Mock Fade to avoid transition issues in tests
 jest.mock('@mui/material', () => {
-    const original = jest.requireActual('@mui/material');
+    const original = jest.requireActual('@mui/material') as Record<
+        string,
+        unknown
+    >;
     return {
         ...original,
         Fade: ({ children }: { children: React.ReactElement }) => children,
@@ -42,7 +45,7 @@ describe('QuizSummaryView', () => {
         onRestart: jest.fn(),
         onBackToMenu: jest.fn(),
         renderHistoryItem: (q: Question<string>, index: number) => (
-            <div key={index} data-testid={`history-item-${index}`}>
+            <div key={index} data-testid={`history-item-${index.toString()}`}>
                 {q.item}
             </div>
         ),

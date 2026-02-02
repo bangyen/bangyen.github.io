@@ -47,18 +47,25 @@ function getIconFrames(
             const predicted = flipAdj(row, col, currentState);
             match = true;
             for (let r = 0; r < dims; r++) {
+                const predictedRow = predicted[r];
+                const nextRowState = nextState[r];
+                if (!predictedRow || !nextRowState) {
+                    match = false;
+                    break;
+                }
                 for (let c = 0; c < dims; c++) {
-                    if (predicted[r][c] !== nextState[r][c]) {
+                    if (predictedRow[c] !== nextRowState[c]) {
                         match = false;
                         break;
                     }
                 }
+                if (!match) break;
             }
 
             if (match) {
-                const isOne = currentState[row][col] === 1;
+                const isOne = currentState[row]?.[col] === 1;
                 color = isOne ? palette.secondary : palette.primary;
-                predictedContent = `"${k + 1}"`;
+                predictedContent = `"${(k + 1).toString()}"`;
             }
         }
 
@@ -128,12 +135,11 @@ function iconHandler(
         const frames = getIconFrames(states, row, col, dims, palette);
         const length = states.length;
 
-        const name = `${id}-icon-${row}-${col}`;
+        const name = `${id}-icon-${row.toString()}-${col.toString()}`;
         const index = `@keyframes ${name}`;
 
         const animation = `
-            ${name}
-            ${length * 2}s
+            ${(length * 2).toString()}s
             linear
             infinite
         `;
@@ -204,7 +210,7 @@ function inputIconHandler(
                     match = true;
                     const isOne = currentState[col] === 1;
                     color = isOne ? palette.secondary : palette.primary;
-                    predictedContent = `"${k + 1}"`;
+                    predictedContent = `"${(k + 1).toString()}"`;
                 }
             }
 
@@ -264,8 +270,7 @@ function inputIconHandler(
         const index = `@keyframes ${name}`;
 
         const animation = `
-            ${name}
-            ${length * 2}s
+            ${(length * 2).toString()}s
             linear
             infinite
         `;
@@ -335,7 +340,7 @@ export default function Example({
     const isSolved = remainder === inputStates.length - 1;
 
     const gridState = {
-        grid: boardStates[remainder],
+        grid: boardStates[remainder] ?? boardStates[0] ?? [],
         rows: dims,
         cols: dims,
     };
@@ -358,12 +363,12 @@ export default function Example({
     };
 
     const inputGetters = useCalculatorHandler(
-        inputStates[remainder],
+        inputStates[remainder] ?? [],
         dims,
         palette
     );
     const outputGetters = useCalculatorHandler(
-        outputStates[remainder],
+        outputStates[remainder] ?? [],
         dims,
         palette
     );

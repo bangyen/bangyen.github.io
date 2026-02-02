@@ -45,7 +45,7 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
 
         const response = await fetch('/zsharp_data.json.gz');
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.status.toString()}`);
         }
         const buffer = await response.arrayBuffer();
         const view = new Uint8Array(buffer);
@@ -91,17 +91,17 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
                     },
                 })
             ).text();
-            realData = JSON.parse(decompressedData);
+            realData = JSON.parse(decompressedData) as RealData;
         } else {
             const text = new TextDecoder().decode(buffer);
-            realData = JSON.parse(text);
+            realData = JSON.parse(text) as RealData;
         }
 
         const data: DataPoint[] = [];
-        const sgdAccuracies = realData['SGD Baseline']?.train_accuracies || [];
-        const zsharpAccuracies = realData.ZSharp?.train_accuracies || [];
-        const sgdLosses = realData['SGD Baseline']?.train_losses || [];
-        const zsharpLosses = realData.ZSharp?.train_losses || [];
+        const sgdAccuracies = realData['SGD Baseline']?.train_accuracies ?? [];
+        const zsharpAccuracies = realData.ZSharp?.train_accuracies ?? [];
+        const sgdLosses = realData['SGD Baseline']?.train_losses ?? [];
+        const zsharpLosses = realData.ZSharp?.train_losses ?? [];
 
         const maxEpochs = Math.max(
             sgdAccuracies.length,
@@ -111,10 +111,10 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
         for (let i = 0; i < maxEpochs; i++) {
             data.push({
                 epoch: i + 1,
-                sgd: (sgdAccuracies[i] || 0) / PERCENTAGE.divisor,
-                zsharp: (zsharpAccuracies[i] || 0) / PERCENTAGE.divisor,
-                sgdLoss: sgdLosses[i] || 0,
-                zsharpLoss: zsharpLosses[i] || 0,
+                sgd: (sgdAccuracies[i] ?? 0) / PERCENTAGE.divisor,
+                zsharp: (zsharpAccuracies[i] ?? 0) / PERCENTAGE.divisor,
+                sgdLoss: sgdLosses[i] ?? 0,
+                zsharpLoss: zsharpLosses[i] ?? 0,
             });
         }
 
@@ -130,15 +130,15 @@ const generateFallbackData = (): DataPoint[] => {
         const sgdAccuracy =
             RESEARCH_CONSTANTS.zsharp.baseAccuracy +
             (i / RESEARCH_CONSTANTS.zsharp.maxEpochs) *
-                (RESEARCH_CONSTANTS.zsharp.maxAccuracy -
-                    RESEARCH_CONSTANTS.zsharp.baseAccuracy);
+            (RESEARCH_CONSTANTS.zsharp.maxAccuracy -
+                RESEARCH_CONSTANTS.zsharp.baseAccuracy);
         const zsharpAccuracy =
             sgdAccuracy + RESEARCH_CONSTANTS.zsharp.improvement;
         const sgdLoss =
             RESEARCH_CONSTANTS.zsharp.baseLoss -
             (i / RESEARCH_CONSTANTS.zsharp.maxEpochs) *
-                (RESEARCH_CONSTANTS.zsharp.baseLoss -
-                    RESEARCH_CONSTANTS.zsharp.minLoss);
+            (RESEARCH_CONSTANTS.zsharp.baseLoss -
+                RESEARCH_CONSTANTS.zsharp.minLoss);
         const zsharpLoss = sgdLoss - RESEARCH_CONSTANTS.zsharp.lossReduction;
 
         data.push({
@@ -189,7 +189,8 @@ const ZSharp: React.FC = () => {
                 yAxisFormatter: (value: number) =>
                     `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
                 yAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
-                tooltipLabelFormatter: (value: number) => `Epoch ${value}`,
+                tooltipLabelFormatter: (value: number) =>
+                    `Epoch ${value.toString()}`,
                 tooltipFormatter: (value: number, name: string) => [
                     `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
                     name,
@@ -222,7 +223,8 @@ const ZSharp: React.FC = () => {
                 xAxisKey: 'epoch',
                 yAxisFormatter: (value: number) => value.toFixed(3),
                 yAxisDomain: ['dataMin - 0.1', 'dataMax + 0.1'],
-                tooltipLabelFormatter: (value: number) => `Epoch ${value}`,
+                tooltipLabelFormatter: (value: number) =>
+                    `Epoch ${value.toString()}`,
                 tooltipFormatter: (value: number, name: string) => [
                     value.toFixed(3),
                     name,
@@ -259,7 +261,8 @@ const ZSharp: React.FC = () => {
                 yAxisFormatter: (value: number) =>
                     `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
                 yAxisDomain: ['dataMin - 0.005', 'dataMax + 0.005'],
-                tooltipLabelFormatter: (value: number) => `Epoch ${value}`,
+                tooltipLabelFormatter: (value: number) =>
+                    `Epoch ${value.toString()}`,
                 tooltipFormatter: (value: number, name: string) => [
                     `${(value * PERCENTAGE.multiplier).toFixed(2)}%`,
                     name,
@@ -283,6 +286,9 @@ const ZSharp: React.FC = () => {
                     if (index === 0)
                         return { epoch: point.epoch, sgd: 0, zsharp: 0 };
                     const prevPoint = data[index - 1];
+                    if (!prevPoint) {
+                        return { epoch: point.epoch, sgd: 0, zsharp: 0 };
+                    }
                     return {
                         epoch: point.epoch,
                         sgd: point.sgd - prevPoint.sgd,
@@ -295,7 +301,8 @@ const ZSharp: React.FC = () => {
                 yAxisFormatter: (value: number) =>
                     `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
                 yAxisDomain: ['dataMin - 0.005', 'dataMax + 0.005'],
-                tooltipLabelFormatter: (value: number) => `Epoch ${value}`,
+                tooltipLabelFormatter: (value: number) =>
+                    `Epoch ${value.toString()}`,
                 tooltipFormatter: (value: number, name: string) => [
                     `${(value * PERCENTAGE.multiplier).toFixed(3)}%`,
                     name,

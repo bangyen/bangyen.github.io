@@ -323,8 +323,8 @@ export const useQuizFilter = ({
             );
         }
 
-        if (settings.filterLetter) {
-            let letters = (settings.filterLetter as string)
+        if (typeof settings.filterLetter === 'string' && settings.filterLetter !== '') {
+            let letters = settings.filterLetter
                 .toLowerCase()
                 .split(',')
                 .map((l: string) => l.trim())
@@ -332,16 +332,16 @@ export const useQuizFilter = ({
 
             if (
                 letters.length <= 1 &&
-                !(settings.filterLetter as string).includes(',')
+                !settings.filterLetter.includes(',')
             ) {
-                const spaceSplit = (settings.filterLetter as string)
+                const spaceSplit = settings.filterLetter
                     .toLowerCase()
                     .split(/\s+/)
                     .filter((l: string) => l);
                 if (spaceSplit.length > 1) {
                     letters = spaceSplit;
                 } else {
-                    letters = (settings.filterLetter as string)
+                    letters = settings.filterLetter
                         .toLowerCase()
                         .split('')
                         .filter((l: string) => l.trim());
@@ -370,10 +370,12 @@ export const useQuizFilter = ({
                     } else if (quizType === 'art') {
                         const artItem = item as ArtItem;
                         if (settings.mode === 'art_artist') {
-                            text = (artItem.artist || '').toLowerCase();
+                            text = (artItem.artist ?? '').toLowerCase();
                         } else {
-                            text = artItem.title.toLowerCase();
+                            text = (artItem.title ?? '').toLowerCase();
                         }
+                    } else {
+                        text = (item.country ?? '').toLowerCase();
                     }
                     return letters.some((l: string) => text.startsWith(l));
                 });

@@ -58,9 +58,9 @@ describe('Snake Component', () => {
         expect(lastCellProps).toBeDefined();
         expect(lastCellProps?.(0, 0)).toBeDefined();
 
-        const keyHandler = mockCreateKeys.mock.calls[0][0];
+        const keyHandler = mockCreateKeys.mock.calls[0]?.[0] as ((args: { key: string }) => void) | undefined;
         act(() => {
-            keyHandler({ key: 'ArrowDown' });
+            keyHandler?.({ key: 'ArrowDown' });
         });
 
         const grid = screen.getByTestId('snake-grid');
@@ -88,9 +88,9 @@ describe('Snake Component', () => {
             });
         });
 
-        const nextIter = mockCreateTimer.mock.calls[0][0].repeat;
+        const nextIter = mockCreateTimer.mock.calls[0]?.[0] as { repeat: () => void } | undefined;
         act(() => {
-            nextIter();
+            nextIter?.repeat();
         });
 
         act(() => {

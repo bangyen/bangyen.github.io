@@ -42,7 +42,7 @@ const WikipediaQuizPage: React.FC = () => {
         if (isArtQuizRoute) return 'art';
 
         const type = searchParams.get('type');
-        if (type && QUIZ_CONFIGS[type as QuizType]) {
+        if (type && Object.prototype.hasOwnProperty.call(QUIZ_CONFIGS, type)) {
             return type as QuizType;
         }
         return 'cctld';
@@ -80,9 +80,9 @@ const WikipediaQuizPage: React.FC = () => {
                             `Failed to load art data: ${response.statusText}`
                         );
 
-                    const artItems: ArtItem[] = await response.json();
+                    const artItems = (await response.json()) as ArtItem[];
 
-                    if (artItems && artItems.length > 0) {
+                    if (artItems.length > 0) {
                         setArtData(artItems);
                     } else {
                         throw new Error('Empty art data');
@@ -212,7 +212,7 @@ const WikipediaQuizPage: React.FC = () => {
                                     ? isLoadingArt
                                         ? 'Fetching Artworks...'
                                         : 'No Questions Found'
-                                    : `Start Quiz (${filteredPool.length})`}
+                                    : `Start Quiz (${filteredPool.length.toString()})`}
                             </Button>
                         </Box>
                     </Box>

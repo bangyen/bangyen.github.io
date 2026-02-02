@@ -47,12 +47,12 @@ export function Toolbar(): React.ReactElement[] {
     const editorContext = useContext(EditorContext);
     const notMobile = useMediaQuery('(min-width:650px)');
 
-    const pause = editorContext?.pause || false;
+    const pause = editorContext?.pause ?? false;
     const dispatch = useMemo(
-        () => editorContext?.dispatch || (() => undefined),
+        () => editorContext?.dispatch ?? (() => undefined),
         [editorContext]
     );
-    const fastForward = editorContext?.fastForward || false;
+    const fastForward = editorContext?.fastForward ?? false;
 
     const TimerButton = useMemo(
         () =>
@@ -100,7 +100,10 @@ export function Toolbar(): React.ReactElement[] {
     };
 
     const buttons: React.ReactElement[] = [];
-    const ffData = buttonData['Fast Forward'] as ButtonData;
+    const ffData = buttonData['Fast Forward'] ?? {
+        icon: LastPageRounded,
+        flag: false,
+    };
 
     // Primary Playback Controls: Run/Pause, Reset, Fast Forward
     buttons.push(TimerButton);

@@ -12,6 +12,7 @@ export const PAGE_TITLES: PageTitles = {
     interpreter: (name: string) => `${name} Interpreter | Bangyen`,
     geography: 'Geography | Bangyen',
     artQuiz: 'Art History Quiz | Bangyen',
+    maze: '3D Maze | Bangyen',
 };
 
 export const ROUTES: Routes = {
@@ -23,6 +24,7 @@ export const ROUTES: Routes = {
         Interpreters: '/interpreters',
         Geography: '/geography',
         ArtQuiz: '/art-quiz',
+        Maze: '/maze',
     },
     interpreters: {
         Stun_Step: '/stun-step',
