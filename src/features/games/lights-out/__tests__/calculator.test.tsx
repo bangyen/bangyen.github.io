@@ -4,13 +4,20 @@ import { useGetters } from '../../components/Board';
 
 // Mock useGetters from Board component
 jest.mock('../../components/Board', () => ({
-    useGetters: jest.fn((_getTile, palette) => ({
-        getColor: (_r: number, _c: number) => ({
-            front: palette.primary,
-            back: palette.secondary,
-        }),
-        getBorder: (_r: number, _c: number) => ({ border: '1px solid black' }),
-    })),
+    useGetters: jest.fn(
+        (
+            _getTile: (r: number, c: number) => number,
+            palette: { primary: string; secondary: string }
+        ) => ({
+            getColor: (_r: number, _c: number) => ({
+                front: palette.primary,
+                back: palette.secondary,
+            }),
+            getBorder: (_r: number, _c: number) => ({
+                border: '1px solid black',
+            }),
+        })
+    ),
 }));
 
 describe('Lights Out Calculator UI Helpers', () => {
@@ -62,7 +69,10 @@ describe('Lights Out Calculator UI Helpers', () => {
             renderHook(() => useHandler(row, 3, mockPalette));
 
             expect(useGetters).toHaveBeenCalled();
-            const getTile = (useGetters as jest.Mock).mock.calls[0][0];
+            const calls = (useGetters as jest.Mock).mock.calls as [
+                (r: number, c: number) => number,
+            ][];
+            const getTile = calls[0]![0];
 
             expect(getTile(0, 0)).toBe(1); // row 0, col 0 -> valid
             expect(getTile(0, 1)).toBe(0); // row 0, col 1 -> valid

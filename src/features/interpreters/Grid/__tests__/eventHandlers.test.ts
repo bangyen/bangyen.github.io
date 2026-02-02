@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { handleAction, GridState, GridAction } from '../eventHandlers';
 import * as gridUtils from '../../utils/gridUtils';
 
@@ -154,24 +153,28 @@ describe('Grid Interpreter Event Handlers', () => {
 
     describe('delete action', () => {
         it('decrements pointer if conditions met', () => {
-            const state = {
+            const state: GridState = {
                 ...initialState,
                 tape: [0, 0],
                 pointer: 1,
-            } as any;
-            const action: GridAction = { type: 'delete' } as any;
-            const result = handleAction(state, action) as any;
+            };
+            const action = { type: 'delete' } as unknown as GridAction;
+            const result = handleAction(state, action) as GridState & {
+                pointer: number;
+            };
             expect(result.pointer).toBe(0);
         });
 
         it('does nothing if conditions not met', () => {
-            const state = {
+            const state: GridState = {
                 ...initialState,
                 tape: [0, 1],
                 pointer: 1,
-            } as any;
-            const action: GridAction = { type: 'delete' } as any;
-            const result = handleAction(state, action) as any;
+            };
+            const action = { type: 'delete' } as unknown as GridAction;
+            const result = handleAction(state, action) as GridState & {
+                pointer: number;
+            };
             expect(result.pointer).toBe(1);
         });
     });
@@ -187,8 +190,8 @@ describe('Grid Interpreter Event Handlers', () => {
         };
         const action: GridAction = {
             type: 'run',
-            payload: mockPayload as any,
-        } as any;
+            payload: mockPayload,
+        } as unknown as GridAction;
         const result = handleAction(initialState, action);
         // handleToolbar should work with this payload
         expect(result.pause).toBe(false);

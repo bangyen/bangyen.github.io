@@ -47,7 +47,7 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
         const response = await fetch('/oligopoly_data.json.gz');
         if (!response.ok) {
             throw new Error(
-                `HTTP error! status: ${response.status} - Failed to load Oligopoly data`
+                `HTTP error! status: ${response.status.toString()} - Failed to load Oligopoly data`
             );
         }
 
@@ -101,11 +101,14 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
                     },
                 })
             ).text();
-            matrixData = JSON.parse(decompressedData);
+            const realData = JSON.parse(decompressedData) as {
+                matrix: MatrixItem[];
+            }[];
+            matrixData = realData[0]?.matrix ?? [];
         } else {
             // Assume already decompressed (Vite dev server)
             const text = new TextDecoder().decode(data);
-            matrixData = JSON.parse(text);
+            matrixData = JSON.parse(text) as MatrixItem[];
         }
 
         if (!Array.isArray(matrixData)) {
@@ -128,7 +131,7 @@ const filterMatrixData = (
     basePrice: number,
     collusionEnabled: boolean
 ): MarketDataPoint[] => {
-    if (!matrixData || matrixData.length === 0) {
+    if (matrixData.length === 0) {
         return generateFallbackOligopolyData();
     }
 
@@ -291,7 +294,7 @@ const Oligopoly: React.FC = () => {
         dualYAxis: true,
         rightYAxisFormatter: (value: number) => value.toFixed(2),
         rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
-        tooltipLabelFormatter: (value: number) => `Round ${value}`,
+        tooltipLabelFormatter: (value: number) => `Round ${value.toString()}`,
         tooltipFormatter: (value: number, name: string): [string, string] => [
             name === 'Market Price' ? `$${value.toFixed(2)}` : value.toFixed(2),
             name,

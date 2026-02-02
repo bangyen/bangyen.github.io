@@ -10,11 +10,17 @@ jest.mock('@mui/icons-material', () => ({
 }));
 
 // Mock Fade to avoid transition issues in tests
+// Mock Fade and useMediaQuery to avoid transition issues and control media queries in tests
+const mockUseMediaQuery = jest.fn((_query: string) => false);
 jest.mock('@mui/material', () => {
-    const original = jest.requireActual('@mui/material');
+    const original = jest.requireActual('@mui/material') as unknown as Record<
+        string,
+        unknown
+    >;
     return {
         ...original,
         Fade: ({ children }: { children: React.ReactElement }) => children,
+        useMediaQuery: (query: string) => mockUseMediaQuery(query),
     };
 });
 
@@ -42,7 +48,7 @@ describe('QuizSummaryView', () => {
         onRestart: jest.fn(),
         onBackToMenu: jest.fn(),
         renderHistoryItem: (q: Question<string>, index: number) => (
-            <div key={index} data-testid={`history-item-${index}`}>
+            <div key={index} data-testid={`history-item-${index.toString()}`}>
                 {q.item}
             </div>
         ),

@@ -4,15 +4,33 @@ const WIKI_REST_API = 'https://en.wikipedia.org/api/rest_v1/page/summary/';
 
 export const ART_SEED_TITLES: string[] = []; // Deprecated: Data is now loaded from art_data.json
 
+interface WikipediaSummary {
+    title: string;
+    description?: string;
+    extract?: string;
+    originalimage?: {
+        source: string;
+    };
+    thumbnail?: {
+        source: string;
+    };
+    content_urls?: {
+        desktop?: {
+            page: string;
+        };
+    };
+}
+
 /**
  * Fetches artwork metadata from Wikipedia REST API.
  */
 export async function fetchArtMetadata(title: string): Promise<ArtItem | null> {
     try {
         const url = `${WIKI_REST_API}${encodeURIComponent(title.replace(/ /g, '_'))}`;
+
         const response = await fetch(url);
         if (!response.ok) return null;
-        const data = await response.json();
+        const data = (await response.json()) as WikipediaSummary;
 
         // Basic extraction logic
         let artist = 'Unknown';
@@ -20,20 +38,20 @@ export async function fetchArtMetadata(title: string): Promise<ArtItem | null> {
         let period = 'Unknown';
 
         // Try to find artist in description
-        const desc = data.description || '';
-        const artistMatch = desc.match(/by ([\w\s.-]+)/i);
+        const desc = data.description ?? '';
+        const artistMatch = /by ([\w\s.-]+)/i.exec(desc);
         if (artistMatch) {
-            artist = artistMatch[1].trim();
+            artist = (artistMatch[1] ?? '').trim();
         }
 
         // Try to find year/century in extract
-        const extract = data.extract || '';
-        const yearMatch = extract.match(/\b(1[4-9]\d{2}|20[0-2]\d)\b/);
+        const extract = data.extract ?? '';
+        const yearMatch = /\b(1[4-9]\d{2}|20[0-2]\d)\b/.exec(extract);
         if (yearMatch) {
             year = yearMatch[0];
         } else {
-            const centuryMatch = extract.match(
-                /(\d{1,2}(st|nd|rd|th)-century)/i
+            const centuryMatch = /(\d{1,2}(st|nd|rd|th)-century)/i.exec(
+                extract
             );
             if (centuryMatch) {
                 year = centuryMatch[0];
@@ -64,8 +82,8 @@ export async function fetchArtMetadata(title: string): Promise<ArtItem | null> {
             year: year,
             period: period,
             imageUrl:
-                data.originalimage?.source || data.thumbnail?.source || '',
-            wikiUrl: data.content_urls?.desktop?.page || '',
+                data.originalimage?.source ?? data.thumbnail?.source ?? '',
+            wikiUrl: data.content_urls?.desktop?.page ?? '',
             description: extract,
             country: '',
         };

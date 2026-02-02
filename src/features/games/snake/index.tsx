@@ -106,7 +106,7 @@ export default function Snake(): React.ReactElement {
             };
             dispatch({
                 type: 'steer',
-                payload: { key: keys[direction] || '' },
+                payload: { key: keys[direction] ?? '' },
             });
         },
         [dispatch]
@@ -149,8 +149,8 @@ export default function Snake(): React.ReactElement {
             const isTail = currentValue === 1;
             const isEndpoint = isHead || isTail;
 
-            const standardRadius = `${size / GRID_CONFIG.cellSize.divisor}rem`;
-            const terminalRadius = `${size / 2.5}rem`; // Slightly less than 50% for a sleeker look
+            const standardRadius = `${(size / GRID_CONFIG.cellSize.divisor).toString()}rem`;
+            const terminalRadius = `${(size / 2.5).toString()}rem`; // Slightly less than 50% for a sleeker look
 
             if (color === 'inherit') {
                 return { backgroundColor: color };
@@ -164,7 +164,7 @@ export default function Snake(): React.ReactElement {
                         <FoodIcon
                             sx={{
                                 color: color,
-                                fontSize: `${size * 0.7}rem`,
+                                fontSize: `${(size * 0.7).toString()}rem`,
                                 animation: `${pulseRotate} 2s infinite ease-in-out`,
                             }}
                         />

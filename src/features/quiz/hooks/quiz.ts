@@ -323,25 +323,25 @@ export const useQuizFilter = ({
             );
         }
 
-        if (settings.filterLetter) {
-            let letters = (settings.filterLetter as string)
+        if (
+            typeof settings.filterLetter === 'string' &&
+            settings.filterLetter !== ''
+        ) {
+            let letters = settings.filterLetter
                 .toLowerCase()
                 .split(',')
                 .map((l: string) => l.trim())
                 .filter((l: string) => l);
 
-            if (
-                letters.length <= 1 &&
-                !(settings.filterLetter as string).includes(',')
-            ) {
-                const spaceSplit = (settings.filterLetter as string)
+            if (letters.length <= 1 && !settings.filterLetter.includes(',')) {
+                const spaceSplit = settings.filterLetter
                     .toLowerCase()
                     .split(/\s+/)
                     .filter((l: string) => l);
                 if (spaceSplit.length > 1) {
                     letters = spaceSplit;
                 } else {
-                    letters = (settings.filterLetter as string)
+                    letters = settings.filterLetter
                         .toLowerCase()
                         .split('')
                         .filter((l: string) => l.trim());
@@ -355,8 +355,8 @@ export const useQuizFilter = ({
                         text =
                             settings.mode === 'toCountry'
                                 ? (item as CCTLD).code
-                                    .toLowerCase()
-                                    .replace('.', '')
+                                      .toLowerCase()
+                                      .replace('.', '')
                                 : (item as CCTLD).country.toLowerCase();
                     } else if (quizType === 'driving_side') {
                         text = (item as DrivingSide).country.toLowerCase();
@@ -367,12 +367,25 @@ export const useQuizFilter = ({
                             settings.mode === 'toCountry'
                                 ? (item as VehicleCode).code.toLowerCase()
                                 : (item as VehicleCode).country.toLowerCase();
-                    } else if (quizType === 'art') {
+                    } else {
                         const artItem = item as ArtItem;
                         if (settings.mode === 'art_artist') {
-                            text = (artItem.artist || '').toLowerCase();
-                        } else {
+                            text = artItem.artist.toLowerCase();
+                        } else if ('title' in artItem) {
                             text = artItem.title.toLowerCase();
+                        } else {
+                            // Fallback for types like 'capitals' which might not have title/artist
+                            const fallbackItem = item as {
+                                title?: string;
+                                artist?: string;
+                                country?: string;
+                            };
+                            text = (
+                                fallbackItem.title ??
+                                fallbackItem.artist ??
+                                fallbackItem.country ??
+                                ''
+                            ).toLowerCase();
                         }
                     }
                     return letters.some((l: string) => text.startsWith(l));

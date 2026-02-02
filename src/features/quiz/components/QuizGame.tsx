@@ -198,7 +198,7 @@ const QuizGame: React.FC<QuizGameProps> = ({
                 item.flag && (
                     <img
                         src={item.flag}
-                        alt={`Flag of ${item.country}`}
+                        alt={`Flag of ${item.country ?? 'Unknown'}`}
                         style={{
                             height: '24px',
                             width: 'auto',

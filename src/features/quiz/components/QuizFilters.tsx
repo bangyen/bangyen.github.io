@@ -89,7 +89,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                     <FormControl fullWidth>
                         <InputLabel>Language Filter</InputLabel>
                         <Select
-                            value={settings.filterLanguage || 'All'}
+                            value={settings.filterLanguage ?? 'All'}
                             label="Language Filter"
                             onChange={e => {
                                 onSettingsChange({
@@ -120,7 +120,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                     <FormControl fullWidth>
                         <InputLabel>Zone Filter</InputLabel>
                         <Select
-                            value={settings.filterZone || 'All'}
+                            value={settings.filterZone ?? 'All'}
                             label="Zone Filter"
                             onChange={e => {
                                 onSettingsChange({
@@ -168,7 +168,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                     <FormControl fullWidth>
                         <InputLabel>Convention Filter</InputLabel>
                         <Select
-                            value={settings.filterConvention || 'All'}
+                            value={settings.filterConvention ?? 'All'}
                             label="Convention Filter"
                             onChange={e => {
                                 onSettingsChange({
@@ -200,7 +200,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                         <FormControl fullWidth>
                             <InputLabel>Side Filter</InputLabel>
                             <Select
-                                value={settings.filterSide || 'All'}
+                                value={settings.filterSide ?? 'All'}
                                 label="Side Filter"
                                 onChange={e => {
                                     onSettingsChange({
@@ -229,7 +229,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                         <FormControl fullWidth>
                             <InputLabel>Switch Filter</InputLabel>
                             <Select
-                                value={settings.filterSwitch || 'All'}
+                                value={settings.filterSwitch ?? 'All'}
                                 label="Switch Filter"
                                 onChange={e => {
                                     onSettingsChange({
@@ -300,7 +300,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                 <FormControl fullWidth>
                     <InputLabel># Questions</InputLabel>
                     <Select
-                        value={settings.maxQuestions || 'All'}
+                        value={settings.maxQuestions}
                         label="# Questions"
                         onChange={e => {
                             onSettingsChange({

@@ -29,7 +29,7 @@ jest.mock('../../components/TextArea', () => ({
 }));
 
 // Stable mocks
-const mockNextIter = jest.fn(action => action.payload);
+const mockNextIter = jest.fn((action: { payload: unknown }) => action.payload);
 const mockStableTimer = { create: jest.fn(), clear: jest.fn() };
 
 // Mock hooks - Correct path
@@ -60,9 +60,7 @@ describe('TextEditor Component', () => {
 
     it('handles text changes and dispatches edit', () => {
         render(<TextEditor {...defaultProps} />);
-        const textArea = screen.getByTestId(
-            'text-area'
-        ) as HTMLTextAreaElement;
+        const textArea = screen.getByTestId<HTMLTextAreaElement>('text-area');
         fireEvent.change(textArea, { target: { value: 'new code' } });
 
         // Check if textarea value updated

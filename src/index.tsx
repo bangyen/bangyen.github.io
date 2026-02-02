@@ -26,6 +26,7 @@ const Interpreters = lazy(
 const WikipediaQuiz = lazy(
     () => import('./features/quiz/pages/WikipediaQuizPage')
 );
+const Maze = lazy(() => import('./features/games/maze/MazeGame'));
 
 const App = (): React.ReactElement => {
     const { resolvedMode } = useThemeContext();
@@ -68,6 +69,7 @@ const App = (): React.ReactElement => {
                         path={ROUTES.pages.ArtQuiz}
                         element={<WikipediaQuiz />}
                     />
+                    <Route path={ROUTES.pages.Maze} element={<Maze />} />
                     <Route path="*" element={<Error />} />
                 </Routes>
             </Suspense>
@@ -75,7 +77,7 @@ const App = (): React.ReactElement => {
     );
 };
 
-const root = createRoot(document.getElementById('root') || document.body);
+const root = createRoot(document.getElementById('root') ?? document.body);
 root.render(
     <React.StrictMode>
         <HashRouter basename="/">

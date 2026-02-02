@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
     getSpace,
     convertPixels,
@@ -317,10 +316,14 @@ describe('Calculate Utilities', () => {
         });
 
         test('handles undefined/null inputs gracefully', () => {
-            expect(() => getDirection(undefined as any)).toThrow();
-            expect(() => getDirection(null as any)).toThrow();
-            expect(() => getSpace(undefined as any)).not.toThrow();
-            expect(() => getSpace(null as any)).not.toThrow();
+            expect(() =>
+                getDirection(undefined as unknown as string)
+            ).toThrow();
+            expect(() => getDirection(null as unknown as string)).toThrow();
+            expect(() =>
+                getSpace(undefined as unknown as number)
+            ).not.toThrow();
+            expect(() => getSpace(null as unknown as number)).not.toThrow();
         });
     });
 });

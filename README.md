@@ -20,7 +20,7 @@ A personal website and portfolio showcasing interactive programming interpreters
 
 ### Interactive Games
 - **Snake**: Classic snake game
-- **Lights Out**: Grid puzzle game
+- **Lights Out**: Grid puzzle game ([Math Documentation](src/features/games/lights-out/README.md))
 
 ### Data Visualization
 - **Oligopoly**: Economic simulation with market dynamics

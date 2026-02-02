@@ -26,12 +26,9 @@ jest.mock('../../ResearchDemo', () => ({
         if (chartData && chartData.length > 0 && viewTypes) {
             viewTypes.forEach((vt: ViewType<unknown>) => {
                 vt.dataProcessor(chartData);
-                if (vt.chartConfig.yAxisFormatter)
-                    vt.chartConfig.yAxisFormatter(0.5);
-                if (vt.chartConfig.tooltipFormatter)
-                    vt.chartConfig.tooltipFormatter(0.5, 'test');
-                if (vt.chartConfig.tooltipLabelFormatter)
-                    vt.chartConfig.tooltipLabelFormatter(1);
+                vt.chartConfig.yAxisFormatter(0.5);
+                vt.chartConfig.tooltipFormatter(0.5, 'test');
+                vt.chartConfig.tooltipLabelFormatter(1);
             });
         }
 

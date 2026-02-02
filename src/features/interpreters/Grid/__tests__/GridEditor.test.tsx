@@ -1,20 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, react/no-array-index-key */
+/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import GridEditor from '../GridEditor';
+import { GridState } from '../eventHandlers';
 
 // Mock MUI to avoid complex rendering
 jest.mock('../../../../components/mui', () => ({
-    Box: ({ children }: any) => <div data-testid="mui-box">{children}</div>,
-    Typography: ({ children }: any) => (
+    Box: ({ children }: { children: React.ReactNode }) => (
+        <div data-testid="mui-box">{children}</div>
+    ),
+    Typography: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="mui-typography">{children}</div>
     ),
-    Fade: ({ children }: any) => <div data-testid="mui-fade">{children}</div>,
-    Grid: ({ children }: any) => <div data-testid="mui-grid">{children}</div>,
+    Fade: ({ children }: { children: React.ReactNode }) => (
+        <div data-testid="mui-fade">{children}</div>
+    ),
+    Grid: ({ children }: { children: React.ReactNode }) => (
+        <div data-testid="mui-grid">{children}</div>
+    ),
 }));
 
 // Mock variables prefixed with 'mock' are allowed in jest.mock()
-const mockNextIter = jest.fn(action => action.payload);
+const mockNextIter = jest.fn((action: { payload: unknown }) => action.payload);
 const mockStableTimer = { create: jest.fn(), clear: jest.fn() };
 const mockStableKeys = { create: jest.fn(), clear: jest.fn() };
 
@@ -30,17 +37,25 @@ jest.mock('../../../../hooks', () => ({
 // Mock Editor sub-component
 jest.mock('../../Editor', () => ({
     __esModule: true,
-    default: ({ children }: any) => <div data-testid="editor">{children}</div>,
+    default: ({ children }: { children: React.ReactNode }) => (
+        <div data-testid="editor">{children}</div>
+    ),
 }));
 
 // Mock GridArea and KeySelector
 jest.mock('../../components/GridArea', () => ({
-    GridArea: ({ handleClick, options }: any) => (
+    GridArea: ({
+        handleClick,
+        options,
+    }: {
+        handleClick: (i: number) => () => void;
+        options: string[];
+    }) => (
         <div data-testid="grid-area">
-            {(options || []).map((opt: string, i: number) => (
+            {options.map((opt: string, i: number) => (
                 <button
                     key={i}
-                    data-testid={`cell-${i}`}
+                    data-testid={`cell-${String(i)}`}
                     onClick={handleClick(i)}
                 >
                     {opt}
@@ -52,13 +67,21 @@ jest.mock('../../components/GridArea', () => ({
 
 // Mock KeySelector
 jest.mock('../../components/KeySelector', () => ({
-    KeySelector: ({ onSelect, keys }: any) => (
+    KeySelector: ({
+        onSelect,
+        keys,
+    }: {
+        onSelect: (k: string) => void;
+        keys: string[];
+    }) => (
         <div data-testid="key-selector">
-            {(keys || []).map((k: string) => (
+            {keys.map((k: string) => (
                 <button
                     key={k}
                     data-testid={`key-${k}`}
-                    onClick={() => onSelect(k)}
+                    onClick={() => {
+                        onSelect(k);
+                    }}
                 >
                     {k}
                 </button>
@@ -71,7 +94,7 @@ describe('GridEditor Minimal', () => {
     const defaultProps = {
         name: 'MinimalTest',
         start: { grid: ' ', rows: 1, cols: 1 },
-        runner: (state: any) => state,
+        runner: (state: GridState) => state,
         keys: ['a'],
     };
 

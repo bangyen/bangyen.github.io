@@ -1,6 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import React from 'react';
-import { Select, MenuItem, FormControl } from '@mui/material';
+import {
+    Select,
+    MenuItem,
+    FormControl,
+    SelectChangeEvent,
+} from '@mui/material';
 import { COLORS, SPACING, TYPOGRAPHY } from '../../../config/theme';
 
 interface InterpreterNavigationProps {
@@ -12,7 +15,7 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
     active,
     onChange,
 }) => {
-    const handleChange = (event: any) => {
+    const handleChange = (event: SelectChangeEvent) => {
         onChange(event.target.value);
     };
 

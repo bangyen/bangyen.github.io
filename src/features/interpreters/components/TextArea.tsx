@@ -33,7 +33,7 @@ export function TextArea({
     const mobile = useMobile('md');
     const rows = Math.floor(height / (mobile ? 24 : 32));
 
-    const isControlled = value !== undefined && value !== null;
+    const isControlled = value !== undefined;
     const textFieldProps = isControlled
         ? {
               value: value || '',

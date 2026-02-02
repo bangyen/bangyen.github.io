@@ -14,7 +14,7 @@ describe('boardHandlers', () => {
             const grid = getGrid(rows, cols);
 
             expect(grid.length).toBe(rows);
-            expect(grid[0].length).toBe(cols);
+            expect(grid[0]!.length).toBe(cols);
             grid.forEach(row => {
                 row.forEach(cell => {
                     expect(cell).toBe(0);
@@ -30,17 +30,17 @@ describe('boardHandlers', () => {
             const newGrid = flipAdj(1, 1, grid);
 
             // Center should be 1
-            expect(newGrid[1][1]).toBe(1);
+            expect(newGrid[1]![1]).toBe(1);
             // Neighbors should be 1
-            expect(newGrid[0][1]).toBe(1); // Top
-            expect(newGrid[2][1]).toBe(1); // Bottom
-            expect(newGrid[1][0]).toBe(1); // Left
-            expect(newGrid[1][2]).toBe(1); // Right
+            expect(newGrid[0]![1]).toBe(1); // Top
+            expect(newGrid[2]![1]).toBe(1); // Bottom
+            expect(newGrid[1]![0]).toBe(1); // Left
+            expect(newGrid[1]![2]).toBe(1); // Right
             // Corners should stay 0
-            expect(newGrid[0][0]).toBe(0);
-            expect(newGrid[0][2]).toBe(0);
-            expect(newGrid[2][0]).toBe(0);
-            expect(newGrid[2][2]).toBe(0);
+            expect(newGrid[0]![0]).toBe(0);
+            expect(newGrid[0]![2]).toBe(0);
+            expect(newGrid[2]![0]).toBe(0);
+            expect(newGrid[2]![2]).toBe(0);
         });
 
         it('should handle corners correctly', () => {
@@ -48,10 +48,10 @@ describe('boardHandlers', () => {
             // Flip top-left
             const newGrid = flipAdj(0, 0, grid);
 
-            expect(newGrid[0][0]).toBe(1);
-            expect(newGrid[0][1]).toBe(1); // Right neighbor
-            expect(newGrid[1][0]).toBe(1); // Bottom neighbor
-            expect(newGrid[1][1]).toBe(0); // Diagonal
+            expect(newGrid[0]![0]).toBe(1);
+            expect(newGrid[0]![1]).toBe(1); // Right neighbor
+            expect(newGrid[1]![0]).toBe(1); // Bottom neighbor
+            expect(newGrid[1]![1]).toBe(0); // Diagonal
         });
     });
 
@@ -72,7 +72,7 @@ describe('boardHandlers', () => {
             };
             const newState = handleBoard(initialState, action);
 
-            expect(newState.grid[1][1]).toBe(1);
+            expect(newState.grid[1]![1]).toBe(1);
             expect(newState.score).toBe(0);
         });
 
@@ -90,7 +90,7 @@ describe('boardHandlers', () => {
 
             expect(newState.score).toBe(0);
             expect(newState.auto).toBe(false);
-            expect(newState.grid[1][1]).toBe(0);
+            expect(newState.grid[1]![1]).toBe(0);
         });
 
         it('should handle random action', () => {
@@ -113,7 +113,7 @@ describe('boardHandlers', () => {
             expect(newState.rows).toBe(4);
             expect(newState.cols).toBe(4);
             expect(newState.grid.length).toBe(4);
-            expect(newState.grid[0].length).toBe(4);
+            expect(newState.grid[0]!.length).toBe(4);
         });
 
         it('should handle auto action', () => {
@@ -134,7 +134,7 @@ describe('boardHandlers', () => {
         it('should chase lights down', () => {
             // Light at top-left
             const grid = getGrid(3, 3);
-            grid[0][0] = 1;
+            grid[0]![0] = 1;
 
             const moves = getNextMove(grid);
             // Should suggest clicking directly below it
@@ -157,8 +157,8 @@ describe('boardHandlers', () => {
             const grid = getGrid(2, 2);
             // 0 0
             // 1 1 ?
-            grid[1][0] = 1;
-            grid[1][1] = 1;
+            grid[1]![0] = 1;
+            grid[1]![1] = 1;
 
             // The solver iterates 2^cols.
             // It simulates top row clicks and chases down to see if it matches bottom row.
@@ -167,7 +167,7 @@ describe('boardHandlers', () => {
             // If solvable, moves will be non-null.
             if (moves) {
                 expect(moves.length).toBeGreaterThan(0);
-                expect(moves[0].row).toBe(0);
+                expect(moves[0]!.row).toBe(0);
             }
         });
     });
@@ -228,11 +228,11 @@ describe('boardHandlers', () => {
             // (0,2): 1
             // (1,1): 1
 
-            expect(newState.grid[0][0]).toBe(0);
-            expect(newState.grid[0][1]).toBe(0);
-            expect(newState.grid[1][0]).toBe(1);
-            expect(newState.grid[0][2]).toBe(1);
-            expect(newState.grid[1][1]).toBe(1);
+            expect(newState.grid[0]![0]).toBe(0);
+            expect(newState.grid[0]![1]).toBe(0);
+            expect(newState.grid[1]![0]).toBe(1);
+            expect(newState.grid[0]![2]).toBe(1);
+            expect(newState.grid[1]![1]).toBe(1);
         });
     });
 });

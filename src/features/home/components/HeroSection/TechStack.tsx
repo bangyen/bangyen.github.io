@@ -46,7 +46,7 @@ export function TechStack(): React.ReactElement {
                 }}
             >
                 {SKILLS.map((skill, index) => {
-                    const IconComponent = ICON_MAP[skill.icon] || Work;
+                    const IconComponent = ICON_MAP[skill.icon] ?? Work;
 
                     return (
                         <Fade in timeout={1200 + index * 150} key={skill.name}>

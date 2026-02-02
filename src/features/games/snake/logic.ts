@@ -5,7 +5,7 @@ export type Board = Record<number, number>;
 export interface SnakeState {
     velocity: number;
     buffer: number[];
-    length: number;
+    length: number | undefined;
     rows: number;
     cols: number;
     head: number;
@@ -63,7 +63,7 @@ export function handleResize(
         cols,
         head,
         board: {
-            [head]: state.length,
+            [head]: state.length ?? 5,
             [next]: -1,
         },
     };
@@ -71,6 +71,7 @@ export function handleResize(
 
 export function reduceBoard(state: SnakeState): SnakeState {
     let { board, length, head, velocity, buffer } = state;
+    if (length === undefined) return state;
     const { rows, cols } = state;
 
     const max = rows * cols;
@@ -117,7 +118,8 @@ export function reduceBoard(state: SnakeState): SnakeState {
             }
         }
 
-        length = board[head] ?? length;
+        // Logic ensures if head was removed (collision), length becomes undefined (signaling game over)
+        length = board[head];
     } else {
         board[head] = length;
     }

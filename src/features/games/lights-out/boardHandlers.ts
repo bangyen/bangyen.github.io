@@ -1,5 +1,5 @@
 export function getGrid(rows: number, cols: number): number[][] {
-    return [...Array(rows)].map(() => Array(cols).fill(0));
+    return Array.from({ length: rows }, () => Array(cols).fill(0) as number[]);
 }
 
 export function flipAdj(
@@ -7,17 +7,40 @@ export function flipAdj(
     col: number,
     grid: number[][]
 ): number[][] {
-    const cols = grid[0].length;
     const rows = grid.length;
 
     const newGrid = grid.map(row => [...row]);
-    newGrid[row][col] ^= 1;
+    const targetRow = newGrid[row];
+    if (targetRow && col >= 0 && col < targetRow.length) {
+        const val = targetRow[col];
+        if (val !== undefined) targetRow[col] = val ^ 1;
+    }
 
-    if (row > 0) newGrid[row - 1][col] ^= 1;
-    if (row < rows - 1) newGrid[row + 1][col] ^= 1;
+    if (row > 0) {
+        const rowAbove = newGrid[row - 1];
+        if (rowAbove && col >= 0 && col < rowAbove.length) {
+            const val = rowAbove[col];
+            if (val !== undefined) rowAbove[col] = val ^ 1;
+        }
+    }
+    if (row < rows - 1) {
+        const rowBelow = newGrid[row + 1];
+        if (rowBelow && col >= 0 && col < rowBelow.length) {
+            const val = rowBelow[col];
+            if (val !== undefined) rowBelow[col] = val ^ 1;
+        }
+    }
 
-    if (col > 0) newGrid[row][col - 1] ^= 1;
-    if (col < cols - 1) newGrid[row][col + 1] ^= 1;
+    if (targetRow) {
+        if (col > 0) {
+            const val = targetRow[col - 1];
+            if (val !== undefined) targetRow[col - 1] = val ^ 1;
+        }
+        if (col < targetRow.length - 1) {
+            const val = targetRow[col + 1];
+            if (val !== undefined) targetRow[col + 1] = val ^ 1;
+        }
+    }
 
     return newGrid;
 }
@@ -49,7 +72,7 @@ function solveLastRow(
     cols: number,
     lastRow: number[]
 ): number[] | null {
-    const key = `${rows},${cols}`;
+    const key = `${rows.toString()},${cols.toString()}`;
 
     if (!solverCache[key]) {
         // Build the lookup table for this grid size
@@ -74,24 +97,30 @@ function solveLastRow(
 
             // Chase down
             for (let r = 0; r < rows - 1; r++) {
+                const currentRow = grid[r];
+                const nextRow = grid[r + 1];
+                if (!currentRow || !nextRow) continue;
+
                 for (let c = 0; c < cols; c++) {
-                    if (grid[r][c] === 1) {
+                    if (currentRow[c] === 1) {
                         grid = flipAdj(r + 1, c, grid);
                     }
                 }
             }
 
             // Record resulting bottom row
-            const bottomStr = grid[rows - 1].join('');
-            if (!map[bottomStr]) {
-                map[bottomStr] = topRowIndices;
+            const finalBottomRow = grid[rows - 1];
+            if (finalBottomRow) {
+                const bottomStr = finalBottomRow.join('');
+                map[bottomStr] ??= topRowIndices;
             }
         }
         solverCache[key] = map;
     }
 
     const currentBottomStr = lastRow.join('');
-    const result = solverCache[key][currentBottomStr] || null;
+    const cache = solverCache[key];
+    const result = cache[currentBottomStr] ?? null;
     return result;
 }
 
@@ -99,12 +128,15 @@ export function getNextMove(
     grid: number[][]
 ): { row: number; col: number }[] | null {
     const rows = grid.length;
-    const cols = grid[0].length;
+    const firstRow = grid[0];
+    const cols = firstRow ? firstRow.length : 0;
 
     // Phase 1: Chase lights down
     for (let r = 0; r < rows - 1; r++) {
+        const currentRow = grid[r];
+        if (!currentRow) continue;
         for (let c = 0; c < cols; c++) {
-            if (grid[r][c] === 1) {
+            if (currentRow[c] === 1) {
                 // Return as single-item array
                 return [{ row: r + 1, col: c }];
             }
@@ -113,7 +145,7 @@ export function getNextMove(
 
     // Phase 2: Check last row
     const lastRow = grid[rows - 1];
-    if (lastRow.some(cell => cell === 1)) {
+    if (lastRow?.some(cell => cell === 1)) {
         // Phase 3: Solve last row
         const solution = solveLastRow(rows, cols, lastRow);
         if (solution && solution.length > 0) {

@@ -25,17 +25,17 @@ jest.mock('../QuizGameView', () => {
                 </div>
             )}
             <div data-testid="question-prompt">
-                {props.renderQuestionPrompt?.()}
+                {props.renderQuestionPrompt()}
             </div>
             <div data-testid="question-content">
                 {props.gameState.currentQuestion &&
-                    props.renderQuestionContent?.(
+                    props.renderQuestionContent(
                         props.gameState.currentQuestion
                     )}
             </div>
             <div data-testid="hint">
                 {props.gameState.currentQuestion &&
-                    props.renderHint?.(props.gameState.currentQuestion)}
+                    props.renderHint(props.gameState.currentQuestion)}
             </div>
             <div data-testid="feedback-flag">
                 {props.gameState.currentQuestion &&

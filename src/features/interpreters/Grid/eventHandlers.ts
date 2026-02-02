@@ -31,6 +31,7 @@ export type GridAction =
     | { type: 'edit'; payload: KeysPayload }
     | { type: 'resize'; payload: ResizePayload }
     | { type: 'click'; payload: { select: number } }
+    | { type: 'delete' }
     | ToolbarAction;
 
 function handleKeys(
@@ -89,15 +90,15 @@ function handleResize(
         grid += ' '.repeat(prod);
     }
 
-    const finalRows = newRows !== undefined ? newRows : rows;
-    const finalCols = newCols !== undefined ? newCols : cols;
+    const finalRows = newRows ?? rows;
+    const finalCols = newCols ?? cols;
 
     for (let k = 0; k < finalRows; k++) {
         const start = k * cols;
         let end = start;
 
         if (newCols !== undefined && newCols > cols) end += cols;
-        else end += newCols !== undefined ? newCols : cols;
+        else end += newCols ?? cols;
 
         resize += grid.substring(start, end).padEnd(finalCols, ' ');
     }

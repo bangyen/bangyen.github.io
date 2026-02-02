@@ -33,7 +33,10 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => (
 
 // Mock Material-UI icons
 jest.mock('@mui/icons-material', () => ({
-    ...jest.requireActual('@mui/icons-material'),
+    ...(jest.requireActual('@mui/icons-material') as unknown as Record<
+        string,
+        unknown
+    >),
     LightModeRounded: () => <div data-testid="light-mode-icon" />,
     DarkModeRounded: () => <div data-testid="dark-mode-icon" />,
     ViewModuleRounded: () => <div data-testid="view-module-icon" />,
@@ -108,7 +111,7 @@ describe('Home Component', () => {
         expect(screen.getByTestId('view-module-icon')).toBeInTheDocument();
 
         // Check GitHub button (there are multiple, so use getAllBy)
-        expect(screen.getAllByTestId('github-icon')).toHaveLength(4);
+        expect(screen.getAllByTestId('github-icon')).toHaveLength(5);
     });
 
     test('renders skill chips', async () => {

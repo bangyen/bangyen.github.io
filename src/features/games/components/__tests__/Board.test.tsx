@@ -5,12 +5,12 @@ import { Board, usePalette, useGetters, useHandler } from '../Board';
 import { COLORS } from '../../../../config/theme';
 
 describe('Board Component', () => {
-    const mockFrontProps = jest.fn((r, c) => ({
-        'data-testid': `front-${r}-${c}`,
+    const mockFrontProps = jest.fn((r: number, c: number) => ({
+        'data-testid': `front-${String(r)}-${String(c)}`,
         children: 'Front',
     }));
-    const mockBackProps = jest.fn((r, c) => ({
-        'data-testid': `back-${r}-${c}`,
+    const mockBackProps = jest.fn((r: number, c: number) => ({
+        'data-testid': `back-${String(r)}-${String(c)}`,
         children: 'Back',
     }));
 

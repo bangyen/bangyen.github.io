@@ -236,18 +236,18 @@ export default function GridEditor<T extends GridState>(
         size,
         ...state,
         dispatch: wrapDispatch,
-        tapeFlag: tape || false,
-        outFlag: output || false,
-        regFlag: register || false,
+        tapeFlag: tape ?? false,
+        outFlag: output ?? false,
+        regFlag: register ?? false,
         height: height,
         index: 0,
         tape: [],
         pointer: 0,
-        output: state.output || '',
+        output: state.output ?? '',
         register: 0,
         code: undefined,
         fastForward: false,
-        pause: state.pause || false,
+        pause: state.pause,
     };
 
     return (
@@ -256,7 +256,7 @@ export default function GridEditor<T extends GridState>(
                 <GridArea
                     rows={rows}
                     cols={cols}
-                    options={state.grid?.split('') || []}
+                    options={state.grid.split('')}
                     handleClick={handleClick}
                     chooseColor={chooseColor}
                 />

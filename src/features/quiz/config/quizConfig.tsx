@@ -200,7 +200,7 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
                     <Box
                         component="span"
                         dangerouslySetInnerHTML={{
-                            __html: cctldItem.explanation || '',
+                            __html: cctldItem.explanation ?? '',
                         }}
                     />
                 </Typography>
@@ -252,7 +252,7 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
                             <div
                                 dangerouslySetInnerHTML={{
                                     __html:
-                                        (drivingItem.explanation || '')
+                                        (drivingItem.explanation ?? '')
                                             .replace(
                                                 /^Drives on the <b>(Left|Right)<\/b>\.?\s*/i,
                                                 ''
@@ -313,7 +313,7 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
         },
         renderFeedbackOrigin: item => {
             const drivingItem = item as DrivingSide;
-            const cleanExplanation = (drivingItem.explanation || '')
+            const cleanExplanation = (drivingItem.explanation ?? '')
                 .replace(/^Drives on the <b>(Left|Right)<\/b>\.?\s*/i, '')
                 .trim();
             if (!cleanExplanation) return null;
@@ -510,7 +510,7 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
                     expected = artItem.artist;
                     break;
                 case 'art_period':
-                    expected = artItem.period || artItem.year;
+                    expected = artItem.period ?? artItem.year;
                     break;
             }
             const isCorrect = isSmartMatch(input, expected);

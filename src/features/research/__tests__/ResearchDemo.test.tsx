@@ -22,11 +22,17 @@ jest.mock('../../../hooks/useTheme', () => ({
 }));
 
 // Mock @mui/material useMediaQuery
-const mockUseMediaQuery = jest.fn();
-jest.mock('@mui/material', () => ({
-    ...jest.requireActual('@mui/material'),
-    useMediaQuery: (query: string) => mockUseMediaQuery(query),
-}));
+const mockUseMediaQuery = jest.fn() as jest.Mock<boolean, [string]>;
+jest.mock('@mui/material', () => {
+    const original = jest.requireActual('@mui/material') as unknown as Record<
+        string,
+        unknown
+    >;
+    return {
+        ...original,
+        useMediaQuery: (query: string) => mockUseMediaQuery(query),
+    };
+});
 mockUseMediaQuery.mockReturnValue(false); // Default
 
 // Mock the helpers
@@ -44,7 +50,7 @@ jest.mock('../../../components/ui/TooltipButton', () => ({
         Icon,
     }: {
         title: string;
-        Icon: React.ElementType;
+        Icon?: React.ElementType;
     }) => (
         <button aria-label={title}>
             {title}
@@ -59,7 +65,7 @@ jest.mock('../../../components/ui/Controls', () => ({
         Icon,
     }: {
         title: string;
-        Icon: React.ElementType;
+        Icon?: React.ElementType;
     }) => (
         <button aria-label={title}>
             {title}
@@ -71,7 +77,6 @@ jest.mock('../../../components/ui/Controls', () => ({
     ),
 }));
 
-// Mock recharts
 // Mock recharts
 jest.mock('recharts', () => ({
     LineChart: ({
@@ -96,7 +101,7 @@ jest.mock('recharts', () => ({
         </div>
     ),
     YAxis: ({ tickFormatter }: { tickFormatter?: (val: number) => string }) => {
-        if (tickFormatter) tickFormatter(0);
+        tickFormatter?.(0);
         return <div data-testid="y-axis">YAxis</div>;
     },
     CartesianGrid: () => <div data-testid="cartesian-grid">Grid</div>,
@@ -107,8 +112,8 @@ jest.mock('recharts', () => ({
         labelFormatter?: (val: number) => string;
         formatter?: (val: unknown, name: unknown) => [string, string];
     }) => {
-        if (labelFormatter) labelFormatter(0);
-        if (formatter) formatter(0, 'test');
+        labelFormatter?.(0);
+        formatter?.(0, 'test');
         return <div data-testid="tooltip">Tooltip</div>;
     },
     ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
@@ -116,7 +121,6 @@ jest.mock('recharts', () => ({
     ),
 }));
 
-// describe('ResearchDemo', () => {
 const mockChartData = [
     { x: 1, y: 10, z: 5 },
     { x: 2, y: 15, z: 8 },
@@ -131,9 +135,9 @@ const defaultProps = {
     chartConfig: {
         type: 'line' as const,
         xAxisKey: 'x',
-        yAxisFormatter: (value: number) => `${value}% `,
+        yAxisFormatter: (value: number) => `${value.toString()}% `,
         yAxisDomain: ['dataMin - 1', 'dataMax + 1'],
-        tooltipLabelFormatter: (value: number) => `Round ${value} `,
+        tooltipLabelFormatter: (value: number) => `Round ${value.toString()} `,
         tooltipFormatter: (value: number, name: string): [string, string] => [
             String(value),
             name,
@@ -144,7 +148,6 @@ const defaultProps = {
         ],
     },
 };
-// });
 
 it('renders the title and subtitle correctly', () => {
     render(<ResearchDemo {...defaultProps} />);
@@ -292,7 +295,7 @@ it('renders dual Y-axes when dualYAxis is enabled', () => {
     const dualAxisConfig = {
         ...defaultProps.chartConfig,
         dualYAxis: true,
-        rightYAxisFormatter: (value: number) => `${value}% `,
+        rightYAxisFormatter: (value: number) => `${value.toString()}% `,
         rightYAxisDomain: ['dataMin - 1', 'dataMax + 1'],
         lines: [
             {
@@ -359,8 +362,9 @@ it('processes data using viewType dataProcessor', () => {
 
     expect(mockProcessor).toHaveBeenCalled();
     const chart = screen.getByTestId('line-chart');
-    const processedData = JSON.parse(chart.getAttribute('data-chart-data')!);
-    expect(processedData[0].x).toBe(2); // 1 * 2
+    const attr = chart.getAttribute('data-chart-data');
+    const processedData = JSON.parse(attr ?? '[]') as { x: number }[];
+    expect(processedData[0]?.x).toBe(2); // 1 * 2
 });
 
 it('renders correct chartTitle based on viewTypes and props', () => {

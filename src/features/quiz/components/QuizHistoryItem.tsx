@@ -58,7 +58,7 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                     {q.item.flag && (
                         <img
                             src={q.item.flag}
-                            alt={`Flag of ${q.item.country} `}
+                            alt={`Flag of ${q.item.country ?? 'Unknown'}`}
                             style={{
                                 height: '16px',
                                 width: 'auto',
@@ -106,7 +106,7 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                                 case 'art_artist':
                                     return item.artist;
                                 case 'art_period':
-                                    return item.period || item.year;
+                                    return item.period ?? item.year;
                                 default:
                                     return item.title;
                             }
@@ -157,7 +157,7 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                     }}
                 >
                     {(() => {
-                        const answer = q.userAnswer?.trim();
+                        const answer = q.userAnswer.trim();
                         if (!answer) return <SkippedBadge />;
 
                         let normalizedAnswer = answer;
@@ -208,7 +208,7 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                         }}
                     />
                 ) : (
-                    q.userAnswer?.trim() && (
+                    q.userAnswer.trim() && (
                         <CheckCircleIcon fontSize="small" color="error" />
                     )
                 )}

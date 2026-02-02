@@ -201,21 +201,21 @@ export default function TextEditor({
 
         return {
             name,
-            tapeFlag: tape || false,
-            outFlag: output || false,
-            regFlag: register || false,
+            tapeFlag: tape ?? false,
+            outFlag: output ?? false,
+            regFlag: register ?? false,
             // eslint-disable-next-line @typescript-eslint/no-misused-spread
             code: state.code ? [...state.code] : [],
             index: (state.index as number) || 0,
-            tape: state.tape || [],
+            tape: state.tape ?? [],
             pointer: (state.pointer as number) || 0,
-            output: state.output || '',
+            output: state.output ?? '',
             register: (state.register as number) || 0,
             height,
             size: 0,
             dispatch: wrapDispatch,
             fastForward: true,
-            pause: state.pause || false,
+            pause: state.pause ?? false,
         };
     }, [
         container,

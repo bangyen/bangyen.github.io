@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import {
@@ -122,11 +121,11 @@ describe('Test Utilities', () => {
         });
 
         test('has correct data types', () => {
-            expect(typeof mockData.zsharp.train_accuracies[0]).toBe('number');
-            expect(typeof mockData.zsharp.train_losses[0]).toBe('number');
-            expect(typeof mockData.oligopoly[0].round).toBe('number');
-            expect(typeof mockData.oligopoly[0].price).toBe('number');
-            expect(typeof mockData.oligopoly[0].hhi).toBe('number');
+            expect(typeof mockData.zsharp.train_accuracies[0]!).toBe('number');
+            expect(typeof mockData.zsharp.train_losses[0]!).toBe('number');
+            expect(typeof mockData.oligopoly[0]!.round).toBe('number');
+            expect(typeof mockData.oligopoly[0]!.price).toBe('number');
+            expect(typeof mockData.oligopoly[0]!.hhi).toBe('number');
         });
     });
 
@@ -153,7 +152,10 @@ describe('Test Utilities', () => {
             const response = mockFetchResponses.success(testData);
 
             const buffer = await response.arrayBuffer();
-            const decoded = String.fromCharCode(...new Uint8Array(buffer));
+            const decoded = String.fromCharCode(
+                ...Array.from(new Uint8Array(buffer))
+            );
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const parsed = JSON.parse(decoded);
 
             expect(parsed).toEqual(testData);
@@ -283,7 +285,10 @@ describe('Test Utilities', () => {
             const response = mockFetchResponses.success(testData);
 
             const buffer = await response.arrayBuffer();
-            const decoded = String.fromCharCode(...new Uint8Array(buffer));
+            const decoded = String.fromCharCode(
+                ...Array.from(new Uint8Array(buffer))
+            );
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const parsed = JSON.parse(decoded);
 
             expect(parsed).toEqual(testData);
@@ -306,7 +311,11 @@ describe('Test Utilities', () => {
         });
 
         test('handles null overrides in generateUserData', () => {
-            const user = testDataGenerators.generateUserData(null as any);
+            const user = testDataGenerators.generateUserData(
+                null as unknown as Partial<
+                    ReturnType<typeof testDataGenerators.generateUserData>
+                >
+            );
 
             expect(user).toHaveProperty('id', 1);
             expect(user).toHaveProperty('name', 'Test User');

@@ -47,36 +47,43 @@ function getIconFrames(
             const predicted = flipAdj(row, col, currentState);
             match = true;
             for (let r = 0; r < dims; r++) {
+                const predictedRow = predicted[r];
+                const nextRowState = nextState[r];
+                if (!predictedRow || !nextRowState) {
+                    match = false;
+                    break;
+                }
                 for (let c = 0; c < dims; c++) {
-                    if (predicted[r][c] !== nextState[r][c]) {
+                    if (predictedRow[c] !== nextRowState[c]) {
                         match = false;
                         break;
                     }
                 }
+                if (!match) break;
             }
 
             if (match) {
-                const isOne = currentState[row][col] === 1;
+                const isOne = currentState[row]?.[col] === 1;
                 color = isOne ? palette.secondary : palette.primary;
-                predictedContent = `"${k + 1}"`;
+                predictedContent = `"${String(k + 1)}"`;
             }
         }
 
         if (match) {
             // Entrance (Pop In)
-            frames[`${start}%`] = {
+            frames[`${String(start)}%`] = {
                 opacity: 0,
                 content: predictedContent,
                 color,
                 transform: 'scale(0.5)',
             };
-            frames[`${start + stepSize * (0.1 / speed)}%`] = {
+            frames[`${String(start + stepSize * (0.1 / speed))}%`] = {
                 opacity: 1,
                 content: predictedContent,
                 color,
                 transform: 'scale(1.2)',
             };
-            frames[`${start + stepSize * (0.2 / speed)}%`] = {
+            frames[`${String(start + stepSize * (0.2 / speed))}%`] = {
                 opacity: 1,
                 content: predictedContent,
                 color,
@@ -84,7 +91,7 @@ function getIconFrames(
             };
 
             // Hold
-            frames[`${end - stepSize * (0.1 / speed)}%`] = {
+            frames[`${String(end - stepSize * (0.1 / speed))}%`] = {
                 opacity: 1,
                 content: predictedContent,
                 color,
@@ -92,7 +99,7 @@ function getIconFrames(
             };
 
             // Exit (Fade Out)
-            frames[`${end}%`] = {
+            frames[`${String(end)}%`] = {
                 opacity: 0,
                 content: predictedContent,
                 color,
@@ -100,13 +107,13 @@ function getIconFrames(
             };
         } else {
             // Keep hidden
-            frames[`${start}%`] = {
+            frames[`${String(start)}%`] = {
                 opacity: 0,
                 content: '""',
                 color,
                 transform: 'scale(0.5)',
             };
-            frames[`${end}%`] = {
+            frames[`${String(end)}%`] = {
                 opacity: 0,
                 content: '""',
                 color,
@@ -128,12 +135,11 @@ function iconHandler(
         const frames = getIconFrames(states, row, col, dims, palette);
         const length = states.length;
 
-        const name = `${id}-icon-${row}-${col}`;
+        const name = `${id}-icon-${String(row)}-${String(col)}`;
         const index = `@keyframes ${name}`;
 
         const animation = `
-            ${name}
-            ${length * 2}s
+            ${String(length * 2)}s
             linear
             infinite
         `;
@@ -204,25 +210,25 @@ function inputIconHandler(
                     match = true;
                     const isOne = currentState[col] === 1;
                     color = isOne ? palette.secondary : palette.primary;
-                    predictedContent = `"${k + 1}"`;
+                    predictedContent = `"${String(k + 1)}"`;
                 }
             }
 
             if (match) {
                 // Entrance (Pop In) - Faster for input
-                frames[`${start}%`] = {
+                frames[`${String(start)}%`] = {
                     opacity: 0,
                     content: predictedContent,
                     color,
                     transform: 'scale(0.5)',
                 };
-                frames[`${start + stepSize * (0.1 / speed)}%`] = {
+                frames[`${String(start + stepSize * (0.1 / speed))}%`] = {
                     opacity: 1,
                     content: predictedContent,
                     color,
                     transform: 'scale(1.2)',
                 };
-                frames[`${start + stepSize * (0.2 / speed)}%`] = {
+                frames[`${String(start + stepSize * (0.2 / speed))}%`] = {
                     opacity: 1,
                     content: predictedContent,
                     color,
@@ -230,7 +236,7 @@ function inputIconHandler(
                 };
 
                 // Hold (End sooner for input to feel snappier)
-                frames[`${end - stepSize * (0.1 / speed)}%`] = {
+                frames[`${String(end - stepSize * (0.1 / speed))}%`] = {
                     opacity: 1,
                     content: predictedContent,
                     color,
@@ -238,20 +244,20 @@ function inputIconHandler(
                 };
 
                 // Exit (Fade Out)
-                frames[`${end}%`] = {
+                frames[`${String(end)}%`] = {
                     opacity: 0,
                     content: predictedContent,
                     color,
                     transform: 'scale(0.5)',
                 };
             } else {
-                frames[`${start}%`] = {
+                frames[`${String(start)}%`] = {
                     opacity: 0,
                     content: '""',
                     color,
                     transform: 'scale(0.5)',
                 };
-                frames[`${end}%`] = {
+                frames[`${String(end)}%`] = {
                     opacity: 0,
                     content: '""',
                     color,
@@ -260,12 +266,11 @@ function inputIconHandler(
             }
         }
 
-        const name = `${id}-icon-${row}-${col}`;
+        const name = `${id}-icon-${String(row)}-${String(col)}`;
         const index = `@keyframes ${name}`;
 
         const animation = `
-            ${name}
-            ${length * 2}s
+            ${String(length * 2)}s
             linear
             infinite
         `;
@@ -335,7 +340,7 @@ export default function Example({
     const isSolved = remainder === inputStates.length - 1;
 
     const gridState = {
-        grid: boardStates[remainder],
+        grid: boardStates[remainder] ?? boardStates[0] ?? [],
         rows: dims,
         cols: dims,
     };
@@ -358,12 +363,12 @@ export default function Example({
     };
 
     const inputGetters = useCalculatorHandler(
-        inputStates[remainder],
+        inputStates[remainder] ?? [],
         dims,
         palette
     );
     const outputGetters = useCalculatorHandler(
-        outputStates[remainder],
+        outputStates[remainder] ?? [],
         dims,
         palette
     );

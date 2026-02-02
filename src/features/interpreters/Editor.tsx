@@ -62,7 +62,7 @@ export default function Editor({
             minHeight={{ xs: '50vh', md: 'auto' }}
             height={{
                 xs: 'auto',
-                md: `calc(100vh - ${LAYOUT.headerHeight.md}px)`,
+                md: `calc(100vh - ${LAYOUT.headerHeight.md.toString()}px)`,
             }}
             direction="column"
             wrap="nowrap"

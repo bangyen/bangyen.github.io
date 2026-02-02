@@ -11,12 +11,15 @@ describe('useCache Hook', () => {
     });
 
     test('initializes and clears cache', () => {
-        const getState = jest.fn(s => s);
+        const getState = jest.fn((s: { count: number }) => s);
         const { result } = renderHook(() => useCache(getState));
 
-        let state;
+        let state: { count: number } | undefined;
         act(() => {
-            state = result.current({ type: 'clear', payload: { count: 0 } });
+            state = result.current({
+                type: 'clear',
+                payload: { count: 0 },
+            }) as { count: number };
         });
         expect(state).toEqual({ count: 0 });
     });
@@ -31,9 +34,11 @@ describe('useCache Hook', () => {
             result.current({ type: 'clear', payload: { count: 0 } });
         });
 
-        let nextState;
+        let nextState: { count: number } | undefined;
         act(() => {
-            nextState = result.current({ type: 'next', payload: null });
+            nextState = result.current({ type: 'next', payload: null }) as {
+                count: number;
+            };
         });
 
         expect(nextState).toEqual({ count: 1 });
@@ -50,10 +55,15 @@ describe('useCache Hook', () => {
             result.current({ type: 'clear', payload: { count: 0 } });
         });
 
-        let state1, state2;
+        let state1: { count: number } | undefined;
+        let state2: { count: number } | undefined;
         act(() => {
-            state1 = result.current({ type: 'next', payload: null });
-            state2 = result.current({ type: 'next', payload: null });
+            state1 = result.current({ type: 'next', payload: null }) as {
+                count: number;
+            };
+            state2 = result.current({ type: 'next', payload: null }) as {
+                count: number;
+            };
         });
 
         expect(state1).toEqual({ count: 1 });
@@ -84,17 +94,19 @@ describe('useCache Hook', () => {
             result.current({ type: 'next', payload: null });
         });
 
-        let prevState;
+        let prevState: { count: number } | undefined;
         act(() => {
             jest.advanceTimersByTime(200);
-            prevState = result.current({ type: 'prev', payload: null });
+            prevState = result.current({ type: 'prev', payload: null }) as {
+                count: number;
+            };
         });
 
         expect(prevState).toEqual({ count: 0 });
     });
 
     test('avoids push when state does not change', () => {
-        const getState = jest.fn(s => s); // Returns same state
+        const getState = jest.fn((s: { count: number }) => s); // Returns same state
         const { result } = renderHook(() => useCache(getState));
 
         act(() => {
@@ -106,7 +118,9 @@ describe('useCache Hook', () => {
         });
 
         // If it didn't push, index remains 0
-        const state = result.current({ type: 'prev', payload: null });
+        const state = result.current({ type: 'prev', payload: null }) as {
+            count: number;
+        };
         expect(state).toEqual({ count: 0 });
     });
 
@@ -135,9 +149,11 @@ describe('useCache Hook', () => {
 
         // Now index is 1. Go next. Should NOT call getState.
         getState.mockClear();
-        let state;
+        let state: { count: number } | undefined;
         act(() => {
-            state = result.current({ type: 'next', payload: null });
+            state = result.current({ type: 'next', payload: null }) as {
+                count: number;
+            };
         });
 
         expect(state).toEqual({ count: 2 });

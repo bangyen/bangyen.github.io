@@ -179,7 +179,7 @@ function Display({ Icon, title, data, pointer, children }: DisplayProps) {
     const items = React.useMemo(
         () =>
             data.map((val, ind) => ({
-                id: `${title}-${ind}`,
+                id: `${title}-${String(ind)}`,
                 val,
                 ind,
             })),
@@ -237,7 +237,7 @@ function CompactDisplay({ Icon, title, data, pointer }: CompactDisplayProps) {
     const items = React.useMemo(
         () =>
             data.map((val, ind) => ({
-                id: `${title}-${ind}`,
+                id: `${title}-${String(ind)}`,
                 val,
                 ind,
             })),

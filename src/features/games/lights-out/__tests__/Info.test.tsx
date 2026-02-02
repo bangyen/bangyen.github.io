@@ -55,12 +55,14 @@ describe('Lights Out Info Component', () => {
         jest.clearAllMocks();
         mockUseHandler.mockReturnValue({}); // simplistic mock
         // Mock getInput to return a function that returns props with onClick
-        mockGetInput.mockImplementation((getters, toggleTile) => {
-            return (r: number, c: number) => ({
-                onClick: toggleTile(c),
-                'data-testid': `input-cell-${c}`,
-            });
-        });
+        mockGetInput.mockImplementation(
+            (_getters: unknown, toggleTile: (c: number) => () => void) => {
+                return (_r: number, c: number) => ({
+                    onClick: toggleTile(c),
+                    'data-testid': `input-cell-${String(c)}`,
+                });
+            }
+        );
         mockGetOutput.mockReturnValue(() => ({}));
     });
 

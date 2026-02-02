@@ -10,7 +10,7 @@ export function useKeys() {
     }, []);
 
     const clear = useCallback((handler?: (event: KeyboardEvent) => void) => {
-        const targetHandler = handler || oldHandler.current;
+        const targetHandler = handler ?? oldHandler.current;
         if (targetHandler) {
             document.removeEventListener('keydown', targetHandler);
         }

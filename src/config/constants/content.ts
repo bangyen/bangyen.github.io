@@ -33,4 +33,11 @@ export const PROJECTS: Project[] = [
         description:
             'Built simulation with 98.5% collusion detection accuracy and 72.3% strategy adaptation rate using FastAPI and SQLAlchemy',
     },
+    {
+        title: '3D Maze — Three.js Game',
+        technology: 'Three.js',
+        url: '#/maze',
+        description:
+            'Created a 3D top-down third-person maze game with limited vision and randomly generated levels using Three.js.',
+    },
 ];

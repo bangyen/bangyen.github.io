@@ -177,7 +177,7 @@ export function useHandler(state: GridState, palette: Palette): Getters {
         (row: number, col: number) => {
             if (row < 0 || col < 0 || row >= rows || col >= cols) return -1;
 
-            return grid[row][col];
+            return grid[row]?.[col] ?? -1;
         },
         [grid, rows, cols]
     );

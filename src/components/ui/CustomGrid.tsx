@@ -18,8 +18,8 @@ interface CellProps {
 }
 
 function Cell({ size, children, ...rest }: CellProps) {
-    const remSize = `${size}rem`;
-    const radius = `${size / GRID_CONFIG.cellSize.divisor}rem`;
+    const remSize = `${size.toString()}rem`;
+    const radius = `${(size / GRID_CONFIG.cellSize.divisor).toString()}rem`;
 
     const {
         backgroundColor,
@@ -44,7 +44,7 @@ function Cell({ size, children, ...rest }: CellProps) {
         borderRadius: radius,
         height: remSize,
         width: remSize,
-        fontSize: `${size * GRID_CONFIG.cellSize.fontSizeMultiplier}rem`,
+        fontSize: `${(size * GRID_CONFIG.cellSize.fontSizeMultiplier).toString()}rem`,
         fontWeight: TYPOGRAPHY.fontWeight.semibold,
         fontFamily: 'monospace',
     };
@@ -83,7 +83,11 @@ interface RowProps {
 
 function Row({ cols, size, index, spacing, cellProps }: RowProps) {
     const WrappedCell = (_: unknown, j: number) => (
-        <Cell {...cellProps(index, j)} key={`${index}_${j}`} size={size} />
+        <Cell
+            {...cellProps(index, j)}
+            key={`${index.toString()}_${j.toString()}`}
+            size={size}
+        />
     );
 
     return (
@@ -111,7 +115,7 @@ export function CustomGrid({
 }: CustomGridProps) {
     const auto = getSpace(size);
     const { space = auto } = rest;
-    const rem = `${space}rem`;
+    const rem = `${space.toString()}rem`;
 
     const getRow = useCallback(
         (_: unknown, i: number) => (
@@ -120,7 +124,7 @@ export function CustomGrid({
                 cols={cols}
                 size={size}
                 spacing={rem}
-                key={`row_${i}`}
+                key={`row_${i.toString()}`}
                 cellProps={cellProps}
             />
         ),
@@ -134,7 +138,7 @@ export function CustomGrid({
             spacing={rem}
             alignItems="center"
             role="grid"
-            aria-label={`Grid with ${rows} rows and ${cols} columns`}
+            aria-label={`Grid with ${rows.toString()} rows and ${cols.toString()} columns`}
             {...rest}
         >
             {Array.from({ length: rows }, getRow)}

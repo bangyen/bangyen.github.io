@@ -9,7 +9,7 @@ export function chaseLights(states: number[][][], dims: number): number[][][] {
 
     for (let r = 1; r < dims; r++) {
         for (let c = 0; c < dims; c++) {
-            if (!prev[r - 1][c]) continue;
+            if (!prev[r - 1]?.[c]) continue;
 
             const next = flipAdj(r, c, prev);
 
@@ -30,9 +30,9 @@ export function fillRow(
 } {
     const blank = Array(dims).fill(0);
 
-    const inputStates: number[][] = [blank];
-    const outputStates: number[][] = [blank];
-    const last = [...blank];
+    const inputStates: number[][] = [blank as number[]];
+    const outputStates: number[][] = [blank as number[]];
+    const last = [...(blank as number[])];
 
     for (let c = 0; c < dims; c++) {
         if (!row[c]) continue;
@@ -99,11 +99,13 @@ export function getStates(
     for (let i = 0; i < before - states.length; i++) {
         states.push([...last]);
     }
+    const firstInput = input[0];
     for (let i = 0; i < before - input.length; i++) {
-        input.unshift([...input[0]]);
+        if (firstInput) input.unshift([...firstInput]);
     }
+    const firstOutput = output[0];
     for (let i = 0; i < before - output.length; i++) {
-        output.unshift([...output[0]]);
+        if (firstOutput) output.unshift([...firstOutput]);
     }
 
     for (let k = 0; k < dims; k++) {

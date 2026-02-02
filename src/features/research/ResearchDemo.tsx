@@ -36,7 +36,7 @@ const ResearchDemo = <T,>({
         dualYAxis: false,
         rightYAxisFormatter: (value: number) => value.toFixed(2),
         rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
-        tooltipLabelFormatter: (value: number) => `Round ${value}`,
+        tooltipLabelFormatter: (value: number) => `Round ${value.toString()}`,
         tooltipFormatter: (value: number, name: string) => [
             value.toFixed(2),
             name,
@@ -53,7 +53,7 @@ const ResearchDemo = <T,>({
     chartTitle = null,
 }: ResearchDemoProps<T>) => {
     const getCurrentChartData = () => {
-        if (!chartData || chartData.length === 0) return [];
+        if (chartData.length === 0) return [];
 
         if (!viewTypes.length) return chartData;
 
@@ -67,7 +67,7 @@ const ResearchDemo = <T,>({
 
     const currentData = getCurrentChartData();
     const currentChartConfig =
-        viewTypes.find(view => view.key === currentViewType)?.chartConfig ||
+        viewTypes.find(view => view.key === currentViewType)?.chartConfig ??
         chartConfig;
 
     const isMobile = useMediaQuery('(max-width:600px)');
@@ -182,12 +182,12 @@ const ResearchDemo = <T,>({
                                     fontSize: TYPOGRAPHY.fontSize.subheading,
                                 }}
                             >
-                                {chartTitle ||
-                                    (viewTypes.length
-                                        ? viewTypes.find(
+                                {chartTitle ??
+                                    (viewTypes.length > 0
+                                        ? (viewTypes.find(
                                               view =>
                                                   view.key === currentViewType
-                                          )?.chartTitle || 'Data Visualization'
+                                          )?.chartTitle ?? 'Data Visualization')
                                         : 'Data Visualization')}
                             </Typography>
                             <Box
@@ -332,7 +332,7 @@ const ResearchDemo = <T,>({
                                                     <Line
                                                         key={line.dataKey}
                                                         yAxisId={
-                                                            line.yAxisId ||
+                                                            line.yAxisId ??
                                                             'left'
                                                         }
                                                         type="monotone"

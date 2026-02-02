@@ -4,11 +4,14 @@ export function getMatrix(cols: number): number[] {
 
     for (let k = 1; k < cols; k++) {
         const prev = matrix[k - 1];
-        const next = prev >> 1;
-        matrix.push(next);
+        if (prev !== undefined) {
+            const next = prev >> 1;
+            matrix.push(next);
+        }
     }
 
-    matrix[0] -= 2 ** cols;
+    const firstVal = matrix[0];
+    if (firstVal !== undefined) matrix[0] = firstVal - 2 ** cols;
     return matrix;
 }
 
@@ -33,11 +36,13 @@ export function multiplySym(matrixA: number[], matrixB: number[]): number[] {
 
         for (let c = 0; c < size; c++) {
             const colB = matrixB[c];
-            const value = rowA & colB;
-            const count = countBits(value);
+            if (rowA !== undefined && colB !== undefined) {
+                const value = rowA & colB;
+                const count = countBits(value);
 
-            outputRow <<= 1;
-            outputRow += count & 1;
+                outputRow <<= 1;
+                outputRow += count & 1;
+            }
         }
 
         output.push(outputRow);
@@ -47,9 +52,12 @@ export function multiplySym(matrixA: number[], matrixB: number[]): number[] {
 }
 
 export function getIdentity(size: number): number[] {
-    const output = Array(size).fill(1);
+    const output = Array<number>(size).fill(1);
 
-    for (let r = 0; r < size; r++) output[r] <<= size - r - 1;
+    for (let r = 0; r < size; r++) {
+        const val = output[r];
+        if (val !== undefined) output[r] = val << (size - r - 1);
+    }
 
     return output;
 }
@@ -70,8 +78,10 @@ export function addSym(matrixA: number[], matrixB: number[]): number[] {
     for (let r = 0; r < size; r++) {
         const rowA = matrixA[r];
         const rowB = matrixB[r];
-        const outputRow = rowA ^ rowB;
-        output.push(outputRow);
+        if (rowA !== undefined && rowB !== undefined) {
+            const outputRow = rowA ^ rowB;
+            output.push(outputRow);
+        }
     }
 
     return output;
@@ -83,17 +93,18 @@ export function getPolynomial(index: number): number {
     for (let k = 1; k < index; k++) {
         const curr = output[k];
         const prev = output[k - 1];
-        const double = curr << 1;
-
-        output.push(double ^ prev);
+        if (curr !== undefined && prev !== undefined) {
+            const double = curr << 1;
+            output.push(double ^ prev);
+        }
     }
 
-    return output[index];
+    return output[index] ?? 0;
 }
 
 export function evalPolynomial(matrix: number[], poly: number): number[] {
     const size = matrix.length;
-    let output = Array(size).fill(0);
+    let output = Array<number>(size).fill(0);
     let degree = 0;
 
     while (poly) {
@@ -115,12 +126,15 @@ export function sortMatrices(
     identity: number[]
 ): [number[], number[]] {
     const size = matrix.length;
-    const sorted = [...Array(size).keys()].sort(
-        (a, b) => matrix[b] - matrix[a]
-    );
+    const sorted = [...Array(size).keys()].sort((a, b) => {
+        const valB = matrix[b];
+        const valA = matrix[a];
+        if (valB === undefined || valA === undefined) return 0;
+        return valB - valA;
+    });
 
-    const original = sorted.map(row => matrix[row]);
-    const inverted = sorted.map(row => identity[row]);
+    const original = sorted.map(row => matrix[row] ?? 0);
+    const inverted = sorted.map(row => identity[row] ?? 0);
 
     return [original, inverted];
 }
@@ -139,12 +153,21 @@ export function invertMatrix(matrix: number[]): number[] {
 
         for (let r = 0; r < size; r++) {
             const alt = original[r];
+            if (alt === undefined) continue;
 
             if (r === c) continue;
 
             if (alt & pow) {
-                original[r] ^= original[c];
-                inverted[r] ^= inverted[c];
+                const rowC = original[c];
+                const invC = inverted[c];
+                if (rowC !== undefined) {
+                    const targetRow = original[r];
+                    if (targetRow !== undefined) original[r] = targetRow ^ rowC;
+                }
+                if (invC !== undefined) {
+                    const targetInv = inverted[r];
+                    if (targetInv !== undefined) inverted[r] = targetInv ^ invC;
+                }
             }
         }
     }
@@ -165,7 +188,7 @@ export function getProduct(
     rows: number,
     cols: number
 ): number[] {
-    const key = `${rows},${cols}`;
+    const key = `${rows.toString()},${cols.toString()}`;
 
     if (!inverseCache[key]) {
         const matrix = getMatrix(cols);

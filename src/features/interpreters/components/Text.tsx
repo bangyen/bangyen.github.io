@@ -12,17 +12,21 @@ export function Text({ text, ...props }: TextProps) {
     return (
         <Typography
             {...props}
-            sx={[
-                {
-                    fontSize: 'inherit',
-                    fontWeight: 'inherit',
-                    fontFamily: 'inherit',
-                    userSelect: 'none',
-                    lineHeight: 1,
-                    display: 'inline',
-                },
-                ...(Array.isArray(props.sx) ? props.sx : [props.sx]),
-            ]}
+            sx={
+                [
+                    {
+                        fontSize: 'inherit',
+                        fontWeight: 'inherit',
+                        fontFamily: 'inherit',
+                        userSelect: 'none',
+                        lineHeight: 1,
+                        display: 'inline',
+                    },
+                    ...(Array.isArray(props.sx)
+                        ? (props.sx as SxProps<Theme>[])
+                        : [props.sx as SxProps<Theme>]),
+                ] as SxProps<Theme>
+            }
         >
             {text}
         </Typography>

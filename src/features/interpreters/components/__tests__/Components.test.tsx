@@ -125,9 +125,9 @@ jest.mock('../../../../components/ui/CustomGrid', () => ({
                 const props = cellProps(row, col);
                 return (
                     <button
-                        key={`${row}-${col}`}
+                        key={`${row.toString()}-${col.toString()}`}
                         type="button"
-                        data-testid={`cell-${i}`}
+                        data-testid={`cell-${i.toString()}`}
                         onClick={props.onClick}
                         style={{
                             color: props.color,
@@ -235,7 +235,9 @@ describe('Interpreter Components', () => {
 
         test('handles click', () => {
             const clickHandler = jest.fn();
-            const handleClick = (pos: number) => () => clickHandler(pos);
+            const handleClick = (pos: number) => (): void => {
+                clickHandler(pos);
+            };
 
             renderWithContext(
                 <GridArea {...defaultProps} handleClick={handleClick} />

@@ -22,15 +22,11 @@ jest.mock('../../ResearchDemo', () => ({
         loading,
     }: ResearchDemoProps<unknown>) => {
         if (chartConfig) {
-            if (chartConfig.yAxisFormatter) chartConfig.yAxisFormatter(0);
-            if (chartConfig.rightYAxisFormatter)
-                chartConfig.rightYAxisFormatter(0);
-            if (chartConfig.tooltipLabelFormatter)
-                chartConfig.tooltipLabelFormatter(0);
-            if (chartConfig.tooltipFormatter)
-                chartConfig.tooltipFormatter(0, 'Market Price');
-            if (chartConfig.tooltipFormatter)
-                chartConfig.tooltipFormatter(0, 'Other');
+            chartConfig.yAxisFormatter(0);
+            chartConfig.rightYAxisFormatter?.(0);
+            chartConfig.tooltipLabelFormatter(0);
+            chartConfig.tooltipFormatter(0, 'Market Price');
+            chartConfig.tooltipFormatter(0, 'Other');
         }
         return (
             <div data-testid="research-demo">
@@ -44,7 +40,7 @@ jest.mock('../../ResearchDemo', () => ({
                             <button
                                 data-testid={`change-${c.label}`}
                                 onClick={() => {
-                                    c.onChange(c.options[0].value);
+                                    c.onChange(c.options[0]!.value);
                                 }}
                             >
                                 Change
