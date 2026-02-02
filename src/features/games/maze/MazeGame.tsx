@@ -29,9 +29,17 @@ export default function MazeGame(): React.ReactElement {
         scene: THREE.Scene;
         camera: THREE.PerspectiveCamera;
         renderer: THREE.WebGLRenderer;
+
         player: THREE.Group;
-        walls: THREE.Mesh[];
-        goal: THREE.Mesh;
+        playerCore: THREE.Mesh;
+        playerShell: THREE.Mesh;
+        // walls: THREE.Mesh[]; // Replaced with InstancedMesh
+        wallColliders: THREE.Box3[]; // Collision-only data
+
+        goalGroup: THREE.Group;
+        goalPrism: THREE.Mesh;
+        goalCore: THREE.Mesh;
+        goalBeacon: THREE.Mesh;
         light: THREE.PointLight;
         particles: THREE.Points;
     } | null>(null);
@@ -138,16 +146,54 @@ export default function MazeGame(): React.ReactElement {
         floor.receiveShadow = true;
         scene.add(floor);
 
-        // Walls
-        const walls: THREE.Mesh[] = [];
+        // Walls (Instanced Rendering)
+        const wallColliders: THREE.Box3[] = [];
         const glassMaterial = createGlassMaterial(COLORS.primary.main);
+
+        // Count total walls first to allocate InstancedMesh
+        let wallCount = 0;
+        maze.grid.forEach(row => {
+            row.forEach(cell => {
+                if (cell.walls.top) wallCount++;
+                if (cell.walls.bottom) wallCount++;
+                if (cell.walls.left) wallCount++;
+                if (cell.walls.right) wallCount++;
+            });
+        });
+
+        const wallGeometry = new THREE.BoxGeometry(1, 1, 1); // Unit cube, scaled later
+        const wallsInstance = new THREE.InstancedMesh(
+            wallGeometry,
+            glassMaterial,
+            wallCount
+        );
+        wallsInstance.castShadow = true;
+        wallsInstance.receiveShadow = true;
+        scene.add(wallsInstance);
+
+        // Edge Glow (Instanced)
+        const edgeGeometry = new THREE.BoxGeometry(1, 1, 1);
+        const edgeMaterial = new THREE.MeshBasicMaterial({
+            color: COLORS.primary.main,
+            transparent: true,
+            opacity: 0.5,
+        });
+        const edgesInstance = new THREE.InstancedMesh(
+            edgeGeometry,
+            edgeMaterial,
+            wallCount
+        );
+        scene.add(edgesInstance);
+
+        const dummy = new THREE.Object3D();
+        let instanceIdx = 0;
 
         maze.grid.forEach((row, r) => {
             row.forEach((cell, c) => {
                 const x = c * CELL_SIZE;
                 const z = r * CELL_SIZE;
 
-                const createWall = (
+                const addWall = (
                     w: number,
                     h: number,
                     d: number,
@@ -155,30 +201,31 @@ export default function MazeGame(): React.ReactElement {
                     py: number,
                     pz: number
                 ) => {
-                    const wall = new THREE.Mesh(
-                        new THREE.BoxGeometry(w, h, d),
-                        glassMaterial
+                    // Physics (Collider)
+                    const wallBox = new THREE.Box3();
+                    wallBox.setFromCenterAndSize(
+                        new THREE.Vector3(px, py, pz),
+                        new THREE.Vector3(w, h, d)
                     );
-                    wall.position.set(px, py, pz);
-                    wall.castShadow = true;
-                    wall.receiveShadow = true;
-                    scene.add(wall);
-                    walls.push(wall);
+                    wallColliders.push(wallBox);
 
-                    // Wall top edge glow
-                    const edgeGeom = new THREE.BoxGeometry(w, 0.05, d);
-                    const edgeMat = new THREE.MeshBasicMaterial({
-                        color: COLORS.primary.main,
-                        transparent: true,
-                        opacity: 0.5,
-                    });
-                    const edge = new THREE.Mesh(edgeGeom, edgeMat);
-                    edge.position.set(px, py + h / 2, pz);
-                    scene.add(edge);
+                    // Visual (Instanced Wall)
+                    dummy.position.set(px, py, pz);
+                    dummy.scale.set(w, h, d);
+                    dummy.updateMatrix();
+                    wallsInstance.setMatrixAt(instanceIdx, dummy.matrix);
+
+                    // Visual (Instanced Edge)
+                    dummy.position.set(px, py + h / 2, pz);
+                    dummy.scale.set(w, 0.05, d);
+                    dummy.updateMatrix();
+                    edgesInstance.setMatrixAt(instanceIdx, dummy.matrix);
+
+                    instanceIdx++;
                 };
 
                 if (cell.walls.top)
-                    createWall(
+                    addWall(
                         CELL_SIZE,
                         WALL_HEIGHT,
                         0.1,
@@ -187,7 +234,7 @@ export default function MazeGame(): React.ReactElement {
                         z - CELL_SIZE / 2
                     );
                 if (cell.walls.bottom)
-                    createWall(
+                    addWall(
                         CELL_SIZE,
                         WALL_HEIGHT,
                         0.1,
@@ -196,7 +243,7 @@ export default function MazeGame(): React.ReactElement {
                         z + CELL_SIZE / 2
                     );
                 if (cell.walls.left)
-                    createWall(
+                    addWall(
                         0.1,
                         WALL_HEIGHT,
                         CELL_SIZE,
@@ -205,7 +252,7 @@ export default function MazeGame(): React.ReactElement {
                         z
                     );
                 if (cell.walls.right)
-                    createWall(
+                    addWall(
                         0.1,
                         WALL_HEIGHT,
                         CELL_SIZE,
@@ -218,22 +265,39 @@ export default function MazeGame(): React.ReactElement {
 
         // Player: Octahedron (Diamond)
         const playerGroup = new THREE.Group();
-        const playerBody = new THREE.Mesh(
-            new THREE.OctahedronGeometry(PLAYER_SIZE),
+        // Player: Quantized Guardian
+        // 1. Core (Spark)
+        const playerCore = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(PLAYER_SIZE * 0.4, 2),
             new THREE.MeshStandardMaterial({
-                color: COLORS.primary.main,
-                emissive: COLORS.primary.main,
-                emissiveIntensity: 1,
-                metalness: 1,
-                roughness: 0,
+                color: 0xffffff,
+                emissive: 0xffffff,
+                emissiveIntensity: 2,
+                toneMapped: false,
             })
         );
-        playerBody.position.y = PLAYER_SIZE + 0.2;
-        playerBody.castShadow = true;
-        playerGroup.add(playerBody);
+        playerCore.castShadow = true;
+        playerGroup.add(playerCore);
 
-        const playerLight = new THREE.PointLight(COLORS.primary.main, 15, 18);
-        playerLight.position.y = 1;
+        // 2. Shell (Vessel)
+        const playerShell = new THREE.Mesh(
+            new THREE.DodecahedronGeometry(PLAYER_SIZE * 0.8),
+            new THREE.MeshPhysicalMaterial({
+                color: COLORS.primary.main,
+                metalness: 0.2,
+                roughness: 0,
+                transmission: 0.5,
+                thickness: 0.5,
+                transparent: true,
+                opacity: 0.6,
+                clearcoat: 1,
+            })
+        );
+        playerShell.castShadow = true;
+        playerGroup.add(playerShell);
+
+        const playerLight = new THREE.PointLight(COLORS.primary.main, 10, 15);
+        playerLight.position.y = 0.5;
         playerLight.castShadow = true;
         playerGroup.add(playerLight);
 
@@ -244,23 +308,72 @@ export default function MazeGame(): React.ReactElement {
         );
         scene.add(playerGroup);
 
-        // Goal: Floating Knot
-        const goal = new THREE.Mesh(
-            new THREE.TorusKnotGeometry(0.35, 0.1, 100, 16),
-            new THREE.MeshStandardMaterial({
-                color: 0xffd700,
-                emissive: 0xffd700,
-                emissiveIntensity: 0.8,
-                metalness: 1,
-                roughness: 0.1,
-            })
-        );
-        goal.position.set(
+        const goalGroup = new THREE.Group();
+        goalGroup.position.set(
             maze.end[1] * CELL_SIZE,
-            0.8,
+            1, // Slightly higher base position
             maze.end[0] * CELL_SIZE
         );
-        scene.add(goal);
+
+        // 1. Outer Shell (Icosahedron)
+        const goalPrism = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(0.45, 0),
+            new THREE.MeshPhysicalMaterial({
+                color: 0x00ffff, // Cyan
+                metalness: 0.1,
+                roughness: 0,
+                transmission: 0.6, // Glassy
+                thickness: 2,
+                emissive: 0x00ffff,
+                emissiveIntensity: 0.6,
+                clearcoat: 1,
+                clearcoatRoughness: 0,
+            })
+        );
+        goalGroup.add(goalPrism);
+        goalPrism.castShadow = true;
+
+        // 2. Inner Core (Octahedron)
+        const goalCore = new THREE.Mesh(
+            new THREE.OctahedronGeometry(0.2),
+            new THREE.MeshBasicMaterial({
+                color: 0xffffff,
+                wireframe: true,
+            })
+        );
+        goalGroup.add(goalCore);
+
+        // 3. Beacon (Light Pillar)
+        const beaconGeom = new THREE.CylinderGeometry(
+            0.05,
+            0.2,
+            20,
+            16,
+            1,
+            true
+        );
+        const beaconMat = new THREE.MeshBasicMaterial({
+            color: 0x00ffff,
+            transparent: true,
+            opacity: 0.3,
+            side: THREE.DoubleSide,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+        });
+        // Shift geometry so cylinder grows upwards from 0
+        beaconGeom.translate(0, 10, 0);
+        const goalBeacon = new THREE.Mesh(beaconGeom, beaconMat);
+        goalGroup.add(goalBeacon);
+
+        // 4. Point Light for the goal
+        const goalLight = new THREE.PointLight(0x00ffff, 10, 10);
+        goalGroup.add(goalLight);
+
+        // 5. Goal Particles (Concentrated energy)
+        const goalParticles = createDustParticles(200, 2);
+        goalGroup.add(goalParticles);
+
+        scene.add(goalGroup);
 
         // Particles
         const particles = createDustParticles(600, 60);
@@ -271,8 +384,14 @@ export default function MazeGame(): React.ReactElement {
             camera,
             renderer,
             player: playerGroup,
-            walls,
-            goal,
+            playerCore,
+            playerShell,
+            wallColliders,
+
+            goalGroup,
+            goalPrism,
+            goalCore,
+            goalBeacon,
             light: playerLight,
             particles,
         };
@@ -394,10 +513,8 @@ export default function MazeGame(): React.ReactElement {
                     const moveZ = (dz / length) * moveSpeed;
 
                     const checkCollision = (pos: THREE.Vector3) => {
-                        return walls.some(wall => {
-                            const wallBox = new THREE.Box3().setFromObject(
-                                wall
-                            );
+                        // Use the Box3 array for collision checks
+                        return wallColliders.some(wallBox => {
                             const playerBox =
                                 new THREE.Box3().setFromCenterAndSize(
                                     pos
@@ -435,26 +552,44 @@ export default function MazeGame(): React.ReactElement {
                     playerGroup.position.z
                 );
                 const goalPos2D = new THREE.Vector2(
-                    goal.position.x,
-                    goal.position.z
+                    goalGroup.position.x,
+                    goalGroup.position.z
                 );
                 if (playerPos2D.distanceTo(goalPos2D) < 0.7) {
                     setGameState('won');
                 }
 
                 // Breathing light & animation
-                playerBody.rotation.y += 0.02;
-                playerBody.rotation.z += 0.01;
-                playerBody.position.y =
+                playerCore.position.y =
                     PLAYER_SIZE + 0.2 + Math.sin(time * 0.003) * 0.05;
-                playerLight.intensity = 15 + Math.sin(time * 0.002) * 3;
+                playerShell.position.copy(playerCore.position);
+
+                // Shell rotation
+                playerShell.rotation.x += 0.01;
+                playerShell.rotation.y += 0.015;
+                playerShell.rotation.z -= 0.005;
+
+                playerLight.intensity = 10 + Math.sin(time * 0.005) * 5;
 
                 // Dust motion
                 particles.rotation.y += 0.0005;
 
                 // Goal animation
-                goal.rotation.y += 0.03;
-                goal.position.y = 0.8 + Math.sin(time * 0.004) * 0.1;
+                goalPrism.rotation.x += 0.01;
+                goalPrism.rotation.y += 0.02;
+                goalCore.rotation.x -= 0.02; // Spin opposite
+                goalCore.rotation.z -= 0.01;
+
+                // Bobbing whole group
+                goalGroup.position.y = 1 + Math.sin(time * 0.003) * 0.15;
+
+                // Beacon pulse
+                if (Array.isArray(goalBeacon.material)) {
+                    // unexpected, but handle type safety
+                } else {
+                    (goalBeacon.material as THREE.Material).opacity =
+                        0.2 + Math.sin(time * 0.005) * 0.1;
+                }
 
                 // Camera follow
                 camera.position.lerp(
