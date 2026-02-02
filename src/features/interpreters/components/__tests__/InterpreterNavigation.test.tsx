@@ -45,7 +45,7 @@ describe('InterpreterNavigation', () => {
             <InterpreterNavigation active="wii2d" onChange={mockOnChange} />
         );
 
-        const select = screen.getByTestId('select');
+        const select = screen.getByTestId('select') as HTMLSelectElement;
         expect(select.value).toBe('wii2d');
     });
 
@@ -54,7 +54,7 @@ describe('InterpreterNavigation', () => {
             <InterpreterNavigation active="stun-step" onChange={mockOnChange} />
         );
 
-        const select = screen.getByTestId('select');
+        const select = screen.getByTestId('select') as HTMLSelectElement;
         fireEvent.change(select, { target: { value: 'suffolk' } });
 
         expect(mockOnChange).toHaveBeenCalledWith('suffolk');

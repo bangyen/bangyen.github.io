@@ -30,7 +30,7 @@ export function getState(state: StunStepState): StunStepState {
     const { code } = state;
 
     if (end) {
-        if (!tape[pointer]) return state;
+        if (tape[pointer] === undefined || !tape[pointer]) return state;
         else end = false;
     }
 
@@ -45,10 +45,12 @@ export function getState(state: StunStepState): StunStepState {
     tape = [...tape];
 
     if (char === '+') {
-        tape[pointer]++;
+        const val = tape[pointer];
+        if (val !== undefined) tape[pointer] = val + 1;
     } else if (tape[pointer]) {
         if (char === '-') {
-            tape[pointer]--;
+            const val = tape[pointer];
+            if (val !== undefined) tape[pointer] = val - 1;
         } else if (char === '>') {
             if (tape.length === ++pointer) tape.push(1);
         } else if (pointer) {

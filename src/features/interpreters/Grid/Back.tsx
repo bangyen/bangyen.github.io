@@ -35,9 +35,11 @@ export function getState(state: BackState): BackState {
         case '>':
             if (++pointer === tape.length) tape.push(0);
             break;
-        case '-':
-            tape[pointer] ^= 1;
+        case '-': {
+            const val = tape[pointer];
+            if (val !== undefined) tape[pointer] = val ^ 1;
             break;
+        }
         case '+': {
             let next: string;
 
@@ -45,8 +47,12 @@ export function getState(state: BackState): BackState {
                 do {
                     position = gridMove(position, velocity, rows, cols);
 
-                    if (position != null) next = grid[position];
-                    else next = '';
+                    if (position != null) {
+                        const val = grid[position];
+                        next = val ?? '';
+                    } else {
+                        next = '';
+                    }
                 } while (!'\\/<>-+*'.includes(next));
             break;
         }

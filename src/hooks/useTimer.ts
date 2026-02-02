@@ -20,8 +20,8 @@ export function useTimer(delay: number) {
                 clearInterval(globalTimer);
             }
 
-            globalRepeat = newRepeat || globalRepeat;
-            globalSpeed = newSpeed || globalSpeed;
+            globalRepeat = newRepeat ?? globalRepeat;
+            globalSpeed = newSpeed ?? globalSpeed;
             repeat.current = globalRepeat;
             speed.current = globalSpeed;
 

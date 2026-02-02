@@ -42,7 +42,7 @@ function getClosest(position: number, grid: string, cols: number): number {
     const compare = getComparison(position, cols);
 
     warp.sort(compare);
-    return warp[1];
+    return warp[1] ?? position;
 }
 
 export function getState(state: WII2DState): WII2DState {
@@ -63,6 +63,7 @@ export function getState(state: WII2DState): WII2DState {
     }
 
     const char = grid[position];
+    if (char === undefined) return state;
 
     if (arrows.includes(char)) {
         const index = arrows.indexOf(char);

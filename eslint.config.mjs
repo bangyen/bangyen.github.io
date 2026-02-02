@@ -10,8 +10,8 @@ export default tseslint.config(
 
     // Base configuration
     js.configs.recommended,
-    ...tseslint.configs.strict,
-    ...tseslint.configs.stylistic,
+    ...tseslint.configs.strictTypeChecked,
+    ...tseslint.configs.stylisticTypeChecked,
 
     // React configuration
     {
@@ -28,6 +28,8 @@ export default tseslint.config(
                 ...globals.jest,
             },
             parserOptions: {
+                projectService: true,
+                tsconfigRootDir: import.meta.dirname,
                 ecmaFeatures: {
                     jsx: true,
                 },
@@ -54,6 +56,9 @@ export default tseslint.config(
                     caughtErrorsIgnorePattern: '^_',
                 },
             ],
+            // Disable noisy type-checked rules for migration
+
+
             'react/prop-types': 'off',
             'react/react-in-jsx-scope': 'off',
             'react/self-closing-comp': 'error',
@@ -72,6 +77,7 @@ export default tseslint.config(
             'no-console': 'off',
             '@typescript-eslint/no-non-null-assertion': 'off',
             '@typescript-eslint/no-empty-function': 'off',
+            '@typescript-eslint/unbound-method': 'off',
         },
     }
 );
