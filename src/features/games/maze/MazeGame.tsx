@@ -213,12 +213,21 @@ export default function MazeGame(): React.ReactElement {
                 return false;
             };
 
+            const KICKBACK = 2;
+
             // Move X
             const nextX =
                 stateRef.current.player.x + stateRef.current.player.vx * dt;
             if (!checkCollision(nextX, stateRef.current.player.y)) {
                 stateRef.current.player.x = nextX;
             } else {
+                // Bounce + Kickback (safety check to avoid flipping into another wall)
+                const kickbackX =
+                    stateRef.current.player.x -
+                    Math.sign(stateRef.current.player.vx) * KICKBACK;
+                if (!checkCollision(kickbackX, stateRef.current.player.y)) {
+                    stateRef.current.player.x = kickbackX;
+                }
                 stateRef.current.player.vx *= -BOUNCE;
             }
 
@@ -228,6 +237,13 @@ export default function MazeGame(): React.ReactElement {
             if (!checkCollision(stateRef.current.player.x, nextY)) {
                 stateRef.current.player.y = nextY;
             } else {
+                // Bounce + Kickback
+                const kickbackY =
+                    stateRef.current.player.y -
+                    Math.sign(stateRef.current.player.vy) * KICKBACK;
+                if (!checkCollision(stateRef.current.player.x, kickbackY)) {
+                    stateRef.current.player.y = kickbackY;
+                }
                 stateRef.current.player.vy *= -BOUNCE;
             }
 
