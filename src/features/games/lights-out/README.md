@@ -62,12 +62,12 @@ To empirically verify these findings, you can run the provided verification scri
 
 
 ```bash
-npx tsx src/features/games/lights-out/verify_identity.ts [max_size]
+npx tsx src/features/games/lights-out/scripts/verify_identity.ts [max_size]
 ```
 
 Example (search up to 50x50):
 ```bash
-npx tsx src/features/games/lights-out/verify_identity.ts 50
+npx tsx src/features/games/lights-out/scripts/verify_identity.ts 50
 ```
 
 ## References
