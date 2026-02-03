@@ -464,15 +464,12 @@ export default function MazeGame(): React.ReactElement {
             ctx.save();
             ctx.translate(goal.x, goal.y);
             ctx.rotate(goal.rotation);
-            ctx.fillStyle = COLORS.data.green;
-            ctx.shadowColor = COLORS.data.green;
+            ctx.fillStyle = COLORS.primary.dark;
+            ctx.shadowColor = COLORS.primary.dark;
             ctx.shadowBlur = 0;
             ctx.beginPath();
             ctx.rect(-10, -10, 20, 20); // Smaller goal (20x20)
             ctx.fill();
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
-            ctx.lineWidth = 2;
-            ctx.stroke();
             ctx.restore();
 
             // Draw Player Trail (Smoothed)
@@ -481,7 +478,7 @@ export default function MazeGame(): React.ReactElement {
             if (len > 2) {
                 ctx.save();
                 ctx.beginPath();
-                ctx.strokeStyle = COLORS.data.amber;
+                ctx.strokeStyle = COLORS.text.primary;
                 ctx.lineWidth = PLAYER_RADIUS;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
@@ -514,7 +511,7 @@ export default function MazeGame(): React.ReactElement {
                 if (p1 && p2) {
                     ctx.save();
                     ctx.beginPath();
-                    ctx.strokeStyle = COLORS.data.amber;
+                    ctx.strokeStyle = COLORS.text.primary;
                     ctx.lineWidth = PLAYER_RADIUS;
                     ctx.lineCap = 'round';
                     ctx.globalAlpha = 0.15;
@@ -530,26 +527,8 @@ export default function MazeGame(): React.ReactElement {
             ctx.save();
             ctx.translate(player.x, player.y);
 
-            // Glow
-            const gradient = ctx.createRadialGradient(
-                0,
-                0,
-                0,
-                0,
-                0,
-                PLAYER_RADIUS * 2
-            );
-            gradient.addColorStop(0, COLORS.data.amber);
-            gradient.addColorStop(1, 'transparent');
-            ctx.fillStyle = gradient;
-            ctx.globalAlpha = 0.2 + Math.sin(time * 0.005) * 0.1;
-            ctx.beginPath();
-            ctx.arc(0, 0, PLAYER_RADIUS * 2, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.globalAlpha = 1.0;
-
             // Core
-            ctx.fillStyle = COLORS.data.amber;
+            ctx.fillStyle = COLORS.text.primary;
             ctx.beginPath();
             ctx.arc(0, 0, PLAYER_RADIUS, 0, Math.PI * 2);
             ctx.fill();
