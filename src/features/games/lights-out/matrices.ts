@@ -36,18 +36,25 @@ export function multiplySym(matrixA: bigint[], matrixB: bigint[]): bigint[] {
     const size = matrixA.length;
     const output: bigint[] = [];
 
+    // In GF(2), (AB)_i = sum_j A_{ij} B_j
+    // This is equivalent to XORing rows of B where A_{ij} is 1.
     for (let r = 0; r < size; r++) {
         const rowA = matrixA[r];
         let outputRow = 0n;
 
-        for (let c = 0; c < size; c++) {
-            const colB = matrixB[c];
-            if (rowA !== undefined && colB !== undefined) {
-                const value = rowA & colB;
-                const count = countBits(value);
-
-                outputRow <<= 1n;
-                outputRow += BigInt(count & 1);
+        if (rowA !== undefined) {
+            for (let c = 0; c < size; c++) {
+                // Check if c-th bit of rowA is set.
+                // Our bit order is: index 0 is high bit (c=0 corresponds to length-1 index)
+                // Wait, getMatrix builds rows where index 0 is bit (cols - 1).
+                // So bit j (from right) corresponds to column (size - 1 - j).
+                // Or simply: bit index 'c' from left is (size - 1 - c) from right.
+                if (rowA & (1n << BigInt(size - 1 - c))) {
+                    const rowB = matrixB[c];
+                    if (rowB !== undefined) {
+                        outputRow ^= rowB;
+                    }
+                }
             }
         }
 

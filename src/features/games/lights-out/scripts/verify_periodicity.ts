@@ -23,8 +23,6 @@ import {
     getPolynomial,
     evalPolynomial,
     getIdentity,
-    multiplySym,
-    addSym,
 } from '../matrices';
 
 function checkIdentity(m: number, n: number): boolean {
@@ -105,16 +103,44 @@ function findPattern(n: number): Pattern {
     const I = getIdentity(n);
     const Zero: bigint[] = Array(n).fill(0n) as bigint[];
 
+    // Pre-calculate sparse representation of matrix A
+    // Since A is tridiagonal, this will be very efficient.
+    const sparseA: number[][] = [];
+    for (let r = 0; r < n; r++) {
+        const rowIndices: number[] = [];
+        const rowVal = A[r];
+        if (rowVal !== undefined) {
+            for (let c = 0; c < n; c++) {
+                if (rowVal & (1n << BigInt(n - 1 - c))) {
+                    rowIndices.push(c);
+                }
+            }
+        }
+        sparseA.push(rowIndices);
+    }
+
     let prev = [...Zero];
     let curr = [...I];
     const R: number[] = [0];
 
     // Iteratively compute Fibonacci polynomials until we find the period
     // f_{k+1}(A) = A * f_k(A) + f_{k-1}(A)
-    // The period z is when f_{z+1}(A) = I
-    // We also need f_z(A) = 0 for the "full" period where it repeats from I, 0
-    for (let k = 2; k <= 100000; k++) {
-        const next = addSym(multiplySym(A, curr), prev);
+    // Using sparse multiplication since A is fixed and sparse.
+    for (let k = 2; k <= 10000000; k++) {
+        const next: bigint[] = [];
+        for (let r = 0; r < n; r++) {
+            let nextRow = prev[r] ?? 0n;
+            const indices = sparseA[r];
+            if (indices) {
+                for (const c of indices) {
+                    const currRow = curr[c];
+                    if (currRow !== undefined) {
+                        nextRow ^= currRow;
+                    }
+                }
+            }
+            next.push(nextRow);
+        }
 
         if (isIdentity(next)) {
             R.push(k - 1);
