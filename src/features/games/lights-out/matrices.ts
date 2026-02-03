@@ -1,4 +1,5 @@
 export function getMatrix(cols: number): number[] {
+    if (cols === 1) return [1];
     const first = 7 << (cols - 2);
     const matrix = [first];
 
@@ -62,11 +63,27 @@ export function getIdentity(size: number): number[] {
     return output;
 }
 
-export function symmetricPow(matrix: number[], power: number): number[] {
+export function symmetricPow(
+    matrix: number[],
+    power: number,
+    cache?: Map<number, number[]>
+): number[] {
+    const cached = cache?.get(power);
+    if (cached) return cached;
+
     const size = matrix.length;
     let output = getIdentity(size);
+    let base = [...matrix];
+    let p = power;
 
-    for (let k = 0; k < power; k++) output = multiplySym(output, matrix);
+    while (p > 0) {
+        if (p % 2 === 1) output = multiplySym(output, base);
+
+        base = multiplySym(base, base);
+        p = Math.floor(p / 2);
+    }
+
+    cache?.set(power, output);
 
     return output;
 }
@@ -87,34 +104,38 @@ export function addSym(matrixA: number[], matrixB: number[]): number[] {
     return output;
 }
 
-export function getPolynomial(index: number): number {
-    const output = [0, 1];
+export function getPolynomial(index: number): bigint {
+    const output = [0n, 1n];
 
     for (let k = 1; k < index; k++) {
         const curr = output[k];
         const prev = output[k - 1];
         if (curr !== undefined && prev !== undefined) {
-            const double = curr << 1;
+            const double = curr << 1n;
             output.push(double ^ prev);
         }
     }
 
-    return output[index] ?? 0;
+    return output[index] ?? 0n;
 }
 
-export function evalPolynomial(matrix: number[], poly: number): number[] {
+export function evalPolynomial(
+    matrix: number[],
+    poly: bigint,
+    cache?: Map<number, number[]>
+): number[] {
     const size = matrix.length;
     let output = Array<number>(size).fill(0);
     let degree = 0;
 
     while (poly) {
-        if (poly & 1) {
-            const power = symmetricPow(matrix, degree);
+        if (poly & 1n) {
+            const power = symmetricPow(matrix, degree, cache);
 
             output = addSym(output, power);
         }
 
-        poly >>= 1;
+        poly >>= 1n;
         degree++;
     }
 

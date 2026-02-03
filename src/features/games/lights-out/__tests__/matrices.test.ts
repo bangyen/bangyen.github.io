@@ -81,10 +81,10 @@ describe('Lights Out Matrix Utilities', () => {
         // k=2: curr=2, prev=1. double=4. push 4^1 = 5. output=[0, 1, 2, 5]
         // k=3: curr=5, prev=2. double=10. push 10^2 = 8. output=[0, 1, 2, 5, 8]
         // Values seem to depend on previous.
-        expect(getPolynomial(0)).toBe(0);
-        expect(getPolynomial(1)).toBe(1);
-        expect(getPolynomial(2)).toBe(2);
-        expect(getPolynomial(3)).toBe(5);
+        expect(getPolynomial(0)).toBe(0n);
+        expect(getPolynomial(1)).toBe(1n);
+        expect(getPolynomial(2)).toBe(2n);
+        expect(getPolynomial(3)).toBe(5n);
     });
 
     test('invertMatrix inverts a matrix', () => {
@@ -111,14 +111,14 @@ describe('Lights Out Matrix Utilities', () => {
     test('evalPolynomial evaluates poly on matrix', () => {
         const mat = getMatrix(3);
         // Poly 0 -> 0 matrix
-        expect(evalPolynomial(mat, 0)).toEqual([0, 0, 0]);
+        expect(evalPolynomial(mat, 0n)).toEqual([0, 0, 0]);
         // Poly 1 -> I * mat^0 = I
-        expect(evalPolynomial(mat, 1)).toEqual(getIdentity(3));
+        expect(evalPolynomial(mat, 1n)).toEqual(getIdentity(3));
         // Poly 2 -> I * mat^1 + 0 * mat^0 ? No
         // Poly 2 (10 binary) -> bit 1 set. mat^1.
-        expect(evalPolynomial(mat, 2)).toEqual(mat);
+        expect(evalPolynomial(mat, 2n)).toEqual(mat);
         // Poly 3 (11 binary) -> mat^1 + mat^0
-        expect(evalPolynomial(mat, 3)).toEqual(addSym(mat, getIdentity(3)));
+        expect(evalPolynomial(mat, 3n)).toEqual(addSym(mat, getIdentity(3)));
     });
 
     test('getProduct returns solution vector', () => {
