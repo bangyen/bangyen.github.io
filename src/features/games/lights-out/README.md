@@ -84,12 +84,20 @@ Iterates through grid dimensions and checks if the Identity Matrix property hold
 npx tsx src/features/games/lights-out/scripts/verify_identity.ts [max_size]
 ```
 
-### 2. Theory & Periodicity Verification (Optimized)
+### 2. Periodicity Pattern Discovery
 
-Uses **Matrix Binary Exponentiation** to verify the modular patterns ($m \pmod z$) across very large ranges (logarithmic time). This script validates the theoretical patterns documented in the table above.
+Dynamically discovers and verifies periodicity patterns for any column width. Uses **Matrix Binary Exponentiation** for efficient verification across large ranges.
 
 ```bash
-npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts [m_limit]
+# Discover patterns for n=1..10 (default)
+npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts
+
+# Discover patterns for specific n values
+npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts 5
+npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts 1-20
+
+# Discover and verify patterns up to m=1000
+npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts 1-10 1000
 ```
 
 Example (search up to 50x50):
