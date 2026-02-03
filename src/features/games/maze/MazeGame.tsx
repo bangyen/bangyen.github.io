@@ -99,9 +99,8 @@ export default function MazeGame(): React.ReactElement {
         if (!containerRef.current || !maze || gameState !== 'playing') return;
 
         const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x020202);
-        // fog is less useful in ortho top-down, maybe lighter or remove? Keeping for depth cue if overlapping.
-        scene.fog = new THREE.FogExp2(0x020202, 0.05);
+        // scene.background is omitted to allow transparency (alpha: true)
+        scene.fog = new THREE.FogExp2(0x080808, 0.05);
 
         // Orthographic Camera Setup
         const aspect = width / availableHeight;
