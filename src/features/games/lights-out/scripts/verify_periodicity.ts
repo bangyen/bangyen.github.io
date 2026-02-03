@@ -111,7 +111,10 @@ function main() {
     const maxZWidth = Math.max(6, ...patterns.map(p => p.z.toString().length));
     const maxRWidth = Math.max(
         10,
-        ...patterns.map(p => JSON.stringify(p.R).length)
+        ...patterns.map(p => {
+            const filtered = p.R.filter(r => r !== p.z);
+            return JSON.stringify(filtered).replace(/,/g, ', ').length;
+        })
     );
 
     // Print table header
@@ -131,7 +134,8 @@ function main() {
     for (const pattern of patterns) {
         const nStr = pattern.n.toString().padStart(maxNWidth);
         const zStr = pattern.z.toString().padStart(maxZWidth);
-        const rStr = JSON.stringify(pattern.R);
+        const filtered = pattern.R.filter(r => r !== pattern.z);
+        const rStr = JSON.stringify(filtered).replace(/,/g, ', ');
         console.log(` ${nStr} | ${zStr} | ${rStr}`);
     }
 
