@@ -109,17 +109,22 @@ function main() {
     // Calculate dynamic column widths
     const maxNWidth = Math.max(1, ...patterns.map(p => p.n.toString().length));
     const maxZWidth = Math.max(6, ...patterns.map(p => p.z.toString().length));
+    const maxRWidth = Math.max(
+        10,
+        ...patterns.map(p => JSON.stringify(p.R).length)
+    );
 
     // Print table header
     const nHeader = 'n'.padStart(maxNWidth);
     const zHeader = 'Period'.padStart(maxZWidth);
-    console.log(` ${nHeader} | ${zHeader} | Remainders`);
+    const rHeader = 'Remainders'.padEnd(maxRWidth);
+    console.log(` ${nHeader} | ${zHeader} | ${rHeader}`);
     console.log(
         '-'.repeat(maxNWidth + 2) +
             '|' +
             '-'.repeat(maxZWidth + 2) +
             '|' +
-            '-'.repeat(40)
+            '-'.repeat(maxRWidth + 2)
     );
 
     // Print table rows
