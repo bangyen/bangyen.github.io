@@ -6,9 +6,6 @@ import { generateMaze, MazeData, MazeAlgorithm } from './mazeLogic';
 import { useWindow, useMobile } from '../../../hooks';
 
 const MAZE_SIZE = 21;
-const CELL_SIZE = 100; // Closer zoom
-const PLAYER_RADIUS = 12;
-const WALL_THICKNESS = 4;
 
 interface JoystickState {
     active: boolean;
@@ -38,6 +35,33 @@ export default function MazeGame(): React.ReactElement {
     const { height, width } = useWindow();
     const isMobile = useMobile('sm');
     const availableHeight = height - (isMobile ? 56 : 80);
+
+    // Responsive Constants
+    const CELL_SIZE = Math.max(60, Math.min(120, width / 7));
+    const PLAYER_RADIUS = CELL_SIZE * 0.12;
+    const WALL_THICKNESS = Math.max(2, CELL_SIZE * 0.04);
+    const CORNER_RADIUS = CELL_SIZE * 0.12;
+    const KICKBACK = CELL_SIZE * 0.02;
+
+    const prevCellSizeRef = useRef(CELL_SIZE);
+
+    // Rescale positions when CELL_SIZE changes (window resize)
+    useEffect(() => {
+        if (prevCellSizeRef.current !== CELL_SIZE) {
+            const scale = CELL_SIZE / prevCellSizeRef.current;
+            stateRef.current.player.x *= scale;
+            stateRef.current.player.y *= scale;
+            stateRef.current.player.vx *= scale;
+            stateRef.current.player.vy *= scale;
+            stateRef.current.goal.x *= scale;
+            stateRef.current.goal.y *= scale;
+            stateRef.current.trail = stateRef.current.trail.map(p => ({
+                x: p.x * scale,
+                y: p.y * scale,
+            }));
+            prevCellSizeRef.current = CELL_SIZE;
+        }
+    }, [CELL_SIZE]);
 
     // Pointer/Touch Input State
     const pointerState = useRef({
@@ -76,7 +100,7 @@ export default function MazeGame(): React.ReactElement {
         stateRef.current.gameState = 'playing';
         stateRef.current.lastTime = 0; // Reset timing
         setGameState('playing');
-    }, [algorithm]);
+    }, [algorithm, CELL_SIZE]);
 
     useEffect(() => {
         initMaze();
@@ -142,7 +166,7 @@ export default function MazeGame(): React.ReactElement {
             const gridColor = resolveColor(COLORS.primary.main);
 
             // 1. Simulation Logic
-            const ACCEL = 1.2 * dt;
+            const ACCEL = (CELL_SIZE / 100) * 1.2 * dt;
             const FRICTION = Math.pow(0.88, dt);
             const BOUNCE = 0.8;
 
@@ -212,8 +236,6 @@ export default function MazeGame(): React.ReactElement {
 
                 return false;
             };
-
-            const KICKBACK = 2;
 
             // Move X
             const nextX =
@@ -345,7 +367,6 @@ export default function MazeGame(): React.ReactElement {
             ctx.shadowColor = wallColor;
             ctx.shadowBlur = 0;
 
-            const CORNER_RADIUS = 12;
             ctx.beginPath();
             for (let r = 0; r <= MAZE_SIZE; r++) {
                 for (let c = 0; c <= MAZE_SIZE; c++) {
@@ -579,7 +600,19 @@ export default function MazeGame(): React.ReactElement {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
         };
-    }, [maze, gameState, width, availableHeight, isMobile, initMaze]);
+    }, [
+        maze,
+        gameState,
+        width,
+        availableHeight,
+        isMobile,
+        initMaze,
+        CELL_SIZE,
+        KICKBACK,
+        CORNER_RADIUS,
+        PLAYER_RADIUS,
+        WALL_THICKNESS,
+    ]);
 
     const handlePointerDown = (e: React.PointerEvent) => {
         if (gameState !== 'playing') return;
