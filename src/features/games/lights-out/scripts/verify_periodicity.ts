@@ -10,7 +10,12 @@
     time, making it possible to check thousands of rows in seconds.
     
     Usage:
-    npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts [limit]
+    npx tsx verify_periodicity.ts [n] [limit]
+    
+    Examples:
+    - npx tsx verify_periodicity.ts 5       (Find pattern for n=5)
+    - npx tsx verify_periodicity.ts 1-15    (Find patterns for n=1..15)
+    - npx tsx verify_periodicity.ts 5 100   (Find n=5 and verify up to m=100)
 */
 
 import {
@@ -79,29 +84,56 @@ function findPattern(n: number): Pattern {
 }
 
 function main() {
-    const limitArg = process.argv[2] ?? '1000';
-    const limit = parseInt(limitArg, 10);
-    console.log(`Verifying periodicity patterns up to m = ${limit}...\n`);
+    const nArg = process.argv[2] ?? '1-10';
+    const limitArg = process.argv[3];
 
-    for (let n = 1; n <= 10; n++) {
+    let nRange: number[] = [];
+    if (nArg.includes('-')) {
+        const [start, end] = nArg.split('-').map(v => parseInt(v, 10));
+        if (start !== undefined && end !== undefined) {
+            for (let i = start; i <= end; i++) nRange.push(i);
+        }
+    } else {
+        nRange = [parseInt(nArg, 10)];
+    }
+
+    console.log(`Finding periodicity patterns for n=${nArg}...\n`);
+
+    for (const n of nRange) {
+        if (isNaN(n)) continue;
         const pattern = findPattern(n);
 
-        process.stdout.write(`n=${n} (Period ${pattern.z}): `);
-        let allPass = true;
-        for (let m = 1; m <= limit; m++) {
-            const expectPass = pattern.R.includes(m % pattern.z);
-            const actualPass = checkIdentity(m, n);
+        console.log(
+            `n=${n}: Period ${pattern.z}, R=${JSON.stringify(pattern.R)}`
+        );
+    }
 
-            if (expectPass !== actualPass) {
-                console.log(
-                    `\n  [FAIL] Discrepancy at m=${m}. Expected ${expectPass}, Got ${actualPass}`
-                );
-                allPass = false;
-                break;
+    // Optional verification against checkIdentity
+    if (limitArg) {
+        const limit = parseInt(limitArg, 10);
+        console.log(`\nVerifying patterns up to m=${limit}...\n`);
+
+        for (const n of nRange) {
+            if (isNaN(n)) continue;
+            const pattern = findPattern(n);
+
+            process.stdout.write(`n=${n}: `);
+            let allPass = true;
+            for (let m = 1; m <= limit; m++) {
+                const expectPass = pattern.R.includes(m % pattern.z);
+                const actualPass = checkIdentity(m, n);
+
+                if (expectPass !== actualPass) {
+                    console.log(
+                        `FAIL at m=${m}. Expected ${expectPass}, Got ${actualPass}`
+                    );
+                    allPass = false;
+                    break;
+                }
             }
-        }
-        if (allPass) {
-            console.log('OK ✅');
+            if (allPass) {
+                console.log('OK ✅');
+            }
         }
     }
 }
