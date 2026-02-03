@@ -5,11 +5,7 @@ import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 import { COLORS } from '../../../config/theme';
 import { generateMaze, MazeData } from './mazeLogic';
 import { useWindow, useMobile } from '../../../hooks';
-import {
-    createGridTexture,
-    createGlassMaterial,
-    createDustParticles,
-} from './visualUtils';
+import { createGlassMaterial, createDustParticles } from './visualUtils';
 
 const MAZE_SIZE = 15;
 const CELL_SIZE = 2;
@@ -26,7 +22,7 @@ export default function MazeGame(): React.ReactElement {
     const containerRef = useRef<HTMLDivElement>(null);
     const sceneRef = useRef<{
         scene: THREE.Scene;
-        camera: THREE.PerspectiveCamera;
+        camera: THREE.OrthographicCamera;
         renderer: THREE.WebGLRenderer;
 
         player: THREE.Object3D;
@@ -103,14 +99,21 @@ export default function MazeGame(): React.ReactElement {
 
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x020202);
-        scene.fog = new THREE.FogExp2(0x020202, 0.12);
+        // fog is less useful in ortho top-down, maybe lighter or remove? Keeping for depth cue if overlapping.
+        scene.fog = new THREE.FogExp2(0x020202, 0.05);
 
-        const camera = new THREE.PerspectiveCamera(
-            75,
-            width / availableHeight,
+        // Orthographic Camera Setup
+        const aspect = width / availableHeight;
+        const viewSize = 18; // Amount of world units visible vertically
+        const camera = new THREE.OrthographicCamera(
+            (-viewSize * aspect) / 2,
+            (viewSize * aspect) / 2,
+            viewSize / 2,
+            -viewSize / 2,
             0.1,
             1000
         );
+
         const renderer = new THREE.WebGLRenderer({
             antialias: true,
             alpha: true,
@@ -126,16 +129,14 @@ export default function MazeGame(): React.ReactElement {
         scene.add(ambientLight);
 
         // Floor
-        const floorTexture = createGridTexture();
-        floorTexture.repeat.set(MAZE_SIZE, MAZE_SIZE);
         const floorGeometry = new THREE.PlaneGeometry(
             MAZE_SIZE * CELL_SIZE,
             MAZE_SIZE * CELL_SIZE
         );
         const floorMaterial = new THREE.MeshStandardMaterial({
-            map: floorTexture,
-            roughness: 0.2,
-            metalness: 0.5,
+            color: 0x111111, // Solid dark gray
+            roughness: 0.8,
+            metalness: 0.1,
         });
         const floor = new THREE.Mesh(floorGeometry, floorMaterial);
         floor.rotation.x = -Math.PI / 2;
@@ -172,20 +173,6 @@ export default function MazeGame(): React.ReactElement {
         wallsInstance.receiveShadow = true;
         scene.add(wallsInstance);
 
-        // Edge Glow (Instanced)
-        const edgeGeometry = new THREE.BoxGeometry(1, 1, 1);
-        const edgeMaterial = new THREE.MeshBasicMaterial({
-            color: COLORS.primary.main,
-            transparent: true,
-            opacity: 0.5,
-        });
-        const edgesInstance = new THREE.InstancedMesh(
-            edgeGeometry,
-            edgeMaterial,
-            wallCount
-        );
-        scene.add(edgesInstance);
-
         const dummy = new THREE.Object3D();
         let instanceIdx = 0;
 
@@ -216,47 +203,41 @@ export default function MazeGame(): React.ReactElement {
                     dummy.updateMatrix();
                     wallsInstance.setMatrixAt(instanceIdx, dummy.matrix);
 
-                    // Visual (Instanced Edge)
-                    dummy.position.set(px, py + h / 2, pz);
-                    dummy.scale.set(w, 0.05, d);
-                    dummy.updateMatrix();
-                    edgesInstance.setMatrixAt(instanceIdx, dummy.matrix);
-
                     instanceIdx++;
                 };
 
                 if (cell.walls.top)
                     addWall(
-                        CELL_SIZE,
+                        CELL_SIZE + 0.2, // Overlap corners
                         WALL_HEIGHT,
-                        0.1,
+                        0.25, // Thicker walls
                         x,
                         WALL_HEIGHT / 2,
                         z - CELL_SIZE / 2
                     );
                 if (cell.walls.bottom)
                     addWall(
-                        CELL_SIZE,
+                        CELL_SIZE + 0.2,
                         WALL_HEIGHT,
-                        0.1,
+                        0.25,
                         x,
                         WALL_HEIGHT / 2,
                         z + CELL_SIZE / 2
                     );
                 if (cell.walls.left)
                     addWall(
-                        0.1,
+                        0.25,
                         WALL_HEIGHT,
-                        CELL_SIZE,
+                        CELL_SIZE + 0.2,
                         x - CELL_SIZE / 2,
                         WALL_HEIGHT / 2,
                         z
                     );
                 if (cell.walls.right)
                     addWall(
-                        0.1,
+                        0.25,
                         WALL_HEIGHT,
-                        CELL_SIZE,
+                        CELL_SIZE + 0.2,
                         x + CELL_SIZE / 2,
                         WALL_HEIGHT / 2,
                         z
@@ -278,7 +259,7 @@ export default function MazeGame(): React.ReactElement {
                 metalness: 0,
             })
         );
-        coreMesh.castShadow = true;
+        coreMesh.castShadow = false; // Emissive objects shouldn't cast dark shadows
         playerBody.add(coreMesh);
 
         // 2. The Wireframe Cage (for rotation visualization)
@@ -577,13 +558,10 @@ export default function MazeGame(): React.ReactElement {
                 goalGroup.position.y = 1 + Math.sin(time * 0.003) * 0.15;
 
                 // Camera follow
-                camera.position.lerp(
-                    new THREE.Vector3(
-                        playerBody.position.x,
-                        9,
-                        playerBody.position.z + 5
-                    ),
-                    0.1
+                camera.position.set(
+                    playerBody.position.x,
+                    20,
+                    playerBody.position.z
                 );
                 camera.lookAt(playerBody.position);
 
@@ -612,8 +590,14 @@ export default function MazeGame(): React.ReactElement {
     useEffect(() => {
         if (sceneRef.current) {
             const { camera, renderer } = sceneRef.current;
-            camera.aspect = width / availableHeight;
+            const aspect = width / availableHeight;
+            const viewSize = 18;
+            camera.left = (-viewSize * aspect) / 2;
+            camera.right = (viewSize * aspect) / 2;
+            camera.top = viewSize / 2;
+            camera.bottom = -viewSize / 2;
             camera.updateProjectionMatrix();
+
             renderer.setSize(width, availableHeight);
         }
     }, [width, availableHeight]);

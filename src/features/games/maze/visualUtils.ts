@@ -9,13 +9,13 @@ export function createGlassMaterial(
     return new THREE.MeshPhysicalMaterial({
         color: color,
         metalness: 0,
-        roughness: 0.1,
-        transmission: 0.5,
-        thickness: 1,
-        transparent: true,
-        opacity: 0.8,
+        roughness: 0.2, // Slightly smoother
+        transmission: 0, // No real refractive glass effect for performance/cleanliness
+        thickness: 0,
+        transparent: false, // Fix overlap brightness
+        opacity: 1,
         emissive: color,
-        emissiveIntensity: 0.1,
+        emissiveIntensity: 0.2,
     });
 }
 
