@@ -299,7 +299,7 @@ export default function MazeGame(): React.ReactElement {
             ctx.beginPath();
             ctx.rect(-15, -15, 30, 30);
             ctx.fill();
-            ctx.strokeStyle = '#fff';
+            ctx.strokeStyle = 'rgba(0, 255, 255, 0.5)'; // Cyan stroke for goal
             ctx.lineWidth = 2;
             ctx.stroke();
             ctx.restore();
@@ -335,7 +335,7 @@ export default function MazeGame(): React.ReactElement {
 
             // Spinning "Wireframe"
             ctx.rotate(player.rotation);
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.strokeStyle = 'rgba(56, 139, 253, 0.5)'; // Primary color stroke for player
             ctx.lineWidth = 2;
             ctx.beginPath();
             ctx.moveTo(-PLAYER_RADIUS, 0);
