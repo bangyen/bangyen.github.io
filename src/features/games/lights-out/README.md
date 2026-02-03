@@ -55,7 +55,7 @@ $$F_{n+1}(x) \mid (F_{m+1}(x+1) + 1)$$
     - **Composite**: If $n+1$ is composite, the period is typically small (e.g., $n=39 \to z=240$).
     - **Prime**: If $p = n+1$ is a prime number (where $p \equiv \pm 1 \pmod{10}$), the period grows exponentially according to the formula:
       $$z = 2 \cdot (2^{\frac{n+1}{2}} - 1)$$
-      *Example:* For $n=40$ ($n+1=41$), the period jumps to $z \approx 2.1 \times 10^6$.
+      _Example:_ For $n=40$ ($n+1=41$), the period jumps to $z \approx 2.1 \times 10^6$.
 
 ### Empirically Verified Grid Dimensions
 
