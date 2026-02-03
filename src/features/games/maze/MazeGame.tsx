@@ -204,13 +204,18 @@ export default function MazeGame(): React.ReactElement {
 
                 stateRef.current.player.rotation += mag * 0.15 * dt;
 
-                // Trail logic
-                const trail = stateRef.current.trail;
-                trail.push({
+                // Add to trail
+                stateRef.current.trail.push({
                     x: stateRef.current.player.x,
                     y: stateRef.current.player.y,
                 });
-                if (trail.length > 15) trail.shift();
+            }
+
+            // Trail dissipation logic
+            const currentTrail = stateRef.current.trail;
+            const maxTrail = 15;
+            if (currentTrail.length > (dx !== 0 || dy !== 0 ? maxTrail : 0)) {
+                currentTrail.shift();
             }
 
             // Camera follow (smoothed with dt)
@@ -335,16 +340,16 @@ export default function MazeGame(): React.ReactElement {
             ctx.restore();
 
             // Draw Player Trail
-            const trail = stateRef.current.trail;
-            if (trail.length > 1) {
+            const trailPoints = stateRef.current.trail;
+            if (trailPoints.length > 1) {
                 ctx.save();
                 ctx.beginPath();
                 ctx.strokeStyle = COLORS.data.amber;
                 ctx.lineWidth = PLAYER_RADIUS;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
-                trail.forEach((p, i) => {
-                    ctx.globalAlpha = (i / trail.length) * 0.3;
+                trailPoints.forEach((p, i) => {
+                    ctx.globalAlpha = (i / trailPoints.length) * 0.3;
                     if (i === 0) ctx.moveTo(p.x, p.y);
                     else ctx.lineTo(p.x, p.y);
                 });
