@@ -32,6 +32,7 @@ export default function MazeGame(): React.ReactElement {
         camera: { x: 0, y: 0 },
         gameState: 'start',
         lastTime: 0,
+        trail: [] as { x: number; y: number }[],
     });
 
     const { height, width } = useWindow();
@@ -202,6 +203,14 @@ export default function MazeGame(): React.ReactElement {
                     stateRef.current.player.y = nextY;
 
                 stateRef.current.player.rotation += mag * 0.15 * dt;
+
+                // Trail logic
+                const trail = stateRef.current.trail;
+                trail.push({
+                    x: stateRef.current.player.x,
+                    y: stateRef.current.player.y,
+                });
+                if (trail.length > 15) trail.shift();
             }
 
             // Camera follow (smoothed with dt)
@@ -251,7 +260,8 @@ export default function MazeGame(): React.ReactElement {
             const viewBottom = stateRef.current.camera.y + availableHeight / 2;
 
             ctx.beginPath();
-            ctx.strokeStyle = 'rgba(56, 139, 253, 0.05)';
+            ctx.strokeStyle = COLORS.primary.main;
+            ctx.globalAlpha = 0.05;
             ctx.lineWidth = 1;
             for (
                 let x = Math.floor(viewLeft / GRID_SPACING) * GRID_SPACING;
@@ -270,13 +280,14 @@ export default function MazeGame(): React.ReactElement {
                 ctx.lineTo(viewRight, y);
             }
             ctx.stroke();
+            ctx.globalAlpha = 1.0;
 
             // Draw Walls
-            ctx.strokeStyle = 'hsl(0, 0%, 60%)'; // Concrete color for canvas
+            ctx.strokeStyle = COLORS.primary.main;
             ctx.lineWidth = WALL_THICKNESS;
             ctx.lineCap = 'round';
-            ctx.shadowColor = 'hsl(0, 0%, 60%)';
-            ctx.shadowBlur = isMobile ? 3 : 5;
+            ctx.shadowColor = COLORS.primary.main;
+            ctx.shadowBlur = isMobile ? 5 : 10; // More glow
 
             ctx.beginPath();
             maze.grid.forEach((row, r) => {
@@ -312,8 +323,8 @@ export default function MazeGame(): React.ReactElement {
             ctx.save();
             ctx.translate(goal.x, goal.y);
             ctx.rotate(goal.rotation);
-            ctx.fillStyle = COLORS.primary.main;
-            ctx.shadowColor = COLORS.primary.main;
+            ctx.fillStyle = COLORS.data.green;
+            ctx.shadowColor = COLORS.data.green;
             ctx.shadowBlur = 15;
             ctx.beginPath();
             ctx.rect(-10, -10, 20, 20); // Smaller goal (20x20)
@@ -322,6 +333,24 @@ export default function MazeGame(): React.ReactElement {
             ctx.lineWidth = 2;
             ctx.stroke();
             ctx.restore();
+
+            // Draw Player Trail
+            const trail = stateRef.current.trail;
+            if (trail.length > 1) {
+                ctx.save();
+                ctx.beginPath();
+                ctx.strokeStyle = COLORS.data.amber;
+                ctx.lineWidth = PLAYER_RADIUS;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                trail.forEach((p, i) => {
+                    ctx.globalAlpha = (i / trail.length) * 0.3;
+                    if (i === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                });
+                ctx.stroke();
+                ctx.restore();
+            }
 
             // Draw Player
             const player = stateRef.current.player;
