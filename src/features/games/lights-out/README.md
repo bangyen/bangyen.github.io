@@ -60,8 +60,14 @@ Generally, solutions for $n \ge 2$ appear to require $m$ to be even.
 
 To empirically verify these findings, you can run the provided verification script. This script iterates through grid dimensions and checks if the Identity Matrix property holds.
 
+
 ```bash
-npx tsx src/features/games/lights-out/verify_identity.ts
+npx tsx src/features/games/lights-out/verify_identity.ts [max_size]
+```
+
+Example (search up to 50x50):
+```bash
+npx tsx src/features/games/lights-out/verify_identity.ts 50
 ```
 
 ## References
