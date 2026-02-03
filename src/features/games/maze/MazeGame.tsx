@@ -30,16 +30,13 @@ export default function MazeGame(): React.ReactElement {
         camera: THREE.PerspectiveCamera;
         renderer: THREE.WebGLRenderer;
 
-        player: THREE.Group;
-        playerCore: THREE.Mesh;
-        playerShell: THREE.Mesh;
+        player: THREE.Mesh;
         // walls: THREE.Mesh[]; // Replaced with InstancedMesh
         wallColliders: THREE.Box3[]; // Collision-only data
 
         goalGroup: THREE.Group;
         goalPrism: THREE.Mesh;
         goalCore: THREE.Mesh;
-        goalBeacon: THREE.Mesh;
         light: THREE.PointLight;
         particles: THREE.Points;
     } | null>(null);
@@ -263,50 +260,31 @@ export default function MazeGame(): React.ReactElement {
             });
         });
 
-        // Player: Octahedron (Diamond)
-        const playerGroup = new THREE.Group();
-        // Player: Quantized Guardian
-        // 1. Core (Spark)
-        const playerCore = new THREE.Mesh(
-            new THREE.IcosahedronGeometry(PLAYER_SIZE * 0.4, 2),
-            new THREE.MeshStandardMaterial({
-                color: 0xffffff,
-                emissive: 0xffffff,
-                emissiveIntensity: 2,
-                toneMapped: false,
-            })
-        );
-        playerCore.castShadow = true;
-        playerGroup.add(playerCore);
-
-        // 2. Shell (Vessel)
-        const playerShell = new THREE.Mesh(
-            new THREE.DodecahedronGeometry(PLAYER_SIZE * 0.8),
+        // Player: Rolling Sphere (Marble)
+        const playerBody = new THREE.Mesh(
+            new THREE.SphereGeometry(PLAYER_SIZE * 0.8, 32, 32),
             new THREE.MeshPhysicalMaterial({
                 color: COLORS.primary.main,
-                metalness: 0.2,
-                roughness: 0,
-                transmission: 0.5,
-                thickness: 0.5,
-                transparent: true,
-                opacity: 0.6,
+                metalness: 0.8,
+                roughness: 0.1,
+                transmission: 0,
                 clearcoat: 1,
             })
         );
-        playerShell.castShadow = true;
-        playerGroup.add(playerShell);
-
-        const playerLight = new THREE.PointLight(COLORS.primary.main, 10, 15);
-        playerLight.position.y = 0.5;
-        playerLight.castShadow = true;
-        playerGroup.add(playerLight);
-
-        playerGroup.position.set(
+        playerBody.castShadow = true;
+        playerBody.position.set(
             maze.start[1] * CELL_SIZE,
-            0,
+            PLAYER_SIZE * 0.8 + 0.1,
             maze.start[0] * CELL_SIZE
         );
-        scene.add(playerGroup);
+        scene.add(playerBody);
+
+        const playerLight = new THREE.PointLight(COLORS.primary.main, 10, 15);
+        playerLight.position
+            .copy(playerBody.position)
+            .add(new THREE.Vector3(0, 1, 0));
+        playerLight.castShadow = true;
+        scene.add(playerLight);
 
         const goalGroup = new THREE.Group();
         goalGroup.position.set(
@@ -343,28 +321,6 @@ export default function MazeGame(): React.ReactElement {
         );
         goalGroup.add(goalCore);
 
-        // 3. Beacon (Light Pillar)
-        const beaconGeom = new THREE.CylinderGeometry(
-            0.05,
-            0.2,
-            20,
-            16,
-            1,
-            true
-        );
-        const beaconMat = new THREE.MeshBasicMaterial({
-            color: 0x00ffff,
-            transparent: true,
-            opacity: 0.3,
-            side: THREE.DoubleSide,
-            depthWrite: false,
-            blending: THREE.AdditiveBlending,
-        });
-        // Shift geometry so cylinder grows upwards from 0
-        beaconGeom.translate(0, 10, 0);
-        const goalBeacon = new THREE.Mesh(beaconGeom, beaconMat);
-        goalGroup.add(goalBeacon);
-
         // 4. Point Light for the goal
         const goalLight = new THREE.PointLight(0x00ffff, 10, 10);
         goalGroup.add(goalLight);
@@ -383,15 +339,12 @@ export default function MazeGame(): React.ReactElement {
             scene,
             camera,
             renderer,
-            player: playerGroup,
-            playerCore,
-            playerShell,
+            player: playerBody,
             wallColliders,
 
             goalGroup,
             goalPrism,
             goalCore,
-            goalBeacon,
             light: playerLight,
             particles,
         };
@@ -471,6 +424,10 @@ export default function MazeGame(): React.ReactElement {
         window.addEventListener('pointermove', handlePointerMove);
         window.addEventListener('pointerup', handlePointerUp);
 
+        const xAxis = new THREE.Vector3(1, 0, 0);
+        const zAxis = new THREE.Vector3(0, 0, 1);
+        const lightOffset = new THREE.Vector3(0, 1, 0);
+
         const animate = (time: number) => {
             animationId = requestAnimationFrame(animate);
 
@@ -517,15 +474,11 @@ export default function MazeGame(): React.ReactElement {
                         return wallColliders.some(wallBox => {
                             const playerBox =
                                 new THREE.Box3().setFromCenterAndSize(
-                                    pos
-                                        .clone()
-                                        .add(
-                                            new THREE.Vector3(0, PLAYER_SIZE, 0)
-                                        ),
+                                    pos, // Sphere is centered
                                     new THREE.Vector3(
-                                        PLAYER_SIZE * 1.5,
-                                        PLAYER_SIZE * 1.5,
-                                        PLAYER_SIZE * 1.5
+                                        PLAYER_SIZE * 1.6,
+                                        PLAYER_SIZE * 1.6,
+                                        PLAYER_SIZE * 1.6
                                     )
                                 );
                             return wallBox.intersectsBox(playerBox);
@@ -533,23 +486,33 @@ export default function MazeGame(): React.ReactElement {
                     };
 
                     if (dx !== 0) {
-                        const newPosX = playerGroup.position.clone();
+                        const newPosX = playerBody.position.clone();
                         newPosX.x += moveX;
                         if (!checkCollision(newPosX))
-                            playerGroup.position.x = newPosX.x;
+                            playerBody.position.x = newPosX.x;
                     }
                     if (dz !== 0) {
-                        const newPosZ = playerGroup.position.clone();
+                        const newPosZ = playerBody.position.clone();
                         newPosZ.z += moveZ;
                         if (!checkCollision(newPosZ))
-                            playerGroup.position.z = newPosZ.z;
+                            playerBody.position.z = newPosZ.z;
                     }
+                }
+
+                // Rolling Animation
+                // Rotate around the axis perpendicular to motion
+                // Speed = distance / radius
+                const speedX = dx * moveSpeed;
+                const speedZ = dz * moveSpeed;
+                if (dx !== 0 || dz !== 0) {
+                    playerBody.rotateOnWorldAxis(xAxis, speedZ * 3.2); // 3.2 ≈ 1 / radius (0.3125)
+                    playerBody.rotateOnWorldAxis(zAxis, -speedX * 3.2);
                 }
 
                 // Win condition
                 const playerPos2D = new THREE.Vector2(
-                    playerGroup.position.x,
-                    playerGroup.position.z
+                    playerBody.position.x,
+                    playerBody.position.z
                 );
                 const goalPos2D = new THREE.Vector2(
                     goalGroup.position.x,
@@ -560,14 +523,11 @@ export default function MazeGame(): React.ReactElement {
                 }
 
                 // Breathing light & animation
-                playerCore.position.y =
+                playerBody.position.y =
                     PLAYER_SIZE + 0.2 + Math.sin(time * 0.003) * 0.05;
-                playerShell.position.copy(playerCore.position);
 
-                // Shell rotation
-                playerShell.rotation.x += 0.01;
-                playerShell.rotation.y += 0.015;
-                playerShell.rotation.z -= 0.005;
+                // Sync light position (since it's no longer a child)
+                playerLight.position.copy(playerBody.position).add(lightOffset);
 
                 playerLight.intensity = 10 + Math.sin(time * 0.005) * 5;
 
@@ -583,27 +543,19 @@ export default function MazeGame(): React.ReactElement {
                 // Bobbing whole group
                 goalGroup.position.y = 1 + Math.sin(time * 0.003) * 0.15;
 
-                // Beacon pulse
-                if (Array.isArray(goalBeacon.material)) {
-                    // unexpected, but handle type safety
-                } else {
-                    (goalBeacon.material as THREE.Material).opacity =
-                        0.2 + Math.sin(time * 0.005) * 0.1;
-                }
-
                 // Camera follow
                 camera.position.lerp(
                     new THREE.Vector3(
-                        playerGroup.position.x,
+                        playerBody.position.x,
                         9,
-                        playerGroup.position.z + 5
+                        playerBody.position.z + 5
                     ),
                     0.1
                 );
-                camera.lookAt(playerGroup.position);
-            }
+                camera.lookAt(playerBody.position);
 
-            renderer.render(scene, camera);
+                renderer.render(scene, camera);
+            }
         };
         animate(0);
 
