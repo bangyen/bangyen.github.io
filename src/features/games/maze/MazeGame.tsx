@@ -294,31 +294,151 @@ export default function MazeGame(): React.ReactElement {
             ctx.shadowColor = COLORS.primary.main;
             ctx.shadowBlur = 0;
 
+            const CORNER_RADIUS = 12;
             ctx.beginPath();
-            maze.grid.forEach((row, r) => {
-                row.forEach((cell, c) => {
+            for (let r = 0; r <= MAZE_SIZE; r++) {
+                for (let c = 0; c <= MAZE_SIZE; c++) {
                     const x = c * CELL_SIZE;
                     const y = r * CELL_SIZE;
 
-                    if (cell.walls.top) {
-                        ctx.moveTo(x, y);
-                        ctx.lineTo(x + CELL_SIZE, y);
+                    // Connectivity at intersection (r, c)
+                    const n =
+                        r > 0 &&
+                        (c < MAZE_SIZE
+                            ? (maze.grid[r - 1]?.[c]?.walls.left ?? false)
+                            : (maze.grid[r - 1]?.[c - 1]?.walls.right ??
+                              false));
+                    const s =
+                        r < MAZE_SIZE &&
+                        (c < MAZE_SIZE
+                            ? (maze.grid[r]?.[c]?.walls.left ?? false)
+                            : (maze.grid[r]?.[c - 1]?.walls.right ?? false));
+                    const w =
+                        c > 0 &&
+                        (r < MAZE_SIZE
+                            ? (maze.grid[r]?.[c - 1]?.walls.top ?? false)
+                            : (maze.grid[r - 1]?.[c - 1]?.walls.bottom ??
+                              false));
+                    const e =
+                        c < MAZE_SIZE &&
+                        (r < MAZE_SIZE
+                            ? (maze.grid[r]?.[c]?.walls.top ?? false)
+                            : (maze.grid[r - 1]?.[c]?.walls.bottom ?? false));
+
+                    const count =
+                        (n ? 1 : 0) + (s ? 1 : 0) + (w ? 1 : 0) + (e ? 1 : 0);
+
+                    // 1. Draw Arcs for L-junctions
+                    if (count === 2) {
+                        if (n && e && !s && !w) {
+                            ctx.moveTo(x, y - CORNER_RADIUS);
+                            ctx.arcTo(
+                                x,
+                                y,
+                                x + CORNER_RADIUS,
+                                y,
+                                CORNER_RADIUS
+                            );
+                        } else if (e && s && !w && !n) {
+                            ctx.moveTo(x + CORNER_RADIUS, y);
+                            ctx.arcTo(
+                                x,
+                                y,
+                                x,
+                                y + CORNER_RADIUS,
+                                CORNER_RADIUS
+                            );
+                        } else if (s && w && !n && !e) {
+                            ctx.moveTo(x, y + CORNER_RADIUS);
+                            ctx.arcTo(
+                                x,
+                                y,
+                                x - CORNER_RADIUS,
+                                y,
+                                CORNER_RADIUS
+                            );
+                        } else if (w && n && !e && !s) {
+                            ctx.moveTo(x - CORNER_RADIUS, y);
+                            ctx.arcTo(
+                                x,
+                                y,
+                                x,
+                                y - CORNER_RADIUS,
+                                CORNER_RADIUS
+                            );
+                        }
                     }
-                    if (cell.walls.left) {
-                        ctx.moveTo(x, y);
-                        ctx.lineTo(x, y + CELL_SIZE);
+
+                    // 2. Draw Main Segments (Shortened)
+                    // Draw South Vertical Segment
+                    if (s) {
+                        const startY =
+                            count === 2 && (w || e) ? y + CORNER_RADIUS : y;
+                        // Connectivity at node below (r+1, c)
+                        const nr = r + 1;
+                        const _nn = true; // current 's'
+                        const ns =
+                            nr < MAZE_SIZE &&
+                            (c < MAZE_SIZE
+                                ? (maze.grid[nr]?.[c]?.walls.left ?? false)
+                                : (maze.grid[nr]?.[c - 1]?.walls.right ??
+                                  false));
+                        const nw =
+                            c > 0 &&
+                            (nr < MAZE_SIZE
+                                ? (maze.grid[nr]?.[c - 1]?.walls.top ?? false)
+                                : (maze.grid[nr - 1]?.[c - 1]?.walls.bottom ??
+                                  false));
+                        const ne =
+                            c < MAZE_SIZE &&
+                            (nr < MAZE_SIZE
+                                ? (maze.grid[nr]?.[c]?.walls.top ?? false)
+                                : (maze.grid[nr - 1]?.[c]?.walls.bottom ??
+                                  false));
+                        const nCount =
+                            1 + (ns ? 1 : 0) + (nw ? 1 : 0) + (ne ? 1 : 0);
+                        const endY =
+                            nCount === 2 && (nw || ne)
+                                ? (r + 1) * CELL_SIZE - CORNER_RADIUS
+                                : (r + 1) * CELL_SIZE;
+                        ctx.moveTo(x, startY);
+                        ctx.lineTo(x, endY);
                     }
-                    // Outer bounds
-                    if (c === MAZE_SIZE - 1 && cell.walls.right) {
-                        ctx.moveTo(x + CELL_SIZE, y);
-                        ctx.lineTo(x + CELL_SIZE, y + CELL_SIZE);
+                    // Draw East Horizontal Segment
+                    if (e) {
+                        const startX =
+                            count === 2 && (n || s) ? x + CORNER_RADIUS : x;
+                        // Connectivity at node to the right (r, c+1)
+                        const nc = c + 1;
+                        const nn =
+                            r > 0 &&
+                            (nc < MAZE_SIZE
+                                ? (maze.grid[r - 1]?.[nc]?.walls.left ?? false)
+                                : (maze.grid[r - 1]?.[nc - 1]?.walls.right ??
+                                  false));
+                        const ns =
+                            r < MAZE_SIZE &&
+                            (nc < MAZE_SIZE
+                                ? (maze.grid[r]?.[nc]?.walls.left ?? false)
+                                : (maze.grid[r]?.[nc - 1]?.walls.right ??
+                                  false));
+                        const _nw = true; // current 'e'
+                        const ne =
+                            nc < MAZE_SIZE &&
+                            (r < MAZE_SIZE
+                                ? (maze.grid[r]?.[nc]?.walls.top ?? false)
+                                : (maze.grid[r - 1]?.[nc]?.walls.bottom ??
+                                  false));
+                        const nCount =
+                            1 + (nn ? 1 : 0) + (ns ? 1 : 0) + (ne ? 1 : 0);
+                        const endX =
+                            nc * CELL_SIZE -
+                            (nCount === 2 && (nn || ns) ? CORNER_RADIUS : 0);
+                        ctx.moveTo(startX, y);
+                        ctx.lineTo(endX, y);
                     }
-                    if (r === MAZE_SIZE - 1 && cell.walls.bottom) {
-                        ctx.moveTo(x, y + CELL_SIZE);
-                        ctx.lineTo(x + CELL_SIZE, y + CELL_SIZE);
-                    }
-                });
-            });
+                }
+            }
             ctx.stroke();
             ctx.shadowBlur = 0;
 
