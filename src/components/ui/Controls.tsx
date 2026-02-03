@@ -249,7 +249,7 @@ export function ArrowsButton({
                     gap: 0.5,
                 }}
             >
-                <Grid container gap={0.5}>
+                <Grid container gap={0.5} wrap="nowrap">
                     <TooltipButton
                         title="Move Up Left"
                         Icon={ICON_MAP.NorthWest ?? NorthWestRounded}
@@ -272,7 +272,7 @@ export function ArrowsButton({
                         size={size}
                     />
                 </Grid>
-                <Grid container gap={0.5}>
+                <Grid container gap={0.5} wrap="nowrap">
                     <TooltipButton
                         title="Move Left"
                         Icon={WestRounded}
@@ -301,7 +301,7 @@ export function ArrowsButton({
                         size={size}
                     />
                 </Grid>
-                <Grid container gap={0.5}>
+                <Grid container gap={0.5} wrap="nowrap">
                     <TooltipButton
                         title="Move Down Left"
                         Icon={ICON_MAP.SouthWest ?? SouthWestRounded}
