@@ -31,6 +31,7 @@ export default function MazeGame(): React.ReactElement {
         goal: { x: 0, y: 0, rotation: 0 },
         camera: { x: 0, y: 0 },
         gameState: 'start',
+        lastTime: 0,
     });
 
     const { height, width } = useWindow();
@@ -70,12 +71,24 @@ export default function MazeGame(): React.ReactElement {
         };
 
         stateRef.current.gameState = 'playing';
+        stateRef.current.lastTime = 0; // Reset timing
         setGameState('playing');
     }, [algorithm]);
 
     useEffect(() => {
         initMaze();
     }, [initMaze]);
+
+    // Handle Resize
+    useEffect(() => {
+        if (!canvasRef.current) return;
+        const canvas = canvasRef.current;
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = width * dpr;
+        canvas.height = availableHeight * dpr;
+        const ctx = canvas.getContext('2d');
+        if (ctx) ctx.scale(dpr, dpr);
+    }, [width, availableHeight]);
 
     // Game Loop & Rendering
     useEffect(() => {
@@ -100,8 +113,14 @@ export default function MazeGame(): React.ReactElement {
         const animate = (time: number) => {
             animationId = requestAnimationFrame(animate);
 
+            // Calculate delta time
+            const dt = stateRef.current.lastTime
+                ? (time - stateRef.current.lastTime) / 16.67 // Normalize to 60fps
+                : 1;
+            stateRef.current.lastTime = time;
+
             // 1. Simulation Logic
-            const moveSpeed = 4.5;
+            const moveSpeed = 4.5 * dt;
             const kdx =
                 (keys.d || keys.arrowright ? 1 : 0) -
                 (keys.a || keys.arrowleft ? 1 : 0);
@@ -182,14 +201,17 @@ export default function MazeGame(): React.ReactElement {
                 if (canMoveTo(stateRef.current.player.x, nextY))
                     stateRef.current.player.y = nextY;
 
-                stateRef.current.player.rotation += mag * 0.15;
+                stateRef.current.player.rotation += mag * 0.15 * dt;
             }
 
-            // Camera follow
+            // Camera follow (smoothed with dt)
+            const cameraLerp = 1 - Math.pow(0.9, dt); // FPS-independent lerp
             stateRef.current.camera.x +=
-                (stateRef.current.player.x - stateRef.current.camera.x) * 0.1;
+                (stateRef.current.player.x - stateRef.current.camera.x) *
+                cameraLerp;
             stateRef.current.camera.y +=
-                (stateRef.current.player.y - stateRef.current.camera.y) * 0.1;
+                (stateRef.current.player.y - stateRef.current.camera.y) *
+                cameraLerp;
 
             // Win condition
             const distToGoal = Math.sqrt(
@@ -211,10 +233,7 @@ export default function MazeGame(): React.ReactElement {
             }
 
             // 2. Rendering Logic
-            const dpr = window.devicePixelRatio || 1;
-            canvas.width = width * dpr;
-            canvas.height = availableHeight * dpr;
-            ctx.scale(dpr, dpr);
+            // Only update canvas dimensions if they changed (handled by useEffect now)
 
             ctx.clearRect(0, 0, width, availableHeight);
 
@@ -259,12 +278,12 @@ export default function MazeGame(): React.ReactElement {
             ctx.shadowColor = 'hsl(0, 0%, 60%)';
             ctx.shadowBlur = isMobile ? 3 : 5;
 
+            ctx.beginPath();
             maze.grid.forEach((row, r) => {
                 row.forEach((cell, c) => {
                     const x = c * CELL_SIZE;
                     const y = r * CELL_SIZE;
 
-                    ctx.beginPath();
                     if (cell.walls.top) {
                         ctx.moveTo(x, y);
                         ctx.lineTo(x + CELL_SIZE, y);
@@ -282,14 +301,14 @@ export default function MazeGame(): React.ReactElement {
                         ctx.moveTo(x, y + CELL_SIZE);
                         ctx.lineTo(x + CELL_SIZE, y + CELL_SIZE);
                     }
-                    ctx.stroke();
                 });
             });
+            ctx.stroke();
             ctx.shadowBlur = 0;
 
             // Draw Goal
             const goal = stateRef.current.goal;
-            goal.rotation += 0.02;
+            goal.rotation += 0.02 * dt;
             ctx.save();
             ctx.translate(goal.x, goal.y);
             ctx.rotate(goal.rotation);
