@@ -266,7 +266,7 @@ export default function MazeGame(): React.ReactElement {
 
             ctx.beginPath();
             ctx.strokeStyle = COLORS.primary.main;
-            ctx.globalAlpha = 0.05;
+            ctx.globalAlpha = 0.03;
             ctx.lineWidth = 1;
             for (
                 let x = Math.floor(viewLeft / GRID_SPACING) * GRID_SPACING;
@@ -292,7 +292,7 @@ export default function MazeGame(): React.ReactElement {
             ctx.lineWidth = WALL_THICKNESS;
             ctx.lineCap = 'round';
             ctx.shadowColor = COLORS.primary.main;
-            ctx.shadowBlur = isMobile ? 5 : 10; // More glow
+            ctx.shadowBlur = 0;
 
             ctx.beginPath();
             maze.grid.forEach((row, r) => {
@@ -330,7 +330,7 @@ export default function MazeGame(): React.ReactElement {
             ctx.rotate(goal.rotation);
             ctx.fillStyle = COLORS.data.green;
             ctx.shadowColor = COLORS.data.green;
-            ctx.shadowBlur = 15;
+            ctx.shadowBlur = 0;
             ctx.beginPath();
             ctx.rect(-10, -10, 20, 20); // Smaller goal (20x20)
             ctx.fill();
@@ -362,7 +362,7 @@ export default function MazeGame(): React.ReactElement {
                         if (p1 && p2) {
                             const xc = (p1.x + p2.x) / 2;
                             const yc = (p1.y + p2.y) / 2;
-                            ctx.globalAlpha = (i / len) * 0.3;
+                            ctx.globalAlpha = (i / len) * 0.15;
                             ctx.quadraticCurveTo(p1.x, p1.y, xc, yc);
                             ctx.stroke();
                             ctx.beginPath();
@@ -406,7 +406,7 @@ export default function MazeGame(): React.ReactElement {
             gradient.addColorStop(0, COLORS.data.amber);
             gradient.addColorStop(1, 'transparent');
             ctx.fillStyle = gradient;
-            ctx.globalAlpha = 0.5 + Math.sin(time * 0.005) * 0.2;
+            ctx.globalAlpha = 0.2 + Math.sin(time * 0.005) * 0.1;
             ctx.beginPath();
             ctx.arc(0, 0, PLAYER_RADIUS * 2, 0, Math.PI * 2);
             ctx.fill();
