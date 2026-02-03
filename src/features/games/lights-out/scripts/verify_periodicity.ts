@@ -106,16 +106,28 @@ function main() {
         patterns.push(findPattern(n));
     }
 
+    // Calculate dynamic column widths
+    const maxNWidth = Math.max(1, ...patterns.map(p => p.n.toString().length));
+    const maxZWidth = Math.max(6, ...patterns.map(p => p.z.toString().length));
+
     // Print table header
-    console.log(' n | Period | Remainders');
-    console.log('---|--------|' + '-'.repeat(40));
+    const nHeader = 'n'.padStart(maxNWidth);
+    const zHeader = 'Period'.padStart(maxZWidth);
+    console.log(` ${nHeader} | ${zHeader} | Remainders`);
+    console.log(
+        '-'.repeat(maxNWidth + 1) +
+            '|' +
+            '-'.repeat(maxZWidth + 2) +
+            '|' +
+            '-'.repeat(40)
+    );
 
     // Print table rows
     for (const pattern of patterns) {
-        const nStr = pattern.n.toString().padStart(2);
-        const zStr = pattern.z.toString().padStart(6);
+        const nStr = pattern.n.toString().padStart(maxNWidth);
+        const zStr = pattern.z.toString().padStart(maxZWidth);
         const rStr = JSON.stringify(pattern.R);
-        console.log(`${nStr} | ${zStr} | ${rStr}`);
+        console.log(` ${nStr} | ${zStr} | ${rStr}`);
     }
 
     // Optional verification against checkIdentity
