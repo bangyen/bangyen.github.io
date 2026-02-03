@@ -14,11 +14,11 @@ import {
 
 describe('Lights Out Matrix Utilities', () => {
     test('countBits returns correct number of set bits', () => {
-        expect(countBits(0)).toBe(0);
-        expect(countBits(1)).toBe(1);
-        expect(countBits(3)).toBe(2); // 11
-        expect(countBits(7)).toBe(3); // 111
-        expect(countBits(0b10101)).toBe(3);
+        expect(countBits(0n)).toBe(0);
+        expect(countBits(1n)).toBe(1);
+        expect(countBits(3n)).toBe(2); // 11
+        expect(countBits(7n)).toBe(3); // 111
+        expect(countBits(0b10101n)).toBe(3);
     });
 
     test('getIdentity returns identity matrix', () => {
@@ -27,7 +27,7 @@ describe('Lights Out Matrix Utilities', () => {
         // 100 -> 4
         // 010 -> 2
         // 001 -> 1
-        expect(id3).toEqual([4, 2, 1]);
+        expect(id3).toEqual([4n, 2n, 1n]);
     });
 
     test('getMatrix generates correct matrix for size 3', () => {
@@ -36,25 +36,25 @@ describe('Lights Out Matrix Utilities', () => {
         // 110 (6)
         // 111 (7)
         // 011 (3)
-        expect(m3).toEqual([6, 7, 3]);
+        expect(m3).toEqual([6n, 7n, 3n]);
     });
 
     test('addSym performs XOR addition', () => {
-        const a = [0b101, 0b010];
-        const b = [0b011, 0b110];
+        const a = [0b101n, 0b010n];
+        const b = [0b011n, 0b110n];
         // 101 ^ 011 = 110 (6)
         // 010 ^ 110 = 100 (4)
-        expect(addSym(a, b)).toEqual([6, 4]);
+        expect(addSym(a, b)).toEqual([6n, 4n]);
     });
 
     test('addSym satisfies A + A = 0', () => {
-        const a = [123, 456];
-        expect(addSym(a, a)).toEqual([0, 0]);
+        const a = [123n, 456n];
+        expect(addSym(a, a)).toEqual([0n, 0n]);
     });
 
     test('multiplySym performs matrix multiplication over GF(2)', () => {
         const id = getIdentity(3);
-        const mat = [6, 7, 3];
+        const mat = [6n, 7n, 3n];
         // I * A = A
         expect(multiplySym(id, mat)).toEqual(mat);
         // A * I = A (since sym)
@@ -100,18 +100,18 @@ describe('Lights Out Matrix Utilities', () => {
     });
 
     test('sortMatrices sorts rows based on value', () => {
-        const mat = [1, 4, 2];
-        const id = [1, 2, 4];
+        const mat = [1n, 4n, 2n];
+        const id = [1n, 2n, 4n];
         // Sort descending: 4 (idx 1), 2 (idx 2), 1 (idx 0)
         const [sortedMat, sortedId] = sortMatrices(mat, id);
-        expect(sortedMat).toEqual([4, 2, 1]);
-        expect(sortedId).toEqual([2, 4, 1]);
+        expect(sortedMat).toEqual([4n, 2n, 1n]);
+        expect(sortedId).toEqual([2n, 4n, 1n]);
     });
 
     test('evalPolynomial evaluates poly on matrix', () => {
         const mat = getMatrix(3);
         // Poly 0 -> 0 matrix
-        expect(evalPolynomial(mat, 0n)).toEqual([0, 0, 0]);
+        expect(evalPolynomial(mat, 0n)).toEqual([0n, 0n, 0n]);
         // Poly 1 -> I * mat^0 = I
         expect(evalPolynomial(mat, 1n)).toEqual(getIdentity(3));
         // Poly 2 -> I * mat^1 + 0 * mat^0 ? No

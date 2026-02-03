@@ -1,39 +1,44 @@
-export function getMatrix(cols: number): number[] {
-    if (cols === 1) return [1];
-    const first = 7 << (cols - 2);
+export function getMatrix(cols: number): bigint[] {
+    if (cols === 1) return [1n];
+    const first = 7n << BigInt(cols - 2);
     const matrix = [first];
 
     for (let k = 1; k < cols; k++) {
         const prev = matrix[k - 1];
         if (prev !== undefined) {
-            const next = prev >> 1;
+            const next = prev >> 1n;
             matrix.push(next);
         }
     }
 
     const firstVal = matrix[0];
-    if (firstVal !== undefined) matrix[0] = firstVal - 2 ** cols;
+    if (firstVal !== undefined) matrix[0] = firstVal - (1n << BigInt(cols));
     return matrix;
 }
 
-export function countBits(num: number): number {
+export function countBits(num: bigint): number {
     let count = 0;
 
-    while (num) {
-        num &= num - 1;
+    let n = num;
+    if (n < 0n) {
+        throw new Error('countBits called on negative bigint');
+    }
+
+    while (n > 0n) {
+        n &= n - 1n;
         count++;
     }
 
     return count;
 }
 
-export function multiplySym(matrixA: number[], matrixB: number[]): number[] {
+export function multiplySym(matrixA: bigint[], matrixB: bigint[]): bigint[] {
     const size = matrixA.length;
-    const output: number[] = [];
+    const output: bigint[] = [];
 
     for (let r = 0; r < size; r++) {
         const rowA = matrixA[r];
-        let outputRow = 0;
+        let outputRow = 0n;
 
         for (let c = 0; c < size; c++) {
             const colB = matrixB[c];
@@ -41,8 +46,8 @@ export function multiplySym(matrixA: number[], matrixB: number[]): number[] {
                 const value = rowA & colB;
                 const count = countBits(value);
 
-                outputRow <<= 1;
-                outputRow += count & 1;
+                outputRow <<= 1n;
+                outputRow += BigInt(count & 1);
             }
         }
 
@@ -52,22 +57,22 @@ export function multiplySym(matrixA: number[], matrixB: number[]): number[] {
     return output;
 }
 
-export function getIdentity(size: number): number[] {
-    const output = Array<number>(size).fill(1);
+export function getIdentity(size: number): bigint[] {
+    const output = Array<bigint>(size).fill(1n);
 
     for (let r = 0; r < size; r++) {
         const val = output[r];
-        if (val !== undefined) output[r] = val << (size - r - 1);
+        if (val !== undefined) output[r] = val << BigInt(size - r - 1);
     }
 
     return output;
 }
 
 export function symmetricPow(
-    matrix: number[],
+    matrix: bigint[],
     power: number,
-    cache?: Map<number, number[]>
-): number[] {
+    cache?: Map<number, bigint[]>
+): bigint[] {
     const cached = cache?.get(power);
     if (cached) return cached;
 
@@ -88,9 +93,9 @@ export function symmetricPow(
     return output;
 }
 
-export function addSym(matrixA: number[], matrixB: number[]): number[] {
+export function addSym(matrixA: bigint[], matrixB: bigint[]): bigint[] {
     const size = matrixA.length;
-    const output: number[] = [];
+    const output: bigint[] = [];
 
     for (let r = 0; r < size; r++) {
         const rowA = matrixA[r];
@@ -120,22 +125,23 @@ export function getPolynomial(index: number): bigint {
 }
 
 export function evalPolynomial(
-    matrix: number[],
+    matrix: bigint[],
     poly: bigint,
-    cache?: Map<number, number[]>
-): number[] {
+    cache?: Map<number, bigint[]>
+): bigint[] {
     const size = matrix.length;
-    let output = Array<number>(size).fill(0);
+    let output = Array<bigint>(size).fill(0n);
     let degree = 0;
 
-    while (poly) {
-        if (poly & 1n) {
+    let p = poly;
+    while (p > 0n) {
+        if (p & 1n) {
             const power = symmetricPow(matrix, degree, cache);
 
             output = addSym(output, power);
         }
 
-        poly >>= 1n;
+        p >>= 1n;
         degree++;
     }
 
@@ -143,24 +149,26 @@ export function evalPolynomial(
 }
 
 export function sortMatrices(
-    matrix: number[],
-    identity: number[]
-): [number[], number[]] {
+    matrix: bigint[],
+    identity: bigint[]
+): [bigint[], bigint[]] {
     const size = matrix.length;
     const sorted = [...Array(size).keys()].sort((a, b) => {
         const valB = matrix[b];
         const valA = matrix[a];
         if (valB === undefined || valA === undefined) return 0;
-        return valB - valA;
+        if (valB > valA) return 1;
+        if (valB < valA) return -1;
+        return 0;
     });
 
-    const original = sorted.map(row => matrix[row] ?? 0);
-    const inverted = sorted.map(row => identity[row] ?? 0);
+    const original = sorted.map(row => matrix[row] ?? 0n);
+    const inverted = sorted.map(row => identity[row] ?? 0n);
 
     return [original, inverted];
 }
 
-export function invertMatrix(matrix: number[]): number[] {
+export function invertMatrix(matrix: bigint[]): bigint[] {
     const size = matrix.length;
     const identity = getIdentity(size);
 
@@ -168,7 +176,7 @@ export function invertMatrix(matrix: number[]): number[] {
     let inverted = identity;
 
     for (let c = 0; c < size; c++) {
-        const pow = 1 << (size - c - 1);
+        const pow = 1n << BigInt(size - c - 1);
 
         [original, inverted] = sortMatrices(original, inverted);
 
@@ -202,7 +210,7 @@ export function invertMatrix(matrix: number[]): number[] {
     https://graphics.stanford.edu/~seander/bithacks.html#:~:text=Brian%20Kernighan
 */
 // Cache for matrix inversions: "rows,cols" -> inverse matrix
-const inverseCache: Record<string, number[]> = {};
+const inverseCache: Record<string, bigint[]> = {};
 
 export function getProduct(
     input: number[],
@@ -219,9 +227,10 @@ export function getProduct(
     }
 
     const inverse = inverseCache[key];
-    const binary = parseInt(input.join(''), 2);
+    const binaryStr = input.join('');
+    const binary = binaryStr ? BigInt('0b' + binaryStr) : 0n;
 
-    const getParity = (row: number): number => {
+    const getParity = (row: bigint): number => {
         const value = row & binary;
         const count = countBits(value);
         return count & 1;

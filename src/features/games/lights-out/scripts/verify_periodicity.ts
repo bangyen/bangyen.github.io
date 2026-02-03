@@ -30,20 +30,20 @@ import {
 function checkIdentity(m: number, n: number): boolean {
     const matrix = getMatrix(n);
     const poly = getPolynomial(m + 1);
-    const powCache = new Map<number, number[]>();
+    const powCache = new Map<number, bigint[]>();
     const product = evalPolynomial(matrix, poly, powCache);
     const identity = getIdentity(n);
     return product.every((val, i) => val === identity[i]);
 }
 
-function isIdentity(matrix: number[]): boolean {
+function isIdentity(matrix: bigint[]): boolean {
     const size = matrix.length;
     const identity = getIdentity(size);
     return matrix.every((val, i) => val === identity[i]);
 }
 
-function isZero(matrix: number[]): boolean {
-    return matrix.every(val => val === 0);
+function isZero(matrix: bigint[]): boolean {
+    return matrix.every(val => val === 0n);
 }
 
 interface Pattern {
@@ -103,7 +103,7 @@ function findMinimalPeriod(z: number, R: number[]): { z: number; R: number[] } {
 function findPattern(n: number): Pattern {
     const A = getMatrix(n);
     const I = getIdentity(n);
-    const Zero: number[] = Array(n).fill(0) as number[];
+    const Zero: bigint[] = Array(n).fill(0n) as bigint[];
 
     let prev = [...Zero];
     let curr = [...I];
