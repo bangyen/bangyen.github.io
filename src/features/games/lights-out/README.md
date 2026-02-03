@@ -33,15 +33,15 @@ The matrix used in the code (`getMatrix(cols)`) corresponds to $L_n = A_n + I_n$
 The "weights" computed by `getPolynomial` correspond to the Fibonacci polynomials $F_k(x)$.
 The calculator logic effectively computes $C = (F_{m+1}(L_n))^{-1}$.
 For the calculator to acts as the identity matrix ($C = I_n$), we must have:
-$$ F*{m+1}(L_n) = I_n $$
-$$ F*{m+1}(A*n + I_n) + I_n = 0 \quad (\text{since } -1 \equiv 1) $$
-$$ Q(A_n) = 0, \quad \text{where } Q(x) = F*{m+1}(x+1) + 1 $$
+$$ F_{m+1}(L_n) = I_n $$
+$$ F_{m+1}(A_n + I_n) + I_n = 0 \quad (\text{since } -1 \equiv 1) $$
+$$ Q(A_n) = 0, \quad \text{where } Q(x) = F_{m+1}(x+1) + 1 $$
 
 By the Cayley-Hamilton theorem, $Q(A_n) = 0$ if and only if the characteristic polynomial of $A_n$ divides $Q(x)$.
 It is a known result that the characteristic polynomial of $A_n$ over $\mathbb{F}_2$ is exactly $F_{n+1}(x)$.
 
 Therefore, the condition is equivalent to:
-$$ F*{n+1}(x) \mid (F*{m+1}(x+1) + 1) $$
+$$ F_{n+1}(x) \mid (F_{m+1}(x+1) + 1) $$
 
 ### Observed Results
 
