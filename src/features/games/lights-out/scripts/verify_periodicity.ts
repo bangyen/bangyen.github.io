@@ -18,6 +18,8 @@ import {
     getPolynomial,
     evalPolynomial,
     getIdentity,
+    multiplySym,
+    addSym,
 } from '../matrices';
 
 function checkIdentity(m: number, n: number): boolean {
@@ -29,18 +31,52 @@ function checkIdentity(m: number, n: number): boolean {
     return product.every((val, i) => val === identity[i]);
 }
 
-const PATTERNS: Record<number, { z: number; R: number[] }> = {
-    1: { z: 3, R: [0, 1] },
-    2: { z: 2, R: [0] },
-    3: { z: 12, R: [0, 10] },
-    4: { z: 10, R: [0, 8] },
-    5: { z: 24, R: [0, 6, 16, 22] },
-    6: { z: 18, R: [0, 16] },
-    7: { z: 24, R: [0, 22] },
-    8: { z: 14, R: [0, 12] },
-    9: { z: 60, R: [0, 18, 40, 58] },
-    10: { z: 62, R: [0, 60] },
-};
+function isIdentity(matrix: number[]): boolean {
+    const size = matrix.length;
+    const identity = getIdentity(size);
+    return matrix.every((val, i) => val === identity[i]);
+}
+
+function isZero(matrix: number[]): boolean {
+    return matrix.every(val => val === 0);
+}
+
+interface Pattern {
+    n: number;
+    z: number;
+    R: number[];
+}
+
+function findPattern(n: number): Pattern {
+    const A = getMatrix(n);
+    const I = getIdentity(n);
+    const Zero: number[] = Array(n).fill(0) as number[];
+
+    let prev = [...Zero];
+    let curr = [...I];
+    const R: number[] = [0];
+
+    // Iteratively compute Fibonacci polynomials until we find the period
+    // f_{k+1}(A) = A * f_k(A) + f_{k-1}(A)
+    // The period z is when f_{z+1}(A) = I
+    // We also need f_z(A) = 0 for the "full" period where it repeats from I, 0
+    for (let k = 2; k <= 100000; k++) {
+        const next = addSym(multiplySym(A, curr), prev);
+
+        if (isIdentity(next)) {
+            R.push(k - 1);
+        }
+
+        if (isIdentity(next) && isZero(curr)) {
+            return { n, z: k - 1, R };
+        }
+
+        prev = curr;
+        curr = next;
+    }
+
+    throw new Error(`Period not found for n=${n}`);
+}
 
 function main() {
     const limitArg = process.argv[2] ?? '1000';
@@ -48,8 +84,7 @@ function main() {
     console.log(`Verifying periodicity patterns up to m = ${limit}...\n`);
 
     for (let n = 1; n <= 10; n++) {
-        const pattern = PATTERNS[n];
-        if (!pattern) continue;
+        const pattern = findPattern(n);
 
         process.stdout.write(`n=${n} (Period ${pattern.z}): `);
         let allPass = true;
