@@ -13,9 +13,37 @@ Instead of performing Gaussian elimination on a large $(mn) \times (mn)$ matrix 
 
 This efficiency allows the calculator to handle arbitrary grid sizes (e.g., $100 \times 100$) nearly instantly.
 
+#### Visualizing the Logic
+
+**1. Light Chasing (Row Reduction)**
+The core idea is that clicking a light in row $i+1$ is the _only_ way to toggle a light in row $i$ without affecting the rows above it.
+
+```mermaid
+graph TD
+    subgraph "Grid Reduction"
+    R1["Row 1 (Target)"] --- R2["Row 2 (Chaser)"]
+    R2 --- R3["Row 3"]
+    R3 --- RN["..."]
+    end
+    Note["Clicking Row 2 'clears' Row 1<br/>Repeat until only Bottom Row remains"]
+```
+
+**2. Path Graph $P_n$ (Column Interaction)**
+The tridiagonal matrix $A_n$ represents the adjacency of a path graph. Each node (light) in a row interacts with its neighbors.
+
+```mermaid
+graph LR
+    L1((1)) --- L2((2))
+    L2 --- L3((3))
+    L3 --- LN[...]
+    LN --- L_n((n))
+```
+
+_This structure is why $A_n$ has 1s on the super/sub-diagonals._
+
 ### Identity Matrix Property
 
-For certain grid dimensions ($m \times n$), the "Calculator" operation behaves as an Identity Matrix over the field $\mathbb{F}_2$. This means that the output pattern matches the input pattern exactly.
+For certain grid dimensions ($m \times n$), the solver transformation behaves as an Identity Matrix over the field $\mathbb{F}_2$. This means that if the grid is reduced to a state where only the top row is active (the 'input'), the solution pattern required to clear the grid (the 'output') is identical to that input pattern.
 
 ### General Formula
 
@@ -23,7 +51,7 @@ For an $m \times n$ grid ($m$ rows, $n$ columns), the calculator output equals t
 
 $$F_{n+1}(x) \pmod{F_{m+1}(x+1) + 1} = 0$$
 
-Or strictly: **$F_{n+1}(x)$ divides $F_{m+1}(x+1) + 1$ over $\mathbb{F}_2[x]$.**
+Or strictly: $F_{n+1}(x)$ **divides** $F_{m+1}(x+1) + 1$ **over** $\mathbb{F}_2[x]$.
 
 ### Mathematical Derivation
 
@@ -32,7 +60,7 @@ The matrix used in the code (`getMatrix(cols)`) corresponds to $L_n = A_n + I_n$
 
 The "weights" computed by `getPolynomial` correspond to the Fibonacci polynomials $F_k(x)$.
 The calculator logic effectively computes $C = (F_{m+1}(L_n))^{-1}$.
-For the calculator to acts as the identity matrix ($C = I_n$), we must have:
+For the calculator to act as the identity matrix ($C = I_n$), we must have:
 
 $$F_{m+1}(L_n) = I_n$$
 $$F_{m+1}(A_n + I_n) + I_n = 0 \quad (\text{since } -1 \equiv 1)$$
@@ -54,12 +82,12 @@ $$F_{n+1}(x) \mid (F_{m+1}(x+1) + 1)$$
 
 ### Empirically Verified Grid Dimensions
 
-The following grid sizes ($m$ rows $\times$ $n$ columns) have been verified to act as an Identity Matrix.
+The following patterns describe the grid heights ($m$) that satisfy the identity property for a given width ($n$), expressed as $m \pmod z \in R_n$ where $z$ is the period and $R_n$ is the set of valid remainders.
 
 > [!NOTE]
 > These periodicity patterns are **empirically derived** and have been verified for grid heights up to **$m = 600$**. While they appear robust, they should be considered experimental observations until formally proven.
 
-| Columns ($n$) | Periodicity ($m \pmod z \in R_n$)    |
+| Columns ($n$) | Periodicity ($m \pmod z$)            |
 | :------------ | :----------------------------------- |
 | **1**         | $m \pmod 3 \in \{0, 1\}$             |
 | **2**         | $m \pmod 2 \in \{0\}$                |
