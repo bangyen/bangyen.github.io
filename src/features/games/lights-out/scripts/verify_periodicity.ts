@@ -52,6 +52,54 @@ interface Pattern {
     R: number[];
 }
 
+function getDivisors(n: number): number[] {
+    const divisors: number[] = [];
+    for (let i = 1; i <= Math.sqrt(n); i++) {
+        if (n % i === 0) {
+            divisors.push(i);
+            if (i !== n / i) {
+                divisors.push(n / i);
+            }
+        }
+    }
+    return divisors.sort((a, b) => a - b);
+}
+
+function findMinimalPeriod(z: number, R: number[]): { z: number; R: number[] } {
+    // Try each divisor of z, starting from smallest (but skip 1 and z itself)
+    for (const candidate of getDivisors(z)) {
+        if (candidate === 1 || candidate === z) continue;
+
+        // Check if this divisor works as a period
+        // For it to work, R mod candidate must equal the unique remainders
+        const candidateR = R.map(r => r % candidate)
+            .filter((r, i, arr) => arr.indexOf(r) === i)
+            .sort((a, b) => a - b);
+
+        // The key insight: if candidate is a valid period, then for ANY m,
+        // m is in the identity set IFF (m mod candidate) is in candidateR
+        // This means: R should be exactly the set of all values < z where (v mod candidate) ∈ candidateR
+        const expectedR: number[] = [];
+        for (let v = 0; v < z; v++) {
+            if (candidateR.includes(v % candidate)) {
+                expectedR.push(v);
+            }
+        }
+
+        // Check if R matches expectedR
+        if (
+            JSON.stringify(R) === JSON.stringify(expectedR) &&
+            candidateR.length < R.length
+        ) {
+            // Found a valid simpler period, recurse
+            return findMinimalPeriod(candidate, candidateR);
+        }
+    }
+
+    // No simpler period found
+    return { z, R };
+}
+
 function findPattern(n: number): Pattern {
     const A = getMatrix(n);
     const I = getIdentity(n);
@@ -73,7 +121,12 @@ function findPattern(n: number): Pattern {
         }
 
         if (isIdentity(next) && isZero(curr)) {
-            return { n, z: k - 1, R };
+            // Found full period, now find minimal period
+            const fullZ = k - 1;
+            // Remove the period itself from R before finding minimal period
+            const R_filtered = R.filter(r => r !== fullZ);
+            const { z: minZ, R: minR } = findMinimalPeriod(fullZ, R_filtered);
+            return { n, z: minZ, R: minR };
         }
 
         prev = curr;
