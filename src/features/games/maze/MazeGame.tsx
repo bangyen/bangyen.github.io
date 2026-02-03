@@ -122,6 +122,25 @@ export default function MazeGame(): React.ReactElement {
                 : 1;
             stateRef.current.lastTime = time;
 
+            // Helper to resolve CSS variables for Canvas
+            const resolveColor = (color: string) => {
+                if (color.startsWith('var(')) {
+                    const varName = color.slice(4, -1);
+                    return (
+                        getComputedStyle(canvas)
+                            .getPropertyValue(varName)
+                            .trim() || '#ffffff'
+                    );
+                }
+                return color;
+            };
+
+            // Calculate colors once per frame
+            const playerColor = resolveColor(COLORS.text.primary);
+            const wallColor = resolveColor(COLORS.primary.main);
+            const goalColor = resolveColor(COLORS.primary.dark);
+            const gridColor = resolveColor(COLORS.primary.main);
+
             // 1. Simulation Logic
             const ACCEL = 1.2 * dt;
             const FRICTION = Math.pow(0.88, dt);
@@ -281,9 +300,9 @@ export default function MazeGame(): React.ReactElement {
             const viewBottom = stateRef.current.camera.y + availableHeight / 2;
 
             ctx.beginPath();
-            ctx.strokeStyle = COLORS.primary.main;
-            ctx.globalAlpha = 0.03;
+            ctx.strokeStyle = gridColor;
             ctx.lineWidth = 1;
+            ctx.globalAlpha = 0.03;
             for (
                 let x = Math.floor(viewLeft / GRID_SPACING) * GRID_SPACING;
                 x <= viewRight;
@@ -304,10 +323,10 @@ export default function MazeGame(): React.ReactElement {
             ctx.globalAlpha = 1.0;
 
             // Draw Walls
-            ctx.strokeStyle = COLORS.primary.main;
+            ctx.strokeStyle = wallColor;
             ctx.lineWidth = WALL_THICKNESS;
             ctx.lineCap = 'round';
-            ctx.shadowColor = COLORS.primary.main;
+            ctx.shadowColor = wallColor;
             ctx.shadowBlur = 0;
 
             const CORNER_RADIUS = 12;
@@ -464,8 +483,8 @@ export default function MazeGame(): React.ReactElement {
             ctx.save();
             ctx.translate(goal.x, goal.y);
             ctx.rotate(goal.rotation);
-            ctx.fillStyle = COLORS.primary.dark;
-            ctx.shadowColor = COLORS.primary.dark;
+            ctx.fillStyle = goalColor;
+            ctx.shadowColor = goalColor;
             ctx.shadowBlur = 0;
             ctx.beginPath();
             ctx.rect(-10, -10, 20, 20); // Smaller goal (20x20)
@@ -478,7 +497,7 @@ export default function MazeGame(): React.ReactElement {
             if (len > 2) {
                 ctx.save();
                 ctx.beginPath();
-                ctx.strokeStyle = COLORS.text.primary;
+                ctx.strokeStyle = playerColor;
                 ctx.lineWidth = PLAYER_RADIUS;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
@@ -511,7 +530,7 @@ export default function MazeGame(): React.ReactElement {
                 if (p1 && p2) {
                     ctx.save();
                     ctx.beginPath();
-                    ctx.strokeStyle = COLORS.text.primary;
+                    ctx.strokeStyle = playerColor;
                     ctx.lineWidth = PLAYER_RADIUS;
                     ctx.lineCap = 'round';
                     ctx.globalAlpha = 0.15;
@@ -528,7 +547,7 @@ export default function MazeGame(): React.ReactElement {
             ctx.translate(player.x, player.y);
 
             // Core
-            ctx.fillStyle = COLORS.text.primary;
+            ctx.fillStyle = playerColor;
             ctx.beginPath();
             ctx.arc(0, 0, PLAYER_RADIUS, 0, Math.PI * 2);
             ctx.fill();
