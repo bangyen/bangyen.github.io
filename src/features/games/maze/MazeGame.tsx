@@ -5,8 +5,8 @@ import { COLORS } from '../../../config/theme';
 import { generateMaze, MazeData, MazeAlgorithm } from './mazeLogic';
 import { useWindow, useMobile } from '../../../hooks';
 
-const MAZE_SIZE = 15;
-const CELL_SIZE = 60; // Base pixel size for cells
+const MAZE_SIZE = 21;
+const CELL_SIZE = 100; // Closer zoom
 const PLAYER_RADIUS = 12;
 const WALL_THICKNESS = 4;
 
@@ -121,7 +121,7 @@ export default function MazeGame(): React.ReactElement {
             stateRef.current.lastTime = time;
 
             // 1. Simulation Logic
-            const moveSpeed = 4.5 * dt;
+            const moveSpeed = 6.0 * dt;
             const kdx =
                 (keys.d || keys.arrowright ? 1 : 0) -
                 (keys.a || keys.arrowleft ? 1 : 0);
