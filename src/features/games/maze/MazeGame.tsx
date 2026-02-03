@@ -27,7 +27,7 @@ export default function MazeGame(): React.ReactElement {
 
     // Refs for simulation state to avoid re-renders
     const stateRef = useRef({
-        player: { x: 0, y: 0, rotation: 0 },
+        player: { x: 0, y: 0, vx: 0, vy: 0, rotation: 0 },
         goal: { x: 0, y: 0, rotation: 0 },
         camera: { x: 0, y: 0 },
         gameState: 'start',
@@ -63,6 +63,8 @@ export default function MazeGame(): React.ReactElement {
         stateRef.current.player = {
             x: newMaze.start[1] * CELL_SIZE + CELL_SIZE / 2,
             y: newMaze.start[0] * CELL_SIZE + CELL_SIZE / 2,
+            vx: 0,
+            vy: 0,
             rotation: 0,
         };
         stateRef.current.goal = {
@@ -121,7 +123,10 @@ export default function MazeGame(): React.ReactElement {
             stateRef.current.lastTime = time;
 
             // 1. Simulation Logic
-            const moveSpeed = 6.0 * dt;
+            const ACCEL = 1.2 * dt;
+            const FRICTION = Math.pow(0.88, dt);
+            const BOUNCE = 0.5;
+
             const kdx =
                 (keys.d || keys.arrowright ? 1 : 0) -
                 (keys.a || keys.arrowleft ? 1 : 0);
@@ -156,55 +161,66 @@ export default function MazeGame(): React.ReactElement {
             const dx = kdx + pdx;
             const dy = kdy + pdy;
 
-            if (dx !== 0 || dy !== 0) {
-                const angle = Math.atan2(dy, dx);
-                const mag = Math.min(1, Math.sqrt(dx * dx + dy * dy));
-                const vx = Math.cos(angle) * mag * moveSpeed;
-                const vy = Math.sin(angle) * mag * moveSpeed;
+            // Apply inputs to velocity
+            stateRef.current.player.vx += dx * ACCEL;
+            stateRef.current.player.vy += dy * ACCEL;
 
-                // Simple 2D Collision (Cell-based)
-                const nextX = stateRef.current.player.x + vx;
-                const nextY = stateRef.current.player.y + vy;
+            // Apply friction
+            stateRef.current.player.vx *= FRICTION;
+            stateRef.current.player.vy *= FRICTION;
 
-                const canMoveTo = (px: number, py: number) => {
-                    const r = PLAYER_RADIUS + 2;
-                    const c = Math.floor(px / CELL_SIZE);
-                    const r_idx = Math.floor(py / CELL_SIZE);
+            // Collision check function
+            const checkCollision = (px: number, py: number) => {
+                const r = PLAYER_RADIUS + 2;
+                const c = Math.floor(px / CELL_SIZE);
+                const r_idx = Math.floor(py / CELL_SIZE);
 
-                    if (
-                        r_idx < 0 ||
-                        r_idx >= MAZE_SIZE ||
-                        c < 0 ||
-                        c >= MAZE_SIZE
-                    )
-                        return false;
-
-                    const cell = maze.grid[r_idx]?.[c];
-                    if (!cell) return false;
-
-                    // Distance to walls
-                    const left = c * CELL_SIZE;
-                    const right = (c + 1) * CELL_SIZE;
-                    const top = r_idx * CELL_SIZE;
-                    const bottom = (r_idx + 1) * CELL_SIZE;
-
-                    if (cell.walls.left && px - r < left) return false;
-                    if (cell.walls.right && px + r > right) return false;
-                    if (cell.walls.top && py - r < top) return false;
-                    if (cell.walls.bottom && py + r > bottom) return false;
-
-                    // Corner collisions (simplified)
+                if (r_idx < 0 || r_idx >= MAZE_SIZE || c < 0 || c >= MAZE_SIZE)
                     return true;
-                };
 
-                if (canMoveTo(nextX, stateRef.current.player.y))
-                    stateRef.current.player.x = nextX;
-                if (canMoveTo(stateRef.current.player.x, nextY))
-                    stateRef.current.player.y = nextY;
+                const cell = maze.grid[r_idx]?.[c];
+                if (!cell) return true;
 
-                stateRef.current.player.rotation += mag * 0.15 * dt;
+                const left = c * CELL_SIZE;
+                const right = (c + 1) * CELL_SIZE;
+                const top = r_idx * CELL_SIZE;
+                const bottom = (r_idx + 1) * CELL_SIZE;
 
-                // Add to trail
+                if (cell.walls.left && px - r < left) return true;
+                if (cell.walls.right && px + r > right) return true;
+                if (cell.walls.top && py - r < top) return true;
+                if (cell.walls.bottom && py + r > bottom) return true;
+
+                return false;
+            };
+
+            // Move X
+            const nextX =
+                stateRef.current.player.x + stateRef.current.player.vx * dt;
+            if (!checkCollision(nextX, stateRef.current.player.y)) {
+                stateRef.current.player.x = nextX;
+            } else {
+                stateRef.current.player.vx *= -BOUNCE;
+            }
+
+            // Move Y
+            const nextY =
+                stateRef.current.player.y + stateRef.current.player.vy * dt;
+            if (!checkCollision(stateRef.current.player.x, nextY)) {
+                stateRef.current.player.y = nextY;
+            } else {
+                stateRef.current.player.vy *= -BOUNCE;
+            }
+
+            // Rotation based on movement speed
+            const speed = Math.sqrt(
+                stateRef.current.player.vx ** 2 +
+                    stateRef.current.player.vy ** 2
+            );
+            stateRef.current.player.rotation += speed * 0.05 * dt;
+
+            // Add to trail
+            if (speed > 0.1) {
                 stateRef.current.trail.push({
                     x: stateRef.current.player.x,
                     y: stateRef.current.player.y,
@@ -214,7 +230,7 @@ export default function MazeGame(): React.ReactElement {
             // Trail dissipation logic
             const currentTrail = stateRef.current.trail;
             const maxTrail = 15;
-            if (currentTrail.length > (dx !== 0 || dy !== 0 ? maxTrail : 0)) {
+            if (currentTrail.length > (speed > 0.1 ? maxTrail : 0)) {
                 currentTrail.shift();
             }
 
