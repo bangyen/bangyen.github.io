@@ -99,13 +99,23 @@ function main() {
 
     console.log(`Finding periodicity patterns for n=${nArg}...\n`);
 
+    // Collect all patterns first for table formatting
+    const patterns: Pattern[] = [];
     for (const n of nRange) {
         if (isNaN(n)) continue;
-        const pattern = findPattern(n);
+        patterns.push(findPattern(n));
+    }
 
-        console.log(
-            `n=${n}: Period ${pattern.z}, R=${JSON.stringify(pattern.R)}`
-        );
+    // Print table header
+    console.log(' n | Period | Remainders');
+    console.log('---|--------|' + '-'.repeat(40));
+
+    // Print table rows
+    for (const pattern of patterns) {
+        const nStr = pattern.n.toString().padStart(2);
+        const zStr = pattern.z.toString().padStart(6);
+        const rStr = JSON.stringify(pattern.R);
+        console.log(`${nStr} | ${zStr} | ${rStr}`);
     }
 
     // Optional verification against checkIdentity
