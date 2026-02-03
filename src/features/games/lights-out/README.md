@@ -13,34 +13,6 @@ Instead of performing Gaussian elimination on a large $(mn) \times (mn)$ matrix 
 
 This efficiency allows the calculator to handle arbitrary grid sizes (e.g., $100 \times 100$) nearly instantly.
 
-#### Visualizing the Logic
-
-**1. Light Chasing (Row Reduction)**
-The core idea is that clicking a light in row $i+1$ is the _only_ way to toggle a light in row $i$ without affecting the rows above it.
-
-```mermaid
-graph TD
-    subgraph "Grid Reduction"
-    R1["Row 1 (Target)"] --- R2["Row 2 (Chaser)"]
-    R2 --- R3["Row 3"]
-    R3 --- RN["..."]
-    end
-    Note["Clicking Row 2 'clears' Row 1<br/>Repeat until only Bottom Row remains"]
-```
-
-**2. Path Graph $P_n$ (Column Interaction)**
-The tridiagonal matrix $A_n$ represents the adjacency of a path graph. Each node (light) in a row interacts with its neighbors.
-
-```mermaid
-graph LR
-    L1((1)) --- L2((2))
-    L2 --- L3((3))
-    L3 --- LN[...]
-    LN --- L_n((n))
-```
-
-_This structure is why $A_n$ has 1s on the super/sub-diagonals._
-
 ### Identity Matrix Property
 
 For certain grid dimensions ($m \times n$), the solver transformation behaves as an Identity Matrix over the field $\mathbb{F}_2$. This means that if the grid is reduced to a state where only the top row is active (the 'input'), the solution pattern required to clear the grid (the 'output') is identical to that input pattern.
