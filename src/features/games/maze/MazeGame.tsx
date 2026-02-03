@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { Grid, Box } from '../../../components/mui';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 import { COLORS } from '../../../config/theme';
-import { generateMaze, MazeData } from './mazeLogic';
+import { generateMaze, MazeData, MazeAlgorithm } from './mazeLogic';
 import { useWindow, useMobile } from '../../../hooks';
 import { createGlassMaterial, createDustParticles } from './visualUtils';
 
@@ -40,6 +40,7 @@ export default function MazeGame(): React.ReactElement {
     const [gameState, setGameState] = useState<'start' | 'playing' | 'won'>(
         'start'
     );
+    const [algorithm, _setAlgorithm] = useState<MazeAlgorithm>('backtracker');
     const gameStateRef = useRef(gameState);
 
     const { height, width } = useWindow();
@@ -67,10 +68,10 @@ export default function MazeGame(): React.ReactElement {
     }, [gameState]);
 
     const initMaze = useCallback(() => {
-        const newMaze = generateMaze(MAZE_SIZE, MAZE_SIZE);
+        const newMaze = generateMaze(MAZE_SIZE, MAZE_SIZE, algorithm);
         setMaze(newMaze);
         setGameState('playing');
-    }, []);
+    }, [algorithm]);
 
     // Auto-start on mount
     useEffect(() => {
