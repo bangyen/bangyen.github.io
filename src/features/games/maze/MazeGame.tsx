@@ -1,16 +1,14 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import * as THREE from 'three';
 import { Grid, Box } from '../../../components/mui';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 import { COLORS } from '../../../config/theme';
 import { generateMaze, MazeData, MazeAlgorithm } from './mazeLogic';
 import { useWindow, useMobile } from '../../../hooks';
-import { createGlassMaterial, createDustParticles } from './visualUtils';
 
 const MAZE_SIZE = 15;
-const CELL_SIZE = 2;
-const WALL_HEIGHT = 1.6;
-const PLAYER_SIZE = 0.4;
+const CELL_SIZE = 60; // Base pixel size for cells
+const PLAYER_RADIUS = 12;
+const WALL_THICKNESS = 4;
 
 interface JoystickState {
     active: boolean;
@@ -19,33 +17,25 @@ interface JoystickState {
 }
 
 export default function MazeGame(): React.ReactElement {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
     const containerRef = useRef<HTMLDivElement>(null);
-    const sceneRef = useRef<{
-        scene: THREE.Scene;
-        camera: THREE.OrthographicCamera;
-        renderer: THREE.WebGLRenderer;
-
-        player: THREE.Object3D;
-        // walls: THREE.Mesh[]; // Replaced with InstancedMesh
-        wallColliders: THREE.Box3[]; // Collision-only data
-
-        goalGroup: THREE.Group;
-        goalPrism: THREE.Mesh;
-        goalCore: THREE.Mesh;
-        light: THREE.PointLight;
-        particles: THREE.Points;
-    } | null>(null);
-
     const [maze, setMaze] = useState<MazeData | null>(null);
     const [gameState, setGameState] = useState<'start' | 'playing' | 'won'>(
         'start'
     );
     const [algorithm, _setAlgorithm] = useState<MazeAlgorithm>('backtracker');
-    const gameStateRef = useRef(gameState);
+
+    // Refs for simulation state to avoid re-renders
+    const stateRef = useRef({
+        player: { x: 0, y: 0, rotation: 0 },
+        goal: { x: 0, y: 0, rotation: 0 },
+        camera: { x: 0, y: 0 },
+        gameState: 'start',
+    });
 
     const { height, width } = useWindow();
     const isMobile = useMobile('sm');
-    const availableHeight = height - (isMobile ? 56 : 80); // Exact header heights
+    const availableHeight = height - (isMobile ? 56 : 80);
 
     // Pointer/Touch Input State
     const pointerState = useRef({
@@ -63,550 +53,368 @@ export default function MazeGame(): React.ReactElement {
             currentConfig: null,
         });
 
-    useEffect(() => {
-        gameStateRef.current = gameState;
-    }, [gameState]);
-
     const initMaze = useCallback(() => {
         const newMaze = generateMaze(MAZE_SIZE, MAZE_SIZE, algorithm);
         setMaze(newMaze);
+
+        // Initialize player and goal positions in pixel coordinates
+        stateRef.current.player = {
+            x: newMaze.start[1] * CELL_SIZE + CELL_SIZE / 2,
+            y: newMaze.start[0] * CELL_SIZE + CELL_SIZE / 2,
+            rotation: 0,
+        };
+        stateRef.current.goal = {
+            x: newMaze.end[1] * CELL_SIZE + CELL_SIZE / 2,
+            y: newMaze.end[0] * CELL_SIZE + CELL_SIZE / 2,
+            rotation: 0,
+        };
+
+        stateRef.current.gameState = 'playing';
         setGameState('playing');
     }, [algorithm]);
 
-    // Auto-start on mount
     useEffect(() => {
         initMaze();
     }, [initMaze]);
 
-    // Global keyboard controls (Start/Restart)
+    // Game Loop & Rendering
     useEffect(() => {
-        const handleGlobalKeyDown = (e: KeyboardEvent) => {
-            if (['enter', ' '].includes(e.key.toLowerCase())) {
-                if (gameState === 'start' || gameState === 'won') {
-                    e.preventDefault();
-                    initMaze();
-                }
-            }
-        };
-        window.addEventListener('keydown', handleGlobalKeyDown);
-        return () => {
-            window.removeEventListener('keydown', handleGlobalKeyDown);
-        };
-    }, [gameState, initMaze]);
+        if (!maze || gameState !== 'playing' || !canvasRef.current) return;
 
-    // Scene setup
-    useEffect(() => {
-        if (!containerRef.current || !maze || gameState !== 'playing') return;
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d', { alpha: true });
+        if (!ctx) return;
 
-        const scene = new THREE.Scene();
-        // scene.background is omitted to allow transparency (alpha: true)
-        scene.fog = new THREE.FogExp2(0x080808, 0.05);
-
-        // Orthographic Camera Setup
-        const aspect = width / availableHeight;
-        const viewSize = 18; // Amount of world units visible vertically
-        const camera = new THREE.OrthographicCamera(
-            (-viewSize * aspect) / 2,
-            (viewSize * aspect) / 2,
-            viewSize / 2,
-            -viewSize / 2,
-            0.1,
-            1000
-        );
-
-        const renderer = new THREE.WebGLRenderer({
-            antialias: !isMobile,
-            alpha: true,
-        });
-        renderer.setSize(width, availableHeight);
-        renderer.setPixelRatio(
-            Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2)
-        );
-        renderer.shadowMap.enabled = !isMobile;
-        renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-        containerRef.current.appendChild(renderer.domElement);
-
-        // Lights
-        const ambientLight = new THREE.AmbientLight(0x388bfd, 0.2); // Soft blue ambient
-        scene.add(ambientLight);
-
-        // Floor
-        const floorGeometry = new THREE.PlaneGeometry(
-            MAZE_SIZE * CELL_SIZE,
-            MAZE_SIZE * CELL_SIZE
-        );
-        const floorMaterial = new THREE.MeshStandardMaterial({
-            color: 0x111111, // Solid dark gray
-            roughness: 0.8,
-            metalness: 0.1,
-        });
-        const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-        floor.rotation.x = -Math.PI / 2;
-        floor.position.set(
-            (MAZE_SIZE * CELL_SIZE) / 2 - CELL_SIZE / 2,
-            0,
-            (MAZE_SIZE * CELL_SIZE) / 2 - CELL_SIZE / 2
-        );
-        floor.receiveShadow = true;
-        scene.add(floor);
-
-        // Walls (Instanced Rendering)
-        const wallColliders: THREE.Box3[] = [];
-        const glassMaterial = createGlassMaterial(COLORS.primary.main);
-
-        // Count total walls first to allocate InstancedMesh
-        let wallCount = 0;
-        maze.grid.forEach(row => {
-            row.forEach(cell => {
-                if (cell.walls.top) wallCount++;
-                if (cell.walls.bottom) wallCount++;
-                if (cell.walls.left) wallCount++;
-                if (cell.walls.right) wallCount++;
-            });
-        });
-
-        const wallGeometry = new THREE.BoxGeometry(1, 1, 1); // Unit cube, scaled later
-        const wallsInstance = new THREE.InstancedMesh(
-            wallGeometry,
-            glassMaterial,
-            wallCount
-        );
-        wallsInstance.castShadow = true;
-        wallsInstance.receiveShadow = true;
-        scene.add(wallsInstance);
-
-        const dummy = new THREE.Object3D();
-        let instanceIdx = 0;
-
-        maze.grid.forEach((row, r) => {
-            row.forEach((cell, c) => {
-                const x = c * CELL_SIZE;
-                const z = r * CELL_SIZE;
-
-                const addWall = (
-                    w: number,
-                    h: number,
-                    d: number,
-                    px: number,
-                    py: number,
-                    pz: number
-                ) => {
-                    // Physics (Collider)
-                    const wallBox = new THREE.Box3();
-                    wallBox.setFromCenterAndSize(
-                        new THREE.Vector3(px, py, pz),
-                        new THREE.Vector3(w, h, d)
-                    );
-                    wallColliders.push(wallBox);
-
-                    // Visual (Instanced Wall)
-                    dummy.position.set(px, py, pz);
-                    dummy.scale.set(w, h, d);
-                    dummy.updateMatrix();
-                    wallsInstance.setMatrixAt(instanceIdx, dummy.matrix);
-
-                    instanceIdx++;
-                };
-
-                if (cell.walls.top)
-                    addWall(
-                        CELL_SIZE + 0.2, // Overlap corners
-                        WALL_HEIGHT,
-                        0.25, // Thicker walls
-                        x,
-                        WALL_HEIGHT / 2,
-                        z - CELL_SIZE / 2
-                    );
-                if (cell.walls.bottom)
-                    addWall(
-                        CELL_SIZE + 0.2,
-                        WALL_HEIGHT,
-                        0.25,
-                        x,
-                        WALL_HEIGHT / 2,
-                        z + CELL_SIZE / 2
-                    );
-                if (cell.walls.left)
-                    addWall(
-                        0.25,
-                        WALL_HEIGHT,
-                        CELL_SIZE + 0.2,
-                        x - CELL_SIZE / 2,
-                        WALL_HEIGHT / 2,
-                        z
-                    );
-                if (cell.walls.right)
-                    addWall(
-                        0.25,
-                        WALL_HEIGHT,
-                        CELL_SIZE + 0.2,
-                        x + CELL_SIZE / 2,
-                        WALL_HEIGHT / 2,
-                        z
-                    );
-            });
-        });
-
-        // Player: Review Simple Aesthetic (Glowing Core + Wireframe Cage)
-        const playerBody = new THREE.Group();
-
-        // 1. The Glowing Core
-        const coreMesh = new THREE.Mesh(
-            new THREE.SphereGeometry(
-                PLAYER_SIZE * 0.8,
-                isMobile ? 16 : 32,
-                isMobile ? 16 : 32
-            ),
-            new THREE.MeshStandardMaterial({
-                color: COLORS.primary.main,
-                emissive: COLORS.primary.main,
-                emissiveIntensity: 2,
-                roughness: 1, // Remove specular highlight (glowing dot)
-                metalness: 0,
-            })
-        );
-        coreMesh.castShadow = false; // Emissive objects shouldn't cast dark shadows
-        playerBody.add(coreMesh);
-
-        // 2. The Wireframe Cage (for rotation visualization)
-        const cageMesh = new THREE.Mesh(
-            new THREE.IcosahedronGeometry(PLAYER_SIZE * 0.85, 1),
-            new THREE.MeshBasicMaterial({
-                color: 0xffffff,
-                wireframe: true,
-                transparent: true,
-                opacity: 0.7, // Make more visible
-            })
-        );
-        playerBody.add(cageMesh);
-
-        playerBody.position.set(
-            maze.start[1] * CELL_SIZE,
-            PLAYER_SIZE * 0.8 + 0.1,
-            maze.start[0] * CELL_SIZE
-        );
-        scene.add(playerBody);
-
-        const playerLight = new THREE.PointLight(COLORS.primary.main, 10, 15);
-        playerLight.position
-            .copy(playerBody.position)
-            .add(new THREE.Vector3(0, 1, 0));
-        playerLight.castShadow = !isMobile;
-        scene.add(playerLight);
-
-        const goalGroup = new THREE.Group();
-        goalGroup.position.set(
-            maze.end[1] * CELL_SIZE,
-            1, // Slightly higher base position
-            maze.end[0] * CELL_SIZE
-        );
-
-        // 1. Outer Shell (Icosahedron)
-        const goalPrism = new THREE.Mesh(
-            new THREE.IcosahedronGeometry(0.45, 0),
-            new THREE.MeshPhysicalMaterial({
-                color: 0x00ffff, // Cyan
-                metalness: 0.1,
-                roughness: 0,
-                transmission: 0.6, // Glassy
-                thickness: 2,
-                emissive: 0x00ffff,
-                emissiveIntensity: 0.6,
-                clearcoat: 1,
-                clearcoatRoughness: 0,
-            })
-        );
-        goalGroup.add(goalPrism);
-        goalPrism.castShadow = true;
-
-        // 2. Inner Core (Octahedron)
-        const goalCore = new THREE.Mesh(
-            new THREE.OctahedronGeometry(0.2),
-            new THREE.MeshBasicMaterial({
-                color: 0xffffff,
-                wireframe: true,
-            })
-        );
-        goalGroup.add(goalCore);
-
-        // 4. Point Light for the goal
-        const goalLight = new THREE.PointLight(0x00ffff, 10, 10);
-        goalGroup.add(goalLight);
-
-        // 5. Goal Particles (Concentrated energy) - REMOVED for simpler aesthetic
-        // const goalParticles = createDustParticles(200, 2);
-        // goalGroup.add(goalParticles);
-
-        scene.add(goalGroup);
-
-        // Particles
-        const particles = createDustParticles(600, 60);
-        scene.add(particles);
-
-        sceneRef.current = {
-            scene,
-            camera,
-            renderer,
-            player: playerBody,
-            wallColliders,
-
-            goalGroup,
-            goalPrism,
-            goalCore,
-            light: playerLight,
-            particles,
-        };
-
-        // Game Loop
         let animationId: number;
         const keys: Record<string, boolean> = {};
 
-        const handleKeyDown = (e: KeyboardEvent) =>
-            (keys[e.key.toLowerCase()] = true);
-        const handleKeyUp = (e: KeyboardEvent) =>
-            (keys[e.key.toLowerCase()] = false);
+        const handleKeyDown = (e: KeyboardEvent) => {
+            keys[e.key.toLowerCase()] = true;
+        };
+        const handleKeyUp = (e: KeyboardEvent) => {
+            keys[e.key.toLowerCase()] = false;
+        };
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
-
-        const handlePointerDown = (e: PointerEvent) => {
-            if (gameStateRef.current !== 'playing') return;
-            pointerState.current.isDown = true;
-            pointerState.current.startX = e.clientX;
-            pointerState.current.startY = e.clientY;
-            pointerState.current.currentX = e.clientX;
-            pointerState.current.currentY = e.clientY;
-
-            setVisualJoystickState({
-                active: true,
-                originConfig: { x: e.clientX, y: e.clientY },
-                currentConfig: { x: e.clientX, y: e.clientY },
-            });
-        };
-
-        const handlePointerMove = (e: PointerEvent) => {
-            if (!pointerState.current.isDown) return;
-            pointerState.current.currentX = e.clientX;
-            pointerState.current.currentY = e.clientY;
-
-            setVisualJoystickState(prev => {
-                if (!prev.originConfig) return prev;
-
-                const VISUAL_RADIUS = 50;
-                const dx = e.clientX - prev.originConfig.x;
-                const dy = e.clientY - prev.originConfig.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-
-                let x = e.clientX;
-                let y = e.clientY;
-
-                if (distance > VISUAL_RADIUS) {
-                    const ratio = VISUAL_RADIUS / distance;
-                    x = prev.originConfig.x + dx * ratio;
-                    y = prev.originConfig.y + dy * ratio;
-                }
-
-                return {
-                    ...prev,
-                    currentConfig: { x, y },
-                };
-            });
-        };
-
-        const handlePointerUp = () => {
-            pointerState.current.isDown = false;
-            pointerState.current.startX = 0;
-            pointerState.current.startY = 0;
-            pointerState.current.currentX = 0;
-            pointerState.current.currentY = 0;
-
-            setVisualJoystickState({
-                active: false,
-                originConfig: null,
-                currentConfig: null,
-            });
-        };
-
-        // Attach pointer events to the container
-        // Attach pointer events to the container
-        containerRef.current.addEventListener('pointerdown', handlePointerDown);
-        window.addEventListener('pointermove', handlePointerMove);
-        window.addEventListener('pointerup', handlePointerUp);
-
-        const xAxis = new THREE.Vector3(1, 0, 0);
-        const zAxis = new THREE.Vector3(0, 0, 1);
-        const lightOffset = new THREE.Vector3(0, 1, 0);
 
         const animate = (time: number) => {
             animationId = requestAnimationFrame(animate);
 
-            if (gameStateRef.current === 'playing') {
-                const moveSpeed = 0.085;
+            // 1. Simulation Logic
+            const moveSpeed = 4.5;
+            const kdx =
+                (keys.d || keys.arrowright ? 1 : 0) -
+                (keys.a || keys.arrowleft ? 1 : 0);
+            const kdy =
+                (keys.s || keys.arrowdown ? 1 : 0) -
+                (keys.w || keys.arrowup ? 1 : 0);
 
-                // Keyboard input
-                const kdx =
-                    (keys.d || keys.arrowright ? 1 : 0) -
-                    (keys.a || keys.arrowleft ? 1 : 0);
-                const kdz =
-                    (keys.s || keys.arrowdown ? 1 : 0) -
-                    (keys.w || keys.arrowup ? 1 : 0);
-
-                // Pointer/Touch input (Virtual Joystick)
-                let pdx = 0;
-                let pdz = 0;
-                const MAX_DRAG = 100; // Pixels to reach max speed
-
-                if (pointerState.current.isDown) {
-                    const diffX =
-                        pointerState.current.currentX -
-                        pointerState.current.startX;
-                    const diffY =
-                        pointerState.current.currentY -
-                        pointerState.current.startY;
-
-                    // Normalize roughly to -1 to 1 range based on drag distance
-                    pdx = Math.max(-1, Math.min(1, diffX / MAX_DRAG));
-                    pdz = Math.max(-1, Math.min(1, diffY / MAX_DRAG));
-                }
-
-                // Combine inputs (clamp magnitude to 1)
-                const dx = kdx + pdx;
-                const dz = kdz + pdz;
-
-                if (dx !== 0 || dz !== 0) {
-                    const length = Math.sqrt(dx * dx + dz * dz);
-                    const moveX = (dx / length) * moveSpeed;
-                    const moveZ = (dz / length) * moveSpeed;
-
-                    const checkCollision = (pos: THREE.Vector3) => {
-                        // Use the Box3 array for collision checks
-                        return wallColliders.some(wallBox => {
-                            const playerBox =
-                                new THREE.Box3().setFromCenterAndSize(
-                                    pos, // Sphere is centered
-                                    new THREE.Vector3(
-                                        PLAYER_SIZE * 1.6,
-                                        PLAYER_SIZE * 1.6,
-                                        PLAYER_SIZE * 1.6
-                                    )
-                                );
-                            return wallBox.intersectsBox(playerBox);
-                        });
-                    };
-
-                    if (dx !== 0) {
-                        const newPosX = playerBody.position.clone();
-                        newPosX.x += moveX;
-                        if (!checkCollision(newPosX))
-                            playerBody.position.x = newPosX.x;
-                    }
-                    if (dz !== 0) {
-                        const newPosZ = playerBody.position.clone();
-                        newPosZ.z += moveZ;
-                        if (!checkCollision(newPosZ))
-                            playerBody.position.z = newPosZ.z;
-                    }
-                }
-
-                // Rolling Animation
-                // Rotate around the axis perpendicular to motion
-                // Speed = distance / radius
-                const speedX = dx * moveSpeed;
-                const speedZ = dz * moveSpeed;
-                if (dx !== 0 || dz !== 0) {
-                    playerBody.rotateOnWorldAxis(xAxis, speedZ * 3.2); // 3.2 ≈ 1 / radius (0.3125)
-                    playerBody.rotateOnWorldAxis(zAxis, -speedX * 3.2);
-                }
-
-                // Win condition
-                const playerPos2D = new THREE.Vector2(
-                    playerBody.position.x,
-                    playerBody.position.z
+            let pdx = 0;
+            let pdy = 0;
+            const MAX_DRAG = 80;
+            if (pointerState.current.isDown) {
+                pdx = Math.max(
+                    -1,
+                    Math.min(
+                        1,
+                        (pointerState.current.currentX -
+                            pointerState.current.startX) /
+                            MAX_DRAG
+                    )
                 );
-                const goalPos2D = new THREE.Vector2(
-                    goalGroup.position.x,
-                    goalGroup.position.z
+                pdy = Math.max(
+                    -1,
+                    Math.min(
+                        1,
+                        (pointerState.current.currentY -
+                            pointerState.current.startY) /
+                            MAX_DRAG
+                    )
                 );
-
-                // Check distance and ensuring we haven't already won (to prevent spamming resets)
-                // We use a property on the goalGroup to track if it's been "collected" for this round
-                if (
-                    playerPos2D.distanceTo(goalPos2D) < 0.7 &&
-                    goalGroup.visible
-                ) {
-                    // "Collect" the goal visually
-                    goalGroup.visible = false;
-
-                    // Auto-restart after 1.5 seconds
-                    setTimeout(() => {
-                        initMaze();
-                    }, 1500);
-                }
-
-                // Breathing light & animation
-                playerBody.position.y =
-                    PLAYER_SIZE + 0.2 + Math.sin(time * 0.003) * 0.05;
-
-                // Sync light position (since it's no longer a child)
-                playerLight.position.copy(playerBody.position).add(lightOffset);
-
-                playerLight.intensity = 10 + Math.sin(time * 0.005) * 5;
-
-                // Dust motion
-                particles.rotation.y += 0.0005;
-
-                // Goal animation
-                goalPrism.rotation.x += 0.01;
-                goalPrism.rotation.y += 0.02;
-                goalCore.rotation.x -= 0.02; // Spin opposite
-                goalCore.rotation.z -= 0.01;
-
-                // Bobbing whole group
-                goalGroup.position.y = 1 + Math.sin(time * 0.003) * 0.15;
-
-                // Camera follow
-                camera.position.set(
-                    playerBody.position.x,
-                    20,
-                    playerBody.position.z
-                );
-                camera.lookAt(playerBody.position);
-
-                renderer.render(scene, camera);
             }
-        };
-        animate(0);
 
-        const container = containerRef.current;
+            const dx = kdx + pdx;
+            const dy = kdy + pdy;
+
+            if (dx !== 0 || dy !== 0) {
+                const angle = Math.atan2(dy, dx);
+                const mag = Math.min(1, Math.sqrt(dx * dx + dy * dy));
+                const vx = Math.cos(angle) * mag * moveSpeed;
+                const vy = Math.sin(angle) * mag * moveSpeed;
+
+                // Simple 2D Collision (Cell-based)
+                const nextX = stateRef.current.player.x + vx;
+                const nextY = stateRef.current.player.y + vy;
+
+                const canMoveTo = (px: number, py: number) => {
+                    const r = PLAYER_RADIUS + 2;
+                    const c = Math.floor(px / CELL_SIZE);
+                    const r_idx = Math.floor(py / CELL_SIZE);
+
+                    if (
+                        r_idx < 0 ||
+                        r_idx >= MAZE_SIZE ||
+                        c < 0 ||
+                        c >= MAZE_SIZE
+                    )
+                        return false;
+
+                    const cell = maze.grid[r_idx]?.[c];
+                    if (!cell) return false;
+
+                    // Distance to walls
+                    const left = c * CELL_SIZE;
+                    const right = (c + 1) * CELL_SIZE;
+                    const top = r_idx * CELL_SIZE;
+                    const bottom = (r_idx + 1) * CELL_SIZE;
+
+                    if (cell.walls.left && px - r < left) return false;
+                    if (cell.walls.right && px + r > right) return false;
+                    if (cell.walls.top && py - r < top) return false;
+                    if (cell.walls.bottom && py + r > bottom) return false;
+
+                    // Corner collisions (simplified)
+                    return true;
+                };
+
+                if (canMoveTo(nextX, stateRef.current.player.y))
+                    stateRef.current.player.x = nextX;
+                if (canMoveTo(stateRef.current.player.x, nextY))
+                    stateRef.current.player.y = nextY;
+
+                stateRef.current.player.rotation += mag * 0.15;
+            }
+
+            // Camera follow
+            stateRef.current.camera.x +=
+                (stateRef.current.player.x - stateRef.current.camera.x) * 0.1;
+            stateRef.current.camera.y +=
+                (stateRef.current.player.y - stateRef.current.camera.y) * 0.1;
+
+            // Win condition
+            const distToGoal = Math.sqrt(
+                Math.pow(
+                    stateRef.current.player.x - stateRef.current.goal.x,
+                    2
+                ) +
+                    Math.pow(
+                        stateRef.current.player.y - stateRef.current.goal.y,
+                        2
+                    )
+            );
+            if (distToGoal < 30 && stateRef.current.gameState === 'playing') {
+                stateRef.current.gameState = 'won';
+                setGameState('won');
+                setTimeout(() => {
+                    initMaze();
+                }, 1500);
+            }
+
+            // 2. Rendering Logic
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = width * dpr;
+            canvas.height = availableHeight * dpr;
+            ctx.scale(dpr, dpr);
+
+            ctx.clearRect(0, 0, width, availableHeight);
+
+            ctx.save();
+            ctx.translate(
+                width / 2 - stateRef.current.camera.x,
+                availableHeight / 2 - stateRef.current.camera.y
+            );
+
+            // Draw Background Grid
+            const GRID_SPACING = CELL_SIZE / 2;
+            const viewLeft = stateRef.current.camera.x - width / 2;
+            const viewRight = stateRef.current.camera.x + width / 2;
+            const viewTop = stateRef.current.camera.y - availableHeight / 2;
+            const viewBottom = stateRef.current.camera.y + availableHeight / 2;
+
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(56, 139, 253, 0.05)';
+            ctx.lineWidth = 1;
+            for (
+                let x = Math.floor(viewLeft / GRID_SPACING) * GRID_SPACING;
+                x <= viewRight;
+                x += GRID_SPACING
+            ) {
+                ctx.moveTo(x, viewTop);
+                ctx.lineTo(x, viewBottom);
+            }
+            for (
+                let y = Math.floor(viewTop / GRID_SPACING) * GRID_SPACING;
+                y <= viewBottom;
+                y += GRID_SPACING
+            ) {
+                ctx.moveTo(viewLeft, y);
+                ctx.lineTo(viewRight, y);
+            }
+            ctx.stroke();
+
+            // Draw Walls
+            ctx.strokeStyle = COLORS.primary.main;
+            ctx.lineWidth = WALL_THICKNESS;
+            ctx.lineCap = 'round';
+            ctx.shadowColor = COLORS.primary.main;
+            ctx.shadowBlur = isMobile ? 5 : 10;
+
+            maze.grid.forEach((row, r) => {
+                row.forEach((cell, c) => {
+                    const x = c * CELL_SIZE;
+                    const y = r * CELL_SIZE;
+
+                    ctx.beginPath();
+                    if (cell.walls.top) {
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(x + CELL_SIZE, y);
+                    }
+                    if (cell.walls.left) {
+                        ctx.moveTo(x, y);
+                        ctx.lineTo(x, y + CELL_SIZE);
+                    }
+                    // Outer bounds
+                    if (c === MAZE_SIZE - 1 && cell.walls.right) {
+                        ctx.moveTo(x + CELL_SIZE, y);
+                        ctx.lineTo(x + CELL_SIZE, y + CELL_SIZE);
+                    }
+                    if (r === MAZE_SIZE - 1 && cell.walls.bottom) {
+                        ctx.moveTo(x, y + CELL_SIZE);
+                        ctx.lineTo(x + CELL_SIZE, y + CELL_SIZE);
+                    }
+                    ctx.stroke();
+                });
+            });
+            ctx.shadowBlur = 0;
+
+            // Draw Goal
+            const goal = stateRef.current.goal;
+            goal.rotation += 0.02;
+            ctx.save();
+            ctx.translate(goal.x, goal.y);
+            ctx.rotate(goal.rotation);
+            ctx.fillStyle = '#00ffff';
+            ctx.shadowColor = '#00ffff';
+            ctx.shadowBlur = 15;
+            ctx.beginPath();
+            ctx.rect(-15, -15, 30, 30);
+            ctx.fill();
+            ctx.strokeStyle = '#fff';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            ctx.restore();
+
+            // Draw Player
+            const player = stateRef.current.player;
+            ctx.save();
+            ctx.translate(player.x, player.y);
+
+            // Glow
+            const gradient = ctx.createRadialGradient(
+                0,
+                0,
+                0,
+                0,
+                0,
+                PLAYER_RADIUS * 2
+            );
+            gradient.addColorStop(0, COLORS.primary.main);
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.globalAlpha = 0.5 + Math.sin(time * 0.005) * 0.2;
+            ctx.beginPath();
+            ctx.arc(0, 0, PLAYER_RADIUS * 2, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1.0;
+
+            // Core
+            ctx.fillStyle = COLORS.primary.main;
+            ctx.beginPath();
+            ctx.arc(0, 0, PLAYER_RADIUS, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Spinning "Wireframe"
+            ctx.rotate(player.rotation);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(-PLAYER_RADIUS, 0);
+            ctx.lineTo(PLAYER_RADIUS, 0);
+            ctx.moveTo(0, -PLAYER_RADIUS);
+            ctx.lineTo(0, PLAYER_RADIUS);
+            ctx.stroke();
+
+            ctx.restore();
+
+            ctx.restore();
+        };
+        requestAnimationFrame(animate);
+
         return () => {
             cancelAnimationFrame(animationId);
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
-            container.removeEventListener('pointerdown', handlePointerDown);
-            window.removeEventListener('pointermove', handlePointerMove);
-            window.removeEventListener('pointerup', handlePointerUp);
-            container.removeChild(renderer.domElement);
-            renderer.dispose();
         };
-    }, [maze, gameState, width, availableHeight, initMaze, isMobile]);
+    }, [maze, gameState, width, availableHeight, isMobile, initMaze]);
+
+    const handlePointerDown = (e: React.PointerEvent) => {
+        if (gameState !== 'playing') return;
+        pointerState.current.isDown = true;
+        pointerState.current.startX = e.clientX;
+        pointerState.current.startY = e.clientY;
+        pointerState.current.currentX = e.clientX;
+        pointerState.current.currentY = e.clientY;
+
+        setVisualJoystickState({
+            active: true,
+            originConfig: { x: e.clientX, y: e.clientY },
+            currentConfig: { x: e.clientX, y: e.clientY },
+        });
+    };
+
+    const handlePointerMove = (e: PointerEvent) => {
+        if (!pointerState.current.isDown) return;
+        pointerState.current.currentX = e.clientX;
+        pointerState.current.currentY = e.clientY;
+
+        setVisualJoystickState(prev => {
+            if (!prev.originConfig) return prev;
+            const VISUAL_RADIUS = 50;
+            const dx = e.clientX - prev.originConfig.x;
+            const dy = e.clientY - prev.originConfig.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            let x = e.clientX;
+            let y = e.clientY;
+            if (distance > VISUAL_RADIUS) {
+                const ratio = VISUAL_RADIUS / distance;
+                x = prev.originConfig.x + dx * ratio;
+                y = prev.originConfig.y + dy * ratio;
+            }
+            return { ...prev, currentConfig: { x, y } };
+        });
+    };
+
+    const handlePointerUp = () => {
+        pointerState.current.isDown = false;
+        setVisualJoystickState({
+            active: false,
+            originConfig: null,
+            currentConfig: null,
+        });
+    };
 
     useEffect(() => {
-        document.title = '3D Maze | Bangyen';
+        window.addEventListener('pointermove', handlePointerMove);
+        window.addEventListener('pointerup', handlePointerUp);
+        return () => {
+            window.removeEventListener('pointermove', handlePointerMove);
+            window.removeEventListener('pointerup', handlePointerUp);
+        };
     }, []);
 
     useEffect(() => {
-        if (sceneRef.current) {
-            const { camera, renderer } = sceneRef.current;
-            const aspect = width / availableHeight;
-            const viewSize = 18;
-            camera.left = (-viewSize * aspect) / 2;
-            camera.right = (viewSize * aspect) / 2;
-            camera.top = viewSize / 2;
-            camera.bottom = -viewSize / 2;
-            camera.updateProjectionMatrix();
-
-            renderer.setSize(width, availableHeight);
-        }
-    }, [width, availableHeight]);
+        document.title = '2D Maze | Bangyen';
+    }, []);
 
     return (
         <Grid
@@ -616,18 +424,26 @@ export default function MazeGame(): React.ReactElement {
             sx={{ background: COLORS.surface.background, overflow: 'hidden' }}
         >
             <GlobalHeader showHome={true} />
-
             <Box
                 ref={containerRef}
+                onPointerDown={handlePointerDown}
                 sx={{
                     flex: 1,
                     position: 'relative',
-                    cursor: gameState === 'playing' ? 'none' : 'default',
-                    touchAction: 'none', // Prevent scrolling while playing
+                    touchAction: 'none',
+                    backgroundColor: 'transparent',
                 }}
-            />
+            >
+                <canvas
+                    ref={canvasRef}
+                    style={{
+                        display: 'block',
+                        width: '100%',
+                        height: '100%',
+                    }}
+                />
+            </Box>
 
-            {/* Visual Joystick */}
             {visualJoystickState.active &&
                 visualJoystickState.originConfig &&
                 visualJoystickState.currentConfig && (
@@ -642,7 +458,6 @@ export default function MazeGame(): React.ReactElement {
                             zIndex: 20,
                         }}
                     >
-                        {/* Base */}
                         <Box
                             sx={{
                                 position: 'absolute',
@@ -657,7 +472,6 @@ export default function MazeGame(): React.ReactElement {
                                 background: `radial-gradient(circle, ${COLORS.primary.main} 0%, transparent 70%)`,
                             }}
                         />
-                        {/* Stick */}
                         <Box
                             sx={{
                                 position: 'absolute',
