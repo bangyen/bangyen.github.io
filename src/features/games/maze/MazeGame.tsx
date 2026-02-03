@@ -144,7 +144,7 @@ export default function MazeGame(): React.ReactElement {
             // 1. Simulation Logic
             const ACCEL = 1.2 * dt;
             const FRICTION = Math.pow(0.88, dt);
-            const BOUNCE = 0.5;
+            const BOUNCE = 0.8;
 
             const kdx =
                 (keys.d || keys.arrowright ? 1 : 0) -
