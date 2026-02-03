@@ -115,7 +115,7 @@ function main() {
     const zHeader = 'Period'.padStart(maxZWidth);
     console.log(` ${nHeader} | ${zHeader} | Remainders`);
     console.log(
-        '-'.repeat(maxNWidth + 1) +
+        '-'.repeat(maxNWidth + 2) +
             '|' +
             '-'.repeat(maxZWidth + 2) +
             '|' +
