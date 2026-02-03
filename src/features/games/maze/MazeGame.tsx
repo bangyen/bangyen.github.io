@@ -253,10 +253,10 @@ export default function MazeGame(): React.ReactElement {
             ctx.stroke();
 
             // Draw Walls
-            ctx.strokeStyle = COLORS.text.secondary;
+            ctx.strokeStyle = 'hsl(0, 0%, 60%)'; // Concrete color for canvas
             ctx.lineWidth = WALL_THICKNESS;
             ctx.lineCap = 'round';
-            ctx.shadowColor = COLORS.text.secondary;
+            ctx.shadowColor = 'hsl(0, 0%, 60%)';
             ctx.shadowBlur = isMobile ? 3 : 5;
 
             maze.grid.forEach((row, r) => {
