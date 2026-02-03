@@ -43,24 +43,49 @@ It is a known result that the characteristic polynomial of $A_n$ over $\mathbb{F
 Therefore, the condition is equivalent to:
 $$ F_{n+1}(x) \mid (F_{m+1}(x+1) + 1) $$
 
-### Observed Results
+### Key Observations
 
-This condition holds for the following verified grid sizes (among others):
+1.  **Directionality (Non-Symmetry)**: Unlike general grid solvability (which is symmetric), the **Identity Matrix property is non-symmetric**. A grid that acts as the identity in one orientation may not do so when transposed.
+    *   **Example**: A $4 \text{ (rows)} \times 1 \text{ (col)}$ grid is an identity grid, but a $1 \times 4$ grid is not.
+    *   **Example**: The $12 \times 8$ grid is an identity grid, but its transpose ($8 \times 12$) is not.
+2.  **Evenness Constraint**: For all verified column widths $n \ge 2$, the identity property only holds for **even row counts** ($m$).
 
-- **12 rows x 8 columns** (The original observed case)
-- **Even rows x 1 or 2 columns**: Always holds.
-- **22 rows x 7 cols**
-- **24 rows x 5 cols**
-- **30 rows x 5 cols**
+### Empirically Verified Grid Dimensions
 
-Generally, solutions for $n \ge 2$ appear to require $m$ to be even.
+The following grid sizes ($m$ rows $\times$ $n$ columns) have been verified to act as an Identity Matrix.
+
+> [!NOTE]
+> These periodicity patterns are **empirically derived** and have been verified for grid heights up to **$m = 600$**. While they appear robust, they should be considered experimental observations until formally proven.
+
+| Columns ($n$) | Periodicity ($m \pmod z \in R_n$) |
+| :--- | :--- |
+| **1** | $m \pmod 3 \in \{0, 1\}$ |
+| **2** | $m \pmod 2 \in \{0\}$ |
+| **3** | $m \pmod {12} \in \{0, 10\}$ |
+| **4** | $m \pmod {10} \in \{0, 8\}$ |
+| **5** | $m \pmod {24} \in \{0, 6, 16, 22\}$ |
+| **6** | $m \pmod {18} \in \{0, 16\}$ |
+| **7** | $m \pmod {24} \in \{0, 22\}$ |
+| **8** | $m \pmod {14} \in \{0, 12\}$ |
+| **9** | $m \pmod {60} \in \{0, 18, 40, 58\}$ |
+| **10** | $m \pmod {62} \in \{0, 60\}$ |
 
 ## Verification
 
-To empirically verify these findings, you can run the provided verification script. This script iterates through grid dimensions and checks if the Identity Matrix property holds.
+We provide two scripts to verify these findings:
+
+### 1. Basic Verification
+Iterates through grid dimensions and checks if the Identity Matrix property holds. This is useful for exploring individual grid sizes.
 
 ```bash
 npx tsx src/features/games/lights-out/scripts/verify_identity.ts [max_size]
+```
+
+### 2. Theory & Periodicity Verification (Optimized)
+Uses **Matrix Binary Exponentiation** to verify the modular patterns ($m \pmod z$) across very large ranges (logarithmic time). This script validates the theoretical patterns documented in the table above.
+
+```bash
+npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts [m_limit]
 ```
 
 Example (search up to 50x50):

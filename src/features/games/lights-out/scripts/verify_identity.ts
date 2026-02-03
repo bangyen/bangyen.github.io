@@ -13,6 +13,12 @@
 */
 
 function getMatrix(cols: number): number[] {
+    // Special case for n=1: L_1 = [1] (1x1 matrix)
+    // The general formula 7 << (cols-2) fails for cols=1 due to negative shift
+    if (cols === 1) {
+        return [1];
+    }
+
     const first = 7 << (cols - 2);
     const matrix = [first];
 
