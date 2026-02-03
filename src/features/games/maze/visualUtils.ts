@@ -5,13 +5,11 @@ import * as THREE from 'three';
  */
 export function createGlassMaterial(
     color: number | string = 0x388bfd
-): THREE.MeshPhysicalMaterial {
-    return new THREE.MeshPhysicalMaterial({
+): THREE.MeshStandardMaterial {
+    return new THREE.MeshStandardMaterial({
         color: color,
         metalness: 0,
         roughness: 0.2, // Slightly smoother
-        transmission: 0, // No real refractive glass effect for performance/cleanliness
-        thickness: 0,
         transparent: false, // Fix overlap brightness
         opacity: 1,
         emissive: color,

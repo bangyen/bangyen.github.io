@@ -115,12 +115,14 @@ export default function MazeGame(): React.ReactElement {
         );
 
         const renderer = new THREE.WebGLRenderer({
-            antialias: true,
+            antialias: !isMobile,
             alpha: true,
         });
         renderer.setSize(width, availableHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-        renderer.shadowMap.enabled = true;
+        renderer.setPixelRatio(
+            Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2)
+        );
+        renderer.shadowMap.enabled = !isMobile;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         containerRef.current.appendChild(renderer.domElement);
 
@@ -250,7 +252,11 @@ export default function MazeGame(): React.ReactElement {
 
         // 1. The Glowing Core
         const coreMesh = new THREE.Mesh(
-            new THREE.SphereGeometry(PLAYER_SIZE * 0.8, 32, 32),
+            new THREE.SphereGeometry(
+                PLAYER_SIZE * 0.8,
+                isMobile ? 16 : 32,
+                isMobile ? 16 : 32
+            ),
             new THREE.MeshStandardMaterial({
                 color: COLORS.primary.main,
                 emissive: COLORS.primary.main,
@@ -285,7 +291,7 @@ export default function MazeGame(): React.ReactElement {
         playerLight.position
             .copy(playerBody.position)
             .add(new THREE.Vector3(0, 1, 0));
-        playerLight.castShadow = true;
+        playerLight.castShadow = !isMobile;
         scene.add(playerLight);
 
         const goalGroup = new THREE.Group();
@@ -581,7 +587,7 @@ export default function MazeGame(): React.ReactElement {
             container.removeChild(renderer.domElement);
             renderer.dispose();
         };
-    }, [maze, gameState, width, availableHeight, initMaze]);
+    }, [maze, gameState, width, availableHeight, initMaze, isMobile]);
 
     useEffect(() => {
         document.title = '3D Maze | Bangyen';
