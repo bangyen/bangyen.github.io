@@ -339,22 +339,54 @@ export default function MazeGame(): React.ReactElement {
             ctx.stroke();
             ctx.restore();
 
-            // Draw Player Trail
+            // Draw Player Trail (Smoothed)
             const trailPoints = stateRef.current.trail;
-            if (trailPoints.length > 1) {
+            const len = trailPoints.length;
+            if (len > 2) {
                 ctx.save();
                 ctx.beginPath();
                 ctx.strokeStyle = COLORS.data.amber;
                 ctx.lineWidth = PLAYER_RADIUS;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
-                trailPoints.forEach((p, i) => {
-                    ctx.globalAlpha = (i / trailPoints.length) * 0.3;
-                    if (i === 0) ctx.moveTo(p.x, p.y);
-                    else ctx.lineTo(p.x, p.y);
-                });
-                ctx.stroke();
+
+                // Start from first point
+                const start = trailPoints[0];
+                if (start) {
+                    ctx.moveTo(start.x, start.y);
+
+                    // Use quadratic curves through midpoints for smoothing
+                    for (let i = 1; i < len - 1; i++) {
+                        const p1 = trailPoints[i];
+                        const p2 = trailPoints[i + 1];
+                        if (p1 && p2) {
+                            const xc = (p1.x + p2.x) / 2;
+                            const yc = (p1.y + p2.y) / 2;
+                            ctx.globalAlpha = (i / len) * 0.3;
+                            ctx.quadraticCurveTo(p1.x, p1.y, xc, yc);
+                            ctx.stroke();
+                            ctx.beginPath();
+                            ctx.moveTo(xc, yc);
+                        }
+                    }
+                }
                 ctx.restore();
+            } else if (len > 1) {
+                // Fallback for very short trails
+                const p1 = trailPoints[0];
+                const p2 = trailPoints[1];
+                if (p1 && p2) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.strokeStyle = COLORS.data.amber;
+                    ctx.lineWidth = PLAYER_RADIUS;
+                    ctx.lineCap = 'round';
+                    ctx.globalAlpha = 0.15;
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.stroke();
+                    ctx.restore();
+                }
             }
 
             // Draw Player
