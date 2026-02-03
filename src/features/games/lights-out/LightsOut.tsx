@@ -1,6 +1,18 @@
-import React, { useMemo, useEffect, useReducer } from 'react';
+import React, {
+    useMemo,
+    useEffect,
+    useReducer,
+    useState,
+    useCallback,
+} from 'react';
 import { Grid, Box } from '../../../components/mui';
-import { MenuBookRounded, CircleRounded } from '../../../components/icons';
+import {
+    MenuBookRounded,
+    CircleRounded,
+    AddRounded,
+    RemoveRounded,
+    EmojiEventsRounded,
+} from '../../../components/icons';
 import { Controls } from '../../../components/ui/Controls';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { Board, useHandler, usePalette, Getters } from '../components/Board';
@@ -11,6 +23,7 @@ import {
     getGrid,
     handleBoard,
     getNextMove,
+    isSolved,
     BoardAction,
 } from './boardHandlers';
 import { useWindow, useMobile } from '../../../hooks';
@@ -20,7 +33,11 @@ import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 
 function getFrontProps(
     getters: Getters,
-    dispatch: (action: BoardAction) => void
+    dispatch: (action: BoardAction) => void,
+    isDragging = false,
+    setIsDragging: (val: boolean) => void = () => undefined,
+    draggedCells = new Set<string>(),
+    addDraggedCell: (pos: string) => void = () => undefined
 ) {
     const { getColor, getBorder } = getters;
 
@@ -35,10 +52,20 @@ function getFrontProps(
     return (row: number, col: number) => {
         const style = getBorder(row, col);
         const { front, back } = getColor(row, col);
+        const pos = `${row.toString()},${col.toString()}`;
 
         return {
-            onClick: () => {
+            onMouseDown: (e: React.MouseEvent) => {
+                if (e.button !== 0) return; // Only left click
+                setIsDragging(true);
                 flipAdj(row, col);
+                addDraggedCell(pos);
+            },
+            onMouseEnter: () => {
+                if (isDragging && !draggedCells.has(pos)) {
+                    flipAdj(row, col);
+                    addDraggedCell(pos);
+                }
             },
             children: <CircleRounded />,
             backgroundColor: front,
@@ -63,13 +90,21 @@ function getBackProps(getters: Getters) {
 }
 
 function getExampleProps(getters: Getters) {
-    const frontProps = getFrontProps(getters, () => undefined);
+    const frontProps = getFrontProps(
+        getters,
+        () => undefined,
+        false,
+        () => undefined,
+        new Set(),
+        () => undefined
+    );
 
     return (row: number, col: number) => {
         const props = frontProps(row, col);
         return {
             ...props,
-            onClick: undefined,
+            onMouseDown: undefined,
+            onMouseEnter: undefined,
             sx: undefined,
         };
     };
@@ -82,39 +117,108 @@ export default function LightsOut(): React.ReactElement {
         ? GAME_CONSTANTS.gridSizes.mobile
         : GAME_CONSTANTS.gridSizes.desktop;
 
-    let { rows, cols } = useMemo(() => {
+    const [manualRows, setManualRows] = useState<number | null>(() => {
+        const saved = localStorage.getItem('lights-out-rows');
+        return saved ? parseInt(saved, 10) : null;
+    });
+    const [manualCols, setManualCols] = useState<number | null>(() => {
+        const saved = localStorage.getItem('lights-out-cols');
+        return saved ? parseInt(saved, 10) : null;
+    });
+
+    const dynamicSize = useMemo(() => {
         const headerOffset = mobile
             ? LAYOUT.headerHeight.xs
             : LAYOUT.headerHeight.md;
-        return convertPixels(
+        const converted = convertPixels(
             size,
             height - headerOffset,
             Math.min(width, 1300)
         );
+
+        let r = converted.rows - 1;
+        const c = converted.cols - 1;
+        if (mobile) r -= 2;
+
+        return { rows: Math.max(2, r), cols: Math.max(2, c) };
     }, [size, height, width, mobile]);
 
-    rows -= 1;
-    cols -= 1;
+    const { rows, cols } = useMemo(() => {
+        if (manualRows !== null && manualCols !== null) {
+            return { rows: manualRows, cols: manualCols };
+        }
+        return dynamicSize;
+    }, [manualRows, manualCols, dynamicSize]);
 
-    if (mobile) rows -= 2;
-
-    const initial = {
-        grid: getGrid(rows, cols),
-        score: 0,
-        rows,
-        cols,
-        auto: false,
-    };
+    const initial = useMemo(
+        () => ({
+            grid: getGrid(rows, cols),
+            score: 0,
+            rows,
+            cols,
+            auto: false,
+            initialized: false,
+        }),
+        [rows, cols]
+    );
 
     const [state, dispatch] = useReducer(handleBoard, initial);
 
     const [open, toggleOpen] = useReducer((open: boolean) => !open, false);
 
+    const [isDragging, setIsDragging] = useState(false);
+    const [draggedCells, setDraggedCells] = useState(new Set<string>());
+
+    const addDraggedCell = useCallback((pos: string) => {
+        setDraggedCells(prev => new Set(prev).add(pos));
+    }, []);
+
+    useEffect(() => {
+        const handleMouseUp = () => {
+            setIsDragging(false);
+            setDraggedCells(new Set());
+        };
+
+        window.addEventListener('mouseup', handleMouseUp);
+        return () => {
+            window.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, []);
+
     const palette = usePalette(state.score);
+
+    const solved = useMemo(
+        () => state.initialized && isSolved(state.grid),
+        [state.initialized, state.grid]
+    );
+
+    const handleNext = useCallback(() => {
+        dispatch({ type: 'next' });
+    }, []);
+
+    useEffect(() => {
+        if (solved) {
+            const timeout = setTimeout(() => {
+                handleNext();
+            }, 2000);
+            return () => {
+                clearTimeout(timeout);
+            };
+        }
+    }, [solved, handleNext]);
 
     useEffect(() => {
         document.title = PAGE_TITLES.lightsOut;
     }, []);
+
+    useEffect(() => {
+        if (manualRows !== null) {
+            localStorage.setItem('lights-out-rows', manualRows.toString());
+        }
+        if (manualCols !== null) {
+            localStorage.setItem('lights-out-cols', manualCols.toString());
+        }
+    }, [manualRows, manualCols]);
 
     useEffect(() => {
         dispatch({
@@ -168,11 +272,38 @@ export default function LightsOut(): React.ReactElement {
         };
     }, [state.auto, state.grid, moveQueue]);
 
+    const handlePlus = () => {
+        if (rows < dynamicSize.rows && cols < dynamicSize.cols) {
+            setManualRows(rows + 1);
+            setManualCols(cols + 1);
+        }
+    };
+
+    const handleMinus = () => {
+        const minDim = Math.min(rows, cols);
+        if (rows !== cols) {
+            setManualRows(minDim);
+            setManualCols(minDim);
+        } else {
+            const nextDim = Math.max(2, minDim - 1);
+            setManualRows(nextDim);
+            setManualCols(nextDim);
+        }
+    };
+
     const getters = useHandler(state, palette);
 
-    const frontProps = getFrontProps(getters, action => {
-        dispatch(action);
-    });
+    const frontProps = getFrontProps(
+        getters,
+        action => {
+            if (solved) return;
+            dispatch(action);
+        },
+        isDragging,
+        setIsDragging,
+        draggedCells,
+        addDraggedCell
+    );
     const backProps = getBackProps(getters);
 
     return (
@@ -183,6 +314,8 @@ export default function LightsOut(): React.ReactElement {
             sx={{
                 background: COLORS.surface.background,
                 position: 'relative',
+                overflow: 'hidden',
+                height: '100vh', // Force height to prevent dynamic resizing
             }}
         >
             <GlobalHeader
@@ -196,18 +329,53 @@ export default function LightsOut(): React.ReactElement {
                     width: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'flex-start',
+                    justifyContent: 'center',
                     alignItems: 'center',
-                    paddingTop: 6,
+                    overflow: 'hidden',
                 }}
             >
-                <Board
-                    size={size}
-                    rows={rows}
-                    cols={cols}
-                    frontProps={frontProps}
-                    backProps={backProps}
-                />
+                <Box
+                    sx={{
+                        position: 'relative',
+                        marginTop: mobile ? '-28px' : '-40px',
+                    }}
+                >
+                    <Board
+                        size={size}
+                        rows={rows}
+                        cols={cols}
+                        frontProps={frontProps}
+                        backProps={backProps}
+                    />
+                    <Box
+                        onClick={handleNext}
+                        sx={{
+                            position: 'absolute',
+                            inset: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: solved ? 1 : 0,
+                            transform: solved ? 'scale(1)' : 'scale(0.5)',
+                            visibility: solved ? 'visible' : 'hidden',
+                            transition:
+                                'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                            cursor: 'pointer',
+                            zIndex: 10,
+                            backgroundColor: solved
+                                ? 'rgba(0,0,0,0.1)'
+                                : 'transparent',
+                        }}
+                    >
+                        <EmojiEventsRounded
+                            sx={{
+                                fontSize: { xs: '6rem', sm: '10rem' },
+                                color: COLORS.primary.main,
+                                filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))',
+                            }}
+                        />
+                    </Box>
+                </Box>
             </Box>
             <Controls
                 handler={() => () => undefined} // No directional controls for Lights Out
@@ -217,21 +385,37 @@ export default function LightsOut(): React.ReactElement {
                 autoPlayEnabled={state.auto}
             >
                 <TooltipButton
+                    title="Decrease Size"
+                    Icon={RemoveRounded}
+                    onClick={handleMinus}
+                    disabled={rows <= 2 && cols <= 2}
+                />
+                <TooltipButton
+                    title="Increase Size"
+                    Icon={AddRounded}
+                    onClick={handlePlus}
+                    disabled={
+                        rows >= dynamicSize.rows || cols >= dynamicSize.cols
+                    }
+                />
+                <TooltipButton
                     title="How to Play"
                     Icon={MenuBookRounded}
                     onClick={toggleOpen}
                 />
             </Controls>
-            <Info
-                rows={rows}
-                cols={cols}
-                size={size}
-                open={open}
-                palette={palette}
-                toggleOpen={toggleOpen}
-                getFrontProps={getExampleProps}
-                getBackProps={getBackProps}
-            />
+            {open && (
+                <Info
+                    rows={rows}
+                    cols={cols}
+                    size={size}
+                    open={open}
+                    palette={palette}
+                    toggleOpen={toggleOpen}
+                    getFrontProps={getExampleProps}
+                    getBackProps={getBackProps}
+                />
+            )}
         </Grid>
     );
 }

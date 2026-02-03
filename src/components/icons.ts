@@ -64,6 +64,8 @@ export {
     LightModeRounded,
     DarkModeRounded,
     DevicesRounded,
+    AddRounded,
+    RemoveRounded,
 } from '@mui/icons-material';
 
 // Code Icons

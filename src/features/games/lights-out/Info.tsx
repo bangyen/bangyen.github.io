@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Backdrop,
     Modal,
@@ -64,24 +64,52 @@ export default function Info(props: InfoProps): React.ReactElement {
     // Calculator State (hoisted to persist across steps)
     const [calcRow, setCalcRow] = useState<number[]>(Array(cols).fill(0));
 
+    const [isDragging, setIsDragging] = useState(false);
+    const [draggedCols, setDraggedCols] = useState(new Set<number>());
+
     useEffect(() => {
         setCalcRow(Array(cols).fill(0));
     }, [cols, palette]); // Reset only on config change
 
+    useEffect(() => {
+        const handleMouseUp = () => {
+            setIsDragging(false);
+            setDraggedCols(new Set());
+        };
+
+        window.addEventListener('mouseup', handleMouseUp);
+        return () => {
+            window.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, []);
+
     const res = getProduct(calcRow, rows, cols);
 
-    const toggleTile = (col: number) => (event: React.MouseEvent) => {
-        event.stopPropagation();
-        const newRow = [...calcRow];
-        if (newRow[col] !== undefined) {
-            newRow[col] ^= 1;
-        }
-        setCalcRow(newRow);
-    };
+    const toggleTile = useCallback(
+        (col: number) => {
+            const newRow = [...calcRow];
+            if (newRow[col] !== undefined) {
+                newRow[col] ^= 1;
+            }
+            setCalcRow(newRow);
+        },
+        [calcRow]
+    );
+
+    const addDraggedCol = useCallback((col: number) => {
+        setDraggedCols(prev => new Set(prev).add(col));
+    }, []);
 
     const inputGetters = useHandler(calcRow, cols, palette);
     const outputGetters = useHandler(res, cols, palette);
-    const inputProps = getInput(inputGetters, toggleTile);
+    const inputProps = getInput(
+        inputGetters,
+        toggleTile,
+        isDragging,
+        setIsDragging,
+        draggedCols,
+        addDraggedCol
+    );
     const outputProps = getOutput(outputGetters);
 
     // Reset functionality
@@ -156,7 +184,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                     <Box
                         sx={{
                             flex: 1,
-                            overflowY: 'auto',
+                            overflowY: step === 1 ? 'hidden' : 'auto',
                             p: { xs: 2.5, md: 3 }, // balanced padding
                             display: 'flex',
                             flexDirection: 'column',

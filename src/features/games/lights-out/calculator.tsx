@@ -4,7 +4,11 @@ import { useGetters, Getters, Palette } from '../components/Board';
 
 export function getInput(
     getters: Getters,
-    toggleTile: (col: number) => (event: React.MouseEvent) => void
+    toggleTile: (col: number) => void,
+    isDragging = false,
+    setIsDragging: (val: boolean) => void = () => undefined,
+    draggedCols = new Set<number>(),
+    addDraggedCol: (col: number) => void = () => undefined
 ) {
     const { getColor, getBorder } = getters;
 
@@ -14,7 +18,18 @@ export function getInput(
         return {
             backgroundColor: front,
             style: getBorder(r, c),
-            onClick: toggleTile(c),
+            onMouseDown: (e: React.MouseEvent) => {
+                if (e.button !== 0) return;
+                setIsDragging(true);
+                toggleTile(c);
+                addDraggedCol(c);
+            },
+            onMouseEnter: () => {
+                if (isDragging && !draggedCols.has(c)) {
+                    toggleTile(c);
+                    addDraggedCol(c);
+                }
+            },
             sx: {
                 '&:hover': {
                     cursor: 'pointer',
@@ -34,6 +49,8 @@ export function getOutput({ getColor, getBorder }: Getters) {
 
         return {
             backgroundColor: front,
+            color: front,
+            children: <CircleRounded />,
             style: getBorder(r, c),
             sx: {
                 transition: 'all 200ms ease',

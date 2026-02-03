@@ -1,3 +1,5 @@
+import { getProduct } from './matrices';
+
 export function getGrid(rows: number, cols: number): number[][] {
     return Array.from({ length: rows }, () => Array(cols).fill(0) as number[]);
 }
@@ -51,77 +53,58 @@ export function isSolved(grid: number[][]): boolean {
 }
 
 function randomize(rows: number, cols: number): number[][] {
-    let grid = getGrid(rows, cols);
+    const grid = getGrid(rows, cols);
 
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
-            const random = Math.random();
+            if (Math.random() > 0.5) {
+                // Inline flipAdj logic to avoid cloning grid in every iteration
+                const neighbors = [
+                    [r, c],
+                    [r - 1, c],
+                    [r + 1, c],
+                    [r, c - 1],
+                    [r, c + 1],
+                ];
 
-            if (random > 0.5) grid = flipAdj(r, c, grid);
+                for (const neighbor of neighbors) {
+                    const nr = neighbor[0];
+                    const nc = neighbor[1];
+                    if (
+                        nr !== undefined &&
+                        nc !== undefined &&
+                        nr >= 0 &&
+                        nr < rows &&
+                        nc >= 0 &&
+                        nc < cols
+                    ) {
+                        const rowArr = grid[nr];
+                        if (rowArr && nc >= 0 && nc < rowArr.length) {
+                            const val = rowArr[nc];
+                            if (val !== undefined) {
+                                rowArr[nc] = val ^ 1;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
     return grid;
 }
 
-// Memoization for solver tables: "rows,cols" -> map of "bottomRowStr" -> "topRowIndices"
-const solverCache: Record<string, Record<string, number[]>> = {};
-
 function solveLastRow(
     rows: number,
     cols: number,
     lastRow: number[]
 ): number[] | null {
-    const key = `${rows.toString()},${cols.toString()}`;
-
-    if (!solverCache[key]) {
-        // Build the lookup table for this grid size
-        const map: Record<string, number[]> = {};
-        const max = 1 << cols;
-
-        for (let i = 0; i < max; i++) {
-            // Create a board with top row set to 'i'
-            let grid = getGrid(rows, cols);
-            const topRowIndices: number[] = [];
-
-            for (let c = 0; c < cols; c++) {
-                if ((i >> c) & 1) {
-                    grid = flipAdj(0, c, grid); // Toggle to set initial state correctly?
-                    // Actually, we want to simulate "clicking" the top row.
-                    // But flipAdj toggles neighbors too.
-                    // The standard algorithm says: "Clicking top row buttons induces a state at the bottom".
-                    // So yes, we just simulate clicks.
-                    topRowIndices.push(c);
-                }
-            }
-
-            // Chase down
-            for (let r = 0; r < rows - 1; r++) {
-                const currentRow = grid[r];
-                const nextRow = grid[r + 1];
-                if (!currentRow || !nextRow) continue;
-
-                for (let c = 0; c < cols; c++) {
-                    if (currentRow[c] === 1) {
-                        grid = flipAdj(r + 1, c, grid);
-                    }
-                }
-            }
-
-            // Record resulting bottom row
-            const finalBottomRow = grid[rows - 1];
-            if (finalBottomRow) {
-                const bottomStr = finalBottomRow.join('');
-                map[bottomStr] ??= topRowIndices;
-            }
-        }
-        solverCache[key] = map;
-    }
-
-    const currentBottomStr = lastRow.join('');
-    const cache = solverCache[key];
-    const result = cache[currentBottomStr] ?? null;
-    return result;
+    const solution = getProduct(lastRow, rows, cols);
+    const indices: number[] = [];
+    solution.forEach((val, col) => {
+        if (val === 1) indices.push(col);
+    });
+    return indices.length > 0 ? indices : null;
 }
 
 export function getNextMove(
@@ -162,6 +145,7 @@ export interface BoardState {
     rows: number;
     cols: number;
     auto: boolean;
+    initialized: boolean;
 }
 
 export interface BoardAction {
@@ -179,7 +163,7 @@ export function handleBoard(
 ): BoardState {
     const { type, row, col, moves } = action;
 
-    let { grid, score, rows, cols, auto } = state;
+    let { grid, score, rows, cols, auto, initialized } = state;
 
     switch (type) {
         case 'auto':
@@ -188,11 +172,6 @@ export function handleBoard(
         case 'adjacent': {
             if (row !== undefined && col !== undefined) {
                 grid = flipAdj(row, col, grid);
-
-                if (isSolved(grid)) {
-                    grid = randomize(rows, cols);
-                    score += 1;
-                }
             }
             break;
         }
@@ -201,11 +180,6 @@ export function handleBoard(
                 moves.forEach(m => {
                     grid = flipAdj(m.row, m.col, grid);
                 });
-
-                if (isSolved(grid)) {
-                    grid = randomize(rows, cols);
-                    score += 1;
-                }
             }
             break;
         case 'random':
@@ -221,6 +195,7 @@ export function handleBoard(
                 cols = newCols;
                 grid = randomize(rows, cols);
                 auto = false;
+                initialized = true; // Mark as initialized
             }
             break;
         }
@@ -229,9 +204,20 @@ export function handleBoard(
             score = 0;
             auto = false;
             break;
+        case 'next':
+            grid = randomize(rows, cols);
+            score += 1;
+            break;
         default:
             break;
     }
 
-    return { grid, score, rows, cols, auto };
+    return {
+        grid,
+        score,
+        rows,
+        cols,
+        auto,
+        initialized: initialized || false,
+    };
 }
