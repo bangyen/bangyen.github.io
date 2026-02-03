@@ -119,7 +119,7 @@ export default function MazeGame(): React.ReactElement {
             alpha: true,
         });
         renderer.setSize(width, availableHeight);
-        renderer.setPixelRatio(window.devicePixelRatio);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         containerRef.current.appendChild(renderer.domElement);
