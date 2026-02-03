@@ -197,11 +197,16 @@ function main() {
         const limit = parseInt(limitArg, 10);
         console.log(`\nVerifying patterns up to m=${limit}...\n`);
 
+        // Calculate max n width for alignment
+        const maxN = Math.max(...nRange.filter(n => !isNaN(n)));
+        const nWidth = maxN.toString().length;
+
         for (const n of nRange) {
             if (isNaN(n)) continue;
             const pattern = findPattern(n);
 
-            process.stdout.write(`n=${n}: `);
+            const nStr = n.toString().padStart(nWidth);
+            process.stdout.write(`n=${nStr}: `);
             let allPass = true;
             for (let m = 1; m <= limit; m++) {
                 const expectPass = pattern.R.includes(m % pattern.z);
