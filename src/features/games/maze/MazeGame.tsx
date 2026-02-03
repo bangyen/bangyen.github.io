@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
-import { Grid, Box, Typography, Button, Fade } from '../../../components/mui';
+import { Grid, Box } from '../../../components/mui';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
-import { GlassCard } from '../../../components/ui/GlassCard';
-import { COLORS, TYPOGRAPHY, SPACING } from '../../../config/theme';
+import { COLORS } from '../../../config/theme';
 import { generateMaze, MazeData } from './mazeLogic';
 import { useWindow, useMobile } from '../../../hooks';
 import {
@@ -30,7 +29,7 @@ export default function MazeGame(): React.ReactElement {
         camera: THREE.PerspectiveCamera;
         renderer: THREE.WebGLRenderer;
 
-        player: THREE.Mesh;
+        player: THREE.Object3D;
         // walls: THREE.Mesh[]; // Replaced with InstancedMesh
         wallColliders: THREE.Box3[]; // Collision-only data
 
@@ -76,6 +75,11 @@ export default function MazeGame(): React.ReactElement {
         setMaze(newMaze);
         setGameState('playing');
     }, []);
+
+    // Auto-start on mount
+    useEffect(() => {
+        initMaze();
+    }, [initMaze]);
 
     // Global keyboard controls (Start/Restart)
     useEffect(() => {
@@ -260,18 +264,35 @@ export default function MazeGame(): React.ReactElement {
             });
         });
 
-        // Player: Rolling Sphere (Marble)
-        const playerBody = new THREE.Mesh(
+        // Player: Review Simple Aesthetic (Glowing Core + Wireframe Cage)
+        const playerBody = new THREE.Group();
+
+        // 1. The Glowing Core
+        const coreMesh = new THREE.Mesh(
             new THREE.SphereGeometry(PLAYER_SIZE * 0.8, 32, 32),
-            new THREE.MeshPhysicalMaterial({
+            new THREE.MeshStandardMaterial({
                 color: COLORS.primary.main,
-                metalness: 0.8,
-                roughness: 0.1,
-                transmission: 0,
-                clearcoat: 1,
+                emissive: COLORS.primary.main,
+                emissiveIntensity: 2,
+                roughness: 1, // Remove specular highlight (glowing dot)
+                metalness: 0,
             })
         );
-        playerBody.castShadow = true;
+        coreMesh.castShadow = true;
+        playerBody.add(coreMesh);
+
+        // 2. The Wireframe Cage (for rotation visualization)
+        const cageMesh = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(PLAYER_SIZE * 0.85, 1),
+            new THREE.MeshBasicMaterial({
+                color: 0xffffff,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.7, // Make more visible
+            })
+        );
+        playerBody.add(cageMesh);
+
         playerBody.position.set(
             maze.start[1] * CELL_SIZE,
             PLAYER_SIZE * 0.8 + 0.1,
@@ -325,9 +346,9 @@ export default function MazeGame(): React.ReactElement {
         const goalLight = new THREE.PointLight(0x00ffff, 10, 10);
         goalGroup.add(goalLight);
 
-        // 5. Goal Particles (Concentrated energy)
-        const goalParticles = createDustParticles(200, 2);
-        goalGroup.add(goalParticles);
+        // 5. Goal Particles (Concentrated energy) - REMOVED for simpler aesthetic
+        // const goalParticles = createDustParticles(200, 2);
+        // goalGroup.add(goalParticles);
 
         scene.add(goalGroup);
 
@@ -518,8 +539,20 @@ export default function MazeGame(): React.ReactElement {
                     goalGroup.position.x,
                     goalGroup.position.z
                 );
-                if (playerPos2D.distanceTo(goalPos2D) < 0.7) {
-                    setGameState('won');
+
+                // Check distance and ensuring we haven't already won (to prevent spamming resets)
+                // We use a property on the goalGroup to track if it's been "collected" for this round
+                if (
+                    playerPos2D.distanceTo(goalPos2D) < 0.7 &&
+                    goalGroup.visible
+                ) {
+                    // "Collect" the goal visually
+                    goalGroup.visible = false;
+
+                    // Auto-restart after 1.5 seconds
+                    setTimeout(() => {
+                        initMaze();
+                    }, 1500);
                 }
 
                 // Breathing light & animation
@@ -651,66 +684,6 @@ export default function MazeGame(): React.ReactElement {
                         />
                     </Box>
                 )}
-
-            {(gameState === 'start' || gameState === 'won') && (
-                <Fade in>
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: '50%',
-                            left: '50%',
-                            transform: 'translate(-50%, -50%)',
-                            zIndex: 10,
-                            width: '90%',
-                            maxWidth: '400px',
-                        }}
-                    >
-                        <GlassCard
-                            sx={{
-                                p: 4,
-                                textAlign: 'center',
-                                border: `1px solid ${COLORS.primary.main}44`,
-                            }}
-                        >
-                            <Typography
-                                variant="h2"
-                                sx={{
-                                    color: COLORS.primary.main,
-                                    mb: 1,
-                                    fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                }}
-                            >
-                                {gameState === 'start'
-                                    ? '3D Maze'
-                                    : 'Goal Reached!'}
-                            </Typography>
-                            <Typography
-                                variant="body1"
-                                sx={{ color: COLORS.text.secondary, mb: 4 }}
-                            >
-                                {gameState === 'start'
-                                    ? 'Navigate the crystalline labyrinth. Use WASD or Arrows.'
-                                    : 'You have mastered the path through the lights.'}
-                            </Typography>
-                            <Button
-                                variant="contained"
-                                size="large"
-                                onClick={initMaze}
-                                sx={{
-                                    py: 1.5,
-                                    px: 6,
-                                    borderRadius: SPACING.borderRadius.full,
-                                    boxShadow: `0 0 20px ${COLORS.primary.main}44`,
-                                }}
-                            >
-                                {gameState === 'start'
-                                    ? 'Initialize'
-                                    : 'Pulse Again'}
-                            </Button>
-                        </GlassCard>
-                    </Box>
-                </Fade>
-            )}
         </Grid>
     );
 }
