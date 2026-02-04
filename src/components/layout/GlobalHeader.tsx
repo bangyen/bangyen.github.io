@@ -13,7 +13,6 @@ interface GlobalHeaderProps {
     infoUrl?: string;
     transparent?: boolean;
 }
-
 export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
     showHome = false,
     githubUrl = URLS.githubProfile,

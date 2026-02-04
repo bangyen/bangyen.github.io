@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
     Backdrop,
     Modal,
@@ -15,12 +15,14 @@ import {
     NavigateNextRounded,
     CloseRounded,
     Refresh,
+    MenuBookRounded,
 } from '../../../components/icons';
 import { COLORS } from '../../../config/theme';
 import { GlassCard } from '../../../components/ui/GlassCard';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { getProduct } from './matrices';
 import { useMobile } from '../../../hooks';
+import { ROUTES } from '../../../config/constants';
 import Example from './Example';
 import { getInput, getOutput, useHandler } from './calculator';
 import { Palette, PropsFactory } from '../components/Board';
@@ -65,25 +67,12 @@ export default function Info(props: InfoProps): React.ReactElement {
     const [calcRow, setCalcRow] = useState<number[]>(Array(cols).fill(0));
 
     const [isDragging, setIsDragging] = useState(false);
-    const [draggedCols, setDraggedCols] = useState(new Set<number>());
+    const draggedCols = useRef(new Set<number>());
+    const lastTouchTime = useRef(0);
 
     useEffect(() => {
         setCalcRow(Array(cols).fill(0));
     }, [cols, palette]); // Reset only on config change
-
-    useEffect(() => {
-        const handleMouseUp = () => {
-            setIsDragging(false);
-            setDraggedCols(new Set());
-        };
-
-        window.addEventListener('mouseup', handleMouseUp);
-        return () => {
-            window.removeEventListener('mouseup', handleMouseUp);
-        };
-    }, []);
-
-    const res = getProduct(calcRow, rows, cols);
 
     const toggleTile = useCallback(
         (col: number) => {
@@ -96,8 +85,56 @@ export default function Info(props: InfoProps): React.ReactElement {
         [calcRow]
     );
 
+    const res = getProduct(calcRow, rows, cols);
+
+    useEffect(() => {
+        const handleStopDragging = () => {
+            setIsDragging(false);
+            draggedCols.current.clear();
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            if (!isDragging || step !== 2) return;
+
+            const touch = e.touches[0];
+            if (!touch) return;
+
+            const element = document.elementFromPoint(
+                touch.clientX,
+                touch.clientY
+            );
+            if (!element) return;
+
+            const cell = element.closest('[data-col]');
+            if (cell) {
+                const colAttr = cell.getAttribute('data-col');
+                if (colAttr !== null) {
+                    const col = parseInt(colAttr, 10);
+                    if (!draggedCols.current.has(col)) {
+                        toggleTile(col);
+                        draggedCols.current.add(col);
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('mouseup', handleStopDragging);
+        window.addEventListener('touchend', handleStopDragging);
+        window.addEventListener('touchcancel', handleStopDragging);
+        window.addEventListener('touchmove', handleTouchMove, {
+            passive: false,
+        });
+
+        return () => {
+            window.removeEventListener('mouseup', handleStopDragging);
+            window.removeEventListener('touchend', handleStopDragging);
+            window.removeEventListener('touchcancel', handleStopDragging);
+            window.removeEventListener('touchmove', handleTouchMove);
+        };
+    }, [isDragging, step, toggleTile]);
+
     const addDraggedCol = useCallback((col: number) => {
-        setDraggedCols(prev => new Set(prev).add(col));
+        draggedCols.current.add(col);
     }, []);
 
     const inputGetters = useHandler(calcRow, cols, palette);
@@ -108,7 +145,8 @@ export default function Info(props: InfoProps): React.ReactElement {
         isDragging,
         setIsDragging,
         draggedCols,
-        addDraggedCol
+        addDraggedCol,
+        lastTouchTime
     );
     const outputProps = getOutput(outputGetters);
 
@@ -129,6 +167,48 @@ export default function Info(props: InfoProps): React.ReactElement {
     const handleClose = () => {
         toggleOpen();
     };
+
+    const href = `#${ROUTES.pages.LightsOutResearch}`;
+    let analysisButton;
+
+    if (isMobile) {
+        analysisButton = (
+            <IconButton
+                component="a"
+                href={href}
+                size="small"
+                sx={{
+                    color: COLORS.text.secondary,
+                }}
+            >
+                <MenuBookRounded />
+            </IconButton>
+        );
+    } else {
+        analysisButton = (
+            <Button
+                component="a"
+                href={href}
+                variant="outlined"
+                size="small"
+                startIcon={<MenuBookRounded />}
+                sx={{
+                    borderColor: COLORS.border.subtle,
+                    color: COLORS.text.secondary,
+                    fontSize: '0.75rem',
+                    py: 0.75,
+                    px: 1.5,
+                    '&:hover': {
+                        borderColor: COLORS.primary.main,
+                        color: COLORS.primary.main,
+                        backgroundColor: COLORS.interactive.hover,
+                    },
+                }}
+            >
+                Analysis
+            </Button>
+        );
+    }
 
     return (
         <Modal
@@ -201,15 +281,24 @@ export default function Info(props: InfoProps): React.ReactElement {
                             }}
                         >
                             <StepTitle>{INFO_TITLES[step]}</StepTitle>
-                            <IconButton
-                                onClick={handleClose}
-                                size="small"
+                            <Box
                                 sx={{
-                                    color: COLORS.text.secondary,
+                                    display: 'flex',
+                                    gap: 2,
+                                    alignItems: 'center',
                                 }}
                             >
-                                <CloseRounded />
-                            </IconButton>
+                                {analysisButton}
+                                <IconButton
+                                    onClick={handleClose}
+                                    size="small"
+                                    sx={{
+                                        color: COLORS.text.secondary,
+                                    }}
+                                >
+                                    <CloseRounded />
+                                </IconButton>
+                            </Box>
                         </Box>
                         {/* Step 0: Instructions */}
                         {step === 0 && (

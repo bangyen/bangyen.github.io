@@ -16,13 +16,20 @@ export {
     LastPageRounded,
     NavigateBeforeRounded,
     NavigateNextRounded,
+    ArrowBackRounded,
 } from '@mui/icons-material';
 
 // Social Icons
 export { GitHub } from '@mui/icons-material';
 
 // Action Icons
-export { Refresh, OpenInNew, ArrowForward } from '@mui/icons-material';
+export {
+    Refresh,
+    RefreshRounded,
+    OpenInNew,
+    ArrowForward,
+    LaunchRounded,
+} from '@mui/icons-material';
 
 // Game Icons
 export {
@@ -66,6 +73,7 @@ export {
     DevicesRounded,
     AddRounded,
     RemoveRounded,
+    ScreenRotationRounded,
 } from '@mui/icons-material';
 
 // Code Icons
@@ -74,6 +82,7 @@ export {
     DataArrayRounded,
     PlusOneRounded,
     EmojiEventsRounded,
+    HelpOutlineRounded,
 } from '@mui/icons-material';
 
 // Dashboard & Charts Icons

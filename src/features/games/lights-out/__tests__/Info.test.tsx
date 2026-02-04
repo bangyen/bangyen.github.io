@@ -13,17 +13,68 @@ jest.mock(
 jest.mock('../../../../components/ui/GlassCard', () => ({
     GlassCard: function MockGlassCard({
         children,
+        sx,
+        onClick,
     }: {
         children: React.ReactNode;
+        sx?: React.CSSProperties;
+        onClick?: (event: React.MouseEvent) => void;
     }) {
-        return <div>{children}</div>;
+        return (
+            <div
+                data-testid="glass-card"
+                onClick={onClick}
+                onKeyDown={e => {
+                    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+                        onClick(e as unknown as React.MouseEvent);
+                    }
+                }}
+                role="button"
+                tabIndex={0}
+                style={sx}
+            >
+                {children}
+            </div>
+        );
     },
 }));
 jest.mock('../../../../hooks', () => ({
-    useMobile: () => false,
+    useMobile: jest.fn(() => false),
 }));
 jest.mock('../matrices', () => ({
     getProduct: jest.fn(() => [0, 0, 0]),
+}));
+
+// Mock MUI components
+jest.mock('../../../../components/mui', () => {
+    const actual = jest.requireActual<Record<string, unknown>>(
+        '../../../../components/mui'
+    );
+    return {
+        ...actual,
+        Modal: ({
+            children,
+            open,
+        }: {
+            children: React.ReactNode;
+            open: boolean;
+        }) => (open ? <div data-testid="modal">{children}</div> : null),
+        Backdrop: () => <div data-testid="backdrop" />,
+    };
+});
+
+// Mock Icons
+jest.mock('../../../../components/icons', () => ({
+    KeyboardArrowDown: () => <div data-testid="keyboardarrowdown-icon" />,
+    Calculate: () => <div data-testid="calculate-icon" />,
+    Replay: () => <div data-testid="replay-icon" />,
+    NavigateBeforeRounded: () => (
+        <div data-testid="navigatebeforerounded-icon" />
+    ),
+    NavigateNextRounded: () => <div data-testid="navigatenextrounded-icon" />,
+    CloseRounded: () => <div data-testid="closerounded-icon" />,
+    Refresh: () => <div data-testid="refresh-icon" />,
+    MenuBookRounded: () => <div data-testid="menubookrounded-icon" />,
 }));
 
 // Mock calculator helpers
@@ -56,9 +107,19 @@ describe('Lights Out Info Component', () => {
         mockUseHandler.mockReturnValue({}); // simplistic mock
         // Mock getInput to return a function that returns props with onClick
         mockGetInput.mockImplementation(
-            (_getters: unknown, toggleTile: (c: number) => () => void) => {
+            (
+                _getters: unknown,
+                toggleTile: (c: number) => void,
+                _isDragging: boolean,
+                _setIsDragging: (v: boolean) => void,
+                _draggedCols: React.RefObject<Set<number>>,
+                _addDraggedCol: (c: number) => void,
+                _lastTouchTime: React.RefObject<number>
+            ) => {
                 return (_r: number, c: number) => ({
-                    onClick: toggleTile(c),
+                    onMouseDown: () => {
+                        toggleTile(c);
+                    },
                     'data-testid': `input-cell-${String(c)}`,
                 });
             }
@@ -100,13 +161,9 @@ describe('Lights Out Info Component', () => {
 
         // We mocked getInput to return elements with testid 'input-cell-{c}'
         const cell0 = screen.getByTestId('input-cell-0');
-        fireEvent.click(cell0);
+        fireEvent.mouseDown(cell0);
 
-        // This should trigger state update.
-        // We can verify getProduct is called with updated row?
-        // getProduct is called during render.
-        // It's hard to verify internal state directly without inspecting effect or rerender.
-        // But we can verify no crash.
+        // Verify no crash and potential verification of state if needed
     });
 
     it('closes modal on Close button click', () => {

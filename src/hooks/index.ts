@@ -7,3 +7,4 @@ export { useWindow } from './useWindow';
 export { useMobile, useContainer } from './layout';
 export type { Size, RefObject } from './layout';
 export * from '../features/quiz/hooks/quiz';
+export { useGyroscope } from './useGyroscope';

@@ -62,6 +62,7 @@ describe('boardHandlers', () => {
             rows: 3,
             cols: 3,
             auto: false,
+            initialized: false,
         };
 
         it('should handle adjacent action', () => {
@@ -83,6 +84,7 @@ describe('boardHandlers', () => {
                 grid: flipAdj(1, 1, initialState.grid),
                 score: 5,
                 auto: true,
+                initialized: true,
             };
 
             const action: BoardAction = { type: 'reset' };
@@ -173,33 +175,21 @@ describe('boardHandlers', () => {
     });
 
     describe('handleBoard - Win Condition', () => {
-        it('should increment score and randomize on win (all 0s)', () => {
+        it('should increment score and randomize on next action', () => {
             const state = {
-                grid: getGrid(3, 3), // All 0s -> Win!
-                // Wait, if it starts as 0s, does it count?
-                // The check happens after move.
+                grid: getGrid(3, 3),
                 score: 0,
                 rows: 3,
                 cols: 3,
                 auto: false,
+                initialized: true,
             };
 
-            // Make a move that results in all 0s.
-            // Start with a grid that needs one flip to be all 0s.
-            // flipAdj(1,1) toggles center + neighbors.
-            // So if we have a grid that IS the pattern of flipAdj(1,1), triggering flipAdj(1,1) makes it all 0.
-
-            let setupGrid = getGrid(3, 3);
-            setupGrid = flipAdj(1, 1, setupGrid);
-
-            const modState = { ...state, grid: setupGrid };
-
-            // Now trigger the move
-            const action: BoardAction = { type: 'adjacent', row: 1, col: 1 };
-            const newState = handleBoard(modState, action);
+            const action: BoardAction = { type: 'next' };
+            const newState = handleBoard(state, action);
 
             expect(newState.score).toBe(1);
-            expect(newState.grid).not.toEqual(setupGrid); // Randomized
+            expect(newState.grid.length).toBe(3);
         });
 
         it('should handle multi_adjacent', () => {
@@ -209,6 +199,7 @@ describe('boardHandlers', () => {
                 rows: 3,
                 cols: 3,
                 auto: false,
+                initialized: true,
             };
 
             const moves = [

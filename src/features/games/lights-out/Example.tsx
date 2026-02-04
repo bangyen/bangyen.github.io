@@ -470,13 +470,26 @@ export default function Example({
                                     zIndex: 10,
                                 }}
                             >
-                                <EmojiEventsRounded
-                                    sx={{
-                                        fontSize: { xs: '2.5rem', sm: '4rem' },
-                                        color: COLORS.primary.main,
-                                        filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))',
-                                    }}
-                                />
+                                {(() => {
+                                    const finalState =
+                                        boardStates[inputStates.length - 1];
+                                    const allOn = finalState
+                                        ?.flat()
+                                        .every((cell: number) => cell === 1);
+                                    return (
+                                        <EmojiEventsRounded
+                                            sx={{
+                                                fontSize: {
+                                                    xs: '2.5rem',
+                                                    sm: '4rem',
+                                                },
+                                                color: allOn
+                                                    ? palette.secondary
+                                                    : palette.primary,
+                                            }}
+                                        />
+                                    );
+                                })()}
                             </Box>
                         </Box>
                     </Grid>

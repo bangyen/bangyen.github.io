@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { Grid, Box } from '../../../components/mui';
+import { IconButton, Tooltip, Box, Grid } from '../../../components/mui';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 import { COLORS } from '../../../config/theme';
+import { ScreenRotationRounded } from '../../../components/icons';
 import { generateMaze, MazeData, MazeAlgorithm } from './mazeLogic';
-import { useWindow, useMobile } from '../../../hooks';
+import { useWindow, useMobile, useGyroscope } from '../../../hooks';
 
 const MAZE_SIZE = 21;
 
@@ -21,6 +22,29 @@ export default function MazeGame(): React.ReactElement {
         'start'
     );
     const [algorithm, _setAlgorithm] = useState<MazeAlgorithm>('backtracker');
+    const {
+        dx: gdx,
+        dy: gdy,
+        requestPermission,
+        stopListening,
+        isActive: gyroActive,
+    } = useGyroscope();
+
+    // Use refs for gyro values to avoid dependency loop in animate useEffect
+    const gyroRef = useRef({ gdx: 0, gdy: 0, active: false });
+    useEffect(() => {
+        gyroRef.current = { gdx, gdy, active: gyroActive };
+    }, [gdx, gdy, gyroActive]);
+
+    const toggleGyro = async () => {
+        if (gyroActive) {
+            stopListening();
+        } else {
+            await requestPermission();
+        }
+    };
+
+    // ... (rest of the file remains same, but we will update the dy/dx usage in animate)
 
     // Refs for simulation state to avoid re-renders
     const stateRef = useRef({
@@ -201,8 +225,20 @@ export default function MazeGame(): React.ReactElement {
                 );
             }
 
-            const dx = kdx + pdx;
-            const dy = kdy + pdy;
+            const dx =
+                kdx +
+                (pointerState.current.isDown
+                    ? pdx
+                    : gyroRef.current.active
+                      ? gyroRef.current.gdx
+                      : 0);
+            const dy =
+                kdy +
+                (pointerState.current.isDown
+                    ? pdy
+                    : gyroRef.current.active
+                      ? gyroRef.current.gdy
+                      : 0);
 
             // Apply inputs to velocity
             stateRef.current.player.vx += dx * ACCEL;
@@ -691,6 +727,43 @@ export default function MazeGame(): React.ReactElement {
                     backgroundColor: 'transparent',
                 }}
             >
+                {isMobile && (
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: 16,
+                            right: 16,
+                            zIndex: 10,
+                        }}
+                    >
+                        <Tooltip
+                            title={gyroActive ? 'Disable Gyro' : 'Enable Gyro'}
+                        >
+                            <IconButton
+                                onClick={() => {
+                                    void toggleGyro();
+                                }}
+                                sx={{
+                                    backgroundColor: gyroActive
+                                        ? COLORS.primary.main
+                                        : 'rgba(255, 255, 255, 0.1)',
+                                    color: gyroActive ? '#000' : '#fff',
+                                    '&:hover': {
+                                        backgroundColor: gyroActive
+                                            ? COLORS.primary.dark
+                                            : 'rgba(255, 255, 255, 0.2)',
+                                    },
+                                    boxShadow: gyroActive
+                                        ? `0 0 10px ${COLORS.primary.main}`
+                                        : 'none',
+                                    transition: 'all 0.2s ease',
+                                }}
+                            >
+                                <ScreenRotationRounded />
+                            </IconButton>
+                        </Tooltip>
+                    </Box>
+                )}
                 <canvas
                     ref={canvasRef}
                     style={{

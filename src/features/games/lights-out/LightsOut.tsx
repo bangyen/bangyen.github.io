@@ -4,6 +4,7 @@ import React, {
     useReducer,
     useState,
     useCallback,
+    useRef,
 } from 'react';
 import { Grid, Box } from '../../../components/mui';
 import {
@@ -36,8 +37,9 @@ function getFrontProps(
     dispatch: (action: BoardAction) => void,
     isDragging = false,
     setIsDragging: (val: boolean) => void = () => undefined,
-    draggedCells = new Set<string>(),
-    addDraggedCell: (pos: string) => void = () => undefined
+    draggedCells: React.RefObject<Set<string>>,
+    addDraggedCell: (pos: string) => void = () => undefined,
+    lastTouchTime: React.RefObject<number>
 ) {
     const { getColor, getBorder } = getters;
 
@@ -57,16 +59,27 @@ function getFrontProps(
         return {
             onMouseDown: (e: React.MouseEvent) => {
                 if (e.button !== 0) return; // Only left click
+                // Ignore ghost clicks on mobile
+                if (Date.now() - lastTouchTime.current < 500) return;
                 setIsDragging(true);
                 flipAdj(row, col);
                 addDraggedCell(pos);
             },
             onMouseEnter: () => {
-                if (isDragging && !draggedCells.has(pos)) {
+                if (isDragging && !draggedCells.current.has(pos)) {
                     flipAdj(row, col);
                     addDraggedCell(pos);
                 }
             },
+            onTouchStart: (e: React.TouchEvent) => {
+                // Prevent ghost mouse events and scrolling
+                if (e.cancelable) e.preventDefault();
+                lastTouchTime.current = Date.now();
+                setIsDragging(true);
+                flipAdj(row, col);
+                addDraggedCell(pos);
+            },
+            'data-pos': pos,
             children: <CircleRounded />,
             backgroundColor: front,
             color: front,
@@ -76,6 +89,8 @@ function getFrontProps(
                     cursor: 'pointer',
                     color: back,
                 },
+                touchAction: 'none', // Prevent scrolling while dragging
+                transition: 'all 100ms ease-in-out',
             },
         };
     };
@@ -95,8 +110,9 @@ function getExampleProps(getters: Getters) {
         () => undefined,
         false,
         () => undefined,
-        new Set(),
-        () => undefined
+        { current: new Set() } as React.RefObject<Set<string>>,
+        () => undefined,
+        { current: 0 } as React.RefObject<number>
     );
 
     return (row: number, col: number) => {
@@ -117,13 +133,9 @@ export default function LightsOut(): React.ReactElement {
         ? GAME_CONSTANTS.gridSizes.mobile
         : GAME_CONSTANTS.gridSizes.desktop;
 
-    const [manualRows, setManualRows] = useState<number | null>(() => {
-        const saved = localStorage.getItem('lights-out-rows');
-        return saved ? parseInt(saved, 10) : null;
-    });
-    const [manualCols, setManualCols] = useState<number | null>(() => {
-        const saved = localStorage.getItem('lights-out-cols');
-        return saved ? parseInt(saved, 10) : null;
+    const [desiredSize, setDesiredSize] = useState<number | null>(() => {
+        const saved = localStorage.getItem('lights-out-size');
+        return saved && saved !== 'null' ? parseInt(saved, 10) : null;
     });
 
     const dynamicSize = useMemo(() => {
@@ -144,11 +156,16 @@ export default function LightsOut(): React.ReactElement {
     }, [size, height, width, mobile]);
 
     const { rows, cols } = useMemo(() => {
-        if (manualRows !== null && manualCols !== null) {
-            return { rows: manualRows, cols: manualCols };
-        }
-        return dynamicSize;
-    }, [manualRows, manualCols, dynamicSize]);
+        if (desiredSize === null) return dynamicSize;
+        return {
+            rows: Math.min(desiredSize, dynamicSize.rows),
+            cols: Math.min(desiredSize, dynamicSize.cols),
+        };
+    }, [desiredSize, dynamicSize]);
+
+    useEffect(() => {
+        localStorage.setItem('lights-out-size', String(desiredSize));
+    }, [desiredSize]);
 
     const initial = useMemo(
         () => ({
@@ -167,28 +184,73 @@ export default function LightsOut(): React.ReactElement {
     const [open, toggleOpen] = useReducer((open: boolean) => !open, false);
 
     const [isDragging, setIsDragging] = useState(false);
-    const [draggedCells, setDraggedCells] = useState(new Set<string>());
+    const draggedCells = useRef(new Set<string>());
+    const lastTouchTime = useRef(0);
 
     const addDraggedCell = useCallback((pos: string) => {
-        setDraggedCells(prev => new Set(prev).add(pos));
+        draggedCells.current.add(pos);
     }, []);
 
     useEffect(() => {
-        const handleMouseUp = () => {
+        const handleStopDragging = () => {
             setIsDragging(false);
-            setDraggedCells(new Set());
+            draggedCells.current.clear();
         };
 
-        window.addEventListener('mouseup', handleMouseUp);
-        return () => {
-            window.removeEventListener('mouseup', handleMouseUp);
+        const handleTouchMove = (e: TouchEvent) => {
+            if (!isDragging) return;
+
+            const touch = e.touches[0];
+            if (!touch) return;
+
+            const element = document.elementFromPoint(
+                touch.clientX,
+                touch.clientY
+            );
+            if (!element) return;
+
+            // Find the cell element (either the div itself or its parent/child)
+            const cell = element.closest('[data-pos]');
+            if (cell) {
+                const pos = cell.getAttribute('data-pos');
+                if (pos && !draggedCells.current.has(pos)) {
+                    const [r, c] = pos.split(',').map(Number);
+                    if (r !== undefined && c !== undefined) {
+                        dispatch({
+                            type: 'adjacent',
+                            row: r,
+                            col: c,
+                        });
+                        addDraggedCell(pos);
+                    }
+                }
+            }
         };
-    }, []);
+
+        window.addEventListener('mouseup', handleStopDragging);
+        window.addEventListener('touchend', handleStopDragging);
+        window.addEventListener('touchcancel', handleStopDragging);
+        window.addEventListener('touchmove', handleTouchMove, {
+            passive: false,
+        });
+
+        return () => {
+            window.removeEventListener('mouseup', handleStopDragging);
+            window.removeEventListener('touchend', handleStopDragging);
+            window.removeEventListener('touchcancel', handleStopDragging);
+            window.removeEventListener('touchmove', handleTouchMove);
+        };
+    }, [isDragging, draggedCells, addDraggedCell, dispatch]);
 
     const palette = usePalette(state.score);
 
     const solved = useMemo(
         () => state.initialized && isSolved(state.grid),
+        [state.initialized, state.grid]
+    );
+
+    const allOn = useMemo(
+        () => state.initialized && state.grid.flat().every(cell => cell === 1),
         [state.initialized, state.grid]
     );
 
@@ -210,15 +272,6 @@ export default function LightsOut(): React.ReactElement {
     useEffect(() => {
         document.title = PAGE_TITLES.lightsOut;
     }, []);
-
-    useEffect(() => {
-        if (manualRows !== null) {
-            localStorage.setItem('lights-out-rows', manualRows.toString());
-        }
-        if (manualCols !== null) {
-            localStorage.setItem('lights-out-cols', manualCols.toString());
-        }
-    }, [manualRows, manualCols]);
 
     useEffect(() => {
         dispatch({
@@ -273,21 +326,30 @@ export default function LightsOut(): React.ReactElement {
     }, [state.auto, state.grid, moveQueue]);
 
     const handlePlus = () => {
-        if (rows < dynamicSize.rows && cols < dynamicSize.cols) {
-            setManualRows(rows + 1);
-            setManualCols(cols + 1);
+        const maxSquare = Math.min(dynamicSize.rows, dynamicSize.cols);
+        const currentMin = Math.min(rows, cols);
+
+        if (rows !== cols) {
+            // Already at max rectangle, do nothing (button should be disabled)
+            return;
+        }
+
+        if (currentMin < maxSquare) {
+            setDesiredSize(currentMin + 1);
+        } else {
+            // Jump to full rectangle
+            setDesiredSize(null);
         }
     };
 
     const handleMinus = () => {
-        const minDim = Math.min(rows, cols);
+        const currentMin = Math.min(rows, cols);
+
         if (rows !== cols) {
-            setManualRows(minDim);
-            setManualCols(minDim);
-        } else {
-            const nextDim = Math.max(2, minDim - 1);
-            setManualRows(nextDim);
-            setManualCols(nextDim);
+            // From rectangle jump to largest possible square
+            setDesiredSize(currentMin);
+        } else if (currentMin > 2) {
+            setDesiredSize(currentMin - 1);
         }
     };
 
@@ -302,7 +364,8 @@ export default function LightsOut(): React.ReactElement {
         isDragging,
         setIsDragging,
         draggedCells,
-        addDraggedCell
+        addDraggedCell,
+        lastTouchTime
     );
     const backProps = getBackProps(getters);
 
@@ -362,16 +425,15 @@ export default function LightsOut(): React.ReactElement {
                                 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
                             cursor: 'pointer',
                             zIndex: 10,
-                            backgroundColor: solved
-                                ? 'rgba(0,0,0,0.1)'
-                                : 'transparent',
+                            backgroundColor: 'transparent',
                         }}
                     >
                         <EmojiEventsRounded
                             sx={{
-                                fontSize: { xs: '6rem', sm: '10rem' },
-                                color: COLORS.primary.main,
-                                filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))',
+                                fontSize: `${(size * 1.25).toString()}rem`,
+                                color: allOn
+                                    ? palette.secondary
+                                    : palette.primary,
                             }}
                         />
                     </Box>
@@ -395,7 +457,7 @@ export default function LightsOut(): React.ReactElement {
                     Icon={AddRounded}
                     onClick={handlePlus}
                     disabled={
-                        rows >= dynamicSize.rows || cols >= dynamicSize.cols
+                        rows === dynamicSize.rows && cols === dynamicSize.cols
                     }
                 />
                 <TooltipButton
