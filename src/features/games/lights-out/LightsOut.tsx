@@ -4,6 +4,7 @@ import React, {
     useReducer,
     useState,
     useCallback,
+    useRef,
 } from 'react';
 import { Grid, Box } from '../../../components/mui';
 import {
@@ -36,8 +37,9 @@ function getFrontProps(
     dispatch: (action: BoardAction) => void,
     isDragging = false,
     setIsDragging: (val: boolean) => void = () => undefined,
-    draggedCells = new Set<string>(),
-    addDraggedCell: (pos: string) => void = () => undefined
+    draggedCells: React.RefObject<Set<string>>,
+    addDraggedCell: (pos: string) => void = () => undefined,
+    lastTouchTime: React.RefObject<number>
 ) {
     const { getColor, getBorder } = getters;
 
@@ -57,17 +59,22 @@ function getFrontProps(
         return {
             onMouseDown: (e: React.MouseEvent) => {
                 if (e.button !== 0) return; // Only left click
+                // Ignore ghost clicks on mobile
+                if (Date.now() - lastTouchTime.current < 500) return;
                 setIsDragging(true);
                 flipAdj(row, col);
                 addDraggedCell(pos);
             },
             onMouseEnter: () => {
-                if (isDragging && !draggedCells.has(pos)) {
+                if (isDragging && !draggedCells.current.has(pos)) {
                     flipAdj(row, col);
                     addDraggedCell(pos);
                 }
             },
-            onTouchStart: () => {
+            onTouchStart: (e: React.TouchEvent) => {
+                // Prevent ghost mouse events and scrolling
+                if (e.cancelable) e.preventDefault();
+                lastTouchTime.current = Date.now();
                 setIsDragging(true);
                 flipAdj(row, col);
                 addDraggedCell(pos);
@@ -103,8 +110,9 @@ function getExampleProps(getters: Getters) {
         () => undefined,
         false,
         () => undefined,
-        new Set(),
-        () => undefined
+        { current: new Set() } as React.RefObject<Set<string>>,
+        () => undefined,
+        { current: 0 } as React.RefObject<number>
     );
 
     return (row: number, col: number) => {
@@ -176,16 +184,17 @@ export default function LightsOut(): React.ReactElement {
     const [open, toggleOpen] = useReducer((open: boolean) => !open, false);
 
     const [isDragging, setIsDragging] = useState(false);
-    const [draggedCells, setDraggedCells] = useState(new Set<string>());
+    const draggedCells = useRef(new Set<string>());
+    const lastTouchTime = useRef(0);
 
     const addDraggedCell = useCallback((pos: string) => {
-        setDraggedCells(prev => new Set(prev).add(pos));
+        draggedCells.current.add(pos);
     }, []);
 
     useEffect(() => {
         const handleStopDragging = () => {
             setIsDragging(false);
-            setDraggedCells(new Set());
+            draggedCells.current.clear();
         };
 
         const handleTouchMove = (e: TouchEvent) => {
@@ -204,7 +213,7 @@ export default function LightsOut(): React.ReactElement {
             const cell = element.closest('[data-pos]');
             if (cell) {
                 const pos = cell.getAttribute('data-pos');
-                if (pos && !draggedCells.has(pos)) {
+                if (pos && !draggedCells.current.has(pos)) {
                     const [r, c] = pos.split(',').map(Number);
                     if (r !== undefined && c !== undefined) {
                         dispatch({
@@ -350,7 +359,8 @@ export default function LightsOut(): React.ReactElement {
         isDragging,
         setIsDragging,
         draggedCells,
-        addDraggedCell
+        addDraggedCell,
+        lastTouchTime
     );
     const backProps = getBackProps(getters);
 
