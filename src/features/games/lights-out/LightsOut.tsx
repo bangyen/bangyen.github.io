@@ -6,7 +6,12 @@ import React, {
     useCallback,
 } from 'react';
 import { Grid, Box } from '../../../components/mui';
-import { MenuBookRounded, CircleRounded } from '../../../components/icons';
+import {
+    MenuBookRounded,
+    CircleRounded,
+    AddRounded,
+    RemoveRounded,
+} from '../../../components/icons';
 import { Controls } from '../../../components/ui/Controls';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { Board, useHandler, usePalette, Getters } from '../components/Board';
@@ -110,21 +115,32 @@ export default function LightsOut(): React.ReactElement {
         ? GAME_CONSTANTS.gridSizes.mobile
         : GAME_CONSTANTS.gridSizes.desktop;
 
-    let { rows, cols } = useMemo(() => {
+    const [manualRows, setManualRows] = useState<number | null>(null);
+    const [manualCols, setManualCols] = useState<number | null>(null);
+
+    const dynamicSize = useMemo(() => {
         const headerOffset = mobile
             ? LAYOUT.headerHeight.xs
             : LAYOUT.headerHeight.md;
-        return convertPixels(
+        const converted = convertPixels(
             size,
             height - headerOffset,
             Math.min(width, 1300)
         );
+
+        let r = converted.rows - 1;
+        const c = converted.cols - 1;
+        if (mobile) r -= 2;
+
+        return { rows: Math.max(2, r), cols: Math.max(2, c) };
     }, [size, height, width, mobile]);
 
-    rows -= 1;
-    cols -= 1;
-
-    if (mobile) rows -= 2;
+    const { rows, cols } = useMemo(() => {
+        if (manualRows !== null && manualCols !== null) {
+            return { rows: manualRows, cols: manualCols };
+        }
+        return dynamicSize;
+    }, [manualRows, manualCols, dynamicSize]);
 
     const initial = {
         grid: getGrid(rows, cols),
@@ -215,6 +231,25 @@ export default function LightsOut(): React.ReactElement {
         };
     }, [state.auto, state.grid, moveQueue]);
 
+    const handlePlus = () => {
+        if (rows < dynamicSize.rows && cols < dynamicSize.cols) {
+            setManualRows(rows + 1);
+            setManualCols(cols + 1);
+        }
+    };
+
+    const handleMinus = () => {
+        const minDim = Math.min(rows, cols);
+        if (rows !== cols) {
+            setManualRows(minDim);
+            setManualCols(minDim);
+        } else {
+            const nextDim = Math.max(2, minDim - 1);
+            setManualRows(nextDim);
+            setManualCols(nextDim);
+        }
+    };
+
     const getters = useHandler(state, palette);
 
     const frontProps = getFrontProps(
@@ -250,9 +285,11 @@ export default function LightsOut(): React.ReactElement {
                     width: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'flex-start',
+                    justifyContent: 'center',
                     alignItems: 'center',
-                    paddingTop: 6,
+                    marginTop: mobile
+                        ? -LAYOUT.headerHeight.xs / 6 // MUI units (assume 8px base)
+                        : -LAYOUT.headerHeight.md / 6,
                 }}
             >
                 <Board
@@ -270,6 +307,20 @@ export default function LightsOut(): React.ReactElement {
                 }}
                 autoPlayEnabled={state.auto}
             >
+                <TooltipButton
+                    title="Decrease Size"
+                    Icon={RemoveRounded}
+                    onClick={handleMinus}
+                    disabled={rows <= 2 && cols <= 2}
+                />
+                <TooltipButton
+                    title="Increase Size"
+                    Icon={AddRounded}
+                    onClick={handlePlus}
+                    disabled={
+                        rows >= dynamicSize.rows || cols >= dynamicSize.cols
+                    }
+                />
                 <TooltipButton
                     title="How to Play"
                     Icon={MenuBookRounded}
