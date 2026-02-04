@@ -180,7 +180,7 @@ export function handleBoard(
 ): BoardState {
     const { type, row, col, moves } = action;
 
-    let { grid, score, rows, cols, auto } = state;
+    let { grid, score, rows, cols, auto, initialized } = state;
 
     switch (type) {
         case 'auto':
@@ -212,7 +212,7 @@ export function handleBoard(
                 cols = newCols;
                 grid = randomize(rows, cols);
                 auto = false;
-                state.initialized = true; // Mark as initialized
+                initialized = true; // Mark as initialized
             }
             break;
         }
@@ -235,6 +235,6 @@ export function handleBoard(
         rows,
         cols,
         auto,
-        initialized: state.initialized || false,
+        initialized: initialized || false,
     };
 }

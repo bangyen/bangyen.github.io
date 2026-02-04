@@ -188,6 +188,17 @@ export default function LightsOut(): React.ReactElement {
     }, []);
 
     useEffect(() => {
+        if (solved) {
+            const timeout = setTimeout(() => {
+                handleNext();
+            }, 2000);
+            return () => {
+                clearTimeout(timeout);
+            };
+        }
+    }, [solved, handleNext]);
+
+    useEffect(() => {
         document.title = PAGE_TITLES.lightsOut;
     }, []);
 
@@ -300,45 +311,49 @@ export default function LightsOut(): React.ReactElement {
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    marginTop: mobile
-                        ? -LAYOUT.headerHeight.xs / 6 // MUI units (assume 8px base)
-                        : -LAYOUT.headerHeight.md / 6,
                 }}
             >
-                <Board
-                    size={size}
-                    rows={rows}
-                    cols={cols}
-                    frontProps={frontProps}
-                    backProps={backProps}
-                />
                 <Box
-                    onClick={handleNext}
                     sx={{
-                        position: 'absolute',
-                        inset: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        opacity: solved ? 1 : 0,
-                        transform: solved ? 'scale(1)' : 'scale(0.5)',
-                        visibility: solved ? 'visible' : 'hidden',
-                        transition:
-                            'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                        cursor: 'pointer',
-                        zIndex: 10,
-                        backgroundColor: solved
-                            ? 'rgba(0,0,0,0.1)'
-                            : 'transparent',
+                        position: 'relative',
+                        marginTop: mobile ? '-28px' : '-40px',
                     }}
                 >
-                    <EmojiEventsRounded
-                        sx={{
-                            fontSize: { xs: '6rem', sm: '10rem' },
-                            color: COLORS.primary.main,
-                            filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))',
-                        }}
+                    <Board
+                        size={size}
+                        rows={rows}
+                        cols={cols}
+                        frontProps={frontProps}
+                        backProps={backProps}
                     />
+                    <Box
+                        onClick={handleNext}
+                        sx={{
+                            position: 'absolute',
+                            inset: 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            opacity: solved ? 1 : 0,
+                            transform: solved ? 'scale(1)' : 'scale(0.5)',
+                            visibility: solved ? 'visible' : 'hidden',
+                            transition:
+                                'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                            cursor: 'pointer',
+                            zIndex: 10,
+                            backgroundColor: solved
+                                ? 'rgba(0,0,0,0.1)'
+                                : 'transparent',
+                        }}
+                    >
+                        <EmojiEventsRounded
+                            sx={{
+                                fontSize: { xs: '6rem', sm: '10rem' },
+                                color: COLORS.primary.main,
+                                filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))',
+                            }}
+                        />
+                    </Box>
                 </Box>
             </Box>
             <Controls
