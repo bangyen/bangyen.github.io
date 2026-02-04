@@ -150,14 +150,17 @@ export default function LightsOut(): React.ReactElement {
         return dynamicSize;
     }, [manualRows, manualCols, dynamicSize]);
 
-    const initial = {
-        grid: getGrid(rows, cols),
-        score: 0,
-        rows,
-        cols,
-        auto: false,
-        initialized: false,
-    };
+    const initial = useMemo(
+        () => ({
+            grid: getGrid(rows, cols),
+            score: 0,
+            rows,
+            cols,
+            auto: false,
+            initialized: false,
+        }),
+        [rows, cols]
+    );
 
     const [state, dispatch] = useReducer(handleBoard, initial);
 
@@ -401,16 +404,18 @@ export default function LightsOut(): React.ReactElement {
                     onClick={toggleOpen}
                 />
             </Controls>
-            <Info
-                rows={rows}
-                cols={cols}
-                size={size}
-                open={open}
-                palette={palette}
-                toggleOpen={toggleOpen}
-                getFrontProps={getExampleProps}
-                getBackProps={getBackProps}
-            />
+            {open && (
+                <Info
+                    rows={rows}
+                    cols={cols}
+                    size={size}
+                    open={open}
+                    palette={palette}
+                    toggleOpen={toggleOpen}
+                    getFrontProps={getExampleProps}
+                    getBackProps={getBackProps}
+                />
+            )}
         </Grid>
     );
 }
