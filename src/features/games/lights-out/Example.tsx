@@ -552,6 +552,7 @@ function GridWithKeyframes({
                 const start = k * stepSize;
                 const end = (k + 1) * stepSize;
                 let match = false;
+                let color = palette.secondary;
                 let predictedContent = '';
                 const currentState = inputStates[k];
                 const nextState = k + 1 < length ? inputStates[k + 1] : null;
@@ -562,36 +563,53 @@ function GridWithKeyframes({
                 ) {
                     match = true;
                     predictedContent = `"${String(k + 1)}"`;
+                    color =
+                        currentState[c] === 1
+                            ? palette.secondary
+                            : palette.primary;
                 }
                 if (match) {
                     frames[`${String(start)}%`] = {
                         opacity: 0,
                         content: predictedContent,
+                        color,
                         transform: 'scale(0.5)',
                     };
                     frames[`${String(start + stepSize * (0.1 / speed))}%`] = {
                         opacity: 1,
                         content: predictedContent,
+                        color,
                         transform: 'scale(1.2)',
                     };
                     frames[`${String(start + stepSize * (0.2 / speed))}%`] = {
                         opacity: 1,
                         content: predictedContent,
+                        color,
                         transform: 'scale(1)',
                     };
                     frames[`${String(end - stepSize * (0.1 / speed))}%`] = {
                         opacity: 1,
                         content: predictedContent,
+                        color,
                         transform: 'scale(1)',
                     };
                     frames[`${String(end)}%`] = {
                         opacity: 0,
                         content: predictedContent,
+                        color,
                         transform: 'scale(0.5)',
                     };
                 } else {
-                    frames[`${String(start)}%`] = { opacity: 0, content: '""' };
-                    frames[`${String(end)}%`] = { opacity: 0, content: '""' };
+                    frames[`${String(start)}%`] = {
+                        opacity: 0,
+                        content: '""',
+                        color,
+                    };
+                    frames[`${String(end)}%`] = {
+                        opacity: 0,
+                        content: '""',
+                        color,
+                    };
                 }
             }
             return { name, frames };

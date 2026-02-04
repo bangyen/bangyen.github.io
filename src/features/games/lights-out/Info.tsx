@@ -184,7 +184,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                     <Box
                         sx={{
                             flex: 1,
-                            overflowY: 'auto',
+                            overflowY: step === 1 ? 'hidden' : 'auto',
                             p: { xs: 2.5, md: 3 }, // balanced padding
                             display: 'flex',
                             flexDirection: 'column',
