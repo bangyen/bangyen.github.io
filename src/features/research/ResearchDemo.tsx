@@ -136,61 +136,61 @@ const ResearchDemo = <T,>({
                         <Box
                             sx={{
                                 display: 'flex',
-                                flexDirection: { xs: 'column', md: 'row' },
-                                justifyContent: {
-                                    xs: 'center',
-                                    md: 'space-between',
-                                },
-                                alignItems: { xs: 'center', md: 'center' },
-                                gap: { xs: 2, md: 4 },
-                                marginBottom: { xs: 2, md: 4 },
+                                flexDirection: 'column',
+                                alignItems: { xs: 'center', md: 'flex-start' },
+                                gap: 2,
+                                marginBottom: { xs: 3, md: 4 },
                                 width: '100%',
                             }}
                         >
-                            <Typography
-                                variant="h1"
-                                sx={{
-                                    color: COLORS.text.primary,
-                                    fontWeight: TYPOGRAPHY.fontWeight.bold,
-                                    fontSize: TYPOGRAPHY.fontSize.h2,
-                                    textAlign: { xs: 'center', md: 'left' },
-                                }}
-                            >
-                                {title}
-                            </Typography>
+                            {backUrl && (
+                                <Button
+                                    component="a"
+                                    href={`#${backUrl}`}
+                                    startIcon={<Back />}
+                                    size="small"
+                                    sx={{
+                                        color: COLORS.text.secondary,
+                                        padding: 0,
+                                        minWidth: 0,
+                                        '&:hover': {
+                                            backgroundColor: 'transparent',
+                                            color: COLORS.primary.main,
+                                        },
+                                        marginBottom: -2,
+                                        alignSelf: 'flex-end',
+                                        textTransform: 'none',
+                                        fontSize: '0.8rem',
+                                    }}
+                                >
+                                    Back to Simulation
+                                </Button>
+                            )}
 
                             <Box
                                 sx={{
                                     display: 'flex',
-                                    flexDirection: 'column',
+                                    flexDirection: { xs: 'column', md: 'row' },
+                                    justifyContent: 'space-between',
                                     alignItems: {
                                         xs: 'center',
-                                        md: 'flex-end',
+                                        md: 'baseline',
                                     },
-                                    gap: 0.5,
+                                    width: '100%',
                                 }}
                             >
-                                {backUrl && (
-                                    <Button
-                                        component="a"
-                                        href={`#${backUrl}`}
-                                        startIcon={<Back />}
-                                        size="small"
-                                        sx={{
-                                            color: COLORS.text.secondary,
-                                            padding: 0,
-                                            minWidth: 0,
-                                            '&:hover': {
-                                                backgroundColor: 'transparent',
-                                                color: COLORS.primary.main,
-                                            },
-                                            textTransform: 'none',
-                                            fontSize: '0.8rem',
-                                        }}
-                                    >
-                                        Back to Simulation
-                                    </Button>
-                                )}
+                                <Typography
+                                    variant="h1"
+                                    sx={{
+                                        color: COLORS.text.primary,
+                                        fontWeight: TYPOGRAPHY.fontWeight.bold,
+                                        fontSize: TYPOGRAPHY.fontSize.h2,
+                                        textAlign: { xs: 'center', md: 'left' },
+                                    }}
+                                >
+                                    {title}
+                                </Typography>
+
                                 <Typography
                                     variant="h5"
                                     sx={{
