@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
     Backdrop,
     Modal,
@@ -65,25 +65,12 @@ export default function Info(props: InfoProps): React.ReactElement {
     const [calcRow, setCalcRow] = useState<number[]>(Array(cols).fill(0));
 
     const [isDragging, setIsDragging] = useState(false);
-    const [draggedCols, setDraggedCols] = useState(new Set<number>());
+    const draggedCols = useRef(new Set<number>());
+    const lastTouchTime = useRef(0);
 
     useEffect(() => {
         setCalcRow(Array(cols).fill(0));
     }, [cols, palette]); // Reset only on config change
-
-    useEffect(() => {
-        const handleMouseUp = () => {
-            setIsDragging(false);
-            setDraggedCols(new Set());
-        };
-
-        window.addEventListener('mouseup', handleMouseUp);
-        return () => {
-            window.removeEventListener('mouseup', handleMouseUp);
-        };
-    }, []);
-
-    const res = getProduct(calcRow, rows, cols);
 
     const toggleTile = useCallback(
         (col: number) => {
@@ -96,8 +83,56 @@ export default function Info(props: InfoProps): React.ReactElement {
         [calcRow]
     );
 
+    const res = getProduct(calcRow, rows, cols);
+
+    useEffect(() => {
+        const handleStopDragging = () => {
+            setIsDragging(false);
+            draggedCols.current.clear();
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            if (!isDragging || step !== 2) return;
+
+            const touch = e.touches[0];
+            if (!touch) return;
+
+            const element = document.elementFromPoint(
+                touch.clientX,
+                touch.clientY
+            );
+            if (!element) return;
+
+            const cell = element.closest('[data-col]');
+            if (cell) {
+                const colAttr = cell.getAttribute('data-col');
+                if (colAttr !== null) {
+                    const col = parseInt(colAttr, 10);
+                    if (!draggedCols.current.has(col)) {
+                        toggleTile(col);
+                        draggedCols.current.add(col);
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('mouseup', handleStopDragging);
+        window.addEventListener('touchend', handleStopDragging);
+        window.addEventListener('touchcancel', handleStopDragging);
+        window.addEventListener('touchmove', handleTouchMove, {
+            passive: false,
+        });
+
+        return () => {
+            window.removeEventListener('mouseup', handleStopDragging);
+            window.removeEventListener('touchend', handleStopDragging);
+            window.removeEventListener('touchcancel', handleStopDragging);
+            window.removeEventListener('touchmove', handleTouchMove);
+        };
+    }, [isDragging, step, toggleTile]);
+
     const addDraggedCol = useCallback((col: number) => {
-        setDraggedCols(prev => new Set(prev).add(col));
+        draggedCols.current.add(col);
     }, []);
 
     const inputGetters = useHandler(calcRow, cols, palette);
@@ -108,7 +143,8 @@ export default function Info(props: InfoProps): React.ReactElement {
         isDragging,
         setIsDragging,
         draggedCols,
-        addDraggedCol
+        addDraggedCol,
+        lastTouchTime
     );
     const outputProps = getOutput(outputGetters);
 

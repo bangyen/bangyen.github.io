@@ -7,8 +7,9 @@ export function getInput(
     toggleTile: (col: number) => void,
     isDragging = false,
     setIsDragging: (val: boolean) => void = () => undefined,
-    draggedCols = new Set<number>(),
-    addDraggedCol: (col: number) => void = () => undefined
+    draggedCols: React.RefObject<Set<number>>,
+    addDraggedCol: (col: number) => void = () => undefined,
+    lastTouchTime: React.RefObject<number>
 ) {
     const { getColor, getBorder } = getters;
 
@@ -20,21 +21,33 @@ export function getInput(
             style: getBorder(r, c),
             onMouseDown: (e: React.MouseEvent) => {
                 if (e.button !== 0) return;
+                // Ignore ghost clicks on mobile
+                if (Date.now() - lastTouchTime.current < 500) return;
                 setIsDragging(true);
                 toggleTile(c);
                 addDraggedCol(c);
             },
             onMouseEnter: () => {
-                if (isDragging && !draggedCols.has(c)) {
+                if (isDragging && !draggedCols.current.has(c)) {
                     toggleTile(c);
                     addDraggedCol(c);
                 }
             },
+            onTouchStart: (e: React.TouchEvent) => {
+                // Prevent ghost mouse events and scrolling
+                if (e.cancelable) e.preventDefault();
+                lastTouchTime.current = Date.now();
+                setIsDragging(true);
+                toggleTile(c);
+                addDraggedCol(c);
+            },
+            'data-col': c.toString(),
             sx: {
                 '&:hover': {
                     cursor: 'pointer',
                     color: back,
                 },
+                touchAction: 'none', // Prevent scrolling while dragging
                 transition: 'all 200ms ease',
             },
             color: front,
