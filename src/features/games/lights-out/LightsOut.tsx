@@ -117,13 +117,9 @@ export default function LightsOut(): React.ReactElement {
         ? GAME_CONSTANTS.gridSizes.mobile
         : GAME_CONSTANTS.gridSizes.desktop;
 
-    const [manualRows, setManualRows] = useState<number | null>(() => {
-        const saved = localStorage.getItem('lights-out-rows');
-        return saved ? parseInt(saved, 10) : null;
-    });
-    const [manualCols, setManualCols] = useState<number | null>(() => {
-        const saved = localStorage.getItem('lights-out-cols');
-        return saved ? parseInt(saved, 10) : null;
+    const [desiredSize, setDesiredSize] = useState<number | null>(() => {
+        const saved = localStorage.getItem('lights-out-size');
+        return saved && saved !== 'null' ? parseInt(saved, 10) : null;
     });
 
     const dynamicSize = useMemo(() => {
@@ -144,11 +140,16 @@ export default function LightsOut(): React.ReactElement {
     }, [size, height, width, mobile]);
 
     const { rows, cols } = useMemo(() => {
-        if (manualRows !== null && manualCols !== null) {
-            return { rows: manualRows, cols: manualCols };
-        }
-        return dynamicSize;
-    }, [manualRows, manualCols, dynamicSize]);
+        if (desiredSize === null) return dynamicSize;
+        return {
+            rows: Math.min(desiredSize, dynamicSize.rows),
+            cols: Math.min(desiredSize, dynamicSize.cols),
+        };
+    }, [desiredSize, dynamicSize]);
+
+    useEffect(() => {
+        localStorage.setItem('lights-out-size', String(desiredSize));
+    }, [desiredSize]);
 
     const initial = useMemo(
         () => ({
@@ -212,15 +213,6 @@ export default function LightsOut(): React.ReactElement {
     }, []);
 
     useEffect(() => {
-        if (manualRows !== null) {
-            localStorage.setItem('lights-out-rows', manualRows.toString());
-        }
-        if (manualCols !== null) {
-            localStorage.setItem('lights-out-cols', manualCols.toString());
-        }
-    }, [manualRows, manualCols]);
-
-    useEffect(() => {
         dispatch({
             type: 'resize',
             newRows: rows,
@@ -273,21 +265,30 @@ export default function LightsOut(): React.ReactElement {
     }, [state.auto, state.grid, moveQueue]);
 
     const handlePlus = () => {
-        if (rows < dynamicSize.rows && cols < dynamicSize.cols) {
-            setManualRows(rows + 1);
-            setManualCols(cols + 1);
+        const maxSquare = Math.min(dynamicSize.rows, dynamicSize.cols);
+        const currentMin = Math.min(rows, cols);
+
+        if (rows !== cols) {
+            // Already at max rectangle, do nothing (button should be disabled)
+            return;
+        }
+
+        if (currentMin < maxSquare) {
+            setDesiredSize(currentMin + 1);
+        } else {
+            // Jump to full rectangle
+            setDesiredSize(null);
         }
     };
 
     const handleMinus = () => {
-        const minDim = Math.min(rows, cols);
+        const currentMin = Math.min(rows, cols);
+
         if (rows !== cols) {
-            setManualRows(minDim);
-            setManualCols(minDim);
-        } else {
-            const nextDim = Math.max(2, minDim - 1);
-            setManualRows(nextDim);
-            setManualCols(nextDim);
+            // From rectangle jump to largest possible square
+            setDesiredSize(currentMin);
+        } else if (currentMin > 2) {
+            setDesiredSize(currentMin - 1);
         }
     };
 
@@ -395,7 +396,7 @@ export default function LightsOut(): React.ReactElement {
                     Icon={AddRounded}
                     onClick={handlePlus}
                     disabled={
-                        rows >= dynamicSize.rows || cols >= dynamicSize.cols
+                        rows === dynamicSize.rows && cols === dynamicSize.cols
                     }
                 />
                 <TooltipButton
