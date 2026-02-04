@@ -168,12 +168,14 @@ export default function Info(props: InfoProps): React.ReactElement {
         toggleOpen();
     };
 
+    const href = `#${ROUTES.pages.LightsOutResearch}`;
     let analysisButton;
 
     if (isMobile) {
         analysisButton = (
             <IconButton
-                onClick={handleClose}
+                component="a"
+                href={href}
                 size="small"
                 sx={{
                     color: COLORS.text.secondary,
@@ -186,7 +188,7 @@ export default function Info(props: InfoProps): React.ReactElement {
         analysisButton = (
             <Button
                 component="a"
-                href={`#${ROUTES.pages.LightsOutResearch}`}
+                href={href}
                 variant="outlined"
                 size="small"
                 startIcon={<MenuBookRounded />}
