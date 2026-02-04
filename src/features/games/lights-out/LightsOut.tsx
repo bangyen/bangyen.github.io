@@ -117,8 +117,14 @@ export default function LightsOut(): React.ReactElement {
         ? GAME_CONSTANTS.gridSizes.mobile
         : GAME_CONSTANTS.gridSizes.desktop;
 
-    const [manualRows, setManualRows] = useState<number | null>(null);
-    const [manualCols, setManualCols] = useState<number | null>(null);
+    const [manualRows, setManualRows] = useState<number | null>(() => {
+        const saved = localStorage.getItem('lights-out-rows');
+        return saved ? parseInt(saved, 10) : null;
+    });
+    const [manualCols, setManualCols] = useState<number | null>(() => {
+        const saved = localStorage.getItem('lights-out-cols');
+        return saved ? parseInt(saved, 10) : null;
+    });
 
     const dynamicSize = useMemo(() => {
         const headerOffset = mobile
@@ -201,6 +207,15 @@ export default function LightsOut(): React.ReactElement {
     useEffect(() => {
         document.title = PAGE_TITLES.lightsOut;
     }, []);
+
+    useEffect(() => {
+        if (manualRows !== null) {
+            localStorage.setItem('lights-out-rows', manualRows.toString());
+        }
+        if (manualCols !== null) {
+            localStorage.setItem('lights-out-cols', manualCols.toString());
+        }
+    }, [manualRows, manualCols]);
 
     useEffect(() => {
         dispatch({
