@@ -60,7 +60,7 @@ const LightsOutResearch: React.FC = () => {
     return (
         <ResearchDemo
             title="Lights Out"
-            subtitle="The Mathematical Mechanics of Grid Solving"
+            subtitle="The Mathematics of Grid Solving"
             githubUrl={URLS.githubProfile}
             chartData={periodicityData}
             chartConfig={chartConfig}

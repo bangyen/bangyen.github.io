@@ -81,6 +81,57 @@ const ResearchDemo = <T,>({
 
     const isMobile = useMediaQuery('(max-width:600px)');
 
+    const backButton = (margin: number) => (
+        <Button
+            component="a"
+            href={`#${backUrl ?? ''}`}
+            startIcon={<Back />}
+            size="small"
+            sx={{
+                color: COLORS.text.secondary,
+                padding: 0,
+                minWidth: 0,
+                '&:hover': {
+                    backgroundColor: 'transparent',
+                    color: COLORS.primary.main,
+                },
+                marginBottom: margin,
+                alignSelf: { xs: 'center', sm: 'flex-end' },
+                textTransform: 'none',
+                fontSize: '0.8rem',
+            }}
+        >
+            Back to Simulation
+        </Button>
+    );
+
+    let subtitleComponent;
+
+    if (backUrl && isMobile) {
+        subtitleComponent = backButton(0);
+    } else {
+        subtitleComponent = (
+            <Typography
+                variant="h5"
+                sx={{
+                    color: COLORS.text.secondary,
+                    fontSize: TYPOGRAPHY.fontSize.subheading,
+                    textAlign: {
+                        xs: 'center',
+                        md: 'right',
+                    },
+                    whiteSpace: {
+                        xs: 'normal',
+                        md: 'nowrap',
+                    },
+                    display: { xs: 'none', sm: 'block' },
+                }}
+            >
+                {subtitle}
+            </Typography>
+        );
+    }
+
     return (
         <Box
             sx={{
@@ -143,34 +194,12 @@ const ResearchDemo = <T,>({
                                 width: '100%',
                             }}
                         >
-                            {backUrl && (
-                                <Button
-                                    component="a"
-                                    href={`#${backUrl}`}
-                                    startIcon={<Back />}
-                                    size="small"
-                                    sx={{
-                                        color: COLORS.text.secondary,
-                                        padding: 0,
-                                        minWidth: 0,
-                                        '&:hover': {
-                                            backgroundColor: 'transparent',
-                                            color: COLORS.primary.main,
-                                        },
-                                        marginBottom: -2,
-                                        alignSelf: 'flex-end',
-                                        textTransform: 'none',
-                                        fontSize: '0.8rem',
-                                    }}
-                                >
-                                    Back to Simulation
-                                </Button>
-                            )}
+                            {backUrl && !isMobile && backButton(-2)}
 
                             <Box
                                 sx={{
                                     display: 'flex',
-                                    flexDirection: { xs: 'column', md: 'row' },
+                                    flexDirection: 'row',
                                     justifyContent: 'space-between',
                                     alignItems: {
                                         xs: 'center',
@@ -191,25 +220,7 @@ const ResearchDemo = <T,>({
                                     {title}
                                 </Typography>
 
-                                <Typography
-                                    variant="h5"
-                                    sx={{
-                                        color: COLORS.text.secondary,
-                                        fontSize:
-                                            TYPOGRAPHY.fontSize.subheading,
-                                        textAlign: {
-                                            xs: 'center',
-                                            md: 'right',
-                                        },
-                                        whiteSpace: {
-                                            xs: 'normal',
-                                            md: 'nowrap',
-                                        },
-                                        display: { xs: 'none', md: 'block' },
-                                    }}
-                                >
-                                    {subtitle}
-                                </Typography>
+                                {subtitleComponent}
                             </Box>
                         </Box>
 

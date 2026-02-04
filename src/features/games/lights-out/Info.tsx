@@ -168,6 +168,46 @@ export default function Info(props: InfoProps): React.ReactElement {
         toggleOpen();
     };
 
+    let analysisButton;
+
+    if (isMobile) {
+        analysisButton = (
+            <IconButton
+                onClick={handleClose}
+                size="small"
+                sx={{
+                    color: COLORS.text.secondary,
+                }}
+            >
+                <MenuBookRounded />
+            </IconButton>
+        );
+    } else {
+        analysisButton = (
+            <Button
+                component="a"
+                href={`#${ROUTES.pages.LightsOutResearch}`}
+                variant="outlined"
+                size="small"
+                startIcon={<MenuBookRounded />}
+                sx={{
+                    borderColor: COLORS.border.subtle,
+                    color: COLORS.text.secondary,
+                    fontSize: '0.75rem',
+                    py: 0.75,
+                    px: 1.5,
+                    '&:hover': {
+                        borderColor: COLORS.primary.main,
+                        color: COLORS.primary.main,
+                        backgroundColor: COLORS.interactive.hover,
+                    },
+                }}
+            >
+                Analysis
+            </Button>
+        );
+    }
+
     return (
         <Modal
             open={open}
@@ -246,28 +286,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                                     alignItems: 'center',
                                 }}
                             >
-                                <Button
-                                    component="a"
-                                    href={`#${ROUTES.pages.LightsOutResearch}`}
-                                    variant="outlined"
-                                    size="small"
-                                    startIcon={<MenuBookRounded />}
-                                    sx={{
-                                        borderColor: COLORS.border.subtle,
-                                        color: COLORS.text.secondary,
-                                        fontSize: '0.75rem',
-                                        py: 0.75,
-                                        px: 1.5,
-                                        '&:hover': {
-                                            borderColor: COLORS.primary.main,
-                                            color: COLORS.primary.main,
-                                            backgroundColor:
-                                                COLORS.interactive.hover,
-                                        },
-                                    }}
-                                >
-                                    Analysis
-                                </Button>
+                                {analysisButton}
                                 <IconButton
                                     onClick={handleClose}
                                     size="small"
