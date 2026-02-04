@@ -8,8 +8,11 @@ import LightsOut from '../LightsOut';
 
 // Mock icons
 jest.mock('../../../../components/icons', () => ({
-    InfoRounded: () => <div data-testid="info-icon" />,
+    MenuBookRounded: () => <div data-testid="menu-icon" />,
     CircleRounded: () => <div data-testid="circle-icon" />,
+    AddRounded: () => <div data-testid="add-icon" />,
+    RemoveRounded: () => <div data-testid="remove-icon" />,
+    EmojiEventsRounded: () => <div data-testid="trophy-icon" />,
 }));
 
 // Mock hooks
@@ -39,6 +42,7 @@ jest.mock('../boardHandlers', () => ({
         return state;
     }),
     getNextMove: jest.fn(),
+    isSolved: jest.fn(() => false),
 }));
 
 // Mock sub-components
@@ -46,13 +50,18 @@ jest.mock('../../components/Board', () => ({
     Board: function MockBoard({
         frontProps,
     }: {
-        frontProps: (r: number, c: number) => { onClick: () => void };
+        frontProps: (
+            r: number,
+            c: number
+        ) => { onMouseDown: (e: React.MouseEvent) => void };
     }) {
         return (
             <div data-testid="board">
                 <button
                     data-testid="cell-0-0"
-                    onClick={frontProps(0, 0).onClick}
+                    onMouseDown={e => {
+                        frontProps(0, 0).onMouseDown(e);
+                    }}
                 >
                     Cell 0,0
                 </button>
@@ -241,7 +250,7 @@ describe('LightsOut', () => {
     it('handles manual cell click', () => {
         render(<LightsOut />);
         const cell = screen.getByTestId('cell-0-0');
-        fireEvent.click(cell);
+        fireEvent.mouseDown(cell);
         expect(mockHandleBoard).toHaveBeenCalledWith(
             expect.anything(),
             expect.objectContaining({ type: 'adjacent', row: 0, col: 0 })

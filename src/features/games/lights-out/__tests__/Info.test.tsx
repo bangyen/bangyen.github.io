@@ -56,9 +56,19 @@ describe('Lights Out Info Component', () => {
         mockUseHandler.mockReturnValue({}); // simplistic mock
         // Mock getInput to return a function that returns props with onClick
         mockGetInput.mockImplementation(
-            (_getters: unknown, toggleTile: (c: number) => () => void) => {
+            (
+                _getters: unknown,
+                toggleTile: (c: number) => void,
+                _isDragging: boolean,
+                _setIsDragging: (v: boolean) => void,
+                _draggedCols: React.RefObject<Set<number>>,
+                _addDraggedCol: (c: number) => void,
+                _lastTouchTime: React.RefObject<number>
+            ) => {
                 return (_r: number, c: number) => ({
-                    onClick: toggleTile(c),
+                    onMouseDown: () => {
+                        toggleTile(c);
+                    },
                     'data-testid': `input-cell-${String(c)}`,
                 });
             }
@@ -100,13 +110,9 @@ describe('Lights Out Info Component', () => {
 
         // We mocked getInput to return elements with testid 'input-cell-{c}'
         const cell0 = screen.getByTestId('input-cell-0');
-        fireEvent.click(cell0);
+        fireEvent.mouseDown(cell0);
 
-        // This should trigger state update.
-        // We can verify getProduct is called with updated row?
-        // getProduct is called during render.
-        // It's hard to verify internal state directly without inspecting effect or rerender.
-        // But we can verify no crash.
+        // Verify no crash and potential verification of state if needed
     });
 
     it('closes modal on Close button click', () => {
