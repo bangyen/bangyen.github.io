@@ -49,6 +49,8 @@ export function getOutput({ getColor, getBorder }: Getters) {
 
         return {
             backgroundColor: front,
+            color: front,
+            children: <CircleRounded />,
             style: getBorder(r, c),
             sx: {
                 transition: 'all 200ms ease',
