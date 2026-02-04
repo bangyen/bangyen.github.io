@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import pako from 'pako';
 import {
     BarChartRounded,
     TrendingUpRounded,
@@ -39,10 +40,6 @@ interface RealData {
 
 const loadRealZSharpData = async (): Promise<DataPoint[]> => {
     try {
-        if (typeof DecompressionStream === 'undefined') {
-            throw new Error('DecompressionStream not supported');
-        }
-
         const response = await fetch('/zsharp_data.json.gz');
         if (!response.ok) {
             throw new Error(
@@ -58,42 +55,8 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
         const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
 
         if (isGzipped) {
-            const decompressedData = await new Response(
-                new ReadableStream({
-                    start(controller) {
-                        const decompressionStream = new DecompressionStream(
-                            'gzip'
-                        );
-                        const writer = decompressionStream.writable.getWriter();
-                        const reader = decompressionStream.readable.getReader();
-
-                        return writer.write(buffer).then(() => writer.close());
-
-                        function pump(): Promise<void> {
-                            return reader
-                                .read()
-                                .then(
-                                    ({
-                                        done,
-                                        value,
-                                    }: {
-                                        done: boolean;
-                                        value: Uint8Array | undefined;
-                                    }) => {
-                                        if (done) {
-                                            controller.close();
-                                            return;
-                                        }
-                                        controller.enqueue(value);
-                                        return pump();
-                                    }
-                                );
-                        }
-                        return pump();
-                    },
-                })
-            ).text();
-            realData = JSON.parse(decompressedData) as RealData;
+            const decompressed = pako.ungzip(view, { to: 'string' });
+            realData = JSON.parse(decompressed) as RealData;
         } else {
             const text = new TextDecoder().decode(buffer);
             realData = JSON.parse(text) as RealData;

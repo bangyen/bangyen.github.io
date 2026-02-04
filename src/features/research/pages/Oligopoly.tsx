@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import pako from 'pako';
 import { URLS, PAGE_TITLES } from '../../../config/constants';
 import { RESEARCH_CONSTANTS } from '../config/researchConfig';
 import { COLORS } from '../../../config/theme';
@@ -51,12 +52,6 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
             );
         }
 
-        if (typeof DecompressionStream === 'undefined') {
-            throw new Error(
-                'DecompressionStream not supported in this browser'
-            );
-        }
-
         const data = await response.arrayBuffer();
         const view = new Uint8Array(data);
 
@@ -66,42 +61,8 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
         const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
 
         if (isGzipped) {
-            const decompressedData = await new Response(
-                new ReadableStream({
-                    start(controller) {
-                        const decompressionStream = new DecompressionStream(
-                            'gzip'
-                        );
-                        const writer = decompressionStream.writable.getWriter();
-                        const reader = decompressionStream.readable.getReader();
-
-                        return writer.write(data).then(() => writer.close());
-
-                        function pump(): Promise<void> {
-                            return reader
-                                .read()
-                                .then(
-                                    ({
-                                        done,
-                                        value,
-                                    }: {
-                                        done: boolean;
-                                        value: Uint8Array | undefined;
-                                    }) => {
-                                        if (done) {
-                                            controller.close();
-                                            return;
-                                        }
-                                        controller.enqueue(value);
-                                        return pump();
-                                    }
-                                );
-                        }
-                        return pump();
-                    },
-                })
-            ).text();
-            const realData = JSON.parse(decompressedData) as {
+            const decompressed = pako.ungzip(view, { to: 'string' });
+            const realData = JSON.parse(decompressed) as {
                 matrix: MatrixItem[];
             }[];
             matrixData = realData[0]?.matrix ?? [];
