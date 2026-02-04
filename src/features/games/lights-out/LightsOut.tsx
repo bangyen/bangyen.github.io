@@ -83,6 +83,7 @@ function getFrontProps(
                     color: back,
                 },
                 touchAction: 'none', // Prevent scrolling while dragging
+                transition: 'all 100ms ease-in-out',
             },
         };
     };
