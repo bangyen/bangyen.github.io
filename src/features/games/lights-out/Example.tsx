@@ -399,6 +399,7 @@ export default function Example({
                     alignItems: 'center',
                     flex: 1,
                     height: '100%',
+                    overflow: 'hidden',
                 }}
             >
                 <Grid
@@ -407,6 +408,7 @@ export default function Example({
                         display: 'flex',
                         justifyContent: 'center',
                         position: 'relative',
+                        overflow: 'hidden',
                     }}
                 >
                     <Board
