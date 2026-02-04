@@ -162,6 +162,7 @@ export interface BoardState {
     rows: number;
     cols: number;
     auto: boolean;
+    initialized: boolean;
 }
 
 export interface BoardAction {
@@ -188,11 +189,6 @@ export function handleBoard(
         case 'adjacent': {
             if (row !== undefined && col !== undefined) {
                 grid = flipAdj(row, col, grid);
-
-                if (isSolved(grid)) {
-                    grid = randomize(rows, cols);
-                    score += 1;
-                }
             }
             break;
         }
@@ -201,11 +197,6 @@ export function handleBoard(
                 moves.forEach(m => {
                     grid = flipAdj(m.row, m.col, grid);
                 });
-
-                if (isSolved(grid)) {
-                    grid = randomize(rows, cols);
-                    score += 1;
-                }
             }
             break;
         case 'random':
@@ -221,6 +212,7 @@ export function handleBoard(
                 cols = newCols;
                 grid = randomize(rows, cols);
                 auto = false;
+                state.initialized = true; // Mark as initialized
             }
             break;
         }
@@ -229,9 +221,20 @@ export function handleBoard(
             score = 0;
             auto = false;
             break;
+        case 'next':
+            grid = randomize(rows, cols);
+            score += 1;
+            break;
         default:
             break;
     }
 
-    return { grid, score, rows, cols, auto };
+    return {
+        grid,
+        score,
+        rows,
+        cols,
+        auto,
+        initialized: state.initialized || false,
+    };
 }

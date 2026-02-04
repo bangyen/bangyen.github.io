@@ -11,6 +11,7 @@ import {
     CircleRounded,
     AddRounded,
     RemoveRounded,
+    EmojiEventsRounded,
 } from '../../../components/icons';
 import { Controls } from '../../../components/ui/Controls';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
@@ -22,6 +23,7 @@ import {
     getGrid,
     handleBoard,
     getNextMove,
+    isSolved,
     BoardAction,
 } from './boardHandlers';
 import { useWindow, useMobile } from '../../../hooks';
@@ -148,6 +150,7 @@ export default function LightsOut(): React.ReactElement {
         rows,
         cols,
         auto: false,
+        initialized: false,
     };
 
     const [state, dispatch] = useReducer(handleBoard, initial);
@@ -174,6 +177,15 @@ export default function LightsOut(): React.ReactElement {
     }, []);
 
     const palette = usePalette(state.score);
+
+    const solved = useMemo(
+        () => state.initialized && isSolved(state.grid),
+        [state.initialized, state.grid]
+    );
+
+    const handleNext = useCallback(() => {
+        dispatch({ type: 'next' });
+    }, []);
 
     useEffect(() => {
         document.title = PAGE_TITLES.lightsOut;
@@ -255,6 +267,7 @@ export default function LightsOut(): React.ReactElement {
     const frontProps = getFrontProps(
         getters,
         action => {
+            if (solved) return;
             dispatch(action);
         },
         isDragging,
@@ -299,6 +312,34 @@ export default function LightsOut(): React.ReactElement {
                     frontProps={frontProps}
                     backProps={backProps}
                 />
+                <Box
+                    onClick={handleNext}
+                    sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        opacity: solved ? 1 : 0,
+                        transform: solved ? 'scale(1)' : 'scale(0.5)',
+                        visibility: solved ? 'visible' : 'hidden',
+                        transition:
+                            'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                        cursor: 'pointer',
+                        zIndex: 10,
+                        backgroundColor: solved
+                            ? 'rgba(0,0,0,0.1)'
+                            : 'transparent',
+                    }}
+                >
+                    <EmojiEventsRounded
+                        sx={{
+                            fontSize: { xs: '6rem', sm: '10rem' },
+                            color: COLORS.primary.main,
+                            filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))',
+                        }}
+                    />
+                </Box>
             </Box>
             <Controls
                 handler={() => () => undefined} // No directional controls for Lights Out
