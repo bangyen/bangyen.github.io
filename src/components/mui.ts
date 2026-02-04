@@ -25,7 +25,16 @@ export { Menu, MenuItem } from '@mui/material';
 export { Tooltip, Fade, Backdrop, Modal } from '@mui/material';
 
 // Data Display Components
-export { Chip } from '@mui/material';
+export {
+    Chip,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    Link,
+} from '@mui/material';
 
 // Form Components
 export { TextField } from '@mui/material';

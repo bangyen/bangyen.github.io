@@ -15,12 +15,14 @@ import {
     NavigateNextRounded,
     CloseRounded,
     Refresh,
+    MenuBookRounded,
 } from '../../../components/icons';
 import { COLORS } from '../../../config/theme';
 import { GlassCard } from '../../../components/ui/GlassCard';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { getProduct } from './matrices';
 import { useMobile } from '../../../hooks';
+import { ROUTES } from '../../../config/constants';
 import Example from './Example';
 import { getInput, getOutput, useHandler } from './calculator';
 import { Palette, PropsFactory } from '../components/Board';
@@ -237,15 +239,45 @@ export default function Info(props: InfoProps): React.ReactElement {
                             }}
                         >
                             <StepTitle>{INFO_TITLES[step]}</StepTitle>
-                            <IconButton
-                                onClick={handleClose}
-                                size="small"
+                            <Box
                                 sx={{
-                                    color: COLORS.text.secondary,
+                                    display: 'flex',
+                                    gap: 2,
+                                    alignItems: 'center',
                                 }}
                             >
-                                <CloseRounded />
-                            </IconButton>
+                                <Button
+                                    component="a"
+                                    href={`#${ROUTES.pages.LightsOutResearch}`}
+                                    variant="outlined"
+                                    size="small"
+                                    startIcon={<MenuBookRounded />}
+                                    sx={{
+                                        borderColor: COLORS.border.subtle,
+                                        color: COLORS.text.secondary,
+                                        fontSize: '0.75rem',
+                                        py: 0.75,
+                                        px: 1.5,
+                                        '&:hover': {
+                                            borderColor: COLORS.primary.main,
+                                            color: COLORS.primary.main,
+                                            backgroundColor:
+                                                COLORS.interactive.hover,
+                                        },
+                                    }}
+                                >
+                                    Analysis
+                                </Button>
+                                <IconButton
+                                    onClick={handleClose}
+                                    size="small"
+                                    sx={{
+                                        color: COLORS.text.secondary,
+                                    }}
+                                >
+                                    <CloseRounded />
+                                </IconButton>
+                            </Box>
                         </Box>
                         {/* Step 0: Instructions */}
                         {step === 0 && (

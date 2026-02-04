@@ -57,4 +57,6 @@ export interface ResearchDemoProps<T> {
     onReset?: () => void;
     resetLabel?: string;
     chartTitle?: string | null;
+    children?: React.ReactNode;
+    backUrl?: string;
 }

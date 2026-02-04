@@ -1,5 +1,11 @@
 import React from 'react';
-import { Box, Typography, Grid, useMediaQuery } from '../../components/mui';
+import {
+    Box,
+    Typography,
+    Grid,
+    useMediaQuery,
+    Button,
+} from '../../components/mui';
 import { CHART_DIMENSIONS, CHART_FORMATTING } from './config/researchConfig';
 import {
     COLORS,
@@ -21,6 +27,7 @@ import { ResearchDemoProps } from './types';
 import ResearchViewSelector from './components/ResearchViewSelector';
 import ResearchControls from './components/ResearchControls';
 import { GlobalHeader } from '../../components/layout/GlobalHeader';
+import { ArrowBackRounded as Back } from '../../components/icons';
 
 const ResearchDemo = <T,>({
     title,
@@ -51,6 +58,8 @@ const ResearchDemo = <T,>({
     onReset,
     resetLabel = 'Reset',
     chartTitle = null,
+    children,
+    backUrl,
 }: ResearchDemoProps<T>) => {
     const getCurrentChartData = () => {
         if (chartData.length === 0) return [];
@@ -150,18 +159,58 @@ const ResearchDemo = <T,>({
                                 {title}
                             </Typography>
 
-                            <Typography
-                                variant="h5"
+                            <Box
                                 sx={{
-                                    color: COLORS.text.secondary,
-                                    fontSize: TYPOGRAPHY.fontSize.subheading,
-                                    textAlign: { xs: 'center', md: 'right' },
-                                    whiteSpace: { xs: 'normal', md: 'nowrap' },
-                                    display: { xs: 'none', md: 'block' },
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: {
+                                        xs: 'center',
+                                        md: 'flex-end',
+                                    },
+                                    gap: 0.5,
                                 }}
                             >
-                                {subtitle}
-                            </Typography>
+                                {backUrl && (
+                                    <Button
+                                        component="a"
+                                        href={`#${backUrl}`}
+                                        startIcon={<Back />}
+                                        size="small"
+                                        sx={{
+                                            color: COLORS.text.secondary,
+                                            padding: 0,
+                                            minWidth: 0,
+                                            '&:hover': {
+                                                backgroundColor: 'transparent',
+                                                color: COLORS.primary.main,
+                                            },
+                                            textTransform: 'none',
+                                            fontSize: '0.8rem',
+                                        }}
+                                    >
+                                        Back to Simulation
+                                    </Button>
+                                )}
+                                <Typography
+                                    variant="h5"
+                                    sx={{
+                                        color: COLORS.text.secondary,
+                                        fontSize:
+                                            TYPOGRAPHY.fontSize.subheading,
+                                        textAlign: {
+                                            xs: 'center',
+                                            md: 'right',
+                                        },
+                                        whiteSpace: {
+                                            xs: 'normal',
+                                            md: 'nowrap',
+                                        },
+                                        display: { xs: 'none', md: 'block' },
+                                    }}
+                                >
+                                    {subtitle}
+                                </Typography>
+                            </Box>
                         </Box>
 
                         <GlassCard
@@ -370,6 +419,8 @@ const ResearchDemo = <T,>({
                             onReset={onReset}
                             resetLabel={resetLabel}
                         />
+
+                        {children}
                     </Box>
                 </Grid>
             </Grid>

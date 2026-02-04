@@ -13,6 +13,7 @@ export const PAGE_TITLES: PageTitles = {
     geography: 'Geography | Bangyen',
     artQuiz: 'Art History Quiz | Bangyen',
     maze: '3D Maze | Bangyen',
+    lightsOutResearch: 'Lights Out Mechanics | Bangyen',
 };
 
 export const ROUTES: Routes = {
@@ -25,6 +26,7 @@ export const ROUTES: Routes = {
         Geography: '/geography',
         ArtQuiz: '/art-quiz',
         Maze: '/maze',
+        LightsOutResearch: '/research/lights-out',
     },
     interpreters: {
         Stun_Step: '/stun-step',

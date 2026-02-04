@@ -27,6 +27,9 @@ const WikipediaQuiz = lazy(
     () => import('./features/quiz/pages/WikipediaQuizPage')
 );
 const Maze = lazy(() => import('./features/games/maze/MazeGame'));
+const LightsOutResearch = lazy(
+    () => import('./features/research/pages/LightsOut')
+);
 
 const App = (): React.ReactElement => {
     const { resolvedMode } = useThemeContext();
@@ -70,6 +73,10 @@ const App = (): React.ReactElement => {
                         element={<WikipediaQuiz />}
                     />
                     <Route path={ROUTES.pages.Maze} element={<Maze />} />
+                    <Route
+                        path={ROUTES.pages.LightsOutResearch}
+                        element={<LightsOutResearch />}
+                    />
                     <Route path="*" element={<Error />} />
                 </Routes>
             </Suspense>

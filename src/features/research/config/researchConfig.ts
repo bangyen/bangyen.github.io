@@ -34,6 +34,7 @@ export const RESEARCH_CONSTANTS: ResearchConfig = {
 export const RESEARCH_TITLES = {
     zsharp: 'ZSharp - Sharpness-Aware Minimization',
     oligopoly: 'Oligopoly - Cournot Competition',
+    lightsOut: 'Lights Out - Matrix Mechanics',
 };
 
 export const CHART_DIMENSIONS = {

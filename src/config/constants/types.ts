@@ -107,6 +107,7 @@ export interface Routes {
         Geography: string;
         ArtQuiz: string;
         Maze: string;
+        LightsOutResearch: string;
     };
     interpreters: {
         Stun_Step: string;
@@ -194,5 +195,6 @@ export interface PageTitles {
     geography: string;
     artQuiz: string;
     maze: string;
+    lightsOutResearch: string;
     interpreter: (name: string) => string;
 }
