@@ -249,6 +249,11 @@ export default function LightsOut(): React.ReactElement {
         [state.initialized, state.grid]
     );
 
+    const allOn = useMemo(
+        () => state.initialized && state.grid.flat().every(cell => cell === 1),
+        [state.initialized, state.grid]
+    );
+
     const handleNext = useCallback(() => {
         dispatch({ type: 'next' });
     }, []);
@@ -420,16 +425,15 @@ export default function LightsOut(): React.ReactElement {
                                 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
                             cursor: 'pointer',
                             zIndex: 10,
-                            backgroundColor: solved
-                                ? 'rgba(0,0,0,0.1)'
-                                : 'transparent',
+                            backgroundColor: 'transparent',
                         }}
                     >
                         <EmojiEventsRounded
                             sx={{
                                 fontSize: `${size.toString()}rem`,
-                                color: COLORS.primary.main,
-                                filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))',
+                                color: allOn
+                                    ? palette.secondary
+                                    : palette.primary,
                             }}
                         />
                     </Box>
