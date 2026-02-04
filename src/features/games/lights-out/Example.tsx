@@ -435,39 +435,49 @@ export default function Example({
                         sx={{
                             display: 'flex',
                             justifyContent: 'center',
-                            position: 'relative',
+                            alignItems: 'center',
                             overflow: 'hidden',
                         }}
                     >
-                        <Board
-                            size={width}
-                            rows={dims}
-                            cols={dims}
-                            frontProps={frontProps}
-                            backProps={backProps}
-                        />
                         <Box
                             sx={{
-                                position: 'absolute',
-                                inset: 0,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                opacity: isSolved ? 1 : 0,
-                                transform: isSolved ? 'scale(1)' : 'scale(0.5)',
-                                transition:
-                                    'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                                pointerEvents: 'none',
-                                zIndex: 10,
+                                position: 'relative',
+                                display: 'inline-flex',
                             }}
                         >
-                            <EmojiEventsRounded
-                                sx={{
-                                    fontSize: { xs: '2.5rem', sm: '4rem' },
-                                    color: COLORS.primary.main,
-                                    filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))',
-                                }}
+                            <Board
+                                size={width}
+                                rows={dims}
+                                cols={dims}
+                                frontProps={frontProps}
+                                backProps={backProps}
                             />
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    inset: 0,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    opacity: isSolved ? 1 : 0,
+                                    transform: isSolved
+                                        ? 'scale(1)'
+                                        : 'scale(0.5)',
+                                    visibility: isSolved ? 'visible' : 'hidden',
+                                    transition:
+                                        'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                                    pointerEvents: 'none',
+                                    zIndex: 10,
+                                }}
+                            >
+                                <EmojiEventsRounded
+                                    sx={{
+                                        fontSize: { xs: '2.5rem', sm: '4rem' },
+                                        color: COLORS.primary.main,
+                                        filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.2))',
+                                    }}
+                                />
+                            </Box>
                         </Box>
                     </Grid>
                     <Grid
