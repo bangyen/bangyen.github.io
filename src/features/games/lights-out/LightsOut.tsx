@@ -1,4 +1,10 @@
-import React, { useMemo, useEffect, useReducer } from 'react';
+import React, {
+    useMemo,
+    useEffect,
+    useReducer,
+    useState,
+    useCallback,
+} from 'react';
 import { Grid, Box } from '../../../components/mui';
 import { MenuBookRounded, CircleRounded } from '../../../components/icons';
 import { Controls } from '../../../components/ui/Controls';
@@ -20,7 +26,11 @@ import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 
 function getFrontProps(
     getters: Getters,
-    dispatch: (action: BoardAction) => void
+    dispatch: (action: BoardAction) => void,
+    isDragging = false,
+    setIsDragging: (val: boolean) => void = () => undefined,
+    draggedCells = new Set<string>(),
+    addDraggedCell: (pos: string) => void = () => undefined
 ) {
     const { getColor, getBorder } = getters;
 
@@ -35,10 +45,20 @@ function getFrontProps(
     return (row: number, col: number) => {
         const style = getBorder(row, col);
         const { front, back } = getColor(row, col);
+        const pos = `${row.toString()},${col.toString()}`;
 
         return {
-            onClick: () => {
+            onMouseDown: (e: React.MouseEvent) => {
+                if (e.button !== 0) return; // Only left click
+                setIsDragging(true);
                 flipAdj(row, col);
+                addDraggedCell(pos);
+            },
+            onMouseEnter: () => {
+                if (isDragging && !draggedCells.has(pos)) {
+                    flipAdj(row, col);
+                    addDraggedCell(pos);
+                }
             },
             children: <CircleRounded />,
             backgroundColor: front,
@@ -63,13 +83,21 @@ function getBackProps(getters: Getters) {
 }
 
 function getExampleProps(getters: Getters) {
-    const frontProps = getFrontProps(getters, () => undefined);
+    const frontProps = getFrontProps(
+        getters,
+        () => undefined,
+        false,
+        () => undefined,
+        new Set(),
+        () => undefined
+    );
 
     return (row: number, col: number) => {
         const props = frontProps(row, col);
         return {
             ...props,
-            onClick: undefined,
+            onMouseDown: undefined,
+            onMouseEnter: undefined,
             sx: undefined,
         };
     };
@@ -109,6 +137,25 @@ export default function LightsOut(): React.ReactElement {
     const [state, dispatch] = useReducer(handleBoard, initial);
 
     const [open, toggleOpen] = useReducer((open: boolean) => !open, false);
+
+    const [isDragging, setIsDragging] = useState(false);
+    const [draggedCells, setDraggedCells] = useState(new Set<string>());
+
+    const addDraggedCell = useCallback((pos: string) => {
+        setDraggedCells(prev => new Set(prev).add(pos));
+    }, []);
+
+    useEffect(() => {
+        const handleMouseUp = () => {
+            setIsDragging(false);
+            setDraggedCells(new Set());
+        };
+
+        window.addEventListener('mouseup', handleMouseUp);
+        return () => {
+            window.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, []);
 
     const palette = usePalette(state.score);
 
@@ -170,9 +217,16 @@ export default function LightsOut(): React.ReactElement {
 
     const getters = useHandler(state, palette);
 
-    const frontProps = getFrontProps(getters, action => {
-        dispatch(action);
-    });
+    const frontProps = getFrontProps(
+        getters,
+        action => {
+            dispatch(action);
+        },
+        isDragging,
+        setIsDragging,
+        draggedCells,
+        addDraggedCell
+    );
     const backProps = getBackProps(getters);
 
     return (
