@@ -370,7 +370,7 @@ export default function LightsOut(): React.ReactElement {
                     >
                         <EmojiEventsRounded
                             sx={{
-                                fontSize: { xs: '6rem', sm: '10rem' },
+                                fontSize: `${size.toString()}rem`,
                                 color: COLORS.primary.main,
                                 filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.3))',
                             }}
