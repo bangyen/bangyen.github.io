@@ -296,6 +296,8 @@ export default function LightsOut(): React.ReactElement {
             sx={{
                 background: COLORS.surface.background,
                 position: 'relative',
+                overflow: 'hidden',
+                height: '100vh', // Force height to prevent dynamic resizing
             }}
         >
             <GlobalHeader
@@ -311,6 +313,7 @@ export default function LightsOut(): React.ReactElement {
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
+                    overflow: 'hidden',
                 }}
             >
                 <Box
