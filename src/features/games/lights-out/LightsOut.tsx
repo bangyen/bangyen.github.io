@@ -67,6 +67,12 @@ function getFrontProps(
                     addDraggedCell(pos);
                 }
             },
+            onTouchStart: () => {
+                setIsDragging(true);
+                flipAdj(row, col);
+                addDraggedCell(pos);
+            },
+            'data-pos': pos,
             children: <CircleRounded />,
             backgroundColor: front,
             color: front,
@@ -76,6 +82,7 @@ function getFrontProps(
                     cursor: 'pointer',
                     color: back,
                 },
+                touchAction: 'none', // Prevent scrolling while dragging
             },
         };
     };
@@ -175,16 +182,55 @@ export default function LightsOut(): React.ReactElement {
     }, []);
 
     useEffect(() => {
-        const handleMouseUp = () => {
+        const handleStopDragging = () => {
             setIsDragging(false);
             setDraggedCells(new Set());
         };
 
-        window.addEventListener('mouseup', handleMouseUp);
-        return () => {
-            window.removeEventListener('mouseup', handleMouseUp);
+        const handleTouchMove = (e: TouchEvent) => {
+            if (!isDragging) return;
+
+            const touch = e.touches[0];
+            if (!touch) return;
+
+            const element = document.elementFromPoint(
+                touch.clientX,
+                touch.clientY
+            );
+            if (!element) return;
+
+            // Find the cell element (either the div itself or its parent/child)
+            const cell = element.closest('[data-pos]');
+            if (cell) {
+                const pos = cell.getAttribute('data-pos');
+                if (pos && !draggedCells.has(pos)) {
+                    const [r, c] = pos.split(',').map(Number);
+                    if (r !== undefined && c !== undefined) {
+                        dispatch({
+                            type: 'adjacent',
+                            row: r,
+                            col: c,
+                        });
+                        addDraggedCell(pos);
+                    }
+                }
+            }
         };
-    }, []);
+
+        window.addEventListener('mouseup', handleStopDragging);
+        window.addEventListener('touchend', handleStopDragging);
+        window.addEventListener('touchcancel', handleStopDragging);
+        window.addEventListener('touchmove', handleTouchMove, {
+            passive: false,
+        });
+
+        return () => {
+            window.removeEventListener('mouseup', handleStopDragging);
+            window.removeEventListener('touchend', handleStopDragging);
+            window.removeEventListener('touchcancel', handleStopDragging);
+            window.removeEventListener('touchmove', handleTouchMove);
+        };
+    }, [isDragging, draggedCells, addDraggedCell, dispatch]);
 
     const palette = usePalette(state.score);
 
