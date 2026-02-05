@@ -104,18 +104,55 @@ function analyzeSolvability(n: number) {
         );
     }
 
-    if (reachableCount <= 65536n) {
+    const displayLimit = 256;
+    const toDisplay =
+        reachableCount < BigInt(displayLimit)
+            ? Number(reachableCount)
+            : displayLimit;
+
+    console.log(
+        `\n  ${COLORS.bold}${COLORS.blue}● REACHABLE STATES${COLORS.reset}`
+    );
+    console.log(
+        `    ${COLORS.dim}Listing ${toDisplay < Number(reachableCount) ? `first ${toDisplay}` : 'all'} reachable combinations of the image basis...${COLORS.reset}\n`
+    );
+
+    for (let i = 0; i < toDisplay; i++) {
+        let target = 0n;
+        for (let j = 0; j < imageBasis.length; j++) {
+            const basisVector = imageBasis[j];
+            if ((i >> j) & 1 && basisVector !== undefined) {
+                target ^= basisVector;
+            }
+        }
+        const sol = getMinWeightSolution(matrix, target, n);
         console.log(
-            `\n  ${COLORS.bold}${COLORS.blue}● REACHABLE STATES${COLORS.reset}`
+            `    ${toBinaryString(target, n)} : ${COLORS.green}${toBinaryString(sol, n)}${COLORS.reset} (${COLORS.bold}${countBits(sol)}${COLORS.reset})`
+        );
+    }
+
+    if (reachableCount > BigInt(displayLimit)) {
+        console.log(
+            `    ${COLORS.dim}... and ${reachableCount - BigInt(displayLimit)} more reachable states.${COLORS.reset}`
+        );
+    }
+
+    // Exhaustive analysis for "reasonable" state spaces (up to 2^18)
+    const analysisThreshold = 262144n; // 2^18
+    if (reachableCount > 1n && reachableCount <= analysisThreshold) {
+        console.log(
+            `\n  ${COLORS.bold}${COLORS.blue}● EXHAUSTIVE STATE SPACE ANALYSIS${COLORS.reset}`
         );
         console.log(
-            `    ${COLORS.dim}Generating all linear combinations of the image basis...${COLORS.reset}\n`
+            `    ${COLORS.dim}Scanning all 2^${imageBasis.length} states to find difficulty distribution...${COLORS.reset}\n`
         );
 
-        const totalToGenerate = Number(reachableCount);
-        const reachableStates: { target: bigint; sol: bigint }[] = [];
+        const total = Number(reachableCount);
+        let maxWeight = 0;
+        let maxWeightTarget = 0n;
+        const weights: Record<number, number> = {};
 
-        for (let i = 0; i < totalToGenerate; i++) {
+        for (let i = 0; i < total; i++) {
             let target = 0n;
             for (let j = 0; j < imageBasis.length; j++) {
                 const basisVector = imageBasis[j];
@@ -124,54 +161,35 @@ function analyzeSolvability(n: number) {
                 }
             }
             const sol = getMinWeightSolution(matrix, target, n);
-            reachableStates.push({ target, sol });
+            const w = countBits(sol);
+            weights[w] = (weights[w] ?? 0) + 1;
+            if (w > maxWeight) {
+                maxWeight = w;
+                maxWeightTarget = target;
+            }
 
-            if (totalToGenerate > 100 && i % 10 === 0) {
-                drawProgressBar(i + 1, totalToGenerate);
+            if (total > 1000 && i % 100 === 0) {
+                drawProgressBar(i + 1, total);
             }
         }
-        if (totalToGenerate > 100)
-            drawProgressBar(totalToGenerate, totalToGenerate);
-
-        const displayLimit = 256;
-        console.log(
-            `\n    ${COLORS.dim}Listing up to ${displayLimit} reachable states:${COLORS.reset}\n`
-        );
-
-        reachableStates.slice(0, displayLimit).forEach(({ target, sol }) => {
-            console.log(
-                `    ${toBinaryString(target, n)} : ${COLORS.green}${toBinaryString(sol, n)}${COLORS.reset} (${COLORS.bold}${countBits(sol)}${COLORS.reset})`
-            );
-        });
-
-        if (totalToGenerate > displayLimit) {
-            console.log(`    ... and ${totalToGenerate - displayLimit} more.`);
-        }
+        if (total > 1000) drawProgressBar(total, total);
 
         console.log(
-            `\n    ${COLORS.dim}Total Reachable: ${totalToGenerate}${COLORS.reset}`
-        );
-    } else {
-        console.log(
-            `\n  ${COLORS.bold}${COLORS.blue}● SAMPLE REACHABLE STATES${COLORS.reset}`
+            `\n    Maximum Toggles Required: ${COLORS.bold}${maxWeight}${COLORS.reset}`
         );
         console.log(
-            `    (Large state space: 2^${imageBasis.length} reachable states. Showing only samples)\n`
+            `    "Hardest" Configuration: ${toBinaryString(maxWeightTarget, n)}`
         );
-
-        const samples = [1n, (1n << BigInt(n)) - 1n];
-        samples.forEach(target => {
-            const sol = getMinWeightSolution(matrix, target, n);
-            if (sol === -1n) {
-                console.log(
-                    `    ${toBinaryString(target, n)} : ${COLORS.red}UNREACHABLE${COLORS.reset}`
-                );
-            } else {
-                console.log(
-                    `    ${toBinaryString(target, n)} : ${COLORS.green}${toBinaryString(sol, n)}${COLORS.reset} (${COLORS.bold}${countBits(sol)}${COLORS.reset})`
-                );
-            }
-        });
+    } else if (reachableCount > analysisThreshold) {
+        console.log(
+            `\n  ${COLORS.bold}${COLORS.yellow}● STATE SPACE OVERVIEW${COLORS.reset}`
+        );
+        console.log(
+            `    Total Reachable: 2^${imageBasis.length} (${reachableCount})`
+        );
+        console.log(
+            `    ${COLORS.dim}Exhaustive analysis skipped to avoid excessive computation.${COLORS.reset}`
+        );
     }
 
     console.log(
