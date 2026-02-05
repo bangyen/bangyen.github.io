@@ -1,1 +1,0 @@
-import{r as e}from"./vendor_react-Dmhynvug.js";function n(){const[n,i]=e.useState({height:window.innerHeight,width:window.innerWidth});return e.useEffect(()=>{const e=()=>{i({height:window.innerHeight,width:window.innerWidth})};return window.addEventListener("resize",e),()=>{window.removeEventListener("resize",e)}},[]),n}export{n as u};
