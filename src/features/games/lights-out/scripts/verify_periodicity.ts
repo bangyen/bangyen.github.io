@@ -124,28 +124,42 @@ function verifyPattern(n: number, pattern: Pattern) {
         )
     );
 
-    console.log(
-        `  ${COLORS.bold}${COLORS.blue}● STEP 1: CONVERGENCE PROOF${COLORS.reset}`
-    );
-    console.log(
-        `    ${COLORS.italic}Verify that sequence returns to (0, I) periodically.${COLORS.reset}`
-    );
-
     const fz = getPolynomial(z_seq);
     const fz1 = getPolynomial(z_seq + 1);
 
     const modZ = polyMod(fz, M);
     const modZ1 = polyMod(fz1 ^ 1n, M);
 
-    const eq1 = `f${toSuperscript(z_seq)}(x) mod M(x)`;
-    const eq2 = `(f${toSuperscript(z_seq + 1)}(x) + 1) mod M(x)`;
-    const leftWidth = 28;
+    const eq1 = `f${toSuperscript(z_seq)}(x)`;
+    const eq2 = `(f${toSuperscript(z_seq + 1)}(x) + 1)`;
+
+    const proofEq1 = `${eq1} mod M(x)`;
+    const proofEq2 = `${eq2} mod M(x)`;
+
+    const defWidth = Math.max(eq1.length, eq2.length);
+    const proofWidth = Math.max(proofEq1.length, proofEq2.length);
 
     console.log(
-        `    ${eq1.padEnd(leftWidth)} = ${COLORS.cyan}${polyToString(modZ)}${COLORS.reset}`
+        `\n  ${COLORS.bold}${COLORS.blue}● STEP 1: CONVERGENCE PROOF${COLORS.reset}`
     );
     console.log(
-        `    ${eq2.padEnd(leftWidth)} = ${COLORS.cyan}${polyToString(modZ1)}${COLORS.reset}`
+        `    ${COLORS.italic}Verify that sequence returns to (0, I) periodically.${COLORS.reset}`
+    );
+
+    console.log(`    ${COLORS.dim}Base Polynomials:${COLORS.reset}`);
+    console.log(
+        `    ${eq1.padEnd(defWidth)} = ${COLORS.dim}${polyToString(fz)}${COLORS.reset}`
+    );
+    console.log(
+        `    ${eq2.padEnd(defWidth)} = ${COLORS.dim}${polyToString(fz1 ^ 1n)}${COLORS.reset}`
+    );
+    console.log('');
+
+    console.log(
+        `    ${proofEq1.padEnd(proofWidth)} = ${COLORS.cyan}${polyToString(modZ)}${COLORS.reset}`
+    );
+    console.log(
+        `    ${proofEq2.padEnd(proofWidth)} = ${COLORS.cyan}${polyToString(modZ1)}${COLORS.reset}`
     );
 
     if (modZ === 0n && modZ1 === 0n) {
@@ -166,7 +180,27 @@ function verifyPattern(n: number, pattern: Pattern) {
         `    ${COLORS.italic}Exhaustive check of the remainder set over one period.${COLORS.reset}`
     );
 
+    const glossaryItems = R.filter(r => r < z).map(r => ({
+        label: `f${toSuperscript(r + 1)}(x) + 1`,
+        poly: getPolynomial(r + 1) ^ 1n,
+    }));
+    const glossaryWidth = Math.max(
+        ...glossaryItems.map(i => i.label.length),
+        0
+    );
+
+    console.log(`    ${COLORS.dim}Polynomial Glossary:${COLORS.reset}`);
+    for (const item of glossaryItems) {
+        console.log(
+            `    ${item.label.padEnd(glossaryWidth)} = ${COLORS.dim}${polyToString(item.poly)}${COLORS.reset}`
+        );
+    }
+    console.log('');
+
+    const maxMWidth = Math.max(3, z.toString().length);
+    const enumItems: { label: string; quotient: bigint }[] = [];
     let allRCorrect = true;
+
     for (let m = 0; m < z; m++) {
         const fm1 = getPolynomial(m + 1);
         const { quotient, remainder } = polyDiv(fm1 ^ 1n, M);
@@ -181,12 +215,18 @@ function verifyPattern(n: number, pattern: Pattern) {
         }
 
         if (isSolution && m < 50) {
-            const mStr = m.toString().padStart(3);
-            const polyTerm = `f${toSuperscript(m + 1)} + 1`;
-            console.log(
-                `    m = ${mStr} : ${polyTerm.padEnd(10)} = [${COLORS.dim}${polyToString(quotient).padEnd(20)}${COLORS.reset}] * M(x) ${COLORS.green}✔${COLORS.reset}`
-            );
+            enumItems.push({
+                label: `m = ${m.toString().padStart(maxMWidth)} : f${toSuperscript(m + 1)} + 1`,
+                quotient,
+            });
         }
+    }
+
+    const enumWidth = Math.max(...enumItems.map(i => i.label.length), 0);
+    for (const item of enumItems) {
+        console.log(
+            `    ${item.label.padEnd(enumWidth)} = [${COLORS.dim}${polyToString(item.quotient).padEnd(20)}${COLORS.reset}] * M(x) ${COLORS.green}✔${COLORS.reset}`
+        );
     }
 
     if (allRCorrect) {
@@ -222,7 +262,7 @@ function main() {
     }
 
     if (!proofFlag) {
-        console.log(`Finding periodicity patterns for n=${nArg}...\n`);
+        console.log(`Finding periodicity patterns for n = ${nArg}...\n`);
     }
 
     const patterns: Pattern[] = [];
@@ -258,7 +298,7 @@ function main() {
         const nHeader = 'n'.padStart(maxNWidth);
         const zHeader = 'Period'.padStart(maxZWidth);
         const rHeader = 'Remainders'.padEnd(maxRWidth);
-        console.log(` ${nHeader} | ${zHeader} | ${rHeader}`);
+        console.log(` ${nHeader} | ${zHeader} | ${rHeader} `);
         console.log(
             '-'.repeat(maxNWidth + 2) +
                 '|' +
@@ -273,7 +313,7 @@ function main() {
             const zStr = pattern.z.toString().padStart(maxZWidth);
             const filtered = pattern.R.filter(r => r !== pattern.z);
             const rStr = JSON.stringify(filtered).replace(/,/g, ', ');
-            console.log(` ${nStr} | ${zStr} | ${rStr}`);
+            console.log(` ${nStr} | ${zStr} | ${rStr} `);
         }
     }
 }
