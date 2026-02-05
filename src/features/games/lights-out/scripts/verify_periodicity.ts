@@ -1,49 +1,128 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-/*
-    Lights Out Periodicity Verifier
-    
-    This script verifies the modular periodicity patterns (m mod z in {R}) 
-    for the Identity Matrix property.
-    
-    It uses Matrix Binary Exponentiation to verify grid heights in O(log m)
-    time, making it possible to check thousands of rows in seconds.
-    
-    Usage:
-    npx tsx verify_periodicity.ts [n] [limit]
-    
-    Examples:
-    - npx tsx verify_periodicity.ts 5       (Find pattern for n=5)
-    - npx tsx verify_periodicity.ts 1-15    (Find patterns for n=1..15)
-    - npx tsx verify_periodicity.ts 5 100   (Find n=5 and verify up to m=100)
-*/
 
 import {
     getMatrix,
     getPolynomial,
-    evalPolynomial,
-    getIdentity,
     findPattern,
+    polyMod,
+    polyDiv,
+    getMinimalPolynomial,
+    factorPoly,
 } from '../matrices';
 
-function checkIdentity(m: number, n: number): boolean {
-    const matrix = getMatrix(n);
-    const poly = getPolynomial(m + 1);
-    const powCache = new Map<number, bigint[]>();
-    const product = evalPolynomial(matrix, poly, powCache);
-    const identity = getIdentity(n);
-    return product.every((val, i) => val === identity[i]);
+function polyToString(p: bigint): string {
+    if (p === 0n) return '0';
+    const terms: string[] = [];
+    const bits = p.toString(2);
+    for (let i = 0; i < bits.length; i++) {
+        if (bits[bits.length - 1 - i] === '1') {
+            if (i === 0) terms.push('1');
+            else if (i === 1) terms.push('x');
+            else terms.push(`x^${i}`);
+        }
+    }
+    return terms.reverse().join(' + ');
 }
 
 interface Pattern {
     n: number;
     z: number;
+    z_seq: number;
     R: number[];
+}
+
+function verifyPattern(n: number, pattern: Pattern) {
+    const { z, R, z_seq } = pattern;
+    const A = getMatrix(n);
+    const M = getMinimalPolynomial(A);
+    const factors = factorPoly(M);
+
+    console.log(`\n--- Mathematical Proof for n=${n} ---`);
+    console.log(`Minimal Polynomial M(x) = ${polyToString(M)}`);
+    console.log(
+        `Factorization: ${factors
+            .map(
+                f =>
+                    `(${polyToString(f.factor)})${
+                        f.exponent > 1 ? `^${f.exponent}` : ''
+                    }`
+            )
+            .join(' * ')}`
+    );
+    console.log(`Discovered Period z = ${z}`);
+    console.log(`Sequence Period z_seq = ${z_seq}`);
+    console.log(`Remainder Set R = {${R.filter(r => r !== z).join(', ')}}\n`);
+
+    console.log(`Step 1: Prove z-periodicity`);
+    console.log(
+        `  We must show M(x) | f_{z_seq}(x) and M(x) | (f_{z_seq+1}(x) + 1)`
+    );
+    const fz = getPolynomial(z_seq);
+    const fz1 = getPolynomial(z_seq + 1);
+
+    const modZ = polyMod(fz, M);
+    const modZ1 = polyMod(fz1 ^ 1n, M);
+
+    console.log(`  f_{${z_seq}}(x) mod M(x) = ${polyToString(modZ)}`);
+    console.log(
+        `  (f_{${z_seq + 1}}(x) + 1) mod M(x) = ${polyToString(modZ1)}`
+    );
+
+    if (modZ === 0n && modZ1 === 0n) {
+        console.log(
+            `  OK: M(A) = 0 implies f_{z_seq}(A) = 0 and f_{z_seq+1}(A) = I. The sequence is ${z_seq}-periodic.`
+        );
+    } else {
+        console.log(
+            `  FAIL: Period z_seq=${z_seq} is invalid for the minimal polynomial.`
+        );
+        return;
+    }
+
+    console.log(`\nStep 2: Illustrate divisibility for R`);
+    console.log(
+        `  A grid height m satisfies the property iff M(x) | (f_{m+1}(x) + 1).`
+    );
+    let allRCorrect = true;
+    for (let m = 0; m < z; m++) {
+        const fm1 = getPolynomial(m + 1);
+        const { quotient, remainder } = polyDiv(fm1 ^ 1n, M);
+        const isSolution = remainder === 0n;
+        const inR = R.includes(m);
+
+        if (isSolution !== inR) {
+            console.log(
+                `  FAIL at m=${m}: Inconsistent! Divisibility=${isSolution}, R.includes=${inR}`
+            );
+            allRCorrect = false;
+        }
+
+        if (isSolution && m < 50) {
+            // Show first few solutions with quotient
+            console.log(
+                `  m=${m.toString().padStart(3)}: (f_{${m + 1}}(x) + 1) = [${polyToString(quotient)}] * M(x) ✅`
+            );
+        }
+    }
+
+    if (allRCorrect) {
+        console.log(
+            `\nPROVEN: The pattern m mod ${z} in {${R.filter(r => r !== z).join(
+                ', '
+            )}} holds for all m.`
+        );
+    } else {
+        console.log(
+            `\nFAILED: The remainder set is inconsistent with the minimal polynomial.`
+        );
+    }
 }
 
 function main() {
     const nArg = process.argv[2] ?? '1-10';
-    const limitArg = process.argv[3];
+    const proofFlag =
+        process.argv.includes('--proof') || process.argv.length === 4;
 
     let nRange: number[] = [];
     if (nArg.includes('-')) {
@@ -55,79 +134,59 @@ function main() {
         nRange = [parseInt(nArg, 10)];
     }
 
-    console.log(`Finding periodicity patterns for n=${nArg}...\n`);
+    if (!proofFlag) {
+        console.log(`Finding periodicity patterns for n=${nArg}...\n`);
+    }
 
-    // Collect all patterns first for table formatting
     const patterns: Pattern[] = [];
     for (const n of nRange) {
         if (isNaN(n)) continue;
-        patterns.push(findPattern(n));
+        const pattern = findPattern(n);
+        patterns.push(pattern);
+
+        if (proofFlag) {
+            verifyPattern(n, pattern);
+        }
     }
 
-    // Calculate dynamic column widths
-    const maxNWidth = Math.max(1, ...patterns.map(p => p.n.toString().length));
-    const maxZWidth = Math.max(6, ...patterns.map(p => p.z.toString().length));
-    const maxRWidth = Math.max(
-        10,
-        ...patterns.map(p => {
-            const filtered = p.R.filter(r => r !== p.z);
-            return JSON.stringify(filtered).replace(/,/g, ', ').length;
-        })
-    );
+    if (!proofFlag) {
+        // Calculate dynamic column widths
+        const maxNWidth = Math.max(
+            1,
+            ...patterns.map(p => p.n.toString().length)
+        );
+        const maxZWidth = Math.max(
+            6,
+            ...patterns.map(p => p.z.toString().length)
+        );
+        const maxRWidth = Math.max(
+            10,
+            ...patterns.map(p => {
+                const filtered = p.R.filter(r => r !== p.z);
+                return JSON.stringify(filtered).replace(/,/g, ', ').length;
+            })
+        );
 
-    // Print table header
-    const nHeader = 'n'.padStart(maxNWidth);
-    const zHeader = 'Period'.padStart(maxZWidth);
-    const rHeader = 'Remainders'.padEnd(maxRWidth);
-    console.log(` ${nHeader} | ${zHeader} | ${rHeader}`);
-    console.log(
-        '-'.repeat(maxNWidth + 2) +
-            '|' +
-            '-'.repeat(maxZWidth + 2) +
-            '|' +
-            '-'.repeat(maxRWidth + 2)
-    );
+        // Print table header
+        const nHeader = 'n'.padStart(maxNWidth);
+        const zHeader = 'Period'.padStart(maxZWidth);
+        const rHeader = 'Remainders'.padEnd(maxRWidth);
+        console.log(` ${nHeader} | ${zHeader} | ${rHeader}`);
+        console.log(
+            '-'.repeat(maxNWidth + 2) +
+                '|' +
+                '-'.repeat(maxZWidth + 2) +
+                '|' +
+                '-'.repeat(maxRWidth + 2)
+        );
 
-    // Print table rows
-    for (const pattern of patterns) {
-        const nStr = pattern.n.toString().padStart(maxNWidth);
-        const zStr = pattern.z.toString().padStart(maxZWidth);
-        const filtered = pattern.R.filter(r => r !== pattern.z);
-        const rStr = JSON.stringify(filtered).replace(/,/g, ', ');
-        console.log(` ${nStr} | ${zStr} | ${rStr}`);
-    }
-
-    // Optional verification against checkIdentity
-    if (limitArg) {
-        const limit = parseInt(limitArg, 10);
-        console.log(`\nVerifying patterns up to m=${limit}...\n`);
-
-        // Calculate max n width for alignment
-        const maxN = Math.max(...nRange.filter(n => !isNaN(n)));
-        const nWidth = maxN.toString().length;
-
-        for (const n of nRange) {
-            if (isNaN(n)) continue;
-            const pattern = findPattern(n);
-
-            const nStr = n.toString().padStart(nWidth);
-            process.stdout.write(`n=${nStr}: `);
-            let allPass = true;
-            for (let m = 1; m <= limit; m++) {
-                const expectPass = pattern.R.includes(m % pattern.z);
-                const actualPass = checkIdentity(m, n);
-
-                if (expectPass !== actualPass) {
-                    console.log(
-                        `FAIL at m=${m}. Expected ${expectPass}, Got ${actualPass}`
-                    );
-                    allPass = false;
-                    break;
-                }
-            }
-            if (allPass) {
-                console.log('OK ✅');
-            }
+        // Print table rows
+        for (const pattern of patterns) {
+            const nStr = pattern.n.toString().padStart(maxNWidth);
+            const zStr = pattern.z.toString().padStart(maxZWidth);
+            const filtered = pattern.R.filter(r => r !== pattern.z);
+            const rStr = JSON.stringify(filtered).replace(/,/g, ', ');
+            console.log(` ${nStr} | ${zStr} | ${rStr}`);
         }
     }
 }

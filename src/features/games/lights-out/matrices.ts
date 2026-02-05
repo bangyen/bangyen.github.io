@@ -131,6 +131,121 @@ export function getPolynomial(index: number): bigint {
     return output[index] ?? 0n;
 }
 
+export function polyDegree(p: bigint): number {
+    if (p === 0n) return -1;
+    return p.toString(2).length - 1;
+}
+
+export function polyDiv(
+    a: bigint,
+    b: bigint
+): { quotient: bigint; remainder: bigint } {
+    if (b === 0n) throw new Error('Division by zero polynomial');
+    let quotient = 0n;
+    let remainder = a;
+    const degreeB = polyDegree(b);
+
+    while (polyDegree(remainder) >= degreeB) {
+        const shift = polyDegree(remainder) - degreeB;
+        quotient ^= 1n << BigInt(shift);
+        remainder ^= b << BigInt(shift);
+    }
+
+    return { quotient, remainder };
+}
+
+export function polyMod(a: bigint, b: bigint): bigint {
+    return polyDiv(a, b).remainder;
+}
+
+export function getMinimalPolynomial(A: bigint[]): bigint {
+    const size = A.length;
+
+    function flatten(mat: bigint[]): bigint {
+        let res = 0n;
+        for (const r of mat) {
+            res = (res << BigInt(size)) | r;
+        }
+        return res;
+    }
+
+    const basis: { vector: bigint; poly: bigint }[] = [];
+
+    for (let d = 0; d <= size * size; d++) {
+        const poly = 1n << BigInt(d);
+        const Ad = evalPolynomial(A, poly);
+        let v = flatten(Ad);
+        let currentPoly = poly;
+
+        for (const b of basis) {
+            if (polyDegree(v ^ b.vector) < polyDegree(v)) {
+                v ^= b.vector;
+                currentPoly ^= b.poly;
+            }
+        }
+
+        if (v === 0n) {
+            return currentPoly;
+        } else {
+            basis.push({ vector: v, poly: currentPoly });
+            basis.sort((a, b) => (a.vector > b.vector ? -1 : 1));
+        }
+    }
+
+    return getPolynomial(size + 1);
+}
+
+const irreduciblesCache: bigint[] = [2n, 3n]; // x, x+1
+let maxCachedDegree = 1;
+
+export function getIrreducibles(maxDegree: number): bigint[] {
+    if (maxDegree <= maxCachedDegree) {
+        return irreduciblesCache.filter(p => polyDegree(p) <= maxDegree);
+    }
+
+    for (
+        let p = 1n << BigInt(maxCachedDegree + 1);
+        polyDegree(p) <= maxDegree;
+        p++
+    ) {
+        let isIrreducible = true;
+        const degP = polyDegree(p);
+        for (const f of irreduciblesCache) {
+            if (polyDegree(f) > degP / 2) break;
+            if (polyMod(p, f) === 0n) {
+                isIrreducible = false;
+                break;
+            }
+        }
+        if (isIrreducible) irreduciblesCache.push(p);
+    }
+
+    maxCachedDegree = maxDegree;
+    return irreduciblesCache;
+}
+
+export function factorPoly(p: bigint): { factor: bigint; exponent: number }[] {
+    if (p === 0n) return [];
+    if (p === 1n) return [];
+    const factors: { factor: bigint; exponent: number }[] = [];
+    let rem = p;
+    const irreducibles = getIrreducibles(polyDegree(p));
+
+    for (const f of irreducibles) {
+        if (polyMod(rem, f) === 0n) {
+            let exponent = 0;
+            while (polyMod(rem, f) === 0n) {
+                rem = polyDiv(rem, f).quotient;
+                exponent++;
+            }
+            factors.push({ factor: f, exponent });
+        }
+        if (rem === 1n) break;
+    }
+
+    return factors;
+}
+
 export function evalPolynomial(
     matrix: bigint[],
     poly: bigint,
@@ -264,6 +379,7 @@ export interface Pattern {
     n: number;
     z: number;
     R: number[];
+    z_seq: number;
 }
 
 export function findPattern(n: number): Pattern {
@@ -313,7 +429,7 @@ export function findPattern(n: number): Pattern {
             const fullZ = k - 1;
             const R_filtered = R.filter(r => r !== fullZ);
             const { z: minZ, R: minR } = findMinimalPeriod(fullZ, R_filtered);
-            return { n, z: minZ, R: minR };
+            return { n, z: minZ, R: minR, z_seq: fullZ };
         }
 
         prev = curr;
