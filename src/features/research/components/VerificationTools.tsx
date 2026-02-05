@@ -211,94 +211,78 @@ const PeriodicityCalculator: React.FC = () => {
                         <Paper
                             elevation={0}
                             sx={{
-                                p: 2.25,
                                 height: '100%',
                                 backgroundColor: 'rgba(255, 255, 255, 0.03)',
                                 borderRadius: SPACING.borderRadius.md,
                                 border: `1px solid ${COLORS.primary.main}33`,
-                                position: 'relative',
-                                overflowY: 'auto',
+                                borderLeft: `4px solid ${COLORS.primary.main}`,
                                 display: 'flex',
                                 flexDirection: 'column',
-                                '&::-webkit-scrollbar': {
-                                    width: '4px',
-                                },
-                                '&::-webkit-scrollbar-thumb': {
-                                    backgroundColor: 'rgba(255,255,255,0.1)',
-                                    borderRadius: '4px',
-                                },
-                                '&::before': {
-                                    content: '""',
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    width: '4px',
-                                    height: '100%',
-                                    backgroundColor: COLORS.primary.main,
-                                },
+                                overflow: 'hidden',
                             }}
                         >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    mb: 2,
-                                    pb: 1.5,
-                                    borderBottom:
-                                        '1px solid rgba(255,255,255,0.05)',
-                                }}
-                            >
-                                <Box>
-                                    <Typography
-                                        variant="caption"
-                                        sx={{
-                                            color: COLORS.primary.main,
-                                            fontWeight: 'bold',
-                                            textTransform: 'uppercase',
-                                            letterSpacing: 1,
-                                            display: 'block',
-                                            lineHeight: 1,
-                                            mb: 0.5,
-                                        }}
-                                    >
-                                        Spectral Periodicity
-                                    </Typography>
-                                    <Typography
-                                        variant="caption"
-                                        sx={{
-                                            color: COLORS.text.secondary,
-                                            fontSize: '0.65rem',
-                                        }}
-                                    >
-                                        Period z = {result.pattern.z}
-                                    </Typography>
-                                </Box>
-                                <Box sx={{ textAlign: 'right' }}>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            color: COLORS.text.primary,
-                                            fontFamily: 'monospace',
-                                            fontWeight: 'bold',
-                                            fontSize: '0.75rem',
-                                        }}
-                                    >
-                                        z_seq: {result.pattern.z_seq}
-                                    </Typography>
-                                    <Typography
-                                        variant="caption"
-                                        sx={{
-                                            color: COLORS.primary.light,
-                                            fontSize: '0.65rem',
-                                            display: 'block',
-                                        }}
-                                    >
-                                        Property: m mod z ∈ R
-                                    </Typography>
+                            <Box sx={{ p: 2.25, pb: 0 }}>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        mb: 2,
+                                        pb: 1.5,
+                                        borderBottom:
+                                            '1px solid rgba(255,255,255,0.05)',
+                                    }}
+                                >
+                                    <Box>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: COLORS.primary.main,
+                                                fontWeight: 'bold',
+                                                textTransform: 'uppercase',
+                                                letterSpacing: 1,
+                                                display: 'block',
+                                                lineHeight: 1,
+                                                mb: 0.5,
+                                            }}
+                                        >
+                                            Spectral Periodicity
+                                        </Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: COLORS.text.secondary,
+                                                fontSize: '0.65rem',
+                                            }}
+                                        >
+                                            Period z = {result.pattern.z}
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ textAlign: 'right' }}>
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: COLORS.text.primary,
+                                                fontFamily: 'monospace',
+                                                fontWeight: 'bold',
+                                                fontSize: '0.75rem',
+                                            }}
+                                        >
+                                            z_seq: {result.pattern.z_seq}
+                                        </Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: COLORS.primary.light,
+                                                fontSize: '0.65rem',
+                                                display: 'block',
+                                            }}
+                                        >
+                                            Property: m mod z ∈ R
+                                        </Typography>
+                                    </Box>
                                 </Box>
                             </Box>
-
                             <Box
                                 sx={{
                                     display: 'flex',
@@ -306,6 +290,17 @@ const PeriodicityCalculator: React.FC = () => {
                                     gap: 2.5,
                                     flexGrow: 1,
                                     minHeight: 0,
+                                    overflowY: 'auto',
+                                    p: 2.25,
+                                    pt: 0,
+                                    '&::-webkit-scrollbar': {
+                                        width: '4px',
+                                    },
+                                    '&::-webkit-scrollbar-thumb': {
+                                        backgroundColor:
+                                            'rgba(255,255,255,0.1)',
+                                        borderRadius: '4px',
+                                    },
                                 }}
                             >
                                 <Box sx={{ minWidth: 0 }}>
@@ -667,98 +662,87 @@ const SolvabilityAnalyzer: React.FC = () => {
                         <Paper
                             elevation={0}
                             sx={{
-                                p: 2.25,
                                 height: '100%',
                                 backgroundColor: 'rgba(255, 255, 255, 0.03)',
                                 borderRadius: SPACING.borderRadius.md,
                                 border: `1px solid ${result.nullity === 0 ? COLORS.data.green : COLORS.primary.main}33`,
+                                borderLeft: `4px solid ${
+                                    result.nullity === 0
+                                        ? COLORS.data.green
+                                        : COLORS.primary.main
+                                }`,
                                 position: 'relative',
-                                overflowY: 'auto',
                                 display: 'flex',
                                 flexDirection: 'column',
-                                '&::-webkit-scrollbar': {
-                                    width: '4px',
-                                },
-                                '&::-webkit-scrollbar-thumb': {
-                                    backgroundColor: 'rgba(255,255,255,0.1)',
-                                    borderRadius: '4px',
-                                },
-                                '&::before': {
-                                    content: '""',
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    width: '4px',
-                                    height: '100%',
-                                    backgroundColor:
-                                        result.nullity === 0
-                                            ? COLORS.data.green
-                                            : COLORS.primary.main,
-                                },
+                                overflow: 'hidden',
                             }}
                         >
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    mb: 2,
-                                    pb: 1.5,
-                                    borderBottom:
-                                        '1px solid rgba(255,255,255,0.05)',
-                                }}
-                            >
-                                <Box>
-                                    <Typography
-                                        variant="caption"
-                                        sx={{
-                                            color: COLORS.primary.main,
-                                            fontWeight: 'bold',
-                                            textTransform: 'uppercase',
-                                            letterSpacing: 1,
-                                            display: 'block',
-                                            lineHeight: 1,
-                                            mb: 0.5,
-                                        }}
-                                    >
-                                        Subspace Analysis
-                                    </Typography>
-                                    <Typography
-                                        variant="caption"
-                                        sx={{
-                                            color: COLORS.text.secondary,
-                                            fontSize: '0.65rem',
-                                        }}
-                                    >
-                                        {result.reachableStates} Solvable States
-                                    </Typography>
-                                </Box>
-                                <Box sx={{ textAlign: 'right' }}>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            color: COLORS.text.primary,
-                                            fontFamily: 'monospace',
-                                            fontWeight: 'bold',
-                                            fontSize: '0.75rem',
-                                        }}
-                                    >
-                                        Rank: {result.gridRank} | Null:{' '}
-                                        {result.nullity}
-                                    </Typography>
-                                    <Typography
-                                        variant="caption"
-                                        sx={{
-                                            color:
-                                                result.nullity === 0
-                                                    ? COLORS.data.green
-                                                    : COLORS.primary.light,
-                                            fontSize: '0.65rem',
-                                            display: 'block',
-                                        }}
-                                    >
-                                        Solvability: {result.solvablePercent}%
-                                    </Typography>
+                            <Box sx={{ p: 2.25, pb: 0 }}>
+                                <Box
+                                    sx={{
+                                        display: 'flex',
+                                        justifyContent: 'space-between',
+                                        alignItems: 'center',
+                                        mb: 2,
+                                        pb: 1.5,
+                                        borderBottom:
+                                            '1px solid rgba(255,255,255,0.05)',
+                                    }}
+                                >
+                                    <Box>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: COLORS.primary.main,
+                                                fontWeight: 'bold',
+                                                textTransform: 'uppercase',
+                                                letterSpacing: 1,
+                                                display: 'block',
+                                                lineHeight: 1,
+                                                mb: 0.5,
+                                            }}
+                                        >
+                                            Subspace Analysis
+                                        </Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: COLORS.text.secondary,
+                                                fontSize: '0.65rem',
+                                            }}
+                                        >
+                                            {result.reachableStates} Solvable
+                                            States
+                                        </Typography>
+                                    </Box>
+                                    <Box sx={{ textAlign: 'right' }}>
+                                        <Typography
+                                            variant="body2"
+                                            sx={{
+                                                color: COLORS.text.primary,
+                                                fontFamily: 'monospace',
+                                                fontWeight: 'bold',
+                                                fontSize: '0.75rem',
+                                            }}
+                                        >
+                                            Rank: {result.gridRank} | Null:{' '}
+                                            {result.nullity}
+                                        </Typography>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color:
+                                                    result.nullity === 0
+                                                        ? COLORS.data.green
+                                                        : COLORS.primary.light,
+                                                fontSize: '0.65rem',
+                                                display: 'block',
+                                            }}
+                                        >
+                                            Solvability:{' '}
+                                            {result.solvablePercent}%
+                                        </Typography>
+                                    </Box>
                                 </Box>
                             </Box>
                             <Box
@@ -768,6 +752,17 @@ const SolvabilityAnalyzer: React.FC = () => {
                                     gap: 2.5,
                                     flexGrow: 1,
                                     minHeight: 0,
+                                    overflowY: 'auto',
+                                    p: 2.25,
+                                    pt: 0,
+                                    '&::-webkit-scrollbar': {
+                                        width: '4px',
+                                    },
+                                    '&::-webkit-scrollbar-thumb': {
+                                        backgroundColor:
+                                            'rgba(255,255,255,0.1)',
+                                        borderRadius: '4px',
+                                    },
                                 }}
                             >
                                 {result.quietPatterns.length > 0 && (
@@ -913,11 +908,15 @@ const SolvabilityAnalyzer: React.FC = () => {
                                     </Box>
                                 </Box>
                             </Box>
-
                             {result.quietPatterns.length === 0 && (
                                 <Box
                                     sx={{
-                                        mt: 1,
+                                        p: 1.5,
+                                        px: 2.25,
+                                        backgroundColor:
+                                            'rgba(0, 200, 83, 0.05)',
+                                        borderTop:
+                                            '1px solid rgba(0, 200, 83, 0.1)',
                                         display: 'flex',
                                         alignItems: 'center',
                                     }}
@@ -927,10 +926,11 @@ const SolvabilityAnalyzer: React.FC = () => {
                                         sx={{
                                             color: COLORS.data.green,
                                             fontStyle: 'italic',
-                                            fontSize: '0.8rem',
+                                            fontSize: '0.75rem',
+                                            fontWeight: 'bold',
                                         }}
                                     >
-                                        Fully solvable (Nullity = 0)
+                                        ✓ GRID IS FULLY SOLVABLE (Nullity = 0)
                                     </Typography>
                                 </Box>
                             )}
