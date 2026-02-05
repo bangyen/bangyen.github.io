@@ -32,6 +32,41 @@ export function countBits(num: bigint): number {
     return count;
 }
 
+export function toSuperscript(num: number): string {
+    const map: Record<string, string> = {
+        '0': '⁰',
+        '1': '¹',
+        '2': '²',
+        '3': '³',
+        '4': '⁴',
+        '5': '⁵',
+        '6': '⁶',
+        '7': '⁷',
+        '8': '⁸',
+        '9': '⁹',
+    };
+    return num
+        .toString()
+        .split('')
+        .map(c => map[c] ?? c)
+        .join('');
+}
+
+export function polyToString(p: bigint): string {
+    if (p === 0n) return '0';
+    if (p === 1n) return '1';
+    const terms: string[] = [];
+    const bits = p.toString(2);
+    for (let i = 0; i < bits.length; i++) {
+        if (bits[bits.length - 1 - i] === '1') {
+            if (i === 0) terms.push('1');
+            else if (i === 1) terms.push('x');
+            else terms.push(`x${toSuperscript(i)}`);
+        }
+    }
+    return terms.reverse().join(' + ');
+}
+
 export function multiplySym(matrixA: bigint[], matrixB: bigint[]): bigint[] {
     const size = matrixA.length;
     const output: bigint[] = [];
@@ -673,4 +708,70 @@ export function getImageBasis(matrix: bigint[], size: number): bigint[] {
     }
 
     return rows.slice(0, pivotRow);
+}
+
+export function getImageMapping(
+    matrix: bigint[],
+    size: number
+): { state: bigint; toggle: bigint }[] {
+    const rows = [...matrix];
+    const mapping: bigint[] = getIdentity(size);
+    let pivotRow = 0;
+
+    for (let c = 0; c < size && pivotRow < rows.length; c++) {
+        const pow = 1n << BigInt(size - 1 - c);
+        let p = pivotRow;
+        while (p < rows.length) {
+            const rowP = rows[p];
+            if (rowP !== undefined && rowP & pow) break;
+            p++;
+        }
+
+        if (p < rows.length) {
+            const rowP = rows[p];
+            const mapP = mapping[p];
+            const rowPivot = rows[pivotRow];
+            const mapPivot = mapping[pivotRow];
+
+            if (
+                rowP !== undefined &&
+                mapP !== undefined &&
+                rowPivot !== undefined &&
+                mapPivot !== undefined
+            ) {
+                rows[pivotRow] = rowP;
+                rows[p] = rowPivot;
+                mapping[pivotRow] = mapP;
+                mapping[p] = mapPivot;
+
+                const rP = rows[pivotRow] ?? 0n;
+                const mP = mapping[pivotRow] ?? 0n;
+
+                for (let r = 0; r < rows.length; r++) {
+                    const rowR = rows[r];
+                    const mapR = mapping[r];
+                    if (
+                        r !== pivotRow &&
+                        rowR !== undefined &&
+                        mapR !== undefined &&
+                        rowR & pow
+                    ) {
+                        rows[r] = rowR ^ rP;
+                        mapping[r] = mapR ^ mP;
+                    }
+                }
+            }
+            pivotRow++;
+        }
+    }
+
+    const result: { state: bigint; toggle: bigint }[] = [];
+    for (let i = 0; i < pivotRow; i++) {
+        const state = rows[i];
+        const toggle = mapping[i];
+        if (state !== undefined && toggle !== undefined) {
+            result.push({ state, toggle });
+        }
+    }
+    return result;
 }

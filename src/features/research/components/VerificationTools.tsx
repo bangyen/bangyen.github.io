@@ -9,7 +9,6 @@ import {
     Alert,
     Tooltip,
     IconButton,
-    Divider,
     Fade,
 } from '../../../components/mui';
 import { HelpOutlineRounded } from '../../../components/icons';
@@ -22,11 +21,21 @@ import {
     findPattern,
     Pattern,
     getKernelBasis,
+    getImageMapping,
+    getMinWeightSolution,
+    getMinimalPolynomial,
+    factorPoly,
+    polyToString,
+    toSuperscript,
 } from '../../games/lights-out/matrices';
 
 const PeriodicityCalculator: React.FC = () => {
     const [cols, setCols] = useState<string>('5');
-    const [pattern, setPattern] = useState<Pattern | null>(null);
+    const [result, setResult] = useState<{
+        pattern: Pattern;
+        minimalPoly: string;
+        factorization: string;
+    } | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
@@ -47,8 +56,21 @@ const PeriodicityCalculator: React.FC = () => {
         // Run in timeout to prevent UI freeze
         setTimeout(() => {
             try {
-                const result = findPattern(n);
-                setPattern(result);
+                const pattern = findPattern(n);
+                const A = getMatrix(n);
+                const M = getMinimalPolynomial(A);
+                const factors = factorPoly(M);
+
+                setResult({
+                    pattern,
+                    minimalPoly: polyToString(M),
+                    factorization: factors
+                        .map(
+                            f =>
+                                `(${polyToString(f.factor)})${f.exponent > 1 ? toSuperscript(f.exponent) : ''}`
+                        )
+                        .join(' · '),
+                });
             } catch (_err) {
                 setError('Could not find period within reasonable limits.');
             } finally {
@@ -112,8 +134,52 @@ const PeriodicityCalculator: React.FC = () => {
                 </Alert>
             )}
 
-            <Box sx={{ height: 240, mt: 3 }}>
-                {!pattern && !error && !loading && (
+            <Box
+                sx={{
+                    height: 480,
+                    mt: 3,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                }}
+            >
+                {loading && (
+                    <Box
+                        sx={{
+                            height: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 2,
+                            border: `1px dashed ${COLORS.border.subtle}`,
+                            borderRadius: SPACING.borderRadius.md,
+                            backgroundColor: 'rgba(255, 255, 255, 0.01)',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: '50%',
+                                border: `2px solid ${COLORS.primary.main}22`,
+                                borderTopColor: COLORS.primary.main,
+                                animation: 'spin 1s linear infinite',
+                                '@keyframes spin': {
+                                    '0%': { transform: 'rotate(0deg)' },
+                                    '100%': { transform: 'rotate(360deg)' },
+                                },
+                            }}
+                        />
+                        <Typography
+                            variant="caption"
+                            sx={{ color: COLORS.text.secondary }}
+                        >
+                            Calculating Patterns...
+                        </Typography>
+                    </Box>
+                )}
+                {!result && !error && !loading && (
                     <Box
                         sx={{
                             height: '100%',
@@ -140,18 +206,27 @@ const PeriodicityCalculator: React.FC = () => {
                         </Typography>
                     </Box>
                 )}
-                {pattern && (
+                {result && !loading && (
                     <Fade in={true}>
                         <Paper
                             elevation={0}
                             sx={{
-                                p: 2.5,
+                                p: 2.25,
                                 height: '100%',
                                 backgroundColor: 'rgba(255, 255, 255, 0.03)',
                                 borderRadius: SPACING.borderRadius.md,
                                 border: `1px solid ${COLORS.primary.main}33`,
                                 position: 'relative',
-                                overflow: 'hidden',
+                                overflowY: 'auto',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                '&::-webkit-scrollbar': {
+                                    width: '4px',
+                                },
+                                '&::-webkit-scrollbar-thumb': {
+                                    backgroundColor: 'rgba(255,255,255,0.1)',
+                                    borderRadius: '4px',
+                                },
                                 '&::before': {
                                     content: '""',
                                     position: 'absolute',
@@ -167,70 +242,171 @@ const PeriodicityCalculator: React.FC = () => {
                                 sx={{
                                     display: 'flex',
                                     justifyContent: 'space-between',
-                                    alignItems: 'baseline',
+                                    alignItems: 'center',
                                     mb: 2,
+                                    pb: 1.5,
+                                    borderBottom:
+                                        '1px solid rgba(255,255,255,0.05)',
                                 }}
                             >
-                                <Typography
-                                    variant="h5"
-                                    sx={{
-                                        color: COLORS.primary.main,
-                                        fontWeight: 'bold',
-                                        letterSpacing: -0.5,
-                                    }}
-                                >
-                                    z = {pattern.z}
-                                </Typography>
+                                <Box>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            color: COLORS.primary.main,
+                                            fontWeight: 'bold',
+                                            textTransform: 'uppercase',
+                                            letterSpacing: 1,
+                                            display: 'block',
+                                            lineHeight: 1,
+                                            mb: 0.5,
+                                        }}
+                                    >
+                                        Spectral Periodicity
+                                    </Typography>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            color: COLORS.text.secondary,
+                                            fontSize: '0.65rem',
+                                        }}
+                                    >
+                                        Width n = {cols} | Period z ={' '}
+                                        {result.pattern.z}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ textAlign: 'right' }}>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: COLORS.text.primary,
+                                            fontFamily: 'monospace',
+                                            fontWeight: 'bold',
+                                            fontSize: '0.75rem',
+                                        }}
+                                    >
+                                        z_seq: {result.pattern.z_seq}
+                                    </Typography>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            color: COLORS.primary.light,
+                                            fontSize: '0.65rem',
+                                            display: 'block',
+                                        }}
+                                    >
+                                        Property: m mod z ∈ R
+                                    </Typography>
+                                </Box>
                             </Box>
-
-                            <Divider
-                                sx={{
-                                    mb: 1.5,
-                                    borderColor: 'rgba(255,255,255,0.05)',
-                                }}
-                            />
-
-                            <Typography
-                                variant="caption"
-                                sx={{
-                                    color: COLORS.text.secondary,
-                                    fontWeight: 'bold',
-                                    display: 'block',
-                                    mb: 0.5,
-                                    textTransform: 'uppercase',
-                                    letterSpacing: 1,
-                                }}
-                            >
-                                Valid Remainders (R)
-                            </Typography>
 
                             <Box
                                 sx={{
-                                    p: 1.25,
-                                    backgroundColor: 'rgba(0,0,0,0.3)',
-                                    borderRadius: '8px',
-                                    fontFamily: 'monospace',
-                                    fontSize: '0.8rem',
-                                    color: COLORS.primary.light,
-                                    wordBreak: 'break-all',
-                                    border: '1px solid rgba(255,255,255,0.05)',
-                                    mb: 1.5,
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 2.5,
+                                    flexGrow: 1,
+                                    minHeight: 0,
                                 }}
                             >
-                                {`{ ${pattern.R.join(', ')} }`}
-                            </Box>
+                                <Box sx={{ minWidth: 0 }}>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            color: COLORS.primary.main,
+                                            fontWeight: 'bold',
+                                            display: 'block',
+                                            mb: 0.5,
+                                            textTransform: 'uppercase',
+                                            letterSpacing: 1,
+                                            fontSize: '0.65rem',
+                                        }}
+                                    >
+                                        Minimal Polynomial M(x)
+                                    </Typography>
+                                    <Box
+                                        sx={{
+                                            p: 1.25,
+                                            backgroundColor: 'rgba(0,0,0,0.2)',
+                                            borderRadius: '6px',
+                                            fontFamily: 'monospace',
+                                            fontSize: '0.75rem',
+                                            color: COLORS.text.primary,
+                                            border: '1px solid rgba(255,255,255,0.03)',
+                                            mb: 1.5,
+                                        }}
+                                    >
+                                        {result.minimalPoly}
+                                    </Box>
 
-                            <Box sx={{ mt: 'auto' }}>
-                                <Typography
-                                    variant="caption"
-                                    sx={{
-                                        color: COLORS.text.secondary,
-                                        fontStyle: 'italic',
-                                        display: 'block',
-                                    }}
-                                >
-                                    Invariant: m mod {pattern.z} ∈ R
-                                </Typography>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            color: COLORS.text.secondary,
+                                            fontWeight: 'bold',
+                                            display: 'block',
+                                            mb: 0.5,
+                                            textTransform: 'uppercase',
+                                            letterSpacing: 1,
+                                            fontSize: '0.65rem',
+                                        }}
+                                    >
+                                        Factorization
+                                    </Typography>
+                                    <Typography
+                                        sx={{
+                                            fontFamily: 'monospace',
+                                            fontSize: '0.75rem',
+                                            color: COLORS.primary.light,
+                                            pl: 1,
+                                        }}
+                                    >
+                                        {result.factorization}
+                                    </Typography>
+                                </Box>
+
+                                <Box sx={{ minWidth: 0 }}>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            color: COLORS.primary.light,
+                                            fontWeight: 'bold',
+                                            display: 'block',
+                                            mb: 0.5,
+                                            textTransform: 'uppercase',
+                                            letterSpacing: 1,
+                                            fontSize: '0.65rem',
+                                        }}
+                                    >
+                                        Remainder Set (R)
+                                    </Typography>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexWrap: 'wrap',
+                                            gap: 1,
+                                        }}
+                                    >
+                                        {result.pattern.R.map(r => (
+                                            <Box
+                                                key={r}
+                                                sx={{
+                                                    fontFamily: 'monospace',
+                                                    fontSize: '0.7rem',
+                                                    px: 1,
+                                                    py: 0.5,
+                                                    backgroundColor:
+                                                        'rgba(0,184,212,0.1)',
+                                                    borderRadius: '4px',
+                                                    color: COLORS.primary.light,
+                                                    border: '1px solid rgba(0,184,212,0.2)',
+                                                }}
+                                            >
+                                                {r}
+                                            </Box>
+                                        ))}
+                                    </Box>
+                                </Box>
                             </Box>
                         </Paper>
                     </Fade>
@@ -246,10 +422,16 @@ const SolvabilityAnalyzer: React.FC = () => {
     const [result, setResult] = useState<{
         rank: number;
         nullity: number;
+        gridRank: number;
         solvablePercent: string;
         quietPatterns: string[];
+        totalStates: string;
+        reachableStates: string;
+        imageMapping: { state: string; toggle: string }[];
+        isFullSubspace: boolean;
     } | null>(null);
 
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const handleAnalyze = () => {
@@ -265,28 +447,96 @@ const SolvabilityAnalyzer: React.FC = () => {
             return;
         }
 
+        setLoading(true);
         setError(null);
-        try {
-            const A = getMatrix(cols);
-            const Pn = getPolynomial(rows + 1);
-            const matrix = evalPolynomial(A, Pn);
-            const kernel = getKernelBasis(matrix, cols);
-            const nullity = kernel.length;
-            const rank = cols - nullity;
 
-            setResult({
-                rank,
-                nullity,
-                solvablePercent: ((1 / Math.pow(2, nullity)) * 100).toFixed(
-                    nullity === 0 ? 0 : 2
-                ),
-                quietPatterns: kernel.map(k =>
-                    k.toString(2).padStart(cols, '0')
-                ),
-            });
-        } catch (_err) {
-            setError('An error occurred during calculation.');
-        }
+        // Timeout to allow loading state to show
+        setTimeout(() => {
+            try {
+                const A = getMatrix(cols);
+                const Pn = getPolynomial(rows + 1);
+                const matrix = evalPolynomial(A, Pn);
+                const kernel = getKernelBasis(matrix, cols);
+                const nullity = kernel.length;
+                const rank = cols - nullity;
+                const totalCells = rows * cols;
+                const gridRank = totalCells - nullity;
+
+                const formatLarge = (n: number) => {
+                    if (n < 50) {
+                        const val = 1n << BigInt(n);
+                        return val.toLocaleString();
+                    }
+                    return `2^${n.toString()}`;
+                };
+
+                const imageBasis = getImageMapping(matrix, cols);
+                const rankTotal = imageBasis.length;
+                const useFullSubspace = rankTotal <= 6 && rankTotal > 0; // Show all if <= 64 states
+
+                const mapping: { state: string; toggle: string }[] = [];
+
+                if (useFullSubspace) {
+                    const count = 1 << rankTotal;
+                    for (let i = 1; i < count; i++) {
+                        let combinedState = 0n;
+                        for (let j = 0; j < rankTotal; j++) {
+                            if ((i >> j) & 1) {
+                                const basis = imageBasis[j];
+                                if (basis) {
+                                    combinedState ^= basis.state;
+                                }
+                            }
+                        }
+                        const minToggle = getMinWeightSolution(
+                            matrix,
+                            combinedState,
+                            cols
+                        );
+                        mapping.push({
+                            state: combinedState
+                                .toString(2)
+                                .padStart(cols, '0'),
+                            toggle: minToggle.toString(2).padStart(cols, '0'),
+                        });
+                    }
+                    // Sort by state for consistency
+                    mapping.sort((a, b) => a.state.localeCompare(b.state));
+                } else {
+                    imageBasis.forEach(m => {
+                        const minToggle = getMinWeightSolution(
+                            matrix,
+                            m.state,
+                            cols
+                        );
+                        mapping.push({
+                            state: m.state.toString(2).padStart(cols, '0'),
+                            toggle: minToggle.toString(2).padStart(cols, '0'),
+                        });
+                    });
+                }
+
+                setResult({
+                    rank,
+                    nullity,
+                    gridRank,
+                    solvablePercent: ((1 / Math.pow(2, nullity)) * 100).toFixed(
+                        nullity === 0 ? 0 : 2
+                    ),
+                    quietPatterns: kernel.map(k =>
+                        k.toString(2).padStart(cols, '0')
+                    ),
+                    totalStates: formatLarge(totalCells),
+                    reachableStates: formatLarge(gridRank),
+                    imageMapping: mapping,
+                    isFullSubspace: useFullSubspace,
+                });
+            } catch (_err) {
+                setError('An error occurred during calculation.');
+            } finally {
+                setLoading(false);
+            }
+        }, 50);
     };
 
     return (
@@ -356,8 +606,52 @@ const SolvabilityAnalyzer: React.FC = () => {
                 </Alert>
             )}
 
-            <Box sx={{ height: 240, mt: 3 }}>
-                {!result && !error && (
+            <Box
+                sx={{
+                    height: 480,
+                    mt: 3,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflow: 'hidden',
+                }}
+            >
+                {loading && (
+                    <Box
+                        sx={{
+                            height: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 2,
+                            border: `1px dashed ${COLORS.border.subtle}`,
+                            borderRadius: SPACING.borderRadius.md,
+                            backgroundColor: 'rgba(255, 255, 255, 0.01)',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: '50%',
+                                border: `2px solid ${COLORS.primary.main}22`,
+                                borderTopColor: COLORS.primary.main,
+                                animation: 'spin 1s linear infinite',
+                                '@keyframes spin': {
+                                    '0%': { transform: 'rotate(0deg)' },
+                                    '100%': { transform: 'rotate(360deg)' },
+                                },
+                            }}
+                        />
+                        <Typography
+                            variant="caption"
+                            sx={{ color: COLORS.text.secondary }}
+                        >
+                            Performing Algebraic Matrix Analysis...
+                        </Typography>
+                    </Box>
+                )}
+                {!result && !error && !loading && (
                     <Box
                         sx={{
                             height: '100%',
@@ -384,7 +678,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                         </Typography>
                     </Box>
                 )}
-                {result && (
+                {result && !loading && (
                     <Fade in={true}>
                         <Paper
                             elevation={0}
@@ -395,9 +689,16 @@ const SolvabilityAnalyzer: React.FC = () => {
                                 borderRadius: SPACING.borderRadius.md,
                                 border: `1px solid ${result.nullity === 0 ? COLORS.data.green : COLORS.primary.main}33`,
                                 position: 'relative',
-                                overflow: 'hidden',
+                                overflowY: 'auto',
                                 display: 'flex',
                                 flexDirection: 'column',
+                                '&::-webkit-scrollbar': {
+                                    width: '4px',
+                                },
+                                '&::-webkit-scrollbar-thumb': {
+                                    backgroundColor: 'rgba(255,255,255,0.1)',
+                                    borderRadius: '4px',
+                                },
                                 '&::before': {
                                     content: '""',
                                     position: 'absolute',
@@ -417,82 +718,141 @@ const SolvabilityAnalyzer: React.FC = () => {
                                     display: 'flex',
                                     justifyContent: 'space-between',
                                     alignItems: 'center',
-                                    mb: 1.5,
+                                    mb: 2,
+                                    pb: 1.5,
+                                    borderBottom:
+                                        '1px solid rgba(255,255,255,0.05)',
                                 }}
                             >
-                                <Typography
-                                    variant="h5"
-                                    sx={{
-                                        color:
-                                            result.nullity === 0
-                                                ? COLORS.data.green
-                                                : COLORS.text.primary,
-                                        fontWeight: 'bold',
-                                        letterSpacing: -0.5,
-                                    }}
-                                >
-                                    Solvability: {result.solvablePercent}%
-                                </Typography>
-                            </Box>
-
-                            <Grid container spacing={2} sx={{ mb: 1.25 }}>
-                                <Grid size={{ xs: 6 }}>
-                                    <Typography
-                                        variant="caption"
-                                        sx={{
-                                            color: COLORS.text.secondary,
-                                            display: 'block',
-                                            fontSize: '0.7rem',
-                                        }}
-                                    >
-                                        Rank
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            fontWeight: 'bold',
-                                            color: COLORS.text.primary,
-                                        }}
-                                    >
-                                        {result.rank}
-                                    </Typography>
-                                </Grid>
-                                <Grid size={{ xs: 6 }}>
-                                    <Typography
-                                        variant="caption"
-                                        sx={{
-                                            color: COLORS.text.secondary,
-                                            display: 'block',
-                                            fontSize: '0.7rem',
-                                        }}
-                                    >
-                                        Nullity
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        sx={{
-                                            fontWeight: 'bold',
-                                            color: COLORS.text.primary,
-                                        }}
-                                    >
-                                        {result.nullity}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-
-                            <Divider
-                                sx={{
-                                    mb: 1.25,
-                                    borderColor: 'rgba(255,255,255,0.05)',
-                                }}
-                            />
-
-                            {result.quietPatterns.length > 0 ? (
-                                <Box sx={{ flexGrow: 1, minHeight: 0 }}>
+                                <Box>
                                     <Typography
                                         variant="caption"
                                         sx={{
                                             color: COLORS.primary.main,
+                                            fontWeight: 'bold',
+                                            textTransform: 'uppercase',
+                                            letterSpacing: 1,
+                                            display: 'block',
+                                            lineHeight: 1,
+                                            mb: 0.5,
+                                        }}
+                                    >
+                                        Subspace Analysis
+                                    </Typography>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            color: COLORS.text.secondary,
+                                            fontSize: '0.65rem',
+                                        }}
+                                    >
+                                        {m}×{n} Grid | {result.reachableStates}{' '}
+                                        Solvable States
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ textAlign: 'right' }}>
+                                    <Typography
+                                        variant="body2"
+                                        sx={{
+                                            color: COLORS.text.primary,
+                                            fontFamily: 'monospace',
+                                            fontWeight: 'bold',
+                                            fontSize: '0.75rem',
+                                        }}
+                                    >
+                                        Rank: {result.gridRank} | Null:{' '}
+                                        {result.nullity}
+                                    </Typography>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            color:
+                                                result.nullity === 0
+                                                    ? COLORS.data.green
+                                                    : COLORS.primary.light,
+                                            fontSize: '0.65rem',
+                                            display: 'block',
+                                        }}
+                                    >
+                                        Solvability: {result.solvablePercent}%
+                                    </Typography>
+                                </Box>
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: 2.5,
+                                    flexGrow: 1,
+                                    minHeight: 0,
+                                }}
+                            >
+                                {result.quietPatterns.length > 0 && (
+                                    <Box sx={{ minWidth: 0 }}>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: COLORS.primary.main,
+                                                fontWeight: 'bold',
+                                                display: 'block',
+                                                mb: 0.5,
+                                                textTransform: 'uppercase',
+                                                letterSpacing: 1,
+                                                fontSize: '0.65rem',
+                                            }}
+                                        >
+                                            Quiet Patterns (Kernel)
+                                        </Typography>
+                                        <Box
+                                            sx={{
+                                                pr: 1,
+                                            }}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexWrap: 'wrap',
+                                                    gap: 1,
+                                                }}
+                                            >
+                                                {result.quietPatterns.map(p => (
+                                                    <Box
+                                                        key={p}
+                                                        sx={{
+                                                            fontFamily:
+                                                                'monospace',
+                                                            fontSize: '0.65rem',
+                                                            px: 1,
+                                                            py: 0.5,
+                                                            backgroundColor:
+                                                                'rgba(0,0,0,0.2)',
+                                                            borderRadius: '4px',
+                                                            color: COLORS
+                                                                .primary.light,
+                                                            letterSpacing: 1,
+                                                            border: '1px solid rgba(255,255,255,0.03)',
+                                                        }}
+                                                    >
+                                                        {p}
+                                                    </Box>
+                                                ))}
+                                            </Box>
+                                        </Box>
+                                    </Box>
+                                )}
+
+                                <Box
+                                    sx={{
+                                        minWidth: 0,
+                                        flexGrow: 1,
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                    }}
+                                >
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            color: COLORS.data.green,
                                             fontWeight: 'bold',
                                             display: 'block',
                                             mb: 0.5,
@@ -501,48 +861,80 @@ const SolvabilityAnalyzer: React.FC = () => {
                                             fontSize: '0.65rem',
                                         }}
                                     >
-                                        Quiet Patterns
+                                        {result.isFullSubspace
+                                            ? 'Reachable States (Full Subspace)'
+                                            : 'Image Basis (Minimal Toggles)'}
                                     </Typography>
                                     <Box
                                         sx={{
-                                            maxHeight: 70,
-                                            overflowY: 'auto',
                                             pr: 1,
-                                            '&::-webkit-scrollbar': {
-                                                width: '3px',
-                                            },
-                                            '&::-webkit-scrollbar-thumb': {
-                                                backgroundColor:
-                                                    'rgba(255,255,255,0.1)',
-                                                borderRadius: '3px',
-                                            },
                                         }}
                                     >
-                                        {result.quietPatterns.map(p => (
-                                            <Box
-                                                key={p}
-                                                sx={{
-                                                    fontFamily: 'monospace',
-                                                    fontSize: '0.7rem',
-                                                    p: 0.75,
-                                                    mb: 0.5,
-                                                    backgroundColor:
-                                                        'rgba(0,0,0,0.2)',
-                                                    borderRadius: '4px',
-                                                    color: COLORS.primary.light,
-                                                    letterSpacing: 1,
-                                                    border: '1px solid rgba(255,255,255,0.03)',
-                                                }}
-                                            >
-                                                {p}
-                                            </Box>
-                                        ))}
+                                        <Box
+                                            sx={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                gap: 0.5,
+                                            }}
+                                        >
+                                            {result.imageMapping.map(m => (
+                                                <Box
+                                                    key={m.state}
+                                                    sx={{
+                                                        fontFamily: 'monospace',
+                                                        fontSize: '0.65rem',
+                                                        p: 0.75,
+                                                        backgroundColor:
+                                                            'rgba(0,0,0,0.2)',
+                                                        borderRadius: '4px',
+                                                        color: COLORS.text
+                                                            .primary,
+                                                        border: '1px solid rgba(255,255,255,0.03)',
+                                                        display: 'flex',
+                                                        justifyContent:
+                                                            'center',
+                                                        alignItems: 'center',
+                                                    }}
+                                                >
+                                                    <Box
+                                                        component="span"
+                                                        sx={{
+                                                            color: COLORS
+                                                                .primary.light,
+                                                        }}
+                                                    >
+                                                        {m.toggle}
+                                                    </Box>
+                                                    <Box
+                                                        component="span"
+                                                        sx={{
+                                                            color: COLORS.text
+                                                                .secondary,
+                                                            mx: 2,
+                                                        }}
+                                                    >
+                                                        →
+                                                    </Box>
+                                                    <Box
+                                                        component="span"
+                                                        sx={{
+                                                            color: COLORS.data
+                                                                .green,
+                                                        }}
+                                                    >
+                                                        {m.state}
+                                                    </Box>
+                                                </Box>
+                                            ))}
+                                        </Box>
                                     </Box>
                                 </Box>
-                            ) : (
+                            </Box>
+
+                            {result.quietPatterns.length === 0 && (
                                 <Box
                                     sx={{
-                                        mt: 'auto',
+                                        mt: 1,
                                         display: 'flex',
                                         alignItems: 'center',
                                     }}
@@ -580,29 +972,27 @@ export const VerificationTools: React.FC = () => {
             >
                 Verification Tools
             </Typography>
-            <Grid container={true} spacing={4}>
-                <Grid size={{ xs: 12, md: 6 }}>
+            <Grid container={true} spacing={4} sx={{ alignItems: 'stretch' }}>
+                <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex' }}>
                     <GlassCard
                         sx={{
                             p: 3,
-                            height: '100%',
+                            flexGrow: 1,
                             display: 'flex',
                             flexDirection: 'column',
-                            minHeight: { md: 380 },
                             backgroundColor: 'rgba(255, 255, 255, 0.02)',
                         }}
                     >
                         <PeriodicityCalculator />
                     </GlassCard>
                 </Grid>
-                <Grid size={{ xs: 12, md: 6 }}>
+                <Grid size={{ xs: 12, md: 6 }} sx={{ display: 'flex' }}>
                     <GlassCard
                         sx={{
                             p: 3,
-                            height: '100%',
+                            flexGrow: 1,
                             display: 'flex',
                             flexDirection: 'column',
-                            minHeight: { md: 380 },
                             backgroundColor: 'rgba(255, 255, 255, 0.02)',
                         }}
                     >
