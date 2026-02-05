@@ -11,8 +11,6 @@ export const PAGE_TITLES: PageTitles = {
     interpreters: `Interpreters - ${PERSONAL_INFO.name}`,
     interpreter: (name: string) => `${name} Interpreter | Bangyen`,
     geography: 'Geography | Bangyen',
-    artQuiz: 'Art History Quiz | Bangyen',
-    maze: '3D Maze | Bangyen',
     lightsOutResearch: 'Lights Out Mechanics | Bangyen',
 };
 
@@ -24,8 +22,6 @@ export const ROUTES: Routes = {
         Lights_Out: '/lights-out',
         Interpreters: '/interpreters',
         Geography: '/geography',
-        ArtQuiz: '/art-quiz',
-        Maze: '/maze',
         LightsOutResearch: '/research/lights-out',
     },
     interpreters: {

@@ -1,18 +1,7 @@
 export type GameState = 'menu' | 'playing' | 'summary';
 
-export type QuizType =
-    | 'cctld'
-    | 'driving_side'
-    | 'telephone'
-    | 'vehicle'
-    | 'art';
-export type GameMode =
-    | 'toCountry'
-    | 'toCode'
-    | 'guessing'
-    | 'art_name'
-    | 'art_artist'
-    | 'art_period';
+export type QuizType = 'cctld' | 'driving_side' | 'telephone' | 'vehicle';
+export type GameMode = 'toCountry' | 'toCode' | 'guessing';
 
 export interface BaseItem {
     country?: string;
@@ -44,22 +33,7 @@ export interface VehicleCode extends BaseItem {
     conventions?: number[];
 }
 
-export interface ArtItem extends BaseItem {
-    title: string;
-    artist: string;
-    year: string;
-    period?: string;
-    imageUrl: string;
-    wikiUrl: string;
-    description?: string;
-}
-
-export type QuizItem =
-    | CCTLD
-    | DrivingSide
-    | TelephoneCode
-    | VehicleCode
-    | ArtItem;
+export type QuizItem = CCTLD | DrivingSide | TelephoneCode | VehicleCode;
 
 export interface QuizSettings {
     mode: GameMode | (string & {});

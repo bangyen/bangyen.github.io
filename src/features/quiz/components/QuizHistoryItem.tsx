@@ -13,7 +13,6 @@ import {
     DrivingSide,
     TelephoneCode,
     VehicleCode,
-    ArtItem,
 } from '../types/quiz';
 
 interface QuizHistoryItemProps {
@@ -58,7 +57,7 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                     {q.item.flag && (
                         <img
                             src={q.item.flag}
-                            alt={`Flag of ${q.item.country ?? 'Unknown'}`}
+                            alt={`Flag of ${q.item.country}`}
                             style={{
                                 height: '16px',
                                 width: 'auto',
@@ -66,23 +65,8 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                             }}
                         />
                     )}
-                    {selectedQuiz === 'art' && (
-                        <Box
-                            component="img"
-                            src={(q.item as ArtItem).imageUrl}
-                            sx={{
-                                height: 32,
-                                width: 'auto',
-                                borderRadius: 0.5,
-                                border: `1px solid ${COLORS.border.subtle}`,
-                            }}
-                        />
-                    )}
                     <Typography variant="body1" fontWeight="bold" noWrap>
                         {(() => {
-                            if (selectedQuiz === 'art') {
-                                return (q.item as ArtItem).title;
-                            }
                             if (selectedQuiz === 'driving_side') {
                                 return q.item.country;
                             }
@@ -100,17 +84,6 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                 <Typography variant="body2" color="textSecondary" noWrap>
                     Answer:{' '}
                     {(() => {
-                        if (selectedQuiz === 'art') {
-                            const item = q.item as ArtItem;
-                            switch (settings.mode) {
-                                case 'art_artist':
-                                    return item.artist;
-                                case 'art_period':
-                                    return item.period ?? item.year;
-                                default:
-                                    return item.title;
-                            }
-                        }
                         if (selectedQuiz === 'driving_side') {
                             return (q.item as DrivingSide).side;
                         }
@@ -183,10 +156,7 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                                 normalizedAnswer =
                                     normalizedAnswer.toUpperCase();
                             }
-                        } else if (
-                            selectedQuiz === 'vehicle' ||
-                            selectedQuiz === 'driving_side'
-                        ) {
+                        } else {
                             normalizedAnswer = normalizedAnswer.toUpperCase();
                         }
 

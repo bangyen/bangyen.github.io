@@ -26,7 +26,6 @@ const Interpreters = lazy(
 const WikipediaQuiz = lazy(
     () => import('./features/quiz/pages/WikipediaQuizPage')
 );
-const Maze = lazy(() => import('./features/games/maze/MazeGame'));
 const LightsOutResearch = lazy(
     () => import('./features/research/pages/LightsOut')
 );
@@ -68,11 +67,6 @@ const App = (): React.ReactElement => {
                         path={ROUTES.pages.Geography}
                         element={<WikipediaQuiz />}
                     />
-                    <Route
-                        path={ROUTES.pages.ArtQuiz}
-                        element={<WikipediaQuiz />}
-                    />
-                    <Route path={ROUTES.pages.Maze} element={<Maze />} />
                     <Route
                         path={ROUTES.pages.LightsOutResearch}
                         element={<LightsOutResearch />}
