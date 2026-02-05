@@ -271,8 +271,7 @@ const PeriodicityCalculator: React.FC = () => {
                                             fontSize: '0.65rem',
                                         }}
                                     >
-                                        Width n = {cols} | Period z ={' '}
-                                        {result.pattern.z}
+                                        Period z = {result.pattern.z}
                                     </Typography>
                                 </Box>
                                 <Box sx={{ textAlign: 'right' }}>
@@ -417,7 +416,6 @@ const PeriodicityCalculator: React.FC = () => {
 };
 
 const SolvabilityAnalyzer: React.FC = () => {
-    const [m, setM] = useState<string>('5');
     const [n, setN] = useState<string>('5');
     const [result, setResult] = useState<{
         rank: number;
@@ -435,15 +433,14 @@ const SolvabilityAnalyzer: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
 
     const handleAnalyze = () => {
-        const rows = parseInt(m, 10);
-        const cols = parseInt(n, 10);
-        if (isNaN(rows) || isNaN(cols) || rows < 1 || cols < 1) {
-            setError('Please enter valid positive integers.');
+        const size = parseInt(n, 10);
+        if (isNaN(size) || size < 1) {
+            setError('Please enter a valid positive integer.');
             return;
         }
 
-        if (cols > 32) {
-            setError('Column width n > 32 is computationally expensive.');
+        if (size > 32) {
+            setError('Grid size n > 32 is computationally expensive.');
             return;
         }
 
@@ -453,6 +450,8 @@ const SolvabilityAnalyzer: React.FC = () => {
         // Timeout to allow loading state to show
         setTimeout(() => {
             try {
+                const rows = size;
+                const cols = size;
                 const A = getMatrix(cols);
                 const Pn = getPolynomial(rows + 1);
                 const matrix = evalPolynomial(A, Pn);
@@ -551,7 +550,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                 >
                     Solvability Analyzer
                 </Typography>
-                <Tooltip title="Analyze the solvability and kernel properties for a given m x n grid.">
+                <Tooltip title="Analyze the solvability and kernel properties for a square n x n grid.">
                     <IconButton
                         size="small"
                         sx={{ ml: 1, color: COLORS.text.secondary }}
@@ -560,34 +559,19 @@ const SolvabilityAnalyzer: React.FC = () => {
                     </IconButton>
                 </Tooltip>
             </Box>
-            <Grid container spacing={2} sx={{ mb: 3 }}>
-                <Grid size={{ xs: 6 }}>
-                    <TextField
-                        fullWidth
-                        label="Rows (m)"
-                        variant="outlined"
-                        value={m}
-                        onChange={e => {
-                            setM(e.target.value);
-                        }}
-                        size="small"
-                        sx={{ input: { color: COLORS.text.primary } }}
-                    />
-                </Grid>
-                <Grid size={{ xs: 6 }}>
-                    <TextField
-                        fullWidth
-                        label="Cols (n)"
-                        variant="outlined"
-                        value={n}
-                        onChange={e => {
-                            setN(e.target.value);
-                        }}
-                        size="small"
-                        sx={{ input: { color: COLORS.text.primary } }}
-                    />
-                </Grid>
-            </Grid>
+            <Box sx={{ mb: 3 }}>
+                <TextField
+                    fullWidth
+                    label="Grid Size (n)"
+                    variant="outlined"
+                    value={n}
+                    onChange={e => {
+                        setN(e.target.value);
+                    }}
+                    size="small"
+                    sx={{ input: { color: COLORS.text.primary } }}
+                />
+            </Box>
             <Button
                 fullWidth
                 variant="contained"
@@ -746,8 +730,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                                             fontSize: '0.65rem',
                                         }}
                                     >
-                                        {m}×{n} Grid | {result.reachableStates}{' '}
-                                        Solvable States
+                                        {result.reachableStates} Solvable States
                                     </Typography>
                                 </Box>
                                 <Box sx={{ textAlign: 'right' }}>
