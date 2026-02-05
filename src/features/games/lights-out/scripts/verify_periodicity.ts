@@ -137,11 +137,15 @@ function verifyPattern(n: number, pattern: Pattern) {
     const modZ = polyMod(fz, M);
     const modZ1 = polyMod(fz1 ^ 1n, M);
 
+    const eq1 = `f${toSuperscript(z_seq)}(x) mod M(x)`;
+    const eq2 = `(f${toSuperscript(z_seq + 1)}(x) + 1) mod M(x)`;
+    const leftWidth = 28;
+
     console.log(
-        `    f${toSuperscript(z_seq)}(x) mod M(x)         = ${COLORS.cyan}${polyToString(modZ)}${COLORS.reset}`
+        `    ${eq1.padEnd(leftWidth)} = ${COLORS.cyan}${polyToString(modZ)}${COLORS.reset}`
     );
     console.log(
-        `    (f${toSuperscript(z_seq + 1)}(x) + 1) mod M(x) = ${COLORS.cyan}${polyToString(modZ1)}${COLORS.reset}`
+        `    ${eq2.padEnd(leftWidth)} = ${COLORS.cyan}${polyToString(modZ1)}${COLORS.reset}`
     );
 
     if (modZ === 0n && modZ1 === 0n) {
