@@ -55,22 +55,14 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
         const data = await response.arrayBuffer();
         const view = new Uint8Array(data);
 
-        let matrixData: MatrixItem[];
-
         // Check for GZIP magic number (0x1f 0x8b)
         const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
 
-        if (isGzipped) {
-            const decompressed = pako.ungzip(view, { to: 'string' });
-            const realData = JSON.parse(decompressed) as {
-                matrix: MatrixItem[];
-            }[];
-            matrixData = realData[0]?.matrix ?? [];
-        } else {
-            // Assume already decompressed (Vite dev server)
-            const text = new TextDecoder().decode(data);
-            matrixData = JSON.parse(text) as MatrixItem[];
-        }
+        const text = isGzipped
+            ? pako.ungzip(view, { to: 'string' })
+            : new TextDecoder().decode(data);
+
+        const matrixData = JSON.parse(text) as MatrixItem[];
 
         if (!Array.isArray(matrixData)) {
             throw new Error('Invalid data format: expected array');

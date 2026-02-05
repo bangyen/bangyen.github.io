@@ -9,8 +9,12 @@ import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import Oligopoly from '../Oligopoly';
 import { ResearchDemoProps, Control } from '../../types';
+import pako from 'pako';
 
 // Mocks
+jest.mock('pako', () => ({
+    ungzip: jest.fn(),
+}));
 jest.mock('../../ResearchDemo', () => ({
     __esModule: true,
     default: ({
@@ -92,6 +96,19 @@ describe('Oligopoly Component', () => {
     };
 
     test('renders correctly and loads gzipped data', async () => {
+        const testData = [
+            {
+                round: 1,
+                price: 99.99,
+                hhi: 0.99,
+                num_firms: 3,
+                model_type: 'cournot',
+                demand_elasticity: 2.0,
+                base_price: 40,
+                collusion_enabled: false,
+            },
+        ];
+        (pako.ungzip as jest.Mock).mockReturnValue(JSON.stringify(testData));
         (global.fetch as jest.Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
@@ -102,9 +119,10 @@ describe('Oligopoly Component', () => {
         expect(screen.getByText('Oligopoly')).toBeInTheDocument();
 
         await waitFor(() => {
-            expect(
-                screen.getByTestId('chart-data-count')
-            ).not.toHaveTextContent('0');
+            // Check for exactly 1 item to ensure it's NOT fallback data (which has 15 items)
+            expect(screen.getByTestId('chart-data-count')).toHaveTextContent(
+                '1'
+            );
         });
     });
 
