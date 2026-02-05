@@ -840,9 +840,41 @@ const SolvabilityAnalyzer: React.FC = () => {
                                         }}
                                     >
                                         {result.isFullSubspace
-                                            ? 'Reachable States (Full Subspace)'
-                                            : 'Image Basis (Minimal Toggles)'}
+                                            ? 'Strategy: Chasing Table'
+                                            : 'Image Basis (Correction Table)'}
                                     </Typography>
+
+                                    <Box
+                                        sx={{ display: 'flex', px: 1, mb: 0.5 }}
+                                    >
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                flex: 1,
+                                                color: COLORS.text.secondary,
+                                                fontSize: '0.55rem',
+                                                fontWeight: 'bold',
+                                                letterSpacing: 0.5,
+                                            }}
+                                        >
+                                            BOTTOM RESIDUAL
+                                        </Typography>
+                                        <Box sx={{ width: 25 }} />
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                flex: 1,
+                                                color: COLORS.text.secondary,
+                                                fontSize: '0.55rem',
+                                                fontWeight: 'bold',
+                                                letterSpacing: 0.5,
+                                                textAlign: 'right',
+                                            }}
+                                        >
+                                            TOP CORRECTION
+                                        </Typography>
+                                    </Box>
+
                                     <Box
                                         sx={{
                                             pr: 1,
@@ -862,6 +894,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                         fontFamily: 'monospace',
                                                         fontSize: '0.65rem',
                                                         p: 0.75,
+                                                        px: 1,
                                                         backgroundColor:
                                                             'rgba(0,0,0,0.2)',
                                                         borderRadius: '4px',
@@ -870,25 +903,26 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                         border: '1px solid rgba(255,255,255,0.03)',
                                                         display: 'flex',
                                                         justifyContent:
-                                                            'center',
+                                                            'space-between',
                                                         alignItems: 'center',
                                                     }}
                                                 >
                                                     <Box
                                                         component="span"
                                                         sx={{
-                                                            color: COLORS
-                                                                .primary.light,
+                                                            color: COLORS.data
+                                                                .green,
+                                                            flex: 1,
                                                         }}
                                                     >
-                                                        {m.toggle}
+                                                        {m.state}
                                                     </Box>
                                                     <Box
                                                         component="span"
                                                         sx={{
                                                             color: COLORS.text
                                                                 .secondary,
-                                                            mx: 2,
+                                                            mx: 1,
                                                         }}
                                                     >
                                                         →
@@ -896,11 +930,13 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                     <Box
                                                         component="span"
                                                         sx={{
-                                                            color: COLORS.data
-                                                                .green,
+                                                            color: COLORS
+                                                                .primary.light,
+                                                            flex: 1,
+                                                            textAlign: 'right',
                                                         }}
                                                     >
-                                                        {m.state}
+                                                        {m.toggle}
                                                     </Box>
                                                 </Box>
                                             ))}
