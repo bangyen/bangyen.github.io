@@ -439,11 +439,6 @@ export function findPattern(n: number): Pattern {
     throw new Error(`Period not found for n=${n.toString()}`);
 }
 
-/*
-    https://math.stackexchange.com/questions/2237467
-    https://en.wikipedia.org/wiki/Fibonacci_polynomials
-    https://graphics.stanford.edu/~seander/bithacks.html#:~:text=Brian%20Kernighan
-*/
 // Cache for matrix inversions: "rows,cols" -> inverse matrix
 const inverseCache: Record<string, bigint[]> = {};
 
@@ -472,4 +467,210 @@ export function getProduct(
     };
 
     return inverse.map(getParity);
+}
+
+export function getKernelBasis(matrix: bigint[], size: number): bigint[] {
+    const rows = [...matrix];
+    const basis: bigint[] = getIdentity(size);
+    let pivotRow = 0;
+
+    for (let c = 0; c < size && pivotRow < rows.length; c++) {
+        const pow = 1n << BigInt(size - 1 - c);
+
+        // Find pivot
+        let p = pivotRow;
+        while (p < rows.length) {
+            const rowP = rows[p];
+            if (rowP !== undefined && rowP & pow) break;
+            p++;
+        }
+
+        if (p < rows.length) {
+            // Swap
+            const rowP = rows[p];
+            const basisP = basis[p];
+            const rowPivot = rows[pivotRow];
+            const basisPivot = basis[pivotRow];
+
+            if (
+                rowP !== undefined &&
+                basisP !== undefined &&
+                rowPivot !== undefined &&
+                basisPivot !== undefined
+            ) {
+                rows[pivotRow] = rowP;
+                rows[p] = rowPivot;
+                basis[pivotRow] = basisP;
+                basis[p] = basisPivot;
+
+                const rP = rows[pivotRow] ?? 0n;
+                const bP = basis[pivotRow] ?? 0n;
+
+                for (let r = 0; r < rows.length; r++) {
+                    const rowR = rows[r];
+                    const basisR = basis[r];
+                    if (
+                        r !== pivotRow &&
+                        rowR !== undefined &&
+                        basisR !== undefined &&
+                        rowR & pow
+                    ) {
+                        rows[r] = rowR ^ rP;
+                        basis[r] = basisR ^ bP;
+                    }
+                }
+            }
+            pivotRow++;
+        }
+    }
+
+    // The kernel corresponds to rows in the diagonalized matrix that are zero
+    const kernel: bigint[] = [];
+    for (let i = pivotRow; i < rows.length; i++) {
+        const rowBasis = basis[i];
+        if (rowBasis !== undefined) {
+            kernel.push(rowBasis);
+        }
+    }
+    return kernel;
+}
+
+export function getMinWeightSolution(
+    matrix: bigint[],
+    target: bigint,
+    size: number
+): bigint {
+    const rows = [...matrix];
+    const basis: bigint[] = getIdentity(size);
+    let pivotRow = 0;
+    const pivots: number[] = [];
+
+    // Gaussian elimination to RREF
+    for (let c = 0; c < size && pivotRow < rows.length; c++) {
+        const pow = 1n << BigInt(size - 1 - c);
+        let p = pivotRow;
+        while (p < rows.length) {
+            const rowP = rows[p];
+            if (rowP !== undefined && rowP & pow) break;
+            p++;
+        }
+
+        if (p < rows.length) {
+            const rowP = rows[p];
+            const basisP = basis[p];
+            const rowPivot = rows[pivotRow];
+            const basisPivot = basis[pivotRow];
+
+            if (
+                rowP !== undefined &&
+                basisP !== undefined &&
+                rowPivot !== undefined &&
+                basisPivot !== undefined
+            ) {
+                rows[pivotRow] = rowP;
+                rows[p] = rowPivot;
+                basis[pivotRow] = basisP;
+                basis[p] = basisPivot;
+
+                const rP = rows[pivotRow] ?? 0n;
+                const bP = basis[pivotRow] ?? 0n;
+
+                for (let r = 0; r < rows.length; r++) {
+                    const rowR = rows[r];
+                    const basisR = basis[r];
+                    if (
+                        r !== pivotRow &&
+                        rowR !== undefined &&
+                        basisR !== undefined &&
+                        rowR & pow
+                    ) {
+                        rows[r] = rowR ^ rP;
+                        basis[r] = basisR ^ bP;
+                    }
+                }
+            }
+            pivots[pivotRow] = c;
+            pivotRow++;
+        }
+    }
+
+    // Find particular solution
+    let particular = 0n;
+    let current = target;
+    for (let i = 0; i < pivotRow; i++) {
+        const c = pivots[i];
+        if (c === undefined) continue;
+
+        const pow = 1n << BigInt(size - 1 - c);
+        if (current & pow) {
+            const rowI = rows[i];
+            const basisI = basis[i];
+            if (rowI !== undefined && basisI !== undefined) {
+                current ^= rowI;
+                particular ^= basisI;
+            }
+        }
+    }
+
+    if (current !== 0n) return -1n; // No solution
+
+    // Combine with kernel to find min weight (brute force for small kernels, heuristic for large)
+    const kernel = getKernelBasis(matrix, size);
+    if (kernel.length > 20) return particular; // Too large to brute force efficiently here
+
+    let minSol = particular;
+    let minWeight = countBits(particular);
+
+    for (let i = 1; i < 1 << kernel.length; i++) {
+        let candidate = particular;
+        for (let j = 0; j < kernel.length; j++) {
+            if ((i >> j) & 1) {
+                const kernelJ = kernel[j];
+                if (kernelJ !== undefined) {
+                    candidate ^= kernelJ;
+                }
+            }
+        }
+        const weight = countBits(candidate);
+        if (weight < minWeight) {
+            minWeight = weight;
+            minSol = candidate;
+        }
+    }
+
+    return minSol;
+}
+
+export function getImageBasis(matrix: bigint[], size: number): bigint[] {
+    const rows = [...matrix];
+    let pivotRow = 0;
+
+    for (let c = 0; c < size && pivotRow < rows.length; c++) {
+        const pow = 1n << BigInt(size - 1 - c);
+        let p = pivotRow;
+        while (p < rows.length) {
+            const rowP = rows[p];
+            if (rowP !== undefined && rowP & pow) break;
+            p++;
+        }
+
+        if (p < rows.length) {
+            const rowP = rows[p];
+            const rowPivot = rows[pivotRow];
+            if (rowP !== undefined && rowPivot !== undefined) {
+                rows[pivotRow] = rowP;
+                rows[p] = rowPivot;
+                const rP = rows[pivotRow] ?? 0n;
+                for (let r = 0; r < rows.length; r++) {
+                    const rowR = rows[r];
+                    if (r !== pivotRow && rowR !== undefined && rowR & pow) {
+                        rows[r] = rowR ^ rP;
+                    }
+                }
+            }
+            pivotRow++;
+        }
+    }
+
+    return rows.slice(0, pivotRow);
 }
