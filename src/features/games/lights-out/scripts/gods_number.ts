@@ -85,14 +85,20 @@ function drawProgressBar(current: number, total: number, width = 30) {
 }
 
 function analyzeGodsNumber(n: number) {
+    const title = `GOD'S NUMBER ANALYSIS: ${n}x${n} GRID`;
+    const boxWidth = 60;
+    const padding = Math.max(0, (boxWidth - title.length) / 2);
+    const leftPadDirection = Math.floor(padding);
+    const rightPadDirection = Math.ceil(padding);
+
     console.log(
-        `\n${COLORS.bold}${COLORS.cyan}╔════════════════════════════════════════════════════════════╗${COLORS.reset}`
+        `\n${COLORS.bold}${COLORS.cyan}╔${'═'.repeat(boxWidth)}╗${COLORS.reset}`
     );
     console.log(
-        `${COLORS.bold}${COLORS.cyan}║              GOD'S NUMBER ANALYSIS: ${n}x${n} GRID             ║${COLORS.reset}`
+        `${COLORS.bold}${COLORS.cyan}║${' '.repeat(leftPadDirection)}${title}${' '.repeat(rightPadDirection)}║${COLORS.reset}`
     );
     console.log(
-        `${COLORS.bold}${COLORS.cyan}╚════════════════════════════════════════════════════════════╝${COLORS.reset}`
+        `${COLORS.bold}${COLORS.cyan}╚${'═'.repeat(boxWidth)}╝${COLORS.reset}`
     );
 
     const toggleVectors = getToggleVectors(n);
