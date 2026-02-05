@@ -14,12 +14,35 @@ import {
 const COLORS = {
     reset: '\x1b[0m',
     bold: '\x1b[1m',
+    dim: '\x1b[2m',
+    italic: '\x1b[3m',
     green: '\x1b[32m',
     yellow: '\x1b[33m',
     blue: '\x1b[34m',
+    magenta: '\x1b[35m',
     cyan: '\x1b[36m',
     red: '\x1b[31m',
 };
+
+function toSuperscript(num: number): string {
+    const map: Record<string, string> = {
+        '0': '⁰',
+        '1': '¹',
+        '2': '²',
+        '3': '³',
+        '4': '⁴',
+        '5': '⁵',
+        '6': '⁶',
+        '7': '⁷',
+        '8': '⁸',
+        '9': '⁹',
+    };
+    return num
+        .toString()
+        .split('')
+        .map(c => map[c] ?? c)
+        .join('');
+}
 
 function polyToString(p: bigint): string {
     if (p === 0n) return '0';
@@ -29,7 +52,7 @@ function polyToString(p: bigint): string {
         if (bits[bits.length - 1 - i] === '1') {
             if (i === 0) terms.push('1');
             else if (i === 1) terms.push('x');
-            else terms.push(`x^${i}`);
+            else terms.push(`x${toSuperscript(i)}`);
         }
     }
     return terms.reverse().join(' + ');
@@ -48,6 +71,10 @@ function verifyPattern(n: number, pattern: Pattern) {
     const M = getMinimalPolynomial(A);
     const factors = factorPoly(M);
 
+    const labelWidth = 24;
+    const formatRow = (label: string, value: string) =>
+        `  ${COLORS.dim}${label.padEnd(labelWidth)}${COLORS.reset} ${value}`;
+
     console.log(
         `\n${COLORS.bold}${COLORS.cyan}╔════════════════════════════════════════════════════════════╗${COLORS.reset}`
     );
@@ -57,34 +84,51 @@ function verifyPattern(n: number, pattern: Pattern) {
     console.log(
         `${COLORS.bold}${COLORS.cyan}╚════════════════════════════════════════════════════════════╝${COLORS.reset}`
     );
-    console.log(`${COLORS.bold}Target Configuration: n = ${n}${COLORS.reset}`);
+
     console.log(
-        `${COLORS.bold}Minimal Polynomial M(x):${COLORS.reset} ${polyToString(M)}`
+        formatRow(
+            'Target Configuration',
+            `${COLORS.bold}n = ${n}${COLORS.reset}`
+        )
     );
     console.log(
-        `${COLORS.bold}Factorization:${COLORS.reset} ${factors
-            .map(
-                f =>
-                    `${COLORS.yellow}(${polyToString(f.factor)})${
-                        f.exponent > 1 ? `^${f.exponent}` : ''
-                    }${COLORS.reset}`
-            )
-            .join(' * ')}`
+        formatRow(
+            'Minimal Polynomial M(x)',
+            `${COLORS.magenta}${polyToString(M)}${COLORS.reset}`
+        )
     );
-    console.log(`${COLORS.bold}Property Period z:${COLORS.reset} ${z}`);
-    console.log(`${COLORS.bold}Sequence Period z_seq:${COLORS.reset} ${z_seq}`);
     console.log(
-        `${COLORS.bold}Remainder Set R:${COLORS.reset} {${R.filter(r => r !== z).join(', ')}}\n`
+        formatRow(
+            'Factorization',
+            factors
+                .map(
+                    f =>
+                        `${COLORS.yellow}(${polyToString(f.factor)})${f.exponent > 1 ? toSuperscript(f.exponent) : ''}${COLORS.reset}`
+                )
+                .join(' * ')
+        )
+    );
+    console.log(
+        formatRow('Property Period (z)', `${COLORS.bold}${z}${COLORS.reset}`)
+    );
+    console.log(
+        formatRow(
+            'Sequence Period (z_seq)',
+            `${COLORS.bold}${z_seq}${COLORS.reset}`
+        )
+    );
+    console.log(
+        formatRow(
+            'Remainder Set (R)',
+            `{${R.filter(r => r !== z).join(', ')}}\n`
+        )
     );
 
     console.log(
-        `${COLORS.bold}${COLORS.blue}[Step 1] Sequence Periodicity Proof${COLORS.reset}`
+        `  ${COLORS.bold}${COLORS.blue}● STEP 1: CONVERGENCE PROOF${COLORS.reset}`
     );
     console.log(
-        `  Theorem: The matrix sequence f_m(A) repeats exactly every ${z_seq} steps.`
-    );
-    console.log(
-        `  Verification: M(x) must divide f_{z_seq}(x) and f_{z_seq+1}(x) + 1.`
+        `    ${COLORS.italic}Verify that sequence returns to (0, I) periodically.${COLORS.reset}`
     );
 
     const fz = getPolynomial(z_seq);
@@ -93,27 +137,29 @@ function verifyPattern(n: number, pattern: Pattern) {
     const modZ = polyMod(fz, M);
     const modZ1 = polyMod(fz1 ^ 1n, M);
 
-    console.log(`  f_{${z_seq}}(x) mod M(x) = ${polyToString(modZ)}`);
     console.log(
-        `  (f_{${z_seq + 1}}(x) + 1) mod M(x) = ${polyToString(modZ1)}`
+        `    f${toSuperscript(z_seq)}(x) mod M(x)         = ${COLORS.cyan}${polyToString(modZ)}${COLORS.reset}`
+    );
+    console.log(
+        `    (f${toSuperscript(z_seq + 1)}(x) + 1) mod M(x) = ${COLORS.cyan}${polyToString(modZ1)}${COLORS.reset}`
     );
 
     if (modZ === 0n && modZ1 === 0n) {
         console.log(
-            `  ${COLORS.green}${COLORS.bold}Result: VALID. The sequence is finite and periodic.${COLORS.reset}`
+            `    ${COLORS.green}Verification successful. Periodicity is established.${COLORS.reset}`
         );
     } else {
         console.log(
-            `  ${COLORS.red}${COLORS.bold}Result: INVALID. Period z_seq=${z_seq} is incorrect.${COLORS.reset}`
+            `    ${COLORS.red}Verification failed. Pattern is mathematically invalid.${COLORS.reset}`
         );
         return;
     }
 
     console.log(
-        `\n${COLORS.bold}${COLORS.blue}[Step 2] Remainder Set Divisibility Proof${COLORS.reset}`
+        `\n  ${COLORS.bold}${COLORS.blue}● STEP 2: FINITE ENUMERATION${COLORS.reset}`
     );
     console.log(
-        `  Theorem: Property holds if and only if M(x) divides f_{m+1}(x) + 1.`
+        `    ${COLORS.italic}Exhaustive check of the remainder set over one period.${COLORS.reset}`
     );
 
     let allRCorrect = true;
@@ -125,28 +171,30 @@ function verifyPattern(n: number, pattern: Pattern) {
 
         if (isSolution !== inR) {
             console.log(
-                `  ${COLORS.red}ERROR at m=${m}: Inconsistent!${COLORS.reset}`
+                `    ${COLORS.red}✖ DISCREPANCY at m = ${m}${COLORS.reset}`
             );
             allRCorrect = false;
         }
 
         if (isSolution && m < 50) {
+            const mStr = m.toString().padStart(3);
+            const polyTerm = `f${toSuperscript(m + 1)} + 1`;
             console.log(
-                `  m = ${m.toString().padStart(3)}: (f_{${m + 1}} + 1) = [${polyToString(quotient)}] * M(x) ${COLORS.green}✅${COLORS.reset}`
+                `    m = ${mStr} : ${polyTerm.padEnd(10)} = [${COLORS.dim}${polyToString(quotient).padEnd(20)}${COLORS.reset}] * M(x) ${COLORS.green}✔${COLORS.reset}`
             );
         }
     }
 
     if (allRCorrect) {
         console.log(
-            `\n${COLORS.bold}${COLORS.green}Conclusion: PROVEN${COLORS.reset}`
+            `\n  ${COLORS.bold}${COLORS.green}STATUS: MATHEMATICALLY PROVEN${COLORS.reset}`
         );
         console.log(
-            `The pattern m mod ${z} ∈ {${R.filter(r => r !== z).join(', ')}} holds for all m ∈ ℕ.`
+            `  ${COLORS.dim}The pattern m mod ${z} ∈ {${R.filter(r => r !== z).join(', ')}} is valid ∀ m ∈ ℕ.${COLORS.reset}`
         );
     } else {
         console.log(
-            `\n${COLORS.bold}${COLORS.red}Conclusion: FAILED${COLORS.reset}`
+            `\n  ${COLORS.bold}${COLORS.red}STATUS: DISPROVEN${COLORS.reset}`
         );
     }
     console.log(
