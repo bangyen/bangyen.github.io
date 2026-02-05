@@ -74,17 +74,6 @@ function toIndex(state: bigint, pivots: number[]): number {
     return index;
 }
 
-function fromIndex(index: number, basis: bigint[]): bigint {
-    let state = 0n;
-    for (let i = 0; i < basis.length; i++) {
-        const b = basis[i];
-        if (b !== undefined && (index >> i) & 1) {
-            state ^= b;
-        }
-    }
-    return state;
-}
-
 function drawProgressBar(current: number, total: number, width = 30) {
     const progress = Math.min(1, current / total);
     const filled = Math.round(width * progress);
@@ -140,6 +129,16 @@ function analyzeGodsNumber(n: number) {
 
         const pivots = getPivots(basis, n * n);
         const numStates = 1 << r;
+
+        console.log(`    Pre-calculating toggle transitions...`);
+        const toggleIndices = new Uint32Array(toggleVectors.length);
+        for (let i = 0; i < toggleVectors.length; i++) {
+            const v = toggleVectors[i];
+            if (v !== undefined) {
+                toggleIndices[i] = toIndex(v, pivots);
+            }
+        }
+
         const visited = new Uint8Array(numStates >> 3);
 
         const getVisited = (idx: number) => {
@@ -172,11 +171,9 @@ function analyzeGodsNumber(n: number) {
             for (let i = 0; i < currentSize; i++) {
                 const stateIdx = currentLayer[i];
                 if (stateIdx === undefined) continue;
-                const state = fromIndex(stateIdx, basis);
 
-                for (const toggle of toggleVectors) {
-                    const nextState = state ^ toggle;
-                    const nextIdx = toIndex(nextState, pivots);
+                for (const toggleIdx of toggleIndices) {
+                    const nextIdx = stateIdx ^ toggleIdx;
                     if (!getVisited(nextIdx)) {
                         setVisited(nextIdx);
                         if (nextSize < numStates) {
