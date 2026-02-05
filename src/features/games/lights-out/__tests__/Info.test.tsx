@@ -13,17 +13,68 @@ jest.mock(
 jest.mock('../../../../components/ui/GlassCard', () => ({
     GlassCard: function MockGlassCard({
         children,
+        sx,
+        onClick,
     }: {
         children: React.ReactNode;
+        sx?: React.CSSProperties;
+        onClick?: (event: React.MouseEvent) => void;
     }) {
-        return <div>{children}</div>;
+        return (
+            <div
+                data-testid="glass-card"
+                onClick={onClick}
+                onKeyDown={e => {
+                    if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+                        onClick(e as unknown as React.MouseEvent);
+                    }
+                }}
+                role="button"
+                tabIndex={0}
+                style={sx}
+            >
+                {children}
+            </div>
+        );
     },
 }));
 jest.mock('../../../../hooks', () => ({
-    useMobile: () => false,
+    useMobile: jest.fn(() => false),
 }));
 jest.mock('../matrices', () => ({
     getProduct: jest.fn(() => [0, 0, 0]),
+}));
+
+// Mock MUI components
+jest.mock('../../../../components/mui', () => {
+    const actual = jest.requireActual<Record<string, unknown>>(
+        '../../../../components/mui'
+    );
+    return {
+        ...actual,
+        Modal: ({
+            children,
+            open,
+        }: {
+            children: React.ReactNode;
+            open: boolean;
+        }) => (open ? <div data-testid="modal">{children}</div> : null),
+        Backdrop: () => <div data-testid="backdrop" />,
+    };
+});
+
+// Mock Icons
+jest.mock('../../../../components/icons', () => ({
+    KeyboardArrowDown: () => <div data-testid="keyboardarrowdown-icon" />,
+    Calculate: () => <div data-testid="calculate-icon" />,
+    Replay: () => <div data-testid="replay-icon" />,
+    NavigateBeforeRounded: () => (
+        <div data-testid="navigatebeforerounded-icon" />
+    ),
+    NavigateNextRounded: () => <div data-testid="navigatenextrounded-icon" />,
+    CloseRounded: () => <div data-testid="closerounded-icon" />,
+    Refresh: () => <div data-testid="refresh-icon" />,
+    MenuBookRounded: () => <div data-testid="menubookrounded-icon" />,
 }));
 
 // Mock calculator helpers
