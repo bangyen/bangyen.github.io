@@ -17,6 +17,7 @@ import { GlassCard } from '../../../components/ui/GlassCard';
 import { Latex } from '../../../components/ui/Latex';
 import { URLS, ROUTES } from '../../../config/constants';
 import ResearchDemo from '../ResearchDemo';
+import { VerificationTools } from '../components/VerificationTools';
 
 interface PeriodicityData {
     n: number;
@@ -319,6 +320,8 @@ const LightsOutResearch: React.FC = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
+
+                <VerificationTools />
 
                 <Box sx={{ mb: 10 }}>
                     <Typography

@@ -16,27 +16,14 @@ import {
     getMatrix,
     getPolynomial,
     evalPolynomial,
-    getIdentity,
+    isIdentity,
 } from '../matrices';
 
 function check(rows: number, cols: number): boolean {
-    // 1. Construct the Adjacency Matrix + Identity for the path graph of size 'cols'
     const matrix = getMatrix(cols);
-
-    // 2. Compute the polynomial F_{rows+1}(x+1) + 1  (The code implicitly handles the basis change)
-    // Actually, 'getPolynomial' computes coefficients for F_{rows+1}
     const weights = getPolynomial(rows + 1);
-
-    // 3. Evaluate the polynomial on the matrix
     const product = evalPolynomial(matrix, weights);
-
-    // 4. Check if the result is the Identity Matrix
-    const identity = getIdentity(cols);
-
-    for (let i = 0; i < cols; i++) {
-        if (product[i] !== identity[i]) return false;
-    }
-    return true;
+    return isIdentity(product);
 }
 
 const args = process.argv.slice(2);

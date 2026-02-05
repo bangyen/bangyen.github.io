@@ -25,6 +25,7 @@ export { GitHub } from '@mui/icons-material';
 // Action Icons
 export {
     Refresh,
+    RefreshRounded,
     OpenInNew,
     ArrowForward,
     LaunchRounded,
@@ -81,6 +82,7 @@ export {
     DataArrayRounded,
     PlusOneRounded,
     EmojiEventsRounded,
+    HelpOutlineRounded,
 } from '@mui/icons-material';
 
 // Dashboard & Charts Icons

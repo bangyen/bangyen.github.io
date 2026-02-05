@@ -22,7 +22,10 @@ export {
 export { Menu, MenuItem } from '@mui/material';
 
 // Feedback Components
-export { Tooltip, Fade, Backdrop, Modal } from '@mui/material';
+export { Tooltip, Fade, Backdrop, Modal, Alert } from '@mui/material';
+
+// Layout Components
+export { Divider } from '@mui/material';
 
 // Data Display Components
 export {
