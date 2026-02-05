@@ -139,7 +139,7 @@ function analyzeSolvability(n: number) {
 
     // Exhaustive analysis for "reasonable" state spaces (up to 2^18)
     const analysisThreshold = 262144n; // 2^18
-    if (reachableCount > 1n && reachableCount <= analysisThreshold) {
+    if (reachableCount > 1n /* && reachableCount <= analysisThreshold */) {
         console.log(
             `\n  ${COLORS.bold}${COLORS.blue}● EXHAUSTIVE STATE SPACE ANALYSIS${COLORS.reset}`
         );
