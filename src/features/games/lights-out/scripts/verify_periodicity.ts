@@ -11,6 +11,16 @@ import {
     factorPoly,
 } from '../matrices';
 
+const COLORS = {
+    reset: '\x1b[0m',
+    bold: '\x1b[1m',
+    green: '\x1b[32m',
+    yellow: '\x1b[33m',
+    blue: '\x1b[34m',
+    cyan: '\x1b[36m',
+    red: '\x1b[31m',
+};
+
 function polyToString(p: bigint): string {
     if (p === 0n) return '0';
     const terms: string[] = [];
@@ -38,26 +48,45 @@ function verifyPattern(n: number, pattern: Pattern) {
     const M = getMinimalPolynomial(A);
     const factors = factorPoly(M);
 
-    console.log(`\n--- Mathematical Proof for n=${n} ---`);
-    console.log(`Minimal Polynomial M(x) = ${polyToString(M)}`);
     console.log(
-        `Factorization: ${factors
+        `\n${COLORS.bold}${COLORS.cyan}╔════════════════════════════════════════════════════════════╗${COLORS.reset}`
+    );
+    console.log(
+        `${COLORS.bold}${COLORS.cyan}║             MATHEMATICAL CERTIFICATE OF PERIODICITY        ║${COLORS.reset}`
+    );
+    console.log(
+        `${COLORS.bold}${COLORS.cyan}╚════════════════════════════════════════════════════════════╝${COLORS.reset}`
+    );
+    console.log(`${COLORS.bold}Target Configuration: n = ${n}${COLORS.reset}`);
+    console.log(
+        `${COLORS.bold}Minimal Polynomial M(x):${COLORS.reset} ${polyToString(M)}`
+    );
+    console.log(
+        `${COLORS.bold}Factorization:${COLORS.reset} ${factors
             .map(
                 f =>
-                    `(${polyToString(f.factor)})${
+                    `${COLORS.yellow}(${polyToString(f.factor)})${
                         f.exponent > 1 ? `^${f.exponent}` : ''
-                    }`
+                    }${COLORS.reset}`
             )
             .join(' * ')}`
     );
-    console.log(`Discovered Period z = ${z}`);
-    console.log(`Sequence Period z_seq = ${z_seq}`);
-    console.log(`Remainder Set R = {${R.filter(r => r !== z).join(', ')}}\n`);
-
-    console.log(`Step 1: Prove z-periodicity`);
+    console.log(`${COLORS.bold}Property Period z:${COLORS.reset} ${z}`);
+    console.log(`${COLORS.bold}Sequence Period z_seq:${COLORS.reset} ${z_seq}`);
     console.log(
-        `  We must show M(x) | f_{z_seq}(x) and M(x) | (f_{z_seq+1}(x) + 1)`
+        `${COLORS.bold}Remainder Set R:${COLORS.reset} {${R.filter(r => r !== z).join(', ')}}\n`
     );
+
+    console.log(
+        `${COLORS.bold}${COLORS.blue}[Step 1] Sequence Periodicity Proof${COLORS.reset}`
+    );
+    console.log(
+        `  Theorem: The matrix sequence f_m(A) repeats exactly every ${z_seq} steps.`
+    );
+    console.log(
+        `  Verification: M(x) must divide f_{z_seq}(x) and f_{z_seq+1}(x) + 1.`
+    );
+
     const fz = getPolynomial(z_seq);
     const fz1 = getPolynomial(z_seq + 1);
 
@@ -71,19 +100,22 @@ function verifyPattern(n: number, pattern: Pattern) {
 
     if (modZ === 0n && modZ1 === 0n) {
         console.log(
-            `  OK: M(A) = 0 implies f_{z_seq}(A) = 0 and f_{z_seq+1}(A) = I. The sequence is ${z_seq}-periodic.`
+            `  ${COLORS.green}${COLORS.bold}Result: VALID. The sequence is finite and periodic.${COLORS.reset}`
         );
     } else {
         console.log(
-            `  FAIL: Period z_seq=${z_seq} is invalid for the minimal polynomial.`
+            `  ${COLORS.red}${COLORS.bold}Result: INVALID. Period z_seq=${z_seq} is incorrect.${COLORS.reset}`
         );
         return;
     }
 
-    console.log(`\nStep 2: Illustrate divisibility for R`);
     console.log(
-        `  A grid height m satisfies the property iff M(x) | (f_{m+1}(x) + 1).`
+        `\n${COLORS.bold}${COLORS.blue}[Step 2] Remainder Set Divisibility Proof${COLORS.reset}`
     );
+    console.log(
+        `  Theorem: Property holds if and only if M(x) divides f_{m+1}(x) + 1.`
+    );
+
     let allRCorrect = true;
     for (let m = 0; m < z; m++) {
         const fm1 = getPolynomial(m + 1);
@@ -93,30 +125,33 @@ function verifyPattern(n: number, pattern: Pattern) {
 
         if (isSolution !== inR) {
             console.log(
-                `  FAIL at m=${m}: Inconsistent! Divisibility=${isSolution}, R.includes=${inR}`
+                `  ${COLORS.red}ERROR at m=${m}: Inconsistent!${COLORS.reset}`
             );
             allRCorrect = false;
         }
 
         if (isSolution && m < 50) {
-            // Show first few solutions with quotient
             console.log(
-                `  m=${m.toString().padStart(3)}: (f_{${m + 1}}(x) + 1) = [${polyToString(quotient)}] * M(x) ✅`
+                `  m = ${m.toString().padStart(3)}: (f_{${m + 1}} + 1) = [${polyToString(quotient)}] * M(x) ${COLORS.green}✅${COLORS.reset}`
             );
         }
     }
 
     if (allRCorrect) {
         console.log(
-            `\nPROVEN: The pattern m mod ${z} in {${R.filter(r => r !== z).join(
-                ', '
-            )}} holds for all m.`
+            `\n${COLORS.bold}${COLORS.green}Conclusion: PROVEN${COLORS.reset}`
+        );
+        console.log(
+            `The pattern m mod ${z} ∈ {${R.filter(r => r !== z).join(', ')}} holds for all m ∈ ℕ.`
         );
     } else {
         console.log(
-            `\nFAILED: The remainder set is inconsistent with the minimal polynomial.`
+            `\n${COLORS.bold}${COLORS.red}Conclusion: FAILED${COLORS.reset}`
         );
     }
+    console.log(
+        `${COLORS.bold}${COLORS.cyan}══════════════════════════════════════════════════════════════${COLORS.reset}\n`
+    );
 }
 
 function main() {
