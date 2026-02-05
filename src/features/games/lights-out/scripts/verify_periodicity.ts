@@ -214,7 +214,7 @@ function verifyPattern(n: number, pattern: Pattern) {
             allRCorrect = false;
         }
 
-        if (isSolution && m < 50) {
+        if (isSolution) {
             enumItems.push({
                 label: `m = ${m.toString().padStart(maxMWidth)} : f${toSuperscript(m + 1)} + 1`,
                 quotient,
