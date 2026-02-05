@@ -8,7 +8,6 @@ import {
     TelephoneCode,
     VehicleCode,
     DrivingSide,
-    ArtItem,
 } from '../types/quiz';
 
 // Quiz Engine Hook
@@ -362,31 +361,12 @@ export const useQuizFilter = ({
                         text = (item as DrivingSide).country.toLowerCase();
                     } else if (quizType === 'telephone') {
                         text = (item as TelephoneCode).country.toLowerCase();
-                    } else if (quizType === 'vehicle') {
+                    } else {
+                        const vehicleItem = item as VehicleCode;
                         text =
                             settings.mode === 'toCountry'
-                                ? (item as VehicleCode).code.toLowerCase()
-                                : (item as VehicleCode).country.toLowerCase();
-                    } else {
-                        const artItem = item as ArtItem;
-                        if (settings.mode === 'art_artist') {
-                            text = artItem.artist.toLowerCase();
-                        } else if ('title' in artItem) {
-                            text = artItem.title.toLowerCase();
-                        } else {
-                            // Fallback for types like 'capitals' which might not have title/artist
-                            const fallbackItem = item as {
-                                title?: string;
-                                artist?: string;
-                                country?: string;
-                            };
-                            text = (
-                                fallbackItem.title ??
-                                fallbackItem.artist ??
-                                fallbackItem.country ??
-                                ''
-                            ).toLowerCase();
-                        }
+                                ? vehicleItem.code.toLowerCase()
+                                : vehicleItem.country.toLowerCase();
                     }
                     return letters.some((l: string) => text.startsWith(l));
                 });

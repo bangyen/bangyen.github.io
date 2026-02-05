@@ -32,6 +32,41 @@ export function countBits(num: bigint): number {
     return count;
 }
 
+export function toSuperscript(num: number): string {
+    const map: Record<string, string> = {
+        '0': '⁰',
+        '1': '¹',
+        '2': '²',
+        '3': '³',
+        '4': '⁴',
+        '5': '⁵',
+        '6': '⁶',
+        '7': '⁷',
+        '8': '⁸',
+        '9': '⁹',
+    };
+    return num
+        .toString()
+        .split('')
+        .map(c => map[c] ?? c)
+        .join('');
+}
+
+export function polyToString(p: bigint): string {
+    if (p === 0n) return '0';
+    if (p === 1n) return '1';
+    const terms: string[] = [];
+    const bits = p.toString(2);
+    for (let i = 0; i < bits.length; i++) {
+        if (bits[bits.length - 1 - i] === '1') {
+            if (i === 0) terms.push('1');
+            else if (i === 1) terms.push('x');
+            else terms.push(`x${toSuperscript(i)}`);
+        }
+    }
+    return terms.reverse().join(' + ');
+}
+
 export function multiplySym(matrixA: bigint[], matrixB: bigint[]): bigint[] {
     const size = matrixA.length;
     const output: bigint[] = [];
@@ -129,6 +164,121 @@ export function getPolynomial(index: number): bigint {
     }
 
     return output[index] ?? 0n;
+}
+
+export function polyDegree(p: bigint): number {
+    if (p === 0n) return -1;
+    return p.toString(2).length - 1;
+}
+
+export function polyDiv(
+    a: bigint,
+    b: bigint
+): { quotient: bigint; remainder: bigint } {
+    if (b === 0n) throw new Error('Division by zero polynomial');
+    let quotient = 0n;
+    let remainder = a;
+    const degreeB = polyDegree(b);
+
+    while (polyDegree(remainder) >= degreeB) {
+        const shift = polyDegree(remainder) - degreeB;
+        quotient ^= 1n << BigInt(shift);
+        remainder ^= b << BigInt(shift);
+    }
+
+    return { quotient, remainder };
+}
+
+export function polyMod(a: bigint, b: bigint): bigint {
+    return polyDiv(a, b).remainder;
+}
+
+export function getMinimalPolynomial(A: bigint[]): bigint {
+    const size = A.length;
+
+    function flatten(mat: bigint[]): bigint {
+        let res = 0n;
+        for (const r of mat) {
+            res = (res << BigInt(size)) | r;
+        }
+        return res;
+    }
+
+    const basis: { vector: bigint; poly: bigint }[] = [];
+
+    for (let d = 0; d <= size * size; d++) {
+        const poly = 1n << BigInt(d);
+        const Ad = evalPolynomial(A, poly);
+        let v = flatten(Ad);
+        let currentPoly = poly;
+
+        for (const b of basis) {
+            if (polyDegree(v ^ b.vector) < polyDegree(v)) {
+                v ^= b.vector;
+                currentPoly ^= b.poly;
+            }
+        }
+
+        if (v === 0n) {
+            return currentPoly;
+        } else {
+            basis.push({ vector: v, poly: currentPoly });
+            basis.sort((a, b) => (a.vector > b.vector ? -1 : 1));
+        }
+    }
+
+    return getPolynomial(size + 1);
+}
+
+const irreduciblesCache: bigint[] = [2n, 3n]; // x, x+1
+let maxCachedDegree = 1;
+
+export function getIrreducibles(maxDegree: number): bigint[] {
+    if (maxDegree <= maxCachedDegree) {
+        return irreduciblesCache.filter(p => polyDegree(p) <= maxDegree);
+    }
+
+    for (
+        let p = 1n << BigInt(maxCachedDegree + 1);
+        polyDegree(p) <= maxDegree;
+        p++
+    ) {
+        let isIrreducible = true;
+        const degP = polyDegree(p);
+        for (const f of irreduciblesCache) {
+            if (polyDegree(f) > degP / 2) break;
+            if (polyMod(p, f) === 0n) {
+                isIrreducible = false;
+                break;
+            }
+        }
+        if (isIrreducible) irreduciblesCache.push(p);
+    }
+
+    maxCachedDegree = maxDegree;
+    return irreduciblesCache;
+}
+
+export function factorPoly(p: bigint): { factor: bigint; exponent: number }[] {
+    if (p === 0n) return [];
+    if (p === 1n) return [];
+    const factors: { factor: bigint; exponent: number }[] = [];
+    let rem = p;
+    const irreducibles = getIrreducibles(polyDegree(p));
+
+    for (const f of irreducibles) {
+        if (polyMod(rem, f) === 0n) {
+            let exponent = 0;
+            while (polyMod(rem, f) === 0n) {
+                rem = polyDiv(rem, f).quotient;
+                exponent++;
+            }
+            factors.push({ factor: f, exponent });
+        }
+        if (rem === 1n) break;
+    }
+
+    return factors;
 }
 
 export function evalPolynomial(
@@ -264,6 +414,7 @@ export interface Pattern {
     n: number;
     z: number;
     R: number[];
+    z_seq: number;
 }
 
 export function findPattern(n: number): Pattern {
@@ -313,7 +464,7 @@ export function findPattern(n: number): Pattern {
             const fullZ = k - 1;
             const R_filtered = R.filter(r => r !== fullZ);
             const { z: minZ, R: minR } = findMinimalPeriod(fullZ, R_filtered);
-            return { n, z: minZ, R: minR };
+            return { n, z: minZ, R: minR, z_seq: fullZ };
         }
 
         prev = curr;
@@ -323,11 +474,6 @@ export function findPattern(n: number): Pattern {
     throw new Error(`Period not found for n=${n.toString()}`);
 }
 
-/*
-    https://math.stackexchange.com/questions/2237467
-    https://en.wikipedia.org/wiki/Fibonacci_polynomials
-    https://graphics.stanford.edu/~seander/bithacks.html#:~:text=Brian%20Kernighan
-*/
 // Cache for matrix inversions: "rows,cols" -> inverse matrix
 const inverseCache: Record<string, bigint[]> = {};
 
@@ -356,4 +502,276 @@ export function getProduct(
     };
 
     return inverse.map(getParity);
+}
+
+export function getKernelBasis(matrix: bigint[], size: number): bigint[] {
+    const rows = [...matrix];
+    const basis: bigint[] = getIdentity(size);
+    let pivotRow = 0;
+
+    for (let c = 0; c < size && pivotRow < rows.length; c++) {
+        const pow = 1n << BigInt(size - 1 - c);
+
+        // Find pivot
+        let p = pivotRow;
+        while (p < rows.length) {
+            const rowP = rows[p];
+            if (rowP !== undefined && rowP & pow) break;
+            p++;
+        }
+
+        if (p < rows.length) {
+            // Swap
+            const rowP = rows[p];
+            const basisP = basis[p];
+            const rowPivot = rows[pivotRow];
+            const basisPivot = basis[pivotRow];
+
+            if (
+                rowP !== undefined &&
+                basisP !== undefined &&
+                rowPivot !== undefined &&
+                basisPivot !== undefined
+            ) {
+                rows[pivotRow] = rowP;
+                rows[p] = rowPivot;
+                basis[pivotRow] = basisP;
+                basis[p] = basisPivot;
+
+                const rP = rows[pivotRow] ?? 0n;
+                const bP = basis[pivotRow] ?? 0n;
+
+                for (let r = 0; r < rows.length; r++) {
+                    const rowR = rows[r];
+                    const basisR = basis[r];
+                    if (
+                        r !== pivotRow &&
+                        rowR !== undefined &&
+                        basisR !== undefined &&
+                        rowR & pow
+                    ) {
+                        rows[r] = rowR ^ rP;
+                        basis[r] = basisR ^ bP;
+                    }
+                }
+            }
+            pivotRow++;
+        }
+    }
+
+    // The kernel corresponds to rows in the diagonalized matrix that are zero
+    const kernel: bigint[] = [];
+    for (let i = pivotRow; i < rows.length; i++) {
+        const rowBasis = basis[i];
+        if (rowBasis !== undefined) {
+            kernel.push(rowBasis);
+        }
+    }
+    return kernel;
+}
+
+export function getMinWeightSolution(
+    matrix: bigint[],
+    target: bigint,
+    size: number
+): bigint {
+    const rows = [...matrix];
+    const basis: bigint[] = getIdentity(size);
+    let pivotRow = 0;
+    const pivots: number[] = [];
+
+    // Gaussian elimination to RREF
+    for (let c = 0; c < size && pivotRow < rows.length; c++) {
+        const pow = 1n << BigInt(size - 1 - c);
+        let p = pivotRow;
+        while (p < rows.length) {
+            const rowP = rows[p];
+            if (rowP !== undefined && rowP & pow) break;
+            p++;
+        }
+
+        if (p < rows.length) {
+            const rowP = rows[p];
+            const basisP = basis[p];
+            const rowPivot = rows[pivotRow];
+            const basisPivot = basis[pivotRow];
+
+            if (
+                rowP !== undefined &&
+                basisP !== undefined &&
+                rowPivot !== undefined &&
+                basisPivot !== undefined
+            ) {
+                rows[pivotRow] = rowP;
+                rows[p] = rowPivot;
+                basis[pivotRow] = basisP;
+                basis[p] = basisPivot;
+
+                const rP = rows[pivotRow] ?? 0n;
+                const bP = basis[pivotRow] ?? 0n;
+
+                for (let r = 0; r < rows.length; r++) {
+                    const rowR = rows[r];
+                    const basisR = basis[r];
+                    if (
+                        r !== pivotRow &&
+                        rowR !== undefined &&
+                        basisR !== undefined &&
+                        rowR & pow
+                    ) {
+                        rows[r] = rowR ^ rP;
+                        basis[r] = basisR ^ bP;
+                    }
+                }
+            }
+            pivots[pivotRow] = c;
+            pivotRow++;
+        }
+    }
+
+    // Find particular solution
+    let particular = 0n;
+    let current = target;
+    for (let i = 0; i < pivotRow; i++) {
+        const c = pivots[i];
+        if (c === undefined) continue;
+
+        const pow = 1n << BigInt(size - 1 - c);
+        if (current & pow) {
+            const rowI = rows[i];
+            const basisI = basis[i];
+            if (rowI !== undefined && basisI !== undefined) {
+                current ^= rowI;
+                particular ^= basisI;
+            }
+        }
+    }
+
+    if (current !== 0n) return -1n; // No solution
+
+    // Combine with kernel to find min weight (brute force for small kernels, heuristic for large)
+    const kernel = getKernelBasis(matrix, size);
+    if (kernel.length > 20) return particular; // Too large to brute force efficiently here
+
+    let minSol = particular;
+    let minWeight = countBits(particular);
+
+    for (let i = 1; i < 1 << kernel.length; i++) {
+        let candidate = particular;
+        for (let j = 0; j < kernel.length; j++) {
+            if ((i >> j) & 1) {
+                const kernelJ = kernel[j];
+                if (kernelJ !== undefined) {
+                    candidate ^= kernelJ;
+                }
+            }
+        }
+        const weight = countBits(candidate);
+        if (weight < minWeight) {
+            minWeight = weight;
+            minSol = candidate;
+        }
+    }
+
+    return minSol;
+}
+
+export function getImageBasis(matrix: bigint[], size: number): bigint[] {
+    const rows = [...matrix];
+    let pivotRow = 0;
+
+    for (let c = 0; c < size && pivotRow < rows.length; c++) {
+        const pow = 1n << BigInt(size - 1 - c);
+        let p = pivotRow;
+        while (p < rows.length) {
+            const rowP = rows[p];
+            if (rowP !== undefined && rowP & pow) break;
+            p++;
+        }
+
+        if (p < rows.length) {
+            const rowP = rows[p];
+            const rowPivot = rows[pivotRow];
+            if (rowP !== undefined && rowPivot !== undefined) {
+                rows[pivotRow] = rowP;
+                rows[p] = rowPivot;
+                const rP = rows[pivotRow] ?? 0n;
+                for (let r = 0; r < rows.length; r++) {
+                    const rowR = rows[r];
+                    if (r !== pivotRow && rowR !== undefined && rowR & pow) {
+                        rows[r] = rowR ^ rP;
+                    }
+                }
+            }
+            pivotRow++;
+        }
+    }
+
+    return rows.slice(0, pivotRow);
+}
+
+export function getImageMapping(
+    matrix: bigint[],
+    size: number
+): { state: bigint; toggle: bigint }[] {
+    const rows = [...matrix];
+    const mapping: bigint[] = getIdentity(size);
+    let pivotRow = 0;
+
+    for (let c = 0; c < size && pivotRow < rows.length; c++) {
+        const pow = 1n << BigInt(size - 1 - c);
+        let p = pivotRow;
+        while (p < rows.length) {
+            const rowP = rows[p];
+            if (rowP !== undefined && rowP & pow) break;
+            p++;
+        }
+
+        if (p < rows.length) {
+            const rowP = rows[p];
+            const mapP = mapping[p];
+            const rowPivot = rows[pivotRow];
+            const mapPivot = mapping[pivotRow];
+
+            if (
+                rowP !== undefined &&
+                mapP !== undefined &&
+                rowPivot !== undefined &&
+                mapPivot !== undefined
+            ) {
+                rows[pivotRow] = rowP;
+                rows[p] = rowPivot;
+                mapping[pivotRow] = mapP;
+                mapping[p] = mapPivot;
+
+                const rP = rows[pivotRow] ?? 0n;
+                const mP = mapping[pivotRow] ?? 0n;
+
+                for (let r = 0; r < rows.length; r++) {
+                    const rowR = rows[r];
+                    const mapR = mapping[r];
+                    if (
+                        r !== pivotRow &&
+                        rowR !== undefined &&
+                        mapR !== undefined &&
+                        rowR & pow
+                    ) {
+                        rows[r] = rowR ^ rP;
+                        mapping[r] = mapR ^ mP;
+                    }
+                }
+            }
+            pivotRow++;
+        }
+    }
+
+    const result: { state: bigint; toggle: bigint }[] = [];
+    for (let i = 0; i < pivotRow; i++) {
+        const state = rows[i];
+        const toggle = mapping[i];
+        if (state !== undefined && toggle !== undefined) {
+            result.push({ state, toggle });
+        }
+    }
+    return result;
 }

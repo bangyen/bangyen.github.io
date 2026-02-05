@@ -46,6 +46,7 @@
     "scrape:quizzes": "tsx scripts/scrapeQuizzes.ts",
     "generate:art": "tsx scripts/generateArtData.ts",
     "data:update": "tsx scripts/updateResearchData.ts",
+    "gods-number": "tsx src/features/games/lights-out/scripts/gods_number.ts",
     "prepare": "husky install"
   },
   "prettier": {

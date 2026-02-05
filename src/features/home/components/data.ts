@@ -49,6 +49,11 @@ export const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
                 description: 'Grid-based logic puzzle',
                 technology: 'JavaScript',
             },
+            Gokigen: {
+                path: ROUTES.pages.Gokigen,
+                description: 'Diagonal line puzzle',
+                technology: 'TypeScript',
+            },
         },
     },
     collections: {

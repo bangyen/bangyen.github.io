@@ -105,9 +105,8 @@ export interface Routes {
         Lights_Out: string;
         Interpreters: string;
         Geography: string;
-        ArtQuiz: string;
-        Maze: string;
         LightsOutResearch: string;
+        Gokigen: string;
     };
     interpreters: {
         Stun_Step: string;
@@ -193,8 +192,7 @@ export interface PageTitles {
     error: string;
     interpreters: string;
     geography: string;
-    artQuiz: string;
-    maze: string;
     lightsOutResearch: string;
+    gokigen: string;
     interpreter: (name: string) => string;
 }

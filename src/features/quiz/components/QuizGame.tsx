@@ -8,7 +8,6 @@ import {
     QuizSettings,
     Question,
     QuizItem,
-    ArtItem,
 } from '../types/quiz';
 import { QUIZ_CONFIGS } from '../config/quizConfig';
 import { COLORS, SHADOWS } from '../../../config/theme';
@@ -139,22 +138,12 @@ const QuizGame: React.FC<QuizGameProps> = ({
                     ? 'Guessing Country'
                     : settings.mode === 'toCode'
                       ? 'Guessing Code'
-                      : settings.mode === 'art_name'
-                        ? 'Guessing Name'
-                        : settings.mode === 'art_artist'
-                          ? 'Guessing Artist'
-                          : settings.mode === 'art_period'
-                            ? 'Guessing Period'
-                            : 'Quiz'
+                      : 'Quiz'
             }
             inputPlaceholder={
                 settings.mode === 'toCountry'
                     ? 'Type country name...'
-                    : settings.mode === 'art_name'
-                      ? 'Type artwork name...'
-                      : settings.mode === 'art_artist'
-                        ? 'Type artist name...'
-                        : 'Type answer...'
+                    : 'Type answer...'
             }
             renderQuestionPrompt={() =>
                 config.renderQuestionPrompt(settings.mode)
@@ -176,16 +165,6 @@ const QuizGame: React.FC<QuizGameProps> = ({
                             Hint: {(item as CCTLD).language} origin
                         </Typography>
                     );
-                } else if (quizType === 'art') {
-                    return (
-                        <Typography
-                            variant="body2"
-                            color="textSecondary"
-                            sx={{ fontStyle: 'italic' }}
-                        >
-                            Hint: {(item as ArtItem).year}
-                        </Typography>
-                    );
                 }
                 return (
                     <Typography variant="body2" color="textSecondary">
@@ -193,12 +172,12 @@ const QuizGame: React.FC<QuizGameProps> = ({
                     </Typography>
                 );
             }}
-            hideHint={quizType !== 'cctld' && quizType !== 'art'}
+            hideHint={quizType !== 'cctld'}
             renderFeedbackFlag={item =>
                 item.flag && (
                     <img
                         src={item.flag}
-                        alt={`Flag of ${item.country ?? 'Unknown'}`}
+                        alt={`Flag of ${item.country}`}
                         style={{
                             height: '24px',
                             width: 'auto',

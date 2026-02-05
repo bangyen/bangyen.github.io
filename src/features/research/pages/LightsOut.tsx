@@ -251,13 +251,13 @@ const LightsOutResearch: React.FC = () => {
                         color: COLORS.text.primary,
                     }}
                 >
-                    Verified Patterns
+                    Proven Periodicity Patterns
                 </Typography>
                 <Typography
                     variant="body1"
                     sx={{ mb: 4, color: COLORS.text.secondary }}
                 >
-                    Verified for grid heights up to m = 600. Patterns are
+                    Mathematically proven for all grid heights m. Patterns are
                     expressed as <Latex formula="m \pmod z \in R_n" />.
                 </Typography>
 
@@ -287,22 +287,30 @@ const LightsOutResearch: React.FC = () => {
                                         fontWeight: 'bold',
                                     }}
                                 >
-                                    Periodicity (m mod z)
+                                    Period (z)
+                                </TableCell>
+                                <TableCell
+                                    sx={{
+                                        color: COLORS.text.primary,
+                                        fontWeight: 'bold',
+                                    }}
+                                >
+                                    Remainder Set (R)
                                 </TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {[
-                                { n: 1, p: 'm mod 3 ∈ {0, 1}' },
-                                { n: 2, p: 'm mod 2 ∈ {0}' },
-                                { n: 3, p: 'm mod 12 ∈ {0, 10}' },
-                                { n: 4, p: 'm mod 10 ∈ {0, 8}' },
-                                { n: 5, p: 'm mod 24 ∈ {0, 6, 16, 22}' },
-                                { n: 6, p: 'm mod 18 ∈ {0, 16}' },
-                                { n: 7, p: 'm mod 24 ∈ {0, 22}' },
-                                { n: 8, p: 'm mod 14 ∈ {0, 12}' },
-                                { n: 9, p: 'm mod 60 ∈ {0, 18, 40, 58}' },
-                                { n: 10, p: 'm mod 62 ∈ {0, 60}' },
+                                { n: 1, z: 3, r: '{0, 1}' },
+                                { n: 2, z: 2, r: '{0}' },
+                                { n: 3, z: 12, r: '{0, 10}' },
+                                { n: 4, z: 10, r: '{0, 8}' },
+                                { n: 5, z: 24, r: '{0, 6, 16, 22}' },
+                                { n: 6, z: 18, r: '{0, 16}' },
+                                { n: 7, z: 24, r: '{0, 22}' },
+                                { n: 8, z: 14, r: '{0, 12}' },
+                                { n: 9, z: 60, r: '{0, 18, 40, 58}' },
+                                { n: 10, z: 62, r: '{0, 60}' },
                             ].map(row => (
                                 <TableRow key={row.n}>
                                     <TableCell
@@ -313,7 +321,15 @@ const LightsOutResearch: React.FC = () => {
                                     <TableCell
                                         sx={{ color: COLORS.text.secondary }}
                                     >
-                                        {row.p}
+                                        {row.z}
+                                    </TableCell>
+                                    <TableCell
+                                        sx={{
+                                            color: COLORS.text.secondary,
+                                            fontFamily: 'monospace',
+                                        }}
+                                    >
+                                        {row.r}
                                     </TableCell>
                                 </TableRow>
                             ))}
