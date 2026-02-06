@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     Box,
     Typography,
@@ -11,23 +11,16 @@ import {
     IconButton,
     Fade,
 } from '../../../components/mui';
-import { HelpOutlineRounded } from '../../../components/icons';
+import { HelpOutlineRounded, CloseRounded } from '../../../components/icons';
 import { COLORS, SPACING, TYPOGRAPHY } from '../../../config/theme';
 import { GlassCard } from '../../../components/ui/GlassCard';
-import {
-    getMatrix,
-    getPolynomial,
-    evalPolynomial,
-    findPattern,
-    Pattern,
-    getKernelBasis,
-    getImageMapping,
-    getMinWeightSolution,
-    getMinimalPolynomial,
-    factorPoly,
-    polyToString,
-    toSuperscript,
-} from '../../games/lights-out/matrices';
+import { Pattern } from '../../games/lights-out/matrices';
+
+interface WorkerResponse<T> {
+    success: boolean;
+    result?: T;
+    error?: string;
+}
 
 const PeriodicityCalculator: React.FC = () => {
     const [cols, setCols] = useState<string>('5');
@@ -39,6 +32,16 @@ const PeriodicityCalculator: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const workerRef = useRef<Worker | null>(null);
+
+    useEffect(() => {
+        return () => {
+            if (workerRef.current) {
+                workerRef.current.terminate();
+            }
+        };
+    }, []);
+
     const handleCalculate = () => {
         const n = parseInt(cols, 10);
         if (isNaN(n) || n <= 0) {
@@ -46,37 +49,65 @@ const PeriodicityCalculator: React.FC = () => {
             return;
         }
 
-        if (n > 20) {
-            setError('Calculating periodicity for n > 20 might take a while.');
+        if (n > 30) {
+            setError('Grid size n > 30 is too computationally intensive.');
+            return;
         }
 
         setLoading(true);
         setError(null);
 
-        // Run in timeout to prevent UI freeze
-        setTimeout(() => {
-            try {
-                const pattern = findPattern(n);
-                const A = getMatrix(n);
-                const M = getMinimalPolynomial(A);
-                const factors = factorPoly(M);
+        if (workerRef.current) {
+            workerRef.current.terminate();
+        }
 
-                setResult({
-                    pattern,
-                    minimalPoly: polyToString(M),
-                    factorization: factors
-                        .map(
-                            f =>
-                                `(${polyToString(f.factor)})${f.exponent > 1 ? toSuperscript(f.exponent) : ''}`
-                        )
-                        .join(' · '),
-                });
-            } catch (_err) {
-                setError('Could not find period within reasonable limits.');
-            } finally {
+        try {
+            workerRef.current = new Worker(
+                new URL('../workers/periodicity.worker.ts', import.meta.url),
+                { type: 'module' }
+            );
+
+            workerRef.current.onmessage = (
+                e: MessageEvent<
+                    WorkerResponse<{
+                        pattern: Pattern;
+                        minimalPoly: string;
+                        factorization: string;
+                    }>
+                >
+            ) => {
+                const { success, result, error } = e.data;
+                if (success && result) {
+                    setResult(result);
+                } else {
+                    setError(error ?? 'An unknown error occurred.');
+                }
                 setLoading(false);
-            }
-        }, 100);
+            };
+
+            workerRef.current.onerror = e => {
+                // eslint-disable-next-line no-console
+                console.error('Worker error:', e);
+                setError('An error occurred in the background worker.');
+                setLoading(false);
+            };
+
+            workerRef.current.postMessage({ n });
+        } catch (err) {
+            // eslint-disable-next-line no-console
+            console.error('Failed to start worker:', err);
+            setError('Failed to start calculation worker.');
+            setLoading(false);
+        }
+    };
+
+    const handleCancel = () => {
+        if (workerRef.current) {
+            workerRef.current.terminate();
+            workerRef.current = null;
+        }
+        setLoading(false);
+        setError(null);
     };
 
     return (
@@ -115,18 +146,39 @@ const PeriodicityCalculator: React.FC = () => {
                     />
                 </Grid>
             </Grid>
-            <Button
-                fullWidth
-                variant="contained"
-                onClick={handleCalculate}
-                disabled={loading}
-                sx={{
-                    backgroundColor: COLORS.primary.main,
-                    '&:hover': { backgroundColor: COLORS.primary.dark },
-                }}
-            >
-                {loading ? 'Calculating...' : 'Discover Patterns'}
-            </Button>
+            {!loading ? (
+                <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={handleCalculate}
+                    sx={{
+                        backgroundColor: COLORS.primary.main,
+                        border: '1px solid transparent',
+                        height: '36.5px',
+                        '&:hover': { backgroundColor: COLORS.primary.dark },
+                    }}
+                >
+                    Discover Patterns
+                </Button>
+            ) : (
+                <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={handleCancel}
+                    startIcon={<CloseRounded />}
+                    sx={{
+                        color: COLORS.text.secondary,
+                        borderColor: COLORS.border.subtle,
+                        height: '36.5px',
+                        '&:hover': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                            borderColor: COLORS.text.secondary,
+                        },
+                    }}
+                >
+                    Cancel Calculation
+                </Button>
+            )}
 
             {error && (
                 <Alert severity="error" sx={{ mb: 2, mt: 2 }}>
@@ -427,6 +479,25 @@ const SolvabilityAnalyzer: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const workerRef = useRef<Worker | null>(null);
+
+    useEffect(() => {
+        return () => {
+            if (workerRef.current) {
+                workerRef.current.terminate();
+            }
+        };
+    }, []);
+
+    const handleCancel = () => {
+        if (workerRef.current) {
+            workerRef.current.terminate();
+            workerRef.current = null;
+        }
+        setLoading(false);
+        setError(null);
+    };
+
     const handleAnalyze = () => {
         const size = parseInt(n, 10);
         if (isNaN(size) || size < 1) {
@@ -434,103 +505,62 @@ const SolvabilityAnalyzer: React.FC = () => {
             return;
         }
 
-        if (size > 32) {
-            setError('Grid size n > 32 is computationally expensive.');
+        if (size > 100) {
+            setError('Grid size n > 100 is too computationally intensive.');
             return;
         }
 
         setLoading(true);
         setError(null);
 
-        // Timeout to allow loading state to show
-        setTimeout(() => {
-            try {
-                const rows = size;
-                const cols = size;
-                const A = getMatrix(cols);
-                const Pn = getPolynomial(rows + 1);
-                const matrix = evalPolynomial(A, Pn);
-                const kernel = getKernelBasis(matrix, cols);
-                const nullity = kernel.length;
-                const rank = cols - nullity;
-                const totalCells = rows * cols;
-                const gridRank = totalCells - nullity;
+        if (workerRef.current) {
+            workerRef.current.terminate();
+        }
 
-                const formatLarge = (n: number) => {
-                    if (n < 50) {
-                        const val = 1n << BigInt(n);
-                        return val.toLocaleString();
-                    }
-                    return `2^${n.toString()}`;
-                };
+        try {
+            workerRef.current = new Worker(
+                new URL('../workers/solvability.worker.ts', import.meta.url),
+                { type: 'module' }
+            );
 
-                const imageBasis = getImageMapping(matrix, cols);
-                const rankTotal = imageBasis.length;
-                const useFullSubspace = rankTotal <= 6 && rankTotal > 0; // Show all if <= 64 states
-
-                const mapping: { state: string; toggle: string }[] = [];
-
-                if (useFullSubspace) {
-                    const count = 1 << rankTotal;
-                    for (let i = 1; i < count; i++) {
-                        let combinedState = 0n;
-                        for (let j = 0; j < rankTotal; j++) {
-                            if ((i >> j) & 1) {
-                                const basis = imageBasis[j];
-                                if (basis) {
-                                    combinedState ^= basis.state;
-                                }
-                            }
-                        }
-                        const minToggle = getMinWeightSolution(
-                            matrix,
-                            combinedState,
-                            cols
-                        );
-                        mapping.push({
-                            state: combinedState
-                                .toString(2)
-                                .padStart(cols, '0'),
-                            toggle: minToggle.toString(2).padStart(cols, '0'),
-                        });
-                    }
-                    // Sort by state for consistency
-                    mapping.sort((a, b) => a.state.localeCompare(b.state));
+            workerRef.current.onmessage = (
+                e: MessageEvent<
+                    WorkerResponse<{
+                        rank: number;
+                        nullity: number;
+                        gridRank: number;
+                        solvablePercent: string;
+                        quietPatterns: string[];
+                        totalStates: string;
+                        reachableStates: string;
+                        imageMapping: { state: string; toggle: string }[];
+                        isFullSubspace: boolean;
+                    }>
+                >
+            ) => {
+                const { success, result, error } = e.data;
+                if (success && result) {
+                    setResult(result);
                 } else {
-                    imageBasis.forEach(m => {
-                        const minToggle = getMinWeightSolution(
-                            matrix,
-                            m.state,
-                            cols
-                        );
-                        mapping.push({
-                            state: m.state.toString(2).padStart(cols, '0'),
-                            toggle: minToggle.toString(2).padStart(cols, '0'),
-                        });
-                    });
+                    setError(error ?? 'An unknown error occurred.');
                 }
-
-                setResult({
-                    rank,
-                    nullity,
-                    gridRank,
-                    solvablePercent: ((1 / Math.pow(2, nullity)) * 100).toFixed(
-                        nullity === 0 ? 0 : 2
-                    ),
-                    quietPatterns: kernel.map(k =>
-                        k.toString(2).padStart(cols, '0')
-                    ),
-                    totalStates: formatLarge(totalCells),
-                    reachableStates: formatLarge(gridRank),
-                    imageMapping: mapping,
-                    isFullSubspace: useFullSubspace,
-                });
-            } catch (_err) {
-                setError('An error occurred during calculation.');
-            } finally {
                 setLoading(false);
-            }
-        }, 50);
+            };
+
+            workerRef.current.onerror = e => {
+                // eslint-disable-next-line no-console
+                console.error('Worker error:', e);
+                setError('An error occurred in the background worker.');
+                setLoading(false);
+            };
+
+            workerRef.current.postMessage({ n: size });
+        } catch (err) {
+            // eslint-disable-next-line no-console
+            console.error('Failed to start worker:', err);
+            setError('Failed to start calculation worker.');
+            setLoading(false);
+        }
     };
 
     return (
@@ -567,17 +597,39 @@ const SolvabilityAnalyzer: React.FC = () => {
                     sx={{ input: { color: COLORS.text.primary } }}
                 />
             </Box>
-            <Button
-                fullWidth
-                variant="contained"
-                onClick={handleAnalyze}
-                sx={{
-                    backgroundColor: COLORS.primary.main,
-                    '&:hover': { backgroundColor: COLORS.primary.dark },
-                }}
-            >
-                Analyze Solvability
-            </Button>
+            {!loading ? (
+                <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={handleAnalyze}
+                    sx={{
+                        backgroundColor: COLORS.primary.main,
+                        border: '1px solid transparent',
+                        height: '36.5px',
+                        '&:hover': { backgroundColor: COLORS.primary.dark },
+                    }}
+                >
+                    Analyze Solvability
+                </Button>
+            ) : (
+                <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={handleCancel}
+                    startIcon={<CloseRounded />}
+                    sx={{
+                        color: COLORS.text.secondary,
+                        borderColor: COLORS.border.subtle,
+                        height: '36.5px',
+                        '&:hover': {
+                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                            borderColor: COLORS.text.secondary,
+                        },
+                    }}
+                >
+                    Cancel Analysis
+                </Button>
+            )}
 
             {error && (
                 <Alert severity="error" sx={{ mb: 2, mt: 2 }}>
@@ -809,6 +861,8 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                                 .primary.light,
                                                             letterSpacing: 1,
                                                             border: '1px solid rgba(255,255,255,0.03)',
+                                                            wordBreak:
+                                                                'break-all',
                                                         }}
                                                     >
                                                         {p}
@@ -922,6 +976,8 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                                 color: COLORS
                                                                     .data.green,
                                                                 flex: 1,
+                                                                wordBreak:
+                                                                    'break-all',
                                                             }}
                                                         >
                                                             {m.state}
@@ -946,6 +1002,8 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                                 flex: 1,
                                                                 textAlign:
                                                                     'right',
+                                                                wordBreak:
+                                                                    'break-all',
                                                             }}
                                                         >
                                                             {m.toggle}
