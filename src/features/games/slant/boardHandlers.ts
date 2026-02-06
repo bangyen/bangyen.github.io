@@ -11,6 +11,9 @@ export interface SlantState {
     cols: number;
     solved: boolean;
     auto: boolean;
+    errorNodes: Set<string>; // "r,c"
+    cycleCells: Set<string>; // "r,c"
+    satisfiedNodes: Set<string>; // "r,c"
 }
 
 export type SlantAction =
@@ -53,6 +56,75 @@ function getNodeIndex(r: number, c: number, cols: number): number {
     return r * (cols + 1) + c;
 }
 
+function findCycles(
+    grid: CellState[][],
+    rows: number,
+    cols: number
+): Set<string> {
+    const adj = new Map<number, { node: number; r: number; c: number }[]>();
+    const cycleCells = new Set<string>();
+
+    for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+            const cell = grid[r]?.[c];
+            if (!cell || cell === EMPTY) continue;
+
+            const u =
+                cell === FORWARD
+                    ? getNodeIndex(r, c + 1, cols)
+                    : getNodeIndex(r, c, cols);
+            const v =
+                cell === FORWARD
+                    ? getNodeIndex(r + 1, c, cols)
+                    : getNodeIndex(r + 1, c + 1, cols);
+
+            if (!adj.has(u)) adj.set(u, []);
+            if (!adj.has(v)) adj.set(v, []);
+            adj.get(u)?.push({ node: v, r, c });
+            adj.get(v)?.push({ node: u, r, c });
+        }
+    }
+
+    const visited = new Set<number>();
+    const onStack = new Set<number>();
+    const edgeStack: { r: number; c: number; u: number; v: number }[] = [];
+
+    const dfs = (u: number, prevNode: number) => {
+        visited.add(u);
+        onStack.add(u);
+
+        const neighbors = adj.get(u) ?? [];
+        for (const { node: v, r, c } of neighbors) {
+            if (v === prevNode) continue;
+
+            if (onStack.has(v)) {
+                // Cycle detected! Trace back edgeStack
+                cycleCells.add(`${String(r)},${String(c)}`);
+                for (let i = edgeStack.length - 1; i >= 0; i--) {
+                    const edge = edgeStack[i];
+                    if (!edge) break;
+                    cycleCells.add(`${String(edge.r)},${String(edge.c)}`);
+                    if (edge.u === v || edge.v === v) break;
+                }
+            } else if (!visited.has(v)) {
+                edgeStack.push({ r, c, u, v });
+                dfs(v, u);
+                edgeStack.pop();
+            }
+        }
+
+        onStack.delete(u);
+    };
+
+    for (const node of adj.keys()) {
+        if (!visited.has(node)) {
+            dfs(node, -1);
+        }
+    }
+
+    return cycleCells;
+}
+
 function hasCycle(grid: CellState[][], rows: number, cols: number): boolean {
     const dsu = new DSU((rows + 1) * (cols + 1));
 
@@ -78,6 +150,74 @@ function hasCycle(grid: CellState[][], rows: number, cols: number): boolean {
         }
     }
     return false;
+}
+
+function getErrorNodes(
+    grid: CellState[][],
+    numbers: (number | null)[][],
+    rows: number,
+    cols: number
+): Set<string> {
+    const errors = new Set<string>();
+    const currentNumbers = calculateNumbers(grid, rows, cols);
+
+    for (let r = 0; r <= rows; r++) {
+        for (let c = 0; c <= cols; c++) {
+            const target = numbers[r]?.[c];
+            if (target === null || target === undefined) continue;
+
+            const current = currentNumbers[r]?.[c] ?? 0;
+
+            // Overfilled
+            if (current > target) {
+                errors.add(`${String(r)},${String(c)}`);
+                continue;
+            }
+
+            // Check if it's impossible to reach target (filled but wrong)
+            const possible = [
+                { gr: r - 1, gc: c - 1 },
+                { gr: r - 1, gc: c },
+                { gr: r, gc: c - 1 },
+                { gr: r, gc: c },
+            ].filter(
+                ({ gr, gc }) =>
+                    gr >= 0 &&
+                    gr < rows &&
+                    gc >= 0 &&
+                    gc < cols &&
+                    grid[gr]?.[gc] === EMPTY
+            ).length;
+
+            if (current + possible < target) {
+                errors.add(`${String(r)},${String(c)}`);
+            }
+        }
+    }
+    return errors;
+}
+
+function getSatisfiedNodes(
+    grid: CellState[][],
+    numbers: (number | null)[][],
+    rows: number,
+    cols: number
+): Set<string> {
+    const satisfied = new Set<string>();
+    const currentNumbers = calculateNumbers(grid, rows, cols);
+
+    for (let r = 0; r <= rows; r++) {
+        for (let c = 0; c <= cols; c++) {
+            const target = numbers[r]?.[c];
+            if (target === null || target === undefined) continue;
+
+            const current = currentNumbers[r]?.[c] ?? 0;
+            if (current === target) {
+                satisfied.add(`${String(r)},${String(c)}`);
+            }
+        }
+    }
+    return satisfied;
 }
 
 function calculateNumbers(
@@ -482,11 +622,28 @@ export function handleBoard(
                 }
             }
 
+            const errorNodes = getErrorNodes(
+                newGrid,
+                state.numbers,
+                state.rows,
+                state.cols
+            );
+            const cycleCells = findCycles(newGrid, state.rows, state.cols);
+            const satisfiedNodes = getSatisfiedNodes(
+                newGrid,
+                state.numbers,
+                state.rows,
+                state.cols
+            );
+
             return {
                 ...state,
                 grid: newGrid,
                 solved,
                 auto: solved ? false : state.auto,
+                errorNodes,
+                cycleCells,
+                satisfiedNodes,
             };
         }
         case 'auto': {
@@ -517,6 +674,9 @@ export function handleBoard(
                 cols: action.cols,
                 solved: false,
                 auto: false,
+                errorNodes: new Set(),
+                cycleCells: new Set(),
+                satisfiedNodes: new Set(),
             };
         }
         case 'new': {
@@ -534,6 +694,9 @@ export function handleBoard(
                 solution,
                 solved: false,
                 auto: false,
+                errorNodes: new Set(),
+                cycleCells: new Set(),
+                satisfiedNodes: new Set(),
             };
         }
         default:
@@ -554,5 +717,8 @@ export function getInitialState(rows: number, cols: number): SlantState {
         cols,
         solved: false,
         auto: false,
+        errorNodes: new Set(),
+        cycleCells: new Set(),
+        satisfiedNodes: new Set(),
     };
 }

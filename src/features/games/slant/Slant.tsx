@@ -178,6 +178,7 @@ export default function Slant(): React.ReactElement {
     const getCellProps = (r: number, c: number) => {
         const value = state.grid[r]?.[c];
         const pos = `${String(r)},${String(c)}`;
+        const isError = state.cycleCells.has(pos);
 
         return {
             onMouseDown: (e: React.MouseEvent) => {
@@ -246,13 +247,16 @@ export default function Slant(): React.ReactElement {
                                 position: 'absolute',
                                 width: '130%',
                                 height: '6px',
-                                backgroundColor: COLORS.text.primary,
+                                backgroundColor: isError
+                                    ? COLORS.data.red
+                                    : COLORS.text.primary,
                                 borderRadius: '99px',
                                 top: '50%',
                                 left: '50%',
                                 transform:
                                     'translate(-50%, -50%) rotate(-45deg)',
                                 boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                                transition: 'all 0.2s',
                             }}
                         />
                     )}
@@ -262,13 +266,16 @@ export default function Slant(): React.ReactElement {
                                 position: 'absolute',
                                 width: '130%',
                                 height: '6px',
-                                backgroundColor: COLORS.text.primary,
+                                backgroundColor: isError
+                                    ? COLORS.data.red
+                                    : COLORS.text.primary,
                                 borderRadius: '99px',
                                 top: '50%',
                                 left: '50%',
                                 transform:
                                     'translate(-50%, -50%) rotate(45deg)',
                                 boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                                transition: 'all 0.2s',
                             }}
                         />
                     )}
@@ -283,27 +290,54 @@ export default function Slant(): React.ReactElement {
     // Props for Numbers (Grid Overlay)
     const getNumberProps = (r: number, c: number) => {
         const value = state.numbers[r]?.[c];
+        const hasError = state.errorNodes.has(`${String(r)},${String(c)}`);
+        const isSatisfied = state.satisfiedNodes.has(
+            `${String(r)},${String(c)}`
+        );
+
         return {
-            children: value ?? '',
+            children: (
+                <Box
+                    sx={{
+                        opacity: isSatisfied && !hasError ? 0.2 : 1,
+                        transition: 'opacity 0.3s',
+                    }}
+                >
+                    {value ?? ''}
+                </Box>
+            ),
             sx: {
                 borderRadius: '50%',
-                backgroundColor: COLORS.surface.background,
+                backgroundColor: hasError
+                    ? COLORS.data.red
+                    : COLORS.surface.background,
                 border:
-                    value !== undefined && value !== null
-                        ? `2px solid ${COLORS.border.subtle}`
+                    value !== null
+                        ? `2px solid ${
+                              hasError
+                                  ? COLORS.data.red
+                                  : isSatisfied
+                                    ? 'transparent'
+                                    : COLORS.border.subtle
+                          }`
                         : 'none',
                 fontSize: `${String(numberSize * 0.5)}rem`,
                 fontWeight: '800',
-                color: COLORS.text.primary,
-                boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                color: hasError ? '#fff' : COLORS.text.primary,
+                boxShadow:
+                    isSatisfied && !hasError
+                        ? 'none'
+                        : '0 4px 8px rgba(0,0,0,0.1)',
                 zIndex: 5,
-                opacity: value !== undefined && value !== null ? 1 : 0,
+                opacity: value !== null ? 1 : 0,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                transition: 'all 0.2s',
+                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 userSelect: 'none',
                 WebkitUserSelect: 'none',
+                transform: hasError ? 'scale(1.1)' : 'scale(1)',
+                position: 'relative',
             },
         };
     };
