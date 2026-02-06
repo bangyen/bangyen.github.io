@@ -29,6 +29,7 @@ const WikipediaQuiz = lazy(
 const LightsOutResearch = lazy(
     () => import('./features/research/pages/LightsOut')
 );
+const Gokigen = lazy(() => import('./features/games/gokigen/Gokigen'));
 
 const App = (): React.ReactElement => {
     const { resolvedMode } = useThemeContext();
@@ -71,6 +72,7 @@ const App = (): React.ReactElement => {
                         path={ROUTES.pages.LightsOutResearch}
                         element={<LightsOutResearch />}
                     />
+                    <Route path={ROUTES.pages.Gokigen} element={<Gokigen />} />
                     <Route path="*" element={<Error />} />
                 </Routes>
             </Suspense>
