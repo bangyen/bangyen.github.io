@@ -291,7 +291,6 @@ export default function Slant(): React.ReactElement {
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.2s',
-                paddingLeft: '0.1rem',
             },
         };
     };
@@ -348,7 +347,7 @@ export default function Slant(): React.ReactElement {
                                 top: 0,
                                 left: 0,
                                 transform: `translate(-${String(
-                                    numberSize / 2 - 1.25
+                                    numberSize / 2
                                 )}rem, -${String(numberSize / 2)}rem)`,
                                 zIndex: 10,
                                 pointerEvents: 'none',
@@ -360,6 +359,7 @@ export default function Slant(): React.ReactElement {
                                 cols={cols + 1}
                                 cellProps={getNumberProps}
                                 space={numberSpace}
+                                sx={{ width: 'fit-content' }}
                             />
                         </Box>
                     </Box>
