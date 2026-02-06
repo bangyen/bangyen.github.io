@@ -101,9 +101,20 @@ export default function Slant(): React.ReactElement {
         setDesiredSize(prev => (prev && prev > 3 ? prev - 1 : 3));
     };
 
-    const handleReset = () => {
+    const handleReset = useCallback(() => {
         dispatch({ type: 'new' });
-    };
+    }, [dispatch]);
+
+    useEffect(() => {
+        if (state.solved) {
+            const timeout = setTimeout(() => {
+                handleReset();
+            }, 3000);
+            return () => {
+                clearTimeout(timeout);
+            };
+        }
+    }, [state.solved, handleReset]);
 
     const [isDragging, setIsDragging] = useState<number | null>(null); // null, 0 (left), or 2 (right)
     const draggedCells = useRef(new Set<string>());
@@ -175,6 +186,7 @@ export default function Slant(): React.ReactElement {
                 if (e.button !== 0 && e.button !== 2) return;
                 if (Date.now() - lastTouchTime.current < 500) return;
 
+                e.preventDefault(); // Prevent text selection
                 setIsDragging(e.button);
                 dispatch({
                     type: 'toggle',
@@ -291,6 +303,8 @@ export default function Slant(): React.ReactElement {
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.2s',
+                userSelect: 'none',
+                WebkitUserSelect: 'none',
             },
         };
     };
@@ -327,7 +341,7 @@ export default function Slant(): React.ReactElement {
                 {/* Main Game Card */}
                 <Box>
                     {/* Grid Container - Isolation for perfect alignment */}
-                    <Box sx={{ position: 'relative' }}>
+                    <Box sx={{ position: 'relative', userSelect: 'none' }}>
                         {/* Main Grid */}
                         <Box sx={{ position: 'relative', zIndex: 1 }}>
                             <CustomGrid
@@ -371,29 +385,23 @@ export default function Slant(): React.ReactElement {
                             position: 'absolute',
                             inset: 0,
                             display: 'flex',
-                            flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            gap: 2,
                             opacity: state.solved ? 1 : 0,
-                            transform: state.solved
-                                ? 'scale(1)'
-                                : 'scale(0.95)',
+                            transform: state.solved ? 'scale(1)' : 'scale(0.5)',
                             visibility: state.solved ? 'visible' : 'hidden',
                             transition:
-                                'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                                'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
                             zIndex: 20,
-                            // backgroundColor: COLORS.surface.glass,
-                            backdropFilter: 'blur(8px)',
-                            borderRadius: 4,
+                            backgroundColor: 'transparent',
                             cursor: 'pointer',
                         }}
                     >
                         <EmojiEventsRounded
                             sx={{
-                                fontSize: '4rem',
+                                fontSize: `${String(size)}rem`, // Match Lights Out proportions
                                 color: COLORS.primary.main,
-                                filter: `drop-shadow(0 0 20px ${COLORS.primary.main})`,
+                                filter: `drop-shadow(0 0 30px ${COLORS.primary.main}88)`,
                                 animation: state.solved
                                     ? 'float 3s ease-in-out infinite'
                                     : 'none',
@@ -407,24 +415,6 @@ export default function Slant(): React.ReactElement {
                                 },
                             }}
                         />
-                        <Box
-                            sx={{
-                                fontSize: '1.5rem',
-                                fontWeight: 'bold',
-                                color: COLORS.text.primary,
-                            }}
-                        >
-                            Puzzle Solved!
-                        </Box>
-                        <Box
-                            sx={{
-                                fontSize: '0.875rem',
-                                color: COLORS.text.secondary,
-                                marginTop: 1,
-                            }}
-                        >
-                            Tap to play again
-                        </Box>
                     </Box>
                 </Box>
             </Box>
