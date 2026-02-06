@@ -58,13 +58,13 @@ export default function Gokigen(): React.ReactElement {
 
     // Calculate cell size to fit the board
     const size = useMemo(() => {
-        const maxW = Math.min(width, 800) * 0.9;
-        const maxH = (height - 200) * 0.9;
+        const maxW = Math.min(width, 1200) * 0.95;
+        const maxH = (height - 160) * 0.95;
 
         const possibleW = maxW / (cols + 1); // +1 because intersections stick out
         const possibleH = maxH / (rows + 1);
 
-        const pxSize = Math.min(possibleW, possibleH, 60); // Max 60px
+        const pxSize = Math.min(possibleW, possibleH, 100); // Max 100px
         return pxSize / 16; // rem
     }, [width, height, rows, cols]);
 
@@ -107,7 +107,7 @@ export default function Gokigen(): React.ReactElement {
             },
             sx: {
                 cursor: 'pointer',
-                border: `1px solid ${COLORS.interactive.disabled}`,
+                border: `1px solid ${COLORS.border.subtle}`,
                 position: 'relative',
                 transition: 'all 0.2s',
                 '&:hover': {
@@ -184,6 +184,7 @@ export default function Gokigen(): React.ReactElement {
                 alignItems: 'center',
                 justifyContent: 'center',
                 transition: 'all 0.2s',
+                paddingLeft: '0.1rem',
             },
         };
     };
@@ -240,7 +241,7 @@ export default function Gokigen(): React.ReactElement {
                                 top: 0,
                                 left: 0,
                                 transform: `translate(-${String(
-                                    numberSize / 2 - 0.75
+                                    numberSize / 2 - 1.25
                                 )}rem, -${String(numberSize / 2)}rem)`,
                                 zIndex: 10,
                                 pointerEvents: 'none',
