@@ -1,4 +1,11 @@
-import React, { useReducer, useEffect, useMemo, useState } from 'react';
+import React, {
+    useReducer,
+    useEffect,
+    useMemo,
+    useState,
+    useCallback,
+    useRef,
+} from 'react';
 import { Box, Grid } from '../../../components/mui';
 import {
     AddRounded,
@@ -21,13 +28,13 @@ import {
     BACKWARD,
 } from './boardHandlers';
 
-export default function Gokigen(): React.ReactElement {
+export default function Slant(): React.ReactElement {
     const { height, width } = useWindow();
     const mobile = useMobile('sm');
 
     // Default size handling
     const [desiredSize, setDesiredSize] = useState<number | null>(() => {
-        const saved = localStorage.getItem('gokigen-size');
+        const saved = localStorage.getItem('slant-size');
         return saved && saved !== 'null' ? parseInt(saved, 10) : 5;
     });
 
@@ -73,7 +80,7 @@ export default function Gokigen(): React.ReactElement {
     );
 
     useEffect(() => {
-        localStorage.setItem('gokigen-size', String(desiredSize));
+        localStorage.setItem('slant-size', String(desiredSize));
     }, [desiredSize]);
 
     useEffect(() => {
@@ -83,7 +90,7 @@ export default function Gokigen(): React.ReactElement {
     }, [rows, cols, state.rows, state.cols]);
 
     useEffect(() => {
-        document.title = PAGE_TITLES.gokigen;
+        document.title = PAGE_TITLES.slant;
     }, []);
 
     const handlePlus = () => {
@@ -98,18 +105,118 @@ export default function Gokigen(): React.ReactElement {
         dispatch({ type: 'new' });
     };
 
+    const [isDragging, setIsDragging] = useState<number | null>(null); // null, 0 (left), or 2 (right)
+    const draggedCells = useRef(new Set<string>());
+    const lastTouchTime = useRef(0);
+
+    const addDraggedCell = useCallback((pos: string) => {
+        draggedCells.current.add(pos);
+    }, []);
+
+    useEffect(() => {
+        const handleStopDragging = () => {
+            setIsDragging(null);
+            draggedCells.current.clear();
+        };
+
+        const handleTouchMove = (e: TouchEvent) => {
+            if (isDragging === null) return;
+
+            const touch = e.touches[0];
+            if (!touch) return;
+
+            const element = document.elementFromPoint(
+                touch.clientX,
+                touch.clientY
+            );
+            if (!element) return;
+
+            const cell = element.closest('[data-pos]');
+            if (cell) {
+                const pos = cell.getAttribute('data-pos');
+                if (pos && !draggedCells.current.has(pos)) {
+                    const [r, c] = pos.split(',').map(Number);
+                    if (r !== undefined && c !== undefined) {
+                        dispatch({
+                            type: 'toggle',
+                            row: r,
+                            col: c,
+                            reverse: isDragging === 2,
+                        });
+                        addDraggedCell(pos);
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('mouseup', handleStopDragging);
+        window.addEventListener('touchend', handleStopDragging);
+        window.addEventListener('touchcancel', handleStopDragging);
+        window.addEventListener('touchmove', handleTouchMove, {
+            passive: false,
+        });
+
+        return () => {
+            window.removeEventListener('mouseup', handleStopDragging);
+            window.removeEventListener('touchend', handleStopDragging);
+            window.removeEventListener('touchcancel', handleStopDragging);
+            window.removeEventListener('touchmove', handleTouchMove);
+        };
+    }, [isDragging, addDraggedCell]);
+
     // Props for Cells
     const getCellProps = (r: number, c: number) => {
         const value = state.grid[r]?.[c];
+        const pos = `${String(r)},${String(c)}`;
+
         return {
-            onClick: () => {
-                dispatch({ type: 'toggle', row: r, col: c });
+            onMouseDown: (e: React.MouseEvent) => {
+                if (state.solved) return;
+                if (e.button !== 0 && e.button !== 2) return;
+                if (Date.now() - lastTouchTime.current < 500) return;
+
+                setIsDragging(e.button);
+                dispatch({
+                    type: 'toggle',
+                    row: r,
+                    col: c,
+                    reverse: e.button === 2,
+                });
+                addDraggedCell(pos);
             },
+            onMouseEnter: () => {
+                if (
+                    isDragging !== null &&
+                    !draggedCells.current.has(pos) &&
+                    !state.solved
+                ) {
+                    dispatch({
+                        type: 'toggle',
+                        row: r,
+                        col: c,
+                        reverse: isDragging === 2,
+                    });
+                    addDraggedCell(pos);
+                }
+            },
+            onContextMenu: (e: React.MouseEvent) => {
+                e.preventDefault();
+            },
+            onTouchStart: (e: React.TouchEvent) => {
+                if (state.solved) return;
+                if (e.cancelable) e.preventDefault();
+                lastTouchTime.current = Date.now();
+                setIsDragging(0); // Touch counts as left click
+                dispatch({ type: 'toggle', row: r, col: c });
+                addDraggedCell(pos);
+            },
+            'data-pos': pos,
             sx: {
                 cursor: 'pointer',
                 border: `1px solid ${COLORS.border.subtle}`,
                 position: 'relative',
                 transition: 'all 0.2s',
+                touchAction: 'none',
                 '&:hover': {
                     backgroundColor: COLORS.interactive.hover,
                 },

@@ -106,7 +106,7 @@ export interface Routes {
         Interpreters: string;
         Geography: string;
         LightsOutResearch: string;
-        Gokigen: string;
+        Slant: string;
     };
     interpreters: {
         Stun_Step: string;
@@ -193,6 +193,6 @@ export interface PageTitles {
     interpreters: string;
     geography: string;
     lightsOutResearch: string;
-    gokigen: string;
+    slant: string;
     interpreter: (name: string) => string;
 }
