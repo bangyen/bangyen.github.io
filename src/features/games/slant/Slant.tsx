@@ -109,7 +109,7 @@ export default function Slant(): React.ReactElement {
         if (state.solved) {
             const timeout = setTimeout(() => {
                 handleReset();
-            }, 3000);
+            }, 2000);
             return () => {
                 clearTimeout(timeout);
             };
@@ -395,6 +395,7 @@ export default function Slant(): React.ReactElement {
                             zIndex: 20,
                             backgroundColor: 'transparent',
                             cursor: 'pointer',
+                            backdropFilter: 'blur(2px)',
                         }}
                     >
                         <EmojiEventsRounded

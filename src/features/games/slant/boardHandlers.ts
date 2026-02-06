@@ -119,98 +119,130 @@ function calculateNumbers(
     return numbers;
 }
 
-function checkSolvability(
+/**
+ * Checks if a puzzle can be solved using deductive logic alone.
+ * Rule 1: Node constraints (0, 1, 2, 3, 4 slants touch the node).
+ * Rule 2: No cycles.
+ */
+function checkDeductiveSolvability(
     maskedNumbers: (number | null)[][],
     rows: number,
-    cols: number,
-    limit = 2
-): number {
-    let solutions = 0;
-
-    const backtrack = (index: number, grid: CellState[][]) => {
-        if (solutions >= limit) return;
-
-        if (index === rows * cols) {
-            solutions++;
-            return;
-        }
-
-        const r = Math.floor(index / cols);
-        const c = index % cols;
-
-        const tryPlace = (move: CellState) => {
-            const rowArr = grid[r];
-            if (!rowArr) return false;
-            rowArr[c] = move;
-
-            const corners = [
-                { nr: r, nc: c },
-                { nr: r, nc: c + 1 },
-                { nr: r + 1, nc: c },
-                { nr: r + 1, nc: c + 1 },
-            ];
-
-            for (const { nr, nc } of corners) {
-                const target = maskedNumbers[nr]?.[nc];
-                if (target === null || target === undefined) continue;
-
-                let current = 0;
-                let decided = 0;
-
-                const neighbors = [
-                    { cr: nr - 1, cc: nc - 1, type: BACKWARD },
-                    { cr: nr - 1, cc: nc, type: FORWARD },
-                    { cr: nr, cc: nc - 1, type: FORWARD },
-                    { cr: nr, cc: nc, type: BACKWARD },
-                ];
-
-                for (const { cr, cc, type } of neighbors) {
-                    if (cr < 0 || cr >= rows || cc < 0 || cc >= cols) continue;
-                    const cRow = grid[cr];
-                    if (!cRow) continue;
-                    const val = cRow[cc];
-                    if (val !== EMPTY) {
-                        decided++;
-                        if (val === type) current++;
-                    }
-                }
-
-                if (current > target) return false;
-                const totalNeighbors = neighbors.filter(
-                    ({ cr, cc }) => cr >= 0 && cr < rows && cc >= 0 && cc < cols
-                ).length;
-
-                if (decided === totalNeighbors && current !== target)
-                    return false;
-            }
-
-            if (hasCycle(grid, rows, cols)) return false;
-
-            return true;
-        };
-
-        const rowArr = grid[r];
-        if (!rowArr) return;
-
-        if (tryPlace(FORWARD)) {
-            backtrack(index + 1, grid);
-        }
-        if (solutions >= limit) return;
-
-        if (tryPlace(BACKWARD)) {
-            backtrack(index + 1, grid);
-        }
-
-        rowArr[c] = EMPTY;
-    };
-
-    const emptyGrid = Array.from(
+    cols: number
+): boolean {
+    const grid: CellState[][] = Array.from(
         { length: rows },
         () => Array(cols).fill(EMPTY) as CellState[]
     );
-    backtrack(0, emptyGrid);
+    let changed = true;
 
-    return solutions;
+    while (changed) {
+        changed = false;
+
+        // Rule 1: Node constraints
+        for (let r = 0; r <= rows; r++) {
+            for (let c = 0; c <= cols; c++) {
+                const target = maskedNumbers[r]?.[c];
+                if (target === null || target === undefined) continue;
+
+                const touching = [
+                    { gr: r - 1, gc: c - 1, pt: BACKWARD },
+                    { gr: r - 1, gc: c, pt: FORWARD },
+                    { gr: r, gc: c - 1, pt: FORWARD },
+                    { gr: r, gc: c, pt: BACKWARD },
+                ].filter(
+                    ({ gr, gc }) => gr >= 0 && gr < rows && gc >= 0 && gc < cols
+                );
+
+                let confirmedIn = 0;
+                const unknown: { gr: number; gc: number; pt: CellState }[] = [];
+
+                for (const cell of touching) {
+                    const current = grid[cell.gr]?.[cell.gc];
+                    if (current === EMPTY) {
+                        unknown.push(cell);
+                    } else if (current === cell.pt) {
+                        confirmedIn++;
+                    }
+                }
+
+                if (confirmedIn === target && unknown.length > 0) {
+                    // All unknown must be "the other one"
+                    for (const { gr, gc, pt } of unknown) {
+                        const row = grid[gr];
+                        if (row) {
+                            row[gc] = pt === FORWARD ? BACKWARD : FORWARD;
+                            changed = true;
+                        }
+                    }
+                } else if (
+                    confirmedIn + unknown.length === target &&
+                    unknown.length > 0
+                ) {
+                    // All unknown must be "in"
+                    for (const { gr, gc, pt } of unknown) {
+                        const row = grid[gr];
+                        if (row) {
+                            row[gc] = pt;
+                            changed = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (changed) continue;
+
+        // Rule 2: Cycle prevention
+        // If one slant creates a cycle, we MUST pick the other.
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const rowArr = grid[r];
+                if (rowArr?.[c] !== EMPTY) continue;
+
+                // Try FORWARD
+                rowArr[c] = FORWARD;
+                if (hasCycle(grid, rows, cols)) {
+                    rowArr[c] = BACKWARD;
+                    changed = true;
+                    if (hasCycle(grid, rows, cols)) {
+                        // Both create cycles? Unsolvable board state
+                        return false;
+                    }
+                    continue;
+                }
+
+                // Try BACKWARD
+                rowArr[c] = BACKWARD;
+                if (hasCycle(grid, rows, cols)) {
+                    rowArr[c] = FORWARD;
+                    changed = true;
+                    if (hasCycle(grid, rows, cols)) {
+                        return false;
+                    }
+                    continue;
+                }
+
+                rowArr[c] = EMPTY;
+            }
+        }
+    }
+
+    // Check if fully solved
+    const isFull = grid.every(row => row.every(cell => cell !== EMPTY));
+    if (!isFull) return false;
+
+    // Verify constraints
+    const currentNumbers = calculateNumbers(grid, rows, cols);
+    for (let r = 0; r <= rows; r++) {
+        for (let c = 0; c <= cols; c++) {
+            const target = maskedNumbers[r]?.[c];
+            if (target !== null && target !== undefined) {
+                if (currentNumbers[r]?.[c] !== target) return false;
+            }
+        }
+    }
+
+    return !hasCycle(grid, rows, cols);
 }
 
 export function generatePuzzle(
@@ -222,50 +254,51 @@ export function generatePuzzle(
         () => Array(cols).fill(FORWARD) as CellState[]
     );
 
-    const iterations = rows * cols * 20;
+    // 1. Generate a valid random solution with no cycles
+    const iterations = rows * cols * 30;
     for (let i = 0; i < iterations; i++) {
         const r = Math.floor(Math.random() * rows);
         const c = Math.floor(Math.random() * cols);
         const rowArr = grid[r];
         if (!rowArr) continue;
 
-        const currentVal = rowArr[c];
-        if (currentVal === undefined) continue;
+        const original = rowArr[c];
+        if (original === undefined) continue;
 
-        const original = currentVal;
         rowArr[c] = original === FORWARD ? BACKWARD : FORWARD;
         if (hasCycle(grid, rows, cols)) {
             rowArr[c] = original;
         }
     }
 
+    // 2. Calculate numbers for this solution
     const fullNumbers = calculateNumbers(grid, rows, cols);
     const maskedNumbers: (number | null)[][] = fullNumbers.map(r => [...r]);
 
+    // 3. Shuffle coordinates for hint removal
     const coords: { r: number; c: number }[] = [];
     for (let r = 0; r <= rows; r++) {
         for (let c = 0; c <= cols; c++) {
             coords.push({ r, c });
         }
     }
-
     for (let i = coords.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
-        const ci = coords[i];
-        const cj = coords[j];
-        if (ci && cj) {
-            coords[i] = cj;
-            coords[j] = ci;
+        const tempI = coords[i];
+        const tempJ = coords[j];
+        if (tempI && tempJ) {
+            coords[i] = tempJ;
+            coords[j] = tempI;
         }
     }
 
-    const isSmall = rows * cols <= 16;
-    const MAX_CHECKS = isSmall ? 100 : rows * cols * 4;
-    let checks = 0;
-    let removedCount = 0;
+    // 4. Remove hints while ensuring deductive solvability
+    // We aim for a target hint density (e.g., 35% of nodes)
+    const targetHintCount = Math.floor((rows + 1) * (cols + 1) * 0.35);
+    let currentHintCount = (rows + 1) * (cols + 1);
 
     for (const { r, c } of coords) {
-        if (checks >= MAX_CHECKS) break;
+        if (currentHintCount <= targetHintCount) continue; // Keep going to see if we can reach it
 
         const rowArr = maskedNumbers[r];
         if (!rowArr) continue;
@@ -273,23 +306,12 @@ export function generatePuzzle(
         const original = rowArr[c];
         if (original === null || original === undefined) continue;
 
-        if (removedCount > (rows + 1) * (cols + 1) * 0.6) break;
-
         rowArr[c] = null;
-        if (isSmall) {
-            if (checkSolvability(maskedNumbers, rows, cols, 2) > 1) {
-                rowArr[c] = original;
-            } else {
-                removedCount++;
-            }
+        if (checkDeductiveSolvability(maskedNumbers, rows, cols)) {
+            currentHintCount--;
         } else {
-            if (Math.random() < 0.5) {
-                rowArr[c] = original;
-            } else {
-                removedCount++;
-            }
+            rowArr[c] = original;
         }
-        checks++;
     }
 
     return { numbers: maskedNumbers, solution: grid };
