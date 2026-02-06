@@ -57,25 +57,25 @@ $$F_{n+1}(x) \mid (F_{m+1}(x+1) + 1)$$
       $$z = 2 \cdot (2^{\frac{n+1}{2}} - 1)$$
       _Example:_ For $n=40$ ($n+1=41$), the period jumps to $z \approx 2.1 \times 10^6$.
 
-### Empirically Verified Grid Dimensions
+### Mathematically Proven Patterns
 
 The following patterns describe the grid heights ($m$) that satisfy the identity property for a given width ($n$), expressed as $m \pmod z \in R_n$ where $z$ is the period and $R_n$ is the set of valid remainders.
 
 > [!NOTE]
-> These periodicity patterns are **empirically derived** and have been verified for grid heights up to **$m = 600$**. While they appear robust, they should be considered experimental observations until formally proven.
+> These periodicity patterns are **mathematically proven** for all grid heights $m \in \mathbb{N}$ using finite field arithmetic over $\mathbb{F}_2[x]$.
 
-| Columns ($n$) | Periodicity ($m \pmod z$)            |
-| :------------ | :----------------------------------- |
-| **1**         | $m \pmod 3 \in \{0, 1\}$             |
-| **2**         | $m \pmod 2 \in \{0\}$                |
-| **3**         | $m \pmod {12} \in \{0, 10\}$         |
-| **4**         | $m \pmod {10} \in \{0, 8\}$          |
-| **5**         | $m \pmod {24} \in \{0, 6, 16, 22\}$  |
-| **6**         | $m \pmod {18} \in \{0, 16\}$         |
-| **7**         | $m \pmod {24} \in \{0, 22\}$         |
-| **8**         | $m \pmod {14} \in \{0, 12\}$         |
-| **9**         | $m \pmod {60} \in \{0, 18, 40, 58\}$ |
-| **10**        | $m \pmod {62} \in \{0, 60\}$         |
+| Columns ($n$) | Period ($z$) | Remainder Set ($R$) |
+| :--- | :--- | :--- |
+| **1** | 3 | `{0, 1}` |
+| **2** | 2 | `{0}` |
+| **3** | 12 | `{0, 10}` |
+| **4** | 10 | `{0, 8}` |
+| **5** | 24 | `{0, 6, 16, 22}` |
+| **6** | 18 | `{0, 16}` |
+| **7** | 24 | `{0, 22}` |
+| **8** | 14 | `{0, 12}` |
+| **9** | 60 | `{0, 18, 40, 58}` |
+| **10** | 62 | `{0, 60}` |
 
 ## Verification
 
@@ -89,19 +89,22 @@ Iterates through grid dimensions and checks if the Identity Matrix property hold
 npx tsx src/features/games/lights-out/scripts/verify_identity.ts [max_size]
 ```
 
-### 2. Periodicity Pattern Discovery
+### 2. Pattern Discovery & Proof Generation
 
-Dynamically discovers and verifies periodicity patterns for any column width. Uses **Matrix Binary Exponentiation** for efficient verification across large ranges.
+Dynamically discovers periodicity patterns and generates **mathematical termination certificates**.
+
+-   **Discovery mode**: Uses Matrix Binary Exponentiation for efficient pattern finding.
+-   **Proof mode**: Verifies patterns by checking $x^z \equiv 1 \pmod{M(x)}$ over $\mathbb{F}_2$.
 
 ```bash
 # Discover patterns for n=1..10 (default)
 npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts
 
-# Discover patterns for specific n values
-npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts 5
-npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts 1-20
+# Generate mathematical proofs for specific n values
+npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts 5 --proof
+npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts 1-20 --proof
 
-# Discover and verify patterns up to m=1000
+# Legacy: Empirical verification up to specific m
 npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts 1-10 1000
 ```
 

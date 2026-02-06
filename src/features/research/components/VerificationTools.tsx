@@ -28,6 +28,12 @@ const PeriodicityCalculator: React.FC = () => {
         pattern: Pattern;
         minimalPoly: string;
         factorization: string;
+        proof?: {
+            eq1: string;
+            res1: string;
+            eq2: string;
+            res2: string;
+        };
     } | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -73,6 +79,12 @@ const PeriodicityCalculator: React.FC = () => {
                         pattern: Pattern;
                         minimalPoly: string;
                         factorization: string;
+                        proof?: {
+                            eq1: string;
+                            res1: string;
+                            eq2: string;
+                            res2: string;
+                        };
                     }>
                 >
             ) => {
@@ -359,6 +371,50 @@ const PeriodicityCalculator: React.FC = () => {
                                     <Typography
                                         variant="caption"
                                         sx={{
+                                            color: COLORS.primary.light,
+                                            fontWeight: 'bold',
+                                            display: 'block',
+                                            mb: 0.5,
+                                            textTransform: 'uppercase',
+                                            letterSpacing: 1,
+                                            fontSize: '0.65rem',
+                                        }}
+                                    >
+                                        Remainder Set (R)
+                                    </Typography>
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            flexWrap: 'wrap',
+                                            gap: 1,
+                                            mb: 1.5,
+                                        }}
+                                    >
+                                        {result.pattern.R.map(r => (
+                                            <Box
+                                                key={r}
+                                                sx={{
+                                                    fontFamily: 'monospace',
+                                                    fontSize: '0.7rem',
+                                                    px: 1,
+                                                    py: 0.5,
+                                                    backgroundColor:
+                                                        'rgba(0,184,212,0.1)',
+                                                    borderRadius: '4px',
+                                                    color: COLORS.primary.light,
+                                                    border: '1px solid rgba(0,184,212,0.2)',
+                                                }}
+                                            >
+                                                {r}
+                                            </Box>
+                                        ))}
+                                    </Box>
+                                </Box>
+
+                                <Box sx={{ minWidth: 0 }}>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
                                             color: COLORS.primary.main,
                                             fontWeight: 'bold',
                                             display: 'block',
@@ -411,48 +467,74 @@ const PeriodicityCalculator: React.FC = () => {
                                     </Typography>
                                 </Box>
 
-                                <Box sx={{ minWidth: 0 }}>
-                                    <Typography
-                                        variant="caption"
-                                        sx={{
-                                            color: COLORS.primary.light,
-                                            fontWeight: 'bold',
-                                            display: 'block',
-                                            mb: 0.5,
-                                            textTransform: 'uppercase',
-                                            letterSpacing: 1,
-                                            fontSize: '0.65rem',
-                                        }}
-                                    >
-                                        Remainder Set (R)
-                                    </Typography>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            flexWrap: 'wrap',
-                                            gap: 1,
-                                        }}
-                                    >
-                                        {result.pattern.R.map(r => (
+                                {result.proof && (
+                                    <Box sx={{ minWidth: 0 }}>
+                                        <Typography
+                                            variant="caption"
+                                            sx={{
+                                                color: COLORS.primary.main,
+                                                fontWeight: 'bold',
+                                                display: 'block',
+                                                mb: 0.5,
+                                                textTransform: 'uppercase',
+                                                letterSpacing: 1,
+                                                fontSize: '0.65rem',
+                                            }}
+                                        >
+                                            Mathematical Certificate
+                                        </Typography>
+                                        <Box
+                                            sx={{
+                                                p: 1.25,
+                                                backgroundColor:
+                                                    'rgba(0,184,212,0.05)',
+                                                borderRadius: '6px',
+                                                fontFamily: 'monospace',
+                                                fontSize: '0.7rem',
+                                                color: COLORS.text.secondary,
+                                                border: '1px solid rgba(0,184,212,0.1)',
+                                            }}
+                                        >
                                             <Box
-                                                key={r}
                                                 sx={{
-                                                    fontFamily: 'monospace',
-                                                    fontSize: '0.7rem',
-                                                    px: 1,
-                                                    py: 0.5,
-                                                    backgroundColor:
-                                                        'rgba(0,184,212,0.1)',
-                                                    borderRadius: '4px',
-                                                    color: COLORS.primary.light,
-                                                    border: '1px solid rgba(0,184,212,0.2)',
+                                                    display: 'flex',
+                                                    justifyContent:
+                                                        'space-between',
+                                                    mb: 0.5,
                                                 }}
                                             >
-                                                {r}
+                                                <span>{result.proof.eq1}</span>
+                                                <span
+                                                    style={{
+                                                        color: COLORS.data
+                                                            .green,
+                                                        fontWeight: 'bold',
+                                                    }}
+                                                >
+                                                    = {result.proof.res1}
+                                                </span>
                                             </Box>
-                                        ))}
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    justifyContent:
+                                                        'space-between',
+                                                }}
+                                            >
+                                                <span>{result.proof.eq2}</span>
+                                                <span
+                                                    style={{
+                                                        color: COLORS.data
+                                                            .green,
+                                                        fontWeight: 'bold',
+                                                    }}
+                                                >
+                                                    = {result.proof.res2}
+                                                </span>
+                                            </Box>
+                                        </Box>
                                     </Box>
-                                </Box>
+                                )}
                             </Box>
                         </Paper>
                     </Fade>
