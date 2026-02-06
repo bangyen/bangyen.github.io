@@ -115,6 +115,21 @@ export default function Slant(): React.ReactElement {
         }
     }, [state.solved, handleReset]);
 
+    const [interactionAllowed, setInteractionAllowed] = useState(false);
+
+    useEffect(() => {
+        if (state.solved) {
+            const timeout = setTimeout(() => {
+                setInteractionAllowed(true);
+            }, 500);
+            return () => {
+                clearTimeout(timeout);
+            };
+        } else {
+            setInteractionAllowed(false);
+        }
+    }, [state.solved]);
+
     const [isDragging, setIsDragging] = useState<number | null>(null); // null, 0 (left), or 2 (right)
     const draggedCells = useRef(new Set<string>());
     const lastTouchTime = useRef(0);
@@ -438,7 +453,8 @@ export default function Slant(): React.ReactElement {
                                 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
                             zIndex: 20,
                             backgroundColor: 'transparent',
-                            cursor: 'pointer',
+                            pointerEvents: interactionAllowed ? 'auto' : 'none',
+                            cursor: interactionAllowed ? 'pointer' : 'default',
                             backdropFilter: 'blur(2px)',
                         }}
                     >
