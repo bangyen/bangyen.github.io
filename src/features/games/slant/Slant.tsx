@@ -10,7 +10,6 @@ import { Box, Grid } from '../../../components/mui';
 import {
     AddRounded,
     RemoveRounded,
-    RefreshRounded,
     EmojiEventsRounded,
 } from '../../../components/icons';
 import { Controls } from '../../../components/ui/Controls';
@@ -309,6 +308,17 @@ export default function Slant(): React.ReactElement {
         };
     };
 
+    useEffect(() => {
+        if (!state.auto || state.solved) return;
+
+        const timeout = setTimeout(() => {
+            dispatch({ type: 'nextLogical' });
+        }, 300);
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [state.auto, state.solved, state.grid]);
+
     return (
         <Grid
             container
@@ -420,12 +430,13 @@ export default function Slant(): React.ReactElement {
                 </Box>
             </Box>
 
-            <Controls handler={() => () => undefined}>
-                <TooltipButton
-                    title="Reset"
-                    Icon={RefreshRounded}
-                    onClick={handleReset}
-                />
+            <Controls
+                handler={() => () => undefined}
+                onAutoPlay={() => {
+                    dispatch({ type: 'auto' });
+                }}
+                autoPlayEnabled={state.auto}
+            >
                 <TooltipButton
                     title="Decrease Size"
                     Icon={RemoveRounded}
