@@ -819,130 +819,168 @@ const SolvabilityAnalyzer: React.FC = () => {
                                     </Box>
                                 )}
 
-                                <Box
-                                    sx={{
-                                        minWidth: 0,
-                                        flexGrow: 1,
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                    }}
-                                >
-                                    <Typography
-                                        variant="caption"
-                                        sx={{
-                                            color: COLORS.data.green,
-                                            fontWeight: 'bold',
-                                            display: 'block',
-                                            mb: 0.5,
-                                            textTransform: 'uppercase',
-                                            letterSpacing: 1,
-                                            fontSize: '0.65rem',
-                                        }}
-                                    >
-                                        {result.isFullSubspace
-                                            ? 'Strategy: Chasing Table'
-                                            : 'Image Basis (Correction Table)'}
-                                    </Typography>
-
+                                {result.imageMapping.length > 0 && (
                                     <Box
-                                        sx={{ display: 'flex', px: 1, mb: 0.5 }}
+                                        sx={{
+                                            minWidth: 0,
+                                            flexGrow: 1,
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                        }}
                                     >
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                flex: 1,
-                                                color: COLORS.text.secondary,
-                                                fontSize: '0.55rem',
+                                                color: COLORS.data.green,
                                                 fontWeight: 'bold',
-                                                letterSpacing: 0.5,
+                                                display: 'block',
+                                                mb: 0.5,
+                                                textTransform: 'uppercase',
+                                                letterSpacing: 1,
+                                                fontSize: '0.65rem',
                                             }}
                                         >
-                                            BOTTOM RESIDUAL
+                                            {result.isFullSubspace
+                                                ? 'Chasing Table'
+                                                : 'Image Basis'}
                                         </Typography>
-                                        <Box sx={{ width: 25 }} />
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                flex: 1,
-                                                color: COLORS.text.secondary,
-                                                fontSize: '0.55rem',
-                                                fontWeight: 'bold',
-                                                letterSpacing: 0.5,
-                                                textAlign: 'right',
-                                            }}
-                                        >
-                                            TOP CORRECTION
-                                        </Typography>
-                                    </Box>
 
-                                    <Box
-                                        sx={{
-                                            pr: 1,
-                                        }}
-                                    >
                                         <Box
                                             sx={{
                                                 display: 'flex',
-                                                flexDirection: 'column',
-                                                gap: 0.5,
+                                                px: 1,
+                                                mb: 0.5,
                                             }}
                                         >
-                                            {result.imageMapping.map(m => (
-                                                <Box
-                                                    key={m.state}
-                                                    sx={{
-                                                        fontFamily: 'monospace',
-                                                        fontSize: '0.65rem',
-                                                        p: 0.75,
-                                                        px: 1,
-                                                        backgroundColor:
-                                                            'rgba(0,0,0,0.2)',
-                                                        borderRadius: '4px',
-                                                        color: COLORS.text
-                                                            .primary,
-                                                        border: '1px solid rgba(255,255,255,0.03)',
-                                                        display: 'flex',
-                                                        justifyContent:
-                                                            'space-between',
-                                                        alignItems: 'center',
-                                                    }}
-                                                >
+                                            <Typography
+                                                variant="caption"
+                                                sx={{
+                                                    flex: 1,
+                                                    color: COLORS.text
+                                                        .secondary,
+                                                    fontSize: '0.55rem',
+                                                    fontWeight: 'bold',
+                                                    letterSpacing: 0.5,
+                                                }}
+                                            >
+                                                BOTTOM RESIDUAL
+                                            </Typography>
+                                            <Box sx={{ width: 25 }} />
+                                            <Typography
+                                                variant="caption"
+                                                sx={{
+                                                    flex: 1,
+                                                    color: COLORS.text
+                                                        .secondary,
+                                                    fontSize: '0.55rem',
+                                                    fontWeight: 'bold',
+                                                    letterSpacing: 0.5,
+                                                    textAlign: 'right',
+                                                }}
+                                            >
+                                                TOP CORRECTION
+                                            </Typography>
+                                        </Box>
+
+                                        <Box
+                                            sx={{
+                                                pr: 1,
+                                            }}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column',
+                                                    gap: 0.5,
+                                                }}
+                                            >
+                                                {result.imageMapping.map(m => (
                                                     <Box
-                                                        component="span"
+                                                        key={m.state}
                                                         sx={{
-                                                            color: COLORS.data
-                                                                .green,
-                                                            flex: 1,
-                                                        }}
-                                                    >
-                                                        {m.state}
-                                                    </Box>
-                                                    <Box
-                                                        component="span"
-                                                        sx={{
+                                                            fontFamily:
+                                                                'monospace',
+                                                            fontSize: '0.65rem',
+                                                            p: 0.75,
+                                                            px: 1,
+                                                            backgroundColor:
+                                                                'rgba(0,0,0,0.2)',
+                                                            borderRadius: '4px',
                                                             color: COLORS.text
-                                                                .secondary,
-                                                            mx: 1,
+                                                                .primary,
+                                                            border: '1px solid rgba(255,255,255,0.03)',
+                                                            display: 'flex',
+                                                            justifyContent:
+                                                                'space-between',
+                                                            alignItems:
+                                                                'center',
                                                         }}
                                                     >
-                                                        →
+                                                        <Box
+                                                            component="span"
+                                                            sx={{
+                                                                color: COLORS
+                                                                    .data.green,
+                                                                flex: 1,
+                                                            }}
+                                                        >
+                                                            {m.state}
+                                                        </Box>
+                                                        <Box
+                                                            component="span"
+                                                            sx={{
+                                                                color: COLORS
+                                                                    .text
+                                                                    .secondary,
+                                                                mx: 1,
+                                                            }}
+                                                        >
+                                                            →
+                                                        </Box>
+                                                        <Box
+                                                            component="span"
+                                                            sx={{
+                                                                color: COLORS
+                                                                    .primary
+                                                                    .light,
+                                                                flex: 1,
+                                                                textAlign:
+                                                                    'right',
+                                                            }}
+                                                        >
+                                                            {m.toggle}
+                                                        </Box>
                                                     </Box>
+                                                ))}
+                                                {!result.isFullSubspace && (
                                                     <Box
-                                                        component="span"
                                                         sx={{
-                                                            color: COLORS
-                                                                .primary.light,
-                                                            flex: 1,
-                                                            textAlign: 'right',
+                                                            p: 1,
+                                                            textAlign: 'center',
                                                         }}
                                                     >
-                                                        {m.toggle}
+                                                        <Typography
+                                                            variant="caption"
+                                                            sx={{
+                                                                color: COLORS
+                                                                    .text
+                                                                    .secondary,
+                                                                fontStyle:
+                                                                    'italic',
+                                                                fontSize:
+                                                                    '0.6rem',
+                                                            }}
+                                                        >
+                                                            ... and other
+                                                            reachable
+                                                            combinations
+                                                        </Typography>
                                                     </Box>
-                                                </Box>
-                                            ))}
+                                                )}
+                                            </Box>
                                         </Box>
                                     </Box>
-                                </Box>
+                                )}
                             </Box>
                             {result.quietPatterns.length === 0 && (
                                 <Box
