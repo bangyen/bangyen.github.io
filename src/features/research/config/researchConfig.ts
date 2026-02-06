@@ -16,6 +16,24 @@ export const RESEARCH_CONSTANTS: ResearchConfig = {
             priceFrequency: 0.3,
             hhiFrequency: 0.1,
         },
+        options: {
+            firms: [
+                { value: 2, label: '2' },
+                { value: 3, label: '3' },
+                { value: 4, label: '4' },
+                { value: 5, label: '5' },
+            ],
+            elasticity: [
+                { value: 1.5, label: '1.5' },
+                { value: 2.0, label: '2.0' },
+                { value: 2.5, label: '2.5' },
+            ],
+            price: [
+                { value: 30, label: '$30' },
+                { value: 40, label: '$40' },
+                { value: 50, label: '$50' },
+            ],
+        },
     },
     zsharp: {
         baseAccuracy: 0.65,
@@ -25,6 +43,13 @@ export const RESEARCH_CONSTANTS: ResearchConfig = {
         improvement: 0.05,
         lossReduction: 0.1,
         maxEpochs: 20,
+        yAxisPadding: 0.05,
+        lossPadding: 0.1,
+        gapPadding: 0.005,
+        convergencePadding: 0.005,
+    },
+    lightsOut: {
+        yAxisMax: 70,
     },
     modelTypes: {
         cournot: 'cournot',

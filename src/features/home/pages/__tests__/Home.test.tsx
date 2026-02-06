@@ -111,7 +111,7 @@ describe('Home Component', () => {
         expect(screen.getByTestId('view-module-icon')).toBeInTheDocument();
 
         // Check GitHub button (there are multiple, so use getAllBy)
-        expect(screen.getAllByTestId('github-icon')).toHaveLength(5);
+        expect(screen.getAllByTestId('github-icon')).toHaveLength(4);
     });
 
     test('renders skill chips', async () => {

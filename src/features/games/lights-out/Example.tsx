@@ -12,6 +12,7 @@ import {
 } from '../components/Board';
 import { getOutput, useHandler as useCalculatorHandler } from './calculator';
 import { COLORS } from '../../../config/theme';
+import { LIGHTS_OUT_STYLES } from './constants';
 
 function getIconFrames(
     states: number[][][],
@@ -154,7 +155,7 @@ function iconHandler(
                             content: '""',
                             fontSize: { xs: '0.8rem', sm: '1.2rem' },
                             fontWeight: 'bold',
-                            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
+                            filter: LIGHTS_OUT_STYLES.SHADOWS.DROP,
                             paddingTop: { xs: '0.08rem', sm: '0.15rem' },
                             animation: `${name} ${String(length * 2)}s linear infinite`,
                         },
@@ -280,7 +281,7 @@ function inputIconHandler(
                             content: '""',
                             fontSize: { xs: '0.8rem', sm: '1.2rem' },
                             fontWeight: 'bold',
-                            filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
+                            filter: LIGHTS_OUT_STYLES.SHADOWS.DROP,
                             paddingTop: { xs: '0.08rem', sm: '0.15rem' },
                             animation: `${name} ${String(length * 2)}s linear infinite`,
                         },

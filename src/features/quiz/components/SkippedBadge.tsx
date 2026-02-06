@@ -1,6 +1,7 @@
 import React from 'react';
 import { Chip } from '@mui/material';
-import { COLORS } from '../../../config/theme';
+import { COLORS, TYPOGRAPHY } from '../../../config/theme';
+import { QUIZ_UI_CONSTANTS } from '../config/quizConfig';
 
 const SkippedBadge: React.FC = () => (
     <Chip
@@ -8,11 +9,11 @@ const SkippedBadge: React.FC = () => (
         size="small"
         variant="outlined"
         sx={{
-            height: 20,
-            fontSize: '0.75rem',
+            height: QUIZ_UI_CONSTANTS.BADGE.HEIGHT,
+            fontSize: QUIZ_UI_CONSTANTS.BADGE.FONT_SIZE,
             borderColor: COLORS.surface.error,
             color: COLORS.data.red,
-            fontWeight: 'medium',
+            fontWeight: TYPOGRAPHY.fontWeight.medium,
             '& .MuiChip-label': { px: 1 },
         }}
     />

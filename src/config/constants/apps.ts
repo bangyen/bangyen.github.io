@@ -12,7 +12,7 @@ export const PAGE_TITLES: PageTitles = {
     interpreter: (name: string) => `${name} Interpreter | Bangyen`,
     geography: 'Geography | Bangyen',
     lightsOutResearch: 'Lights Out Mechanics | Bangyen',
-    gokigen: 'Gokigen Naname | Bangyen',
+    slant: 'Slant | Bangyen',
 };
 
 export const ROUTES: Routes = {
@@ -24,7 +24,7 @@ export const ROUTES: Routes = {
         Interpreters: '/interpreters',
         Geography: '/geography',
         LightsOutResearch: '/research/lights-out',
-        Gokigen: '/gokigen',
+        Slant: '/slant',
     },
     interpreters: {
         Stun_Step: '/stun-step',

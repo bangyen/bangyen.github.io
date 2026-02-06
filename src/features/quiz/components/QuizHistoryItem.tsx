@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card, Box, Typography } from '@mui/material';
 import { CheckCircleRounded as CheckCircleIcon } from '@mui/icons-material';
-import { COLORS } from '../../../config/theme';
-import { QuizConfig } from '../config/quizConfig';
+import { COLORS, TYPOGRAPHY } from '../../../config/theme';
+import { QuizConfig, QUIZ_UI_CONSTANTS } from '../config/quizConfig';
 import SkippedBadge from './SkippedBadge';
 import {
     Question,
@@ -59,13 +59,19 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                             src={q.item.flag}
                             alt={`Flag of ${q.item.country}`}
                             style={{
-                                height: '16px',
+                                height: `${QUIZ_UI_CONSTANTS.HISTORY_ITEM.FLAG_HEIGHT.toString()}px`,
                                 width: 'auto',
-                                borderRadius: '1px',
+                                borderRadius:
+                                    QUIZ_UI_CONSTANTS.HISTORY_ITEM
+                                        .FLAG_BORDER_RADIUS,
                             }}
                         />
                     )}
-                    <Typography variant="body1" fontWeight="bold" noWrap>
+                    <Typography
+                        variant="body1"
+                        fontWeight={TYPOGRAPHY.fontWeight.bold}
+                        noWrap
+                    >
                         {(() => {
                             if (selectedQuiz === 'driving_side') {
                                 return q.item.country;
@@ -120,13 +126,16 @@ const QuizHistoryItem: React.FC<QuizHistoryItemProps> = ({
                                 : q.pointsEarned === 0.5
                                   ? COLORS.data.amber
                                   : COLORS.data.red,
-                        fontWeight: q.pointsEarned > 0 ? 'bold' : 'normal',
+                        fontWeight:
+                            q.pointsEarned > 0
+                                ? TYPOGRAPHY.fontWeight.bold
+                                : TYPOGRAPHY.fontWeight.normal,
                         maxWidth: '150px',
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
                         textOverflow: 'ellipsis',
                         display: 'block',
-                        fontSize: '0.75rem',
+                        fontSize: QUIZ_UI_CONSTANTS.BADGE.FONT_SIZE,
                     }}
                 >
                     {(() => {

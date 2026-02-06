@@ -206,12 +206,7 @@ const Oligopoly: React.FC = () => {
             color: COLORS.primary.main,
             value: numFirms,
             onChange: setNumFirms,
-            options: [
-                { value: 2, label: '2' },
-                { value: 3, label: '3' },
-                { value: 4, label: '4' },
-                { value: 5, label: '5' },
-            ],
+            options: RESEARCH_CONSTANTS.oligopoly.options.firms,
         },
         {
             label: 'Demand Elasticity',
@@ -219,11 +214,7 @@ const Oligopoly: React.FC = () => {
             color: COLORS.data.green,
             value: demandElasticity,
             onChange: setDemandElasticity,
-            options: [
-                { value: 1.5, label: '1.5' },
-                { value: 2.0, label: '2.0' },
-                { value: 2.5, label: '2.5' },
-            ],
+            options: RESEARCH_CONSTANTS.oligopoly.options.elasticity,
         },
         {
             label: 'Base Price',
@@ -231,11 +222,7 @@ const Oligopoly: React.FC = () => {
             color: COLORS.data.amber,
             value: basePrice,
             onChange: setBasePrice,
-            options: [
-                { value: 30, label: '$30' },
-                { value: 40, label: '$40' },
-                { value: 50, label: '$50' },
-            ],
+            options: RESEARCH_CONSTANTS.oligopoly.options.price,
         },
     ];
 
@@ -246,7 +233,10 @@ const Oligopoly: React.FC = () => {
         yAxisDomain: ['dataMin - 5', 'dataMax + 5'],
         dualYAxis: true,
         rightYAxisFormatter: (value: number) => value.toFixed(2),
-        rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
+        rightYAxisDomain: [
+            `dataMin - ${String(RESEARCH_CONSTANTS.oligopoly.simulation.hhiFrequency)}`,
+            `dataMax + ${String(RESEARCH_CONSTANTS.oligopoly.simulation.hhiFrequency)}`,
+        ],
         tooltipLabelFormatter: (value: number) => `Round ${value.toString()}`,
         tooltipFormatter: (value: number, name: string): [string, string] => [
             name === 'Market Price' ? `$${value.toFixed(2)}` : value.toFixed(2),

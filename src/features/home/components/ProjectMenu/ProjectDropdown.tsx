@@ -1,12 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Box, MenuItem, Typography } from '../../../../components/mui';
-import { COLORS } from '../../../../config/theme';
+import {
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+    ANIMATIONS,
+} from '../../../../config/theme';
 import { PROJECT_CATEGORIES } from '../data';
 
 export function ProjectDropdown(): React.ReactElement {
     return (
-        <Box sx={{ padding: '16px 16px 0 16px' }}>
+        <Box
+            sx={{
+                padding: `${SPACING.padding.sm} ${SPACING.padding.sm} 0 ${SPACING.padding.sm}`,
+            }}
+        >
             {Object.entries(PROJECT_CATEGORIES).map(
                 ([categoryKey, category]) => {
                     const IconComponent = category.icon;
@@ -17,7 +26,7 @@ export function ProjectDropdown(): React.ReactElement {
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: 1,
-                                    padding: '8px 0 4px 0',
+                                    padding: `${SPACING.padding.xs} 0`,
                                     marginBottom: 0.5,
                                     position: 'relative',
                                     '&::after': {
@@ -35,15 +44,16 @@ export function ProjectDropdown(): React.ReactElement {
                                 <IconComponent
                                     sx={{
                                         color: COLORS.primary.main,
-                                        fontSize: '14px',
+                                        fontSize: '0.875rem',
                                         opacity: 0.7,
                                     }}
                                 />
                                 <Typography
                                     sx={{
                                         color: COLORS.text.secondary,
-                                        fontSize: '10px',
-                                        fontWeight: 500,
+                                        fontSize: '0.625rem',
+                                        fontWeight:
+                                            TYPOGRAPHY.fontWeight.medium,
                                         textTransform: 'uppercase',
                                         letterSpacing: '0.14em',
                                         fontFamily:
@@ -61,11 +71,12 @@ export function ProjectDropdown(): React.ReactElement {
                                         component={Link}
                                         to={project.path}
                                         sx={{
-                                            padding: '10px 12px',
-                                            borderRadius: '8px',
+                                            padding: `${SPACING.padding.xs} ${SPACING.padding.sm}`,
+                                            borderRadius:
+                                                SPACING.borderRadius.sm,
                                             margin: '0',
                                             minHeight: '40px',
-                                            transition: 'all 120ms ease',
+                                            transition: ANIMATIONS.transition,
                                             display: 'flex',
                                             flexDirection: 'column',
                                             alignItems: 'flex-start',
@@ -88,8 +99,10 @@ export function ProjectDropdown(): React.ReactElement {
                                     >
                                         <Typography
                                             sx={{
-                                                fontWeight: 600,
-                                                fontSize: '15px',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight
+                                                        .semibold,
+                                                fontSize: '0.9375rem',
                                                 lineHeight: 1.6,
                                                 color: COLORS.text.primary,
                                             }}
@@ -99,7 +112,8 @@ export function ProjectDropdown(): React.ReactElement {
                                         <Typography
                                             sx={{
                                                 color: COLORS.text.secondary,
-                                                fontSize: '12px',
+                                                fontSize:
+                                                    TYPOGRAPHY.fontSize.caption,
                                                 lineHeight: 1.4,
                                             }}
                                         >

@@ -1,5 +1,5 @@
 import React, { useCallback, ReactNode } from 'react';
-import { Box, Grid } from '../mui';
+import { Box } from '../mui';
 import { getSpace } from '../../features/interpreters/utils/gridUtils';
 import { TYPOGRAPHY, ANIMATIONS, COMPONENT_VARIANTS } from '../../config/theme';
 import { GRID_CONFIG } from '../../features/interpreters/config/interpretersConfig';
@@ -91,9 +91,15 @@ function Row({ cols, size, index, spacing, cellProps }: RowProps) {
     );
 
     return (
-        <Grid container size={12} spacing={spacing} justifyContent="center">
+        <Box
+            sx={{
+                display: 'flex',
+                gap: spacing,
+                justifyContent: 'center',
+            }}
+        >
             {Array.from({ length: cols }, WrappedCell)}
-        </Grid>
+        </Box>
     );
 }
 
@@ -103,6 +109,7 @@ interface CustomGridProps {
     cols: number;
     cellProps: (row: number, col: number) => CellOptions;
     space?: number;
+    sx?: object;
     [key: string]: unknown;
 }
 
@@ -111,11 +118,13 @@ export function CustomGrid({
     rows,
     cols,
     cellProps,
+    space,
+    sx,
     ...rest
 }: CustomGridProps) {
     const auto = getSpace(size);
-    const { space = auto } = rest;
-    const rem = `${space.toString()}rem`;
+    const actualSpace = space ?? auto;
+    const rem = `${actualSpace.toString()}rem`;
 
     const getRow = useCallback(
         (_: unknown, i: number) => (
@@ -132,16 +141,19 @@ export function CustomGrid({
     );
 
     return (
-        <Grid
-            container
-            size={12}
-            spacing={rem}
-            alignItems="center"
+        <Box
             role="grid"
             aria-label={`Grid with ${rows.toString()} rows and ${cols.toString()} columns`}
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: rem,
+                ...sx,
+            }}
             {...rest}
         >
             {Array.from({ length: rows }, getRow)}
-        </Grid>
+        </Box>
     );
 }

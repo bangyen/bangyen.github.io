@@ -15,7 +15,7 @@ import {
     NavigateNextRounded,
     CloseRounded,
     Refresh,
-    MenuBookRounded,
+    AnalyticsRounded,
 } from '../../../components/icons';
 import { COLORS } from '../../../config/theme';
 import { GlassCard } from '../../../components/ui/GlassCard';
@@ -181,7 +181,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                     color: COLORS.text.secondary,
                 }}
             >
-                <MenuBookRounded />
+                <AnalyticsRounded />
             </IconButton>
         );
     } else {
@@ -191,7 +191,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                 href={href}
                 variant="outlined"
                 size="small"
-                startIcon={<MenuBookRounded />}
+                startIcon={<AnalyticsRounded />}
                 sx={{
                     borderColor: COLORS.border.subtle,
                     color: COLORS.text.secondary,

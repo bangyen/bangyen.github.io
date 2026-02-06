@@ -9,8 +9,8 @@ import {
     Question,
     QuizItem,
 } from '../types/quiz';
-import { QUIZ_CONFIGS } from '../config/quizConfig';
-import { COLORS, SHADOWS } from '../../../config/theme';
+import { QUIZ_CONFIGS, QUIZ_UI_CONSTANTS } from '../config/quizConfig';
+import { COLORS, SHADOWS, SPACING } from '../../../config/theme';
 
 interface QuizGameProps {
     quizType: QuizType;
@@ -84,7 +84,7 @@ const QuizGame: React.FC<QuizGameProps> = ({
                             disabled={state.showFeedback}
                             sx={{
                                 flex: 1,
-                                py: 1.5,
+                                py: QUIZ_UI_CONSTANTS.ACTION_BUTTON.PY,
                                 whiteSpace: 'nowrap',
                                 '&.Mui-disabled': {
                                     backgroundColor:
@@ -102,7 +102,7 @@ const QuizGame: React.FC<QuizGameProps> = ({
                             disabled={state.showFeedback}
                             sx={{
                                 flex: 1,
-                                py: 1.5,
+                                py: QUIZ_UI_CONSTANTS.ACTION_BUTTON.PY,
                                 whiteSpace: 'nowrap',
                                 '&.Mui-disabled': {
                                     backgroundColor:
@@ -179,9 +179,9 @@ const QuizGame: React.FC<QuizGameProps> = ({
                         src={item.flag}
                         alt={`Flag of ${item.country}`}
                         style={{
-                            height: '24px',
+                            height: `${QUIZ_UI_CONSTANTS.FEEDBACK.FLAG_HEIGHT.toString()}px`,
                             width: 'auto',
-                            borderRadius: '2px',
+                            borderRadius: SPACING.borderRadius.sm,
                             boxShadow: SHADOWS.sm,
                         }}
                     />

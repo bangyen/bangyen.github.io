@@ -49,17 +49,21 @@ export function TechStack(): React.ReactElement {
                     const IconComponent = ICON_MAP[skill.icon] ?? Work;
 
                     return (
-                        <Fade in timeout={1200 + index * 150} key={skill.name}>
+                        <Fade
+                            in
+                            timeout={
+                                ANIMATIONS.durations.long +
+                                index * ANIMATIONS.durations.stagger
+                            }
+                            key={skill.name}
+                        >
                             <Box
                                 sx={{
                                     backgroundColor:
                                         COLORS.interactive.selected,
                                     border: `1px solid ${COLORS.interactive.selected}`,
                                     borderRadius: SPACING.borderRadius.md,
-                                    padding: {
-                                        xs: '12px',
-                                        md: '16px',
-                                    },
+                                    padding: SPACING.padding.sm,
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: {

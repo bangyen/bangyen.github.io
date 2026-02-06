@@ -88,6 +88,7 @@ interface Padding {
 }
 
 interface BorderRadius {
+    xs: string;
     sm: string;
     md: string;
     lg: string;
@@ -129,11 +130,36 @@ interface AnimationPresets {
         backdropFilter: string;
         border: string;
     };
+    glassSoft: {
+        backgroundColor: string;
+        backdropFilter: string;
+        border: string;
+    };
 }
 
 interface Animations {
     transition: string;
+    transitions: {
+        standard: string;
+        smooth: string;
+        fast: string;
+    };
+    durations: {
+        short: number;
+        standard: number;
+        long: number;
+        stagger: number;
+        menu: number;
+    };
     presets: AnimationPresets;
+}
+
+interface ZIndex {
+    base: number;
+    header: number;
+    navigation: number;
+    modal: number;
+    tooltip: number;
 }
 
 interface ComponentVariants {
@@ -146,6 +172,23 @@ interface ComponentVariants {
         display: string;
         flexDirection: string;
         transition: string;
+    };
+    badge: {
+        fontSize: string;
+        padding: string;
+        textTransform: string;
+        letterSpacing: string;
+    };
+    badgeSmall: {
+        fontSize: string;
+        padding: string;
+        textTransform: string;
+        letterSpacing: string;
+    };
+    badgeContainer: {
+        borderRadius: string;
+        display: string;
+        padding: string;
     };
     interactiveCard: {
         backgroundColor: string;
@@ -171,6 +214,10 @@ interface ComponentVariants {
         alignItems: string;
         justifyContent: string;
     };
+}
+
+interface ThemeLayout extends Layout {
+    zIndex: ZIndex;
 }
 
 // Palette Definitions
@@ -270,10 +317,17 @@ interface Layout {
     };
 }
 
-export const LAYOUT: Layout = {
+export const LAYOUT: ThemeLayout = {
     headerHeight: {
         xs: 56,
         md: 80,
+    },
+    zIndex: {
+        base: 0,
+        header: 1100,
+        navigation: 1000,
+        modal: 1300,
+        tooltip: 1500,
     },
 };
 
@@ -286,6 +340,7 @@ export const SPACING: Spacing = {
         xl: '3rem',
     },
     borderRadius: {
+        xs: '4px',
         sm: '8px',
         md: '12px',
         lg: '16px',
@@ -312,6 +367,18 @@ export const SHADOWS: Shadows = {
 
 export const ANIMATIONS: Animations = {
     transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+    transitions: {
+        standard: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+        smooth: 'all 300ms cubic-bezier(0.4, 0, 0.2, 1)',
+        fast: 'all 150ms cubic-bezier(0.4, 0, 0.2, 1)',
+    },
+    durations: {
+        short: 200,
+        standard: 400,
+        long: 1000,
+        stagger: 150,
+        menu: 300,
+    },
     presets: {
         focus: {
             boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
@@ -319,6 +386,11 @@ export const ANIMATIONS: Animations = {
         glass: {
             backgroundColor: COLORS.surface.glass,
             backdropFilter: 'blur(24px) saturate(180%)',
+            border: `1px solid ${COLORS.border.subtle}`,
+        },
+        glassSoft: {
+            backgroundColor: COLORS.surface.glass,
+            backdropFilter: 'blur(8px) saturate(140%)',
             border: `1px solid ${COLORS.border.subtle}`,
         },
     },
@@ -348,6 +420,23 @@ export const COMPONENT_VARIANTS: ComponentVariants = {
             outline: 'none',
             boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
         },
+    },
+    badge: {
+        fontSize: '0.7rem',
+        padding: '4px 12px',
+        textTransform: 'uppercase',
+        letterSpacing: '0.025em',
+    },
+    badgeSmall: {
+        fontSize: '0.65rem',
+        padding: '2px 8px',
+        textTransform: 'uppercase',
+        letterSpacing: '0.02em',
+    },
+    badgeContainer: {
+        borderRadius: SPACING.borderRadius.full,
+        display: 'inline-block',
+        padding: '4px 12px',
     },
     flexCenter: {
         display: 'flex',
@@ -429,6 +518,9 @@ export function createAppTheme(mode: 'light' | 'dark' = 'dark') {
                         '--selection-background': palette.selectionBackground,
                         '--selection-text': palette.selectionText,
                         '--text-shadow': palette.textShadow,
+                        '--primary-main': COLORS.primary.main,
+                        '--primary-light': COLORS.primary.light,
+                        '--primary-dark': COLORS.primary.dark,
                     },
                     body: {
                         transition:

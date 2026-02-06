@@ -1,7 +1,14 @@
 import React from 'react';
 import { Button, Box } from '../../../components/mui';
-import { COLORS, SPACING, TYPOGRAPHY, SHADOWS } from '../../../config/theme';
+import {
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+    SHADOWS,
+    ANIMATIONS,
+} from '../../../config/theme';
 import { ViewType } from '../types';
+import { RESEARCH_STYLES } from '../constants';
 
 interface ResearchViewSelectorProps<T> {
     viewTypes: ViewType<T>[];
@@ -60,19 +67,19 @@ const ResearchViewSelector = <T,>({
                                 '&.MuiButton-root': {
                                     color:
                                         currentViewType === viewType.key
-                                            ? '#fff'
+                                            ? COLORS.text.primary
                                             : COLORS.text.secondary,
                                 },
                                 borderColor: COLORS.border.subtle,
                                 borderWidth: '1px',
                                 borderStyle: 'solid',
                                 borderRadius: SPACING.borderRadius.lg,
-                                minHeight: '36px',
-                                padding: '0.4rem 0.8rem',
-                                fontSize: '0.8rem',
+                                minHeight: RESEARCH_STYLES.LAYOUT.BUTTON_HEIGHT,
+                                padding:
+                                    RESEARCH_STYLES.LAYOUT.INNER_PADDING_SM,
+                                fontSize: RESEARCH_STYLES.LAYOUT.FONT_SIZE_SM,
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                transition:
-                                    'transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
+                                transition: ANIMATIONS.transitions.standard,
                                 '&:hover': {
                                     backgroundColor:
                                         currentViewType === viewType.key

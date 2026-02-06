@@ -24,17 +24,17 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: hsl(217deg 91% 45%); /* Keep primary dark for dark mode feel */
+    background: var(--primary-dark); /* Keep primary dark for dark mode feel */
     border-radius: 4px;
     transition: background-color 150ms ease-in-out;
 }
 
 [data-theme='light'] ::-webkit-scrollbar-thumb {
-    background: hsl(217deg 91% 60%);
+    background: var(--primary-light);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: hsl(217deg 91% 50%);
+    background: var(--primary-main);
 }
 
 /* Selection styles */

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Menu } from '../../../components/mui';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { ViewModuleRounded } from '../../../components/icons';
-import { COLORS, SHADOWS } from '../../../config/theme';
+import { COLORS, SHADOWS, ANIMATIONS, SPACING } from '../../../config/theme';
 import { ProjectDropdown } from './ProjectMenu/ProjectDropdown';
 
 function clickHandler(setAnchor: (anchor: HTMLElement | null) => void) {
@@ -71,13 +71,11 @@ export function MenuButton(): React.ReactElement {
                         width: 'auto',
                         maxWidth: '300px',
                         height: 'auto !important',
-                        backgroundColor: COLORS.surface.glass,
-                        backdropFilter: 'blur(8px)',
-                        border: `1px solid ${COLORS.border.subtle}`,
-                        borderRadius: '16px',
+                        ...ANIMATIONS.presets.glassSoft,
+                        borderRadius: SPACING.borderRadius.lg,
                         padding: 0,
                         boxShadow: SHADOWS.lg,
-                        transition: 'all 140ms cubic-bezier(0.2, 0.8, 0.2, 1)',
+                        transition: `all ${ANIMATIONS.durations.menu.toString()}ms cubic-bezier(0.2, 0.8, 0.2, 1)`,
                         transform: open
                             ? 'translateY(0) scale(1)'
                             : 'translateY(8px) scale(0.98)',

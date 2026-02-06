@@ -153,7 +153,10 @@ const ZSharp: React.FC = () => {
                 xAxisKey: 'epoch',
                 yAxisFormatter: (value: number) =>
                     `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
-                yAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
+                yAxisDomain: [
+                    `dataMin - ${String(RESEARCH_CONSTANTS.zsharp.yAxisPadding)}`,
+                    `dataMax + ${String(RESEARCH_CONSTANTS.zsharp.yAxisPadding)}`,
+                ],
                 tooltipLabelFormatter: (value: number) =>
                     `Epoch ${value.toString()}`,
                 tooltipFormatter: (value: number, name: string) => [
@@ -187,7 +190,10 @@ const ZSharp: React.FC = () => {
                 type: 'line',
                 xAxisKey: 'epoch',
                 yAxisFormatter: (value: number) => value.toFixed(3),
-                yAxisDomain: ['dataMin - 0.1', 'dataMax + 0.1'],
+                yAxisDomain: [
+                    `dataMin - ${String(RESEARCH_CONSTANTS.zsharp.lossPadding)}`,
+                    `dataMax + ${String(RESEARCH_CONSTANTS.zsharp.lossPadding)}`,
+                ],
                 tooltipLabelFormatter: (value: number) =>
                     `Epoch ${value.toString()}`,
                 tooltipFormatter: (value: number, name: string) => [
@@ -225,7 +231,10 @@ const ZSharp: React.FC = () => {
                 xAxisKey: 'epoch',
                 yAxisFormatter: (value: number) =>
                     `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
-                yAxisDomain: ['dataMin - 0.005', 'dataMax + 0.005'],
+                yAxisDomain: [
+                    `dataMin - ${String(RESEARCH_CONSTANTS.zsharp.gapPadding)}`,
+                    `dataMax + ${String(RESEARCH_CONSTANTS.zsharp.gapPadding)}`,
+                ],
                 tooltipLabelFormatter: (value: number) =>
                     `Epoch ${value.toString()}`,
                 tooltipFormatter: (value: number, name: string) => [
@@ -265,7 +274,10 @@ const ZSharp: React.FC = () => {
                 xAxisKey: 'epoch',
                 yAxisFormatter: (value: number) =>
                     `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
-                yAxisDomain: ['dataMin - 0.005', 'dataMax + 0.005'],
+                yAxisDomain: [
+                    `dataMin - ${String(RESEARCH_CONSTANTS.zsharp.convergencePadding)}`,
+                    `dataMax + ${String(RESEARCH_CONSTANTS.zsharp.convergencePadding)}`,
+                ],
                 tooltipLabelFormatter: (value: number) =>
                     `Epoch ${value.toString()}`,
                 tooltipFormatter: (value: number, name: string) => [

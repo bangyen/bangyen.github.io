@@ -18,6 +18,8 @@ import { Latex } from '../../../components/ui/Latex';
 import { URLS, ROUTES } from '../../../config/constants';
 import ResearchDemo from '../ResearchDemo';
 import { VerificationTools } from '../components/VerificationTools';
+import { RESEARCH_STYLES } from '../constants';
+import { RESEARCH_CONSTANTS } from '../config/researchConfig';
 
 interface PeriodicityData {
     n: number;
@@ -42,7 +44,7 @@ const LightsOutResearch: React.FC = () => {
         type: 'line',
         xAxisKey: 'n',
         yAxisFormatter: (value: number) => value.toString(),
-        yAxisDomain: ['0', '70'],
+        yAxisDomain: ['0', String(RESEARCH_CONSTANTS.lightsOut.yAxisMax)],
         tooltipLabelFormatter: (value: number) =>
             `Grid Width n=${value.toString()}`,
         tooltipFormatter: (value: number): [string, string] => [
@@ -226,7 +228,7 @@ const LightsOutResearch: React.FC = () => {
                         textAlign: 'center',
                         mb: 6,
                         py: 4,
-                        background: 'rgba(255,255,255,0.03)',
+                        background: RESEARCH_STYLES.GLASS.TRANSPARENT,
                         borderRadius: SPACING.borderRadius.md,
                     }}
                 >
@@ -265,7 +267,7 @@ const LightsOutResearch: React.FC = () => {
                     component={Paper}
                     sx={{
                         mb: 6,
-                        background: 'rgba(255,255,255,0.02)',
+                        background: RESEARCH_STYLES.GLASS.SUBTLE,
                         boxShadow: 'none',
                         borderRadius: SPACING.borderRadius.md,
                     }}

@@ -31,6 +31,12 @@ import { useWindow, useMobile } from '../../../hooks';
 import { convertPixels } from '../../interpreters/utils/gridUtils';
 import Info from './Info';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
+import {
+    TIMING_CONSTANTS,
+    LIGHTS_OUT_STYLES,
+    STORAGE_KEYS,
+    LAYOUT_CONSTANTS,
+} from './constants';
 
 function getFrontProps(
     getters: Getters,
@@ -60,7 +66,11 @@ function getFrontProps(
             onMouseDown: (e: React.MouseEvent) => {
                 if (e.button !== 0) return; // Only left click
                 // Ignore ghost clicks on mobile
-                if (Date.now() - lastTouchTime.current < 500) return;
+                if (
+                    Date.now() - lastTouchTime.current <
+                    TIMING_CONSTANTS.GHOST_CLICK_TIMEOUT
+                )
+                    return;
                 setIsDragging(true);
                 flipAdj(row, col);
                 addDraggedCell(pos);
@@ -90,7 +100,7 @@ function getFrontProps(
                     color: back,
                 },
                 touchAction: 'none', // Prevent scrolling while dragging
-                transition: 'all 100ms ease-in-out',
+                transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
             },
         };
     };
@@ -134,7 +144,7 @@ export default function LightsOut(): React.ReactElement {
         : GAME_CONSTANTS.gridSizes.desktop;
 
     const [desiredSize, setDesiredSize] = useState<number | null>(() => {
-        const saved = localStorage.getItem('lights-out-size');
+        const saved = localStorage.getItem(STORAGE_KEYS.SIZE);
         return saved && saved !== 'null' ? parseInt(saved, 10) : null;
     });
 
@@ -164,7 +174,7 @@ export default function LightsOut(): React.ReactElement {
     }, [desiredSize, dynamicSize]);
 
     useEffect(() => {
-        localStorage.setItem('lights-out-size', String(desiredSize));
+        localStorage.setItem(STORAGE_KEYS.SIZE, String(desiredSize));
     }, [desiredSize]);
 
     const initial = useMemo(
@@ -262,7 +272,7 @@ export default function LightsOut(): React.ReactElement {
         if (solved) {
             const timeout = setTimeout(() => {
                 handleNext();
-            }, 2000);
+            }, TIMING_CONSTANTS.WIN_ANIMATION_DELAY);
             return () => {
                 clearTimeout(timeout);
             };
@@ -319,7 +329,7 @@ export default function LightsOut(): React.ReactElement {
                     dispatch({ type: 'auto' });
                 }
             }
-        }, 300);
+        }, TIMING_CONSTANTS.AUTO_PLAY_SPEED);
         return () => {
             clearTimeout(timeout);
         };
@@ -400,7 +410,9 @@ export default function LightsOut(): React.ReactElement {
                 <Box
                     sx={{
                         position: 'relative',
-                        marginTop: mobile ? '-28px' : '-40px',
+                        marginTop: mobile
+                            ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
+                            : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
                     }}
                 >
                     <Board
@@ -430,7 +442,9 @@ export default function LightsOut(): React.ReactElement {
                     >
                         <EmojiEventsRounded
                             sx={{
-                                fontSize: `${(size * 1.25).toString()}rem`,
+                                fontSize: `${(
+                                    size * LAYOUT_CONSTANTS.ICON_SIZE_RATIO
+                                ).toString()}rem`,
                                 color: allOn
                                     ? palette.secondary
                                     : palette.primary,

@@ -3,13 +3,12 @@ import Info from '../Info';
 import * as calculator from '../calculator';
 
 // Mock dependencies
-jest.mock(
-    '../Example',
-    () =>
-        function MockExample() {
-            return <div data-testid="example-component" />;
-        }
-);
+jest.mock('../Example', () => ({
+    __esModule: true,
+    default: function MockExample() {
+        return <div data-testid="example-component" />;
+    },
+}));
 jest.mock('../../../../components/ui/GlassCard', () => ({
     GlassCard: function MockGlassCard({
         children,
@@ -75,6 +74,7 @@ jest.mock('../../../../components/icons', () => ({
     CloseRounded: () => <div data-testid="closerounded-icon" />,
     Refresh: () => <div data-testid="refresh-icon" />,
     MenuBookRounded: () => <div data-testid="menubookrounded-icon" />,
+    AnalyticsRounded: () => <div data-testid="analytics-icon" />,
 }));
 
 // Mock calculator helpers

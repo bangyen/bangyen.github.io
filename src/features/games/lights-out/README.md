@@ -65,17 +65,17 @@ The following patterns describe the grid heights ($m$) that satisfy the identity
 > These periodicity patterns are **mathematically proven** for all grid heights $m \in \mathbb{N}$ using finite field arithmetic over $\mathbb{F}_2[x]$.
 
 | Columns ($n$) | Period ($z$) | Remainder Set ($R$) |
-| :--- | :--- | :--- |
-| **1** | 3 | `{0, 1}` |
-| **2** | 2 | `{0}` |
-| **3** | 12 | `{0, 10}` |
-| **4** | 10 | `{0, 8}` |
-| **5** | 24 | `{0, 6, 16, 22}` |
-| **6** | 18 | `{0, 16}` |
-| **7** | 24 | `{0, 22}` |
-| **8** | 14 | `{0, 12}` |
-| **9** | 60 | `{0, 18, 40, 58}` |
-| **10** | 62 | `{0, 60}` |
+| :------------ | :----------- | :------------------ |
+| **1**         | 3            | `{0, 1}`            |
+| **2**         | 2            | `{0}`               |
+| **3**         | 12           | `{0, 10}`           |
+| **4**         | 10           | `{0, 8}`            |
+| **5**         | 24           | `{0, 6, 16, 22}`    |
+| **6**         | 18           | `{0, 16}`           |
+| **7**         | 24           | `{0, 22}`           |
+| **8**         | 14           | `{0, 12}`           |
+| **9**         | 60           | `{0, 18, 40, 58}`   |
+| **10**        | 62           | `{0, 60}`           |
 
 ## Verification
 
@@ -93,8 +93,8 @@ npx tsx src/features/games/lights-out/scripts/verify_identity.ts [max_size]
 
 Dynamically discovers periodicity patterns and generates **mathematical termination certificates**.
 
--   **Discovery mode**: Uses Matrix Binary Exponentiation for efficient pattern finding.
--   **Proof mode**: Verifies patterns by checking $x^z \equiv 1 \pmod{M(x)}$ over $\mathbb{F}_2$.
+- **Discovery mode**: Uses Matrix Binary Exponentiation for efficient pattern finding.
+- **Proof mode**: Verifies patterns by checking $x^z \equiv 1 \pmod{M(x)}$ over $\mathbb{F}_2$.
 
 ```bash
 # Discover patterns for n=1..10 (default)

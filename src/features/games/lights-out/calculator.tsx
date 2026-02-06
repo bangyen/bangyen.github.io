@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { CircleRounded } from '../../../components/icons';
 import { useGetters, Getters, Palette } from '../components/Board';
+import { TIMING_CONSTANTS, LIGHTS_OUT_STYLES } from './constants';
 
 export function getInput(
     getters: Getters,
@@ -22,7 +23,11 @@ export function getInput(
             onMouseDown: (e: React.MouseEvent) => {
                 if (e.button !== 0) return;
                 // Ignore ghost clicks on mobile
-                if (Date.now() - lastTouchTime.current < 500) return;
+                if (
+                    Date.now() - lastTouchTime.current <
+                    TIMING_CONSTANTS.GHOST_CLICK_TIMEOUT
+                )
+                    return;
                 setIsDragging(true);
                 toggleTile(c);
                 addDraggedCol(c);
@@ -48,7 +53,7 @@ export function getInput(
                     color: back,
                 },
                 touchAction: 'none', // Prevent scrolling while dragging
-                transition: 'all 200ms ease',
+                transition: LIGHTS_OUT_STYLES.TRANSITION.DEFAULT,
             },
             color: front,
             children: <CircleRounded />,
@@ -66,7 +71,7 @@ export function getOutput({ getColor, getBorder }: Getters) {
             children: <CircleRounded />,
             style: getBorder(r, c),
             sx: {
-                transition: 'all 200ms ease',
+                transition: LIGHTS_OUT_STYLES.TRANSITION.DEFAULT,
             },
         };
     };
