@@ -126,13 +126,15 @@ export default function Gokigen(): React.ReactElement {
                         <Box
                             sx={{
                                 position: 'absolute',
-                                width: '120%',
-                                height: '2px',
+                                width: '130%',
+                                height: '6px',
                                 backgroundColor: COLORS.text.primary,
+                                borderRadius: '99px',
                                 top: '50%',
                                 left: '50%',
                                 transform:
                                     'translate(-50%, -50%) rotate(-45deg)',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
                             }}
                         />
                     )}
@@ -140,13 +142,15 @@ export default function Gokigen(): React.ReactElement {
                         <Box
                             sx={{
                                 position: 'absolute',
-                                width: '120%',
-                                height: '2px',
+                                width: '130%',
+                                height: '6px',
                                 backgroundColor: COLORS.text.primary,
+                                borderRadius: '99px',
                                 top: '50%',
                                 left: '50%',
                                 transform:
                                     'translate(-50%, -50%) rotate(45deg)',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
                             }}
                         />
                     )}
@@ -165,17 +169,21 @@ export default function Gokigen(): React.ReactElement {
             children: value ?? '',
             sx: {
                 borderRadius: '50%',
-                backgroundColor: COLORS.surface.elevated,
+                backgroundColor: COLORS.surface.background,
                 border:
                     value !== undefined && value !== null
-                        ? `1px solid ${COLORS.border.subtle}`
+                        ? `2px solid ${COLORS.border.subtle}`
                         : 'none',
-                fontSize: `${String(numberSize * 0.6)}rem`,
-                fontWeight: 'bold',
+                fontSize: `${String(numberSize * 0.5)}rem`,
+                fontWeight: '800',
                 color: COLORS.text.primary,
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
                 zIndex: 5,
                 opacity: value !== undefined && value !== null ? 1 : 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.2s',
             },
         };
     };
@@ -186,7 +194,7 @@ export default function Gokigen(): React.ReactElement {
             minHeight="100vh"
             flexDirection="column"
             sx={{
-                background: COLORS.surface.background,
+                background: `radial-gradient(circle at 50% 50%, ${COLORS.surface.elevated} 0%, ${COLORS.surface.background} 100%)`,
                 position: 'relative',
                 overflow: 'hidden',
                 height: '100vh',
@@ -209,62 +217,106 @@ export default function Gokigen(): React.ReactElement {
                     padding: `${String(size)}rem`,
                 }}
             >
-                <Box sx={{ position: 'relative' }}>
-                    {/* Main Grid */}
-                    <Box sx={{ position: 'relative', zIndex: 1 }}>
-                        <CustomGrid
-                            size={size}
-                            rows={rows}
-                            cols={cols}
-                            cellProps={getCellProps}
-                            space={0}
-                        />
-                    </Box>
+                {/* Main Game Card */}
+                <Box>
+                    {/* Grid Container - Isolation for perfect alignment */}
+                    <Box sx={{ position: 'relative' }}>
+                        {/* Main Grid */}
+                        <Box sx={{ position: 'relative', zIndex: 1 }}>
+                            <CustomGrid
+                                size={size}
+                                rows={rows}
+                                cols={cols}
+                                cellProps={getCellProps}
+                                space={0}
+                                sx={{ width: 'fit-content' }}
+                            />
+                        </Box>
 
-                    {/* Numbers Grid Overlay */}
-                    <Box
-                        sx={{
-                            position: 'absolute',
-                            top: `-${String(numberSize / 2)}rem`,
-                            left: `-${String(numberSize / 2)}rem`,
-                            zIndex: 10,
-                            pointerEvents: 'none',
-                        }}
-                    >
-                        <CustomGrid
-                            size={numberSize}
-                            rows={rows + 1}
-                            cols={cols + 1}
-                            cellProps={getNumberProps}
-                            space={numberSpace}
-                        />
+                        {/* Numbers Grid Overlay */}
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                transform: `translate(-${String(
+                                    numberSize / 2 - 0.75
+                                )}rem, -${String(numberSize / 2)}rem)`,
+                                zIndex: 10,
+                                pointerEvents: 'none',
+                            }}
+                        >
+                            <CustomGrid
+                                size={numberSize}
+                                rows={rows + 1}
+                                cols={cols + 1}
+                                cellProps={getNumberProps}
+                                space={numberSpace}
+                            />
+                        </Box>
                     </Box>
 
                     {/* Win Overlay */}
                     <Box
+                        onClick={handleReset}
                         sx={{
                             position: 'absolute',
                             inset: 0,
                             display: 'flex',
+                            flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'center',
+                            gap: 2,
                             opacity: state.solved ? 1 : 0,
-                            transform: state.solved ? 'scale(1)' : 'scale(0.5)',
+                            transform: state.solved
+                                ? 'scale(1)'
+                                : 'scale(0.95)',
                             visibility: state.solved ? 'visible' : 'hidden',
                             transition:
-                                'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                                'all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)',
                             zIndex: 20,
-                            backgroundColor: 'rgba(255,255,255,0.3)',
-                            backdropFilter: 'blur(2px)',
-                            borderRadius: '1rem',
+                            // backgroundColor: COLORS.surface.glass,
+                            backdropFilter: 'blur(8px)',
+                            borderRadius: 4,
+                            cursor: 'pointer',
                         }}
                     >
                         <EmojiEventsRounded
                             sx={{
-                                fontSize: `${(size * 2).toString()}rem`,
+                                fontSize: '4rem',
                                 color: COLORS.primary.main,
+                                filter: `drop-shadow(0 0 20px ${COLORS.primary.main})`,
+                                animation: state.solved
+                                    ? 'float 3s ease-in-out infinite'
+                                    : 'none',
+                                '@keyframes float': {
+                                    '0%, 100%': {
+                                        transform: 'translateY(0)',
+                                    },
+                                    '50%': {
+                                        transform: 'translateY(-10px)',
+                                    },
+                                },
                             }}
                         />
+                        <Box
+                            sx={{
+                                fontSize: '1.5rem',
+                                fontWeight: 'bold',
+                                color: COLORS.text.primary,
+                            }}
+                        >
+                            Puzzle Solved!
+                        </Box>
+                        <Box
+                            sx={{
+                                fontSize: '0.875rem',
+                                color: COLORS.text.secondary,
+                                marginTop: 1,
+                            }}
+                        >
+                            Tap to play again
+                        </Box>
                     </Box>
                 </Box>
             </Box>
