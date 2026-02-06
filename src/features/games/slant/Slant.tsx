@@ -497,7 +497,10 @@ export default function Slant(): React.ReactElement {
                     title="Increase Size"
                     Icon={AddRounded}
                     onClick={handlePlus}
-                    disabled={rows >= 10}
+                    disabled={
+                        rows >= 10 ||
+                        (rows >= dynamicSize.rows && cols >= dynamicSize.cols)
+                    }
                 />
             </Controls>
         </Grid>
