@@ -12,6 +12,7 @@ import { handleAction, handleResize } from './logic';
 import { GRID_CONFIG } from '../../interpreters/config/interpretersConfig';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 import { StarRounded as FoodIcon } from '../../../components/icons';
+import { SNAKE_CONSTANTS } from './constants';
 
 const pulseRotate = keyframes`
   0% { transform: scale(0.8) rotate(0deg); }
@@ -150,7 +151,7 @@ export default function Snake(): React.ReactElement {
             const isEndpoint = isHead || isTail;
 
             const standardRadius = `${(size / GRID_CONFIG.cellSize.divisor).toString()}rem`;
-            const terminalRadius = `${(size / 2.5).toString()}rem`; // Slightly less than 50% for a sleeker look
+            const terminalRadius = `${(size / SNAKE_CONSTANTS.CORNER_RADIUS.TERMINAL_DIVISOR).toString()}rem`; // Slightly less than 50% for a sleeker look
 
             if (color === 'inherit') {
                 return { backgroundColor: color };
@@ -164,8 +165,8 @@ export default function Snake(): React.ReactElement {
                         <FoodIcon
                             sx={{
                                 color: color,
-                                fontSize: `${(size * 0.7).toString()}rem`,
-                                animation: `${pulseRotate} 2s infinite ease-in-out`,
+                                fontSize: `${(size * SNAKE_CONSTANTS.FOOD_SIZE_RATIO).toString()}rem`,
+                                animation: `${pulseRotate} ${SNAKE_CONSTANTS.FOOD_ANIMATION_DURATION} infinite ease-in-out`,
                             }}
                         />
                     ),
@@ -192,7 +193,7 @@ export default function Snake(): React.ReactElement {
 
             return {
                 backgroundColor: color,
-                boxShadow: `0 0 1.25rem ${color.replace('hsl', 'hsla').replace(')', ', 0.25)')}`,
+                boxShadow: `0 0 ${SNAKE_CONSTANTS.CORNER_RADIUS.GLOW_SIZE} ${color.replace('hsl', 'hsla').replace(')', `, ${String(SNAKE_CONSTANTS.CORNER_RADIUS.GLOW_OPACITY)})`)}`,
                 borderRadius: br,
             };
         },
@@ -213,7 +214,10 @@ export default function Snake(): React.ReactElement {
             });
         };
 
-        createTimer({ repeat: wrapDispatch, speed: 100 });
+        createTimer({
+            repeat: wrapDispatch,
+            speed: SNAKE_CONSTANTS.TIMER_SPEED,
+        });
         createKeys(wrapDirection);
     }, [createTimer, createKeys]);
 

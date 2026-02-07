@@ -9,7 +9,9 @@ import {
     DESKTOP_PADDING,
     NUMBER_SIZE_RATIO,
     SLANT_STYLES,
+    LAYOUT_CONSTANTS,
 } from './constants';
+import { ANIMATIONS, SPACING } from '../../../config/theme';
 
 interface GhostBoardProps {
     rows: number;
@@ -257,7 +259,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                                 transform:
                                     'translate(-50%, -50%) rotate(-45deg)',
                                 boxShadow: SLANT_STYLES.SHADOWS.LINE,
-                                transition: 'all 0.2s',
+                                transition: ANIMATIONS.transition,
                                 pointerEvents: 'none',
                             }}
                         />
@@ -275,7 +277,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                                 transform:
                                     'translate(-50%, -50%) rotate(45deg)',
                                 boxShadow: SLANT_STYLES.SHADOWS.LINE,
-                                transition: 'all 0.2s',
+                                transition: ANIMATIONS.transition,
                                 pointerEvents: 'none',
                             }}
                         />
@@ -346,7 +348,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                         letterSpacing: '0.2rem',
                         border: `1px solid ${SLANT_STYLES.GHOST.HINT_BORDER}`,
                         padding: '4px 12px',
-                        borderRadius: '4px',
+                        borderRadius: SPACING.borderRadius.sm,
                         background: SLANT_STYLES.GHOST.OVERLAY_BG,
                         backdropFilter: 'blur(4px)',
                     }}
@@ -360,7 +362,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                     position: 'relative',
                     padding: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
                     border: `2px dashed ${SLANT_STYLES.GHOST.DASHED_BORDER}`,
-                    borderRadius: '24px',
+                    borderRadius: LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
                 }}
             >
                 {/* Main Grid */}

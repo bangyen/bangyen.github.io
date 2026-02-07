@@ -13,6 +13,17 @@ export const LAYOUT_CONSTANTS = {
     LINE_WIDTH: '130%',
     LINE_THICKNESS: '6px',
     CALCULATOR_BORDER_RADIUS: '24px',
+    HEADER_OFFSET: {
+        MOBILE: 64,
+        DESKTOP: 80,
+    },
+    PADDING_OFFSET: 100,
+    WIDTH_LIMIT: 1000,
+    BOARD_MAX_WIDTH: 1200,
+    BOARD_SIZE_FACTOR: 0.95,
+    HEIGHT_OFFSET: 160,
+    MAX_CELL_SIZE: 100,
+    REM_BASE: 16,
 };
 
 export const STORAGE_KEYS = {
@@ -23,6 +34,10 @@ export const STORAGE_KEYS = {
 
 export const GAME_LOGIC_CONSTANTS = {
     HINT_DENSITY: 0.35,
+    MIN_SIZE: 3,
+    MAX_SIZE: 10,
+    DEFAULT_SIZE: 5,
+    PUZZLE_GENERATION_ITERATIONS: 30,
 };
 
 export const SLANT_STYLES = {

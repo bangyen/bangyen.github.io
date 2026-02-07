@@ -23,7 +23,8 @@ export type SlantAction =
     | { type: 'resize'; rows: number; cols: number }
     | { type: 'new' }
     | { type: 'auto' }
-    | { type: 'nextLogical' };
+    | { type: 'nextLogical' }
+    | { type: 'hydrate'; state: SlantState };
 
 class DSU {
     parent: number[];
@@ -401,7 +402,8 @@ export function generatePuzzle(
     );
 
     // 1. Generate a valid random solution with no cycles
-    const iterations = rows * cols * 30;
+    const iterations =
+        rows * cols * GAME_LOGIC_CONSTANTS.PUZZLE_GENERATION_ITERATIONS;
     for (let i = 0; i < iterations; i++) {
         const r = Math.floor(Math.random() * rows);
         const c = Math.floor(Math.random() * cols);
@@ -661,8 +663,18 @@ export function handleBoard(
             if (!move) return { ...state, auto: false };
             return handleBoard(state, { type: 'toggle', ...move });
         }
+        case 'hydrate': {
+            return {
+                ...action.state,
+                auto: false, // Don't resume auto-play on load
+            };
+        }
         case 'resize': {
-            if (action.rows < 2 || action.cols < 2) return state;
+            if (
+                action.rows < GAME_LOGIC_CONSTANTS.MIN_SIZE ||
+                action.cols < GAME_LOGIC_CONSTANTS.MIN_SIZE
+            )
+                return state;
             const { numbers, solution } = generatePuzzle(
                 action.rows,
                 action.cols
