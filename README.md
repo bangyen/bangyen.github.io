@@ -1,7 +1,7 @@
 # Bangyen's Personal Website
 
-[![React](https://img.shields.io/badge/React-19.0.0-blue.svg?logo=react)](https://react.dev/)
-[![MUI](https://img.shields.io/badge/MUI-7.0.0-007FFF?logo=mui)](https://mui.com/)
+[![React](https://img.shields.io/badge/React-19.2.3-blue.svg?logo=react)](https://react.dev/)
+[![MUI](https://img.shields.io/badge/MUI-7.3.7-007FFF?logo=mui)](https://mui.com/)
 [![Vite](https://img.shields.io/badge/Vite-7.3.1-646CFF?logo=vite)](https://vitejs.dev/)
 [![GitHub Pages](https://img.shields.io/badge/Deployed%20on-GitHub%20Pages-green.svg?logo=github)](https://pages.github.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -19,8 +19,13 @@ A personal website and portfolio showcasing interactive programming interpreters
 - **Back**: Grid-based language with mirror reflections
 
 ### Interactive Games
-- **Snake**: Classic snake game
-- **Lights Out**: Grid puzzle game ([Math Documentation](src/features/games/lights-out/README.md))
+- **Slant**: Diagonal line logic puzzle
+- **Lights Out**: Grid puzzle game with [algebraic analysis](src/features/games/lights-out/README.md)
+- **Snake**: Classic retro arcade game
+
+### Knowledge Collections
+- **Geography Quizzes**: Interactive map-based learning using Wikipedia data
+
 
 ### Data Visualization
 - **Oligopoly**: Economic simulation with market dynamics
@@ -38,10 +43,11 @@ A personal website and portfolio showcasing interactive programming interpreters
 - **Frontend**: React 19, Material-UI 7, React Router 7
 - **Build Tooling**: Vite 7, TypeScript 5
 - **Styling**: Vanilla CSS, Emotion
-- **Charts**: Recharts
-- **Testing**: Jest, React Testing Library
-- **Quality Control**: ESLint 9 (Flat Config), Prettier, Husky, lint-staged
+- **Data**: KaTeX (Math), Recharts (Visuals)
+- **Testing**: Jest 30, React Testing Library
+- **Quality Control**: ESLint 9 (Flat Config), Prettier 3, Husky, lint-staged
 - **Deployment**: GitHub Pages
+
 
 ## Getting Started
 
