@@ -1,6 +1,6 @@
 import React, { useMemo, useEffect, useReducer, useCallback } from 'react';
 import { Box } from '../../../components/mui';
-import { MenuBookRounded, CircleRounded } from '../../../components/icons';
+import { MenuBookRounded } from '../../../components/icons';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { Board, useHandler, usePalette, Getters } from '../components/Board';
 import { GameControls } from '../components/GameControls';
@@ -23,6 +23,18 @@ import { GamePageLayout } from '../components/GamePageLayout';
 import { TrophyOverlay } from '../components/TrophyOverlay';
 import { BoardState } from './boardHandlers';
 
+const ICON = (
+    <Box
+        sx={{
+            width: '60%',
+            height: '60%',
+            borderRadius: '50%',
+            backgroundColor: 'currentColor',
+            boxShadow: '0 0 15px currentColor',
+        }}
+    />
+);
+
 function getFrontProps(
     getters: Getters,
     getDragProps: (pos: string) => DragProps
@@ -37,7 +49,7 @@ function getFrontProps(
 
         return {
             ...dragProps,
-            children: <CircleRounded />,
+            children: ICON,
             backgroundColor: front,
             color: front,
             style,
@@ -56,6 +68,7 @@ function getBackProps(getters: Getters) {
     return (row: number, col: number) => {
         return {
             backgroundColor: getters.getFiller(row, col),
+            transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
         };
     };
 }
