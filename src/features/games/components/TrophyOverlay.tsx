@@ -38,6 +38,7 @@ export function TrophyOverlay({
                 cursor: 'pointer',
                 zIndex: 10,
                 ...ANIMATIONS.presets.glass,
+                backdropFilter: 'blur(4px) saturate(180%)',
                 backgroundColor: 'transparent',
             }}
         >
