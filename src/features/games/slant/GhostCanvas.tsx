@@ -297,8 +297,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
             color = COLORS.data.red;
         } else if (isCycle) {
             // Differentiate user vs propagated loops
-            color =
-                source === 'user' ? COLORS.data.red : `${COLORS.data.red}88`; // Translucent red/orange
+            color = source === 'user' ? COLORS.data.red : '#ff9800'; // Solid Orange for visibility
         } else if (source === 'user') {
             color = COLORS.primary.main;
         } else if (source === 'propagated') {
@@ -360,15 +359,9 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 position: 'relative',
                 transition: 'all 0.2s',
                 touchAction: 'none',
-                backgroundColor:
-                    isConflict || isCycle
-                        ? `${COLORS.data.red}20`
-                        : SLANT_STYLES.GHOST.BG_SUBTLE, // Slight tint
+                backgroundColor: SLANT_STYLES.GHOST.BG_SUBTLE,
                 '&:hover': {
-                    backgroundColor:
-                        isConflict || isCycle
-                            ? `${COLORS.data.red}30`
-                            : SLANT_STYLES.GHOST.BG_HOVER,
+                    backgroundColor: SLANT_STYLES.GHOST.BG_HOVER,
                 },
             },
             children: (
