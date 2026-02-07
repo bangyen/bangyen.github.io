@@ -207,6 +207,14 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                     continue;
                 }
 
+                // If this update was propagated, we stop here.
+                // We checked for conflicts (above), but we don't trigger further chains.
+                if (
+                    newGrid.get(`${String(cr)},${String(cc)}`)?.source !==
+                    'user'
+                )
+                    continue;
+
                 if (connected === limit && unknowns.length > 0) {
                     for (const unk of unknowns) {
                         const forced =
