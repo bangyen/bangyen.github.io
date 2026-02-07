@@ -243,16 +243,16 @@ export default function LightsOut() {
                     frontProps={frontProps}
                     backProps={backProps}
                 />
-                <TrophyOverlay
-                    show={solved}
-                    onClick={handleNext}
-                    size={size}
-                    iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
-                    primaryColor={palette.primary}
-                    secondaryColor={palette.secondary}
-                    useSecondary={allOn}
-                />
             </Box>
+            <TrophyOverlay
+                show={solved}
+                onClick={handleNext}
+                size={size}
+                iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
+                primaryColor={palette.primary}
+                secondaryColor={palette.secondary}
+                useSecondary={allOn}
+            />
             {open && (
                 <Info
                     rows={rows}
