@@ -58,8 +58,10 @@ export function PublicationCard({
                             color: COLORS.primary.main,
                             fontSize: TYPOGRAPHY.fontSize.caption,
                             fontWeight: TYPOGRAPHY.fontWeight.medium,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.025em',
+                            textTransform:
+                                COMPONENT_VARIANTS.badge.textTransform,
+                            letterSpacing:
+                                COMPONENT_VARIANTS.badge.letterSpacing,
                         }}
                     >
                         Research
@@ -88,7 +90,7 @@ export function PublicationCard({
                         component="span"
                         sx={{
                             backgroundColor: COLORS.surface.success,
-                            padding: '4px 12px',
+                            padding: COMPONENT_VARIANTS.badge.padding,
                             borderRadius: SPACING.borderRadius.full,
                             border: `1px solid ${COLORS.surface.success}`,
                             display: 'inline-block',
@@ -98,10 +100,12 @@ export function PublicationCard({
                             component="span"
                             sx={{
                                 color: COLORS.data.green,
-                                fontSize: '0.7rem',
+                                fontSize: COMPONENT_VARIANTS.badge.fontSize,
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.025em',
+                                textTransform:
+                                    COMPONENT_VARIANTS.badge.textTransform,
+                                letterSpacing:
+                                    COMPONENT_VARIANTS.badge.letterSpacing,
                             }}
                         >
                             {publication.conference}

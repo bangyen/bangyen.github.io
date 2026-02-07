@@ -13,6 +13,11 @@ export interface OligopolyConstants {
         priceFrequency: number;
         hhiFrequency: number;
     };
+    options: {
+        firms: { value: number; label: string }[];
+        elasticity: { value: number; label: string }[];
+        price: { value: number; label: string }[];
+    };
 }
 
 export interface ZSharpDefaults {
@@ -23,6 +28,10 @@ export interface ZSharpDefaults {
     improvement: number;
     lossReduction: number;
     maxEpochs: number;
+    yAxisPadding: number;
+    lossPadding: number;
+    gapPadding: number;
+    convergencePadding: number;
 }
 
 export interface ResearchConfig {
@@ -30,5 +39,8 @@ export interface ResearchConfig {
     zsharp: ZSharpDefaults;
     modelTypes: {
         cournot: string;
+    };
+    lightsOut: {
+        yAxisMax: number;
     };
 }

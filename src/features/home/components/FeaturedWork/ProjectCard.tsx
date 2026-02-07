@@ -56,8 +56,10 @@ export function ProjectCard({ project }: ProjectCardProps): React.ReactElement {
                             color: COLORS.primary.main,
                             fontSize: TYPOGRAPHY.fontSize.caption,
                             fontWeight: TYPOGRAPHY.fontWeight.medium,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.025em',
+                            textTransform:
+                                COMPONENT_VARIANTS.badge.textTransform,
+                            letterSpacing:
+                                COMPONENT_VARIANTS.badge.letterSpacing,
                         }}
                     >
                         Engineering
@@ -86,7 +88,7 @@ export function ProjectCard({ project }: ProjectCardProps): React.ReactElement {
                         component="span"
                         sx={{
                             backgroundColor: COLORS.interactive.selected,
-                            padding: '4px 12px',
+                            padding: COMPONENT_VARIANTS.badge.padding,
                             borderRadius: SPACING.borderRadius.full,
                             border: `1px solid ${COLORS.interactive.selected}`,
                             display: 'inline-block',
@@ -96,10 +98,12 @@ export function ProjectCard({ project }: ProjectCardProps): React.ReactElement {
                             component="span"
                             sx={{
                                 color: COLORS.primary.main,
-                                fontSize: '0.7rem',
+                                fontSize: COMPONENT_VARIANTS.badge.fontSize,
                                 fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                textTransform: 'uppercase',
-                                letterSpacing: '0.025em',
+                                textTransform:
+                                    COMPONENT_VARIANTS.badge.textTransform,
+                                letterSpacing:
+                                    COMPONENT_VARIANTS.badge.letterSpacing,
                             }}
                         >
                             {project.technology}

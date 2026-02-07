@@ -5,6 +5,7 @@ import { Toolbar } from './Toolbar';
 import { LAYOUT, COLORS, TYPOGRAPHY } from '../../config/theme';
 import { EditorContext } from './EditorContext';
 import { TextArea, TextAreaProps } from './components/TextArea';
+import { GRID_CONFIG } from './config/interpretersConfig';
 
 interface EditorProps {
     container?: RefObject<HTMLDivElement | null>;
@@ -49,7 +50,10 @@ export default function Editor({
         sx: {
             overflowY: 'hidden',
             height: {
-                xs: code !== undefined ? '300px' : '350px',
+                xs:
+                    code !== undefined
+                        ? GRID_CONFIG.layout.editorHeight.xs.withCode
+                        : GRID_CONFIG.layout.editorHeight.xs.withoutCode,
                 md: 'auto',
             },
         },
@@ -66,7 +70,7 @@ export default function Editor({
             }}
             direction="column"
             wrap="nowrap"
-            padding={{ xs: '1rem', md: '2rem' }}
+            padding={GRID_CONFIG.layout.padding}
             sx={{
                 background: COLORS.surface.background,
                 position: 'relative',
@@ -134,7 +138,10 @@ export default function Editor({
                         [code !== undefined, tapeFlag, outFlag, regFlag].filter(
                             Boolean
                         ).length > 0
-                            ? { xs: 'auto', md: '210px' }
+                            ? {
+                                  xs: 'auto',
+                                  md: GRID_CONFIG.layout.fieldsMinHeight.md,
+                              }
                             : 0,
                     flexShrink: 0,
                 }}

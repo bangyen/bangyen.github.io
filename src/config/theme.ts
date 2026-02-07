@@ -147,6 +147,12 @@ interface ComponentVariants {
         flexDirection: string;
         transition: string;
     };
+    badge: {
+        fontSize: string;
+        padding: string;
+        textTransform: string;
+        letterSpacing: string;
+    };
     interactiveCard: {
         backgroundColor: string;
         backdropFilter: string;
@@ -348,6 +354,12 @@ export const COMPONENT_VARIANTS: ComponentVariants = {
             outline: 'none',
             boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
         },
+    },
+    badge: {
+        fontSize: '0.7rem',
+        padding: '4px 12px',
+        textTransform: 'uppercase',
+        letterSpacing: '0.025em',
     },
     flexCenter: {
         display: 'flex',
