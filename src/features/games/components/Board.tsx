@@ -163,11 +163,14 @@ export function useGetters(
         [getTile, palette]
     );
 
-    return {
-        getColor,
-        getBorder,
-        getFiller,
-    };
+    return useMemo(
+        () => ({
+            getColor,
+            getBorder,
+            getFiller,
+        }),
+        [getColor, getBorder, getFiller]
+    );
 }
 
 export function useHandler(state: GridState, palette: Palette): Getters {

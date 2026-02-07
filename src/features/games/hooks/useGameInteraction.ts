@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useCallback } from 'react';
 import { useDrag } from './useDrag';
 import { TIMING_CONSTANTS } from '../slant/constants';
 
@@ -11,33 +11,47 @@ interface UseGameInteractionOptions<T> {
     ) => T | undefined;
     checkEnabled: () => boolean;
     touchTimeout?: number;
+    transition?: string;
+    posAttribute?: 'data-pos' | 'data-col';
 }
 
 export function useGameInteraction<T>({
     onToggle,
     checkEnabled,
     touchTimeout = TIMING_CONSTANTS.TOUCH_HOLD_DELAY,
+    transition,
+    posAttribute,
 }: UseGameInteractionOptions<T>) {
     const draggingValue = useRef<T | undefined>(undefined);
 
-    const { getDragProps } = useDrag({
-        onAction: (pos, isRightClick, isInitialClick) => {
+    const onToggleRef = useRef(onToggle);
+    onToggleRef.current = onToggle;
+
+    const onAction = useCallback(
+        (pos: string, isRightClick: boolean, isInitialClick: boolean) => {
             if (!checkEnabled()) return;
 
             const [r, c] = pos.split(',').map(Number);
             if (r === undefined || c === undefined) return;
 
             if (isInitialClick) {
-                const result = onToggle(r, c, isRightClick);
+                const result = onToggleRef.current(r, c, isRightClick);
                 if (result !== undefined) {
                     draggingValue.current = result;
                 }
             } else {
-                onToggle(r, c, isRightClick, draggingValue.current);
+                onToggleRef.current(r, c, isRightClick, draggingValue.current);
             }
         },
+        [checkEnabled]
+    );
+
+    const { getDragProps } = useDrag({
+        onAction,
         checkEnabled,
         touchTimeout,
+        transition,
+        posAttribute,
     });
 
     return { getDragProps };

@@ -189,136 +189,142 @@ export default function Slant() {
     });
 
     // Props for Cells
-    const getCellProps = (r: number, c: number) => {
-        const value = state.grid[r]?.[c];
-        const pos = `${String(r)},${String(c)}`;
-        const isError = state.cycleCells.has(pos);
-        const dragProps = getDragProps(pos);
+    const getCellProps = useCallback(
+        (r: number, c: number) => {
+            const value = state.grid[r]?.[c];
+            const pos = `${String(r)},${String(c)}`;
+            const isError = state.cycleCells.has(pos);
+            const dragProps = getDragProps(pos);
 
-        return {
-            ...dragProps,
-            sx: {
-                ...dragProps.sx,
-                cursor: 'pointer',
-                border: `1px solid ${COLORS.border.subtle}`,
-                position: 'relative',
-                '&:hover': {
-                    backgroundColor: COLORS.interactive.hover,
+            return {
+                ...dragProps,
+                sx: {
+                    ...dragProps.sx,
+                    cursor: 'pointer',
+                    border: `1px solid ${COLORS.border.subtle}`,
+                    position: 'relative',
+                    '&:hover': {
+                        backgroundColor: COLORS.interactive.hover,
+                    },
                 },
-            },
-            children: (
-                <Box
-                    sx={{
-                        width: '100%',
-                        height: '100%',
-                        position: 'relative',
-                    }}
-                >
-                    {value === FORWARD && (
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                width: '130%',
-                                height: '6px',
-                                backgroundColor: isError
-                                    ? COLORS.data.red
-                                    : COLORS.text.primary,
-                                borderRadius: '99px',
-                                top: '50%',
-                                left: '50%',
-                                transform:
-                                    'translate(-50%, -50%) rotate(-45deg)',
-                                boxShadow: SLANT_STYLES.SHADOWS.LINE,
-                                transition: ANIMATIONS.transition,
-                                pointerEvents: 'none',
-                            }}
-                        />
-                    )}
-                    {value === BACKWARD && (
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                width: '130%',
-                                height: '6px',
-                                backgroundColor: isError
-                                    ? COLORS.data.red
-                                    : COLORS.text.primary,
-                                borderRadius: '99px',
-                                top: '50%',
-                                left: '50%',
-                                transform:
-                                    'translate(-50%, -50%) rotate(45deg)',
-                                boxShadow: SLANT_STYLES.SHADOWS.LINE,
-                                transition: ANIMATIONS.transition,
-                                pointerEvents: 'none',
-                            }}
-                        />
-                    )}
-                </Box>
-            ),
-        };
-    };
+                children: (
+                    <Box
+                        sx={{
+                            width: '100%',
+                            height: '100%',
+                            position: 'relative',
+                        }}
+                    >
+                        {value === FORWARD && (
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    width: '130%',
+                                    height: '6px',
+                                    backgroundColor: isError
+                                        ? COLORS.data.red
+                                        : COLORS.text.primary,
+                                    borderRadius: '99px',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform:
+                                        'translate(-50%, -50%) rotate(-45deg)',
+                                    boxShadow: SLANT_STYLES.SHADOWS.LINE,
+                                    transition: ANIMATIONS.transition,
+                                    pointerEvents: 'none',
+                                }}
+                            />
+                        )}
+                        {value === BACKWARD && (
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    width: '130%',
+                                    height: '6px',
+                                    backgroundColor: isError
+                                        ? COLORS.data.red
+                                        : COLORS.text.primary,
+                                    borderRadius: '99px',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform:
+                                        'translate(-50%, -50%) rotate(45deg)',
+                                    boxShadow: SLANT_STYLES.SHADOWS.LINE,
+                                    transition: ANIMATIONS.transition,
+                                    pointerEvents: 'none',
+                                }}
+                            />
+                        )}
+                    </Box>
+                ),
+            };
+        },
+        [state.grid, state.cycleCells, getDragProps]
+    );
 
     const numberSize = size * NUMBER_SIZE_RATIO;
     const numberSpace = size - numberSize;
 
     // Props for Numbers (Grid Overlay)
-    const getNumberProps = (r: number, c: number) => {
-        const value = state.numbers[r]?.[c];
-        const hasError = state.errorNodes.has(`${String(r)},${String(c)}`);
-        const isSatisfied = state.satisfiedNodes.has(
-            `${String(r)},${String(c)}`
-        );
+    const getNumberProps = useCallback(
+        (r: number, c: number) => {
+            const value = state.numbers[r]?.[c];
+            const hasError = state.errorNodes.has(`${String(r)},${String(c)}`);
+            const isSatisfied = state.satisfiedNodes.has(
+                `${String(r)},${String(c)}`
+            );
 
-        return {
-            children: (
-                <Box
-                    sx={{
-                        opacity: isSatisfied && !hasError ? 0.2 : 1,
-                        transition: 'opacity 0.3s',
-                    }}
-                >
-                    {value ?? ''}
-                </Box>
-            ),
-            sx: {
-                borderRadius: '50%',
-                backgroundColor: hasError
-                    ? COLORS.data.red
-                    : COLORS.surface.background,
-                border:
-                    value !== null
-                        ? `2px solid ${
-                              hasError
-                                  ? COLORS.data.red
-                                  : isSatisfied
-                                    ? 'transparent'
-                                    : COLORS.border.subtle
-                          }`
-                        : 'none',
-                fontSize: `${String(numberSize * 0.5)}rem`,
-                fontWeight: '800',
-                color: hasError
-                    ? SLANT_STYLES.COLORS.WHITE
-                    : COLORS.text.primary,
-                boxShadow:
-                    isSatisfied && !hasError
-                        ? 'none'
-                        : SLANT_STYLES.SHADOWS.HINT,
-                zIndex: 5,
-                opacity: value !== null ? 1 : 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                userSelect: 'none',
-                WebkitUserSelect: 'none',
-                transform: hasError ? 'scale(1.1)' : 'scale(1)',
-                position: 'relative',
-                pointerEvents: 'none',
-            },
-        };
-    };
+            return {
+                children: (
+                    <Box
+                        sx={{
+                            opacity: isSatisfied && !hasError ? 0.2 : 1,
+                            transition: 'opacity 0.3s',
+                        }}
+                    >
+                        {value ?? ''}
+                    </Box>
+                ),
+                sx: {
+                    borderRadius: '50%',
+                    backgroundColor: hasError
+                        ? COLORS.data.red
+                        : COLORS.surface.background,
+                    border:
+                        value !== null
+                            ? `2px solid ${
+                                  hasError
+                                      ? COLORS.data.red
+                                      : isSatisfied
+                                        ? 'transparent'
+                                        : COLORS.border.subtle
+                              }`
+                            : 'none',
+                    fontSize: `${String(numberSize * 0.5)}rem`,
+                    fontWeight: '800',
+                    color: hasError
+                        ? SLANT_STYLES.COLORS.WHITE
+                        : COLORS.text.primary,
+                    boxShadow:
+                        isSatisfied && !hasError
+                            ? 'none'
+                            : SLANT_STYLES.SHADOWS.HINT,
+                    zIndex: 5,
+                    opacity: value !== null ? 1 : 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    transform: hasError ? 'scale(1.1)' : 'scale(1)',
+                    position: 'relative',
+                    pointerEvents: 'none',
+                },
+            };
+        },
+        [state.numbers, state.errorNodes, state.satisfiedNodes, numberSize]
+    );
 
     useEffect(() => {
         dispatch({

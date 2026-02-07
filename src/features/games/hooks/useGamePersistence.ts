@@ -9,11 +9,13 @@ interface PersistenceOptions<T> {
     serialize?: (state: T) => unknown;
     deserialize?: (saved: unknown) => T;
     enabled?: boolean;
+    saveDebounceMs?: number;
 }
 
 /**
  * Hook to handle game state persistence in localStorage.
  * Uses refs for callbacks to avoid unnecessary re-runs when callers pass inline functions.
+ * Debounces saves to prevent lag during rapid state changes (e.g. dragging).
  */
 export function useGamePersistence<T>({
     storageKey,
@@ -24,10 +26,10 @@ export function useGamePersistence<T>({
     serialize,
     deserialize,
     enabled = true,
+    saveDebounceMs = 300,
 }: PersistenceOptions<T>) {
     const key = `${storageKey}-${String(rows)}x${String(cols)}`;
 
-    // Use refs for callbacks and options to avoid re-triggering effects
     const onRestoreRef = useRef(onRestore);
     const deserializeRef = useRef(deserialize);
     const serializeRef = useRef(serialize);
@@ -53,14 +55,20 @@ export function useGamePersistence<T>({
                 localStorage.removeItem(key);
             }
         }
-    }, [key, enabled]); // Only run when the storage key or enabled state changes
+    }, [key, enabled]);
 
-    // Save on state change
+    // Save with debounce
     useEffect(() => {
         if (!enabled) return;
 
-        const _serialize = serializeRef.current ?? ((s: T) => s as unknown);
-        const toSave = _serialize(state);
-        localStorage.setItem(key, JSON.stringify(toSave));
-    }, [key, state, enabled]);
+        const timeout = setTimeout(() => {
+            const _serialize = serializeRef.current ?? ((s: T) => s as unknown);
+            const toSave = _serialize(state);
+            localStorage.setItem(key, JSON.stringify(toSave));
+        }, saveDebounceMs);
+
+        return () => {
+            clearTimeout(timeout);
+        };
+    }, [key, state, enabled, saveDebounceMs]);
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { useMobile } from '../../../hooks';
 import { Box } from '@mui/material';
 import { COLORS, LAYOUT } from '../../../config/theme';
@@ -275,129 +275,137 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
         [conflicts]
     );
 
-    const getCellProps = (r: number, c: number) => {
-        const pos = `${String(r)},${String(c)}`;
-        const info = gridState.get(pos);
-        const value = info?.state ?? EMPTY;
-        const source = info?.source;
-        const isConflict = conflictSet.has(pos);
-        const isCycle = cycleCells.has(pos);
-        const dragProps = getDragProps(pos);
+    const getCellProps = useCallback(
+        (r: number, c: number) => {
+            const pos = `${String(r)},${String(c)}`;
+            const info = gridState.get(pos);
+            const value = info?.state ?? EMPTY;
+            const source = info?.source;
+            const isConflict = conflictSet.has(pos);
+            const isCycle = cycleCells.has(pos);
+            const dragProps = getDragProps(pos);
 
-        let color = COLORS.text.primary;
+            let color = COLORS.text.primary;
 
-        if (isConflict) {
-            color = COLORS.data.red;
-        } else if (isCycle) {
-            // Differentiate user vs propagated loops
-            color = source === 'user' ? COLORS.data.red : '#ff9800'; // Solid Orange for visibility
-        } else if (source === 'user') {
-            color = COLORS.primary.main;
-        } else if (source === 'propagated') {
-            color = COLORS.data.green;
-        }
+            if (isConflict) {
+                color = COLORS.data.red;
+            } else if (isCycle) {
+                // Differentiate user vs propagated loops
+                color = source === 'user' ? COLORS.data.red : '#ff9800'; // Solid Orange for visibility
+            } else if (source === 'user') {
+                color = COLORS.primary.main;
+            } else if (source === 'propagated') {
+                color = COLORS.data.green;
+            }
 
-        return {
-            ...dragProps,
-            sx: {
-                ...dragProps.sx,
-                cursor: 'pointer',
-                border: `1px solid ${SLANT_STYLES.GHOST.BORDER}`, // Lighter border for dark bg
-                position: 'relative',
-                backgroundColor: SLANT_STYLES.GHOST.BG_SUBTLE,
-                '&:hover': {
-                    backgroundColor: SLANT_STYLES.GHOST.BG_HOVER,
+            return {
+                ...dragProps,
+                sx: {
+                    ...dragProps.sx,
+                    cursor: 'pointer',
+                    border: `1px solid ${SLANT_STYLES.GHOST.BORDER}`, // Lighter border for dark bg
+                    position: 'relative',
+                    backgroundColor: SLANT_STYLES.GHOST.BG_SUBTLE,
+                    '&:hover': {
+                        backgroundColor: SLANT_STYLES.GHOST.BG_HOVER,
+                    },
                 },
-            },
-            children: (
-                <Box
-                    sx={{
-                        width: '100%',
-                        height: '100%',
-                        position: 'relative',
-                    }}
-                >
-                    {value === FORWARD && (
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                width: LAYOUT_CONSTANTS.LINE_WIDTH,
-                                height: LAYOUT_CONSTANTS.LINE_THICKNESS,
-                                backgroundColor: color,
-                                borderRadius: SPACING.borderRadius.full,
-                                top: '50%',
-                                left: '50%',
-                                transform:
-                                    'translate(-50%, -50%) rotate(-45deg)',
-                                boxShadow: SLANT_STYLES.SHADOWS.LINE,
-                                transition: ANIMATIONS.transition,
-                                pointerEvents: 'none',
-                            }}
-                        />
-                    )}
-                    {value === BACKWARD && (
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                width: LAYOUT_CONSTANTS.LINE_WIDTH,
-                                height: LAYOUT_CONSTANTS.LINE_THICKNESS,
-                                backgroundColor: color,
-                                borderRadius: SPACING.borderRadius.full,
-                                top: '50%',
-                                left: '50%',
-                                transform:
-                                    'translate(-50%, -50%) rotate(45deg)',
-                                boxShadow: SLANT_STYLES.SHADOWS.LINE,
-                                transition: ANIMATIONS.transition,
-                                pointerEvents: 'none',
-                            }}
-                        />
-                    )}
-                </Box>
-            ),
-        };
-    };
+                children: (
+                    <Box
+                        sx={{
+                            width: '100%',
+                            height: '100%',
+                            position: 'relative',
+                        }}
+                    >
+                        {value === FORWARD && (
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    width: LAYOUT_CONSTANTS.LINE_WIDTH,
+                                    height: LAYOUT_CONSTANTS.LINE_THICKNESS,
+                                    backgroundColor: color,
+                                    borderRadius: SPACING.borderRadius.full,
+                                    top: '50%',
+                                    left: '50%',
+                                    transform:
+                                        'translate(-50%, -50%) rotate(-45deg)',
+                                    boxShadow: SLANT_STYLES.SHADOWS.LINE,
+                                    transition: ANIMATIONS.transition,
+                                    pointerEvents: 'none',
+                                }}
+                            />
+                        )}
+                        {value === BACKWARD && (
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    width: LAYOUT_CONSTANTS.LINE_WIDTH,
+                                    height: LAYOUT_CONSTANTS.LINE_THICKNESS,
+                                    backgroundColor: color,
+                                    borderRadius: SPACING.borderRadius.full,
+                                    top: '50%',
+                                    left: '50%',
+                                    transform:
+                                        'translate(-50%, -50%) rotate(45deg)',
+                                    boxShadow: SLANT_STYLES.SHADOWS.LINE,
+                                    transition: ANIMATIONS.transition,
+                                    pointerEvents: 'none',
+                                }}
+                            />
+                        )}
+                    </Box>
+                ),
+            };
+        },
+        [gridState, conflictSet, cycleCells, getDragProps]
+    );
 
-    const getNumberProps = (r: number, c: number) => {
-        const value = numbers[r]?.[c];
-        const hasConflict = nodeConflictSet.has(`${String(r)},${String(c)}`);
+    const getNumberProps = useCallback(
+        (r: number, c: number) => {
+            const value = numbers[r]?.[c];
+            const hasConflict = nodeConflictSet.has(
+                `${String(r)},${String(c)}`
+            );
 
-        return {
-            'data-pos': `${String(r)},${String(c)}`,
-            'data-type': 'hint',
-            children: <Box>{value ?? ''}</Box>,
-            sx: {
-                borderRadius: '50%',
-                backgroundColor: hasConflict
-                    ? COLORS.data.red
-                    : SLANT_STYLES.GHOST.HINT_BG, // Match dark bg
-                border:
-                    value !== null
-                        ? `2px solid ${
-                              hasConflict
-                                  ? COLORS.data.red
-                                  : SLANT_STYLES.GHOST.HINT_BORDER // Lighter border
-                          }`
-                        : 'none',
-                fontSize: `${String(numberSize * 0.5)}rem`,
-                fontWeight: '800',
-                color: hasConflict
-                    ? SLANT_STYLES.COLORS.WHITE
-                    : SLANT_STYLES.COLORS.WHITE, // Always white text
-                zIndex: 5,
-                opacity: value !== null ? 1 : 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                userSelect: 'none',
-                WebkitUserSelect: 'none',
-                transform: hasConflict ? 'scale(1.1)' : 'scale(1)',
-                position: 'relative',
-                pointerEvents: 'none',
-            },
-        };
-    };
+            return {
+                'data-pos': `${String(r)},${String(c)}`,
+                'data-type': 'hint',
+                children: <Box>{value ?? ''}</Box>,
+                sx: {
+                    borderRadius: '50%',
+                    backgroundColor: hasConflict
+                        ? COLORS.data.red
+                        : SLANT_STYLES.GHOST.HINT_BG, // Match dark bg
+                    border:
+                        value !== null
+                            ? `2px solid ${
+                                  hasConflict
+                                      ? COLORS.data.red
+                                      : SLANT_STYLES.GHOST.HINT_BORDER // Lighter border
+                              }`
+                            : 'none',
+                    fontSize: `${String(numberSize * 0.5)}rem`,
+                    fontWeight: '800',
+                    color: hasConflict
+                        ? SLANT_STYLES.COLORS.WHITE
+                        : SLANT_STYLES.COLORS.WHITE, // Always white text
+                    zIndex: 5,
+                    opacity: value !== null ? 1 : 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    transform: hasConflict ? 'scale(1.1)' : 'scale(1)',
+                    position: 'relative',
+                    pointerEvents: 'none',
+                },
+            };
+        },
+        [numbers, nodeConflictSet, numberSize]
+    );
 
     return (
         <Box sx={{ position: 'relative', userSelect: 'none' }}>

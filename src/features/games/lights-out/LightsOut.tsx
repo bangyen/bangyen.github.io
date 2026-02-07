@@ -9,7 +9,12 @@ import { GAME_CONSTANTS } from '../config/gameConfig';
 import { LAYOUT } from '../../../config/theme';
 import { getGrid, handleBoard, isSolved } from './boardHandlers';
 import Info from './Info';
-import { TIMING_CONSTANTS, STORAGE_KEYS, LAYOUT_CONSTANTS } from './constants';
+import {
+    TIMING_CONSTANTS,
+    STORAGE_KEYS,
+    LAYOUT_CONSTANTS,
+    LIGHTS_OUT_STYLES,
+} from './constants';
 import { useGridSize } from '../hooks/useGridSize';
 import { DragProps } from '../hooks/useDrag';
 import { useGamePersistence } from '../hooks/useGamePersistence';
@@ -129,6 +134,7 @@ export default function LightsOut() {
         },
         checkEnabled: () => !solved,
         touchTimeout: TIMING_CONSTANTS.GHOST_CLICK_TIMEOUT,
+        transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
     });
 
     const allOn = useMemo(
@@ -179,8 +185,11 @@ export default function LightsOut() {
         ? GAME_CONSTANTS.gridSizes.mobile
         : GAME_CONSTANTS.gridSizes.desktop;
 
-    const frontProps = getFrontProps(getters, getDragProps);
-    const backProps = getBackProps(getters);
+    const frontProps = useMemo(
+        () => getFrontProps(getters, getDragProps),
+        [getters, getDragProps]
+    );
+    const backProps = useMemo(() => getBackProps(getters), [getters]);
 
     const controls = (
         <GameControls
