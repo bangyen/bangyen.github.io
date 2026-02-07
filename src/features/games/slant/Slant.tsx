@@ -20,8 +20,6 @@ import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 import { PAGE_TITLES } from '../../../config/constants';
-import { useWindow, useMobile } from '../../../hooks';
-import { convertPixels } from '../../interpreters/utils/gridUtils';
 import { COLORS, ANIMATIONS } from '../../../config/theme';
 import {
     handleBoard,
@@ -37,9 +35,12 @@ import {
     SLANT_STYLES,
     LAYOUT_CONSTANTS,
     GAME_LOGIC_CONSTANTS,
+    MOBILE_PADDING,
+    DESKTOP_PADDING,
 } from './constants';
 import { SlantState } from './boardHandlers';
 import { useDrag } from '../hooks/useDrag';
+import { useGridSize } from '../hooks/useGridSize';
 
 interface SavedSlantState extends Omit<
     SlantState,
@@ -50,49 +51,31 @@ interface SavedSlantState extends Omit<
     satisfiedNodes: string[];
 }
 
-export default function Slant(): React.ReactElement {
-    const { height, width } = useWindow();
-    const mobile = useMobile('sm');
-    const [isGhostMode, setIsGhostMode] = useState(false);
-
-    // Default size handling
-    // Default size handling
-    const [desiredSize, setDesiredSize] = useState<number | null>(() => {
-        const saved = localStorage.getItem(STORAGE_KEYS.SIZE);
-        return saved && saved !== 'null'
-            ? parseInt(saved, 10)
-            : GAME_LOGIC_CONSTANTS.DEFAULT_SIZE;
+export default function Slant() {
+    const {
+        rows,
+        cols,
+        handlePlus,
+        handleMinus,
+        mobile,
+        width,
+        height,
+        dynamicSize,
+    } = useGridSize({
+        storageKey: STORAGE_KEYS.SIZE,
+        defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
+        minSize: GAME_LOGIC_CONSTANTS.MIN_SIZE,
+        headerOffset: {
+            mobile: LAYOUT_CONSTANTS.HEADER_OFFSET.MOBILE,
+            desktop: LAYOUT_CONSTANTS.HEADER_OFFSET.DESKTOP,
+        },
+        paddingOffset: 160,
+        widthLimit: LAYOUT_CONSTANTS.WIDTH_LIMIT,
+        cellSizeReference: 4,
+        mobileRowOffset: -2,
     });
 
-    const dynamicSize = useMemo(() => {
-        const headerOffset = mobile
-            ? LAYOUT_CONSTANTS.HEADER_OFFSET.MOBILE
-            : LAYOUT_CONSTANTS.HEADER_OFFSET.DESKTOP;
-        // Leave space for controls and padding
-        const converted = convertPixels(
-            4, // Base cell size reference
-            height - headerOffset - LAYOUT_CONSTANTS.PADDING_OFFSET,
-            Math.min(width, LAYOUT_CONSTANTS.WIDTH_LIMIT)
-        );
-
-        let r = converted.rows - 1;
-        const c = converted.cols - 1;
-        if (mobile) r -= 2;
-
-        return {
-            rows: Math.max(GAME_LOGIC_CONSTANTS.MIN_SIZE, r),
-            cols: Math.max(GAME_LOGIC_CONSTANTS.MIN_SIZE, c),
-        };
-    }, [height, width, mobile]);
-
-    const { rows, cols } = useMemo(() => {
-        const dScore = desiredSize ?? GAME_LOGIC_CONSTANTS.DEFAULT_SIZE;
-        // Clamp to screen
-        return {
-            rows: Math.min(dScore, dynamicSize.rows),
-            cols: Math.min(dScore, dynamicSize.cols),
-        };
-    }, [desiredSize, dynamicSize]);
+    const [isGhostMode, setIsGhostMode] = useState(false);
 
     // Calculate cell size to fit the board
     const size = useMemo(() => {
@@ -100,52 +83,33 @@ export default function Slant(): React.ReactElement {
             Math.min(width, LAYOUT_CONSTANTS.BOARD_MAX_WIDTH) *
             LAYOUT_CONSTANTS.BOARD_SIZE_FACTOR;
         const maxH =
-            (height - LAYOUT_CONSTANTS.HEIGHT_OFFSET) *
+            (height -
+                (mobile
+                    ? LAYOUT_CONSTANTS.HEADER_OFFSET.MOBILE
+                    : LAYOUT_CONSTANTS.HEADER_OFFSET.DESKTOP) -
+                LAYOUT_CONSTANTS.PADDING_OFFSET) *
             LAYOUT_CONSTANTS.BOARD_SIZE_FACTOR;
 
-        const possibleW = maxW / (cols + 1); // +1 because intersections stick out
-        const possibleH = maxH / (rows + 1);
-
         const pxSize = Math.min(
-            possibleW,
-            possibleH,
+            maxW / (cols + 1), // +1 because intersections stick out
+            maxH / (rows + 1),
             LAYOUT_CONSTANTS.MAX_CELL_SIZE
         ); // Max 100px
         return pxSize / LAYOUT_CONSTANTS.REM_BASE; // rem
-    }, [width, height, rows, cols]);
+    }, [width, height, mobile, rows, cols]);
 
-    const [state, dispatch] = useReducer(handleBoard, { rows, cols }, init => {
-        const saved = localStorage.getItem(STORAGE_KEYS.STATE);
+    const initial = useMemo(() => getInitialState(rows, cols), [rows, cols]);
+
+    const [state, dispatch] = useReducer(handleBoard, initial);
+
+    // Sync localStorage and state on init or rows/cols change
+    useEffect(() => {
+        const stateKey = `${STORAGE_KEYS.STATE}-${String(rows)}x${String(cols)}`;
+        const saved = localStorage.getItem(stateKey);
         if (saved) {
             try {
                 const parsed = JSON.parse(saved) as SavedSlantState;
-                if (parsed.rows === init.rows && parsed.cols === init.cols) {
-                    return {
-                        ...parsed,
-                        errorNodes: new Set(parsed.errorNodes),
-                        cycleCells: new Set(parsed.cycleCells),
-                        satisfiedNodes: new Set(parsed.satisfiedNodes),
-                    } as SlantState;
-                }
-            } catch (e) {
-                // eslint-disable-next-line no-console
-                console.error('Failed to load saved slant state:', e);
-            }
-        }
-        return getInitialState(init.rows, init.cols);
-    });
-
-    useEffect(() => {
-        localStorage.setItem(STORAGE_KEYS.SIZE, String(desiredSize));
-    }, [desiredSize]);
-
-    useEffect(() => {
-        if (state.rows !== rows || state.cols !== cols) {
-            const stateKey = `${STORAGE_KEYS.STATE}-${String(rows)}x${String(cols)}`;
-            const saved = localStorage.getItem(stateKey);
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved) as SavedSlantState;
+                if (parsed.rows === rows && parsed.cols === cols) {
                     dispatch({
                         type: 'hydrate',
                         state: {
@@ -155,15 +119,12 @@ export default function Slant(): React.ReactElement {
                             satisfiedNodes: new Set(parsed.satisfiedNodes),
                         } as SlantState,
                     });
-                    return;
-                } catch (e) {
-                    // eslint-disable-next-line no-console
-                    console.error('Failed to hydrate slant state:', e);
                 }
+            } catch (_e) {
+                // Ignore corrupted state
             }
-            dispatch({ type: 'resize', rows, cols });
         }
-    }, [rows, cols, state.rows, state.cols]);
+    }, [rows, cols]);
 
     // Ghost mode state
     const [ghostMoves, setGhostMoves] = useState<Map<string, CellState>>(
@@ -179,9 +140,7 @@ export default function Slant(): React.ReactElement {
                 setGhostMoves(
                     new Map(JSON.parse(saved) as [string, CellState][])
                 );
-            } catch (e) {
-                // eslint-disable-next-line no-console
-                console.error('Failed to load saved ghost moves:', e);
+            } catch (_e) {
                 setGhostMoves(new Map());
             }
         } else {
@@ -236,20 +195,6 @@ export default function Slant(): React.ReactElement {
     useEffect(() => {
         document.title = PAGE_TITLES.slant;
     }, []);
-
-    const handlePlus = () => {
-        setDesiredSize(prev =>
-            prev ? prev + 1 : GAME_LOGIC_CONSTANTS.DEFAULT_SIZE - 1
-        );
-    };
-
-    const handleMinus = () => {
-        setDesiredSize(prev =>
-            prev && prev > GAME_LOGIC_CONSTANTS.MIN_SIZE
-                ? prev - 1
-                : GAME_LOGIC_CONSTANTS.MIN_SIZE
-        );
-    };
 
     const handleReset = useCallback(() => {
         dispatch({ type: 'new' });
@@ -431,15 +376,12 @@ export default function Slant(): React.ReactElement {
     };
 
     useEffect(() => {
-        if (!state.auto || state.solved) return;
-
-        const timeout = setTimeout(() => {
-            dispatch({ type: 'nextLogical' });
-        }, TIMING_CONSTANTS.AUTO_PLAY_SPEED);
-        return () => {
-            clearTimeout(timeout);
-        };
-    }, [state.auto, state.solved, state.grid]);
+        dispatch({
+            type: 'resize',
+            rows,
+            cols,
+        });
+    }, [rows, cols]);
 
     return (
         <Grid
@@ -472,12 +414,7 @@ export default function Slant(): React.ReactElement {
                     justifyContent: 'center',
                     alignItems: 'center',
                     padding: `${String(size)}rem`,
-                    maxHeight: isGhostMode ? 'calc(100vh - 100px)' : 'none',
-                    marginBottom: isGhostMode
-                        ? '0'
-                        : mobile
-                          ? '152px'
-                          : '128px',
+                    marginBottom: mobile ? '180px' : '150px',
                     overflow: 'hidden',
                 }}
             >
@@ -530,6 +467,12 @@ export default function Slant(): React.ReactElement {
                                 sx={{
                                     position: 'relative',
                                     userSelect: 'none',
+                                    padding: mobile
+                                        ? MOBILE_PADDING
+                                        : DESKTOP_PADDING,
+                                    border: '2px solid transparent',
+                                    borderRadius:
+                                        LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
                                 }}
                             >
                                 {/* Main Grid */}
@@ -548,8 +491,12 @@ export default function Slant(): React.ReactElement {
                                 <Box
                                     sx={{
                                         position: 'absolute',
-                                        top: 0,
-                                        left: 0,
+                                        top: mobile
+                                            ? MOBILE_PADDING
+                                            : DESKTOP_PADDING,
+                                        left: mobile
+                                            ? MOBILE_PADDING
+                                            : DESKTOP_PADDING,
                                         transform: `translate(-${String(
                                             numberSize / 2
                                         )}rem, -${String(numberSize / 2)}rem)`,
@@ -621,36 +568,35 @@ export default function Slant(): React.ReactElement {
                 </Box>
             </Box>
 
-            {!isGhostMode && (
-                <Controls
-                    handler={() => () => undefined}
-                    onRefresh={handleReset}
-                >
-                    <TooltipButton
-                        title="Decrease Size"
-                        Icon={RemoveRounded}
-                        onClick={handleMinus}
-                        disabled={rows <= 3}
-                    />
-                    <TooltipButton
-                        title="Increase Size"
-                        Icon={AddRounded}
-                        onClick={handlePlus}
-                        disabled={
-                            rows >= GAME_LOGIC_CONSTANTS.MAX_SIZE ||
-                            (rows >= dynamicSize.rows &&
-                                cols >= dynamicSize.cols)
-                        }
-                    />
-                    <TooltipButton
-                        title={'Open Calculator'}
-                        Icon={Psychology}
-                        onClick={() => {
-                            setIsGhostMode(!isGhostMode);
-                        }}
-                    />
-                </Controls>
-            )}
+            <Controls handler={() => () => undefined} onRefresh={handleReset}>
+                <TooltipButton
+                    title="Decrease Size"
+                    Icon={RemoveRounded}
+                    onClick={handleMinus}
+                    disabled={rows <= 3 || isGhostMode}
+                />
+                <TooltipButton
+                    title="Increase Size"
+                    Icon={AddRounded}
+                    onClick={handlePlus}
+                    disabled={
+                        rows >= GAME_LOGIC_CONSTANTS.MAX_SIZE ||
+                        (rows >= dynamicSize.rows &&
+                            cols >= dynamicSize.cols) ||
+                        isGhostMode
+                    }
+                />
+                <TooltipButton
+                    title={'Open Calculator'}
+                    Icon={Psychology}
+                    onClick={() => {
+                        setIsGhostMode(!isGhostMode);
+                    }}
+                    sx={{
+                        color: isGhostMode ? 'primary.main' : 'default',
+                    }}
+                />
+            </Controls>
         </Grid>
     );
 }

@@ -12,7 +12,6 @@ export interface SlantState {
     rows: number;
     cols: number;
     solved: boolean;
-    auto: boolean;
     errorNodes: Set<string>; // "r,c"
     cycleCells: Set<string>; // "r,c"
     satisfiedNodes: Set<string>; // "r,c"
@@ -22,8 +21,6 @@ export type SlantAction =
     | { type: 'toggle'; row: number; col: number; reverse?: boolean }
     | { type: 'resize'; rows: number; cols: number }
     | { type: 'new' }
-    | { type: 'auto' }
-    | { type: 'nextLogical' }
     | { type: 'hydrate'; state: SlantState };
 
 class DSU {
@@ -646,27 +643,14 @@ export function handleBoard(
                 ...state,
                 grid: newGrid,
                 solved,
-                auto: solved ? false : state.auto,
                 errorNodes,
                 cycleCells,
                 satisfiedNodes,
             };
         }
-        case 'auto': {
-            return {
-                ...state,
-                auto: !state.auto,
-            };
-        }
-        case 'nextLogical': {
-            const move = getNextLogicalMove(state);
-            if (!move) return { ...state, auto: false };
-            return handleBoard(state, { type: 'toggle', ...move });
-        }
         case 'hydrate': {
             return {
                 ...action.state,
-                auto: false, // Don't resume auto-play on load
             };
         }
         case 'resize': {
@@ -689,7 +673,6 @@ export function handleBoard(
                 rows: action.rows,
                 cols: action.cols,
                 solved: false,
-                auto: false,
                 errorNodes: new Set(),
                 cycleCells: new Set(),
                 satisfiedNodes: new Set(),
@@ -709,7 +692,6 @@ export function handleBoard(
                 numbers,
                 solution,
                 solved: false,
-                auto: false,
                 errorNodes: new Set(),
                 cycleCells: new Set(),
                 satisfiedNodes: new Set(),
@@ -732,7 +714,6 @@ export function getInitialState(rows: number, cols: number): SlantState {
         rows,
         cols,
         solved: false,
-        auto: false,
         errorNodes: new Set(),
         cycleCells: new Set(),
         satisfiedNodes: new Set(),

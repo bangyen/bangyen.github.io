@@ -1,10 +1,4 @@
-import React, {
-    useMemo,
-    useEffect,
-    useReducer,
-    useState,
-    useCallback,
-} from 'react';
+import React, { useMemo, useEffect, useReducer, useCallback } from 'react';
 import { Grid, Box } from '../../../components/mui';
 import {
     MenuBookRounded,
@@ -19,9 +13,7 @@ import { Board, useHandler, usePalette, Getters } from '../components/Board';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
 import { LAYOUT, COLORS } from '../../../config/theme';
-import { getGrid, handleBoard, getNextMove, isSolved } from './boardHandlers';
-import { useWindow, useMobile } from '../../../hooks';
-import { convertPixels } from '../../interpreters/utils/gridUtils';
+import { getGrid, handleBoard, isSolved } from './boardHandlers';
 import Info from './Info';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 import {
@@ -31,6 +23,7 @@ import {
     LAYOUT_CONSTANTS,
 } from './constants';
 import { useDrag, DragProps } from '../hooks/useDrag';
+import { useGridSize } from '../hooks/useGridSize';
 
 function getFrontProps(
     getters: Getters,
@@ -75,7 +68,7 @@ function getExampleProps(getters: Getters) {
         onMouseEnter: () => undefined,
         onTouchStart: () => undefined,
         'data-pos': pos,
-        sx: { touchAction: 'none' as const, transition: '' },
+        sx: { touchAction: 'none' as const, transition: 'none' },
     }));
 
     return (row: number, col: number) => {
@@ -84,51 +77,28 @@ function getExampleProps(getters: Getters) {
             ...props,
             onMouseDown: undefined,
             onMouseEnter: undefined,
-            sx: undefined,
+            onTouchStart: undefined,
+            sx: {},
         };
     };
 }
 
-export default function LightsOut(): React.ReactElement {
-    const { height, width } = useWindow();
-    const mobile = useMobile('sm');
-    const size = mobile
-        ? GAME_CONSTANTS.gridSizes.mobile
-        : GAME_CONSTANTS.gridSizes.desktop;
-
-    const [desiredSize, setDesiredSize] = useState<number | null>(() => {
-        const saved = localStorage.getItem(STORAGE_KEYS.SIZE);
-        return saved && saved !== 'null' ? parseInt(saved, 10) : null;
-    });
-
-    const dynamicSize = useMemo(() => {
-        const headerOffset = mobile
-            ? LAYOUT.headerHeight.xs
-            : LAYOUT.headerHeight.md;
-        const converted = convertPixels(
-            size,
-            height - headerOffset,
-            Math.min(width, 1300)
-        );
-
-        let r = converted.rows - 1;
-        const c = converted.cols - 1;
-        if (mobile) r -= 2;
-
-        return { rows: Math.max(2, r), cols: Math.max(2, c) };
-    }, [size, height, width, mobile]);
-
-    const { rows, cols } = useMemo(() => {
-        if (desiredSize === null) return dynamicSize;
-        return {
-            rows: Math.min(desiredSize, dynamicSize.rows),
-            cols: Math.min(desiredSize, dynamicSize.cols),
-        };
-    }, [desiredSize, dynamicSize]);
-
-    useEffect(() => {
-        localStorage.setItem(STORAGE_KEYS.SIZE, String(desiredSize));
-    }, [desiredSize]);
+export default function LightsOut() {
+    const { rows, cols, dynamicSize, handlePlus, handleMinus, mobile } =
+        useGridSize({
+            storageKey: STORAGE_KEYS.SIZE,
+            defaultSize: null,
+            headerOffset: {
+                mobile: LAYOUT.headerHeight.xs,
+                desktop: LAYOUT.headerHeight.md,
+            },
+            cellSizeReference: {
+                mobile: GAME_CONSTANTS.gridSizes.mobile,
+                desktop: GAME_CONSTANTS.gridSizes.desktop,
+            },
+            paddingOffset: 120, // Reserve space for bottom controls
+            mobileRowOffset: -2,
+        });
 
     const initial = useMemo(
         () => ({
@@ -136,7 +106,6 @@ export default function LightsOut(): React.ReactElement {
             score: 0,
             rows,
             cols,
-            auto: false,
             initialized: false,
         }),
         [rows, cols]
@@ -202,79 +171,11 @@ export default function LightsOut(): React.ReactElement {
         });
     }, [rows, cols]);
 
-    const [moveQueue, setMoveQueue] = React.useState<
-        { row: number; col: number }[]
-    >([]);
-
-    useEffect(() => {
-        if (!state.auto) {
-            if (moveQueue.length > 0) setMoveQueue([]);
-            return;
-        }
-
-        const timeout = setTimeout(() => {
-            if (moveQueue.length > 0) {
-                const nextMove = moveQueue[0];
-                if (nextMove) {
-                    dispatch({
-                        type: 'adjacent',
-                        row: nextMove.row,
-                        col: nextMove.col,
-                    });
-                    setMoveQueue(moveQueue.slice(1));
-                }
-            } else {
-                const moves = getNextMove(state.grid);
-                if (moves && moves.length > 0) {
-                    const firstMove = moves[0];
-                    if (moves.length === 1 && firstMove) {
-                        dispatch({
-                            type: 'adjacent',
-                            row: firstMove.row,
-                            col: firstMove.col,
-                        });
-                    } else {
-                        setMoveQueue(moves);
-                    }
-                } else {
-                    dispatch({ type: 'auto' });
-                }
-            }
-        }, TIMING_CONSTANTS.AUTO_PLAY_SPEED);
-        return () => {
-            clearTimeout(timeout);
-        };
-    }, [state.auto, state.grid, moveQueue]);
-
-    const handlePlus = () => {
-        const maxSquare = Math.min(dynamicSize.rows, dynamicSize.cols);
-        const currentMin = Math.min(rows, cols);
-
-        if (rows !== cols) {
-            // Already at max rectangle, do nothing (button should be disabled)
-            return;
-        }
-
-        if (currentMin < maxSquare) {
-            setDesiredSize(currentMin + 1);
-        } else {
-            // Jump to full rectangle
-            setDesiredSize(null);
-        }
-    };
-
-    const handleMinus = () => {
-        const currentMin = Math.min(rows, cols);
-
-        if (rows !== cols) {
-            // From rectangle jump to largest possible square
-            setDesiredSize(currentMin);
-        } else if (currentMin > 2) {
-            setDesiredSize(currentMin - 1);
-        }
-    };
-
     const getters = useHandler(state, palette);
+
+    const size = mobile
+        ? GAME_CONSTANTS.gridSizes.mobile
+        : GAME_CONSTANTS.gridSizes.desktop;
 
     const frontProps = getFrontProps(getters, getDragProps);
     const backProps = getBackProps(getters);
@@ -305,6 +206,7 @@ export default function LightsOut(): React.ReactElement {
                     justifyContent: 'center',
                     alignItems: 'center',
                     overflow: 'hidden',
+                    pb: { xs: '80px', md: '120px' }, // Push board up away from controls
                 }}
             >
                 <Box

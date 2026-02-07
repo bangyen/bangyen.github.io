@@ -144,7 +144,6 @@ export interface BoardState {
     score: number;
     rows: number;
     cols: number;
-    auto: boolean;
     initialized: boolean;
 }
 
@@ -161,31 +160,20 @@ export function handleBoard(
     state: BoardState,
     action: BoardAction
 ): BoardState {
-    const { type, row, col, moves } = action;
+    const { type, row, col } = action;
 
-    let { grid, score, rows, cols, auto, initialized } = state;
+    let { grid, score, rows, cols, initialized } = state;
 
     switch (type) {
-        case 'auto':
-            auto = !auto;
-            break;
         case 'adjacent': {
             if (row !== undefined && col !== undefined) {
                 grid = flipAdj(row, col, grid);
             }
             break;
         }
-        case 'multi_adjacent':
-            if (moves) {
-                moves.forEach(m => {
-                    grid = flipAdj(m.row, m.col, grid);
-                });
-            }
-            break;
         case 'random':
         case 'randomize': {
             grid = randomize(rows, cols);
-            auto = false;
             break;
         }
         case 'resize': {
@@ -194,7 +182,6 @@ export function handleBoard(
                 rows = newRows;
                 cols = newCols;
                 grid = randomize(rows, cols);
-                auto = false;
                 initialized = true; // Mark as initialized
             }
             break;
@@ -202,7 +189,6 @@ export function handleBoard(
         case 'reset':
             grid = getGrid(rows, cols);
             score = 0;
-            auto = false;
             break;
         case 'next':
             grid = randomize(rows, cols);
@@ -217,7 +203,6 @@ export function handleBoard(
         score,
         rows,
         cols,
-        auto,
         initialized: initialized || false,
     };
 }
