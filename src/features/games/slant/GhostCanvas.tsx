@@ -1,10 +1,4 @@
-import React, {
-    useEffect,
-    useState,
-    useMemo,
-    useRef,
-    useCallback,
-} from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { useMobile } from '../../../hooks';
 import { Box } from '@mui/material';
 import { COLORS, LAYOUT } from '../../../config/theme';
@@ -31,6 +25,7 @@ import {
     TIMING_CONSTANTS,
 } from './constants';
 import { ANIMATIONS, SPACING } from '../../../config/theme';
+import { useDrag } from '../hooks/useDrag';
 
 interface GhostBoardProps {
     rows: number;
@@ -71,59 +66,40 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
     // User inputs: just strict assignments
     const userMoves = initialMoves;
 
-    // Dragging state
-    const [isDragging, setIsDragging] = useState<number | null>(null);
     const draggingState = useRef<CellState | undefined>(undefined);
-    const draggedCells = useRef(new Set<string>());
-    const lastTouchTime = useRef(0);
+    const { getDragProps } = useDrag({
+        onAction: (
+            pos: string,
+            isRightClick: boolean,
+            isInitialClick: boolean
+        ) => {
+            if (isInitialClick) {
+                const current = userMoves.get(pos);
+                let newState: CellState | undefined;
 
-    const addDraggedCell = useCallback((pos: string) => {
-        draggedCells.current.add(pos);
-    }, []);
-
-    useEffect(() => {
-        const handleStopDragging = () => {
-            setIsDragging(null);
-            draggedCells.current.clear();
-            draggingState.current = undefined;
-        };
-
-        const handleTouchMove = (e: TouchEvent) => {
-            if (isDragging === null) return;
-
-            const touch = e.touches[0];
-            if (!touch) return;
-
-            const element = document.elementFromPoint(
-                touch.clientX,
-                touch.clientY
-            );
-            if (!element) return;
-
-            const cell = element.closest('[data-pos]');
-            if (cell) {
-                const pos = cell.getAttribute('data-pos');
-                if (pos && !draggedCells.current.has(pos)) {
-                    onMove(pos, draggingState.current);
-                    addDraggedCell(pos);
+                if (isRightClick) {
+                    newState =
+                        current === BACKWARD
+                            ? FORWARD
+                            : current === FORWARD
+                              ? undefined
+                              : BACKWARD;
+                } else {
+                    newState =
+                        current === FORWARD
+                            ? BACKWARD
+                            : current === BACKWARD
+                              ? undefined
+                              : FORWARD;
                 }
+                draggingState.current = newState;
+                onMove(pos, newState);
+            } else {
+                onMove(pos, draggingState.current);
             }
-        };
-
-        window.addEventListener('mouseup', handleStopDragging);
-        window.addEventListener('touchend', handleStopDragging);
-        window.addEventListener('touchcancel', handleStopDragging);
-        window.addEventListener('touchmove', handleTouchMove, {
-            passive: false,
-        });
-
-        return () => {
-            window.removeEventListener('mouseup', handleStopDragging);
-            window.removeEventListener('touchend', handleStopDragging);
-            window.removeEventListener('touchcancel', handleStopDragging);
-            window.removeEventListener('touchmove', handleTouchMove);
-        };
-    }, [isDragging, addDraggedCell, onMove]);
+        },
+        touchTimeout: TIMING_CONSTANTS.TOUCH_HOLD_DELAY,
+    });
 
     // Computed state
     const [gridState, setGridState] = useState<Map<string, CellInfo>>(
@@ -302,6 +278,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
         const source = info?.source;
         const isConflict = conflictSet.has(pos);
         const isCycle = cycleCells.has(pos);
+        const dragProps = getDragProps(pos);
 
         let color = COLORS.text.primary;
 
@@ -317,79 +294,12 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
         }
 
         return {
-            onContextMenu: (e: React.MouseEvent) => {
-                e.preventDefault();
-            },
-            onMouseDown: (e: React.MouseEvent) => {
-                if (e.button !== 0 && e.button !== 2) return;
-                if (
-                    Date.now() - lastTouchTime.current <
-                    TIMING_CONSTANTS.TOUCH_HOLD_DELAY
-                )
-                    return;
-
-                e.preventDefault(); // Prevent text selection
-                const current = userMoves.get(pos);
-                const isRight = e.button === 2;
-
-                // Cycle logic
-                // Left: F -> B -> Empty -> F
-                // Right: B -> F -> Empty -> B
-                let newState: CellState | undefined;
-
-                if (isRight) {
-                    newState =
-                        current === BACKWARD
-                            ? FORWARD
-                            : current === FORWARD
-                              ? undefined
-                              : BACKWARD;
-                } else {
-                    newState =
-                        current === FORWARD
-                            ? BACKWARD
-                            : current === BACKWARD
-                              ? undefined
-                              : FORWARD;
-                }
-
-                draggingState.current = newState;
-                setIsDragging(e.button);
-                onMove(pos, newState);
-                addDraggedCell(pos);
-            },
-            onMouseEnter: () => {
-                if (isDragging !== null && !draggedCells.current.has(pos)) {
-                    onMove(pos, draggingState.current);
-                    addDraggedCell(pos);
-                }
-            },
-            onTouchStart: (e: React.TouchEvent) => {
-                if (e.cancelable) e.preventDefault();
-                lastTouchTime.current = Date.now();
-
-                const current = userMoves.get(pos);
-                // Touch behaves like Left Click
-                const newState =
-                    current === FORWARD
-                        ? BACKWARD
-                        : current === BACKWARD
-                          ? undefined
-                          : FORWARD;
-
-                draggingState.current = newState;
-                setIsDragging(0);
-                onMove(pos, newState);
-                addDraggedCell(pos);
-            },
-            'data-pos': pos,
-            'data-type': 'cell',
+            ...dragProps,
             sx: {
+                ...dragProps.sx,
                 cursor: 'pointer',
                 border: `1px solid ${SLANT_STYLES.GHOST.BORDER}`, // Lighter border for dark bg
                 position: 'relative',
-                transition: 'all 0.2s',
-                touchAction: 'none',
                 backgroundColor: SLANT_STYLES.GHOST.BG_SUBTLE,
                 '&:hover': {
                     backgroundColor: SLANT_STYLES.GHOST.BG_HOVER,

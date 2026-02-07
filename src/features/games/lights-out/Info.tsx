@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Backdrop,
     Modal,
@@ -27,6 +27,7 @@ import Example from './Example';
 import { getInput, getOutput, useHandler } from './calculator';
 import { Palette, PropsFactory } from '../components/Board';
 import { StepTitle, InstructionItem, INFO_TITLES } from './content';
+import { useDrag } from '../hooks/useDrag';
 
 // Type assertion for GlassCard component
 const TypedGlassCard = GlassCard as React.ComponentType<{
@@ -66,88 +67,35 @@ export default function Info(props: InfoProps): React.ReactElement {
     // Calculator State (hoisted to persist across steps)
     const [calcRow, setCalcRow] = useState<number[]>(Array(cols).fill(0));
 
-    const [isDragging, setIsDragging] = useState(false);
-    const draggedCols = useRef(new Set<number>());
-    const lastTouchTime = useRef(0);
-
     useEffect(() => {
         setCalcRow(Array(cols).fill(0));
     }, [cols, palette]); // Reset only on config change
 
     const toggleTile = useCallback(
-        (col: number) => {
-            const newRow = [...calcRow];
-            if (newRow[col] !== undefined) {
-                newRow[col] ^= 1;
-            }
-            setCalcRow(newRow);
+        (colAttr: string) => {
+            const col = parseInt(colAttr, 10);
+            setCalcRow(prev => {
+                const next = [...prev];
+                if (next[col] !== undefined) {
+                    next[col] ^= 1;
+                }
+                return next;
+            });
         },
-        [calcRow]
+        [setCalcRow]
     );
 
     const res = getProduct(calcRow, rows, cols);
 
-    useEffect(() => {
-        const handleStopDragging = () => {
-            setIsDragging(false);
-            draggedCols.current.clear();
-        };
-
-        const handleTouchMove = (e: TouchEvent) => {
-            if (!isDragging || step !== 2) return;
-
-            const touch = e.touches[0];
-            if (!touch) return;
-
-            const element = document.elementFromPoint(
-                touch.clientX,
-                touch.clientY
-            );
-            if (!element) return;
-
-            const cell = element.closest('[data-col]');
-            if (cell) {
-                const colAttr = cell.getAttribute('data-col');
-                if (colAttr !== null) {
-                    const col = parseInt(colAttr, 10);
-                    if (!draggedCols.current.has(col)) {
-                        toggleTile(col);
-                        draggedCols.current.add(col);
-                    }
-                }
-            }
-        };
-
-        window.addEventListener('mouseup', handleStopDragging);
-        window.addEventListener('touchend', handleStopDragging);
-        window.addEventListener('touchcancel', handleStopDragging);
-        window.addEventListener('touchmove', handleTouchMove, {
-            passive: false,
-        });
-
-        return () => {
-            window.removeEventListener('mouseup', handleStopDragging);
-            window.removeEventListener('touchend', handleStopDragging);
-            window.removeEventListener('touchcancel', handleStopDragging);
-            window.removeEventListener('touchmove', handleTouchMove);
-        };
-    }, [isDragging, step, toggleTile]);
-
-    const addDraggedCol = useCallback((col: number) => {
-        draggedCols.current.add(col);
-    }, []);
+    const { getDragProps } = useDrag({
+        onAction: toggleTile,
+        checkEnabled: () => step === 2,
+        posAttribute: 'data-col',
+    });
 
     const inputGetters = useHandler(calcRow, cols, palette);
     const outputGetters = useHandler(res, cols, palette);
-    const inputProps = getInput(
-        inputGetters,
-        toggleTile,
-        isDragging,
-        setIsDragging,
-        draggedCols,
-        addDraggedCol,
-        lastTouchTime
-    );
+    const inputProps = getInput(inputGetters, getDragProps);
     const outputProps = getOutput(outputGetters);
 
     // Reset functionality

@@ -4,7 +4,6 @@ import React, {
     useReducer,
     useState,
     useCallback,
-    useRef,
 } from 'react';
 import { Grid, Box } from '../../../components/mui';
 import {
@@ -20,13 +19,7 @@ import { Board, useHandler, usePalette, Getters } from '../components/Board';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
 import { LAYOUT, COLORS } from '../../../config/theme';
-import {
-    getGrid,
-    handleBoard,
-    getNextMove,
-    isSolved,
-    BoardAction,
-} from './boardHandlers';
+import { getGrid, handleBoard, getNextMove, isSolved } from './boardHandlers';
 import { useWindow, useMobile } from '../../../hooks';
 import { convertPixels } from '../../interpreters/utils/gridUtils';
 import Info from './Info';
@@ -37,70 +30,32 @@ import {
     STORAGE_KEYS,
     LAYOUT_CONSTANTS,
 } from './constants';
+import { useDrag, DragProps } from '../hooks/useDrag';
 
 function getFrontProps(
     getters: Getters,
-    dispatch: (action: BoardAction) => void,
-    isDragging = false,
-    setIsDragging: (val: boolean) => void = () => undefined,
-    draggedCells: React.RefObject<Set<string>>,
-    addDraggedCell: (pos: string) => void = () => undefined,
-    lastTouchTime: React.RefObject<number>
+    getDragProps: (pos: string) => DragProps
 ) {
     const { getColor, getBorder } = getters;
-
-    const flipAdj = (row: number, col: number) => {
-        dispatch({
-            type: 'adjacent',
-            row,
-            col,
-        });
-    };
 
     return (row: number, col: number) => {
         const style = getBorder(row, col);
         const { front, back } = getColor(row, col);
         const pos = `${row.toString()},${col.toString()}`;
+        const dragProps = getDragProps(pos);
 
         return {
-            onMouseDown: (e: React.MouseEvent) => {
-                if (e.button !== 0) return; // Only left click
-                // Ignore ghost clicks on mobile
-                if (
-                    Date.now() - lastTouchTime.current <
-                    TIMING_CONSTANTS.GHOST_CLICK_TIMEOUT
-                )
-                    return;
-                setIsDragging(true);
-                flipAdj(row, col);
-                addDraggedCell(pos);
-            },
-            onMouseEnter: () => {
-                if (isDragging && !draggedCells.current.has(pos)) {
-                    flipAdj(row, col);
-                    addDraggedCell(pos);
-                }
-            },
-            onTouchStart: (e: React.TouchEvent) => {
-                // Prevent ghost mouse events and scrolling
-                if (e.cancelable) e.preventDefault();
-                lastTouchTime.current = Date.now();
-                setIsDragging(true);
-                flipAdj(row, col);
-                addDraggedCell(pos);
-            },
-            'data-pos': pos,
+            ...dragProps,
             children: <CircleRounded />,
             backgroundColor: front,
             color: front,
             style,
             sx: {
+                ...dragProps.sx,
                 '&:hover': {
                     cursor: 'pointer',
                     color: back,
                 },
-                touchAction: 'none', // Prevent scrolling while dragging
-                transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
             },
         };
     };
@@ -115,15 +70,13 @@ function getBackProps(getters: Getters) {
 }
 
 function getExampleProps(getters: Getters) {
-    const frontProps = getFrontProps(
-        getters,
-        () => undefined,
-        false,
-        () => undefined,
-        { current: new Set() } as React.RefObject<Set<string>>,
-        () => undefined,
-        { current: 0 } as React.RefObject<number>
-    );
+    const frontProps = getFrontProps(getters, (pos: string) => ({
+        onMouseDown: () => undefined,
+        onMouseEnter: () => undefined,
+        onTouchStart: () => undefined,
+        'data-pos': pos,
+        sx: { touchAction: 'none' as const, transition: '' },
+    }));
 
     return (row: number, col: number) => {
         const props = frontProps(row, col);
@@ -193,71 +146,29 @@ export default function LightsOut(): React.ReactElement {
 
     const [open, toggleOpen] = useReducer((open: boolean) => !open, false);
 
-    const [isDragging, setIsDragging] = useState(false);
-    const draggedCells = useRef(new Set<string>());
-    const lastTouchTime = useRef(0);
-
-    const addDraggedCell = useCallback((pos: string) => {
-        draggedCells.current.add(pos);
-    }, []);
-
-    useEffect(() => {
-        const handleStopDragging = () => {
-            setIsDragging(false);
-            draggedCells.current.clear();
-        };
-
-        const handleTouchMove = (e: TouchEvent) => {
-            if (!isDragging) return;
-
-            const touch = e.touches[0];
-            if (!touch) return;
-
-            const element = document.elementFromPoint(
-                touch.clientX,
-                touch.clientY
-            );
-            if (!element) return;
-
-            // Find the cell element (either the div itself or its parent/child)
-            const cell = element.closest('[data-pos]');
-            if (cell) {
-                const pos = cell.getAttribute('data-pos');
-                if (pos && !draggedCells.current.has(pos)) {
-                    const [r, c] = pos.split(',').map(Number);
-                    if (r !== undefined && c !== undefined) {
-                        dispatch({
-                            type: 'adjacent',
-                            row: r,
-                            col: c,
-                        });
-                        addDraggedCell(pos);
-                    }
-                }
-            }
-        };
-
-        window.addEventListener('mouseup', handleStopDragging);
-        window.addEventListener('touchend', handleStopDragging);
-        window.addEventListener('touchcancel', handleStopDragging);
-        window.addEventListener('touchmove', handleTouchMove, {
-            passive: false,
-        });
-
-        return () => {
-            window.removeEventListener('mouseup', handleStopDragging);
-            window.removeEventListener('touchend', handleStopDragging);
-            window.removeEventListener('touchcancel', handleStopDragging);
-            window.removeEventListener('touchmove', handleTouchMove);
-        };
-    }, [isDragging, draggedCells, addDraggedCell, dispatch]);
-
     const palette = usePalette(state.score);
 
     const solved = useMemo(
         () => state.initialized && isSolved(state.grid),
         [state.initialized, state.grid]
     );
+
+    const { getDragProps } = useDrag({
+        onAction: pos => {
+            if (solved) return;
+            const [r, c] = pos.split(',').map(Number);
+            if (r !== undefined && c !== undefined) {
+                dispatch({
+                    type: 'adjacent',
+                    row: r,
+                    col: c,
+                });
+            }
+        },
+        checkEnabled: () => !solved,
+        touchTimeout: TIMING_CONSTANTS.GHOST_CLICK_TIMEOUT,
+        transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
+    });
 
     const allOn = useMemo(
         () => state.initialized && state.grid.flat().every(cell => cell === 1),
@@ -365,18 +276,7 @@ export default function LightsOut(): React.ReactElement {
 
     const getters = useHandler(state, palette);
 
-    const frontProps = getFrontProps(
-        getters,
-        action => {
-            if (solved) return;
-            dispatch(action);
-        },
-        isDragging,
-        setIsDragging,
-        draggedCells,
-        addDraggedCell,
-        lastTouchTime
-    );
+    const frontProps = getFrontProps(getters, getDragProps);
     const backProps = getBackProps(getters);
 
     return (

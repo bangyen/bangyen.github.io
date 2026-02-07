@@ -1,59 +1,29 @@
 import React, { useCallback } from 'react';
 import { CircleRounded } from '../../../components/icons';
 import { useGetters, Getters, Palette } from '../components/Board';
-import { TIMING_CONSTANTS, LIGHTS_OUT_STYLES } from './constants';
+import { LIGHTS_OUT_STYLES } from './constants';
+import { DragProps } from '../hooks/useDrag';
 
 export function getInput(
     getters: Getters,
-    toggleTile: (col: number) => void,
-    isDragging = false,
-    setIsDragging: (val: boolean) => void = () => undefined,
-    draggedCols: React.RefObject<Set<number>>,
-    addDraggedCol: (col: number) => void = () => undefined,
-    lastTouchTime: React.RefObject<number>
+    getDragProps: (pos: string) => DragProps
 ) {
     const { getColor, getBorder } = getters;
 
     return (r: number, c: number) => {
         const { front, back } = getColor(r, c);
+        const dragProps = getDragProps(c.toString());
 
         return {
+            ...dragProps,
             backgroundColor: front,
             style: getBorder(r, c),
-            onMouseDown: (e: React.MouseEvent) => {
-                if (e.button !== 0) return;
-                // Ignore ghost clicks on mobile
-                if (
-                    Date.now() - lastTouchTime.current <
-                    TIMING_CONSTANTS.GHOST_CLICK_TIMEOUT
-                )
-                    return;
-                setIsDragging(true);
-                toggleTile(c);
-                addDraggedCol(c);
-            },
-            onMouseEnter: () => {
-                if (isDragging && !draggedCols.current.has(c)) {
-                    toggleTile(c);
-                    addDraggedCol(c);
-                }
-            },
-            onTouchStart: (e: React.TouchEvent) => {
-                // Prevent ghost mouse events and scrolling
-                if (e.cancelable) e.preventDefault();
-                lastTouchTime.current = Date.now();
-                setIsDragging(true);
-                toggleTile(c);
-                addDraggedCol(c);
-            },
-            'data-col': c.toString(),
             sx: {
+                ...dragProps.sx,
                 '&:hover': {
                     cursor: 'pointer',
                     color: back,
                 },
-                touchAction: 'none', // Prevent scrolling while dragging
-                transition: LIGHTS_OUT_STYLES.TRANSITION.DEFAULT,
             },
             color: front,
             children: <CircleRounded />,
