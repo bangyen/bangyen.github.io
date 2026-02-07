@@ -26,11 +26,10 @@ import { BoardState } from './boardHandlers';
 const ICON = (
     <Box
         sx={{
-            width: '60%',
-            height: '60%',
+            width: '45%',
+            height: '45%',
             borderRadius: '50%',
             backgroundColor: 'currentColor',
-            boxShadow: '0 0 15px currentColor',
         }}
     />
 );
