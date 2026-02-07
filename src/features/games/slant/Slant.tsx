@@ -33,6 +33,7 @@ import { useWinTransition } from '../hooks/useWinTransition';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { GamePageLayout } from '../components/GamePageLayout';
 import { getBackProps, getFrontProps } from './renderers';
+import { useResponsiveBoardSize } from '../hooks/useResponsiveBoardSize';
 
 interface SavedSlantState extends Omit<
     SlantState,
@@ -50,8 +51,6 @@ export default function Slant() {
         handlePlus,
         handleMinus,
         mobile,
-        width,
-        height,
         dynamicSize,
         minSize,
         maxSize,
@@ -71,26 +70,19 @@ export default function Slant() {
 
     const [isGhostMode, setIsGhostMode] = useState(false);
 
-    // Calculate cell size to fit the board
-    const size = useMemo(() => {
-        const maxW =
-            Math.min(width, LAYOUT_CONSTANTS.BOARD_MAX_WIDTH) *
-            LAYOUT_CONSTANTS.BOARD_SIZE_FACTOR;
-        const maxH =
-            (height -
-                (mobile
-                    ? LAYOUT_CONSTANTS.HEADER_OFFSET.MOBILE
-                    : LAYOUT_CONSTANTS.HEADER_OFFSET.DESKTOP) -
-                LAYOUT_CONSTANTS.PADDING_OFFSET) *
-            LAYOUT_CONSTANTS.BOARD_SIZE_FACTOR;
-
-        const pxSize = Math.min(
-            maxW / (cols + 1), // +1 because intersections stick out
-            maxH / (rows + 1),
-            LAYOUT_CONSTANTS.MAX_CELL_SIZE
-        ); // Max 100px
-        return pxSize / LAYOUT_CONSTANTS.REM_BASE; // rem
-    }, [width, height, mobile, rows, cols]);
+    const size = useResponsiveBoardSize({
+        rows: rows + 1,
+        cols: cols + 1,
+        headerOffset: {
+            mobile: LAYOUT_CONSTANTS.HEADER_OFFSET.MOBILE,
+            desktop: LAYOUT_CONSTANTS.HEADER_OFFSET.DESKTOP,
+        },
+        paddingOffset: LAYOUT_CONSTANTS.PADDING_OFFSET,
+        boardMaxWidth: LAYOUT_CONSTANTS.BOARD_MAX_WIDTH,
+        boardSizeFactor: LAYOUT_CONSTANTS.BOARD_SIZE_FACTOR,
+        maxCellSize: LAYOUT_CONSTANTS.MAX_CELL_SIZE,
+        remBase: LAYOUT_CONSTANTS.REM_BASE,
+    });
 
     const initial = useMemo(() => getInitialState(rows, cols), [rows, cols]);
 

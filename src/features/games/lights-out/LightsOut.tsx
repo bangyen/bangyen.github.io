@@ -1,7 +1,8 @@
 import React, { useMemo, useEffect, useReducer, useCallback } from 'react';
 import { MenuBookRounded } from '../../../components/icons';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
-import { Board, useHandler, usePalette } from '../components/Board';
+import { Board } from '../components/Board';
+import { useHandler, usePalette } from './boardUtils';
 import { GameControls } from '../components/GameControls';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
@@ -20,6 +21,7 @@ import { useGameInteraction } from '../hooks/useGameInteraction';
 import { useWinTransition } from '../hooks/useWinTransition';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { GamePageLayout } from '../components/GamePageLayout';
+import { useResponsiveBoardSize } from '../hooks/useResponsiveBoardSize';
 import { getFrontProps, getBackProps, getExampleProps } from './renderers';
 
 import { BoardState } from './boardHandlers';
@@ -113,9 +115,19 @@ export default function LightsOut() {
 
     const getters = useHandler(state, palette);
 
-    const size = mobile
-        ? GAME_CONSTANTS.gridSizes.mobile
-        : GAME_CONSTANTS.gridSizes.desktop;
+    const size = useResponsiveBoardSize({
+        rows,
+        cols,
+        headerOffset: {
+            mobile: LAYOUT.headerHeight.xs,
+            desktop: LAYOUT.headerHeight.md,
+        },
+        paddingOffset: 180,
+        boardMaxWidth: 1200,
+        boardSizeFactor: 0.9,
+        maxCellSize: 80,
+        remBase: 16,
+    });
 
     const frontProps = useMemo(
         () => getFrontProps(getters, getDragProps),
