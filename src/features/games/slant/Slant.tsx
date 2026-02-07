@@ -562,7 +562,7 @@ export default function Slant(): React.ReactElement {
                     title="Decrease Size"
                     Icon={RemoveRounded}
                     onClick={handleMinus}
-                    disabled={rows <= 3}
+                    disabled={rows <= 3 || isGhostMode}
                 />
                 <TooltipButton
                     title="Increase Size"
@@ -570,7 +570,9 @@ export default function Slant(): React.ReactElement {
                     onClick={handlePlus}
                     disabled={
                         rows >= 10 ||
-                        (rows >= dynamicSize.rows && cols >= dynamicSize.cols)
+                        (rows >= dynamicSize.rows &&
+                            cols >= dynamicSize.cols) ||
+                        isGhostMode
                     }
                 />
                 <TooltipButton
