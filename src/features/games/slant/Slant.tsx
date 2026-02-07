@@ -272,6 +272,7 @@ export default function Slant(): React.ReactElement {
                                     'translate(-50%, -50%) rotate(-45deg)',
                                 boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
                                 transition: 'all 0.2s',
+                                pointerEvents: 'none',
                             }}
                         />
                     )}
@@ -291,6 +292,7 @@ export default function Slant(): React.ReactElement {
                                     'translate(-50%, -50%) rotate(45deg)',
                                 boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
                                 transition: 'all 0.2s',
+                                pointerEvents: 'none',
                             }}
                         />
                     )}
@@ -353,6 +355,7 @@ export default function Slant(): React.ReactElement {
                 WebkitUserSelect: 'none',
                 transform: hasError ? 'scale(1.1)' : 'scale(1)',
                 position: 'relative',
+                pointerEvents: 'none',
             },
         };
     };
