@@ -6,14 +6,13 @@ import React, {
     useCallback,
     useRef,
 } from 'react';
-import { Box, Grid } from '../../../components/mui';
-import { EmojiEventsRounded, Psychology } from '../../../components/icons';
+import { Box } from '../../../components/mui';
+import { Psychology } from '../../../components/icons';
 import { GhostCanvas } from './GhostCanvas';
 import { GameControls } from '../components/GameControls';
 import { CellState } from './boardHandlers';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
-import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 import { PAGE_TITLES } from '../../../config/constants';
 import { COLORS, ANIMATIONS } from '../../../config/theme';
 import {
@@ -34,8 +33,11 @@ import {
     DESKTOP_PADDING,
 } from './constants';
 import { SlantState } from './boardHandlers';
-import { useDrag } from '../hooks/useDrag';
 import { useGridSize } from '../hooks/useGridSize';
+import { useGamePersistence } from '../hooks/useGamePersistence';
+import { useGameInteraction } from '../hooks/useGameInteraction';
+import { GamePageLayout } from '../components/GamePageLayout';
+import { TrophyOverlay } from '../components/TrophyOverlay';
 
 interface SavedSlantState extends Omit<
     SlantState,
@@ -99,85 +101,50 @@ export default function Slant() {
 
     const [state, dispatch] = useReducer(handleBoard, initial);
 
-    // Sync localStorage and state on init or rows/cols change
-    useEffect(() => {
-        const stateKey = `${STORAGE_KEYS.STATE}-${String(rows)}x${String(cols)}`;
-        const saved = localStorage.getItem(stateKey);
-        if (saved) {
-            try {
-                const parsed = JSON.parse(saved) as SavedSlantState;
-                if (parsed.rows === rows && parsed.cols === cols) {
-                    dispatch({
-                        type: 'hydrate',
-                        state: {
-                            ...parsed,
-                            errorNodes: new Set(parsed.errorNodes),
-                            cycleCells: new Set(parsed.cycleCells),
-                            satisfiedNodes: new Set(parsed.satisfiedNodes),
-                        } as SlantState,
-                    });
-                }
-            } catch (_e) {
-                // Ignore corrupted state
-            }
-        }
-    }, [rows, cols]);
+    // Persistence for main game state
+    useGamePersistence<SlantState>({
+        storageKey: STORAGE_KEYS.STATE,
+        rows,
+        cols,
+        state,
+        enabled: !isGhostMode,
+        onRestore: saved => {
+            dispatch({ type: 'hydrate', state: saved });
+        },
+        serialize: s => ({
+            ...s,
+            errorNodes: Array.from(s.errorNodes),
+            cycleCells: Array.from(s.cycleCells),
+            satisfiedNodes: Array.from(s.satisfiedNodes),
+        }),
+        deserialize: (saved: unknown) => {
+            const s = saved as SavedSlantState;
+            return {
+                ...s,
+                errorNodes: new Set(s.errorNodes),
+                cycleCells: new Set(s.cycleCells),
+                satisfiedNodes: new Set(s.satisfiedNodes),
+            } as SlantState;
+        },
+    });
 
-    // Ghost mode state
     const [ghostMoves, setGhostMoves] = useState<Map<string, CellState>>(
         new Map()
     );
 
-    // Load ghost moves when state changes
-    useEffect(() => {
-        const ghostKey = `${STORAGE_KEYS.GHOST_MOVES}-${String(state.rows)}x${String(state.cols)}`;
-        const saved = localStorage.getItem(ghostKey);
-        if (saved) {
-            try {
-                setGhostMoves(
-                    new Map(JSON.parse(saved) as [string, CellState][])
-                );
-            } catch (_e) {
-                setGhostMoves(new Map());
-            }
-        } else {
-            setGhostMoves(new Map());
-        }
-    }, [state.numbers, state.rows, state.cols]);
-
-    // Save state on change
-    useEffect(() => {
-        const stateKey = `${STORAGE_KEYS.STATE}-${String(state.rows)}x${String(state.cols)}`;
-        const ghostKey = `${STORAGE_KEYS.GHOST_MOVES}-${String(state.rows)}x${String(state.cols)}`;
-
-        const hasMoves = state.grid.some(row =>
-            row.some(cell => cell !== EMPTY)
-        );
-        const hasGhostMoves = ghostMoves.size > 0;
-
-        if (!hasMoves && !hasGhostMoves) {
-            localStorage.removeItem(stateKey);
-            localStorage.removeItem(ghostKey);
-            return;
-        }
-
-        const toSave = {
-            ...state,
-            errorNodes: Array.from(state.errorNodes),
-            cycleCells: Array.from(state.cycleCells),
-            satisfiedNodes: Array.from(state.satisfiedNodes),
-        };
-        localStorage.setItem(stateKey, JSON.stringify(toSave));
-
-        if (hasGhostMoves) {
-            localStorage.setItem(
-                ghostKey,
-                JSON.stringify(Array.from(ghostMoves.entries()))
-            );
-        } else {
-            localStorage.removeItem(ghostKey);
-        }
-    }, [state, ghostMoves]);
+    // Persistence for ghost moves
+    useGamePersistence<Map<string, CellState>>({
+        storageKey: STORAGE_KEYS.GHOST_MOVES,
+        rows,
+        cols,
+        state: ghostMoves,
+        onRestore: saved => {
+            setGhostMoves(saved);
+        },
+        serialize: m => Array.from(m.entries()),
+        deserialize: (saved: unknown) =>
+            new Map(saved as [string, CellState][]),
+    });
 
     // Reset ghost moves when puzzle changes
     const lastPuzzleRef = useRef<string>('');
@@ -208,33 +175,14 @@ export default function Slant() {
         }
     }, [state.solved, handleReset]);
 
-    const [interactionAllowed, setInteractionAllowed] = useState(false);
-
-    useEffect(() => {
-        if (state.solved) {
-            const timeout = setTimeout(() => {
-                setInteractionAllowed(true);
-            }, TIMING_CONSTANTS.INTERACTION_DELAY);
-            return () => {
-                clearTimeout(timeout);
-            };
-        } else {
-            setInteractionAllowed(false);
-        }
-    }, [state.solved]);
-
-    const { getDragProps } = useDrag({
-        onAction: (pos: string, isRightClick: boolean) => {
-            if (state.solved) return;
-            const [r, c] = pos.split(',').map(Number);
-            if (r !== undefined && c !== undefined) {
-                dispatch({
-                    type: 'toggle',
-                    row: r,
-                    col: c,
-                    reverse: isRightClick,
-                });
-            }
+    const { getDragProps } = useGameInteraction({
+        onToggle: (r, c, isRightClick) => {
+            dispatch({
+                type: 'toggle',
+                row: r,
+                col: c,
+                reverse: isRightClick,
+            });
         },
         checkEnabled: () => !state.solved,
         touchTimeout: TIMING_CONSTANTS.TOUCH_HOLD_DELAY,
@@ -380,213 +328,149 @@ export default function Slant() {
         });
     }, [rows, cols]);
 
-    return (
-        <Grid
-            container
-            minHeight="100vh"
-            flexDirection="column"
-            sx={{
-                background: `radial-gradient(circle at 50% 50%, ${COLORS.surface.elevated} 0%, ${COLORS.surface.background} 100%)`,
-                position: 'relative',
-                overflow: 'hidden',
-                height: '100vh',
-                transition: 'background 0.5s ease-in-out',
-            }}
+    const controls = (
+        <GameControls
+            rows={rows}
+            cols={cols}
+            dynamicSize={dynamicSize}
+            minSize={minSize}
+            maxSize={maxSize}
+            handlePlus={handlePlus}
+            handleMinus={handleMinus}
+            onRefresh={handleReset}
+            disabled={isGhostMode}
         >
-            <GlobalHeader
-                showHome={true}
-                infoUrl="https://en.wikipedia.org/wiki/Gokigen_Naname"
-            />
-
-            <Box
+            <TooltipButton
+                title={'Open Calculator'}
+                Icon={Psychology}
                 onClick={() => {
-                    if (isGhostMode) setIsGhostMode(false);
+                    setIsGhostMode(!isGhostMode);
                 }}
                 sx={{
-                    flex: 1,
-                    position: 'relative',
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    padding: `${String(size)}rem`,
-                    marginBottom: mobile ? '180px' : '150px',
-                    overflow: 'hidden',
+                    color: isGhostMode ? 'primary.main' : 'default',
+                }}
+            />
+        </GameControls>
+    );
+
+    return (
+        <GamePageLayout
+            title={PAGE_TITLES.slant}
+            infoUrl="https://en.wikipedia.org/wiki/Gokigen_Naname"
+            paddingBottom={{ xs: '180px', md: '150px' }}
+            controls={controls}
+            contentSx={{
+                background: `radial-gradient(circle at 50% 50%, ${COLORS.surface.elevated} 0%, ${COLORS.surface.background} 100%)`,
+                padding: `${String(size)}rem`,
+            }}
+        >
+            <Box
+                onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation();
                 }}
             >
-                {/* Main Game Card */}
-                <Box
-                    onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation();
-                    }}
-                >
-                    {isGhostMode ? (
-                        <GhostCanvas
-                            rows={rows}
-                            cols={cols}
-                            numbers={state.numbers}
-                            size={size}
-                            initialMoves={ghostMoves}
-                            onMove={(pos, val) => {
-                                setGhostMoves(prev => {
-                                    const next = new Map(prev);
-                                    if (val === undefined) next.delete(pos);
-                                    else next.set(pos, val);
-                                    return next;
+                {isGhostMode ? (
+                    <GhostCanvas
+                        rows={rows}
+                        cols={cols}
+                        numbers={state.numbers}
+                        size={size}
+                        initialMoves={ghostMoves}
+                        onMove={(pos, val) => {
+                            setGhostMoves(prev => {
+                                const next = new Map(prev);
+                                if (val === undefined) next.delete(pos);
+                                else next.set(pos, val);
+                                return next;
+                            });
+                        }}
+                        onCopy={() => {
+                            const newMoves = new Map<string, CellState>();
+                            state.grid.forEach((row, r) => {
+                                row.forEach((cell, c) => {
+                                    if (cell !== EMPTY) {
+                                        newMoves.set(
+                                            `${String(r)},${String(c)}`,
+                                            cell
+                                        );
+                                    }
                                 });
+                            });
+                            setGhostMoves(newMoves);
+                        }}
+                        onClear={() => {
+                            setGhostMoves(new Map());
+                        }}
+                        onClose={() => {
+                            setIsGhostMode(false);
+                        }}
+                    />
+                ) : (
+                    <>
+                        {/* Grid Container - Isolation for perfect alignment */}
+                        <Box
+                            sx={{
+                                position: 'relative',
+                                userSelect: 'none',
+                                padding: mobile
+                                    ? MOBILE_PADDING
+                                    : DESKTOP_PADDING,
+                                border: '2px solid transparent',
+                                borderRadius:
+                                    LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
                             }}
-                            onCopy={() => {
-                                const newMoves = new Map<string, CellState>();
-                                state.grid.forEach((row, r) => {
-                                    row.forEach((cell, c) => {
-                                        if (cell !== EMPTY) {
-                                            newMoves.set(
-                                                `${String(r)},${String(c)}`,
-                                                cell
-                                            );
-                                        }
-                                    });
-                                });
-                                setGhostMoves(newMoves);
-                            }}
-                            onClear={() => {
-                                setGhostMoves(new Map());
-                            }}
-                            onClose={() => {
-                                setIsGhostMode(false);
-                            }}
-                        />
-                    ) : (
-                        <>
-                            {/* Grid Container - Isolation for perfect alignment */}
-                            <Box
-                                sx={{
-                                    position: 'relative',
-                                    userSelect: 'none',
-                                    padding: mobile
-                                        ? MOBILE_PADDING
-                                        : DESKTOP_PADDING,
-                                    border: '2px solid transparent',
-                                    borderRadius:
-                                        LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
-                                }}
-                            >
-                                {/* Main Grid */}
-                                <Box sx={{ position: 'relative', zIndex: 1 }}>
-                                    <CustomGrid
-                                        size={size}
-                                        rows={rows}
-                                        cols={cols}
-                                        cellProps={getCellProps}
-                                        space={0}
-                                        sx={{ width: 'fit-content' }}
-                                    />
-                                </Box>
-
-                                {/* Numbers Grid Overlay */}
-                                <Box
-                                    sx={{
-                                        position: 'absolute',
-                                        top: mobile
-                                            ? MOBILE_PADDING
-                                            : DESKTOP_PADDING,
-                                        left: mobile
-                                            ? MOBILE_PADDING
-                                            : DESKTOP_PADDING,
-                                        transform: `translate(-${String(
-                                            numberSize / 2
-                                        )}rem, -${String(numberSize / 2)}rem)`,
-                                        zIndex: 10,
-                                        pointerEvents: 'none',
-                                    }}
-                                >
-                                    <CustomGrid
-                                        size={numberSize}
-                                        rows={rows + 1}
-                                        cols={cols + 1}
-                                        cellProps={getNumberProps}
-                                        space={numberSpace}
-                                        sx={{ width: 'fit-content' }}
-                                    />
-                                </Box>
-                            </Box>
-
-                            {/* Win Overlay */}
-                            <Box
-                                onClick={handleReset}
-                                sx={{
-                                    position: 'absolute',
-                                    inset: 0,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    opacity: state.solved ? 1 : 0,
-                                    transform: state.solved
-                                        ? 'scale(1)'
-                                        : 'scale(0.5)',
-                                    visibility: state.solved
-                                        ? 'visible'
-                                        : 'hidden',
-                                    transition:
-                                        'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                                    zIndex: 20,
-                                    backgroundColor: 'transparent',
-                                    pointerEvents: interactionAllowed
-                                        ? 'auto'
-                                        : 'none',
-                                    cursor: interactionAllowed
-                                        ? 'pointer'
-                                        : 'default',
-                                    backdropFilter: 'blur(2px)',
-                                }}
-                            >
-                                <EmojiEventsRounded
-                                    sx={{
-                                        fontSize: `${String(size)}rem`, // Match Lights Out proportions
-                                        color: COLORS.primary.main,
-                                        filter: `drop-shadow(0 0 30px ${COLORS.primary.main}88)`,
-                                        animation: state.solved
-                                            ? 'float 3s ease-in-out infinite'
-                                            : 'none',
-                                        '@keyframes float': {
-                                            '0%, 100%': {
-                                                transform: 'translateY(0)',
-                                            },
-                                            '50%': {
-                                                transform: 'translateY(-10px)',
-                                            },
-                                        },
-                                    }}
+                        >
+                            {/* Main Grid */}
+                            <Box sx={{ position: 'relative', zIndex: 1 }}>
+                                <CustomGrid
+                                    size={size}
+                                    rows={rows}
+                                    cols={cols}
+                                    cellProps={getCellProps}
+                                    space={0}
+                                    sx={{ width: 'fit-content' }}
                                 />
                             </Box>
-                        </>
-                    )}
-                </Box>
+
+                            {/* Numbers Grid Overlay */}
+                            <Box
+                                sx={{
+                                    position: 'absolute',
+                                    top: mobile
+                                        ? MOBILE_PADDING
+                                        : DESKTOP_PADDING,
+                                    left: mobile
+                                        ? MOBILE_PADDING
+                                        : DESKTOP_PADDING,
+                                    transform: `translate(-${String(
+                                        numberSize / 2
+                                    )}rem, -${String(numberSize / 2)}rem)`,
+                                    zIndex: 10,
+                                    pointerEvents: 'none',
+                                }}
+                            >
+                                <CustomGrid
+                                    size={numberSize}
+                                    rows={rows + 1}
+                                    cols={cols + 1}
+                                    cellProps={getNumberProps}
+                                    space={numberSpace}
+                                    sx={{ width: 'fit-content' }}
+                                />
+                            </Box>
+                        </Box>
+                    </>
+                )}
             </Box>
 
-            <GameControls
-                rows={rows}
-                cols={cols}
-                dynamicSize={dynamicSize}
-                minSize={minSize}
-                maxSize={maxSize}
-                handlePlus={handlePlus}
-                handleMinus={handleMinus}
-                onRefresh={handleReset}
-                disabled={isGhostMode}
-            >
-                <TooltipButton
-                    title={'Open Calculator'}
-                    Icon={Psychology}
-                    onClick={() => {
-                        setIsGhostMode(!isGhostMode);
-                    }}
-                    sx={{
-                        color: isGhostMode ? 'primary.main' : 'default',
-                    }}
-                />
-            </GameControls>
-        </Grid>
+            <TrophyOverlay
+                show={state.solved}
+                onClick={handleReset}
+                size={size}
+                iconSizeRatio={1.0}
+                primaryColor={COLORS.primary.main}
+                secondaryColor={COLORS.primary.main}
+            />
+        </GamePageLayout>
     );
 }

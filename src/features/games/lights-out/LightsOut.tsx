@@ -1,27 +1,22 @@
 import React, { useMemo, useEffect, useReducer, useCallback } from 'react';
-import { Grid, Box } from '../../../components/mui';
-import {
-    MenuBookRounded,
-    CircleRounded,
-    EmojiEventsRounded,
-} from '../../../components/icons';
+import { Box } from '../../../components/mui';
+import { MenuBookRounded, CircleRounded } from '../../../components/icons';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { Board, useHandler, usePalette, Getters } from '../components/Board';
 import { GameControls } from '../components/GameControls';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
-import { LAYOUT, COLORS } from '../../../config/theme';
+import { LAYOUT } from '../../../config/theme';
 import { getGrid, handleBoard, isSolved } from './boardHandlers';
 import Info from './Info';
-import { GlobalHeader } from '../../../components/layout/GlobalHeader';
-import {
-    TIMING_CONSTANTS,
-    LIGHTS_OUT_STYLES,
-    STORAGE_KEYS,
-    LAYOUT_CONSTANTS,
-} from './constants';
-import { useDrag, DragProps } from '../hooks/useDrag';
+import { TIMING_CONSTANTS, STORAGE_KEYS, LAYOUT_CONSTANTS } from './constants';
 import { useGridSize } from '../hooks/useGridSize';
+import { DragProps } from '../hooks/useDrag';
+import { useGamePersistence } from '../hooks/useGamePersistence';
+import { useGameInteraction } from '../hooks/useGameInteraction';
+import { GamePageLayout } from '../components/GamePageLayout';
+import { TrophyOverlay } from '../components/TrophyOverlay';
+import { BoardState } from './boardHandlers';
 
 function getFrontProps(
     getters: Getters,
@@ -128,21 +123,12 @@ export default function LightsOut() {
         [state.initialized, state.grid]
     );
 
-    const { getDragProps } = useDrag({
-        onAction: pos => {
-            if (solved) return;
-            const [r, c] = pos.split(',').map(Number);
-            if (r !== undefined && c !== undefined) {
-                dispatch({
-                    type: 'adjacent',
-                    row: r,
-                    col: c,
-                });
-            }
+    const { getDragProps } = useGameInteraction({
+        onToggle: (r, c) => {
+            dispatch({ type: 'adjacent', row: r, col: c });
         },
         checkEnabled: () => !solved,
         touchTimeout: TIMING_CONSTANTS.GHOST_CLICK_TIMEOUT,
-        transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
     });
 
     const allOn = useMemo(
@@ -153,6 +139,16 @@ export default function LightsOut() {
     const handleNext = useCallback(() => {
         dispatch({ type: 'next' });
     }, []);
+
+    useGamePersistence<BoardState>({
+        storageKey: STORAGE_KEYS.STATE,
+        rows,
+        cols,
+        state,
+        onRestore: saved => {
+            dispatch({ type: 'restore', state: saved });
+        },
+    });
 
     useEffect(() => {
         if (solved) {
@@ -186,97 +182,56 @@ export default function LightsOut() {
     const frontProps = getFrontProps(getters, getDragProps);
     const backProps = getBackProps(getters);
 
-    return (
-        <Grid
-            container
-            minHeight="100vh"
-            flexDirection="column"
-            sx={{
-                background: COLORS.surface.background,
-                position: 'relative',
-                overflow: 'hidden',
-                height: '100vh', // Force height to prevent dynamic resizing
-            }}
+    const controls = (
+        <GameControls
+            rows={rows}
+            cols={cols}
+            dynamicSize={dynamicSize}
+            minSize={minSize}
+            maxSize={maxSize}
+            handlePlus={handlePlus}
+            handleMinus={handleMinus}
+            onRefresh={handleNext}
         >
-            <GlobalHeader
-                showHome={true}
-                infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
+            <TooltipButton
+                title="How to Play"
+                Icon={MenuBookRounded}
+                onClick={toggleOpen}
             />
+        </GameControls>
+    );
+
+    return (
+        <GamePageLayout
+            title={PAGE_TITLES.lightsOut}
+            infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
+            controls={controls}
+        >
             <Box
                 sx={{
-                    flex: 1,
                     position: 'relative',
-                    width: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    overflow: 'hidden',
-                    pb: { xs: '80px', md: '120px' }, // Push board up away from controls
+                    marginTop: mobile
+                        ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
+                        : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
                 }}
             >
-                <Box
-                    sx={{
-                        position: 'relative',
-                        marginTop: mobile
-                            ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
-                            : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
-                    }}
-                >
-                    <Board
-                        size={size}
-                        rows={rows}
-                        cols={cols}
-                        frontProps={frontProps}
-                        backProps={backProps}
-                    />
-                    <Box
-                        onClick={handleNext}
-                        sx={{
-                            position: 'absolute',
-                            inset: 0,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            opacity: solved ? 1 : 0,
-                            transform: solved ? 'scale(1)' : 'scale(0.5)',
-                            visibility: solved ? 'visible' : 'hidden',
-                            transition:
-                                'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                            cursor: 'pointer',
-                            zIndex: 10,
-                            backgroundColor: 'transparent',
-                        }}
-                    >
-                        <EmojiEventsRounded
-                            sx={{
-                                fontSize: `${(
-                                    size * LAYOUT_CONSTANTS.ICON_SIZE_RATIO
-                                ).toString()}rem`,
-                                color: allOn
-                                    ? palette.secondary
-                                    : palette.primary,
-                            }}
-                        />
-                    </Box>
-                </Box>
-            </Box>
-            <GameControls
-                rows={rows}
-                cols={cols}
-                dynamicSize={dynamicSize}
-                minSize={minSize}
-                maxSize={maxSize}
-                handlePlus={handlePlus}
-                handleMinus={handleMinus}
-                onRefresh={handleNext}
-            >
-                <TooltipButton
-                    title="How to Play"
-                    Icon={MenuBookRounded}
-                    onClick={toggleOpen}
+                <Board
+                    size={size}
+                    rows={rows}
+                    cols={cols}
+                    frontProps={frontProps}
+                    backProps={backProps}
                 />
-            </GameControls>
+                <TrophyOverlay
+                    show={solved}
+                    onClick={handleNext}
+                    size={size}
+                    iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
+                    primaryColor={palette.primary}
+                    secondaryColor={palette.secondary}
+                    useSecondary={allOn}
+                />
+            </Box>
             {open && (
                 <Info
                     rows={rows}
@@ -289,6 +244,6 @@ export default function LightsOut() {
                     getBackProps={getBackProps}
                 />
             )}
-        </Grid>
+        </GamePageLayout>
     );
 }

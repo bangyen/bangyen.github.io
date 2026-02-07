@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useRef } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useMobile } from '../../../hooks';
 import { Box } from '@mui/material';
 import { COLORS, LAYOUT } from '../../../config/theme';
@@ -25,7 +25,7 @@ import {
     TIMING_CONSTANTS,
 } from './constants';
 import { ANIMATIONS, SPACING } from '../../../config/theme';
-import { useDrag } from '../hooks/useDrag';
+import { useGameInteraction } from '../hooks/useGameInteraction';
 
 interface GhostBoardProps {
     rows: number;
@@ -66,39 +66,43 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
     // User inputs: just strict assignments
     const userMoves = initialMoves;
 
-    const draggingState = useRef<CellState | undefined>(undefined);
-    const { getDragProps } = useDrag({
-        onAction: (
-            pos: string,
+    const { getDragProps } = useGameInteraction<CellState | undefined>({
+        onToggle: (
+            r: number,
+            c: number,
             isRightClick: boolean,
-            isInitialClick: boolean
+            draggingValue: CellState | undefined
         ) => {
-            if (isInitialClick) {
-                const current = userMoves.get(pos);
-                let newState: CellState | undefined;
+            const pos = `${String(r)},${String(c)}`;
 
-                if (isRightClick) {
-                    newState =
-                        current === BACKWARD
-                            ? FORWARD
-                            : current === FORWARD
-                              ? undefined
-                              : BACKWARD;
-                } else {
-                    newState =
-                        current === FORWARD
-                            ? BACKWARD
-                            : current === BACKWARD
-                              ? undefined
-                              : FORWARD;
-                }
-                draggingState.current = newState;
-                onMove(pos, newState);
-            } else {
-                onMove(pos, draggingState.current);
+            if (draggingValue !== undefined) {
+                onMove(pos, draggingValue);
+                return;
             }
+
+            const current = userMoves.get(pos);
+            let newState: CellState | undefined;
+
+            if (isRightClick) {
+                newState =
+                    current === BACKWARD
+                        ? FORWARD
+                        : current === FORWARD
+                          ? undefined
+                          : BACKWARD;
+            } else {
+                newState =
+                    current === FORWARD
+                        ? BACKWARD
+                        : current === BACKWARD
+                          ? undefined
+                          : FORWARD;
+            }
+            onMove(pos, newState);
+            return newState;
         },
         touchTimeout: TIMING_CONSTANTS.TOUCH_HOLD_DELAY,
+        checkEnabled: () => true,
     });
 
     // Computed state
@@ -115,8 +119,8 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
         const newConflicts: Conflict[] = [];
 
         // 1. Initialize with User Moves
-        userMoves.forEach((state: CellState, pos: string) => {
-            newGrid.set(pos, { state, source: 'user' });
+        userMoves.forEach((val: CellState, pos: string) => {
+            newGrid.set(pos, { state: val, source: 'user' });
             const [r, c] = pos.split(',').map(Number);
             if (r !== undefined && c !== undefined) {
                 queue.push({ r, c });

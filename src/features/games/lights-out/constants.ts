@@ -24,4 +24,5 @@ export const LAYOUT_CONSTANTS = {
 
 export const STORAGE_KEYS = {
     SIZE: 'lights-out-size',
+    STATE: 'lights-out-state',
 };

@@ -154,6 +154,7 @@ export interface BoardAction {
     moves?: { row: number; col: number }[];
     newRows?: number;
     newCols?: number;
+    state?: BoardState;
 }
 
 export function handleBoard(
@@ -194,6 +195,12 @@ export function handleBoard(
             grid = randomize(rows, cols);
             score += 1;
             break;
+        case 'restore': {
+            if (action.state) {
+                return { ...action.state };
+            }
+            break;
+        }
         default:
             break;
     }
