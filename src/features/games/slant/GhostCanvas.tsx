@@ -152,9 +152,8 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
             }
 
             newGrid.set(pos, { state, source });
-            if (source === 'user') {
-                queue.push({ r, c });
-            }
+            // Always add to queue to propagate constraints recursively
+            queue.push({ r, c });
         };
 
         const getNodeNeighbors = (nr: number, nc: number) => {
