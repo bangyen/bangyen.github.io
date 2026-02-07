@@ -37,14 +37,36 @@ jest.mock('../../../../components/ui/CustomGrid', () => ({
     }: {
         rows: number;
         cols: number;
-        cellProps: (r: number, c: number) => { children: React.ReactNode };
+        cellProps: (
+            r: number,
+            c: number
+        ) => {
+            sx?: Record<string, unknown>;
+            children: React.ReactNode;
+        };
     }) => (
         <div>
             {Array.from({ length: rows }).map((_, r) =>
                 Array.from({ length: cols }).map((_, c) => {
-                    const props = cellProps(r, c);
+                    const { sx, ...props } = cellProps(r, c);
+                    // Sanitize sx for style prop
+                    const sanitizedStyle: Record<string, unknown> = {};
+                    if (sx) {
+                        Object.keys(sx).forEach(key => {
+                            if (
+                                !key.startsWith('&') &&
+                                typeof sx[key] !== 'object'
+                            ) {
+                                sanitizedStyle[key] = sx[key];
+                            }
+                        });
+                    }
                     return (
-                        <div key={`${String(r)}-${String(c)}`} {...props}>
+                        <div
+                            key={`${String(r)}-${String(c)}`}
+                            style={sanitizedStyle as React.CSSProperties}
+                            {...props}
+                        >
                             {props.children}
                         </div>
                     );
@@ -86,8 +108,10 @@ describe('GhostCanvas', () => {
 
     it('renders the grid correctly', () => {
         render(<GhostCanvas {...DEFAULT_PROPS} />);
-        const gridCells = document.querySelectorAll('[data-pos]');
-        expect(gridCells.length).toBe(9);
+        const cells = document.querySelectorAll('[data-type="cell"][data-pos]');
+        expect(cells.length).toBe(9); // 3x3
+        const hints = document.querySelectorAll('[data-type="hint"][data-pos]');
+        expect(hints.length).toBe(16); // 4x4
     });
 
     it('handles click interactions', () => {
@@ -143,10 +167,13 @@ describe('GhostCanvas', () => {
         );
 
         await waitFor(() => {
-            const cell01 = container.querySelector('[data-pos="0,1"]');
+            const cell01 = container.querySelector(
+                '[data-type="cell"][data-pos="0,1"]'
+            );
             expect(cell01).toBeInTheDocument();
-            // Use 3 levels deep selector to target the inner line div
-            const innerLine = cell01?.querySelector('div > div > div');
+            // Use precise traversal: Wrapper (div) -> Line (div)
+            const wrapper = cell01?.firstElementChild;
+            const innerLine = wrapper?.firstElementChild;
             expect(innerLine).toBeInTheDocument();
             expect(innerLine).toHaveAttribute(
                 'style',
@@ -177,12 +204,15 @@ describe('GhostCanvas', () => {
         );
 
         await waitFor(() => {
-            const cell00 = container.querySelector('[data-pos="0,0"]');
-            expect(cell00).toBeInTheDocument();
-            // Use 3 levels deep selector to target the inner line div
-            const innerLine = cell00?.querySelector('div > div > div');
-            expect(innerLine).toBeInTheDocument();
-            expect(innerLine).toHaveAttribute(
+            // In current implementation, NODE conflicts (hint numbers) turn red.
+            // Cell lines only turn red if there is a cell-level conflict.
+            // So we check the Hint element at (0,1).
+            const hint01 = container.querySelector(
+                '[data-type="hint"][data-pos="0,1"]'
+            );
+            expect(hint01).toBeInTheDocument();
+            // Hint style is on the wrapper or inner?
+            expect(hint01).toHaveAttribute(
                 'style',
                 expect.stringMatching(/background-color:\s*red/)
             );

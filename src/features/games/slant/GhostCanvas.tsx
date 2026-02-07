@@ -320,6 +320,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 addDraggedCell(pos);
             },
             'data-pos': pos,
+            'data-type': 'cell',
             sx: {
                 cursor: 'pointer',
                 border: `1px solid ${SLANT_STYLES.GHOST.BORDER}`, // Lighter border for dark bg
@@ -389,6 +390,8 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
         const hasConflict = nodeConflictSet.has(`${String(r)},${String(c)}`);
 
         return {
+            'data-pos': `${String(r)},${String(c)}`,
+            'data-type': 'hint',
             children: <Box>{value ?? ''}</Box>,
             sx: {
                 borderRadius: '50%',
