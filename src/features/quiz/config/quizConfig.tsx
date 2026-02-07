@@ -46,6 +46,14 @@ export const QUIZ_UI_CONSTANTS = {
     FEEDBACK: {
         FLAG_HEIGHT: 24,
     },
+    HISTORY_ITEM: {
+        FLAG_HEIGHT: 16,
+        FLAG_BORDER_RADIUS: '1px',
+    },
+    BADGE: {
+        HEIGHT: 20,
+        FONT_SIZE: '0.75rem',
+    },
 };
 
 export const QUIZ_GAME_CONSTANTS = {

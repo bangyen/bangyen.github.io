@@ -33,6 +33,18 @@ export const RESEARCH_STYLES = {
         VERY_SUBTLE: 'rgba(255, 255, 255, 0.03)',
         SUBTLE: 'rgba(255, 255, 255, 0.05)',
     },
+    // Layout constants
+    LAYOUT: {
+        BUTTON_HEIGHT: '36.5px',
+        CONTROLS_SPACING: 2.5,
+        RESULT_CARD_HEIGHT: 480,
+        INNER_PADDING: '1rem',
+        INNER_PADDING_SM: '0.6rem 0.8rem',
+        FONT_SIZE_XS: '0.65rem',
+        FONT_SIZE_SM: '0.75rem',
+        FONT_SIZE_MD: '0.85rem',
+        CARD_RADIUS: '6px',
+    },
     // Animations
     ANIMATIONS: {
         SPIN: {

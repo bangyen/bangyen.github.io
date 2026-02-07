@@ -167,7 +167,7 @@ const PeriodicityCalculator: React.FC = () => {
                     sx={{
                         backgroundColor: COLORS.primary.main,
                         border: '1px solid transparent',
-                        height: '36.5px',
+                        height: RESEARCH_STYLES.LAYOUT.BUTTON_HEIGHT,
                         '&:hover': { backgroundColor: COLORS.primary.dark },
                     }}
                 >
@@ -182,7 +182,7 @@ const PeriodicityCalculator: React.FC = () => {
                     sx={{
                         color: COLORS.text.secondary,
                         borderColor: COLORS.border.subtle,
-                        height: '36.5px',
+                        height: RESEARCH_STYLES.LAYOUT.BUTTON_HEIGHT,
                         '&:hover': {
                             backgroundColor: RESEARCH_STYLES.GLASS.SLIGHT,
                             borderColor: COLORS.text.secondary,
@@ -201,7 +201,7 @@ const PeriodicityCalculator: React.FC = () => {
 
             <Box
                 sx={{
-                    height: 480,
+                    height: RESEARCH_STYLES.LAYOUT.RESULT_CARD_HEIGHT,
                     mt: 3,
                     display: 'flex',
                     flexDirection: 'column',
@@ -229,11 +229,7 @@ const PeriodicityCalculator: React.FC = () => {
                                 borderRadius: '50%',
                                 border: `2px solid ${COLORS.primary.main}22`,
                                 borderTopColor: COLORS.primary.main,
-                                animation: 'spin 1s linear infinite',
-                                '@keyframes spin': {
-                                    '0%': { transform: 'rotate(0deg)' },
-                                    '100%': { transform: 'rotate(360deg)' },
-                                },
+                                ...RESEARCH_STYLES.ANIMATIONS.SPIN,
                             }}
                         />
                         <Typography
@@ -303,7 +299,8 @@ const PeriodicityCalculator: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 color: COLORS.primary.main,
-                                                fontWeight: 'bold',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight.bold,
                                                 textTransform: 'uppercase',
                                                 letterSpacing: 1,
                                                 display: 'block',
@@ -317,7 +314,9 @@ const PeriodicityCalculator: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 color: COLORS.text.secondary,
-                                                fontSize: '0.65rem',
+                                                fontSize:
+                                                    RESEARCH_STYLES.LAYOUT
+                                                        .FONT_SIZE_XS,
                                             }}
                                         >
                                             Period z = {result.pattern.z}
@@ -329,8 +328,11 @@ const PeriodicityCalculator: React.FC = () => {
                                             sx={{
                                                 color: COLORS.text.primary,
                                                 fontFamily: 'monospace',
-                                                fontWeight: 'bold',
-                                                fontSize: '0.75rem',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight.bold,
+                                                fontSize:
+                                                    RESEARCH_STYLES.LAYOUT
+                                                        .FONT_SIZE_SM,
                                             }}
                                         >
                                             z_seq: {result.pattern.z_seq}
@@ -339,7 +341,9 @@ const PeriodicityCalculator: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 color: COLORS.primary.light,
-                                                fontSize: '0.65rem',
+                                                fontSize:
+                                                    RESEARCH_STYLES.LAYOUT
+                                                        .FONT_SIZE_XS,
                                                 display: 'block',
                                             }}
                                         >
@@ -364,7 +368,7 @@ const PeriodicityCalculator: React.FC = () => {
                                     '&::-webkit-scrollbar-thumb': {
                                         backgroundColor:
                                             RESEARCH_STYLES.GLASS.MEDIUM,
-                                        borderRadius: '4px',
+                                        borderRadius: SPACING.borderRadius.xs,
                                     },
                                 }}
                             >
@@ -402,7 +406,8 @@ const PeriodicityCalculator: React.FC = () => {
                                                     backgroundColor:
                                                         RESEARCH_STYLES.CYAN
                                                             .BG_SLIGHT,
-                                                    borderRadius: '4px',
+                                                    borderRadius:
+                                                        SPACING.borderRadius.xs,
                                                     color: COLORS.primary.light,
                                                     border: `1px solid ${RESEARCH_STYLES.CYAN.BORDER_SLIGHT}`,
                                                 }}
@@ -433,7 +438,9 @@ const PeriodicityCalculator: React.FC = () => {
                                             p: 1.25,
                                             backgroundColor:
                                                 RESEARCH_STYLES.GLASS.STRONG,
-                                            borderRadius: '6px',
+                                            borderRadius:
+                                                RESEARCH_STYLES.LAYOUT
+                                                    .CARD_RADIUS,
                                             fontFamily: 'monospace',
                                             fontSize: '0.75rem',
                                             color: COLORS.text.primary,
@@ -476,12 +483,15 @@ const PeriodicityCalculator: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 color: COLORS.primary.main,
-                                                fontWeight: 'bold',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight.bold,
                                                 display: 'block',
                                                 mb: 0.5,
                                                 textTransform: 'uppercase',
                                                 letterSpacing: 1,
-                                                fontSize: '0.65rem',
+                                                fontSize:
+                                                    RESEARCH_STYLES.LAYOUT
+                                                        .FONT_SIZE_XS,
                                             }}
                                         >
                                             Mathematical Certificate
@@ -492,7 +502,9 @@ const PeriodicityCalculator: React.FC = () => {
                                                 backgroundColor:
                                                     RESEARCH_STYLES.CYAN
                                                         .BG_SUBTLE,
-                                                borderRadius: '6px',
+                                                borderRadius:
+                                                    RESEARCH_STYLES.LAYOUT
+                                                        .CARD_RADIUS,
                                                 fontFamily: 'monospace',
                                                 fontSize: '0.7rem',
                                                 color: COLORS.text.secondary,
@@ -512,7 +524,10 @@ const PeriodicityCalculator: React.FC = () => {
                                                     style={{
                                                         color: COLORS.data
                                                             .green,
-                                                        fontWeight: 'bold',
+                                                        fontWeight:
+                                                            TYPOGRAPHY
+                                                                .fontWeight
+                                                                .bold,
                                                     }}
                                                 >
                                                     = {result.proof.res1}
@@ -530,7 +545,10 @@ const PeriodicityCalculator: React.FC = () => {
                                                     style={{
                                                         color: COLORS.data
                                                             .green,
-                                                        fontWeight: 'bold',
+                                                        fontWeight:
+                                                            TYPOGRAPHY
+                                                                .fontWeight
+                                                                .bold,
                                                     }}
                                                 >
                                                     = {result.proof.res2}
@@ -691,7 +709,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                     sx={{
                         backgroundColor: COLORS.primary.main,
                         border: '1px solid transparent',
-                        height: '36.5px',
+                        height: RESEARCH_STYLES.LAYOUT.BUTTON_HEIGHT,
                         '&:hover': { backgroundColor: COLORS.primary.dark },
                     }}
                 >
@@ -706,7 +724,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                     sx={{
                         color: COLORS.text.secondary,
                         borderColor: COLORS.border.subtle,
-                        height: '36.5px',
+                        height: RESEARCH_STYLES.LAYOUT.BUTTON_HEIGHT,
                         '&:hover': {
                             backgroundColor: RESEARCH_STYLES.GLASS.SLIGHT,
                             borderColor: COLORS.text.secondary,
@@ -725,7 +743,7 @@ const SolvabilityAnalyzer: React.FC = () => {
 
             <Box
                 sx={{
-                    height: 480,
+                    height: RESEARCH_STYLES.LAYOUT.RESULT_CARD_HEIGHT,
                     mt: 3,
                     display: 'flex',
                     flexDirection: 'column',
@@ -753,11 +771,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                                 borderRadius: '50%',
                                 border: `2px solid ${COLORS.primary.main}22`,
                                 borderTopColor: COLORS.primary.main,
-                                animation: 'spin 1s linear infinite',
-                                '@keyframes spin': {
-                                    '0%': { transform: 'rotate(0deg)' },
-                                    '100%': { transform: 'rotate(360deg)' },
-                                },
+                                ...RESEARCH_STYLES.ANIMATIONS.SPIN,
                             }}
                         />
                         <Typography
@@ -832,7 +846,8 @@ const SolvabilityAnalyzer: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 color: COLORS.primary.main,
-                                                fontWeight: 'bold',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight.bold,
                                                 textTransform: 'uppercase',
                                                 letterSpacing: 1,
                                                 display: 'block',
@@ -846,7 +861,9 @@ const SolvabilityAnalyzer: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 color: COLORS.text.secondary,
-                                                fontSize: '0.65rem',
+                                                fontSize:
+                                                    RESEARCH_STYLES.LAYOUT
+                                                        .FONT_SIZE_XS,
                                             }}
                                         >
                                             {result.reachableStates} Solvable
@@ -859,8 +876,11 @@ const SolvabilityAnalyzer: React.FC = () => {
                                             sx={{
                                                 color: COLORS.text.primary,
                                                 fontFamily: 'monospace',
-                                                fontWeight: 'bold',
-                                                fontSize: '0.75rem',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight.bold,
+                                                fontSize:
+                                                    RESEARCH_STYLES.LAYOUT
+                                                        .FONT_SIZE_SM,
                                             }}
                                         >
                                             Rank: {result.gridRank} | Null:{' '}
@@ -873,7 +893,9 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                     result.nullity === 0
                                                         ? COLORS.data.green
                                                         : COLORS.primary.light,
-                                                fontSize: '0.65rem',
+                                                fontSize:
+                                                    RESEARCH_STYLES.LAYOUT
+                                                        .FONT_SIZE_XS,
                                                 display: 'block',
                                             }}
                                         >
@@ -899,7 +921,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                                     '&::-webkit-scrollbar-thumb': {
                                         backgroundColor:
                                             RESEARCH_STYLES.GLASS.MEDIUM,
-                                        borderRadius: '4px',
+                                        borderRadius: SPACING.borderRadius.xs,
                                     },
                                 }}
                             >
@@ -909,12 +931,15 @@ const SolvabilityAnalyzer: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 color: COLORS.primary.main,
-                                                fontWeight: 'bold',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight.bold,
                                                 display: 'block',
                                                 mb: 0.5,
                                                 textTransform: 'uppercase',
                                                 letterSpacing: 1,
-                                                fontSize: '0.65rem',
+                                                fontSize:
+                                                    RESEARCH_STYLES.LAYOUT
+                                                        .FONT_SIZE_XS,
                                             }}
                                         >
                                             Quiet Patterns (Kernel)
@@ -937,13 +962,19 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                         sx={{
                                                             fontFamily:
                                                                 'monospace',
-                                                            fontSize: '0.65rem',
+                                                            fontSize:
+                                                                RESEARCH_STYLES
+                                                                    .LAYOUT
+                                                                    .FONT_SIZE_XS,
                                                             px: 1,
                                                             py: 0.5,
                                                             backgroundColor:
                                                                 RESEARCH_STYLES
                                                                     .GLASS.DARK,
-                                                            borderRadius: '4px',
+                                                            borderRadius:
+                                                                SPACING
+                                                                    .borderRadius
+                                                                    .xs,
                                                             color: COLORS
                                                                 .primary.light,
                                                             letterSpacing: 1,
@@ -973,12 +1004,15 @@ const SolvabilityAnalyzer: React.FC = () => {
                                             variant="caption"
                                             sx={{
                                                 color: COLORS.data.green,
-                                                fontWeight: 'bold',
+                                                fontWeight:
+                                                    TYPOGRAPHY.fontWeight.bold,
                                                 display: 'block',
                                                 mb: 0.5,
                                                 textTransform: 'uppercase',
                                                 letterSpacing: 1,
-                                                fontSize: '0.65rem',
+                                                fontSize:
+                                                    RESEARCH_STYLES.LAYOUT
+                                                        .FONT_SIZE_XS,
                                             }}
                                         >
                                             {result.isFullSubspace
@@ -1000,7 +1034,9 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                     color: COLORS.text
                                                         .secondary,
                                                     fontSize: '0.55rem',
-                                                    fontWeight: 'bold',
+                                                    fontWeight:
+                                                        TYPOGRAPHY.fontWeight
+                                                            .bold,
                                                     letterSpacing: 0.5,
                                                 }}
                                             >
@@ -1014,7 +1050,9 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                     color: COLORS.text
                                                         .secondary,
                                                     fontSize: '0.55rem',
-                                                    fontWeight: 'bold',
+                                                    fontWeight:
+                                                        TYPOGRAPHY.fontWeight
+                                                            .bold,
                                                     letterSpacing: 0.5,
                                                     textAlign: 'right',
                                                 }}
@@ -1041,13 +1079,19 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                         sx={{
                                                             fontFamily:
                                                                 'monospace',
-                                                            fontSize: '0.65rem',
+                                                            fontSize:
+                                                                RESEARCH_STYLES
+                                                                    .LAYOUT
+                                                                    .FONT_SIZE_XS,
                                                             p: 0.75,
                                                             px: 1,
                                                             backgroundColor:
                                                                 RESEARCH_STYLES
                                                                     .GLASS.DARK,
-                                                            borderRadius: '4px',
+                                                            borderRadius:
+                                                                SPACING
+                                                                    .borderRadius
+                                                                    .xs,
                                                             color: COLORS.text
                                                                 .primary,
                                                             border: `1px solid ${RESEARCH_STYLES.BORDER.VERY_SUBTLE}`,

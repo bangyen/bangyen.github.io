@@ -8,7 +8,13 @@ import {
     ToggleButtonGroup,
 } from '../../../components/mui';
 import { Refresh } from '../../../components/icons';
-import { COLORS, SPACING, TYPOGRAPHY, SHADOWS } from '../../../config/theme';
+import {
+    COLORS,
+    SPACING,
+    TYPOGRAPHY,
+    SHADOWS,
+    ANIMATIONS,
+} from '../../../config/theme';
 import { Control } from '../types';
 import { RESEARCH_STYLES } from '../constants';
 
@@ -40,7 +46,7 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
                         display: 'flex',
                         justifyContent: 'flex-end',
                         alignItems: 'center',
-                        marginBottom: 2.5,
+                        mb: RESEARCH_STYLES.LAYOUT.CONTROLS_SPACING,
                     }}
                 >
                     <Button
@@ -52,10 +58,11 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
                             color: COLORS.text.secondary,
                             borderColor: COLORS.border.subtle,
                             borderRadius: SPACING.borderRadius.lg,
-                            padding: '0.25rem 1rem',
-                            fontSize: '0.875rem',
+                            px: 2,
+                            py: 0.5,
+                            fontSize: RESEARCH_STYLES.LAYOUT.FONT_SIZE_MD,
                             fontWeight: TYPOGRAPHY.fontWeight.medium,
-                            transition: 'all 0.2s ease-in-out',
+                            transition: ANIMATIONS.transitions.standard,
                             '&:hover': {
                                 borderColor: COLORS.primary.main,
                                 backgroundColor: COLORS.interactive.hover,
@@ -69,13 +76,13 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
                 </Box>
             )}
 
-            <Grid container spacing={2.5}>
+            <Grid container spacing={RESEARCH_STYLES.LAYOUT.CONTROLS_SPACING}>
                 {controls.map((control, index) => (
                     <Grid key={control.label || index} size={{ xs: 12, md: 4 }}>
                         <Box
                             sx={{
                                 marginBottom: 0,
-                                padding: '1rem',
+                                padding: RESEARCH_STYLES.LAYOUT.INNER_PADDING,
                                 backgroundColor: COLORS.interactive.disabled,
                                 borderRadius: SPACING.borderRadius.lg,
                                 border: `1px solid ${COLORS.border.subtle}`,
@@ -135,18 +142,22 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
                                     '& .MuiToggleButton-root': {
                                         color: COLORS.text.secondary,
                                         borderColor: COLORS.border.subtle,
-                                        padding: '0.6rem 0.8rem',
+                                        padding:
+                                            RESEARCH_STYLES.LAYOUT
+                                                .INNER_PADDING_SM,
                                         flex: 1,
-                                        fontSize: '0.85rem',
+                                        fontSize:
+                                            RESEARCH_STYLES.LAYOUT.FONT_SIZE_MD,
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.medium,
                                         borderRadius: 0,
-                                        transition: 'all 0.2s ease-in-out',
+                                        transition:
+                                            ANIMATIONS.transitions.standard,
                                         '&.Mui-selected': {
                                             backgroundColor:
                                                 control.color ??
                                                 COLORS.primary.main,
-                                            color: '#fff',
+                                            color: COLORS.text.primary,
                                             borderColor:
                                                 control.color ??
                                                 COLORS.primary.main,
