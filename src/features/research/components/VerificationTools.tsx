@@ -15,6 +15,7 @@ import { HelpOutlineRounded, CloseRounded } from '../../../components/icons';
 import { COLORS, SPACING, TYPOGRAPHY } from '../../../config/theme';
 import { GlassCard } from '../../../components/ui/GlassCard';
 import { Pattern } from '../../games/lights-out/matrices';
+import { RESEARCH_STYLES } from '../constants';
 
 interface WorkerResponse<T> {
     success: boolean;
@@ -183,7 +184,7 @@ const PeriodicityCalculator: React.FC = () => {
                         borderColor: COLORS.border.subtle,
                         height: '36.5px',
                         '&:hover': {
-                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                            backgroundColor: RESEARCH_STYLES.GLASS.SLIGHT,
                             borderColor: COLORS.text.secondary,
                         },
                     }}
@@ -218,7 +219,7 @@ const PeriodicityCalculator: React.FC = () => {
                             gap: 2,
                             border: `1px dashed ${COLORS.border.subtle}`,
                             borderRadius: SPACING.borderRadius.md,
-                            backgroundColor: 'rgba(255, 255, 255, 0.01)',
+                            backgroundColor: RESEARCH_STYLES.GLASS.VERY_SUBTLE,
                         }}
                     >
                         <Box
@@ -254,7 +255,7 @@ const PeriodicityCalculator: React.FC = () => {
                             px: 3,
                             border: `1px dashed ${COLORS.border.subtle}`,
                             borderRadius: SPACING.borderRadius.md,
-                            backgroundColor: 'rgba(255, 255, 255, 0.01)',
+                            backgroundColor: RESEARCH_STYLES.GLASS.VERY_SUBTLE,
                         }}
                     >
                         <Typography
@@ -276,7 +277,8 @@ const PeriodicityCalculator: React.FC = () => {
                             elevation={0}
                             sx={{
                                 height: '100%',
-                                backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                                backgroundColor:
+                                    RESEARCH_STYLES.GLASS.TRANSPARENT,
                                 borderRadius: SPACING.borderRadius.md,
                                 border: `1px solid ${COLORS.primary.main}33`,
                                 borderLeft: `4px solid ${COLORS.primary.main}`,
@@ -293,8 +295,7 @@ const PeriodicityCalculator: React.FC = () => {
                                         alignItems: 'center',
                                         mb: 2,
                                         pb: 1.5,
-                                        borderBottom:
-                                            '1px solid rgba(255,255,255,0.05)',
+                                        borderBottom: `1px solid ${RESEARCH_STYLES.BORDER.SUBTLE}`,
                                     }}
                                 >
                                     <Box>
@@ -362,7 +363,7 @@ const PeriodicityCalculator: React.FC = () => {
                                     },
                                     '&::-webkit-scrollbar-thumb': {
                                         backgroundColor:
-                                            'rgba(255,255,255,0.1)',
+                                            RESEARCH_STYLES.GLASS.MEDIUM,
                                         borderRadius: '4px',
                                     },
                                 }}
@@ -399,10 +400,11 @@ const PeriodicityCalculator: React.FC = () => {
                                                     px: 1,
                                                     py: 0.5,
                                                     backgroundColor:
-                                                        'rgba(0,184,212,0.1)',
+                                                        RESEARCH_STYLES.CYAN
+                                                            .BG_SLIGHT,
                                                     borderRadius: '4px',
                                                     color: COLORS.primary.light,
-                                                    border: '1px solid rgba(0,184,212,0.2)',
+                                                    border: `1px solid ${RESEARCH_STYLES.CYAN.BORDER_SLIGHT}`,
                                                 }}
                                             >
                                                 {r}
@@ -429,12 +431,13 @@ const PeriodicityCalculator: React.FC = () => {
                                     <Box
                                         sx={{
                                             p: 1.25,
-                                            backgroundColor: 'rgba(0,0,0,0.2)',
+                                            backgroundColor:
+                                                RESEARCH_STYLES.GLASS.STRONG,
                                             borderRadius: '6px',
                                             fontFamily: 'monospace',
                                             fontSize: '0.75rem',
                                             color: COLORS.text.primary,
-                                            border: '1px solid rgba(255,255,255,0.03)',
+                                            border: `1px solid ${RESEARCH_STYLES.BORDER.VERY_SUBTLE}`,
                                             mb: 1.5,
                                         }}
                                     >
@@ -487,12 +490,13 @@ const PeriodicityCalculator: React.FC = () => {
                                             sx={{
                                                 p: 1.25,
                                                 backgroundColor:
-                                                    'rgba(0,184,212,0.05)',
+                                                    RESEARCH_STYLES.CYAN
+                                                        .BG_SUBTLE,
                                                 borderRadius: '6px',
                                                 fontFamily: 'monospace',
                                                 fontSize: '0.7rem',
                                                 color: COLORS.text.secondary,
-                                                border: '1px solid rgba(0,184,212,0.1)',
+                                                border: `1px solid ${RESEARCH_STYLES.CYAN.BORDER_SUBTLE}`,
                                             }}
                                         >
                                             <Box
@@ -704,7 +708,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                         borderColor: COLORS.border.subtle,
                         height: '36.5px',
                         '&:hover': {
-                            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                            backgroundColor: RESEARCH_STYLES.GLASS.SLIGHT,
                             borderColor: COLORS.text.secondary,
                         },
                     }}
@@ -739,7 +743,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                             gap: 2,
                             border: `1px dashed ${COLORS.border.subtle}`,
                             borderRadius: SPACING.borderRadius.md,
-                            backgroundColor: 'rgba(255, 255, 255, 0.01)',
+                            backgroundColor: RESEARCH_STYLES.GLASS.VERY_SUBTLE,
                         }}
                     >
                         <Box
@@ -775,7 +779,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                             px: 3,
                             border: `1px dashed ${COLORS.border.subtle}`,
                             borderRadius: SPACING.borderRadius.md,
-                            backgroundColor: 'rgba(255, 255, 255, 0.01)',
+                            backgroundColor: RESEARCH_STYLES.GLASS.VERY_SUBTLE,
                         }}
                     >
                         <Typography
@@ -797,7 +801,8 @@ const SolvabilityAnalyzer: React.FC = () => {
                             elevation={0}
                             sx={{
                                 height: '100%',
-                                backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                                backgroundColor:
+                                    RESEARCH_STYLES.GLASS.TRANSPARENT,
                                 borderRadius: SPACING.borderRadius.md,
                                 border: `1px solid ${result.nullity === 0 ? COLORS.data.green : COLORS.primary.main}33`,
                                 borderLeft: `4px solid ${
@@ -819,8 +824,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                                         alignItems: 'center',
                                         mb: 2,
                                         pb: 1.5,
-                                        borderBottom:
-                                            '1px solid rgba(255,255,255,0.05)',
+                                        borderBottom: `1px solid ${RESEARCH_STYLES.BORDER.SUBTLE}`,
                                     }}
                                 >
                                     <Box>
@@ -894,7 +898,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                                     },
                                     '&::-webkit-scrollbar-thumb': {
                                         backgroundColor:
-                                            'rgba(255,255,255,0.1)',
+                                            RESEARCH_STYLES.GLASS.MEDIUM,
                                         borderRadius: '4px',
                                     },
                                 }}
@@ -937,12 +941,13 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                             px: 1,
                                                             py: 0.5,
                                                             backgroundColor:
-                                                                'rgba(0,0,0,0.2)',
+                                                                RESEARCH_STYLES
+                                                                    .GLASS.DARK,
                                                             borderRadius: '4px',
                                                             color: COLORS
                                                                 .primary.light,
                                                             letterSpacing: 1,
-                                                            border: '1px solid rgba(255,255,255,0.03)',
+                                                            border: `1px solid ${RESEARCH_STYLES.BORDER.VERY_SUBTLE}`,
                                                             wordBreak:
                                                                 'break-all',
                                                         }}
@@ -1040,11 +1045,12 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                             p: 0.75,
                                                             px: 1,
                                                             backgroundColor:
-                                                                'rgba(0,0,0,0.2)',
+                                                                RESEARCH_STYLES
+                                                                    .GLASS.DARK,
                                                             borderRadius: '4px',
                                                             color: COLORS.text
                                                                 .primary,
-                                                            border: '1px solid rgba(255,255,255,0.03)',
+                                                            border: `1px solid ${RESEARCH_STYLES.BORDER.VERY_SUBTLE}`,
                                                             display: 'flex',
                                                             justifyContent:
                                                                 'space-between',
@@ -1128,9 +1134,8 @@ const SolvabilityAnalyzer: React.FC = () => {
                                         p: 1.5,
                                         px: 2.25,
                                         backgroundColor:
-                                            'rgba(0, 200, 83, 0.05)',
-                                        borderTop:
-                                            '1px solid rgba(0, 200, 83, 0.1)',
+                                            RESEARCH_STYLES.GREEN.BG_SUBTLE,
+                                        borderTop: `1px solid ${RESEARCH_STYLES.GREEN.BORDER_SUBTLE}`,
                                         display: 'flex',
                                         alignItems: 'center',
                                     }}
@@ -1177,7 +1182,7 @@ export const VerificationTools: React.FC = () => {
                             flexGrow: 1,
                             display: 'flex',
                             flexDirection: 'column',
-                            backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                            backgroundColor: RESEARCH_STYLES.GLASS.SUBTLE,
                         }}
                     >
                         <PeriodicityCalculator />
@@ -1190,7 +1195,7 @@ export const VerificationTools: React.FC = () => {
                             flexGrow: 1,
                             display: 'flex',
                             flexDirection: 'column',
-                            backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                            backgroundColor: RESEARCH_STYLES.GLASS.SUBTLE,
                         }}
                     >
                         <SolvabilityAnalyzer />
