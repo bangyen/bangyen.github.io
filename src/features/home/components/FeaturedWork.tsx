@@ -2,9 +2,9 @@ import React from 'react';
 import { Box, Typography, Fade } from '../../../components/mui';
 import { Section } from '../../../components/layout/Layout';
 import { PUBLICATIONS, PROJECTS } from '../../../config/constants';
-import { COLORS, TYPOGRAPHY } from '../../../config/theme';
-import { PublicationCard } from './FeaturedWork/PublicationCard';
 import { ProjectCard } from './FeaturedWork/ProjectCard';
+import { PublicationCard } from './FeaturedWork/PublicationCard';
+import { ANIMATIONS, COLORS, TYPOGRAPHY } from '../../../config/theme';
 
 interface AnimatedCardProps {
     index: number;
@@ -18,7 +18,7 @@ function AnimatedCard({
     children,
 }: AnimatedCardProps): React.ReactElement {
     return (
-        <Fade in timeout={baseTimeout + index * 200}>
+        <Fade in timeout={baseTimeout + index * ANIMATIONS.durations.stagger}>
             <div>{children}</div>
         </Fade>
     );
@@ -27,7 +27,7 @@ function AnimatedCard({
 export function FeaturedWork(): React.ReactElement {
     return (
         <Section id="featured-work">
-            <Fade in timeout={1400}>
+            <Fade in timeout={ANIMATIONS.durations.long + 400}>
                 <Box>
                     <Typography
                         sx={{
@@ -55,7 +55,7 @@ export function FeaturedWork(): React.ReactElement {
                             <AnimatedCard
                                 key={publication.title}
                                 index={index}
-                                baseTimeout={1600}
+                                baseTimeout={ANIMATIONS.durations.long + 600}
                             >
                                 <PublicationCard publication={publication} />
                             </AnimatedCard>
@@ -64,7 +64,7 @@ export function FeaturedWork(): React.ReactElement {
                             <AnimatedCard
                                 key={project.title}
                                 index={index}
-                                baseTimeout={2000}
+                                baseTimeout={ANIMATIONS.durations.long + 1000}
                             >
                                 <ProjectCard project={project} />
                             </AnimatedCard>

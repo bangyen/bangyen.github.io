@@ -5,7 +5,7 @@ import {
     MenuItem,
     SelectChangeEvent,
 } from '@mui/material';
-import { COLORS, SPACING } from '../../../config/theme';
+import { COLORS, SPACING, ANIMATIONS } from '../../../config/theme';
 import { QuizType } from '../types/quiz';
 
 interface QuizTopicSelectorProps {
@@ -28,8 +28,7 @@ const QuizTopicSelector: React.FC<QuizTopicSelectorProps> = ({
                 flexShrink: 0,
                 marginRight: { xs: 0, sm: -4 },
                 '& .MuiOutlinedInput-root': {
-                    backgroundColor: COLORS.surface.glass,
-                    backdropFilter: 'blur(24px) saturate(180%)',
+                    ...ANIMATIONS.presets.glass,
                     borderRadius: SPACING.borderRadius.full,
                     color: COLORS.text.primary,
                     fontWeight: 'medium',
@@ -67,14 +66,12 @@ const QuizTopicSelector: React.FC<QuizTopicSelectorProps> = ({
                     },
                     PaperProps: {
                         sx: {
-                            backgroundColor: COLORS.surface.glass,
-                            backdropFilter: 'blur(24px) saturate(180%)',
-                            border: `1px solid ${COLORS.border.subtle}`,
+                            ...ANIMATIONS.presets.glass,
                             borderRadius: SPACING.borderRadius.lg,
                             mt: 1,
                             '& .MuiMenuItem-root': {
                                 color: COLORS.text.secondary,
-                                transition: 'all 0.2s ease',
+                                transition: ANIMATIONS.transition,
                                 '&:hover': {
                                     backgroundColor: COLORS.interactive.hover,
                                     color: COLORS.text.primary,

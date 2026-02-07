@@ -127,7 +127,7 @@ export function HeroSection(): React.ReactElement {
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: 1,
-                                    padding: '12px 20px',
+                                    padding: `${SPACING.padding.sm} ${SPACING.padding.md}`,
                                     backgroundColor:
                                         COLORS.interactive.selected,
                                     borderRadius: SPACING.borderRadius.full,
@@ -167,7 +167,7 @@ export function HeroSection(): React.ReactElement {
                     size={{ xs: 12, md: 6 }}
                     sx={{ display: { xs: 'none', md: 'block' } }}
                 >
-                    <Fade in timeout={1000}>
+                    <Fade in timeout={ANIMATIONS.durations.long}>
                         <Box
                             sx={{
                                 display: 'flex',

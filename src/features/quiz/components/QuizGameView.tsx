@@ -16,7 +16,9 @@ import {
     SPACING,
     COMPONENT_VARIANTS,
     SHADOWS,
+    TYPOGRAPHY,
 } from '../../../config/theme';
+import { QUIZ_UI_CONSTANTS } from '../config/quizConfig';
 import { Question } from '../types/quiz';
 
 export interface QuizGameViewProps<T> {
@@ -167,7 +169,7 @@ const QuizGameView = <T,>({
                             sx={{
                                 letterSpacing: '0.1em',
                                 textTransform: 'uppercase',
-                                fontWeight: 'bold',
+                                fontWeight: TYPOGRAPHY.fontWeight.bold,
                                 opacity: 0.6,
                             }}
                         >
@@ -202,7 +204,10 @@ const QuizGameView = <T,>({
                             mb: 1.5,
                         }}
                     >
-                        <Typography variant="h6" sx={{ fontWeight: 'medium' }}>
+                        <Typography
+                            variant="h6"
+                            sx={{ fontWeight: TYPOGRAPHY.fontWeight.medium }}
+                        >
                             Question{' '}
                             {Math.min(history.length + 1, totalQuestions)} of{' '}
                             {totalQuestions}
@@ -240,11 +245,11 @@ const QuizGameView = <T,>({
                                     : 0
                             }
                             sx={{
-                                height: 4,
-                                borderRadius: 2,
+                                height: QUIZ_UI_CONSTANTS.PROGRESS_BAR.HEIGHT,
+                                borderRadius: SPACING.borderRadius.full,
                                 backgroundColor: COLORS.interactive.hover,
                                 '& .MuiLinearProgress-bar': {
-                                    borderRadius: 2,
+                                    borderRadius: SPACING.borderRadius.full,
                                     background: `linear-gradient(90deg, ${COLORS.primary.main}, ${COLORS.primary.light})`,
                                 },
                             }}
@@ -259,7 +264,7 @@ const QuizGameView = <T,>({
                         pt: 6,
                         pb: 3,
                         mb: 4,
-                        minHeight: 360,
+                        minHeight: QUIZ_UI_CONSTANTS.QUESTION_CARD.MIN_HEIGHT,
                         width: '100%',
                         display: 'flex',
                         alignItems: 'center',
@@ -323,7 +328,9 @@ const QuizGameView = <T,>({
                                         fontSize: '1.2rem',
                                     },
                                     width: '100%',
-                                    maxWidth: 450,
+                                    maxWidth:
+                                        QUIZ_UI_CONSTANTS.QUESTION_CARD
+                                            .MAX_WIDTH,
                                     '& .MuiOutlinedInput-root': {
                                         '& fieldset': {
                                             borderColor: COLORS.border.subtle,
@@ -349,19 +356,22 @@ const QuizGameView = <T,>({
                                 mt: 4,
                                 justifyContent: 'center',
                                 width: '100%',
-                                maxWidth: 450,
+                                maxWidth:
+                                    QUIZ_UI_CONSTANTS.QUESTION_CARD.MAX_WIDTH,
                             }}
                         >
                             <Button
                                 ref={nextButtonRef}
                                 variant="outlined"
                                 sx={{
-                                    py: 1.5,
+                                    py: QUIZ_UI_CONSTANTS.ACTION_BUTTON.PY,
                                     flex: 1,
                                     borderColor: COLORS.border.subtle,
                                     color: COLORS.text.secondary,
                                     whiteSpace: 'nowrap',
-                                    fontSize: '0.8rem',
+                                    fontSize:
+                                        QUIZ_UI_CONSTANTS.ACTION_BUTTON
+                                            .FONT_SIZE,
                                     '&.Mui-disabled': {
                                         borderColor: COLORS.border.subtle,
                                         opacity: 0.6,
@@ -378,11 +388,13 @@ const QuizGameView = <T,>({
                                     onClick={toggleHint}
                                     disabled={showFeedback}
                                     sx={{
-                                        py: 1.5,
+                                        py: QUIZ_UI_CONSTANTS.ACTION_BUTTON.PY,
                                         flex: 1,
                                         borderColor: COLORS.border.subtle,
                                         whiteSpace: 'nowrap',
-                                        fontSize: '0.8rem',
+                                        fontSize:
+                                            QUIZ_UI_CONSTANTS.ACTION_BUTTON
+                                                .FONT_SIZE,
                                         '&.Mui-disabled': {
                                             borderColor: COLORS.border.subtle,
                                             opacity: 0.6,
@@ -397,10 +409,12 @@ const QuizGameView = <T,>({
                                     type="submit"
                                     variant="contained"
                                     sx={{
-                                        py: 1.5,
+                                        py: QUIZ_UI_CONSTANTS.ACTION_BUTTON.PY,
                                         flex: 1,
                                         whiteSpace: 'nowrap',
-                                        fontSize: '0.8rem',
+                                        fontSize:
+                                            QUIZ_UI_CONSTANTS.ACTION_BUTTON
+                                                .FONT_SIZE,
                                         '&.Mui-disabled': {
                                             backgroundColor:
                                                 COLORS.interactive.disabled,
@@ -423,10 +437,12 @@ const QuizGameView = <T,>({
                                 sx={{
                                     mt: 3,
                                     p: 2,
-                                    borderRadius: 1,
+                                    borderRadius: SPACING.borderRadius.sm,
                                     border: `1px dashed ${COLORS.primary.main}40`,
                                     width: '100%',
-                                    maxWidth: 450,
+                                    maxWidth:
+                                        QUIZ_UI_CONSTANTS.QUESTION_CARD
+                                            .MAX_WIDTH,
                                 }}
                             >
                                 {currentQuestion && renderHint(currentQuestion)}
@@ -452,7 +468,8 @@ const QuizGameView = <T,>({
                                         noWrap
                                         sx={{
                                             color: feedbackColor,
-                                            fontWeight: 'bold',
+                                            fontWeight:
+                                                TYPOGRAPHY.fontWeight.bold,
                                             textShadow: SHADOWS.text,
                                             maxWidth: '100%',
                                             overflow: 'hidden',

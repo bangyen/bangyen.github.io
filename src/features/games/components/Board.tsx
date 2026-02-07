@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from 'react';
 import { Box } from '../../../components/mui';
 
 import { CustomGrid } from '../../../components/ui/CustomGrid';
-import { COLORS } from '../../../config/theme';
+import { COLORS, LAYOUT } from '../../../config/theme';
 
 interface BoardProps {
     frontProps: (row: number, col: number) => Record<string, unknown>;
@@ -61,7 +61,7 @@ export function Board(props: BoardProps): React.ReactElement {
             <Box
                 sx={{
                     gridArea: '1/1',
-                    zIndex: 1,
+                    zIndex: LAYOUT.zIndex.base + 1,
                 }}
             >
                 <CustomGrid

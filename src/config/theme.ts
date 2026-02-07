@@ -129,11 +129,31 @@ interface AnimationPresets {
         backdropFilter: string;
         border: string;
     };
+    glassSoft: {
+        backgroundColor: string;
+        backdropFilter: string;
+        border: string;
+    };
 }
 
 interface Animations {
     transition: string;
+    durations: {
+        short: number;
+        standard: number;
+        long: number;
+        stagger: number;
+        menu: number;
+    };
     presets: AnimationPresets;
+}
+
+interface ZIndex {
+    base: number;
+    header: number;
+    navigation: number;
+    modal: number;
+    tooltip: number;
 }
 
 interface ComponentVariants {
@@ -177,6 +197,10 @@ interface ComponentVariants {
         alignItems: string;
         justifyContent: string;
     };
+}
+
+interface ThemeLayout extends Layout {
+    zIndex: ZIndex;
 }
 
 // Palette Definitions
@@ -276,10 +300,17 @@ interface Layout {
     };
 }
 
-export const LAYOUT: Layout = {
+export const LAYOUT: ThemeLayout = {
     headerHeight: {
         xs: 56,
         md: 80,
+    },
+    zIndex: {
+        base: 0,
+        header: 1100,
+        navigation: 1000,
+        modal: 1300,
+        tooltip: 1500,
     },
 };
 
@@ -318,6 +349,13 @@ export const SHADOWS: Shadows = {
 
 export const ANIMATIONS: Animations = {
     transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
+    durations: {
+        short: 200,
+        standard: 400,
+        long: 1000,
+        stagger: 150,
+        menu: 140,
+    },
     presets: {
         focus: {
             boxShadow: `0 0 0 3px ${COLORS.interactive.focus}`,
@@ -325,6 +363,11 @@ export const ANIMATIONS: Animations = {
         glass: {
             backgroundColor: COLORS.surface.glass,
             backdropFilter: 'blur(24px) saturate(180%)',
+            border: `1px solid ${COLORS.border.subtle}`,
+        },
+        glassSoft: {
+            backgroundColor: COLORS.surface.glass,
+            backdropFilter: 'blur(8px) saturate(140%)',
             border: `1px solid ${COLORS.border.subtle}`,
         },
     },

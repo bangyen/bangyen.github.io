@@ -33,6 +33,18 @@ export const QUIZ_UI_CONSTANTS = {
             DEFAULT: { xs: '3rem', sm: '4rem' },
             DETAILED: { xs: '2.5rem', sm: '3.5rem' },
         },
+        MIN_HEIGHT: 360,
+        MAX_WIDTH: 450,
+    },
+    ACTION_BUTTON: {
+        FONT_SIZE: '0.8rem',
+        PY: 1.5,
+    },
+    PROGRESS_BAR: {
+        HEIGHT: 4,
+    },
+    FEEDBACK: {
+        FLAG_HEIGHT: 24,
     },
 };
 

@@ -1,10 +1,11 @@
 import React, { ReactNode } from 'react';
 import { Paper, Grid } from '../mui';
 import {
-    COLORS,
     SPACING,
     SHADOWS,
     COMPONENT_VARIANTS,
+    LAYOUT,
+    ANIMATIONS,
 } from '../../config/theme';
 
 import type { SxProps, Theme } from '@mui/material/styles';
@@ -25,15 +26,13 @@ export function Navigation({ children, ...rest }: NavigationProps) {
             sx={{
                 transform: 'translateX(-50%)',
                 position: 'absolute',
-                bottom: 50,
+                bottom: SPACING.padding.xl,
                 left: '50%',
-                zIndex: 10,
-                backgroundColor: COLORS.surface.glass,
-                backdropFilter: 'blur(24px) saturate(180%)',
-                border: `1px solid ${COLORS.border.subtle}`,
+                zIndex: LAYOUT.zIndex.navigation,
+                ...ANIMATIONS.presets.glass,
                 borderRadius: SPACING.borderRadius.lg,
                 boxShadow: SHADOWS.lg,
-                padding: '16px 24px',
+                padding: `${SPACING.padding.sm} ${SPACING.padding.lg}`,
                 ...rest,
             }}
         >

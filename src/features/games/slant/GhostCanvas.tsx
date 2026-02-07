@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useMobile } from '../../../hooks';
 import { Box } from '@mui/material';
-import { COLORS } from '../../../config/theme';
+import { COLORS, LAYOUT } from '../../../config/theme';
 import { FORWARD, BACKWARD, EMPTY, CellState } from './boardHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import {
@@ -250,10 +250,10 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                         <Box
                             sx={{
                                 position: 'absolute',
-                                width: '130%',
-                                height: '6px',
+                                width: LAYOUT_CONSTANTS.LINE_WIDTH,
+                                height: LAYOUT_CONSTANTS.LINE_THICKNESS,
                                 backgroundColor: color,
-                                borderRadius: '99px',
+                                borderRadius: SPACING.borderRadius.full,
                                 top: '50%',
                                 left: '50%',
                                 transform:
@@ -268,10 +268,10 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                         <Box
                             sx={{
                                 position: 'absolute',
-                                width: '130%',
-                                height: '6px',
+                                width: LAYOUT_CONSTANTS.LINE_WIDTH,
+                                height: LAYOUT_CONSTANTS.LINE_THICKNESS,
                                 backgroundColor: color,
-                                borderRadius: '99px',
+                                borderRadius: SPACING.borderRadius.full,
                                 top: '50%',
                                 left: '50%',
                                 transform:
@@ -366,7 +366,12 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 }}
             >
                 {/* Main Grid */}
-                <Box sx={{ position: 'relative', zIndex: 1 }}>
+                <Box
+                    sx={{
+                        position: 'relative',
+                        zIndex: LAYOUT.zIndex.base + 1,
+                    }}
+                >
                     <CustomGrid
                         size={size}
                         rows={rows}
@@ -384,7 +389,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                         top: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
                         left: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
                         transform: `translate(-${String(numberSize / 2)}rem, -${String(numberSize / 2)}rem)`,
-                        zIndex: 10,
+                        zIndex: LAYOUT.zIndex.base + 2,
                         pointerEvents: 'none',
                     }}
                 >
