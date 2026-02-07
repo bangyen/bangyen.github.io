@@ -223,86 +223,99 @@ export default function Slant() {
         </GameControls>
     );
 
+    const handleGhostMove = useCallback((pos: string, val?: CellState) => {
+        setGhostMoves(prev => {
+            const next = new Map(prev);
+            if (val === undefined) next.delete(pos);
+            else next.set(pos, val);
+            return next;
+        });
+    }, []);
+
+    const handleGhostCopy = useCallback(() => {
+        const newMoves = new Map<string, CellState>();
+        state.grid.forEach((row, r) => {
+            row.forEach((cell, c) => {
+                if (cell !== EMPTY) {
+                    newMoves.set(`${String(r)},${String(c)}`, cell);
+                }
+            });
+        });
+        setGhostMoves(newMoves);
+    }, [state.grid]);
+
+    const handleGhostClear = useCallback(() => {
+        setGhostMoves(new Map());
+    }, []);
+
+    const handleGhostClose = useCallback(() => {
+        setIsGhostMode(false);
+    }, []);
+
+    const handleBoxClick = useCallback((e: React.MouseEvent) => {
+        e.stopPropagation();
+    }, []);
+
+    const contentSx = useMemo(
+        () => ({
+            background: `radial-gradient(circle at 50% 50%, ${COLORS.surface.elevated} 0%, ${COLORS.surface.background} 100%)`,
+            padding: `${String(size)}rem`,
+        }),
+        [size]
+    );
+
+    const boardSx = useMemo(
+        () =>
+            !isGhostMode
+                ? {
+                      userSelect: 'none',
+                      padding: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
+                      border: '2px solid transparent',
+                      borderRadius: LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
+                  }
+                : undefined,
+        [isGhostMode, mobile]
+    );
+
+    const boardContent = isGhostMode ? (
+        <GhostCanvas
+            rows={rows}
+            cols={cols}
+            numbers={state.numbers}
+            size={size}
+            initialMoves={ghostMoves}
+            onMove={handleGhostMove}
+            onCopy={handleGhostCopy}
+            onClear={handleGhostClear}
+            onClose={handleGhostClose}
+        />
+    ) : (
+        <Board
+            size={size}
+            rows={rows + 1}
+            cols={cols + 1}
+            frontProps={frontProps}
+            backProps={backProps}
+            frontLayerSx={{ pointerEvents: 'none' }}
+        />
+    );
+
     return (
         <GamePageLayout
             title={PAGE_TITLES.slant}
             infoUrl="https://en.wikipedia.org/wiki/Gokigen_Naname"
             paddingBottom={{ xs: '180px', md: '150px' }}
             controls={controls}
-            contentSx={{
-                background: `radial-gradient(circle at 50% 50%, ${COLORS.surface.elevated} 0%, ${COLORS.surface.background} 100%)`,
-                padding: `${String(size)}rem`,
-            }}
+            contentSx={contentSx}
             showTrophy={!isGhostMode && state.solved}
             onReset={handleReset}
             boardSize={size}
             iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
             primaryColor={COLORS.primary.main}
             secondaryColor={COLORS.primary.main}
-            boardSx={
-                !isGhostMode
-                    ? {
-                          userSelect: 'none',
-                          padding: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
-                          border: '2px solid transparent',
-                          borderRadius:
-                              LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
-                      }
-                    : undefined
-            }
+            boardSx={boardSx}
         >
-            <Box
-                onClick={(e: React.MouseEvent) => {
-                    e.stopPropagation();
-                }}
-            >
-                {isGhostMode ? (
-                    <GhostCanvas
-                        rows={rows}
-                        cols={cols}
-                        numbers={state.numbers}
-                        size={size}
-                        initialMoves={ghostMoves}
-                        onMove={(pos, val) => {
-                            setGhostMoves(prev => {
-                                const next = new Map(prev);
-                                if (val === undefined) next.delete(pos);
-                                else next.set(pos, val);
-                                return next;
-                            });
-                        }}
-                        onCopy={() => {
-                            const newMoves = new Map<string, CellState>();
-                            state.grid.forEach((row, r) => {
-                                row.forEach((cell, c) => {
-                                    if (cell !== EMPTY) {
-                                        newMoves.set(
-                                            `${String(r)},${String(c)}`,
-                                            cell
-                                        );
-                                    }
-                                });
-                            });
-                            setGhostMoves(newMoves);
-                        }}
-                        onClear={() => {
-                            setGhostMoves(new Map());
-                        }}
-                        onClose={() => {
-                            setIsGhostMode(false);
-                        }}
-                    />
-                ) : (
-                    <Board
-                        size={size}
-                        rows={rows + 1}
-                        cols={cols + 1}
-                        frontProps={frontProps}
-                        backProps={backProps}
-                        frontLayerSx={{ pointerEvents: 'none' }}
-                    />
-                )}
-            </Box>
+            <Box onClick={handleBoxClick}>{boardContent}</Box>
         </GamePageLayout>
     );
 }
