@@ -11,7 +11,10 @@ import {
     AddRounded,
     RemoveRounded,
     EmojiEventsRounded,
+    Psychology,
 } from '../../../components/icons';
+import { GhostCanvas } from './GhostCanvas';
+import { CellState } from './boardHandlers';
 import { Controls } from '../../../components/ui/Controls';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
@@ -30,6 +33,7 @@ import {
 export default function Slant(): React.ReactElement {
     const { height, width } = useWindow();
     const mobile = useMobile('sm');
+    const [isGhostMode, setIsGhostMode] = useState(false);
 
     // Default size handling
     const [desiredSize, setDesiredSize] = useState<number | null>(() => {
@@ -87,6 +91,16 @@ export default function Slant(): React.ReactElement {
             dispatch({ type: 'resize', rows, cols });
         }
     }, [rows, cols, state.rows, state.cols]);
+
+    // Ghost mode state
+    const [ghostMoves, setGhostMoves] = useState<Map<string, CellState>>(
+        new Map()
+    );
+
+    // Reset ghost moves when puzzle changes
+    useEffect(() => {
+        setGhostMoves(new Map());
+    }, [state.numbers, state.rows, state.cols]);
 
     useEffect(() => {
         document.title = PAGE_TITLES.slant;
@@ -377,10 +391,13 @@ export default function Slant(): React.ReactElement {
             minHeight="100vh"
             flexDirection="column"
             sx={{
-                background: `radial-gradient(circle at 50% 50%, ${COLORS.surface.elevated} 0%, ${COLORS.surface.background} 100%)`,
+                background: isGhostMode
+                    ? `radial-gradient(circle at 50% 50%, hsl(217, 50%, 12%) 0%, hsl(217, 50%, 4%) 100%)`
+                    : `radial-gradient(circle at 50% 50%, ${COLORS.surface.elevated} 0%, ${COLORS.surface.background} 100%)`,
                 position: 'relative',
                 overflow: 'hidden',
                 height: '100vh',
+                transition: 'background 0.5s ease-in-out',
             }}
         >
             <GlobalHeader
@@ -389,6 +406,9 @@ export default function Slant(): React.ReactElement {
             />
 
             <Box
+                onClick={() => {
+                    if (isGhostMode) setIsGhostMode(false);
+                }}
                 sx={{
                     flex: 1,
                     position: 'relative',
@@ -401,85 +421,122 @@ export default function Slant(): React.ReactElement {
                 }}
             >
                 {/* Main Game Card */}
-                <Box>
-                    {/* Grid Container - Isolation for perfect alignment */}
-                    <Box sx={{ position: 'relative', userSelect: 'none' }}>
-                        {/* Main Grid */}
-                        <Box sx={{ position: 'relative', zIndex: 1 }}>
-                            <CustomGrid
-                                size={size}
-                                rows={rows}
-                                cols={cols}
-                                cellProps={getCellProps}
-                                space={0}
-                                sx={{ width: 'fit-content' }}
-                            />
-                        </Box>
-
-                        {/* Numbers Grid Overlay */}
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                top: 0,
-                                left: 0,
-                                transform: `translate(-${String(
-                                    numberSize / 2
-                                )}rem, -${String(numberSize / 2)}rem)`,
-                                zIndex: 10,
-                                pointerEvents: 'none',
-                            }}
-                        >
-                            <CustomGrid
-                                size={numberSize}
-                                rows={rows + 1}
-                                cols={cols + 1}
-                                cellProps={getNumberProps}
-                                space={numberSpace}
-                                sx={{ width: 'fit-content' }}
-                            />
-                        </Box>
-                    </Box>
-
-                    {/* Win Overlay */}
-                    <Box
-                        onClick={handleReset}
-                        sx={{
-                            position: 'absolute',
-                            inset: 0,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            opacity: state.solved ? 1 : 0,
-                            transform: state.solved ? 'scale(1)' : 'scale(0.5)',
-                            visibility: state.solved ? 'visible' : 'hidden',
-                            transition:
-                                'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                            zIndex: 20,
-                            backgroundColor: 'transparent',
-                            pointerEvents: interactionAllowed ? 'auto' : 'none',
-                            cursor: interactionAllowed ? 'pointer' : 'default',
-                            backdropFilter: 'blur(2px)',
-                        }}
-                    >
-                        <EmojiEventsRounded
-                            sx={{
-                                fontSize: `${String(size)}rem`, // Match Lights Out proportions
-                                color: COLORS.primary.main,
-                                filter: `drop-shadow(0 0 30px ${COLORS.primary.main}88)`,
-                                animation: state.solved
-                                    ? 'float 3s ease-in-out infinite'
-                                    : 'none',
-                                '@keyframes float': {
-                                    '0%, 100%': {
-                                        transform: 'translateY(0)',
-                                    },
-                                    '50%': {
-                                        transform: 'translateY(-10px)',
-                                    },
-                                },
+                <Box
+                    onClick={(e: React.MouseEvent) => {
+                        e.stopPropagation();
+                    }}
+                >
+                    {isGhostMode ? (
+                        <GhostCanvas
+                            rows={rows}
+                            cols={cols}
+                            numbers={state.numbers}
+                            size={size}
+                            initialMoves={ghostMoves}
+                            onMove={(pos, val) => {
+                                setGhostMoves(prev => {
+                                    const next = new Map(prev);
+                                    if (val === undefined) next.delete(pos);
+                                    else next.set(pos, val);
+                                    return next;
+                                });
                             }}
                         />
-                    </Box>
+                    ) : (
+                        <>
+                            {/* Grid Container - Isolation for perfect alignment */}
+                            <Box
+                                sx={{
+                                    position: 'relative',
+                                    userSelect: 'none',
+                                }}
+                            >
+                                {/* Main Grid */}
+                                <Box sx={{ position: 'relative', zIndex: 1 }}>
+                                    <CustomGrid
+                                        size={size}
+                                        rows={rows}
+                                        cols={cols}
+                                        cellProps={getCellProps}
+                                        space={0}
+                                        sx={{ width: 'fit-content' }}
+                                    />
+                                </Box>
+
+                                {/* Numbers Grid Overlay */}
+                                <Box
+                                    sx={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        transform: `translate(-${String(
+                                            numberSize / 2
+                                        )}rem, -${String(numberSize / 2)}rem)`,
+                                        zIndex: 10,
+                                        pointerEvents: 'none',
+                                    }}
+                                >
+                                    <CustomGrid
+                                        size={numberSize}
+                                        rows={rows + 1}
+                                        cols={cols + 1}
+                                        cellProps={getNumberProps}
+                                        space={numberSpace}
+                                        sx={{ width: 'fit-content' }}
+                                    />
+                                </Box>
+                            </Box>
+
+                            {/* Win Overlay */}
+                            <Box
+                                onClick={handleReset}
+                                sx={{
+                                    position: 'absolute',
+                                    inset: 0,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    opacity: state.solved ? 1 : 0,
+                                    transform: state.solved
+                                        ? 'scale(1)'
+                                        : 'scale(0.5)',
+                                    visibility: state.solved
+                                        ? 'visible'
+                                        : 'hidden',
+                                    transition:
+                                        'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                                    zIndex: 20,
+                                    backgroundColor: 'transparent',
+                                    pointerEvents: interactionAllowed
+                                        ? 'auto'
+                                        : 'none',
+                                    cursor: interactionAllowed
+                                        ? 'pointer'
+                                        : 'default',
+                                    backdropFilter: 'blur(2px)',
+                                }}
+                            >
+                                <EmojiEventsRounded
+                                    sx={{
+                                        fontSize: `${String(size)}rem`, // Match Lights Out proportions
+                                        color: COLORS.primary.main,
+                                        filter: `drop-shadow(0 0 30px ${COLORS.primary.main}88)`,
+                                        animation: state.solved
+                                            ? 'float 3s ease-in-out infinite'
+                                            : 'none',
+                                        '@keyframes float': {
+                                            '0%, 100%': {
+                                                transform: 'translateY(0)',
+                                            },
+                                            '50%': {
+                                                transform: 'translateY(-10px)',
+                                            },
+                                        },
+                                    }}
+                                />
+                            </Box>
+                        </>
+                    )}
                 </Box>
             </Box>
 
@@ -504,6 +561,19 @@ export default function Slant(): React.ReactElement {
                         rows >= 10 ||
                         (rows >= dynamicSize.rows && cols >= dynamicSize.cols)
                     }
+                />
+                <TooltipButton
+                    title={isGhostMode ? 'Close Calculator' : 'Open Calculator'}
+                    Icon={Psychology}
+                    onClick={() => {
+                        setIsGhostMode(!isGhostMode);
+                    }}
+                    sx={{
+                        color: isGhostMode ? COLORS.primary.main : 'inherit',
+                        backgroundColor: isGhostMode
+                            ? `${COLORS.primary.main}20`
+                            : 'transparent',
+                    }}
                 />
             </Controls>
         </Grid>
