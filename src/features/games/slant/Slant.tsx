@@ -28,6 +28,7 @@ import {
     getInitialState,
     FORWARD,
     BACKWARD,
+    EMPTY,
 } from './boardHandlers';
 import {
     NUMBER_SIZE_RATIO,
@@ -35,6 +36,16 @@ import {
     TIMING_CONSTANTS,
     SLANT_STYLES,
 } from './constants';
+import { SlantState } from './boardHandlers';
+
+interface SavedSlantState extends Omit<
+    SlantState,
+    'errorNodes' | 'cycleCells' | 'satisfiedNodes'
+> {
+    errorNodes: string[];
+    cycleCells: string[];
+    satisfiedNodes: string[];
+}
 
 export default function Slant(): React.ReactElement {
     const { height, width } = useWindow();
@@ -85,9 +96,26 @@ export default function Slant(): React.ReactElement {
         return pxSize / 16; // rem
     }, [width, height, rows, cols]);
 
-    const [state, dispatch] = useReducer(handleBoard, { rows, cols }, init =>
-        getInitialState(init.rows, init.cols)
-    );
+    const [state, dispatch] = useReducer(handleBoard, { rows, cols }, init => {
+        const saved = localStorage.getItem(STORAGE_KEYS.STATE);
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved) as SavedSlantState;
+                if (parsed.rows === init.rows && parsed.cols === init.cols) {
+                    return {
+                        ...parsed,
+                        errorNodes: new Set(parsed.errorNodes),
+                        cycleCells: new Set(parsed.cycleCells),
+                        satisfiedNodes: new Set(parsed.satisfiedNodes),
+                    } as SlantState;
+                }
+            } catch (e) {
+                // eslint-disable-next-line no-console
+                console.error('Failed to load saved slant state:', e);
+            }
+        }
+        return getInitialState(init.rows, init.cols);
+    });
 
     useEffect(() => {
         localStorage.setItem(STORAGE_KEYS.SIZE, String(desiredSize));
@@ -100,13 +128,60 @@ export default function Slant(): React.ReactElement {
     }, [rows, cols, state.rows, state.cols]);
 
     // Ghost mode state
-    const [ghostMoves, setGhostMoves] = useState<Map<string, CellState>>(
-        new Map()
-    );
+    const [ghostMoves, setGhostMoves] = useState<Map<string, CellState>>(() => {
+        const saved = localStorage.getItem(STORAGE_KEYS.GHOST_MOVES);
+        if (saved) {
+            try {
+                return new Map(JSON.parse(saved) as [string, CellState][]);
+            } catch (e) {
+                // eslint-disable-next-line no-console
+                console.error('Failed to load saved ghost moves:', e);
+            }
+        }
+        return new Map();
+    });
+
+    // Save state on change
+    useEffect(() => {
+        const hasMoves = state.grid.some(row =>
+            row.some(cell => cell !== EMPTY)
+        );
+        const hasGhostMoves = ghostMoves.size > 0;
+
+        if (!hasMoves && !hasGhostMoves) {
+            localStorage.removeItem(STORAGE_KEYS.STATE);
+            return;
+        }
+
+        const toSave = {
+            ...state,
+            errorNodes: Array.from(state.errorNodes),
+            cycleCells: Array.from(state.cycleCells),
+            satisfiedNodes: Array.from(state.satisfiedNodes),
+        };
+        localStorage.setItem(STORAGE_KEYS.STATE, JSON.stringify(toSave));
+    }, [state, ghostMoves]);
+
+    // Save ghost moves
+    useEffect(() => {
+        if (ghostMoves.size === 0) {
+            localStorage.removeItem(STORAGE_KEYS.GHOST_MOVES);
+            return;
+        }
+        localStorage.setItem(
+            STORAGE_KEYS.GHOST_MOVES,
+            JSON.stringify(Array.from(ghostMoves.entries()))
+        );
+    }, [ghostMoves]);
 
     // Reset ghost moves when puzzle changes
+    const lastPuzzleRef = useRef<string>('');
     useEffect(() => {
-        setGhostMoves(new Map());
+        const puzzleId = JSON.stringify(state.numbers);
+        if (lastPuzzleRef.current && lastPuzzleRef.current !== puzzleId) {
+            setGhostMoves(new Map());
+        }
+        lastPuzzleRef.current = puzzleId;
     }, [state.numbers, state.rows, state.cols]);
 
     useEffect(() => {

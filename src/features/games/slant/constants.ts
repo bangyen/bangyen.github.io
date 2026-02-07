@@ -17,6 +17,8 @@ export const LAYOUT_CONSTANTS = {
 
 export const STORAGE_KEYS = {
     SIZE: 'slant-size',
+    STATE: 'slant-state',
+    GHOST_MOVES: 'slant-ghost-moves',
 };
 
 export const GAME_LOGIC_CONSTANTS = {
