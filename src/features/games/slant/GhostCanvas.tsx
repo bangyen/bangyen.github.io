@@ -8,7 +8,13 @@ import React, {
 import { useMobile } from '../../../hooks';
 import { Box } from '@mui/material';
 import { COLORS, LAYOUT } from '../../../config/theme';
-import { FORWARD, BACKWARD, EMPTY, CellState } from './boardHandlers';
+import {
+    FORWARD,
+    BACKWARD,
+    EMPTY,
+    CellState,
+    findCycles,
+} from './boardHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import {
     MOBILE_PADDING,
@@ -112,6 +118,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
         new Map()
     );
     const [conflicts, setConflicts] = useState<Conflict[]>([]);
+    const [cycleCells, setCycleCells] = useState<Set<string>>(new Set());
 
     // Engine
     useEffect(() => {
@@ -232,8 +239,24 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
             }
         }
 
+        // Cycle Detection
+        // Convert Map to 2D array for the existing findCycles utility
+        const tempGrid: CellState[][] = Array.from(
+            { length: rows },
+            () => Array(cols).fill(EMPTY) as CellState[]
+        );
+        newGrid.forEach((info, key) => {
+            const [r, c] = key.split(',').map(Number);
+            if (r !== undefined && c !== undefined && tempGrid[r]) {
+                tempGrid[r][c] = info.state;
+            }
+        });
+
+        const cycles = findCycles(tempGrid, rows, cols);
+
         setGridState(newGrid);
         setConflicts(newConflicts);
+        setCycleCells(cycles);
     }, [userMoves, numbers, rows, cols]);
 
     // View Helpers
@@ -266,11 +289,21 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
         const value = info?.state ?? EMPTY;
         const source = info?.source;
         const isConflict = conflictSet.has(pos);
+        const isCycle = cycleCells.has(pos);
 
         let color = COLORS.text.primary;
-        if (isConflict) color = COLORS.data.red;
-        else if (source === 'user') color = COLORS.primary.main;
-        else if (source === 'propagated') color = COLORS.data.green;
+
+        if (isConflict) {
+            color = COLORS.data.red;
+        } else if (isCycle) {
+            // Differentiate user vs propagated loops
+            color =
+                source === 'user' ? COLORS.data.red : `${COLORS.data.red}88`; // Translucent red/orange
+        } else if (source === 'user') {
+            color = COLORS.primary.main;
+        } else if (source === 'propagated') {
+            color = COLORS.data.green;
+        }
 
         return {
             onMouseDown: (e: React.MouseEvent) => {
@@ -327,13 +360,15 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 position: 'relative',
                 transition: 'all 0.2s',
                 touchAction: 'none',
-                backgroundColor: isConflict
-                    ? `${COLORS.data.red}20`
-                    : SLANT_STYLES.GHOST.BG_SUBTLE, // Slight tint
+                backgroundColor:
+                    isConflict || isCycle
+                        ? `${COLORS.data.red}20`
+                        : SLANT_STYLES.GHOST.BG_SUBTLE, // Slight tint
                 '&:hover': {
-                    backgroundColor: isConflict
-                        ? `${COLORS.data.red}30`
-                        : SLANT_STYLES.GHOST.BG_HOVER,
+                    backgroundColor:
+                        isConflict || isCycle
+                            ? `${COLORS.data.red}30`
+                            : SLANT_STYLES.GHOST.BG_HOVER,
                 },
             },
             children: (

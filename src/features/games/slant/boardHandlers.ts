@@ -59,7 +59,7 @@ function getNodeIndex(r: number, c: number, cols: number): number {
     return r * (cols + 1) + c;
 }
 
-function findCycles(
+export function findCycles(
     grid: CellState[][],
     rows: number,
     cols: number
