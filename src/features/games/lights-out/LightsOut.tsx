@@ -227,11 +227,13 @@ export default function LightsOut() {
             title={PAGE_TITLES.lightsOut}
             infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
             controls={controls}
-            paddingBottom={{ xs: '180px', md: '150px' }}
         >
             <Box
                 sx={{
                     position: 'relative',
+                    marginTop: mobile
+                        ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
+                        : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
                 }}
             >
                 <Board
@@ -250,6 +252,11 @@ export default function LightsOut() {
                 primaryColor={palette.primary}
                 secondaryColor={palette.secondary}
                 useSecondary={allOn}
+                sx={{
+                    marginTop: mobile
+                        ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
+                        : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
+                }}
             />
             {open && (
                 <Info

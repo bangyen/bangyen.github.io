@@ -11,6 +11,7 @@ interface TrophyOverlayProps {
     primaryColor: string;
     secondaryColor: string;
     useSecondary?: boolean;
+    sx?: object;
 }
 
 export function TrophyOverlay({
@@ -21,6 +22,7 @@ export function TrophyOverlay({
     primaryColor,
     secondaryColor,
     useSecondary = false,
+    sx,
 }: TrophyOverlayProps) {
     return (
         <Box
@@ -40,6 +42,7 @@ export function TrophyOverlay({
                 ...ANIMATIONS.presets.glass,
                 backdropFilter: 'blur(4px) saturate(180%)',
                 backgroundColor: 'transparent',
+                ...sx,
             }}
         >
             <EmojiEventsRounded
