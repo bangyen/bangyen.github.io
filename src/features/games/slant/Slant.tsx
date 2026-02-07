@@ -558,6 +558,8 @@ export default function Slant(): React.ReactElement {
                     justifyContent: 'center',
                     alignItems: 'center',
                     padding: `${String(size)}rem`,
+                    overflowY: isGhostMode ? 'auto' : 'visible',
+                    maxHeight: isGhostMode ? 'calc(100vh - 100px)' : 'none',
                 }}
             >
                 {/* Main Game Card */}
@@ -580,6 +582,23 @@ export default function Slant(): React.ReactElement {
                                     else next.set(pos, val);
                                     return next;
                                 });
+                            }}
+                            onCopy={() => {
+                                const newMoves = new Map<string, CellState>();
+                                state.grid.forEach((row, r) => {
+                                    row.forEach((cell, c) => {
+                                        if (cell !== EMPTY) {
+                                            newMoves.set(
+                                                `${String(r)},${String(c)}`,
+                                                cell
+                                            );
+                                        }
+                                    });
+                                });
+                                setGhostMoves(newMoves);
+                            }}
+                            onClear={() => {
+                                setGhostMoves(new Map());
                             }}
                         />
                     ) : (
@@ -713,7 +732,7 @@ export default function Slant(): React.ReactElement {
                     sx={{
                         color: isGhostMode ? COLORS.primary.main : 'inherit',
                         backgroundColor: isGhostMode
-                            ? `${COLORS.primary.main}20`
+                            ? COLORS.interactive.selected
                             : 'transparent',
                     }}
                 />

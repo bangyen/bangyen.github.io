@@ -74,6 +74,8 @@ export {
     AddRounded,
     RemoveRounded,
     ScreenRotationRounded,
+    ContentCopyRounded,
+    DeleteRounded,
 } from '@mui/icons-material';
 
 // Code Icons

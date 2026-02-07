@@ -8,6 +8,8 @@ import React, {
 import { useMobile } from '../../../hooks';
 import { Box } from '@mui/material';
 import { COLORS, LAYOUT } from '../../../config/theme';
+import { TooltipButton } from '../../../components/ui/TooltipButton';
+import { ContentCopyRounded, DeleteRounded } from '../../../components/icons';
 import {
     FORWARD,
     BACKWARD,
@@ -33,6 +35,8 @@ interface GhostBoardProps {
     size: number;
     initialMoves: Map<string, CellState>;
     onMove: (pos: string, val: CellState | undefined) => void;
+    onCopy?: () => void;
+    onClear?: () => void;
 }
 
 type CellSource = 'user' | 'propagated';
@@ -54,6 +58,8 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
     size,
     initialMoves,
     onMove,
+    onCopy,
+    onClear,
 }) => {
     const mobile = useMobile('sm');
     // User inputs: just strict assignments
@@ -549,6 +555,43 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                         sx={{ width: 'fit-content' }}
                     />
                 </Box>
+            </Box>
+
+            {/* Ghost Controls */}
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    gap: 2,
+                    marginTop: 3,
+                    marginBottom: 4,
+                    pointerEvents: 'auto',
+                }}
+            >
+                <TooltipButton
+                    title="Copy Logic from Board"
+                    Icon={ContentCopyRounded}
+                    onClick={onCopy}
+                    sx={{
+                        backgroundColor: COLORS.interactive.selected,
+                        color: COLORS.primary.main,
+                        '&:hover': {
+                            backgroundColor: COLORS.interactive.focus,
+                        },
+                    }}
+                />
+                <TooltipButton
+                    title="Clear Calculator"
+                    Icon={DeleteRounded}
+                    onClick={onClear}
+                    sx={{
+                        backgroundColor: 'rgba(255, 68, 68, 0.1)',
+                        color: COLORS.data.red,
+                        '&:hover': {
+                            backgroundColor: 'rgba(255, 68, 68, 0.2)',
+                        },
+                    }}
+                />
             </Box>
         </Box>
     );
