@@ -10,6 +10,8 @@ interface BoardProps {
     size: number;
     rows: number;
     cols: number;
+    frontLayerSx?: object;
+    backLayerSx?: object;
 }
 
 export interface Palette {
@@ -36,7 +38,15 @@ interface GridState {
 }
 
 export function Board(props: BoardProps): React.ReactElement {
-    const { frontProps, backProps, size, rows, cols } = props;
+    const {
+        frontProps,
+        backProps,
+        size,
+        rows,
+        cols,
+        frontLayerSx,
+        backLayerSx,
+    } = props;
 
     return (
         <Box
@@ -48,6 +58,7 @@ export function Board(props: BoardProps): React.ReactElement {
             <Box
                 sx={{
                     gridArea: '1/1',
+                    ...backLayerSx,
                 }}
             >
                 <CustomGrid
@@ -62,6 +73,7 @@ export function Board(props: BoardProps): React.ReactElement {
                 sx={{
                     gridArea: '1/1',
                     zIndex: LAYOUT.zIndex.base + 1,
+                    ...frontLayerSx,
                 }}
             >
                 <CustomGrid

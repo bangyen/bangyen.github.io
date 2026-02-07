@@ -12,7 +12,7 @@ import { GhostCanvas } from './GhostCanvas';
 import { GameControls } from '../components/GameControls';
 import { CellState } from './boardHandlers';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
-import { CustomGrid } from '../../../components/ui/CustomGrid';
+import { Board } from '../components/Board';
 import { PAGE_TITLES } from '../../../config/constants';
 import { COLORS, ANIMATIONS } from '../../../config/theme';
 import {
@@ -182,8 +182,10 @@ export default function Slant() {
         touchTimeout: TIMING_CONSTANTS.TOUCH_HOLD_DELAY,
     });
 
-    // Props for Cells
-    const getCellProps = useCallback(
+    // Props for Cells (Back Layer in Board terms)
+    // Board logic: Board rows=N -> Back layer rows=N-1.
+    // We pass rows+1 to Board. So Back layer has rows.
+    const backProps = useCallback(
         (r: number, c: number) => {
             const value = state.grid[r]?.[c];
             const pos = `${String(r)},${String(c)}`;
@@ -257,10 +259,13 @@ export default function Slant() {
     );
 
     const numberSize = size * NUMBER_SIZE_RATIO;
-    const numberSpace = size - numberSize;
+    // We don't need numberSpace for Board because Board forces space=0.
+    // We just render the number centered in the cell.
 
-    // Props for Numbers (Grid Overlay)
-    const getNumberProps = useCallback(
+    // Props for Numbers (Grid Overlay - Front Layer in Board terms)
+    // Board logic: Board rows=N -> Front layer rows=N.
+    // We pass rows+1 to Board. So Front layer has rows+1.
+    const frontProps = useCallback(
         (r: number, c: number) => {
             const value = state.numbers[r]?.[c];
             const hasError = state.errorNodes.has(`${String(r)},${String(c)}`);
@@ -269,52 +274,57 @@ export default function Slant() {
             );
 
             return {
+                sx: {
+                    // Make the container transparent to clicks so they reach the back layer
+                    pointerEvents: 'none',
+                },
                 children: (
                     <Box
                         sx={{
-                            opacity: isSatisfied && !hasError ? 0.2 : 1,
-                            transition: 'opacity 0.3s',
+                            borderRadius: '50%',
+                            backgroundColor: hasError
+                                ? COLORS.data.red
+                                : COLORS.surface.background,
+                            border:
+                                value !== null
+                                    ? `2px solid ${
+                                          hasError
+                                              ? COLORS.data.red
+                                              : isSatisfied
+                                                ? 'transparent'
+                                                : COLORS.border.subtle
+                                      }`
+                                    : 'none',
+                            fontSize: `${String(numberSize * 0.5)}rem`,
+                            fontWeight: '800',
+                            color: hasError
+                                ? SLANT_STYLES.COLORS.WHITE
+                                : COLORS.text.primary,
+                            boxShadow:
+                                isSatisfied && !hasError
+                                    ? 'none'
+                                    : SLANT_STYLES.SHADOWS.HINT,
+                            zIndex: 5,
+                            opacity:
+                                value !== null
+                                    ? isSatisfied && !hasError
+                                        ? 0.2
+                                        : 1
+                                    : 0,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                            userSelect: 'none',
+                            WebkitUserSelect: 'none',
+                            transform: hasError ? 'scale(1.1)' : 'scale(1)',
+                            width: `${String(numberSize)}rem`,
+                            height: `${String(numberSize)}rem`,
                         }}
                     >
                         {value ?? ''}
                     </Box>
                 ),
-                sx: {
-                    borderRadius: '50%',
-                    backgroundColor: hasError
-                        ? COLORS.data.red
-                        : COLORS.surface.background,
-                    border:
-                        value !== null
-                            ? `2px solid ${
-                                  hasError
-                                      ? COLORS.data.red
-                                      : isSatisfied
-                                        ? 'transparent'
-                                        : COLORS.border.subtle
-                              }`
-                            : 'none',
-                    fontSize: `${String(numberSize * 0.5)}rem`,
-                    fontWeight: '800',
-                    color: hasError
-                        ? SLANT_STYLES.COLORS.WHITE
-                        : COLORS.text.primary,
-                    boxShadow:
-                        isSatisfied && !hasError
-                            ? 'none'
-                            : SLANT_STYLES.SHADOWS.HINT,
-                    zIndex: 5,
-                    opacity: value !== null ? 1 : 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                    userSelect: 'none',
-                    WebkitUserSelect: 'none',
-                    transform: hasError ? 'scale(1.1)' : 'scale(1)',
-                    position: 'relative',
-                    pointerEvents: 'none',
-                },
             };
         },
         [state.numbers, state.errorNodes, state.satisfiedNodes, numberSize]
@@ -423,42 +433,14 @@ export default function Slant() {
                         }}
                     />
                 ) : (
-                    <>
-                        {/* Main Grid */}
-                        <Box sx={{ position: 'relative', zIndex: 1 }}>
-                            <CustomGrid
-                                size={size}
-                                rows={rows}
-                                cols={cols}
-                                cellProps={getCellProps}
-                                space={0}
-                                sx={{ width: 'fit-content' }}
-                            />
-                        </Box>
-
-                        {/* Numbers Grid Overlay */}
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                top: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
-                                left: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
-                                transform: `translate(-${String(
-                                    numberSize / 2
-                                )}rem, -${String(numberSize / 2)}rem)`,
-                                zIndex: 10,
-                                pointerEvents: 'none',
-                            }}
-                        >
-                            <CustomGrid
-                                size={numberSize}
-                                rows={rows + 1}
-                                cols={cols + 1}
-                                cellProps={getNumberProps}
-                                space={numberSpace}
-                                sx={{ width: 'fit-content' }}
-                            />
-                        </Box>
-                    </>
+                    <Board
+                        size={size}
+                        rows={rows + 1}
+                        cols={cols + 1}
+                        frontProps={frontProps}
+                        backProps={backProps}
+                        frontLayerSx={{ pointerEvents: 'none' }}
+                    />
                 )}
             </Box>
         </GamePageLayout>
