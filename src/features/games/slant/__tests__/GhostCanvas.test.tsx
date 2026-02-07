@@ -153,7 +153,10 @@ describe('GhostCanvas', () => {
                 (): (number | null)[] =>
                     Array(4).fill(null) as (number | null)[]
             );
-        numbers[0][1] = 1;
+        const row0 = numbers[0];
+        if (row0) {
+            row0[1] = 1;
+        }
 
         const initialMoves = new Map<string, CellState>();
         initialMoves.set('0,0', FORWARD);
@@ -189,7 +192,10 @@ describe('GhostCanvas', () => {
                 (): (number | null)[] =>
                     Array(4).fill(null) as (number | null)[]
             );
-        numbers[0][1] = 1;
+        const row0 = numbers[0];
+        if (row0) {
+            row0[1] = 1;
+        }
 
         const initialMoves = new Map<string, CellState>();
         initialMoves.set('0,0', FORWARD);
