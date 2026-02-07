@@ -305,8 +305,11 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
         }
 
         return {
+            onContextMenu: (e: React.MouseEvent) => {
+                e.preventDefault();
+            },
             onMouseDown: (e: React.MouseEvent) => {
-                if (e.button !== 0) return;
+                if (e.button !== 0 && e.button !== 2) return;
                 if (
                     Date.now() - lastTouchTime.current <
                     TIMING_CONSTANTS.TOUCH_HOLD_DELAY
@@ -315,13 +318,28 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
 
                 e.preventDefault(); // Prevent text selection
                 const current = userMoves.get(pos);
-                // Forward -> Backward -> Empty
-                const newState =
-                    current === FORWARD
-                        ? BACKWARD
-                        : current === BACKWARD
-                          ? undefined
-                          : FORWARD;
+                const isRight = e.button === 2;
+
+                // Cycle logic
+                // Left: F -> B -> Empty -> F
+                // Right: B -> F -> Empty -> B
+                let newState: CellState | undefined;
+
+                if (isRight) {
+                    newState =
+                        current === BACKWARD
+                            ? FORWARD
+                            : current === FORWARD
+                              ? undefined
+                              : BACKWARD;
+                } else {
+                    newState =
+                        current === FORWARD
+                            ? BACKWARD
+                            : current === BACKWARD
+                              ? undefined
+                              : FORWARD;
+                }
 
                 draggingState.current = newState;
                 setIsDragging(e.button);
@@ -329,7 +347,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 addDraggedCell(pos);
             },
             onMouseEnter: () => {
-                if (isDragging === 0 && !draggedCells.current.has(pos)) {
+                if (isDragging !== null && !draggedCells.current.has(pos)) {
                     onMove(pos, draggingState.current);
                     addDraggedCell(pos);
                 }
@@ -339,6 +357,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 lastTouchTime.current = Date.now();
 
                 const current = userMoves.get(pos);
+                // Touch behaves like Left Click
                 const newState =
                     current === FORWARD
                         ? BACKWARD
@@ -347,7 +366,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                           : FORWARD;
 
                 draggingState.current = newState;
-                setIsDragging(0); // Touch counts as left click
+                setIsDragging(0);
                 onMove(pos, newState);
                 addDraggedCell(pos);
             },
