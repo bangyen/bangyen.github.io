@@ -14,19 +14,12 @@ import { CellState } from './boardHandlers';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { Board } from '../components/Board';
 import { PAGE_TITLES } from '../../../config/constants';
-import { COLORS, ANIMATIONS } from '../../../config/theme';
-import {
-    handleBoard,
-    getInitialState,
-    FORWARD,
-    BACKWARD,
-    EMPTY,
-} from './boardHandlers';
+import { COLORS } from '../../../config/theme';
+import { handleBoard, getInitialState, EMPTY } from './boardHandlers';
 import {
     NUMBER_SIZE_RATIO,
     STORAGE_KEYS,
     TIMING_CONSTANTS,
-    SLANT_STYLES,
     LAYOUT_CONSTANTS,
     GAME_LOGIC_CONSTANTS,
     MOBILE_PADDING,
@@ -39,6 +32,7 @@ import { useGameInteraction } from '../hooks/useGameInteraction';
 import { useWinTransition } from '../hooks/useWinTransition';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { GamePageLayout } from '../components/GamePageLayout';
+import { getBackProps, getFrontProps } from './renderers';
 
 interface SavedSlantState extends Omit<
     SlantState,
@@ -182,152 +176,18 @@ export default function Slant() {
         touchTimeout: TIMING_CONSTANTS.TOUCH_HOLD_DELAY,
     });
 
-    // Props for Cells (Back Layer in Board terms)
-    // Board logic: Board rows=N -> Back layer rows=N-1.
-    // We pass rows+1 to Board. So Back layer has rows.
-    const backProps = useCallback(
-        (r: number, c: number) => {
-            const value = state.grid[r]?.[c];
-            const pos = `${String(r)},${String(c)}`;
-            const isError = state.cycleCells.has(pos);
-            const dragProps = getDragProps(pos);
+    const numberSize = size * NUMBER_SIZE_RATIO;
 
-            return {
-                ...dragProps,
-                sx: {
-                    ...dragProps.sx,
-                    cursor: 'pointer',
-                    border: `1px solid ${COLORS.border.subtle}`,
-                    position: 'relative',
-                    '&:hover': {
-                        backgroundColor: COLORS.interactive.hover,
-                    },
-                },
-                children: (
-                    <Box
-                        sx={{
-                            width: '100%',
-                            height: '100%',
-                            position: 'relative',
-                        }}
-                    >
-                        {value === FORWARD && (
-                            <Box
-                                sx={{
-                                    position: 'absolute',
-                                    width: '130%',
-                                    height: '6px',
-                                    backgroundColor: isError
-                                        ? COLORS.data.red
-                                        : COLORS.text.primary,
-                                    borderRadius: '99px',
-                                    top: '50%',
-                                    left: '50%',
-                                    transform:
-                                        'translate(-50%, -50%) rotate(-45deg)',
-                                    boxShadow: SLANT_STYLES.SHADOWS.LINE,
-                                    transition: ANIMATIONS.transition,
-                                    pointerEvents: 'none',
-                                }}
-                            />
-                        )}
-                        {value === BACKWARD && (
-                            <Box
-                                sx={{
-                                    position: 'absolute',
-                                    width: '130%',
-                                    height: '6px',
-                                    backgroundColor: isError
-                                        ? COLORS.data.red
-                                        : COLORS.text.primary,
-                                    borderRadius: '99px',
-                                    top: '50%',
-                                    left: '50%',
-                                    transform:
-                                        'translate(-50%, -50%) rotate(45deg)',
-                                    boxShadow: SLANT_STYLES.SHADOWS.LINE,
-                                    transition: ANIMATIONS.transition,
-                                    pointerEvents: 'none',
-                                }}
-                            />
-                        )}
-                    </Box>
-                ),
-            };
-        },
-        [state.grid, state.cycleCells, getDragProps]
+    // Props for Cells (Back Layer in Board terms)
+    const backProps = useMemo(
+        () => getBackProps(state, getDragProps),
+        [state, getDragProps]
     );
 
-    const numberSize = size * NUMBER_SIZE_RATIO;
-    // We don't need numberSpace for Board because Board forces space=0.
-    // We just render the number centered in the cell.
-
     // Props for Numbers (Grid Overlay - Front Layer in Board terms)
-    // Board logic: Board rows=N -> Front layer rows=N.
-    // We pass rows+1 to Board. So Front layer has rows+1.
-    const frontProps = useCallback(
-        (r: number, c: number) => {
-            const value = state.numbers[r]?.[c];
-            const hasError = state.errorNodes.has(`${String(r)},${String(c)}`);
-            const isSatisfied = state.satisfiedNodes.has(
-                `${String(r)},${String(c)}`
-            );
-
-            return {
-                sx: {
-                    // Make the container transparent to clicks so they reach the back layer
-                    pointerEvents: 'none',
-                },
-                children: (
-                    <Box
-                        sx={{
-                            borderRadius: '50%',
-                            backgroundColor: hasError
-                                ? COLORS.data.red
-                                : COLORS.surface.background,
-                            border:
-                                value !== null
-                                    ? `2px solid ${
-                                          hasError
-                                              ? COLORS.data.red
-                                              : isSatisfied
-                                                ? 'transparent'
-                                                : COLORS.border.subtle
-                                      }`
-                                    : 'none',
-                            fontSize: `${String(numberSize * 0.5)}rem`,
-                            fontWeight: '800',
-                            color: hasError
-                                ? SLANT_STYLES.COLORS.WHITE
-                                : COLORS.text.primary,
-                            boxShadow:
-                                isSatisfied && !hasError
-                                    ? 'none'
-                                    : SLANT_STYLES.SHADOWS.HINT,
-                            zIndex: 5,
-                            opacity:
-                                value !== null
-                                    ? isSatisfied && !hasError
-                                        ? 0.2
-                                        : 1
-                                    : 0,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                            userSelect: 'none',
-                            WebkitUserSelect: 'none',
-                            transform: hasError ? 'scale(1.1)' : 'scale(1)',
-                            width: `${String(numberSize)}rem`,
-                            height: `${String(numberSize)}rem`,
-                        }}
-                    >
-                        {value ?? ''}
-                    </Box>
-                ),
-            };
-        },
-        [state.numbers, state.errorNodes, state.satisfiedNodes, numberSize]
+    const frontProps = useMemo(
+        () => getFrontProps(state, numberSize),
+        [state, numberSize]
     );
 
     useEffect(() => {
