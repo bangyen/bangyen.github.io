@@ -13,7 +13,7 @@ export function ProjectDropdown(): React.ReactElement {
     return (
         <Box
             sx={{
-                padding: `${SPACING.padding.md} ${SPACING.padding.md} 0 ${SPACING.padding.md}`,
+                padding: `${SPACING.padding.sm} ${SPACING.padding.sm} 0 ${SPACING.padding.sm}`,
             }}
         >
             {Object.entries(PROJECT_CATEGORIES).map(
