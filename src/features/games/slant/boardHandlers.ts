@@ -3,6 +3,8 @@ export const EMPTY: CellState = 0;
 export const FORWARD: CellState = 1;
 export const BACKWARD: CellState = 2;
 
+import { GAME_LOGIC_CONSTANTS } from './constants';
+
 export interface SlantState {
     grid: CellState[][];
     numbers: (number | null)[][];
@@ -438,7 +440,9 @@ export function generatePuzzle(
 
     // 4. Remove hints while ensuring deductive solvability
     // We aim for a target hint density (e.g., 35% of nodes)
-    const targetHintCount = Math.floor((rows + 1) * (cols + 1) * 0.35);
+    const targetHintCount = Math.floor(
+        (rows + 1) * (cols + 1) * GAME_LOGIC_CONSTANTS.HINT_DENSITY
+    );
     let currentHintCount = (rows + 1) * (cols + 1);
 
     for (const { r, c } of coords) {

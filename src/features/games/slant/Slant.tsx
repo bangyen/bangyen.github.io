@@ -29,7 +29,7 @@ import {
     FORWARD,
     BACKWARD,
 } from './boardHandlers';
-import { NUMBER_SIZE_RATIO } from './constants';
+import { NUMBER_SIZE_RATIO, STORAGE_KEYS, TIMING_CONSTANTS } from './constants';
 
 export default function Slant(): React.ReactElement {
     const { height, width } = useWindow();
@@ -37,8 +37,9 @@ export default function Slant(): React.ReactElement {
     const [isGhostMode, setIsGhostMode] = useState(false);
 
     // Default size handling
+    // Default size handling
     const [desiredSize, setDesiredSize] = useState<number | null>(() => {
-        const saved = localStorage.getItem('slant-size');
+        const saved = localStorage.getItem(STORAGE_KEYS.SIZE);
         return saved && saved !== 'null' ? parseInt(saved, 10) : 5;
     });
 
@@ -84,7 +85,7 @@ export default function Slant(): React.ReactElement {
     );
 
     useEffect(() => {
-        localStorage.setItem('slant-size', String(desiredSize));
+        localStorage.setItem(STORAGE_KEYS.SIZE, String(desiredSize));
     }, [desiredSize]);
 
     useEffect(() => {
@@ -123,7 +124,7 @@ export default function Slant(): React.ReactElement {
         if (state.solved) {
             const timeout = setTimeout(() => {
                 handleReset();
-            }, 2000);
+            }, TIMING_CONSTANTS.WIN_ANIMATION_DELAY);
             return () => {
                 clearTimeout(timeout);
             };
@@ -136,7 +137,7 @@ export default function Slant(): React.ReactElement {
         if (state.solved) {
             const timeout = setTimeout(() => {
                 setInteractionAllowed(true);
-            }, 500);
+            }, TIMING_CONSTANTS.INTERACTION_DELAY);
             return () => {
                 clearTimeout(timeout);
             };
@@ -214,7 +215,11 @@ export default function Slant(): React.ReactElement {
             onMouseDown: (e: React.MouseEvent) => {
                 if (state.solved) return;
                 if (e.button !== 0 && e.button !== 2) return;
-                if (Date.now() - lastTouchTime.current < 500) return;
+                if (
+                    Date.now() - lastTouchTime.current <
+                    TIMING_CONSTANTS.TOUCH_HOLD_DELAY
+                )
+                    return;
 
                 e.preventDefault(); // Prevent text selection
                 setIsDragging(e.button);
@@ -380,7 +385,7 @@ export default function Slant(): React.ReactElement {
 
         const timeout = setTimeout(() => {
             dispatch({ type: 'nextLogical' });
-        }, 300);
+        }, TIMING_CONSTANTS.AUTO_PLAY_SPEED);
         return () => {
             clearTimeout(timeout);
         };
