@@ -7,15 +7,10 @@ import React, {
     useRef,
 } from 'react';
 import { Box, Grid } from '../../../components/mui';
-import {
-    AddRounded,
-    RemoveRounded,
-    EmojiEventsRounded,
-    Psychology,
-} from '../../../components/icons';
+import { EmojiEventsRounded, Psychology } from '../../../components/icons';
 import { GhostCanvas } from './GhostCanvas';
+import { GameControls } from '../components/GameControls';
 import { CellState } from './boardHandlers';
-import { Controls } from '../../../components/ui/Controls';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
@@ -61,6 +56,8 @@ export default function Slant() {
         width,
         height,
         dynamicSize,
+        minSize,
+        maxSize,
     } = useGridSize({
         storageKey: STORAGE_KEYS.SIZE,
         defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
@@ -568,24 +565,17 @@ export default function Slant() {
                 </Box>
             </Box>
 
-            <Controls handler={() => () => undefined} onRefresh={handleReset}>
-                <TooltipButton
-                    title="Decrease Size"
-                    Icon={RemoveRounded}
-                    onClick={handleMinus}
-                    disabled={rows <= 3 || isGhostMode}
-                />
-                <TooltipButton
-                    title="Increase Size"
-                    Icon={AddRounded}
-                    onClick={handlePlus}
-                    disabled={
-                        rows >= GAME_LOGIC_CONSTANTS.MAX_SIZE ||
-                        (rows >= dynamicSize.rows &&
-                            cols >= dynamicSize.cols) ||
-                        isGhostMode
-                    }
-                />
+            <GameControls
+                rows={rows}
+                cols={cols}
+                dynamicSize={dynamicSize}
+                minSize={minSize}
+                maxSize={maxSize}
+                handlePlus={handlePlus}
+                handleMinus={handleMinus}
+                onRefresh={handleReset}
+                disabled={isGhostMode}
+            >
                 <TooltipButton
                     title={'Open Calculator'}
                     Icon={Psychology}
@@ -596,7 +586,7 @@ export default function Slant() {
                         color: isGhostMode ? 'primary.main' : 'default',
                     }}
                 />
-            </Controls>
+            </GameControls>
         </Grid>
     );
 }

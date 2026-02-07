@@ -3,13 +3,11 @@ import { Grid, Box } from '../../../components/mui';
 import {
     MenuBookRounded,
     CircleRounded,
-    AddRounded,
-    RemoveRounded,
     EmojiEventsRounded,
 } from '../../../components/icons';
-import { Controls } from '../../../components/ui/Controls';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { Board, useHandler, usePalette, Getters } from '../components/Board';
+import { GameControls } from '../components/GameControls';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
 import { LAYOUT, COLORS } from '../../../config/theme';
@@ -84,21 +82,29 @@ function getExampleProps(getters: Getters) {
 }
 
 export default function LightsOut() {
-    const { rows, cols, dynamicSize, handlePlus, handleMinus, mobile } =
-        useGridSize({
-            storageKey: STORAGE_KEYS.SIZE,
-            defaultSize: null,
-            headerOffset: {
-                mobile: LAYOUT.headerHeight.xs,
-                desktop: LAYOUT.headerHeight.md,
-            },
-            cellSizeReference: {
-                mobile: GAME_CONSTANTS.gridSizes.mobile,
-                desktop: GAME_CONSTANTS.gridSizes.desktop,
-            },
-            paddingOffset: 120, // Reserve space for bottom controls
-            mobileRowOffset: -2,
-        });
+    const {
+        rows,
+        cols,
+        dynamicSize,
+        handlePlus,
+        handleMinus,
+        mobile,
+        minSize,
+        maxSize,
+    } = useGridSize({
+        storageKey: STORAGE_KEYS.SIZE,
+        defaultSize: null,
+        headerOffset: {
+            mobile: LAYOUT.headerHeight.xs,
+            desktop: LAYOUT.headerHeight.md,
+        },
+        cellSizeReference: {
+            mobile: GAME_CONSTANTS.gridSizes.mobile,
+            desktop: GAME_CONSTANTS.gridSizes.desktop,
+        },
+        paddingOffset: 120, // Reserve space for bottom controls
+        mobileRowOffset: -2,
+    });
 
     const initial = useMemo(
         () => ({
@@ -255,30 +261,22 @@ export default function LightsOut() {
                     </Box>
                 </Box>
             </Box>
-            <Controls
-                handler={() => () => undefined} // No directional controls for Lights Out
+            <GameControls
+                rows={rows}
+                cols={cols}
+                dynamicSize={dynamicSize}
+                minSize={minSize}
+                maxSize={maxSize}
+                handlePlus={handlePlus}
+                handleMinus={handleMinus}
                 onRefresh={handleNext}
             >
-                <TooltipButton
-                    title="Decrease Size"
-                    Icon={RemoveRounded}
-                    onClick={handleMinus}
-                    disabled={rows <= 2 && cols <= 2}
-                />
-                <TooltipButton
-                    title="Increase Size"
-                    Icon={AddRounded}
-                    onClick={handlePlus}
-                    disabled={
-                        rows === dynamicSize.rows && cols === dynamicSize.cols
-                    }
-                />
                 <TooltipButton
                     title="How to Play"
                     Icon={MenuBookRounded}
                     onClick={toggleOpen}
                 />
-            </Controls>
+            </GameControls>
             {open && (
                 <Info
                     rows={rows}

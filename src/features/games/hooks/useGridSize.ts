@@ -126,5 +126,7 @@ export function useGridSize({
         mobile,
         width,
         height,
+        minSize,
+        maxSize: _maxSize,
     };
 }
