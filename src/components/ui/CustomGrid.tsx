@@ -95,8 +95,7 @@ function Row({ cols, size, index, spacing, cellProps }: RowProps) {
             sx={{
                 display: 'flex',
                 gap: spacing,
-                width: '100%',
-                justifyContent: 'flex-start',
+                justifyContent: 'center',
             }}
         >
             {Array.from({ length: cols }, WrappedCell)}
@@ -148,6 +147,7 @@ export function CustomGrid({
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
+                alignItems: 'center',
                 gap: rem,
                 ...sx,
             }}
