@@ -1,8 +1,12 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { useMobile } from '../../../hooks';
 import { Box } from '@mui/material';
 import { COLORS } from '../../../config/theme';
 import { FORWARD, BACKWARD, EMPTY, CellState } from './boardHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
+
+const MOBILE_PADDING = '32px';
+const DESKTOP_PADDING = '48px';
 
 interface GhostBoardProps {
     rows: number;
@@ -33,6 +37,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
     initialMoves,
     onMove,
 }) => {
+    const mobile = useMobile('sm');
     // User inputs: just strict assignments
     const userMoves = initialMoves;
 
@@ -347,7 +352,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
             <Box
                 sx={{
                     position: 'relative',
-                    padding: '48px',
+                    padding: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
                     border: '2px dashed rgba(255, 255, 255, 0.2)',
                     borderRadius: '24px',
                 }}
@@ -368,8 +373,8 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 <Box
                     sx={{
                         position: 'absolute',
-                        top: '48px',
-                        left: '48px',
+                        top: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
+                        left: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
                         transform: `translate(-${String(numberSize / 2)}rem, -${String(numberSize / 2)}rem)`,
                         zIndex: 10,
                         pointerEvents: 'none',
