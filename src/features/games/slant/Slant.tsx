@@ -190,7 +190,9 @@ export default function Slant() {
         });
     }, [rows, cols]);
 
-    const controls = (
+    const controls = isGhostMode ? (
+        <></>
+    ) : (
         <GameControls
             rows={rows}
             cols={cols}
@@ -209,7 +211,7 @@ export default function Slant() {
                     setIsGhostMode(!isGhostMode);
                 }}
                 sx={{
-                    color: isGhostMode ? 'primary.main' : 'default',
+                    color: 'default',
                 }}
             />
         </GameControls>

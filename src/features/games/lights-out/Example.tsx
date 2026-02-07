@@ -4,12 +4,8 @@ import { EmojiEventsRounded } from '../../../components/icons';
 import { getStates } from './chaseHandlers';
 import { flipAdj } from './boardHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
-import {
-    useHandler as useBoardHandler,
-    Board,
-    Palette,
-    PropsFactory,
-} from '../components/Board';
+import { Board, Palette, PropsFactory } from '../components/Board';
+import { useHandler as useBoardHandler } from './boardUtils';
 import { getOutput, useHandler as useCalculatorHandler } from './calculator';
 import { COLORS } from '../../../config/theme';
 import { LIGHTS_OUT_STYLES } from './constants';

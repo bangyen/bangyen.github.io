@@ -1,9 +1,10 @@
 import { renderHook } from '@testing-library/react';
 import { getInput, getOutput, useHandler } from '../calculator';
-import { useGetters } from '../../components/Board';
+import { useGetters } from '../boardUtils';
+import { DragProps } from '../../hooks/useDrag';
 
-// Mock useGetters from Board component
-jest.mock('../../components/Board', () => ({
+// Mock useGetters from boardUtils
+jest.mock('../boardUtils', () => ({
     useGetters: jest.fn(
         (
             _getTile: (r: number, c: number) => number,
@@ -30,21 +31,15 @@ describe('Lights Out Calculator UI Helpers', () => {
 
     describe('getInput', () => {
         it('returns correct props for a tile', () => {
-            const toggleTile = jest.fn();
-            const isDragging = false;
-            const setIsDragging = jest.fn();
-            const draggedCols = { current: new Set<number>() };
-            const addDraggedCol = jest.fn();
-            const lastTouchTime = { current: 0 };
-            const getProps = getInput(
-                mockGetters,
-                toggleTile,
-                isDragging,
-                setIsDragging,
-                draggedCols,
-                addDraggedCol,
-                lastTouchTime
-            );
+            const mockGetDragProps = jest.fn((pos: string) => ({
+                onMouseDown: jest.fn(),
+                onMouseEnter: jest.fn(),
+                onTouchStart: jest.fn(),
+                'data-pos': pos,
+                sx: { touchAction: 'none' as const, transition: 'none' },
+            }));
+
+            const getProps = getInput(mockGetters, mockGetDragProps);
             const props = getProps(0, 0);
 
             expect(props.backgroundColor).toBe('red');
@@ -52,20 +47,14 @@ describe('Lights Out Calculator UI Helpers', () => {
             expect(props.color).toBe('red');
             expect(props.sx).toBeDefined();
 
-            // Verify onClick handler creation (via onMouseDown)
-            props.onMouseDown({ button: 0 } as React.MouseEvent);
-            expect(toggleTile).toHaveBeenCalledWith(0);
+            // Verify getDragProps was called
+            expect(mockGetDragProps).toHaveBeenCalledWith('0');
         });
 
         it('calls getters with correct coordinates', () => {
             const getProps = getInput(
                 mockGetters,
-                jest.fn(),
-                false,
-                jest.fn(),
-                { current: new Set() },
-                jest.fn(),
-                { current: 0 }
+                jest.fn(() => ({}) as DragProps)
             );
             getProps(1, 2);
             expect(mockGetters.getColor).toHaveBeenCalledWith(1, 2);

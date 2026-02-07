@@ -30,8 +30,7 @@ jest.mock('../../../../hooks', () => ({
 jest.mock('../boardHandlers', () => ({
     getGrid: jest.fn(() => Array(4).fill(Array(4).fill(0)) as number[][]),
     handleBoard: jest.fn((state: BoardState, action: BoardAction) => {
-        if (action.type === 'auto') return { ...state, auto: !state.auto };
-        if (action.type === 'resize')
+        if (action.type === 'resize' && action.newRows && action.newCols)
             return {
                 ...state,
                 rows: action.newRows,
@@ -43,6 +42,16 @@ jest.mock('../boardHandlers', () => ({
     }),
     getNextMove: jest.fn(),
     isSolved: jest.fn(() => false),
+}));
+
+// Mock boardUtils
+jest.mock('../boardUtils', () => ({
+    useHandler: () => ({
+        getColor: () => ({ front: 'white', back: 'black' }),
+        getBorder: () => ({}),
+        getFiller: () => 'gray',
+    }),
+    usePalette: () => ({}),
 }));
 
 // Mock sub-components
@@ -68,12 +77,6 @@ jest.mock('../../components/Board', () => ({
             </div>
         );
     },
-    useHandler: () => ({
-        getColor: () => ({ front: 'white', back: 'black' }),
-        getBorder: () => ({}),
-        getFiller: () => 'gray',
-    }),
-    usePalette: () => ({}),
 }));
 
 jest.mock('../../../../components/ui/Controls', () => ({
@@ -141,8 +144,6 @@ describe('LightsOut', () => {
 
         mockHandleBoard.mockImplementation(
             (state: BoardState, action: BoardAction) => {
-                if (action.type === 'auto')
-                    return { ...state, auto: !state.auto };
                 if (
                     action.type === 'resize' &&
                     action.newRows &&

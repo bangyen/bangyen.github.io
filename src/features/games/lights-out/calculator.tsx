@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { CircleRounded } from '../../../components/icons';
-import { useGetters, Getters, Palette } from '../components/Board';
+import { Getters, Palette } from '../components/Board';
+import { useGetters } from './boardUtils';
 import { LIGHTS_OUT_STYLES } from './constants';
 import { DragProps } from '../hooks/useDrag';
 

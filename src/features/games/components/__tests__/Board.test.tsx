@@ -1,7 +1,12 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { renderHook } from '@testing-library/react';
-import { Board, usePalette, useGetters, useHandler } from '../Board';
+import { Board } from '../Board';
+import {
+    usePalette,
+    useGetters,
+    useHandler,
+} from '../../lights-out/boardUtils';
 import { COLORS } from '../../../../config/theme';
 
 describe('Board Component', () => {

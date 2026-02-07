@@ -60,22 +60,17 @@ export function usePalette(_score: number): Palette {
     }, []);
 }
 
-export function useHandler(state: GridState, palette: Palette): Getters {
-    const { grid, rows, cols } = state;
-
-    const getTile = useCallback(
-        (row: number, col: number) => {
-            if (row < 0 || col < 0 || row >= rows || col >= cols) return -1;
-            return grid[row]?.[col] ?? -1;
-        },
-        [grid, rows, cols]
-    );
-
+export function useGetters(
+    getTile: (row: number, col: number) => unknown,
+    palette: Palette
+): Getters {
     const getColor = useCallback(
         (row: number, col: number) => {
             const value = getTile(row, col);
+
             const front = value ? palette.primary : palette.secondary;
             const back = value ? palette.secondary : palette.primary;
+
             return { front, back };
         },
         [getTile, palette]
@@ -91,6 +86,7 @@ export function useHandler(state: GridState, palette: Palette): Getters {
     const getFiller = useCallback(
         (row: number, col: number) => {
             const value = fillerHandler(row, col, getTile);
+
             return value ? palette.primary : palette.secondary;
         },
         [getTile, palette]
@@ -107,4 +103,18 @@ export function useHandler(state: GridState, palette: Palette): Getters {
         }),
         [getColor, getBorder, getFiller]
     );
+}
+
+export function useHandler(state: GridState, palette: Palette): Getters {
+    const { grid, rows, cols } = state;
+
+    const getTile = useCallback(
+        (row: number, col: number) => {
+            if (row < 0 || col < 0 || row >= rows || col >= cols) return -1;
+            return grid[row]?.[col] ?? -1;
+        },
+        [grid, rows, cols]
+    );
+
+    return useGetters(getTile, palette);
 }

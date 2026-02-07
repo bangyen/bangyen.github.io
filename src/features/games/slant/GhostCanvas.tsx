@@ -468,6 +468,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                     right: 0,
                     pointerEvents: 'auto',
                     zIndex: LAYOUT.zIndex.base + 5,
+                    paddingBottom: 2,
                 }}
             >
                 <TooltipButton
