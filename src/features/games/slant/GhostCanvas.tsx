@@ -4,9 +4,11 @@ import { Box } from '@mui/material';
 import { COLORS } from '../../../config/theme';
 import { FORWARD, BACKWARD, EMPTY, CellState } from './boardHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
-
-const MOBILE_PADDING = '32px';
-const DESKTOP_PADDING = '48px';
+import {
+    MOBILE_PADDING,
+    DESKTOP_PADDING,
+    NUMBER_SIZE_RATIO,
+} from './constants';
 
 interface GhostBoardProps {
     rows: number;
@@ -164,7 +166,8 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
     }, [userMoves, numbers, rows, cols]);
 
     // View Helpers
-    const numberSize = size * 0.4;
+
+    const numberSize = size * NUMBER_SIZE_RATIO;
     const numberSpace = size - numberSize;
 
     const conflictSet = useMemo(

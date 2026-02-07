@@ -29,6 +29,7 @@ import {
     FORWARD,
     BACKWARD,
 } from './boardHandlers';
+import { NUMBER_SIZE_RATIO } from './constants';
 
 export default function Slant(): React.ReactElement {
     const { height, width } = useWindow();
@@ -315,7 +316,7 @@ export default function Slant(): React.ReactElement {
         };
     };
 
-    const numberSize = size * 0.4;
+    const numberSize = size * NUMBER_SIZE_RATIO;
     const numberSpace = size - numberSize;
 
     // Props for Numbers (Grid Overlay)
