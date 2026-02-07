@@ -4,7 +4,7 @@ import { SxProps, Theme } from '@mui/material';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
 import { COLORS } from '../../../config/theme';
 import { useMobile } from '../../../hooks';
-import { EmojiEventsRounded } from '../../../components/icons';
+import { TrophyOverlay } from './TrophyOverlay';
 
 interface GamePageLayoutProps {
     children: React.ReactNode;
@@ -97,36 +97,15 @@ export function GamePageLayout({
                     ]}
                 >
                     {children}
-                    <Box
-                        onClick={onReset}
-                        sx={{
-                            position: 'absolute',
-                            inset: 0,
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            opacity: showTrophy ? 1 : 0,
-                            transform: showTrophy ? 'scale(1)' : 'scale(0.5)',
-                            visibility: showTrophy ? 'visible' : 'hidden',
-                            transition:
-                                'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                            cursor: 'pointer',
-                            zIndex: 10,
-                            backgroundColor: 'transparent',
-                        }}
-                    >
-                        {boardSize > 0 && (
-                            <EmojiEventsRounded
-                                sx={{
-                                    fontSize: `${(boardSize * iconSizeRatio).toString()}rem`,
-                                    color: useSecondaryTrophy
-                                        ? secondaryColor
-                                        : primaryColor,
-                                    filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))',
-                                }}
-                            />
-                        )}
-                    </Box>
+                    <TrophyOverlay
+                        show={showTrophy}
+                        onReset={onReset}
+                        size={boardSize}
+                        iconSizeRatio={iconSizeRatio}
+                        primaryColor={primaryColor}
+                        secondaryColor={secondaryColor}
+                        useSecondary={useSecondaryTrophy}
+                    />
                 </Box>
             </Box>
             {controls}

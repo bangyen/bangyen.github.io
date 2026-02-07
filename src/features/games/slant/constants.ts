@@ -34,7 +34,7 @@ export const STORAGE_KEYS = {
 };
 
 export const GAME_LOGIC_CONSTANTS = {
-    HINT_DENSITY: 0.35,
+    HINT_DENSITY: 0,
     MIN_SIZE: 3,
     MAX_SIZE: 10,
     DEFAULT_SIZE: 5,
