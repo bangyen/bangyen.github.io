@@ -8,7 +8,7 @@ interface ResponsiveSizeConfig {
         mobile: number;
         desktop: number;
     };
-    paddingOffset: number;
+    paddingOffset: number | { x: number; y: number };
     boardMaxWidth: number;
     boardSizeFactor: number;
     maxCellSize: number;
@@ -33,9 +33,12 @@ export function useResponsiveBoardSize({
             ? headerOffset.mobile
             : headerOffset.desktop;
 
-        const maxW = Math.min(width, boardMaxWidth) * boardSizeFactor;
-        const maxH =
-            (height - currentHeaderOffset - paddingOffset) * boardSizeFactor;
+        const pX = typeof paddingOffset === 'number' ? 0 : paddingOffset.x;
+        const pY =
+            typeof paddingOffset === 'number' ? paddingOffset : paddingOffset.y;
+
+        const maxW = (Math.min(width, boardMaxWidth) - pX) * boardSizeFactor;
+        const maxH = (height - currentHeaderOffset - pY) * boardSizeFactor;
 
         // Note: rows/cols are the base grid dims.
         // For Slant, we use cols+1/rows+1 for divisions.

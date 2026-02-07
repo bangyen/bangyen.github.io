@@ -77,7 +77,10 @@ export default function Slant() {
             mobile: LAYOUT_CONSTANTS.HEADER_OFFSET.MOBILE,
             desktop: LAYOUT_CONSTANTS.HEADER_OFFSET.DESKTOP,
         },
-        paddingOffset: LAYOUT_CONSTANTS.PADDING_OFFSET,
+        paddingOffset: {
+            x: mobile ? 128 : 224,
+            y: LAYOUT_CONSTANTS.PADDING_OFFSET,
+        },
         boardMaxWidth: LAYOUT_CONSTANTS.BOARD_MAX_WIDTH,
         boardSizeFactor: LAYOUT_CONSTANTS.BOARD_SIZE_FACTOR,
         maxCellSize: LAYOUT_CONSTANTS.MAX_CELL_SIZE,
@@ -253,22 +256,19 @@ export default function Slant() {
     const contentSx = useMemo(
         () => ({
             background: `radial-gradient(circle at 50% 50%, ${COLORS.surface.elevated} 0%, ${COLORS.surface.background} 100%)`,
-            padding: `${String(size)}rem`,
+            padding: mobile ? '1rem' : '2rem',
         }),
-        [size]
+        [mobile]
     );
 
     const boardSx = useMemo(
-        () =>
-            !isGhostMode
-                ? {
-                      userSelect: 'none',
-                      padding: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
-                      border: '2px solid transparent',
-                      borderRadius: LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
-                  }
-                : undefined,
-        [isGhostMode, mobile]
+        () => ({
+            userSelect: 'none',
+            padding: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
+            border: '2px solid transparent',
+            borderRadius: LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
+        }),
+        [mobile]
     );
 
     const boardContent = isGhostMode ? (
