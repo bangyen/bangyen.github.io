@@ -36,6 +36,8 @@ import { SlantState } from './boardHandlers';
 import { useGridSize } from '../hooks/useGridSize';
 import { useGamePersistence } from '../hooks/useGamePersistence';
 import { useGameInteraction } from '../hooks/useGameInteraction';
+import { useWinTransition } from '../hooks/useWinTransition';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { GamePageLayout } from '../components/GamePageLayout';
 import { GameBoard } from '../components/GameBoard';
 interface SavedSlantState extends Omit<
@@ -155,24 +157,17 @@ export default function Slant() {
         lastPuzzleRef.current = puzzleId;
     }, [state.numbers, state.rows, state.cols]);
 
-    useEffect(() => {
-        document.title = PAGE_TITLES.slant;
-    }, []);
+    usePageTitle(PAGE_TITLES.slant);
 
     const handleReset = useCallback(() => {
         dispatch({ type: 'new' });
     }, [dispatch]);
 
-    useEffect(() => {
-        if (state.solved) {
-            const timeout = setTimeout(() => {
-                handleReset();
-            }, TIMING_CONSTANTS.WIN_ANIMATION_DELAY);
-            return () => {
-                clearTimeout(timeout);
-            };
-        }
-    }, [state.solved, handleReset]);
+    useWinTransition(
+        state.solved,
+        handleReset,
+        TIMING_CONSTANTS.WIN_ANIMATION_DELAY
+    );
 
     const { getDragProps } = useGameInteraction({
         onToggle: (r, c, isRightClick) => {

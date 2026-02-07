@@ -19,6 +19,8 @@ import { useGridSize } from '../hooks/useGridSize';
 import { DragProps } from '../hooks/useDrag';
 import { useGamePersistence } from '../hooks/useGamePersistence';
 import { useGameInteraction } from '../hooks/useGameInteraction';
+import { useWinTransition } from '../hooks/useWinTransition';
+import { usePageTitle } from '../hooks/usePageTitle';
 import { GamePageLayout } from '../components/GamePageLayout';
 
 import { BoardState } from './boardHandlers';
@@ -169,20 +171,9 @@ export default function LightsOut() {
         },
     });
 
-    useEffect(() => {
-        if (solved) {
-            const timeout = setTimeout(() => {
-                handleNext();
-            }, TIMING_CONSTANTS.WIN_ANIMATION_DELAY);
-            return () => {
-                clearTimeout(timeout);
-            };
-        }
-    }, [solved, handleNext]);
+    useWinTransition(solved, handleNext, TIMING_CONSTANTS.WIN_ANIMATION_DELAY);
 
-    useEffect(() => {
-        document.title = PAGE_TITLES.lightsOut;
-    }, []);
+    usePageTitle(PAGE_TITLES.lightsOut);
 
     useEffect(() => {
         dispatch({
