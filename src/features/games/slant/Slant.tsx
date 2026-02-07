@@ -560,7 +560,12 @@ export default function Slant(): React.ReactElement {
                     padding: `${String(size)}rem`,
                     overflowY: isGhostMode ? 'auto' : 'visible',
                     maxHeight: isGhostMode ? 'calc(100vh - 100px)' : 'none',
-                    marginBottom: !isGhostMode ? '128px' : '0',
+                    marginBottom: isGhostMode
+                        ? '0'
+                        : mobile
+                          ? '152px'
+                          : '128px',
+                    overflowX: 'hidden',
                 }}
             >
                 {/* Main Game Card */}
