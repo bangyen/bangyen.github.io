@@ -29,7 +29,12 @@ import {
     FORWARD,
     BACKWARD,
 } from './boardHandlers';
-import { NUMBER_SIZE_RATIO, STORAGE_KEYS, TIMING_CONSTANTS } from './constants';
+import {
+    NUMBER_SIZE_RATIO,
+    STORAGE_KEYS,
+    TIMING_CONSTANTS,
+    SLANT_STYLES,
+} from './constants';
 
 export default function Slant(): React.ReactElement {
     const { height, width } = useWindow();
@@ -290,7 +295,7 @@ export default function Slant(): React.ReactElement {
                                 left: '50%',
                                 transform:
                                     'translate(-50%, -50%) rotate(-45deg)',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                                boxShadow: SLANT_STYLES.SHADOWS.LINE,
                                 transition: 'all 0.2s',
                                 pointerEvents: 'none',
                             }}
@@ -310,7 +315,7 @@ export default function Slant(): React.ReactElement {
                                 left: '50%',
                                 transform:
                                     'translate(-50%, -50%) rotate(45deg)',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                                boxShadow: SLANT_STYLES.SHADOWS.LINE,
                                 transition: 'all 0.2s',
                                 pointerEvents: 'none',
                             }}
@@ -360,11 +365,13 @@ export default function Slant(): React.ReactElement {
                         : 'none',
                 fontSize: `${String(numberSize * 0.5)}rem`,
                 fontWeight: '800',
-                color: hasError ? '#fff' : COLORS.text.primary,
+                color: hasError
+                    ? SLANT_STYLES.COLORS.WHITE
+                    : COLORS.text.primary,
                 boxShadow:
                     isSatisfied && !hasError
                         ? 'none'
-                        : '0 4px 8px rgba(0,0,0,0.1)',
+                        : SLANT_STYLES.SHADOWS.HINT,
                 zIndex: 5,
                 opacity: value !== null ? 1 : 0,
                 display: 'flex',

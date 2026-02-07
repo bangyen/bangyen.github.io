@@ -429,6 +429,9 @@ export function createAppTheme(mode: 'light' | 'dark' = 'dark') {
                         '--selection-background': palette.selectionBackground,
                         '--selection-text': palette.selectionText,
                         '--text-shadow': palette.textShadow,
+                        '--primary-main': COLORS.primary.main,
+                        '--primary-light': COLORS.primary.light,
+                        '--primary-dark': COLORS.primary.dark,
                     },
                     body: {
                         transition:

@@ -8,6 +8,7 @@ import {
     MOBILE_PADDING,
     DESKTOP_PADDING,
     NUMBER_SIZE_RATIO,
+    SLANT_STYLES,
 } from './constants';
 
 interface GhostBoardProps {
@@ -222,17 +223,17 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
             'data-pos': pos,
             sx: {
                 cursor: 'pointer',
-                border: `1px solid rgba(255, 255, 255, 0.1)`, // Lighter border for dark bg
+                border: `1px solid ${SLANT_STYLES.GHOST.BORDER}`, // Lighter border for dark bg
                 position: 'relative',
                 transition: 'all 0.2s',
                 touchAction: 'none',
                 backgroundColor: isConflict
                     ? `${COLORS.data.red}20`
-                    : 'rgba(255, 255, 255, 0.02)', // Slight tint
+                    : SLANT_STYLES.GHOST.BG_SUBTLE, // Slight tint
                 '&:hover': {
                     backgroundColor: isConflict
                         ? `${COLORS.data.red}30`
-                        : 'rgba(255, 255, 255, 0.1)',
+                        : SLANT_STYLES.GHOST.BG_HOVER,
                 },
             },
             children: (
@@ -255,7 +256,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                                 left: '50%',
                                 transform:
                                     'translate(-50%, -50%) rotate(-45deg)',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                                boxShadow: SLANT_STYLES.SHADOWS.LINE,
                                 transition: 'all 0.2s',
                                 pointerEvents: 'none',
                             }}
@@ -273,7 +274,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                                 left: '50%',
                                 transform:
                                     'translate(-50%, -50%) rotate(45deg)',
-                                boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+                                boxShadow: SLANT_STYLES.SHADOWS.LINE,
                                 transition: 'all 0.2s',
                                 pointerEvents: 'none',
                             }}
@@ -294,18 +295,20 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 borderRadius: '50%',
                 backgroundColor: hasConflict
                     ? COLORS.data.red
-                    : 'hsl(217, 50%, 8%)', // Match dark bg
+                    : SLANT_STYLES.GHOST.HINT_BG, // Match dark bg
                 border:
                     value !== null
                         ? `2px solid ${
                               hasConflict
                                   ? COLORS.data.red
-                                  : 'rgba(255, 255, 255, 0.3)' // Lighter border
+                                  : SLANT_STYLES.GHOST.HINT_BORDER // Lighter border
                           }`
                         : 'none',
                 fontSize: `${String(numberSize * 0.5)}rem`,
                 fontWeight: '800',
-                color: hasConflict ? '#fff' : '#fff', // Always white text
+                color: hasConflict
+                    ? SLANT_STYLES.COLORS.WHITE
+                    : SLANT_STYLES.COLORS.WHITE, // Always white text
                 zIndex: 5,
                 opacity: value !== null ? 1 : 0,
                 display: 'flex',
@@ -337,14 +340,14 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
             >
                 <Box
                     sx={{
-                        color: 'rgba(255, 255, 255, 0.5)',
+                        color: SLANT_STYLES.GHOST.OVERLAY_LABEL,
                         fontSize: '0.8rem',
                         fontWeight: 'bold',
                         letterSpacing: '0.2rem',
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
+                        border: `1px solid ${SLANT_STYLES.GHOST.HINT_BORDER}`,
                         padding: '4px 12px',
                         borderRadius: '4px',
-                        background: 'rgba(0, 0, 0, 0.3)',
+                        background: SLANT_STYLES.GHOST.OVERLAY_BG,
                         backdropFilter: 'blur(4px)',
                     }}
                 >
@@ -356,7 +359,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 sx={{
                     position: 'relative',
                     padding: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
-                    border: '2px dashed rgba(255, 255, 255, 0.2)',
+                    border: `2px dashed ${SLANT_STYLES.GHOST.DASHED_BORDER}`,
                     borderRadius: '24px',
                 }}
             >

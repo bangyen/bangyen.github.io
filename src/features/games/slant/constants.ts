@@ -22,3 +22,23 @@ export const STORAGE_KEYS = {
 export const GAME_LOGIC_CONSTANTS = {
     HINT_DENSITY: 0.35,
 };
+
+export const SLANT_STYLES = {
+    COLORS: {
+        WHITE: '#fff',
+    },
+    SHADOWS: {
+        LINE: '0 2px 4px rgba(0,0,0,0.2)',
+        HINT: '0 4px 8px rgba(0,0,0,0.1)',
+    },
+    GHOST: {
+        BORDER: 'rgba(255, 255, 255, 0.1)',
+        BG_SUBTLE: 'rgba(255, 255, 255, 0.02)',
+        BG_HOVER: 'rgba(255, 255, 255, 0.1)',
+        DASHED_BORDER: 'rgba(255, 255, 255, 0.2)',
+        HINT_BG: 'hsl(217, 50%, 8%)',
+        HINT_BORDER: 'rgba(255, 255, 255, 0.3)',
+        OVERLAY_LABEL: 'rgba(255, 255, 255, 0.5)',
+        OVERLAY_BG: 'rgba(0, 0, 0, 0.3)',
+    },
+};

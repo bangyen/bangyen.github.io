@@ -20,6 +20,13 @@ export const RESEARCH_STYLES = {
     GREEN: {
         BG_SUBTLE: 'rgba(0, 200, 83, 0.05)',
         BORDER_SUBTLE: 'rgba(0, 200, 83, 0.1)',
+        HOVER: 'hsl(141, 64%, 39%)',
+    },
+    // Amber accents for warnings/logic nodes
+    AMBER: {
+        BG_SUBTLE: 'rgba(255, 193, 7, 0.05)',
+        BORDER_SUBTLE: 'rgba(255, 193, 7, 0.1)',
+        HOVER: 'hsl(34, 95%, 48%)',
     },
     // General borders
     BORDER: {

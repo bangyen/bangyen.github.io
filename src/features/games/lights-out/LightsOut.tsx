@@ -31,6 +31,7 @@ import { useWindow, useMobile } from '../../../hooks';
 import { convertPixels } from '../../interpreters/utils/gridUtils';
 import Info from './Info';
 import { GlobalHeader } from '../../../components/layout/GlobalHeader';
+import { TIMING_CONSTANTS, LIGHTS_OUT_STYLES } from './constants';
 
 function getFrontProps(
     getters: Getters,
@@ -60,7 +61,11 @@ function getFrontProps(
             onMouseDown: (e: React.MouseEvent) => {
                 if (e.button !== 0) return; // Only left click
                 // Ignore ghost clicks on mobile
-                if (Date.now() - lastTouchTime.current < 500) return;
+                if (
+                    Date.now() - lastTouchTime.current <
+                    TIMING_CONSTANTS.GHOST_CLICK_TIMEOUT
+                )
+                    return;
                 setIsDragging(true);
                 flipAdj(row, col);
                 addDraggedCell(pos);
@@ -90,7 +95,7 @@ function getFrontProps(
                     color: back,
                 },
                 touchAction: 'none', // Prevent scrolling while dragging
-                transition: 'all 100ms ease-in-out',
+                transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
             },
         };
     };

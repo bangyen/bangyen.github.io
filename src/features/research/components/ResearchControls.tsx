@@ -10,6 +10,7 @@ import {
 import { Refresh } from '../../../components/icons';
 import { COLORS, SPACING, TYPOGRAPHY, SHADOWS } from '../../../config/theme';
 import { Control } from '../types';
+import { RESEARCH_STYLES } from '../constants';
 
 interface ResearchControlsProps {
     controls: Control[];
@@ -157,10 +158,12 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
                                                         ? COLORS.primary.dark
                                                         : control.color ===
                                                             COLORS.data.green
-                                                          ? 'hsl(141, 64%, 39%)'
+                                                          ? RESEARCH_STYLES
+                                                                .GREEN.HOVER
                                                           : control.color ===
                                                               COLORS.data.amber
-                                                            ? 'hsl(34, 95%, 48%)'
+                                                            ? RESEARCH_STYLES
+                                                                  .AMBER.HOVER
                                                             : (control.color ??
                                                               COLORS.primary
                                                                   .dark)),
@@ -171,10 +174,12 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
                                                         ? COLORS.primary.dark
                                                         : control.color ===
                                                             COLORS.data.green
-                                                          ? 'hsl(141, 64%, 39%)'
+                                                          ? RESEARCH_STYLES
+                                                                .GREEN.HOVER
                                                           : control.color ===
                                                               COLORS.data.amber
-                                                            ? 'hsl(34, 95%, 48%)'
+                                                            ? RESEARCH_STYLES
+                                                                  .AMBER.HOVER
                                                             : (control.color ??
                                                               COLORS.primary
                                                                   .dark)),
