@@ -243,21 +243,22 @@ export default function LightsOut() {
                     frontProps={frontProps}
                     backProps={backProps}
                 />
+                <TrophyOverlay
+                    show={solved}
+                    onClick={handleNext}
+                    size={size}
+                    iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
+                    primaryColor={palette.primary}
+                    secondaryColor={palette.secondary}
+                    useSecondary={allOn}
+                    sx={{
+                        backdropFilter: 'none',
+                        backgroundColor: 'transparent',
+                        boxShadow: 'none',
+                        border: 'none',
+                    }}
+                />
             </Box>
-            <TrophyOverlay
-                show={solved}
-                onClick={handleNext}
-                size={size}
-                iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
-                primaryColor={palette.primary}
-                secondaryColor={palette.secondary}
-                useSecondary={allOn}
-                sx={{
-                    marginTop: mobile
-                        ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
-                        : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
-                }}
-            />
             {open && (
                 <Info
                     rows={rows}

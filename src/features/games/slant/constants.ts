@@ -24,6 +24,7 @@ export const LAYOUT_CONSTANTS = {
     HEIGHT_OFFSET: 240,
     MAX_CELL_SIZE: 100,
     REM_BASE: 16,
+    ICON_SIZE_RATIO: 0.8,
 };
 
 export const STORAGE_KEYS = {

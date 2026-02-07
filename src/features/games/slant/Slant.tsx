@@ -464,19 +464,25 @@ export default function Slant() {
                                     sx={{ width: 'fit-content' }}
                                 />
                             </Box>
+
+                            <TrophyOverlay
+                                show={state.solved}
+                                onClick={handleReset}
+                                size={size}
+                                iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
+                                primaryColor={COLORS.primary.main}
+                                secondaryColor={COLORS.primary.main}
+                                sx={{
+                                    backdropFilter: 'none',
+                                    backgroundColor: 'transparent',
+                                    boxShadow: 'none',
+                                    border: 'none',
+                                }}
+                            />
                         </Box>
                     </>
                 )}
             </Box>
-
-            <TrophyOverlay
-                show={state.solved}
-                onClick={handleReset}
-                size={size}
-                iconSizeRatio={1.0}
-                primaryColor={COLORS.primary.main}
-                secondaryColor={COLORS.primary.main}
-            />
         </GamePageLayout>
     );
 }
