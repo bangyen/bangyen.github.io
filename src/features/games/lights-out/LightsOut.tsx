@@ -1,8 +1,7 @@
 import React, { useMemo, useEffect, useReducer, useCallback } from 'react';
-import { Box } from '../../../components/mui';
 import { MenuBookRounded } from '../../../components/icons';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
-import { Board, useHandler, usePalette, Getters } from '../components/Board';
+import { Board, useHandler, usePalette } from '../components/Board';
 import { GameControls } from '../components/GameControls';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
@@ -16,84 +15,14 @@ import {
     LIGHTS_OUT_STYLES,
 } from './constants';
 import { useGridSize } from '../hooks/useGridSize';
-import { DragProps } from '../hooks/useDrag';
 import { useGamePersistence } from '../hooks/useGamePersistence';
 import { useGameInteraction } from '../hooks/useGameInteraction';
 import { useWinTransition } from '../hooks/useWinTransition';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { GamePageLayout } from '../components/GamePageLayout';
+import { getFrontProps, getBackProps, getExampleProps } from './renderers';
 
 import { BoardState } from './boardHandlers';
-
-const ICON = (
-    <Box
-        sx={{
-            width: '45%',
-            height: '45%',
-            borderRadius: '50%',
-            backgroundColor: 'currentColor',
-        }}
-    />
-);
-
-function getFrontProps(
-    getters: Getters,
-    getDragProps: (pos: string) => DragProps
-) {
-    const { getColor, getBorder } = getters;
-
-    return (row: number, col: number) => {
-        const style = getBorder(row, col);
-        const { front, back } = getColor(row, col);
-        const pos = `${row.toString()},${col.toString()}`;
-        const dragProps = getDragProps(pos);
-
-        return {
-            ...dragProps,
-            children: ICON,
-            backgroundColor: front,
-            color: front,
-            style,
-            sx: {
-                ...dragProps.sx,
-                '&:hover': {
-                    cursor: 'pointer',
-                    color: back,
-                },
-            },
-        };
-    };
-}
-
-function getBackProps(getters: Getters) {
-    return (row: number, col: number) => {
-        return {
-            backgroundColor: getters.getFiller(row, col),
-            transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
-        };
-    };
-}
-
-function getExampleProps(getters: Getters) {
-    const frontProps = getFrontProps(getters, (pos: string) => ({
-        onMouseDown: () => undefined,
-        onMouseEnter: () => undefined,
-        onTouchStart: () => undefined,
-        'data-pos': pos,
-        sx: { touchAction: 'none' as const, transition: 'none' },
-    }));
-
-    return (row: number, col: number) => {
-        const props = frontProps(row, col);
-        return {
-            ...props,
-            onMouseDown: undefined,
-            onMouseEnter: undefined,
-            onTouchStart: undefined,
-            sx: {},
-        };
-    };
-}
 
 export default function LightsOut() {
     const {
