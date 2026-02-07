@@ -21,11 +21,20 @@ jest.mock('../../../../config/theme', () => ({
             elevated: 'white',
             background: 'white',
         },
+        interactive: {
+            selected: 'lightgray',
+            focus: 'gray',
+        },
     },
     sxf: () => ({}),
     ANIMATIONS: { transition: 'none' },
     LAYOUT: { zIndex: { base: 1 } },
     SPACING: { borderRadius: { full: 999, sm: 4 } },
+}));
+
+// Mock TooltipButton
+jest.mock('../../../../components/ui/TooltipButton', () => ({
+    TooltipButton: () => <div data-testid="tooltip-button" />,
 }));
 
 // Mock CustomGrid to verify cell rendering
