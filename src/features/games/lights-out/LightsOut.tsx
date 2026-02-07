@@ -20,8 +20,9 @@ import { DragProps } from '../hooks/useDrag';
 import { useGamePersistence } from '../hooks/useGamePersistence';
 import { useGameInteraction } from '../hooks/useGameInteraction';
 import { GamePageLayout } from '../components/GamePageLayout';
-import { TrophyOverlay } from '../components/TrophyOverlay';
+
 import { BoardState } from './boardHandlers';
+import { GameBoard } from '../components/GameBoard';
 
 const ICON = (
     <Box
@@ -228,9 +229,15 @@ export default function LightsOut() {
             infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
             controls={controls}
         >
-            <Box
+            <GameBoard
+                showTrophy={solved}
+                onReset={handleNext}
+                size={size}
+                iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
+                primaryColor={palette.primary}
+                secondaryColor={palette.secondary}
+                useSecondaryTrophy={allOn}
                 sx={{
-                    position: 'relative',
                     marginTop: mobile
                         ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
                         : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
@@ -243,22 +250,7 @@ export default function LightsOut() {
                     frontProps={frontProps}
                     backProps={backProps}
                 />
-                <TrophyOverlay
-                    show={solved}
-                    onClick={handleNext}
-                    size={size}
-                    iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
-                    primaryColor={palette.primary}
-                    secondaryColor={palette.secondary}
-                    useSecondary={allOn}
-                    sx={{
-                        backdropFilter: 'none',
-                        backgroundColor: 'transparent',
-                        boxShadow: 'none',
-                        border: 'none',
-                    }}
-                />
-            </Box>
+            </GameBoard>
             {open && (
                 <Info
                     rows={rows}

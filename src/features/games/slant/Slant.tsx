@@ -37,8 +37,7 @@ import { useGridSize } from '../hooks/useGridSize';
 import { useGamePersistence } from '../hooks/useGamePersistence';
 import { useGameInteraction } from '../hooks/useGameInteraction';
 import { GamePageLayout } from '../components/GamePageLayout';
-import { TrophyOverlay } from '../components/TrophyOverlay';
-
+import { GameBoard } from '../components/GameBoard';
 interface SavedSlantState extends Omit<
     SlantState,
     'errorNodes' | 'cycleCells' | 'satisfiedNodes'
@@ -413,10 +412,14 @@ export default function Slant() {
                     />
                 ) : (
                     <>
-                        {/* Grid Container - Isolation for perfect alignment */}
-                        <Box
+                        <GameBoard
+                            showTrophy={state.solved}
+                            onReset={handleReset}
+                            size={size}
+                            iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
+                            primaryColor={COLORS.primary.main}
+                            secondaryColor={COLORS.primary.main}
                             sx={{
-                                position: 'relative',
                                 userSelect: 'none',
                                 padding: mobile
                                     ? MOBILE_PADDING
@@ -464,22 +467,7 @@ export default function Slant() {
                                     sx={{ width: 'fit-content' }}
                                 />
                             </Box>
-
-                            <TrophyOverlay
-                                show={state.solved}
-                                onClick={handleReset}
-                                size={size}
-                                iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
-                                primaryColor={COLORS.primary.main}
-                                secondaryColor={COLORS.primary.main}
-                                sx={{
-                                    backdropFilter: 'none',
-                                    backgroundColor: 'transparent',
-                                    boxShadow: 'none',
-                                    border: 'none',
-                                }}
-                            />
-                        </Box>
+                        </GameBoard>
                     </>
                 )}
             </Box>
