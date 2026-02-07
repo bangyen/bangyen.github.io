@@ -9,7 +9,11 @@ import { useMobile } from '../../../hooks';
 import { Box } from '@mui/material';
 import { COLORS, LAYOUT } from '../../../config/theme';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
-import { ContentCopyRounded, DeleteRounded } from '../../../components/icons';
+import {
+    CloseRounded,
+    ContentCopyRounded,
+    DeleteRounded,
+} from '../../../components/icons';
 import {
     FORWARD,
     BACKWARD,
@@ -37,6 +41,7 @@ interface GhostBoardProps {
     onMove: (pos: string, val: CellState | undefined) => void;
     onCopy?: () => void;
     onClear?: () => void;
+    onClose?: () => void;
 }
 
 type CellSource = 'user' | 'propagated';
@@ -60,6 +65,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
     onMove,
     onCopy,
     onClear,
+    onClose,
 }) => {
     const mobile = useMobile('sm');
     // User inputs: just strict assignments
@@ -481,35 +487,6 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
 
     return (
         <Box sx={{ position: 'relative', userSelect: 'none' }}>
-            {/* Blueprint Container */}
-            <Box
-                sx={{
-                    position: 'absolute',
-                    top: -40,
-                    left: 0,
-                    right: 0,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    pointerEvents: 'none',
-                }}
-            >
-                <Box
-                    sx={{
-                        color: SLANT_STYLES.GHOST.OVERLAY_LABEL,
-                        fontSize: '0.8rem',
-                        fontWeight: 'bold',
-                        letterSpacing: '0.2rem',
-                        border: `1px solid ${SLANT_STYLES.GHOST.HINT_BORDER}`,
-                        padding: '4px 12px',
-                        borderRadius: SPACING.borderRadius.sm,
-                        background: SLANT_STYLES.GHOST.OVERLAY_BG,
-                        backdropFilter: 'blur(4px)',
-                    }}
-                >
-                    CALCULATOR
-                </Box>
-            </Box>
-
             <Box
                 sx={{
                     position: 'relative',
@@ -569,7 +546,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 }}
             >
                 <TooltipButton
-                    title="Copy Logic from Board"
+                    title="Copy Board"
                     Icon={ContentCopyRounded}
                     onClick={onCopy}
                     sx={{
@@ -589,6 +566,18 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                         color: COLORS.data.red,
                         '&:hover': {
                             backgroundColor: 'rgba(255, 68, 68, 0.2)',
+                        },
+                    }}
+                />
+                <TooltipButton
+                    title="Close Calculator"
+                    Icon={CloseRounded}
+                    onClick={onClose}
+                    sx={{
+                        backgroundColor: 'rgba(255, 193, 7, 0.1)',
+                        color: COLORS.data.amber,
+                        '&:hover': {
+                            backgroundColor: 'rgba(255, 193, 7, 0.2)',
                         },
                     }}
                 />

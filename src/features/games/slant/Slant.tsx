@@ -558,14 +558,13 @@ export default function Slant(): React.ReactElement {
                     justifyContent: 'center',
                     alignItems: 'center',
                     padding: `${String(size)}rem`,
-                    overflowY: isGhostMode ? 'auto' : 'visible',
                     maxHeight: isGhostMode ? 'calc(100vh - 100px)' : 'none',
                     marginBottom: isGhostMode
                         ? '0'
                         : mobile
                           ? '152px'
                           : '128px',
-                    overflowX: 'hidden',
+                    overflow: 'hidden',
                 }}
             >
                 {/* Main Game Card */}
@@ -605,6 +604,9 @@ export default function Slant(): React.ReactElement {
                             }}
                             onClear={() => {
                                 setGhostMoves(new Map());
+                            }}
+                            onClose={() => {
+                                setIsGhostMode(false);
                             }}
                         />
                     ) : (
@@ -705,44 +707,39 @@ export default function Slant(): React.ReactElement {
                 </Box>
             </Box>
 
-            <Controls
-                handler={() => () => undefined}
-                onAutoPlay={() => {
-                    dispatch({ type: 'auto' });
-                }}
-                autoPlayEnabled={state.auto}
-            >
-                <TooltipButton
-                    title="Decrease Size"
-                    Icon={RemoveRounded}
-                    onClick={handleMinus}
-                    disabled={rows <= 3 || isGhostMode}
-                />
-                <TooltipButton
-                    title="Increase Size"
-                    Icon={AddRounded}
-                    onClick={handlePlus}
-                    disabled={
-                        rows >= GAME_LOGIC_CONSTANTS.MAX_SIZE ||
-                        (rows >= dynamicSize.rows &&
-                            cols >= dynamicSize.cols) ||
-                        isGhostMode
-                    }
-                />
-                <TooltipButton
-                    title={isGhostMode ? 'Close Calculator' : 'Open Calculator'}
-                    Icon={Psychology}
-                    onClick={() => {
-                        setIsGhostMode(!isGhostMode);
+            {!isGhostMode && (
+                <Controls
+                    handler={() => () => undefined}
+                    onAutoPlay={() => {
+                        dispatch({ type: 'auto' });
                     }}
-                    sx={{
-                        color: isGhostMode ? COLORS.primary.main : 'inherit',
-                        backgroundColor: isGhostMode
-                            ? COLORS.interactive.selected
-                            : 'transparent',
-                    }}
-                />
-            </Controls>
+                    autoPlayEnabled={state.auto}
+                >
+                    <TooltipButton
+                        title="Decrease Size"
+                        Icon={RemoveRounded}
+                        onClick={handleMinus}
+                        disabled={rows <= 3}
+                    />
+                    <TooltipButton
+                        title="Increase Size"
+                        Icon={AddRounded}
+                        onClick={handlePlus}
+                        disabled={
+                            rows >= GAME_LOGIC_CONSTANTS.MAX_SIZE ||
+                            (rows >= dynamicSize.rows &&
+                                cols >= dynamicSize.cols)
+                        }
+                    />
+                    <TooltipButton
+                        title={'Open Calculator'}
+                        Icon={Psychology}
+                        onClick={() => {
+                            setIsGhostMode(!isGhostMode);
+                        }}
+                    />
+                </Controls>
+            )}
         </Grid>
     );
 }
