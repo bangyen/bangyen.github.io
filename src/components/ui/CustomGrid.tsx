@@ -37,7 +37,7 @@ const Cell = memo(function Cell({ size, children, ...rest }: CellProps) {
             ? 'none'
             : typeof transitionProp === 'string'
               ? transitionProp
-              : 'background-color 200ms ease, color 200ms ease, opacity 200ms ease, transform 200ms ease';
+              : 'background-color 200ms ease, color 200ms ease, opacity 200ms ease, transform 200ms ease, border-radius 200ms ease';
 
     const props = useMemo(
         () => ({

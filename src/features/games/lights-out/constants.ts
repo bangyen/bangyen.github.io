@@ -1,8 +1,8 @@
 export const LIGHTS_OUT_STYLES = {
     TRANSITION: {
-        FAST: 'background-color 100ms ease-in-out, color 100ms ease-in-out, opacity 100ms ease-in-out',
+        FAST: 'background-color 100ms ease-in-out, color 100ms ease-in-out, opacity 100ms ease-in-out, border-radius 100ms ease-in-out',
         DEFAULT:
-            'background-color 200ms ease, color 200ms ease, opacity 200ms ease',
+            'background-color 200ms ease, color 200ms ease, opacity 200ms ease, border-radius 200ms ease',
     },
     SHADOWS: {
         DROP: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
