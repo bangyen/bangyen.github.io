@@ -155,8 +155,7 @@ describe('Test Utilities', () => {
             const decoded = String.fromCharCode(
                 ...Array.from(new Uint8Array(buffer))
             );
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            const parsed = JSON.parse(decoded);
+            const parsed = JSON.parse(decoded) as unknown;
 
             expect(parsed).toEqual(testData);
         });
@@ -288,8 +287,7 @@ describe('Test Utilities', () => {
             const decoded = String.fromCharCode(
                 ...Array.from(new Uint8Array(buffer))
             );
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            const parsed = JSON.parse(decoded);
+            const parsed = JSON.parse(decoded) as unknown;
 
             expect(parsed).toEqual(testData);
         });

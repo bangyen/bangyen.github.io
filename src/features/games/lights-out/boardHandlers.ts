@@ -1,92 +1,101 @@
 import { getProduct } from './matrices';
+import { PRECOMPUTED_SOLUTIONS } from './precomputedTables';
+import { createGameReducer } from '../utils/gameUtils';
 
-export function getGrid(rows: number, cols: number): number[][] {
-    return Array.from({ length: rows }, () => Array(cols).fill(0) as number[]);
+export interface BoardState {
+    grid: number[];
+    score: number;
+    rows: number;
+    cols: number;
+    initialized: boolean;
+}
+
+export type BoardAction =
+    | { type: 'adjacent'; row: number; col: number }
+    | { type: 'multi_adjacent'; moves: { row: number; col: number }[] }
+    | { type: 'random' | 'randomize' }
+    | {
+          type: 'resize';
+          rows?: number;
+          cols?: number;
+          newRows?: number;
+          newCols?: number;
+      }
+    | { type: 'reset' }
+    | { type: 'new' | 'next' }
+    | { type: 'restore' | 'hydrate'; state: BoardState };
+
+export function getGrid(rows: number, _cols: number): number[] {
+    return Array.from({ length: rows }, () => 0);
 }
 
 export function flipAdj(
     row: number,
     col: number,
-    grid: number[][]
-): number[][] {
-    const rows = grid.length;
+    grid: number[],
+    rows: number,
+    cols: number
+): number[] {
+    const newGrid = [...grid];
 
-    const newGrid = grid.map(row => [...row]);
-    const targetRow = newGrid[row];
-    if (targetRow && col >= 0 && col < targetRow.length) {
-        const val = targetRow[col];
-        if (val !== undefined) targetRow[col] = val ^ 1;
-    }
+    // Toggle self and left/right
+    let mask = 1 << col;
+    // Check boundaries for left/right
+    if (col > 0) mask |= 1 << (col - 1);
+    if (col < cols - 1) mask |= 1 << (col + 1);
 
+    if (newGrid[row] !== undefined) newGrid[row] ^= mask;
+
+    // Toggle up
     if (row > 0) {
-        const rowAbove = newGrid[row - 1];
-        if (rowAbove && col >= 0 && col < rowAbove.length) {
-            const val = rowAbove[col];
-            if (val !== undefined) rowAbove[col] = val ^ 1;
-        }
-    }
-    if (row < rows - 1) {
-        const rowBelow = newGrid[row + 1];
-        if (rowBelow && col >= 0 && col < rowBelow.length) {
-            const val = rowBelow[col];
-            if (val !== undefined) rowBelow[col] = val ^ 1;
-        }
+        const val = newGrid[row - 1];
+        if (val !== undefined) newGrid[row - 1] = val ^ (1 << col);
     }
 
-    if (targetRow) {
-        if (col > 0) {
-            const val = targetRow[col - 1];
-            if (val !== undefined) targetRow[col - 1] = val ^ 1;
-        }
-        if (col < targetRow.length - 1) {
-            const val = targetRow[col + 1];
-            if (val !== undefined) targetRow[col + 1] = val ^ 1;
-        }
+    // Toggle down
+    if (row < rows - 1) {
+        const val = newGrid[row + 1];
+        if (val !== undefined) newGrid[row + 1] = val ^ (1 << col);
     }
 
     return newGrid;
 }
 
-export function isSolved(grid: number[][]): boolean {
-    const flat = grid.flat();
-    return !flat.includes(1) || !flat.includes(0);
+function flipAdjInPlace(
+    row: number,
+    col: number,
+    grid: number[],
+    rows: number,
+    cols: number
+): void {
+    let mask = 1 << col;
+    if (col > 0) mask |= 1 << (col - 1);
+    if (col < cols - 1) mask |= 1 << (col + 1);
+
+    if (grid[row] !== undefined) grid[row] ^= mask;
+
+    if (row > 0) {
+        const val = grid[row - 1];
+        if (val !== undefined) grid[row - 1] = val ^ (1 << col);
+    }
+
+    if (row < rows - 1) {
+        const val = grid[row + 1];
+        if (val !== undefined) grid[row + 1] = val ^ (1 << col);
+    }
 }
 
-function randomize(rows: number, cols: number): number[][] {
+export function isSolved(grid: number[]): boolean {
+    return grid.every(row => row === 0);
+}
+
+function randomize(rows: number, cols: number): number[] {
     const grid = getGrid(rows, cols);
 
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
             if (Math.random() > 0.5) {
-                // Inline flipAdj logic to avoid cloning grid in every iteration
-                const neighbors = [
-                    [r, c],
-                    [r - 1, c],
-                    [r + 1, c],
-                    [r, c - 1],
-                    [r, c + 1],
-                ];
-
-                for (const neighbor of neighbors) {
-                    const nr = neighbor[0];
-                    const nc = neighbor[1];
-                    if (
-                        nr !== undefined &&
-                        nc !== undefined &&
-                        nr >= 0 &&
-                        nr < rows &&
-                        nc >= 0 &&
-                        nc < cols
-                    ) {
-                        const rowArr = grid[nr];
-                        if (rowArr && nc >= 0 && nc < rowArr.length) {
-                            const val = rowArr[nc];
-                            if (val !== undefined) {
-                                rowArr[nc] = val ^ 1;
-                            }
-                        }
-                    }
-                }
+                flipAdjInPlace(r, c, grid, rows, cols);
             }
         }
     }
@@ -97,39 +106,80 @@ function randomize(rows: number, cols: number): number[][] {
 function solveLastRow(
     rows: number,
     cols: number,
-    lastRow: number[]
+    lastRow: number
 ): number[] | null {
-    const solution = getProduct(lastRow, rows, cols);
+    // Check precomputed
+    const key = `${String(rows)},${String(cols)}`;
+    const precomputed = PRECOMPUTED_SOLUTIONS[key];
+
+    let solutionMask = 0;
+
+    if (precomputed) {
+        for (let i = 0; i < cols; i++) {
+            const rowInv = precomputed[i];
+            if (rowInv !== undefined) {
+                const dot = rowInv & lastRow;
+                // Count bits of dot
+                let count = 0;
+                let n = dot;
+                while (n > 0) {
+                    n &= n - 1;
+                    count++;
+                }
+
+                if (count % 2 === 1) {
+                    solutionMask |= 1 << i;
+                }
+            }
+        }
+    } else {
+        // Fallback to getProduct
+        const input: number[] = [];
+        for (let i = 0; i < cols; i++) {
+            input.push((lastRow >> i) & 1);
+        }
+
+        const result = getProduct(input, rows, cols);
+        result.forEach((val, idx) => {
+            if (val) solutionMask |= 1 << idx;
+        });
+    }
+
     const indices: number[] = [];
-    solution.forEach((val, col) => {
-        if (val === 1) indices.push(col);
-    });
+    for (let c = 0; c < cols; c++) {
+        if ((solutionMask >> c) & 1) {
+            indices.push(c);
+        }
+    }
+
     return indices.length > 0 ? indices : null;
 }
 
 export function getNextMove(
-    grid: number[][]
+    grid: number[],
+    rows: number,
+    cols: number
 ): { row: number; col: number }[] | null {
-    const rows = grid.length;
-    const firstRow = grid[0];
-    const cols = firstRow ? firstRow.length : 0;
+    const tempGrid = [...grid];
+    const moves: { row: number; col: number }[] = [];
 
-    // Phase 1: Chase lights down
     for (let r = 0; r < rows - 1; r++) {
-        const currentRow = grid[r];
-        if (!currentRow) continue;
+        const currentRow = tempGrid[r];
+        if (currentRow === undefined) continue;
         for (let c = 0; c < cols; c++) {
-            if (currentRow[c] === 1) {
-                // Return as single-item array
-                return [{ row: r + 1, col: c }];
+            if ((currentRow >> c) & 1) {
+                moves.push({ row: r + 1, col: c });
+                flipAdjInPlace(r + 1, c, tempGrid, rows, cols);
             }
         }
     }
 
-    // Phase 2: Check last row
-    const lastRow = grid[rows - 1];
-    if (lastRow?.some(cell => cell === 1)) {
-        // Phase 3: Solve last row
+    if (moves.length > 0) {
+        return moves;
+    }
+
+    const lastRow = tempGrid[rows - 1];
+    if (lastRow !== undefined && lastRow !== 0) {
         const solution = solveLastRow(rows, cols, lastRow);
         if (solution && solution.length > 0) {
             return solution.map(col => ({ row: 0, col }));
@@ -139,85 +189,68 @@ export function getNextMove(
     return null;
 }
 
-export interface BoardState {
-    grid: number[][];
-    score: number;
-    rows: number;
-    cols: number;
-    auto: boolean;
-    initialized: boolean;
-}
-
-export interface BoardAction {
-    type: string;
-    row?: number;
-    col?: number;
-    moves?: { row: number; col: number }[];
-    newRows?: number;
-    newCols?: number;
-}
-
-export function handleBoard(
-    state: BoardState,
-    action: BoardAction
-): BoardState {
-    const { type, row, col, moves } = action;
-
-    let { grid, score, rows, cols, auto, initialized } = state;
-
-    switch (type) {
-        case 'auto':
-            auto = !auto;
-            break;
-        case 'adjacent': {
-            if (row !== undefined && col !== undefined) {
-                grid = flipAdj(row, col, grid);
-            }
-            break;
-        }
-        case 'multi_adjacent':
-            if (moves) {
-                moves.forEach(m => {
-                    grid = flipAdj(m.row, m.col, grid);
-                });
-            }
-            break;
-        case 'random':
-        case 'randomize': {
-            grid = randomize(rows, cols);
-            auto = false;
-            break;
-        }
-        case 'resize': {
-            const { newRows, newCols } = action;
-            if (newRows !== undefined && newCols !== undefined) {
-                rows = newRows;
-                cols = newCols;
-                grid = randomize(rows, cols);
-                auto = false;
-                initialized = true; // Mark as initialized
-            }
-            break;
-        }
-        case 'reset':
-            grid = getGrid(rows, cols);
-            score = 0;
-            auto = false;
-            break;
-        case 'next':
-            grid = randomize(rows, cols);
-            score += 1;
-            break;
-        default:
-            break;
-    }
-
+export function getInitialState(rows: number, cols: number): BoardState {
     return {
-        grid,
-        score,
+        grid: getGrid(rows, cols),
+        score: 0,
         rows,
         cols,
-        auto,
-        initialized: initialized || false,
+        initialized: false,
     };
 }
+
+export const handleBoard = createGameReducer<BoardState, BoardAction>({
+    getInitialState,
+    customHandler: (state, action) => {
+        const { rows, cols } = state;
+
+        switch (action.type) {
+            case 'adjacent': {
+                return {
+                    ...state,
+                    grid: flipAdj(
+                        action.row,
+                        action.col,
+                        state.grid,
+                        rows,
+                        cols
+                    ),
+                };
+            }
+            case 'multi_adjacent': {
+                const newGrid = [...state.grid];
+                action.moves.forEach(({ row: r, col: c }) => {
+                    flipAdjInPlace(r, c, newGrid, rows, cols);
+                });
+                return { ...state, grid: newGrid };
+            }
+            case 'random':
+            case 'randomize': {
+                return {
+                    ...state,
+                    grid: randomize(rows, cols),
+                    initialized: true,
+                };
+            }
+            case 'resize': {
+                const r = action.newRows ?? action.rows ?? state.rows;
+                const c = action.newCols ?? action.cols ?? state.cols;
+                return {
+                    ...getInitialState(r, c),
+                    grid: randomize(r, c),
+                    initialized: true,
+                };
+            }
+            case 'new':
+            case 'next': {
+                return {
+                    ...getInitialState(rows, cols),
+                    grid: randomize(rows, cols),
+                    score: state.score + 1,
+                    initialized: true,
+                };
+            }
+        }
+        return state;
+    },
+});

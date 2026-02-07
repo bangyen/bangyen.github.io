@@ -40,3 +40,5 @@ temp_research_repos/
 __pycache__/
 coverage_output_*.txt
 *.txt
+/target/
+**/target/

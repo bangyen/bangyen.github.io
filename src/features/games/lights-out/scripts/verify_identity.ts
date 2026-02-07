@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /*
     Verification Script for Lights Out Identity Matrix Property
     

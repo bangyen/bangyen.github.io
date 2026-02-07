@@ -1,17 +1,20 @@
 import { getGrid, flipAdj } from './boardHandlers';
 import { getProduct } from './matrices';
 
-export function chaseLights(states: number[][][], dims: number): number[][][] {
+export function chaseLights(states: number[][], dims: number): number[][] {
     const newStates = [...states];
     let prev = states.at(-1);
 
     if (!prev) return newStates;
 
     for (let r = 1; r < dims; r++) {
-        for (let c = 0; c < dims; c++) {
-            if (!prev[r - 1]?.[c]) continue;
+        const prevRow = prev[r - 1];
+        if (prevRow === undefined) continue;
 
-            const next = flipAdj(r, c, prev);
+        for (let c = 0; c < dims; c++) {
+            if (!((prevRow >> c) & 1)) continue;
+
+            const next = flipAdj(r, c, prev, dims, dims);
 
             newStates.push(next);
             prev = next;
@@ -28,11 +31,11 @@ export function fillRow(
     input: number[][];
     output: number[][];
 } {
-    const blank = Array(dims).fill(0);
+    const blank = Array(dims).fill(0) as number[];
 
-    const inputStates: number[][] = [blank as number[]];
-    const outputStates: number[][] = [blank as number[]];
-    const last = [...(blank as number[])];
+    const inputStates: number[][] = [blank];
+    const outputStates: number[][] = [blank];
+    const last = [...blank];
 
     for (let c = 0; c < dims; c++) {
         if (!row[c]) continue;
@@ -67,7 +70,7 @@ export function getStates(
     grid: number[],
     dims: number
 ): {
-    boardStates: number[][][];
+    boardStates: number[][];
     inputStates: number[][];
     outputStates: number[][];
 } {
@@ -77,15 +80,15 @@ export function getStates(
         const row = Math.floor(index / dims);
         const col = index % dims;
 
-        board = flipAdj(row, col, board);
+        board = flipAdj(row, col, board, dims, dims);
     }
 
     const states = chaseLights([board], dims);
     const last = states.at(-1);
     if (!last) return { boardStates: [], inputStates: [], outputStates: [] };
 
-    const row = last.at(-1);
-    if (!row) return { boardStates: [], inputStates: [], outputStates: [] };
+    const lastRowMask = last.at(-1) ?? 0;
+    const row = Array.from({ length: dims }, (_, i) => (lastRowMask >> i) & 1);
 
     const { input, output } = fillRow(row, dims);
 
@@ -96,21 +99,22 @@ export function getStates(
 
     let state = [...last];
 
-    for (let i = 0; i < before - states.length; i++) {
+    while (states.length < before) {
         states.push([...last]);
     }
+
     const firstInput = input[0];
-    for (let i = 0; i < before - input.length; i++) {
+    while (input.length < before) {
         if (firstInput) input.unshift([...firstInput]);
     }
     const firstOutput = output[0];
-    for (let i = 0; i < before - output.length; i++) {
+    while (output.length < before) {
         if (firstOutput) output.unshift([...firstOutput]);
     }
 
     for (let k = 0; k < dims; k++) {
         if (top[k]) {
-            state = flipAdj(0, k, state);
+            state = flipAdj(0, k, state, dims, dims);
             states.push([...state]);
         }
     }
@@ -144,11 +148,11 @@ export function handleChase(state: unknown, action: unknown): unknown {
     return state;
 }
 
-export function getCalculator(rows: number, cols: number, dims: number) {
+export function getCalculator(rows: number, _cols: number, dims: number) {
     return (
         row: number[]
     ): {
-        boardStates: number[][][];
+        boardStates: number[][];
         inputStates: number[][];
         outputStates: number[][];
     } => {

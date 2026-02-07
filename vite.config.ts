@@ -1,9 +1,14 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import wasm from 'vite-plugin-wasm';
+import topLevelAwait from 'vite-plugin-top-level-await';
 
 export default defineConfig({
-    plugins: [react(), tsconfigPaths()],
+    plugins: [react(), tsconfigPaths(), wasm(), topLevelAwait()],
+    worker: {
+        format: 'es',
+    },
     build: {
         outDir: 'build', // Maintain 'build' for gh-pages compatibility
         // Enable source maps for production debugging (can be disabled for smaller builds)

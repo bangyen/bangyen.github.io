@@ -1,12 +1,12 @@
-import React, { useCallback, ReactNode } from 'react';
+import React, { useMemo, memo } from 'react';
 import { Box } from '../mui';
 import { getSpace } from '../../features/interpreters/utils/gridUtils';
-import { TYPOGRAPHY, ANIMATIONS, COMPONENT_VARIANTS } from '../../config/theme';
+import { TYPOGRAPHY, COMPONENT_VARIANTS } from '../../config/theme';
 import { GRID_CONFIG } from '../../features/interpreters/config/interpretersConfig';
 
 interface CellProps {
     size: number;
-    children?: ReactNode;
+    children?: React.ReactNode;
     backgroundColor?: string;
     color?: string;
     boxShadow?: string;
@@ -17,7 +17,7 @@ interface CellProps {
     [key: string]: unknown;
 }
 
-function Cell({ size, children, ...rest }: CellProps) {
+const Cell = memo(function Cell({ size, children, ...rest }: CellProps) {
     const remSize = `${size.toString()}rem`;
     const radius = `${(size / GRID_CONFIG.cellSize.divisor).toString()}rem`;
 
@@ -37,17 +37,20 @@ function Cell({ size, children, ...rest }: CellProps) {
             ? 'none'
             : typeof transitionProp === 'string'
               ? transitionProp
-              : ANIMATIONS.transition;
+              : 'background-color 200ms ease, color 200ms ease, opacity 200ms ease, transform 200ms ease, border-radius 200ms ease';
 
-    const props = {
-        ...COMPONENT_VARIANTS.flexCenter,
-        borderRadius: radius,
-        height: remSize,
-        width: remSize,
-        fontSize: `${(size * GRID_CONFIG.cellSize.fontSizeMultiplier).toString()}rem`,
-        fontWeight: TYPOGRAPHY.fontWeight.semibold,
-        fontFamily: 'monospace',
-    };
+    const props = useMemo(
+        () => ({
+            ...COMPONENT_VARIANTS.flexCenter,
+            borderRadius: radius,
+            height: remSize,
+            width: remSize,
+            fontSize: `${(size * GRID_CONFIG.cellSize.fontSizeMultiplier).toString()}rem`,
+            fontWeight: TYPOGRAPHY.fontWeight.semibold,
+            fontFamily: 'monospace',
+        }),
+        [radius, remSize, size]
+    );
 
     return (
         <Box
@@ -66,10 +69,10 @@ function Cell({ size, children, ...rest }: CellProps) {
             {children}
         </Box>
     );
-}
+});
 
 interface CellOptions {
-    children?: ReactNode;
+    children?: React.ReactNode;
     [key: string]: unknown;
 }
 
@@ -81,15 +84,13 @@ interface RowProps {
     cellProps: (row: number, col: number) => CellOptions;
 }
 
-function Row({ cols, size, index, spacing, cellProps }: RowProps) {
-    const WrappedCell = (_: unknown, j: number) => (
-        <Cell
-            {...cellProps(index, j)}
-            key={`${index.toString()}_${j.toString()}`}
-            size={size}
-        />
-    );
-
+const Row = memo(function Row({
+    cols,
+    size,
+    index,
+    spacing,
+    cellProps,
+}: RowProps) {
     return (
         <Box
             sx={{
@@ -98,10 +99,16 @@ function Row({ cols, size, index, spacing, cellProps }: RowProps) {
                 justifyContent: 'center',
             }}
         >
-            {Array.from({ length: cols }, WrappedCell)}
+            {Array.from({ length: cols }, (_, j) => (
+                <Cell
+                    {...cellProps(index, j)}
+                    key={`${index.toString()}_${j.toString()}`}
+                    size={size}
+                />
+            ))}
         </Box>
     );
-}
+});
 
 interface CustomGridProps {
     size: number;
@@ -113,7 +120,7 @@ interface CustomGridProps {
     [key: string]: unknown;
 }
 
-export function CustomGrid({
+export const CustomGrid = memo(function CustomGrid({
     size,
     rows,
     cols,
@@ -125,20 +132,6 @@ export function CustomGrid({
     const auto = getSpace(size);
     const actualSpace = space ?? auto;
     const rem = `${actualSpace.toString()}rem`;
-
-    const getRow = useCallback(
-        (_: unknown, i: number) => (
-            <Row
-                index={i}
-                cols={cols}
-                size={size}
-                spacing={rem}
-                key={`row_${i.toString()}`}
-                cellProps={cellProps}
-            />
-        ),
-        [cols, size, rem, cellProps]
-    );
 
     return (
         <Box
@@ -153,7 +146,16 @@ export function CustomGrid({
             }}
             {...rest}
         >
-            {Array.from({ length: rows }, getRow)}
+            {Array.from({ length: rows }, (_, i) => (
+                <Row
+                    index={i}
+                    cols={cols}
+                    size={size}
+                    spacing={rem}
+                    key={`row_${i.toString()}`}
+                    cellProps={cellProps}
+                />
+            ))}
         </Box>
     );
-}
+});

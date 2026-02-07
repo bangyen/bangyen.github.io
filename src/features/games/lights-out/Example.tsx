@@ -4,18 +4,14 @@ import { EmojiEventsRounded } from '../../../components/icons';
 import { getStates } from './chaseHandlers';
 import { flipAdj } from './boardHandlers';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
-import {
-    useHandler as useBoardHandler,
-    Board,
-    Palette,
-    PropsFactory,
-} from '../components/Board';
+import { Board, Palette, PropsFactory } from '../components/Board';
+import { useHandler as useBoardHandler } from './boardUtils';
 import { getOutput, useHandler as useCalculatorHandler } from './calculator';
 import { COLORS } from '../../../config/theme';
 import { LIGHTS_OUT_STYLES } from './constants';
 
 function getIconFrames(
-    states: number[][][],
+    states: number[][],
     row: number,
     col: number,
     dims: number,
@@ -45,28 +41,22 @@ function getIconFrames(
         const nextState = k + 1 < length ? states[k + 1] : null;
 
         if (currentState && nextState) {
-            const predicted = flipAdj(row, col, currentState);
+            const predicted = flipAdj(row, col, currentState, dims, dims);
             match = true;
             for (let r = 0; r < dims; r++) {
-                const predictedRow = predicted[r];
-                const nextRowState = nextState[r];
-                if (!predictedRow || !nextRowState) {
+                if (predicted[r] !== nextState[r]) {
                     match = false;
                     break;
                 }
-                for (let c = 0; c < dims; c++) {
-                    if (predictedRow[c] !== nextRowState[c]) {
-                        match = false;
-                        break;
-                    }
-                }
-                if (!match) break;
             }
 
             if (match) {
-                const isOne = currentState[row]?.[col] === 1;
-                color = isOne ? palette.secondary : palette.primary;
-                predictedContent = `"${String(k + 1)}"`;
+                const rowVal = currentState[row];
+                if (rowVal !== undefined) {
+                    const isOne = (rowVal >> col) & 1;
+                    color = isOne ? palette.secondary : palette.primary;
+                    predictedContent = `"${String(k + 1)}"`;
+                }
             }
         }
 
@@ -127,7 +117,7 @@ function getIconFrames(
 }
 
 function iconHandler(
-    states: number[][][],
+    states: number[][],
     dims: number,
     id: string,
     palette: Palette
@@ -474,9 +464,10 @@ export default function Example({
                                 {(() => {
                                     const finalState =
                                         boardStates[inputStates.length - 1];
-                                    const allOn = finalState
-                                        ?.flat()
-                                        .every((cell: number) => cell === 1);
+                                    const allOn = finalState?.every(
+                                        (rowVal: number) =>
+                                            rowVal === (1 << dims) - 1
+                                    );
                                     return (
                                         <EmojiEventsRounded
                                             sx={{
@@ -550,7 +541,7 @@ function GridWithKeyframes({
     palette,
     children,
 }: {
-    boardStates: number[][][];
+    boardStates: number[][];
     inputStates: number[][];
     dims: number;
     id: string;

@@ -15,6 +15,7 @@
     "depcheck": "^1.4.3",
     "gh-pages": "^6.3.0",
     "katex": "^0.16.28",
+    "lights-out-wasm": "file:lights-out-wasm/pkg",
     "pako": "^2.1.0",
     "prop-types": "^15.8.1",
     "react": "^19.2.3",
@@ -22,6 +23,7 @@
     "react-router": "^7.12.0",
     "react-router-dom": "^7.12.0",
     "recharts": "^3.2.1",
+    "slant-wasm": "file:slant-wasm/pkg",
     "three": "^0.182.0"
   },
   "scripts": {
@@ -124,6 +126,9 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.53.1",
     "vite": "^7.3.1",
-    "vite-tsconfig-paths": "^6.0.4"
+    "vite-plugin-top-level-await": "^1.6.0",
+    "vite-plugin-wasm": "^3.5.0",
+    "vite-tsconfig-paths": "^6.0.4",
+    "worker-loader": "^3.0.8"
   }
 }

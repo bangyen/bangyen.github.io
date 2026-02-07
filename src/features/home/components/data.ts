@@ -39,11 +39,6 @@ export const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
         icon: GamepadRounded,
         color: COLORS.primary.main,
         projects: {
-            Snake: {
-                path: ROUTES.pages.Snake,
-                description: 'Retro arcade gameplay',
-                technology: 'JavaScript',
-            },
             Lights_Out: {
                 path: ROUTES.pages.Lights_Out,
                 description: 'Grid-based logic puzzle',

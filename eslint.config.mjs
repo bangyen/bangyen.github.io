@@ -79,5 +79,30 @@ export default tseslint.config(
             '@typescript-eslint/no-empty-function': 'off',
             '@typescript-eslint/unbound-method': 'off',
         },
+    },
+
+    // Script overrides
+    {
+        files: ['**/scripts/*.ts'],
+        rules: {
+            'no-console': 'off',
+            '@typescript-eslint/restrict-template-expressions': 'off',
+        },
+    },
+
+    // Research file overrides
+    {
+        files: ['**/Oligopoly.tsx', '**/VerificationTools.tsx'],
+        rules: {
+            'no-console': 'off',
+        },
+    },
+
+    // Layout overrides for complex MUI sx spreads
+    {
+        files: ['**/GamePageLayout.tsx'],
+        rules: {
+            '@typescript-eslint/no-unsafe-assignment': 'off',
+        },
     }
 );

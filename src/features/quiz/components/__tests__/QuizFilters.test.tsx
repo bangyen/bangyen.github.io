@@ -20,7 +20,6 @@ const mockConfig = {
     modes: [
         { value: 'toCountry' as GameMode, label: 'Mode 1' },
         { value: 'toCode' as GameMode, label: 'Mode 2' },
-        { value: 'toCountry' as GameMode, label: 'To Country' },
         { value: 'guessing' as GameMode, label: 'Other Mode' },
     ],
     maxQuestionOptions: [5, 10, 20],
@@ -331,6 +330,8 @@ describe('QuizFilters', () => {
 
     test('handles empty settings for all specialized types', () => {
         const emptySettings = {
+            mode: 'toCountry',
+            maxQuestions: 10,
             allowRepeats: false,
         } as unknown as QuizSettings;
         const types: QuizType[] = [
@@ -358,7 +359,12 @@ describe('QuizFilters', () => {
         render(
             <QuizFilters
                 {...defaultProps}
-                settings={{ mode: 'toCountry' } as unknown as QuizSettings}
+                settings={
+                    {
+                        mode: 'toCountry',
+                        maxQuestions: 10,
+                    } as unknown as QuizSettings
+                }
                 selectedQuiz="driving_side"
             />
         );

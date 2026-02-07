@@ -99,7 +99,6 @@ const PeriodicityCalculator: React.FC = () => {
             };
 
             workerRef.current.onerror = e => {
-                // eslint-disable-next-line no-console
                 console.error('Worker error:', e);
                 setError('An error occurred in the background worker.');
                 setLoading(false);
@@ -107,7 +106,6 @@ const PeriodicityCalculator: React.FC = () => {
 
             workerRef.current.postMessage({ n });
         } catch (err) {
-            // eslint-disable-next-line no-console
             console.error('Failed to start worker:', err);
             setError('Failed to start calculation worker.');
             setLoading(false);
@@ -652,7 +650,6 @@ const SolvabilityAnalyzer: React.FC = () => {
             };
 
             workerRef.current.onerror = e => {
-                // eslint-disable-next-line no-console
                 console.error('Worker error:', e);
                 setError('An error occurred in the background worker.');
                 setLoading(false);
@@ -660,7 +657,6 @@ const SolvabilityAnalyzer: React.FC = () => {
 
             workerRef.current.postMessage({ n: size });
         } catch (err) {
-            // eslint-disable-next-line no-console
             console.error('Failed to start worker:', err);
             setError('Failed to start calculation worker.');
             setLoading(false);

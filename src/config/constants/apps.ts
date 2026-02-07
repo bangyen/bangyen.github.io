@@ -3,7 +3,6 @@ import { PERSONAL_INFO } from './identity';
 
 export const PAGE_TITLES: PageTitles = {
     home: `${PERSONAL_INFO.name} - ${PERSONAL_INFO.title}`,
-    snake: 'Snake | Bangyen',
     lightsOut: 'Lights Out | Bangyen',
     zsharp: 'ZSharp - Sharpness-Aware Minimization',
     oligopoly: 'Oligopoly - Cournot Competition',
@@ -19,7 +18,6 @@ export const ROUTES: Routes = {
     pages: {
         Oligopoly: '/oligopoly',
         ZSharp: '/zsharp',
-        Snake: '/snake',
         Lights_Out: '/lights-out',
         Interpreters: '/interpreters',
         Geography: '/geography',

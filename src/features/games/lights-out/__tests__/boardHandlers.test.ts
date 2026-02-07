@@ -1,3 +1,9 @@
+jest.mock('lights-out-wasm', () => ({
+    invert_matrix: () => {
+        throw new Error('Wasm not mocked');
+    },
+}));
+
 import {
     getGrid,
     flipAdj,
@@ -5,6 +11,11 @@ import {
     getNextMove,
     BoardAction,
 } from '../boardHandlers';
+
+// Helper to access bitmask grid
+function getBit(grid: number[], r: number, c: number): number {
+    return (grid[r]! >> c) & 1;
+}
 
 describe('boardHandlers', () => {
     describe('getGrid', () => {
@@ -14,44 +25,46 @@ describe('boardHandlers', () => {
             const grid = getGrid(rows, cols);
 
             expect(grid.length).toBe(rows);
-            expect(grid[0]!.length).toBe(cols);
+            // Each row should be 0
             grid.forEach(row => {
-                row.forEach(cell => {
-                    expect(cell).toBe(0);
-                });
+                expect(row).toBe(0);
             });
         });
     });
 
     describe('flipAdj', () => {
         it('should flip the target cell and adjacent neighbors', () => {
-            const grid = getGrid(3, 3);
+            const rows = 3;
+            const cols = 3;
+            const grid = getGrid(rows, cols);
             // Flip center
-            const newGrid = flipAdj(1, 1, grid);
+            const newGrid = flipAdj(1, 1, grid, rows, cols);
 
             // Center should be 1
-            expect(newGrid[1]![1]).toBe(1);
+            expect(getBit(newGrid, 1, 1)).toBe(1);
             // Neighbors should be 1
-            expect(newGrid[0]![1]).toBe(1); // Top
-            expect(newGrid[2]![1]).toBe(1); // Bottom
-            expect(newGrid[1]![0]).toBe(1); // Left
-            expect(newGrid[1]![2]).toBe(1); // Right
+            expect(getBit(newGrid, 0, 1)).toBe(1); // Top
+            expect(getBit(newGrid, 2, 1)).toBe(1); // Bottom
+            expect(getBit(newGrid, 1, 0)).toBe(1); // Left
+            expect(getBit(newGrid, 1, 2)).toBe(1); // Right
             // Corners should stay 0
-            expect(newGrid[0]![0]).toBe(0);
-            expect(newGrid[0]![2]).toBe(0);
-            expect(newGrid[2]![0]).toBe(0);
-            expect(newGrid[2]![2]).toBe(0);
+            expect(getBit(newGrid, 0, 0)).toBe(0);
+            expect(getBit(newGrid, 0, 2)).toBe(0);
+            expect(getBit(newGrid, 2, 0)).toBe(0);
+            expect(getBit(newGrid, 2, 2)).toBe(0);
         });
 
         it('should handle corners correctly', () => {
-            const grid = getGrid(3, 3);
+            const rows = 3;
+            const cols = 3;
+            const grid = getGrid(rows, cols);
             // Flip top-left
-            const newGrid = flipAdj(0, 0, grid);
+            const newGrid = flipAdj(0, 0, grid, rows, cols);
 
-            expect(newGrid[0]![0]).toBe(1);
-            expect(newGrid[0]![1]).toBe(1); // Right neighbor
-            expect(newGrid[1]![0]).toBe(1); // Bottom neighbor
-            expect(newGrid[1]![1]).toBe(0); // Diagonal
+            expect(getBit(newGrid, 0, 0)).toBe(1);
+            expect(getBit(newGrid, 0, 1)).toBe(1); // Right neighbor
+            expect(getBit(newGrid, 1, 0)).toBe(1); // Bottom neighbor
+            expect(getBit(newGrid, 1, 1)).toBe(0); // Diagonal
         });
     });
 
@@ -61,7 +74,6 @@ describe('boardHandlers', () => {
             score: 0,
             rows: 3,
             cols: 3,
-            auto: false,
             initialized: false,
         };
 
@@ -73,7 +85,7 @@ describe('boardHandlers', () => {
             };
             const newState = handleBoard(initialState, action);
 
-            expect(newState.grid[1]![1]).toBe(1);
+            expect(getBit(newState.grid, 1, 1)).toBe(1);
             expect(newState.score).toBe(0);
         });
 
@@ -81,9 +93,8 @@ describe('boardHandlers', () => {
             // First modify state
             const modifiedState = {
                 ...initialState,
-                grid: flipAdj(1, 1, initialState.grid),
+                grid: flipAdj(1, 1, initialState.grid, 3, 3),
                 score: 5,
-                auto: true,
                 initialized: true,
             };
 
@@ -91,17 +102,14 @@ describe('boardHandlers', () => {
             const newState = handleBoard(modifiedState, action);
 
             expect(newState.score).toBe(0);
-            expect(newState.auto).toBe(false);
-            expect(newState.grid[1]![1]).toBe(0);
+            expect(getBit(newState.grid, 1, 1)).toBe(0);
         });
 
         it('should handle random action', () => {
             const action: BoardAction = { type: 'random' };
             const newState = handleBoard(initialState, action);
 
-            // Cannot predict exact grid, but check properties
             expect(newState.grid.length).toBe(3);
-            expect(newState.auto).toBe(false);
         });
 
         it('should handle resize action', () => {
@@ -115,61 +123,45 @@ describe('boardHandlers', () => {
             expect(newState.rows).toBe(4);
             expect(newState.cols).toBe(4);
             expect(newState.grid.length).toBe(4);
-            expect(newState.grid[0]!.length).toBe(4);
-        });
-
-        it('should handle auto action', () => {
-            const action: BoardAction = { type: 'auto' };
-            const newState = handleBoard(initialState, action);
-
-            expect(newState.auto).toBe(true);
         });
     });
 
     describe('getNextMove', () => {
         it('should return null for empty grid', () => {
             const grid = getGrid(3, 3);
-            const moves = getNextMove(grid);
+            const moves = getNextMove(grid, 3, 3);
+            // Might return null or empty array depending on implementation
             expect(moves).toBeNull();
         });
 
         it('should chase lights down', () => {
             // Light at top-left
             const grid = getGrid(3, 3);
-            grid[0]![0] = 1;
+            // Set bit 0 of row 0
+            grid[0] = 1;
 
-            const moves = getNextMove(grid);
+            const moves = getNextMove(grid, 3, 3);
             // Should suggest clicking directly below it
-            expect(moves).toEqual([{ row: 1, col: 0 }]);
+            expect(moves).toBeDefined();
+            expect(moves![0]).toEqual({ row: 1, col: 0 });
         });
 
-        it('should solve last row (Phase 3)', () => {
-            // Create a 2x2 grid where last row needs solving
-            // 2x2.
-            // If we have light at [1,0].
-            // To clear [1,0], we need to have clicked [0,0] previously (chased down).
-            // But valid configuration??
-            // Let's rely on the solver's logic.
-            // If we have a solvable bottom row, it should return moves for top row.
-
-            // Example: 3x3. All 0s except bottom row [1, 1, 1] ?
-            // Finding a solvable state might be tricky without running the solver myself.
-            // Let's mock a scenario or trust the loop.
-
-            const grid = getGrid(2, 2);
+        it('should solve last row', () => {
+            // 2x2 grid.
             // 0 0
-            // 1 1 ?
-            grid[1]![0] = 1;
-            grid[1]![1] = 1;
+            // 1 1  (row 1: 3)
+            // Last row is 1 1.
+            const grid2 = getGrid(2, 2);
+            grid2[1] = 3; // 1 | 2 = 3 (bits 0 and 1)
 
-            // The solver iterates 2^cols.
-            // It simulates top row clicks and chases down to see if it matches bottom row.
+            const moves = getNextMove(grid2, 2, 2);
 
-            const moves = getNextMove(grid);
-            // If solvable, moves will be non-null.
             if (moves) {
-                expect(moves.length).toBeGreaterThan(0);
-                expect(moves[0]!.row).toBe(0);
+                expect(moves.length).toBe(2);
+                const has00 = moves.some(m => m.row === 0 && m.col === 0);
+                const has01 = moves.some(m => m.row === 0 && m.col === 1);
+                expect(has00).toBe(true);
+                expect(has01).toBe(true);
             }
         });
     });
@@ -210,20 +202,11 @@ describe('boardHandlers', () => {
 
             const newState = handleBoard(state, action);
 
-            // 0,0 toggles (0,0), (0,1), (1,0)
-            // 0,1 toggles (0,1), (0,0), (0,2), (1,1)
-            // Combined:
-            // (0,0): 1^1 = 0
-            // (0,1): 1^1 = 0
-            // (1,0): 1
-            // (0,2): 1
-            // (1,1): 1
-
-            expect(newState.grid[0]![0]).toBe(0);
-            expect(newState.grid[0]![1]).toBe(0);
-            expect(newState.grid[1]![0]).toBe(1);
-            expect(newState.grid[0]![2]).toBe(1);
-            expect(newState.grid[1]![1]).toBe(1);
+            expect(getBit(newState.grid, 0, 0)).toBe(0);
+            expect(getBit(newState.grid, 0, 1)).toBe(0);
+            expect(getBit(newState.grid, 1, 0)).toBe(1);
+            expect(getBit(newState.grid, 0, 2)).toBe(1);
+            expect(getBit(newState.grid, 1, 1)).toBe(1);
         });
     });
 });

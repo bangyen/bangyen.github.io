@@ -1,7 +1,8 @@
 export const LIGHTS_OUT_STYLES = {
     TRANSITION: {
-        FAST: 'all 100ms ease-in-out',
-        DEFAULT: 'all 200ms ease',
+        FAST: 'background-color 100ms ease-in-out, color 100ms ease-in-out, opacity 100ms ease-in-out, border-radius 100ms ease-in-out',
+        DEFAULT:
+            'background-color 200ms ease, color 200ms ease, opacity 200ms ease, border-radius 200ms ease',
     },
     SHADOWS: {
         DROP: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
@@ -24,4 +25,5 @@ export const LAYOUT_CONSTANTS = {
 
 export const STORAGE_KEYS = {
     SIZE: 'lights-out-size',
+    STATE: 'lights-out-state',
 };

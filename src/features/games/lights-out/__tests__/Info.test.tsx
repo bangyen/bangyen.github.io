@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import Info from '../Info';
 import * as calculator from '../calculator';
+import { DragProps } from '../../hooks/useDrag';
 
 // Mock dependencies
 jest.mock('../Example', () => ({
@@ -107,21 +108,14 @@ describe('Lights Out Info Component', () => {
         mockUseHandler.mockReturnValue({}); // simplistic mock
         // Mock getInput to return a function that returns props with onClick
         mockGetInput.mockImplementation(
-            (
-                _getters: unknown,
-                toggleTile: (c: number) => void,
-                _isDragging: boolean,
-                _setIsDragging: (v: boolean) => void,
-                _draggedCols: React.RefObject<Set<number>>,
-                _addDraggedCol: (c: number) => void,
-                _lastTouchTime: React.RefObject<number>
-            ) => {
-                return (_r: number, c: number) => ({
-                    onMouseDown: () => {
-                        toggleTile(c);
-                    },
-                    'data-testid': `input-cell-${String(c)}`,
-                });
+            (_getters: unknown, getDragProps: (pos: string) => DragProps) => {
+                return (_r: number, c: number) => {
+                    const dragProps = getDragProps(c.toString());
+                    return {
+                        ...dragProps,
+                        'data-testid': `input-cell-${String(c)}`,
+                    };
+                };
             }
         );
         mockGetOutput.mockReturnValue(() => ({}));

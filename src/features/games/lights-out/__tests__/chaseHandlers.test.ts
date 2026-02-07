@@ -26,7 +26,7 @@ describe('Lights Out Chase Handlers', () => {
             // 3x3 grid
             // (0,1) is ON.
             const grid = boardHandlers.getGrid(3, 3);
-            grid[0]![1] = 1;
+            grid[0] = 2; // (0,1) ON
 
             const states = chaseLights([grid], 3);
 
@@ -38,7 +38,7 @@ describe('Lights Out Chase Handlers', () => {
             expect(states.length).toBeGreaterThan(1);
             const nextState = states[1];
             // (0,1) should be OFF in next state
-            expect(nextState![0]![1]).toBe(0);
+            expect((nextState![0]! >> 1) & 1).toBe(0);
         });
 
         it('returns original states if empty', () => {
@@ -50,7 +50,7 @@ describe('Lights Out Chase Handlers', () => {
         it('calls getProduct for each set bit in row', () => {
             mockProduct.mockReturnValue([0, 0, 0]);
 
-            // Row with middle bit set: [0, 1, 0]
+            // Row with middle bit set: 2 (binary 010)
             const { input, output } = fillRow([0, 1, 0], 3);
 
             // Should call getProduct with [0, 1, 0] (as the "input" row built step-by-step)
@@ -69,7 +69,7 @@ describe('Lights Out Chase Handlers', () => {
 
     describe('extendBack', () => {
         it('extends states array to size', () => {
-            const states = [[1], [2]] as number[][];
+            const states = [[1], [2]];
             const extended = extendBack(states, 5);
             expect(extended.length).toBe(5);
             expect(extended[2]).toEqual([2]);

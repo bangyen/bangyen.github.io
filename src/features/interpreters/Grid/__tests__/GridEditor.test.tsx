@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import GridEditor from '../GridEditor';
@@ -54,7 +53,7 @@ jest.mock('../../components/GridArea', () => ({
         <div data-testid="grid-area">
             {options.map((opt: string, i: number) => (
                 <button
-                    key={i}
+                    key={`${opt}-${i.toString()}`}
                     data-testid={`cell-${String(i)}`}
                     onClick={handleClick(i)}
                 >

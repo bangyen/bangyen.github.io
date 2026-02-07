@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-
 import {
     getMatrix,
     getPolynomial,

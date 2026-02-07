@@ -1,3 +1,14 @@
+import init, { invert_matrix } from 'lights-out-wasm';
+
+// Initialize the Wasm module
+// Since we use vite-plugin-top-level-await, we can wait for it here
+try {
+    await init();
+} catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to initialize Lights Out Wasm:', e);
+}
+
 export function getMatrix(cols: number): bigint[] {
     if (cols === 1) return [1n];
     const first = 7n << BigInt(cols - 2);
@@ -488,10 +499,27 @@ export function getProduct(
         const matrix = getMatrix(cols);
         const weights = getPolynomial(rows + 1);
         const product = evalPolynomial(matrix, weights);
-        inverseCache[key] = invertMatrix(product);
+
+        if (cols <= 64) {
+            try {
+                // Convert bigint[] to BigUint64Array for Wasm
+                // Note: BigInts in JS are arbitrary precision, but for <=64 cols they fit in 64 bits.
+                const input = new BigUint64Array(
+                    product.map(b => BigInt.asUintN(64, b))
+                );
+                const result = invert_matrix(input, product.length);
+                inverseCache[key] = Array.from(result);
+            } catch (_e) {
+                // eslint-disable-next-line no-console
+                console.warn('Wasm inversion failed, falling back to JS', _e);
+                inverseCache[key] = invertMatrix(product);
+            }
+        } else {
+            inverseCache[key] = invertMatrix(product);
+        }
     }
 
-    const inverse = inverseCache[key];
+    const inverse = inverseCache[key] as bigint[] | undefined;
     const binaryStr = input.join('');
     const binary = binaryStr ? BigInt('0b' + binaryStr) : 0n;
 
@@ -500,6 +528,10 @@ export function getProduct(
         const count = countBits(value);
         return count & 1;
     };
+
+    if (inverse === undefined) {
+        throw new Error('Inverse matrix not found in cache');
+    }
 
     return inverse.map(getParity);
 }
