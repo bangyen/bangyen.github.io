@@ -1,9 +1,3 @@
-export interface SnakeConstants {
-    initialLength: number;
-    segmentSize: number;
-    initialVelocity: number;
-}
-
 export interface LightsOutConstants {
     defaultSize: number;
 }
@@ -14,7 +8,6 @@ export interface GridSizes {
 }
 
 export interface GameConfig {
-    snake: SnakeConstants;
     lightsOut: LightsOutConstants;
     gridSizes: GridSizes;
     controls: {

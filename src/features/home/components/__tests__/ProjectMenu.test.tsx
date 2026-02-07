@@ -23,7 +23,6 @@ describe('ProjectMenu', () => {
         // Check if ProjectDropdown content is visible
         // PROJECT_CATEGORIES usually has titles like "Games", "Research", etc.
         expect(screen.getByText(/Games/i)).toBeInTheDocument();
-        expect(screen.getByText(/Snake/i)).toBeInTheDocument();
 
         // Close menu
         // Mui Menu usually handles onClose when clicking backdrop or Escape

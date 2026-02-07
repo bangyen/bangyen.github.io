@@ -16,7 +16,6 @@ import { ThemeProvider, useThemeContext } from './hooks/useTheme';
 // Lazy load pages
 const Home = lazy(() => import('./features/home/pages/Home'));
 const Error = lazy(() => import('./pages/Error'));
-const Snake = lazy(() => import('./features/games/snake'));
 const LightsOut = lazy(() => import('./features/games/lights-out/LightsOut'));
 const ZSharp = lazy(() => import('./features/research/pages/ZSharp'));
 const Oligopoly = lazy(() => import('./features/research/pages/Oligopoly'));
@@ -60,7 +59,6 @@ const App = (): React.ReactElement => {
                     <Route path="/" element={<Home />} />
                     <Route path="/error" element={<Error />} />
                     <Route path="/interpreters" element={<Interpreters />} />
-                    <Route path="/snake" element={<Snake />} />
                     <Route path="/lights-out" element={<LightsOut />} />
                     <Route path="/zsharp" element={<ZSharp />} />
                     <Route path="/oligopoly" element={<Oligopoly />} />

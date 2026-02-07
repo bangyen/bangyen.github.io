@@ -50,11 +50,6 @@ export interface Project {
 }
 
 export interface GameConstants {
-    snake: {
-        initialLength: number;
-        segmentSize: number;
-        initialVelocity: number;
-    };
     oligopoly: {
         defaultFirms: number;
         defaultElasticity: number;
@@ -102,7 +97,6 @@ export interface Routes {
     pages: {
         Oligopoly: string;
         ZSharp: string;
-        Snake: string;
         Lights_Out: string;
         Interpreters: string;
         Geography: string;
@@ -186,7 +180,6 @@ export interface Meta {
 
 export interface PageTitles {
     home: string;
-    snake: string;
     lightsOut: string;
     zsharp: string;
     oligopoly: string;

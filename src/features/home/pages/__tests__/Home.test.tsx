@@ -49,7 +49,6 @@ jest.mock('../../../../pages', () => ({
     pages: {
         Oligopoly: '/oligopoly',
         ZSharp: '/zsharp',
-        Snake: '/snake',
         Lights_Out: '/lights-out',
         Interpreters: '/interpreters',
     },
@@ -150,7 +149,6 @@ describe('Home Component', () => {
         });
 
         expect(screen.getByText('ZSharp')).toBeInTheDocument();
-        expect(screen.getByText('Snake')).toBeInTheDocument();
         expect(screen.getByText('Lights Out')).toBeInTheDocument();
         expect(screen.getByText('Interpreters')).toBeInTheDocument();
     });
