@@ -710,10 +710,7 @@ export default function Slant(): React.ReactElement {
             {!isGhostMode && (
                 <Controls
                     handler={() => () => undefined}
-                    onAutoPlay={() => {
-                        dispatch({ type: 'auto' });
-                    }}
-                    autoPlayEnabled={state.auto}
+                    onRefresh={handleReset}
                 >
                     <TooltipButton
                         title="Decrease Size"

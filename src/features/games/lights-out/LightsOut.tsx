@@ -455,10 +455,7 @@ export default function LightsOut(): React.ReactElement {
             </Box>
             <Controls
                 handler={() => () => undefined} // No directional controls for Lights Out
-                onAutoPlay={() => {
-                    dispatch({ type: 'auto' });
-                }}
-                autoPlayEnabled={state.auto}
+                onRefresh={handleNext}
             >
                 <TooltipButton
                     title="Decrease Size"

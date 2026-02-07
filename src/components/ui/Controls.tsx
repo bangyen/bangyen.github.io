@@ -9,8 +9,6 @@ import {
     Psychology,
     Cloud,
     Work,
-    PlayArrowRounded,
-    PauseRounded,
     NorthRounded,
     SouthRounded,
     EastRounded,
@@ -126,27 +124,27 @@ export function RandomButton({
     );
 }
 
-interface AutoPlayButtonProps {
+interface RefreshButtonProps {
     onClick: () => void;
-    enabled?: boolean;
+    title?: string;
     hide?: boolean;
     [key: string]: unknown;
 }
 
-export function AutoPlayButton({
+export function RefreshButton({
     onClick,
-    enabled = false,
+    title = 'New Puzzle',
     hide = false,
     ...props
-}: AutoPlayButtonProps) {
+}: RefreshButtonProps) {
     if (hide) return null;
 
     return (
         <TooltipButton
-            title={enabled ? 'Pause' : 'Auto Play'}
-            Icon={enabled ? PauseRounded : PlayArrowRounded}
+            title={title}
+            Icon={Refresh}
             onClick={onClick}
-            aria-label={enabled ? 'Pause' : 'Auto Play'}
+            aria-label={title}
             {...props}
         />
     );
@@ -156,8 +154,7 @@ interface ControlsProps {
     handler?: (direction: string) => () => void;
     onRandom?: () => void;
     randomEnabled?: boolean;
-    onAutoPlay?: () => void;
-    autoPlayEnabled?: boolean;
+    onRefresh?: () => void;
     children?: React.ReactNode;
     size?: 'small' | 'medium' | 'large' | 'inherit';
     hide?: boolean;
@@ -167,8 +164,7 @@ export function Controls({
     handler: _handler,
     onRandom,
     randomEnabled,
-    onAutoPlay,
-    autoPlayEnabled,
+    onRefresh,
     children,
     size = 'large',
     hide = false,
@@ -188,13 +184,8 @@ export function Controls({
                     size={size}
                 />
             )}
-            {onAutoPlay && (
-                <AutoPlayButton
-                    onClick={onAutoPlay}
-                    enabled={autoPlayEnabled}
-                    hide={hide}
-                    size={size}
-                />
+            {onRefresh && (
+                <RefreshButton onClick={onRefresh} hide={hide} size={size} />
             )}
             {children}
         </Navigation>

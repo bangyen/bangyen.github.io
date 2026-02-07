@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { PAGE_TITLES } from '../../../../config/constants';
 import * as boardHandlers from '../boardHandlers';
 import { BoardState, BoardAction } from '../boardHandlers';
@@ -79,21 +79,16 @@ jest.mock('../../components/Board', () => ({
 jest.mock('../../../../components/ui/Controls', () => ({
     Controls: function MockControls({
         children,
-        onAutoPlay,
-        autoPlayEnabled,
+        onRefresh,
     }: {
         children: React.ReactNode;
-        onAutoPlay?: () => void;
-        autoPlayEnabled?: boolean;
+        onRefresh?: () => void;
     }) {
         return (
             <div data-testid="controls">
-                {onAutoPlay && (
-                    <button
-                        aria-label={autoPlayEnabled ? 'Pause' : 'Auto Play'}
-                        onClick={onAutoPlay}
-                    >
-                        {autoPlayEnabled ? 'Pause' : 'Auto Play'}
+                {onRefresh && (
+                    <button aria-label="New Puzzle" onClick={onRefresh}>
+                        New Puzzle
                     </button>
                 )}
                 {children}
@@ -136,11 +131,9 @@ jest.mock('../../../../hooks/useTheme', () => ({
 }));
 
 describe('LightsOut', () => {
-    let mockGetNextMove: jest.Mock;
     let mockHandleBoard: jest.Mock;
 
     beforeEach(() => {
-        mockGetNextMove = boardHandlers.getNextMove as jest.Mock;
         mockHandleBoard = boardHandlers.handleBoard as jest.Mock;
 
         jest.clearAllMocks();
@@ -197,39 +190,15 @@ describe('LightsOut', () => {
         );
     });
 
-    it('handles auto play mode: moves and termination', () => {
-        // 1. First call: returns 1 move
-        // 2. Second call: returns 0 moves (should stop auto)
-        mockGetNextMove
-            .mockReturnValueOnce([{ row: 0, col: 0 }])
-            .mockReturnValueOnce([]);
-
+    it('handles refresh: dispatches next action', () => {
         render(<LightsOut />);
-        const autoBtn = screen.getByLabelText('Auto Play');
+        const refreshBtn = screen.getByLabelText('New Puzzle');
 
-        // Start Auto Play
-        fireEvent.click(autoBtn);
+        fireEvent.click(refreshBtn);
 
-        // Advance timer for first move
-        act(() => {
-            jest.advanceTimersByTime(350);
-        });
-
-        // Verify first move dispatch
         expect(mockHandleBoard).toHaveBeenCalledWith(
             expect.anything(),
-            expect.objectContaining({ type: 'adjacent', row: 0, col: 0 })
-        );
-
-        // Advance timer for termination check
-        act(() => {
-            jest.advanceTimersByTime(350);
-        });
-
-        // Verify it stopped (toggled auto again)
-        expect(mockHandleBoard).toHaveBeenCalledWith(
-            expect.anything(),
-            expect.objectContaining({ type: 'auto' })
+            expect.objectContaining({ type: 'next' })
         );
     });
 
