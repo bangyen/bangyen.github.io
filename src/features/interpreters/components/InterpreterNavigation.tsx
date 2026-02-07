@@ -4,7 +4,7 @@ import {
     FormControl,
     SelectChangeEvent,
 } from '@mui/material';
-import { COLORS, SPACING, TYPOGRAPHY } from '../../../config/theme';
+import { COLORS, SPACING, TYPOGRAPHY, ANIMATIONS } from '../../../config/theme';
 
 interface InterpreterNavigationProps {
     active: string;
@@ -25,12 +25,11 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
             sx={{
                 minWidth: { xs: 140, sm: 160 },
                 '& .MuiOutlinedInput-root': {
-                    backgroundColor: COLORS.surface.glass,
-                    backdropFilter: 'blur(24px) saturate(180%)',
+                    ...ANIMATIONS.presets.glass,
                     borderRadius: SPACING.borderRadius.full,
                     color: COLORS.text.primary,
                     fontWeight: TYPOGRAPHY.fontWeight.medium,
-                    transition: 'all 0.2s ease',
+                    transition: ANIMATIONS.transition,
                     '& fieldset': {
                         border: `1px solid ${COLORS.border.subtle}`,
                     },
@@ -64,15 +63,13 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
                     },
                     PaperProps: {
                         sx: {
-                            backgroundColor: COLORS.surface.glass,
-                            backdropFilter: 'blur(24px) saturate(180%)',
-                            border: `1px solid ${COLORS.border.subtle}`,
+                            ...ANIMATIONS.presets.glass,
                             borderRadius: SPACING.borderRadius.lg,
                             mt: 1,
                             '& .MuiMenuItem-root': {
                                 color: COLORS.text.secondary,
                                 fontSize: '0.9rem',
-                                transition: 'all 0.2s ease',
+                                transition: ANIMATIONS.transition,
                                 '&:hover': {
                                     backgroundColor: COLORS.interactive.hover,
                                     color: COLORS.text.primary,

@@ -7,6 +7,7 @@ export interface PersonalInfo {
     title: string;
     location: string;
     greeting: string;
+    email: string;
 }
 
 export interface Urls {

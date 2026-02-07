@@ -2,7 +2,7 @@ import React from 'react';
 import { Box, Typography, Button } from '../../../../components/mui';
 import { GlassCard } from '../../../../components/ui/GlassCard';
 import { GitHub, ArrowForward } from '../../../../components/icons';
-import { URLS } from '../../../../config/constants';
+import { URLS, PERSONAL_INFO } from '../../../../config/constants';
 import { COLORS, TYPOGRAPHY } from '../../../../config/theme';
 
 export function ConnectSection(): React.ReactElement {
@@ -54,7 +54,7 @@ export function ConnectSection(): React.ReactElement {
 
                 <Button
                     component="a"
-                    href="mailto:bangyenp@gmail.com?subject=Project%20Collaboration"
+                    href={`mailto:${PERSONAL_INFO.email}?subject=Project%20Collaboration`}
                     variant="text"
                     endIcon={<ArrowForward />}
                     sx={{

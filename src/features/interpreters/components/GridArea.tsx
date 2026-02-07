@@ -2,7 +2,7 @@ import React, { useContext, useMemo } from 'react';
 import { EditorContext } from '../EditorContext';
 import { CustomGrid } from '../../../components/ui/CustomGrid';
 import { Text } from './Text';
-import { COLORS, SPACING } from '../../../config/theme';
+import { COLORS, SPACING, ANIMATIONS } from '../../../config/theme';
 
 export interface GridAreaProps {
     handleClick: (pos: number) => () => void;
@@ -75,10 +75,10 @@ export function GridArea({
             children: <Text text={value} />,
             sx: {
                 borderRadius: SPACING.borderRadius.md,
-                border: cellStyle.border,
                 cursor: 'pointer',
-                transition: 'all 200ms cubic-bezier(0.4, 0, 0.2, 1)',
-                backdropFilter: 'blur(24px) saturate(180%)',
+                transition: ANIMATIONS.transition,
+                ...ANIMATIONS.presets.glass,
+                border: cellStyle.border,
                 '&:hover': {
                     backgroundColor: cellStyle.hover,
                 },

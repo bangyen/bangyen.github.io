@@ -5,6 +5,7 @@ export const PERSONAL_INFO: PersonalInfo = {
     title: 'Backend Developer & AI/ML Engineer',
     location: 'Chicago, IL',
     greeting: "Hey, I'm Bangyen",
+    email: 'bangyenp@gmail.com',
 };
 
 export const URLS: Urls = {

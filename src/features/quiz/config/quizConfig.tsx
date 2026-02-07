@@ -22,6 +22,20 @@ export const QUIZ_TITLES = {
     wikipediaQuiz: 'Wikipedia Quizzes | Bangyen',
 };
 
+export const QUIZ_UI_CONSTANTS = {
+    START_BUTTON: {
+        FONT_SIZE: { xs: '1rem', sm: '1.2rem' },
+        MIN_WIDTH: { xs: 210, sm: 300 },
+        LETTER_SPACING: '0.05em',
+    },
+    QUESTION_CARD: {
+        FONT_SIZE: {
+            DEFAULT: { xs: '3rem', sm: '4rem' },
+            DETAILED: { xs: '2.5rem', sm: '3.5rem' },
+        },
+    },
+};
+
 export const QUIZ_GAME_CONSTANTS = {
     cctld: {
         defaultQuestionCount: 10,
@@ -163,7 +177,8 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
                     sx={{
                         fontWeight: 'bold',
                         textAlign: 'center',
-                        fontSize: { xs: '3rem', sm: '4rem' },
+                        fontSize:
+                            QUIZ_UI_CONSTANTS.QUESTION_CARD.FONT_SIZE.DEFAULT,
                     }}
                 >
                     {mode === 'toCountry' ? cctldItem.code : cctldItem.country}
@@ -360,7 +375,8 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
                     sx={{
                         fontWeight: 'bold',
                         textAlign: 'center',
-                        fontSize: { xs: '2.5rem', sm: '3.5rem' },
+                        fontSize:
+                            QUIZ_UI_CONSTANTS.QUESTION_CARD.FONT_SIZE.DETAILED,
                         wordBreak: 'break-word',
                     }}
                 >
@@ -420,7 +436,8 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
                     sx={{
                         fontWeight: 'bold',
                         textAlign: 'center',
-                        fontSize: { xs: '2.5rem', sm: '3.5rem' },
+                        fontSize:
+                            QUIZ_UI_CONSTANTS.QUESTION_CARD.FONT_SIZE.DETAILED,
                         wordBreak: 'break-word',
                     }}
                 >

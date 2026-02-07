@@ -2,7 +2,7 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Box, Button, Fade, SelectChangeEvent } from '@mui/material';
 import { SPACING, COLORS } from '../../../config/theme';
-import { QUIZ_CONFIGS } from '../config/quizConfig';
+import { QUIZ_CONFIGS, QUIZ_UI_CONSTANTS } from '../config/quizConfig';
 import {
     QuizSettings,
     QuizType,
@@ -141,11 +141,17 @@ const WikipediaQuizPage: React.FC = () => {
                                 sx={{
                                     px: { xs: 4, sm: 8 },
                                     py: 1.5,
-                                    fontSize: { xs: '1rem', sm: '1.2rem' },
+                                    fontSize:
+                                        QUIZ_UI_CONSTANTS.START_BUTTON
+                                            .FONT_SIZE,
                                     borderRadius: SPACING.borderRadius.full,
                                     fontWeight: 'bold',
-                                    letterSpacing: '0.05em',
-                                    minWidth: { xs: 210, sm: 300 },
+                                    letterSpacing:
+                                        QUIZ_UI_CONSTANTS.START_BUTTON
+                                            .LETTER_SPACING,
+                                    minWidth:
+                                        QUIZ_UI_CONSTANTS.START_BUTTON
+                                            .MIN_WIDTH,
                                     whiteSpace: 'nowrap',
                                     '&.Mui-disabled': {
                                         backgroundColor:
