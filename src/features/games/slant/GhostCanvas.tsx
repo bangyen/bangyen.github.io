@@ -286,7 +286,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 borderRadius: '50%',
                 backgroundColor: hasConflict
                     ? COLORS.data.red
-                    : 'hsl(217, 50%, 12%)', // Match dark bg
+                    : 'hsl(217, 50%, 8%)', // Match dark bg
                 border:
                     value !== null
                         ? `2px solid ${
@@ -350,7 +350,6 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                     padding: '48px',
                     border: '2px dashed rgba(255, 255, 255, 0.2)',
                     borderRadius: '24px',
-                    backgroundColor: 'rgba(0, 0, 0, 0.2)',
                 }}
             >
                 {/* Main Grid */}

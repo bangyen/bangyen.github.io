@@ -391,9 +391,7 @@ export default function Slant(): React.ReactElement {
             minHeight="100vh"
             flexDirection="column"
             sx={{
-                background: isGhostMode
-                    ? `radial-gradient(circle at 50% 50%, hsl(217, 50%, 12%) 0%, hsl(217, 50%, 4%) 100%)`
-                    : `radial-gradient(circle at 50% 50%, ${COLORS.surface.elevated} 0%, ${COLORS.surface.background} 100%)`,
+                background: `radial-gradient(circle at 50% 50%, ${COLORS.surface.elevated} 0%, ${COLORS.surface.background} 100%)`,
                 position: 'relative',
                 overflow: 'hidden',
                 height: '100vh',
