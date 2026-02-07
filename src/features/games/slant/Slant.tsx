@@ -39,7 +39,7 @@ import { useGameInteraction } from '../hooks/useGameInteraction';
 import { useWinTransition } from '../hooks/useWinTransition';
 import { usePageTitle } from '../hooks/usePageTitle';
 import { GamePageLayout } from '../components/GamePageLayout';
-import { GameBoard } from '../components/GameBoard';
+
 interface SavedSlantState extends Omit<
     SlantState,
     'errorNodes' | 'cycleCells' | 'satisfiedNodes'
@@ -363,6 +363,23 @@ export default function Slant() {
                 background: `radial-gradient(circle at 50% 50%, ${COLORS.surface.elevated} 0%, ${COLORS.surface.background} 100%)`,
                 padding: `${String(size)}rem`,
             }}
+            showTrophy={!isGhostMode && state.solved}
+            onReset={handleReset}
+            boardSize={size}
+            iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
+            primaryColor={COLORS.primary.main}
+            secondaryColor={COLORS.primary.main}
+            boardSx={
+                !isGhostMode
+                    ? {
+                          userSelect: 'none',
+                          padding: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
+                          border: '2px solid transparent',
+                          borderRadius:
+                              LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
+                      }
+                    : undefined
+            }
         >
             <Box
                 onClick={(e: React.MouseEvent) => {
@@ -407,62 +424,40 @@ export default function Slant() {
                     />
                 ) : (
                     <>
-                        <GameBoard
-                            showTrophy={state.solved}
-                            onReset={handleReset}
-                            size={size}
-                            iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
-                            primaryColor={COLORS.primary.main}
-                            secondaryColor={COLORS.primary.main}
+                        {/* Main Grid */}
+                        <Box sx={{ position: 'relative', zIndex: 1 }}>
+                            <CustomGrid
+                                size={size}
+                                rows={rows}
+                                cols={cols}
+                                cellProps={getCellProps}
+                                space={0}
+                                sx={{ width: 'fit-content' }}
+                            />
+                        </Box>
+
+                        {/* Numbers Grid Overlay */}
+                        <Box
                             sx={{
-                                userSelect: 'none',
-                                padding: mobile
-                                    ? MOBILE_PADDING
-                                    : DESKTOP_PADDING,
-                                border: '2px solid transparent',
-                                borderRadius:
-                                    LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
+                                position: 'absolute',
+                                top: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
+                                left: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
+                                transform: `translate(-${String(
+                                    numberSize / 2
+                                )}rem, -${String(numberSize / 2)}rem)`,
+                                zIndex: 10,
+                                pointerEvents: 'none',
                             }}
                         >
-                            {/* Main Grid */}
-                            <Box sx={{ position: 'relative', zIndex: 1 }}>
-                                <CustomGrid
-                                    size={size}
-                                    rows={rows}
-                                    cols={cols}
-                                    cellProps={getCellProps}
-                                    space={0}
-                                    sx={{ width: 'fit-content' }}
-                                />
-                            </Box>
-
-                            {/* Numbers Grid Overlay */}
-                            <Box
-                                sx={{
-                                    position: 'absolute',
-                                    top: mobile
-                                        ? MOBILE_PADDING
-                                        : DESKTOP_PADDING,
-                                    left: mobile
-                                        ? MOBILE_PADDING
-                                        : DESKTOP_PADDING,
-                                    transform: `translate(-${String(
-                                        numberSize / 2
-                                    )}rem, -${String(numberSize / 2)}rem)`,
-                                    zIndex: 10,
-                                    pointerEvents: 'none',
-                                }}
-                            >
-                                <CustomGrid
-                                    size={numberSize}
-                                    rows={rows + 1}
-                                    cols={cols + 1}
-                                    cellProps={getNumberProps}
-                                    space={numberSpace}
-                                    sx={{ width: 'fit-content' }}
-                                />
-                            </Box>
-                        </GameBoard>
+                            <CustomGrid
+                                size={numberSize}
+                                rows={rows + 1}
+                                cols={cols + 1}
+                                cellProps={getNumberProps}
+                                space={numberSpace}
+                                sx={{ width: 'fit-content' }}
+                            />
+                        </Box>
                     </>
                 )}
             </Box>

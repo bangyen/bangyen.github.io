@@ -24,7 +24,6 @@ import { usePageTitle } from '../hooks/usePageTitle';
 import { GamePageLayout } from '../components/GamePageLayout';
 
 import { BoardState } from './boardHandlers';
-import { GameBoard } from '../components/GameBoard';
 
 const ICON = (
     <Box
@@ -218,30 +217,27 @@ export default function LightsOut() {
         <GamePageLayout
             title={PAGE_TITLES.lightsOut}
             infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
+            showTrophy={solved}
+            onReset={handleNext}
+            boardSize={size}
+            iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
+            primaryColor={palette.primary}
+            secondaryColor={palette.secondary}
+            useSecondaryTrophy={allOn}
+            boardSx={{
+                marginTop: mobile
+                    ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
+                    : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
+            }}
             controls={controls}
         >
-            <GameBoard
-                showTrophy={solved}
-                onReset={handleNext}
+            <Board
                 size={size}
-                iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
-                primaryColor={palette.primary}
-                secondaryColor={palette.secondary}
-                useSecondaryTrophy={allOn}
-                sx={{
-                    marginTop: mobile
-                        ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
-                        : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
-                }}
-            >
-                <Board
-                    size={size}
-                    rows={rows}
-                    cols={cols}
-                    frontProps={frontProps}
-                    backProps={backProps}
-                />
-            </GameBoard>
+                rows={rows}
+                cols={cols}
+                frontProps={frontProps}
+                backProps={backProps}
+            />
             {open && (
                 <Info
                     rows={rows}
