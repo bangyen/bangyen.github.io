@@ -3,16 +3,16 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import QuizGameView from '../QuizGameView';
 
 // Mock the icon to prevent rendering issues
-jest.mock('@mui/icons-material', () => ({
+vi.mock('@mui/icons-material', () => ({
     ArrowBackRounded: () => <span data-testid="arrow-back-icon">BackIcon</span>,
 }));
 
 const mockActions = {
-    setInputValue: jest.fn(),
-    handleSubmit: jest.fn(),
-    submitAnswer: jest.fn(),
-    handleSkip: jest.fn(),
-    toggleHint: jest.fn(),
+    setInputValue: vi.fn(),
+    handleSubmit: vi.fn(),
+    submitAnswer: vi.fn(),
+    handleSkip: vi.fn(),
+    toggleHint: vi.fn(),
 };
 
 const mockQuestion = {
@@ -35,28 +35,26 @@ const mockGameState = {
 };
 
 const mockRenderProps = {
-    renderQuestionPrompt: jest.fn().mockReturnValue('Question Prompt'),
-    renderQuestionContent: jest
-        .fn()
-        .mockReturnValue(<div>Question Content</div>),
-    renderHint: jest.fn().mockReturnValue(<div>Hint Content</div>),
-    renderFeedbackFlag: jest
+    renderQuestionPrompt: vi.fn().mockReturnValue('Question Prompt'),
+    renderQuestionContent: vi.fn().mockReturnValue(<div>Question Content</div>),
+    renderHint: vi.fn().mockReturnValue(<div>Hint Content</div>),
+    renderFeedbackFlag: vi
         .fn()
         .mockReturnValue(<img src="flag.png" alt="Feedback Flag" />),
-    renderFeedbackOrigin: jest.fn().mockReturnValue(<div>Feedback Origin</div>),
+    renderFeedbackOrigin: vi.fn().mockReturnValue(<div>Feedback Origin</div>),
 };
 
 const defaultProps = {
     gameState: mockGameState,
     actions: mockActions,
-    onBackToMenu: jest.fn(),
+    onBackToMenu: vi.fn(),
     modeLabel: 'Test Mode',
     ...mockRenderProps,
 };
 
 describe('QuizGameView', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('renders initial state correctly', () => {
@@ -199,7 +197,7 @@ describe('QuizGameView', () => {
     });
 
     test('calls special onKeyDown prop', () => {
-        const specialKeyDown = jest.fn();
+        const specialKeyDown = vi.fn();
         render(<QuizGameView {...defaultProps} onKeyDown={specialKeyDown} />);
 
         fireEvent.keyDown(window, { key: 'ArrowLeft' }); // Not Enter

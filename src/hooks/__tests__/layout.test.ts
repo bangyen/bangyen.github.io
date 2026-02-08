@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import {
     getWindow,
@@ -10,13 +11,13 @@ import {
 import { useMediaQuery } from '../../components/mui';
 
 // Mock useMediaQuery
-jest.mock('../../components/mui', () => ({
-    useMediaQuery: jest.fn(),
+vi.mock('../../components/mui', () => ({
+    useMediaQuery: vi.fn(),
 }));
 
 describe('Layout Hooks and Helpers', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         // Reset window dimensions
         Object.defineProperty(window, 'innerWidth', {
             writable: true,
@@ -54,7 +55,7 @@ describe('Layout Hooks and Helpers', () => {
 
     describe('useSize', () => {
         test('updates size on resize event', () => {
-            const getSize = jest.fn(() => ({ width: 100, height: 100 }));
+            const getSize = vi.fn(() => ({ width: 100, height: 100 }));
             const { result } = renderHook(() => useSize(getSize));
 
             expect(result.current.size).toEqual({ width: 100, height: 100 });
@@ -77,11 +78,11 @@ describe('Layout Hooks and Helpers', () => {
 
     describe('useMobile', () => {
         test('calls useMediaQuery with proper breakpoint', () => {
-            (useMediaQuery as jest.Mock).mockReturnValue(true);
+            (useMediaQuery as Mock).mockReturnValue(true);
             const { result } = renderHook(() => useMobile('md'));
 
             expect(result.current).toBe(true);
-            const mockCalls = (useMediaQuery as jest.Mock).mock.calls as [
+            const mockCalls = (useMediaQuery as Mock).mock.calls as [
                 [
                     (theme: {
                         breakpoints: { down: (s: string) => string };

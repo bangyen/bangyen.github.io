@@ -14,7 +14,8 @@ export interface ChartConfig {
     dualYAxis?: boolean;
     rightYAxisFormatter?: (value: number) => string;
     rightYAxisDomain?: string[];
-    tooltipLabelFormatter: (value: number) => string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tooltipLabelFormatter: (value: any) => React.ReactNode;
     tooltipFormatter: (value: number, name: string) => [string, string];
 }
 

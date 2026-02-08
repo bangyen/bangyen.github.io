@@ -4,7 +4,7 @@ import { ErrorFallback } from '../ErrorFallback';
 import { BrowserRouter } from 'react-router-dom';
 
 // Mock HomeButton as it uses navigation
-jest.mock('../../ui/Controls', () => ({
+vi.mock('../../ui/Controls', () => ({
     HomeButton: () => <button data-testid="home-button">Home</button>,
 }));
 
@@ -14,8 +14,8 @@ describe('ErrorFallback', () => {
         errorInfo: {
             componentStack: 'component\nstack\ntrace',
         } as React.ErrorInfo,
-        onReload: jest.fn(),
-        onReset: jest.fn(),
+        onReload: vi.fn(),
+        onReset: vi.fn(),
     };
 
     const renderWithRouter = (ui: React.ReactElement) => {
@@ -51,7 +51,7 @@ describe('ErrorFallback', () => {
         const originalEnv = process.env.NODE_ENV;
 
         beforeEach(() => {
-            jest.resetModules();
+            vi.resetModules();
         });
 
         afterEach(() => {

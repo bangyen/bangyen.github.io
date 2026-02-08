@@ -1,16 +1,17 @@
+import { vi, type Mock } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import Info from '../Info';
 import * as calculator from '../calculator';
 import { DragProps } from '../../hooks/useDrag';
 
 // Mock dependencies
-jest.mock('../Example', () => ({
+vi.mock('../Example', () => ({
     __esModule: true,
     default: function MockExample() {
         return <div data-testid="example-component" />;
     },
 }));
-jest.mock('../../../../components/ui/GlassCard', () => ({
+vi.mock('../../../../components/ui/GlassCard', () => ({
     GlassCard: function MockGlassCard({
         children,
         sx,
@@ -38,18 +39,16 @@ jest.mock('../../../../components/ui/GlassCard', () => ({
         );
     },
 }));
-jest.mock('../../../../hooks', () => ({
-    useMobile: jest.fn(() => false),
+vi.mock('../../../../hooks', () => ({
+    useMobile: vi.fn(() => false),
 }));
-jest.mock('../matrices', () => ({
-    getProduct: jest.fn(() => [0, 0, 0]),
+vi.mock('../matrices', () => ({
+    getProduct: vi.fn(() => [0, 0, 0]),
 }));
 
 // Mock MUI components
-jest.mock('../../../../components/mui', () => {
-    const actual = jest.requireActual<Record<string, unknown>>(
-        '../../../../components/mui'
-    );
+vi.mock('../../../../components/mui', async importOriginal => {
+    const actual = await importOriginal<Record<string, any>>();
     return {
         ...actual,
         Modal: ({
@@ -64,7 +63,7 @@ jest.mock('../../../../components/mui', () => {
 });
 
 // Mock Icons
-jest.mock('../../../../components/icons', () => ({
+vi.mock('../../../../components/icons', () => ({
     KeyboardArrowDown: () => <div data-testid="keyboardarrowdown-icon" />,
     Calculate: () => <div data-testid="calculate-icon" />,
     Replay: () => <div data-testid="replay-icon" />,
@@ -79,14 +78,14 @@ jest.mock('../../../../components/icons', () => ({
 }));
 
 // Mock calculator helpers
-jest.mock('../calculator', () => ({
-    getInput: jest.fn(),
-    getOutput: jest.fn(),
-    useHandler: jest.fn(),
+vi.mock('../calculator', () => ({
+    getInput: vi.fn(),
+    getOutput: vi.fn(),
+    useHandler: vi.fn(),
 }));
 
 describe('Lights Out Info Component', () => {
-    const mockToggleOpen = jest.fn();
+    const mockToggleOpen = vi.fn();
     const mockPalette = { primary: 'red', secondary: 'blue' };
     const defaultProps = {
         rows: 3,
@@ -99,12 +98,12 @@ describe('Lights Out Info Component', () => {
         getBackProps: () => (_r: number, _c: number) => ({}),
     };
 
-    const mockGetInput = calculator.getInput as jest.Mock;
-    const mockGetOutput = calculator.getOutput as jest.Mock;
-    const mockUseHandler = calculator.useHandler as jest.Mock;
+    const mockGetInput = calculator.getInput as Mock;
+    const mockGetOutput = calculator.getOutput as Mock;
+    const mockUseHandler = calculator.useHandler as Mock;
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
         mockUseHandler.mockReturnValue({}); // simplistic mock
         // Mock getInput to return a function that returns props with onClick
         mockGetInput.mockImplementation(

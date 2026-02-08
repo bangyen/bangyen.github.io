@@ -1,10 +1,11 @@
+import { vi, type Mock } from 'vitest';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Toolbar, handleToolbar, ToolbarPayload } from '../Toolbar';
 import { EditorContext, EditorContextType } from '../EditorContext';
 
 // Mock components
-jest.mock('../../../components/ui/Controls', () => ({
+vi.mock('../../../components/ui/Controls', () => ({
     TooltipButton: ({
         title,
         onClick,
@@ -25,7 +26,7 @@ jest.mock('../../../components/ui/Controls', () => ({
 }));
 
 // Mock icons
-jest.mock('../../../components/icons', () => ({
+vi.mock('../../../components/icons', () => ({
     FirstPageRounded: () => <span>First</span>,
     LastPageRounded: () => <span>Last</span>,
     NavigateBeforeRounded: () => <span>Prev</span>,
@@ -35,15 +36,15 @@ jest.mock('../../../components/icons', () => ({
 }));
 
 // Mock useMediaQuery
-jest.mock('../../../components/mui', () => ({
-    useMediaQuery: jest.fn(() => true), // Desktop by default
+vi.mock('../../../components/mui', () => ({
+    useMediaQuery: vi.fn(() => true), // Desktop by default
 }));
 
 describe('Toolbar Component and handleToolbar', () => {
-    const mockDispatch = jest.fn();
-    const mockCreate = jest.fn();
-    const mockClear = jest.fn();
-    const mockNextIter = jest.fn();
+    const mockDispatch = vi.fn();
+    const mockCreate = vi.fn();
+    const mockClear = vi.fn();
+    const mockNextIter = vi.fn();
 
     const mockPayload = {
         dispatch: mockDispatch,
@@ -54,11 +55,11 @@ describe('Toolbar Component and handleToolbar', () => {
     };
 
     beforeEach(() => {
-        jest.clearAllMocks();
-        window.confirm = jest.fn(() => true);
+        vi.clearAllMocks();
+        window.confirm = vi.fn(() => true);
         Object.assign(navigator, {
             clipboard: {
-                writeText: jest.fn().mockResolvedValue(undefined),
+                writeText: vi.fn().mockResolvedValue(undefined),
             },
         });
     });
@@ -89,7 +90,7 @@ describe('Toolbar Component and handleToolbar', () => {
         });
 
         test('handles reset action with confirmation', () => {
-            (window.confirm as jest.Mock).mockReturnValue(true);
+            (window.confirm as Mock).mockReturnValue(true);
             const result = handleToolbar(
                 {},
                 {
@@ -105,7 +106,7 @@ describe('Toolbar Component and handleToolbar', () => {
         });
 
         test('handles reset action without confirmation', () => {
-            (window.confirm as jest.Mock).mockReturnValue(false);
+            (window.confirm as Mock).mockReturnValue(false);
             handleToolbar(
                 {},
                 {
@@ -205,7 +206,7 @@ describe('Toolbar Component and handleToolbar', () => {
             const context = {
                 name: 'Test Lang',
                 pause: true,
-                dispatch: jest.fn(() => jest.fn()),
+                dispatch: vi.fn(() => vi.fn()),
                 fastForward: true,
             };
             renderToolbar(context);
@@ -220,7 +221,7 @@ describe('Toolbar Component and handleToolbar', () => {
             const context = {
                 name: 'Test Lang',
                 pause: false,
-                dispatch: jest.fn(() => jest.fn()),
+                dispatch: vi.fn(() => vi.fn()),
             };
             renderToolbar(context);
             expect(screen.getByTestId('btn-Pause')).toBeInTheDocument();
@@ -230,7 +231,7 @@ describe('Toolbar Component and handleToolbar', () => {
             const context = {
                 name: 'Test Lang',
                 pause: true,
-                dispatch: jest.fn(() => jest.fn()),
+                dispatch: vi.fn(() => vi.fn()),
                 fastForward: false,
             };
             renderToolbar(context);

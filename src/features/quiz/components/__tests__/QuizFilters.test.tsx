@@ -25,8 +25,8 @@ const mockConfig = {
     maxQuestionOptions: [5, 10, 20],
 };
 
-const mockOnChange = jest.fn();
-const mockOnEnter = jest.fn();
+const mockOnChange = vi.fn();
+const mockOnEnter = vi.fn();
 
 const defaultProps = {
     selectedQuiz: 'cctld' as QuizType,
@@ -39,7 +39,7 @@ const defaultProps = {
 
 describe('QuizFilters', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     // Helper to check if a text exists (handling multiple matches due to MUI legends)

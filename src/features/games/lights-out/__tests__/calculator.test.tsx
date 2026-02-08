@@ -1,11 +1,12 @@
+import { vi, type Mock } from 'vitest';
 import { renderHook } from '@testing-library/react';
 import { getInput, getOutput, useHandler } from '../calculator';
 import { useGetters } from '../boardUtils';
 import { DragProps } from '../../hooks/useDrag';
 
 // Mock useGetters from boardUtils
-jest.mock('../boardUtils', () => ({
-    useGetters: jest.fn(
+vi.mock('../boardUtils', () => ({
+    useGetters: vi.fn(
         (
             _getTile: (r: number, c: number) => number,
             palette: { primary: string; secondary: string }
@@ -24,17 +25,17 @@ jest.mock('../boardUtils', () => ({
 describe('Lights Out Calculator UI Helpers', () => {
     const mockPalette = { primary: 'red', secondary: 'blue' };
     const mockGetters = {
-        getColor: jest.fn(() => ({ front: 'red', back: 'blue' })),
-        getBorder: jest.fn(() => ({ border: '1px solid' })),
-        getFiller: jest.fn(() => 'red'),
+        getColor: vi.fn(() => ({ front: 'red', back: 'blue' })),
+        getBorder: vi.fn(() => ({ border: '1px solid' })),
+        getFiller: vi.fn(() => 'red'),
     };
 
     describe('getInput', () => {
         it('returns correct props for a tile', () => {
-            const mockGetDragProps = jest.fn((pos: string) => ({
-                onMouseDown: jest.fn(),
-                onMouseEnter: jest.fn(),
-                onTouchStart: jest.fn(),
+            const mockGetDragProps = vi.fn((pos: string) => ({
+                onMouseDown: vi.fn(),
+                onMouseEnter: vi.fn(),
+                onTouchStart: vi.fn(),
                 'data-pos': pos,
                 sx: { touchAction: 'none' as const, transition: 'none' },
             }));
@@ -54,7 +55,7 @@ describe('Lights Out Calculator UI Helpers', () => {
         it('calls getters with correct coordinates', () => {
             const getProps = getInput(
                 mockGetters,
-                jest.fn(() => ({}) as DragProps)
+                vi.fn(() => ({}) as DragProps)
             );
             getProps(1, 2);
             expect(mockGetters.getColor).toHaveBeenCalledWith(1, 2);
@@ -80,7 +81,7 @@ describe('Lights Out Calculator UI Helpers', () => {
             renderHook(() => useHandler(row, 3, mockPalette));
 
             expect(useGetters).toHaveBeenCalled();
-            const calls = (useGetters as jest.Mock).mock.calls as [
+            const calls = (useGetters as Mock).mock.calls as [
                 (r: number, c: number) => number,
             ][];
             const getTile = calls[0]![0];

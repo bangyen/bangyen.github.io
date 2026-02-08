@@ -3,7 +3,7 @@ use serde::{Serialize, Deserialize};
 use rand::seq::SliceRandom;
 use rand::SeedableRng;
 use rand::rngs::SmallRng;
-use std::collections::{HashSet, VecDeque};
+use std::collections::HashSet;
 
 #[wasm_bindgen]
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Serialize, Deserialize)]
@@ -270,7 +270,7 @@ fn check_deductive_solvability(
 }
 
 #[wasm_bindgen]
-pub fn generate_puzzle_wasm(rows: usize, cols: usize, seed: u64) -> JsValue {
+pub fn generate_puzzle_wasm(rows: usize, cols: usize, seed: u64, hint_density: f32) -> JsValue {
     let mut rng = SmallRng::seed_from_u64(seed);
     let mut final_grid = vec![vec![CellState::Empty; cols]; rows];
     let mut success = false;
@@ -346,7 +346,7 @@ pub fn generate_puzzle_wasm(rows: usize, cols: usize, seed: u64) -> JsValue {
     }
     coords.shuffle(&mut rng);
 
-    let target_hint_count = (rows as f32 + 1.0) * (cols as f32 + 1.0) * 0.3; // Using 0.3 as density for now
+    let target_hint_count = (rows as f32 + 1.0) * (cols as f32 + 1.0) * hint_density;
     let mut current_hint_count = (rows + 1) * (cols + 1);
 
     for (r, c) in coords {

@@ -1,11 +1,13 @@
 import {
     getMatrix,
-    getPolynomial,
-    evalPolynomial,
     getKernelBasis,
     getImageMapping,
     getMinWeightSolution,
-} from '../../games/lights-out/matrices';
+} from '../../games/lights-out/matrixAlgebra';
+import {
+    getPolynomial,
+    evalPolynomial,
+} from '../../games/lights-out/polynomialUtils';
 
 // Define the shape of the message we expect to receive
 interface WorkerMessage {

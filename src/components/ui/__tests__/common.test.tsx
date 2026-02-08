@@ -23,7 +23,7 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => (
 
 describe('Helper Components', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     describe('TooltipButton', () => {
@@ -42,7 +42,7 @@ describe('Helper Components', () => {
 
         test('passes through props', () => {
             const MockIcon = () => <div>Icon</div>;
-            const handleClick = jest.fn();
+            const handleClick = vi.fn();
 
             render(
                 <TooltipButton
@@ -137,7 +137,7 @@ describe('Helper Components', () => {
 
     describe('RandomButton', () => {
         test('renders with default title', () => {
-            const handleClick = jest.fn();
+            const handleClick = vi.fn();
 
             render(<RandomButton onClick={handleClick} />);
 
@@ -147,7 +147,7 @@ describe('Helper Components', () => {
         });
 
         test('renders with custom title', () => {
-            const handleClick = jest.fn();
+            const handleClick = vi.fn();
 
             render(
                 <RandomButton onClick={handleClick} title="Custom Random" />
@@ -159,7 +159,7 @@ describe('Helper Components', () => {
         });
 
         test('shows enabled state when enabled', () => {
-            const handleClick = jest.fn();
+            const handleClick = vi.fn();
 
             render(
                 <RandomButton
@@ -175,7 +175,7 @@ describe('Helper Components', () => {
         });
 
         test('shows disabled state when disabled', () => {
-            const handleClick = jest.fn();
+            const handleClick = vi.fn();
 
             render(
                 <RandomButton
@@ -191,7 +191,7 @@ describe('Helper Components', () => {
         });
 
         test('does not render when hidden', () => {
-            const handleClick = jest.fn();
+            const handleClick = vi.fn();
 
             render(<RandomButton onClick={handleClick} hide={true} />);
 
@@ -201,7 +201,7 @@ describe('Helper Components', () => {
         });
 
         test('calls onClick when clicked', () => {
-            const handleClick = jest.fn();
+            const handleClick = vi.fn();
 
             render(<RandomButton onClick={handleClick} />);
 
@@ -242,7 +242,7 @@ describe('Helper Components', () => {
         });
 
         test('includes RandomButton when onRandom provided', () => {
-            const handleRandom = jest.fn();
+            const handleRandom = vi.fn();
 
             render(
                 <TestWrapper>
@@ -281,8 +281,8 @@ describe('Helper Components', () => {
     });
 
     describe('ArrowsButton', () => {
-        const mockHandler = jest.fn();
-        const mockSetShow = jest.fn();
+        const mockHandler = vi.fn();
+        const mockSetShow = vi.fn();
 
         test('shows gamepad button when not expanded', () => {
             render(
@@ -376,7 +376,7 @@ describe('Helper Components', () => {
 
     describe('CustomGrid', () => {
         test('renders grid with correct dimensions', () => {
-            const cellProps = jest.fn((row: number, col: number) => ({
+            const cellProps = vi.fn((row: number, col: number) => ({
                 children: `${String(row)}-${String(col)}`,
             }));
 
@@ -388,7 +388,7 @@ describe('Helper Components', () => {
         });
 
         test('calls cellProps for each cell', () => {
-            const cellProps = jest.fn((row: number, col: number) => ({
+            const cellProps = vi.fn((row: number, col: number) => ({
                 children: `${String(row)}-${String(col)}`,
             }));
 
@@ -400,7 +400,7 @@ describe('Helper Components', () => {
         });
 
         test('uses custom space when provided', () => {
-            const cellProps = jest.fn((row: number, col: number) => ({
+            const cellProps = vi.fn((row: number, col: number) => ({
                 children: `${String(row)}-${String(col)}`,
             }));
 

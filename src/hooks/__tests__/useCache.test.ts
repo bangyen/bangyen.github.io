@@ -3,15 +3,15 @@ import { useCache } from '../useCache';
 
 describe('useCache Hook', () => {
     beforeEach(() => {
-        jest.useFakeTimers();
+        vi.useFakeTimers();
     });
 
     afterEach(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     test('initializes and clears cache', () => {
-        const getState = jest.fn((s: { count: number }) => s);
+        const getState = vi.fn((s: { count: number }) => s);
         const { result } = renderHook(() => useCache(getState));
 
         let state: { count: number } | undefined;
@@ -25,7 +25,7 @@ describe('useCache Hook', () => {
     });
 
     test('handles next action and increments index', () => {
-        const getState = jest.fn((s: { count: number }) => ({
+        const getState = vi.fn((s: { count: number }) => ({
             count: s.count + 1,
         }));
         const { result } = renderHook(() => useCache(getState));
@@ -46,7 +46,7 @@ describe('useCache Hook', () => {
     });
 
     test('prevents double processing', () => {
-        const getState = jest.fn((s: { count: number }) => ({
+        const getState = vi.fn((s: { count: number }) => ({
             count: s.count + 1,
         }));
         const { result } = renderHook(() => useCache(getState));
@@ -71,7 +71,7 @@ describe('useCache Hook', () => {
         expect(getState).toHaveBeenCalledTimes(1);
 
         act(() => {
-            jest.advanceTimersByTime(200); // Wait for resetDelay
+            vi.advanceTimersByTime(200); // Wait for resetDelay
         });
 
         act(() => {
@@ -81,7 +81,7 @@ describe('useCache Hook', () => {
     });
 
     test('handles prev action', () => {
-        const getState = jest.fn((s: { count: number }) => ({
+        const getState = vi.fn((s: { count: number }) => ({
             count: s.count + 1,
         }));
         const { result } = renderHook(() => useCache(getState));
@@ -96,7 +96,7 @@ describe('useCache Hook', () => {
 
         let prevState: { count: number } | undefined;
         act(() => {
-            jest.advanceTimersByTime(200);
+            vi.advanceTimersByTime(200);
             prevState = result.current({ type: 'prev', payload: null }) as {
                 count: number;
             };
@@ -106,7 +106,7 @@ describe('useCache Hook', () => {
     });
 
     test('avoids push when state does not change', () => {
-        const getState = jest.fn((s: { count: number }) => s); // Returns same state
+        const getState = vi.fn((s: { count: number }) => s); // Returns same state
         const { result } = renderHook(() => useCache(getState));
 
         act(() => {
@@ -125,7 +125,7 @@ describe('useCache Hook', () => {
     });
 
     test('uses cached states when index is behind', () => {
-        const getState = jest.fn((s: { count: number }) => ({
+        const getState = vi.fn((s: { count: number }) => ({
             count: s.count + 1,
         }));
         const { result } = renderHook(() => useCache(getState));
@@ -136,15 +136,15 @@ describe('useCache Hook', () => {
 
         act(() => {
             result.current({ type: 'next', payload: null });
-            jest.advanceTimersByTime(200);
+            vi.advanceTimersByTime(200);
             result.current({ type: 'next', payload: null });
-            jest.advanceTimersByTime(200);
+            vi.advanceTimersByTime(200);
         });
 
         // Index is 2 (count: 2). Go back.
         act(() => {
             result.current({ type: 'prev', payload: null });
-            jest.advanceTimersByTime(200);
+            vi.advanceTimersByTime(200);
         });
 
         // Now index is 1. Go next. Should NOT call getState.

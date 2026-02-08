@@ -43,7 +43,8 @@ const ResearchDemo = <T,>({
         dualYAxis: false,
         rightYAxisFormatter: (value: number) => value.toFixed(2),
         rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
-        tooltipLabelFormatter: (value: number) => `Round ${value.toString()}`,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        tooltipLabelFormatter: (value: any) => `Round ${String(value)}`,
         tooltipFormatter: (value: number, name: string) => [
             value.toFixed(2),
             name,

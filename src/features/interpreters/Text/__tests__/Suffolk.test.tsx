@@ -65,7 +65,7 @@ describe('Suffolk Interpreter Logic', () => {
         });
 
         it('handles , (input)', () => {
-            window.prompt = jest.fn().mockReturnValue('A');
+            window.prompt = vi.fn().mockReturnValue('A');
             let state = { ...initialState, code: ',' };
             state = getState(state);
             expect(state.register).toBe(65);
@@ -73,7 +73,7 @@ describe('Suffolk Interpreter Logic', () => {
         });
 
         it('handles , with no input', () => {
-            window.prompt = jest.fn().mockReturnValue(null);
+            window.prompt = vi.fn().mockReturnValue(null);
             let state = { ...initialState, code: ',' };
             state = getState(state);
             expect(state.register).toBe(0);

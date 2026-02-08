@@ -186,7 +186,7 @@ export const useQuizEngine = <T>({
     ]);
 
     const handleSubmit = useCallback(
-        (e?: React.FormEvent) => {
+        (e?: React.SyntheticEvent) => {
             e?.preventDefault();
             submitAnswer(inputValue);
         },

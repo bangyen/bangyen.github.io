@@ -32,20 +32,20 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 // Mock Material-UI icons
-jest.mock('@mui/icons-material', () => ({
-    ...(jest.requireActual('@mui/icons-material') as unknown as Record<
-        string,
-        unknown
-    >),
-    LightModeRounded: () => <div data-testid="light-mode-icon" />,
-    DarkModeRounded: () => <div data-testid="dark-mode-icon" />,
-    ViewModuleRounded: () => <div data-testid="view-module-icon" />,
-    GitHub: () => <div data-testid="github-icon" />,
-    LocationOn: () => <div data-testid="location-icon" />,
-}));
+vi.mock('@mui/icons-material', async importOriginal => {
+    const original = await importOriginal<Record<string, any>>();
+    return {
+        ...original,
+        LightModeRounded: () => <div data-testid="light-mode-icon" />,
+        DarkModeRounded: () => <div data-testid="dark-mode-icon" />,
+        ViewModuleRounded: () => <div data-testid="view-module-icon" />,
+        GitHub: () => <div data-testid="github-icon" />,
+        LocationOn: () => <div data-testid="location-icon" />,
+    };
+});
 
 // Mock the Pages module
-jest.mock('../../../../pages', () => ({
+vi.mock('../../../../pages', () => ({
     pages: {
         Oligopoly: '/oligopoly',
         ZSharp: '/zsharp',

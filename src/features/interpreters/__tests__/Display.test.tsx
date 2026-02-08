@@ -4,7 +4,7 @@ import { Program, Tape, Output, Register, DisplayModeToggle } from '../Display';
 import { EditorContext, EditorContextType } from '../EditorContext';
 
 // Mocks
-jest.mock('../../../components/mui', () => ({
+vi.mock('../../../components/mui', () => ({
     Box: ({
         children,
         sx: _sx,
@@ -34,7 +34,7 @@ jest.mock('../../../components/mui', () => ({
     }) => <button onClick={onClick}>{children}</button>,
 }));
 
-jest.mock('../components/Text', () => ({
+vi.mock('../components/Text', () => ({
     Text: ({ text, color }: { text: string; color?: string }) => (
         <span data-testid="text-comp" data-color={color}>
             {text}
@@ -42,13 +42,13 @@ jest.mock('../components/Text', () => ({
     ),
 }));
 
-jest.mock('../../../components/ui/GlassCard', () => ({
+vi.mock('../../../components/ui/GlassCard', () => ({
     GlassCard: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="glass-card">{children}</div>
     ),
 }));
 
-jest.mock('../../../components/icons', () => ({
+vi.mock('../../../components/icons', () => ({
     CodeRounded: () => <svg data-testid="icon-code" />,
     DataArrayRounded: () => <svg data-testid="icon-tape" />,
     TextFieldsRounded: () => <svg data-testid="icon-output" />,
@@ -200,7 +200,7 @@ describe('Display Components', () => {
 
     describe('DisplayModeToggle', () => {
         test('toggles mode', () => {
-            const setCompact = jest.fn();
+            const setCompact = vi.fn();
             render(
                 <DisplayModeToggle
                     compactMode={false}

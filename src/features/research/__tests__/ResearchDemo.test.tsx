@@ -1,33 +1,35 @@
 import React from 'react';
 import { render, screen, renderHook } from '@testing-library/react';
+import { vi, type Mock } from 'vitest';
 import ResearchDemo from '../ResearchDemo';
 import { URLS } from '../../../config/constants';
 
 // Mock the icons
-jest.mock('../../../components/icons', () => ({
-    GitHub: () => <div data-testid="github-icon">GitHub</div>,
-    HomeRounded: () => <div data-testid="home-icon">Home</div>,
-    Refresh: () => <div data-testid="refresh-icon">Refresh</div>,
-    SettingsRounded: () => <div data-testid="settings-icon">Settings</div>,
-    InfoRounded: () => <div data-testid="info-icon">Info</div>,
-}));
+vi.mock('../../../components/icons', async importOriginal => {
+    const original = await importOriginal<Record<string, any>>();
+    return {
+        ...original,
+        GitHub: () => <div data-testid="github-icon">GitHub</div>,
+        HomeRounded: () => <div data-testid="home-icon">Home</div>,
+        Refresh: () => <div data-testid="refresh-icon">Refresh</div>,
+        SettingsRounded: () => <div data-testid="settings-icon">Settings</div>,
+        InfoRounded: () => <div data-testid="info-icon">Info</div>,
+    };
+});
 
 // Mock useTheme
-jest.mock('../../../hooks/useTheme', () => ({
+vi.mock('../../../hooks/useTheme', () => ({
     useThemeContext: () => ({
         mode: 'light',
         resolvedMode: 'light',
-        toggleTheme: jest.fn(),
+        toggleTheme: vi.fn(),
     }),
 }));
 
 // Mock @mui/material useMediaQuery
-const mockUseMediaQuery = jest.fn() as jest.Mock<boolean, [string]>;
-jest.mock('@mui/material', () => {
-    const original = jest.requireActual('@mui/material') as unknown as Record<
-        string,
-        unknown
-    >;
+const mockUseMediaQuery = vi.fn() as Mock;
+vi.mock('@mui/material', async importOriginal => {
+    const original = await importOriginal<Record<string, any>>();
     return {
         ...original,
         useMediaQuery: (query: string) => mockUseMediaQuery(query),
@@ -36,7 +38,7 @@ jest.mock('@mui/material', () => {
 mockUseMediaQuery.mockReturnValue(false); // Default
 
 // Mock the helpers
-jest.mock('../../../components/ui/GlassCard', () => ({
+vi.mock('../../../components/ui/GlassCard', () => ({
     GlassCard: ({ children, ...props }: { children: React.ReactNode }) => (
         <div data-testid="glass-card" {...props}>
             {children}
@@ -44,7 +46,7 @@ jest.mock('../../../components/ui/GlassCard', () => ({
     ),
 }));
 
-jest.mock('../../../components/ui/TooltipButton', () => ({
+vi.mock('../../../components/ui/TooltipButton', () => ({
     TooltipButton: ({
         title,
         Icon,
@@ -59,7 +61,7 @@ jest.mock('../../../components/ui/TooltipButton', () => ({
     ),
 }));
 
-jest.mock('../../../components/ui/Controls', () => ({
+vi.mock('../../../components/ui/Controls', () => ({
     TooltipButton: ({
         title,
         Icon,
@@ -78,7 +80,7 @@ jest.mock('../../../components/ui/Controls', () => ({
 }));
 
 // Mock recharts
-jest.mock('recharts', () => ({
+vi.mock('recharts', () => ({
     LineChart: ({
         children,
         data,
@@ -261,7 +263,7 @@ it('renders controls when provided', () => {
 });
 
 it('renders reset button when onReset is provided', () => {
-    const mockReset = jest.fn();
+    const mockReset = vi.fn();
     const controls = [
         {
             label: 'Test Control',
@@ -338,7 +340,7 @@ it('uses default chartConfig values and fallback onViewTypeChange', () => {
 });
 
 it('processes data using viewType dataProcessor', () => {
-    const mockProcessor = jest.fn((data: { x: number }[]) =>
+    const mockProcessor = vi.fn((data: { x: number }[]) =>
         data.map(d => ({ ...d, x: d.x * 2 }))
     );
     const viewTypes = [

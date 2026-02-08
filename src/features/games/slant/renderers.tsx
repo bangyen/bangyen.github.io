@@ -7,7 +7,11 @@ import { DragProps } from '../hooks/useDrag';
 import { getPosKey } from '../utils/gameUtils';
 
 export const getBackProps =
-    (getDragProps: (pos: string) => DragProps, state: SlantState) =>
+    (
+        getDragProps: (pos: string) => DragProps,
+        state: SlantState,
+        size: number
+    ) =>
     (r: number, c: number) => {
         const value = state.grid[r]?.[c];
         const pos = getPosKey(r, c);
@@ -37,8 +41,8 @@ export const getBackProps =
                         <Box
                             sx={{
                                 position: 'absolute',
-                                width: '130%',
-                                height: '6px',
+                                width: '115%',
+                                height: `${String(Math.max(2, size))}px`,
                                 backgroundColor: isError
                                     ? COLORS.data.red
                                     : COLORS.text.primary,
@@ -57,8 +61,8 @@ export const getBackProps =
                         <Box
                             sx={{
                                 position: 'absolute',
-                                width: '130%',
-                                height: '6px',
+                                width: '115%',
+                                height: `${String(Math.max(2, size))}px`,
                                 backgroundColor: isError
                                     ? COLORS.data.red
                                     : COLORS.text.primary,

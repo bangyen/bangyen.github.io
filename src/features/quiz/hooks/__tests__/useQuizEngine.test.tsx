@@ -21,17 +21,17 @@ const mockSettings: QuizSettings = {
     allowRepeats: false,
 };
 
-const mockCheckAnswer = jest.fn();
-const mockOnEndGame = jest.fn();
+const mockCheckAnswer = vi.fn();
+const mockOnEndGame = vi.fn();
 
 describe('useQuizEngine', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
-        jest.useFakeTimers();
+        vi.clearAllMocks();
+        vi.useFakeTimers();
     });
 
     afterEach(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     test('initializes correctly', () => {
@@ -95,7 +95,7 @@ describe('useQuizEngine', () => {
 
         // Fast forward timer to next question
         act(() => {
-            jest.advanceTimersByTime(500);
+            vi.advanceTimersByTime(500);
         });
 
         expect(result.current.state.showFeedback).toBe(false);
@@ -192,7 +192,7 @@ describe('useQuizEngine', () => {
 
         // Advance to finish
         act(() => {
-            jest.runAllTimers();
+            vi.runAllTimers();
         });
 
         expect(mockOnEndGame).toHaveBeenCalled();
@@ -240,8 +240,8 @@ describe('useQuizEngine', () => {
 
         act(() => {
             result.current.actions.handleSubmit({
-                preventDefault: jest.fn(),
-            } as unknown as React.FormEvent);
+                preventDefault: vi.fn(),
+            } as unknown as React.SyntheticEvent);
         });
 
         expect(result.current.state.score).toBe(10);

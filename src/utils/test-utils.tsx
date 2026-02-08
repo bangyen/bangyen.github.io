@@ -1,8 +1,13 @@
 import React from 'react';
-import { render, type RenderOptions } from '@testing-library/react';
+import {
+    render,
+    type RenderOptions,
+    type RenderResult,
+} from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme, grey, blueGrey } from '../components/mui';
 import type { Theme } from '@mui/material/styles';
+import { vi, type Mock } from 'vitest';
 
 /**
  * Creates a test theme for consistent testing across all components
@@ -46,7 +51,7 @@ interface RenderWithProvidersOptions extends Omit<RenderOptions, 'wrapper'> {
 export const renderWithProviders = (
     ui: React.ReactElement,
     options: RenderWithProvidersOptions = {}
-) => {
+): RenderResult => {
     const { theme = createTestTheme(), ...renderOptions } = options;
 
     const Wrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
@@ -96,16 +101,16 @@ export const testUtils = {
     /**
      * Creates a mock function
      */
-    createMockFunction: () => jest.fn(),
+    createMockFunction: (): Mock => vi.fn(),
 
     /**
      * Mocks console methods to suppress expected warnings in tests
      */
-    suppressConsoleWarnings: () => {
-        const warnSpy = jest
+    suppressConsoleWarnings: (): (() => void) => {
+        const warnSpy = vi
             .spyOn(console, 'warn')
             .mockImplementation(() => undefined);
-        const errorSpy = jest
+        const errorSpy = vi
             .spyOn(console, 'error')
             .mockImplementation(() => undefined);
 

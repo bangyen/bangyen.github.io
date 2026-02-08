@@ -1,22 +1,20 @@
+import { vi } from 'vitest';
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import QuizSummaryView from '../QuizSummaryView';
 import { Question } from '../../types/quiz';
 
 // Mock MUI icons
-jest.mock('@mui/icons-material', () => ({
+vi.mock('@mui/icons-material', () => ({
     ArrowBackRounded: () => <div data-testid="ArrowBackIcon" />,
     RefreshRounded: () => <div data-testid="RefreshIcon" />,
 }));
 
 // Mock Fade to avoid transition issues in tests
 // Mock Fade and useMediaQuery to avoid transition issues and control media queries in tests
-const mockUseMediaQuery = jest.fn((_query: string) => false);
-jest.mock('@mui/material', () => {
-    const original = jest.requireActual('@mui/material') as unknown as Record<
-        string,
-        unknown
-    >;
+const mockUseMediaQuery = vi.fn((_query: string) => false);
+vi.mock('@mui/material', async importOriginal => {
+    const original = await importOriginal<Record<string, any>>();
     return {
         ...original,
         Fade: ({ children }: { children: React.ReactElement }) => children,
@@ -45,8 +43,8 @@ describe('QuizSummaryView', () => {
     const mockProps = {
         score: 1,
         history: mockHistory,
-        onRestart: jest.fn(),
-        onBackToMenu: jest.fn(),
+        onRestart: vi.fn(),
+        onBackToMenu: vi.fn(),
         renderHistoryItem: (q: Question<string>, index: number) => (
             <div key={index} data-testid={`history-item-${index.toString()}`}>
                 {q.item}

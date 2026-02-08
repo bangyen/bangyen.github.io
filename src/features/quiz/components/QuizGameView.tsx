@@ -36,7 +36,7 @@ export interface QuizGameViewProps<T> {
     };
     actions: {
         setInputValue: (val: string) => void;
-        handleSubmit: (e?: React.FormEvent) => void;
+        handleSubmit: (e?: React.SyntheticEvent) => void;
         submitAnswer?: (ans: string) => void;
         handleSkip: () => void;
         toggleHint: () => void;

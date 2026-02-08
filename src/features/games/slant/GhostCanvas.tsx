@@ -201,7 +201,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 sx: {
                     ...dragProps.sx,
                     cursor: 'pointer',
-                    border: `1px solid ${SLANT_STYLES.GHOST.BORDER}`, // Lighter border for dark bg
+                    border: `1px solid ${SLANT_STYLES.GHOST.BORDER}`,
                     position: 'relative',
                     backgroundColor: SLANT_STYLES.GHOST.BG_SUBTLE,
                     '&:hover': {
@@ -274,20 +274,20 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                     borderRadius: '50%',
                     backgroundColor: hasConflict
                         ? COLORS.data.red
-                        : SLANT_STYLES.GHOST.HINT_BG, // Match dark bg
+                        : SLANT_STYLES.GHOST.HINT_BG,
                     border:
                         value != null
                             ? `2px solid ${
                                   hasConflict
                                       ? COLORS.data.red
-                                      : SLANT_STYLES.GHOST.HINT_BORDER // Lighter border
+                                      : SLANT_STYLES.GHOST.HINT_BORDER
                               }`
                             : 'none',
                     fontSize: `${String(numberSize * 0.5)}rem`,
                     fontWeight: '800',
                     color: hasConflict
                         ? SLANT_STYLES.COLORS.WHITE
-                        : SLANT_STYLES.COLORS.WHITE, // Always white text
+                        : SLANT_STYLES.GHOST.HINT_TEXT, // Mode-aware hint text color
                     zIndex: 5,
                     opacity: value != null ? 1 : 0,
                     display: 'flex',
@@ -367,7 +367,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                     justifyContent: 'center',
                     gap: 2,
                     position: 'absolute',
-                    bottom: mobile ? -72 : -88,
+                    bottom: -90,
                     left: 0,
                     right: 0,
                     pointerEvents: 'auto',

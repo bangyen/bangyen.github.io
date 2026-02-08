@@ -3,7 +3,7 @@ import React from 'react';
 import Back, { getState, BackState } from '../Back';
 
 // Mock GridEditor to avoid full rendering logic
-jest.mock('../GridEditor', () => ({
+vi.mock('../GridEditor', () => ({
     __esModule: true,
     default: ({ name }: { name: string }) => (
         <div data-testid="grid-editor">{name}</div>

@@ -12,8 +12,8 @@ describe('QuizSettingsView', () => {
 
     const mockProps = {
         settings: mockSettings,
-        onUpdate: jest.fn(),
-        onStart: jest.fn(),
+        onUpdate: vi.fn(),
+        onStart: vi.fn(),
     };
 
     test('renders default title when no title is provided', () => {

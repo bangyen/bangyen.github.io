@@ -3,16 +3,16 @@ import { useTimer } from '../useTimer';
 
 describe('useTimer hook', () => {
     beforeEach(() => {
-        jest.useFakeTimers();
-        jest.clearAllMocks();
+        vi.useFakeTimers();
+        vi.clearAllMocks();
     });
 
     afterEach(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     test('starts interval on create', () => {
-        const handler = jest.fn();
+        const handler = vi.fn();
         const { result } = renderHook(() => useTimer(200));
 
         act(() => {
@@ -20,12 +20,12 @@ describe('useTimer hook', () => {
         });
 
         act(() => {
-            jest.advanceTimersByTime(100);
+            vi.advanceTimersByTime(100);
         });
         expect(handler).toHaveBeenCalledTimes(1);
 
         act(() => {
-            jest.advanceTimersByTime(100);
+            vi.advanceTimersByTime(100);
         });
         expect(handler).toHaveBeenCalledTimes(2);
 
@@ -35,8 +35,8 @@ describe('useTimer hook', () => {
     });
 
     test('clears existing interval on new create', () => {
-        const handler1 = jest.fn();
-        const handler2 = jest.fn();
+        const handler1 = vi.fn();
+        const handler2 = vi.fn();
         const { result } = renderHook(() => useTimer(200));
 
         act(() => {
@@ -48,7 +48,7 @@ describe('useTimer hook', () => {
         });
 
         act(() => {
-            jest.advanceTimersByTime(200);
+            vi.advanceTimersByTime(200);
         });
 
         expect(handler1).not.toHaveBeenCalled();
@@ -60,7 +60,7 @@ describe('useTimer hook', () => {
     });
 
     test('cleans up on unmount', () => {
-        const handler = jest.fn();
+        const handler = vi.fn();
         const { result, unmount } = renderHook(() => useTimer(200));
 
         act(() => {
@@ -70,14 +70,14 @@ describe('useTimer hook', () => {
         unmount();
 
         act(() => {
-            jest.advanceTimersByTime(200);
+            vi.advanceTimersByTime(200);
         });
 
         expect(handler).not.toHaveBeenCalled();
     });
 
     test('uses global handlers if new ones are not provided', () => {
-        const handler = jest.fn();
+        const handler = vi.fn();
         const { result } = renderHook(() => useTimer(200));
 
         act(() => {
@@ -89,7 +89,7 @@ describe('useTimer hook', () => {
         });
 
         act(() => {
-            jest.advanceTimersByTime(100);
+            vi.advanceTimersByTime(100);
         });
         expect(handler).toHaveBeenCalled();
 
@@ -99,7 +99,7 @@ describe('useTimer hook', () => {
     });
 
     test('does not create interval when repeat is null', () => {
-        const handler = jest.fn();
+        const handler = vi.fn();
         const { result } = renderHook(() => useTimer(200));
 
         // First create a timer with a handler
@@ -114,7 +114,7 @@ describe('useTimer hook', () => {
 
         // Advance timers - the original handler should not be called
         act(() => {
-            jest.advanceTimersByTime(200);
+            vi.advanceTimersByTime(200);
         });
 
         // Handler was called twice during the first create (200ms / 100ms interval)
@@ -123,7 +123,7 @@ describe('useTimer hook', () => {
     });
 
     test('does not create interval when repeat is undefined', () => {
-        const handler = jest.fn();
+        const handler = vi.fn();
         const { result } = renderHook(() => useTimer(200));
 
         // First create a timer with a handler
@@ -138,7 +138,7 @@ describe('useTimer hook', () => {
 
         // Advance timers - handler should be called with new speed
         act(() => {
-            jest.advanceTimersByTime(50);
+            vi.advanceTimersByTime(50);
         });
 
         expect(handler).toHaveBeenCalled();

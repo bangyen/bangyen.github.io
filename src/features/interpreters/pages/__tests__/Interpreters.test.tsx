@@ -4,47 +4,49 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import Interpreters from '../Interpreters';
 
 // Mock child components
-jest.mock(
-    '../../Text/StunStep',
-    () =>
-        function MockStunStep({ navigation }: { navigation: React.ReactNode }) {
-            return (
-                <div data-testid="stun-step">
-                    StunStep Interpreter {navigation}
-                </div>
-            );
-        }
-);
-jest.mock(
-    '../../Text/Suffolk',
-    () =>
-        function MockSuffolk({ navigation }: { navigation: React.ReactNode }) {
-            return (
-                <div data-testid="suffolk">
-                    Suffolk Interpreter {navigation}
-                </div>
-            );
-        }
-);
-jest.mock(
-    '../../Grid/WII2D',
-    () =>
-        function MockWII2D({ navigation }: { navigation: React.ReactNode }) {
-            return (
-                <div data-testid="wii2d">WII2D Interpreter {navigation}</div>
-            );
-        }
-);
-jest.mock(
-    '../../Grid/Back',
-    () =>
-        function MockBack({ navigation }: { navigation: React.ReactNode }) {
-            return <div data-testid="back">Back Interpreter {navigation}</div>;
-        }
-);
+vi.mock('../../Text/StunStep', () => ({
+    default: function MockStunStep({
+        navigation,
+    }: {
+        navigation: React.ReactNode;
+    }) {
+        return (
+            <div data-testid="stun-step">StunStep Interpreter {navigation}</div>
+        );
+    },
+}));
+vi.mock('../../Text/Suffolk', () => ({
+    default: function MockSuffolk({
+        navigation,
+    }: {
+        navigation: React.ReactNode;
+    }) {
+        return (
+            <div data-testid="suffolk">Suffolk Interpreter {navigation}</div>
+        );
+    },
+}));
+vi.mock('../../Grid/WII2D', () => ({
+    default: function MockWII2D({
+        navigation,
+    }: {
+        navigation: React.ReactNode;
+    }) {
+        return <div data-testid="wii2d">WII2D Interpreter {navigation}</div>;
+    },
+}));
+vi.mock('../../Grid/Back', () => ({
+    default: function MockBack({
+        navigation,
+    }: {
+        navigation: React.ReactNode;
+    }) {
+        return <div data-testid="back">Back Interpreter {navigation}</div>;
+    },
+}));
 
 // Mock navigation to test interaction
-jest.mock('../../components/InterpreterNavigation', () => ({
+vi.mock('../../components/InterpreterNavigation', () => ({
     InterpreterNavigation: ({
         active,
         onChange,
@@ -66,13 +68,13 @@ jest.mock('../../components/InterpreterNavigation', () => ({
         </select>
     ),
 }));
-jest.mock('../../../../components/ui/TooltipButton', () => ({
+vi.mock('../../../../components/ui/TooltipButton', () => ({
     TooltipButton: ({ title }: { title: string }) => (
         <button aria-label={title}>{title}</button>
     ),
 }));
 
-jest.mock('../../../../components/ui/Controls', () => ({
+vi.mock('../../../../components/ui/Controls', () => ({
     TooltipButton: ({ title }: { title: string }) => (
         <button aria-label={title}>{title}</button>
     ),
@@ -82,11 +84,11 @@ jest.mock('../../../../components/ui/Controls', () => ({
 }));
 
 // Mock the ThemeProvider since we just need the context to exist
-jest.mock('../../../../hooks/useTheme', () => ({
+vi.mock('../../../../hooks/useTheme', () => ({
     useThemeContext: () => ({
         mode: 'light',
         resolvedMode: 'light',
-        toggleTheme: jest.fn(),
+        toggleTheme: vi.fn(),
     }),
 }));
 

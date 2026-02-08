@@ -86,7 +86,7 @@ We provide two scripts to verify these findings:
 Iterates through grid dimensions and checks if the Identity Matrix property holds. This is useful for exploring individual grid sizes.
 
 ```bash
-npx tsx src/features/games/lights-out/scripts/verify_identity.ts [max_size]
+bun src/features/games/lights-out/scripts/verify_identity.ts [max_size]
 ```
 
 ### 2. Pattern Discovery & Proof Generation
@@ -98,20 +98,20 @@ Dynamically discovers periodicity patterns and generates **mathematical terminat
 
 ```bash
 # Discover patterns for n=1..10 (default)
-npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts
+bun src/features/games/lights-out/scripts/verify_periodicity.ts
 
 # Generate mathematical proofs for specific n values
-npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts 5 --proof
-npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts 1-20 --proof
+bun src/features/games/lights-out/scripts/verify_periodicity.ts 5 --proof
+bun src/features/games/lights-out/scripts/verify_periodicity.ts 1-20 --proof
 
 # Legacy: Empirical verification up to specific m
-npx tsx src/features/games/lights-out/scripts/verify_periodicity.ts 1-10 1000
+bun src/features/games/lights-out/scripts/verify_periodicity.ts 1-10 1000
 ```
 
 Example (search up to 50x50):
 
 ```bash
-npx tsx src/features/games/lights-out/scripts/verify_identity.ts 50
+bun src/features/games/lights-out/scripts/verify_identity.ts 50
 ```
 
 ## References

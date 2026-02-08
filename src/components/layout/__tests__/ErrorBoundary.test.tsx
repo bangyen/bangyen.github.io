@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import ErrorBoundary from '../ErrorBoundary';
 
 // Mock ErrorFallback to simplify Boundary testing
-jest.mock('../ErrorFallback', () => ({
+vi.mock('../ErrorFallback', () => ({
     ErrorFallback: ({
         onReload,
         onReset,
@@ -30,7 +30,7 @@ describe('ErrorBoundary', () => {
 
     beforeAll(() => {
         // Suppress expected console errors from React during crash testing
-        console.error = jest.fn();
+        console.error = vi.fn();
     });
 
     afterAll(() => {

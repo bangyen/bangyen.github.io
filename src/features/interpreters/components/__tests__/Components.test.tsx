@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { InterpreterNavigation } from '../InterpreterNavigation';
@@ -9,7 +10,7 @@ import { EditorContext, EditorContextType } from '../../EditorContext';
 import { useMobile } from '../../../../hooks';
 
 // Mocks
-jest.mock('@mui/material', () => ({
+vi.mock('@mui/material', () => ({
     Select: ({
         children,
         value,
@@ -35,7 +36,7 @@ jest.mock('@mui/material', () => ({
     ),
 }));
 
-jest.mock('../../../../components/mui', () => ({
+vi.mock('../../../../components/mui', () => ({
     Typography: ({
         children,
         ...props
@@ -96,11 +97,11 @@ jest.mock('../../../../components/mui', () => ({
     ),
 }));
 
-jest.mock('../../../../hooks', () => ({
-    useMobile: jest.fn(() => false),
+vi.mock('../../../../hooks', () => ({
+    useMobile: vi.fn(() => false),
 }));
 
-jest.mock('../../../../components/ui/CustomGrid', () => ({
+vi.mock('../../../../components/ui/CustomGrid', () => ({
     CustomGrid: ({
         cellProps,
         rows,
@@ -151,7 +152,7 @@ const mockContext = {
 describe('Interpreter Components', () => {
     describe('InterpreterNavigation', () => {
         test('renders select with active value', () => {
-            const onChange = jest.fn();
+            const onChange = vi.fn();
             render(
                 <InterpreterNavigation active="wii2d" onChange={onChange} />
             );
@@ -161,7 +162,7 @@ describe('Interpreter Components', () => {
         });
 
         test('calls onChange when changed', () => {
-            const onChange = jest.fn();
+            const onChange = vi.fn();
             render(
                 <InterpreterNavigation active="wii2d" onChange={onChange} />
             );
@@ -202,7 +203,7 @@ describe('Interpreter Components', () => {
         };
 
         const defaultProps = {
-            handleClick: (_: number) => jest.fn(),
+            handleClick: (_: number) => vi.fn(),
             chooseColor: (_: number) => 'secondary',
             options: ['A', 'B', 'C', 'D'],
             rows: 2,
@@ -210,7 +211,7 @@ describe('Interpreter Components', () => {
         };
 
         test('throws if no context', () => {
-            const consoleSpy = jest
+            const consoleSpy = vi
                 .spyOn(console, 'error')
                 .mockImplementation(() => {});
             expect(() => render(<GridArea {...defaultProps} />)).toThrow(
@@ -220,7 +221,7 @@ describe('Interpreter Components', () => {
         });
 
         test('renders grid cells with correct styles', () => {
-            const chooseColor = jest.fn(pos =>
+            const chooseColor = vi.fn(pos =>
                 pos === 0 ? 'primary' : 'secondary'
             );
 
@@ -234,7 +235,7 @@ describe('Interpreter Components', () => {
         });
 
         test('handles click', () => {
-            const clickHandler = jest.fn();
+            const clickHandler = vi.fn();
             const handleClick = (pos: number) => (): void => {
                 clickHandler(pos);
             };
@@ -274,14 +275,14 @@ describe('Interpreter Components', () => {
         const keys = ['A', 'B', ' '];
 
         test('renders keys', () => {
-            render(<KeySelector keys={keys} onSelect={jest.fn()} />);
+            render(<KeySelector keys={keys} onSelect={vi.fn()} />);
             expect(screen.getByText('A')).toBeInTheDocument();
             expect(screen.getByText('B')).toBeInTheDocument();
             expect(screen.getByText('␣')).toBeInTheDocument();
         });
 
         test('handles key selection', () => {
-            const onSelect = jest.fn();
+            const onSelect = vi.fn();
             render(<KeySelector keys={keys} onSelect={onSelect} />);
 
             fireEvent.click(screen.getByText('A'));
@@ -289,7 +290,7 @@ describe('Interpreter Components', () => {
         });
 
         test('handles backspace', () => {
-            const onSelect = jest.fn();
+            const onSelect = vi.fn();
             render(<KeySelector keys={keys} onSelect={onSelect} />);
 
             fireEvent.click(screen.getByText('⌫'));
@@ -297,7 +298,7 @@ describe('Interpreter Components', () => {
         });
 
         test('handles escape', () => {
-            const onSelect = jest.fn();
+            const onSelect = vi.fn();
             render(<KeySelector keys={keys} onSelect={onSelect} />);
 
             fireEvent.click(screen.getByText('✕'));
@@ -318,7 +319,7 @@ describe('Interpreter Components', () => {
         };
 
         test('throws if no context', () => {
-            const consoleSpy = jest
+            const consoleSpy = vi
                 .spyOn(console, 'error')
                 .mockImplementation(() => {});
             expect(() => render(<TextArea />)).toThrow(
@@ -328,7 +329,7 @@ describe('Interpreter Components', () => {
         });
 
         test('renders controlled input', () => {
-            const handleChange = jest.fn();
+            const handleChange = vi.fn();
             renderWithContext(
                 <TextArea value="Content" handleChange={handleChange} />
             );
@@ -341,7 +342,7 @@ describe('Interpreter Components', () => {
         });
 
         test('renders controlled input with empty string', () => {
-            renderWithContext(<TextArea value="" handleChange={jest.fn()} />);
+            renderWithContext(<TextArea value="" handleChange={vi.fn()} />);
             const area = screen.getByTestId<HTMLTextAreaElement>('textarea');
             expect(area.value).toBe('');
         });
@@ -359,7 +360,7 @@ describe('Interpreter Components', () => {
         });
 
         test('calculates rows based on height (mobile)', () => {
-            (useMobile as jest.Mock).mockReturnValue(true);
+            (useMobile as Mock).mockReturnValue(true);
 
             renderWithContext(<TextArea />, { ...mockContext, height: 480 });
             const area = screen.getByTestId('textarea');

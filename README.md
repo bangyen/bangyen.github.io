@@ -40,10 +40,10 @@ A personal website and portfolio showcasing interactive programming interpreters
 ## Tech Stack
 
 - **Frontend**: React 19, Material-UI 7, React Router 7
-- **Build Tooling**: Vite 7, TypeScript 5
+- **Build Tooling**: Vite 7, TypeScript 5, Bun
 - **Styling**: Vanilla CSS, Emotion
 - **Data**: KaTeX (Math), Recharts (Visuals)
-- **Testing**: Jest 30, React Testing Library
+- **Testing**: Vitest 4, React Testing Library
 - **Quality Control**: ESLint 9 (Flat Config), Prettier 3, Husky, lint-staged
 - **Deployment**: GitHub Pages
 
@@ -51,8 +51,8 @@ A personal website and portfolio showcasing interactive programming interpreters
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v18 or higher)
-- npm
+
+- [Bun](https://bun.sh/) (v1.1 or higher)
 
 ### Installation
 
@@ -64,28 +64,28 @@ cd bangyen.github.io
 
 2. Install dependencies:
 ```bash
-npm install
+bun install
 ```
 
 3. Start the development server:
 ```bash
-npm start
+bun start
 ```
 
 4. Open [http://localhost:5173](http://localhost:5173) to view it in the browser.
 
 ## Available Scripts
 
-- `npm start` - Start Vite development server
-- `npm run build` - Create production build
-- `npm test` - Run Jest tests
-- `npm run test:ci` - Run tests in CI mode
-- `npm run type-check` - Run TypeScript type checking
-- `npm run lint:all` - Run all linting (ESLint, Prettier, Stylelint)
-- `npm run format` - Format code with Prettier
-- `npm run deploy` - Deploy to GitHub Pages
-- `npm run scrape:quizzes` - Scrape quiz data from Wikipedia
-- `npm run data:update` - Update research data (requires repo cloning)
+- `bun start` - Start Vite development server
+- `bun run build` - Create production build
+- `bun test` - Run Vitest tests
+- `bun run test:ci` - Run tests in CI mode
+- `bun run type-check` - Run TypeScript type checking
+- `bun run lint:all` - Run all linting (ESLint, Prettier, Stylelint)
+- `bun run format` - Format code with Prettier
+- `bun run deploy` - Deploy to GitHub Pages
+- `bun run scrape:quizzes` - Scrape quiz data from Wikipedia
+- `bun run data:update` - Update research data (requires repo cloning)
 
 ## Project Structure
 
@@ -105,6 +105,6 @@ src/
 
 ## Development
 
-**Testing**: Jest with React Testing Library. Run `npm run test:coverage` for reports.  
+**Testing**: Vitest with React Testing Library. Run `bun run test:coverage` for reports.  
 **Code Quality**: Automated via ESLint 9 and Husky pre-commit hooks.  
-**Continuous Integration**: GitHub Actions verify all PRs via linting and unit testing.
+**Continuous Integration**: GitHub Actions verify all PRs via linting and unit testing via Bun.

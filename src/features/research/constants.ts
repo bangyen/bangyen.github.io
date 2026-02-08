@@ -1,37 +1,37 @@
 export const RESEARCH_STYLES = {
     // Glass/Transparency effects for scientific UI
     GLASS: {
-        VERY_SUBTLE: 'rgba(255, 255, 255, 0.01)',
-        SUBTLE: 'rgba(255, 255, 255, 0.02)',
-        TRANSPARENT: 'rgba(255, 255, 255, 0.03)',
-        SLIGHT: 'rgba(255, 255, 255, 0.05)',
-        MEDIUM: 'rgba(255, 255, 255, 0.1)',
-        STRONG: 'rgba(255, 255, 255, 0.2)',
-        DARK: 'rgba(0, 0, 0, 0.2)',
+        VERY_SUBTLE: 'var(--glass-very-subtle)',
+        SUBTLE: 'var(--glass-subtle)',
+        TRANSPARENT: 'var(--glass-transparent)',
+        SLIGHT: 'var(--glass-slight)',
+        MEDIUM: 'var(--glass-medium)',
+        STRONG: 'var(--glass-strong)',
+        DARK: 'var(--glass-dark)',
     },
     // Cyan/Teal accents often used for "data" or "results"
     CYAN: {
-        BG_SUBTLE: 'rgba(0, 184, 212, 0.05)',
-        BG_SLIGHT: 'rgba(0, 184, 212, 0.1)',
-        BORDER_SUBTLE: 'rgba(0, 184, 212, 0.1)',
-        BORDER_SLIGHT: 'rgba(0, 184, 212, 0.2)',
+        BG_SUBTLE: 'var(--research-cyan-bg)',
+        BG_SLIGHT: 'var(--research-cyan-bg)',
+        BORDER_SUBTLE: 'var(--research-cyan-border)',
+        BORDER_SLIGHT: 'var(--research-cyan-border)',
     },
     // Green accents for success/proofs
     GREEN: {
-        BG_SUBTLE: 'rgba(0, 200, 83, 0.05)',
-        BORDER_SUBTLE: 'rgba(0, 200, 83, 0.1)',
+        BG_SUBTLE: 'var(--research-green-bg)',
+        BORDER_SUBTLE: 'var(--research-green-border)',
         HOVER: 'hsl(141, 64%, 39%)',
     },
     // Amber accents for warnings/logic nodes
     AMBER: {
-        BG_SUBTLE: 'rgba(255, 193, 7, 0.05)',
-        BORDER_SUBTLE: 'rgba(255, 193, 7, 0.1)',
+        BG_SUBTLE: 'var(--research-amber-bg)',
+        BORDER_SUBTLE: 'var(--research-amber-border)',
         HOVER: 'hsl(34, 95%, 48%)',
     },
     // General borders
     BORDER: {
-        VERY_SUBTLE: 'rgba(255, 255, 255, 0.03)',
-        SUBTLE: 'rgba(255, 255, 255, 0.05)',
+        VERY_SUBTLE: 'var(--research-border-very-subtle)',
+        SUBTLE: 'var(--research-border-subtle)',
     },
     // Layout constants
     LAYOUT: {

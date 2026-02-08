@@ -1,9 +1,10 @@
+import { vi, type Mock } from 'vitest';
 import { handleAction, GridState, GridAction } from '../eventHandlers';
 import * as gridUtils from '../../utils/gridUtils';
 
-jest.mock('../../utils/gridUtils', () => ({
-    gridMove: jest.fn(),
-    getDirection: jest.fn(),
+vi.mock('../../utils/gridUtils', () => ({
+    gridMove: vi.fn(),
+    getDirection: vi.fn(),
 }));
 
 describe('Grid Interpreter Event Handlers', () => {
@@ -15,10 +16,10 @@ describe('Grid Interpreter Event Handlers', () => {
         pause: true,
     };
 
-    const mockResetState = jest.fn();
+    const mockResetState = vi.fn();
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     describe('edit action', () => {
@@ -37,8 +38,8 @@ describe('Grid Interpreter Event Handlers', () => {
                 type: 'edit',
                 payload: { key: 'ArrowRight', resetState: mockResetState },
             };
-            (gridUtils.getDirection as jest.Mock).mockReturnValue('right');
-            (gridUtils.gridMove as jest.Mock).mockReturnValue(1);
+            (gridUtils.getDirection as Mock).mockReturnValue('right');
+            (gridUtils.gridMove as Mock).mockReturnValue(1);
 
             const result = handleAction(state, action);
             expect(result.select).toBe(1);
@@ -181,11 +182,11 @@ describe('Grid Interpreter Event Handlers', () => {
 
     it('passes other actions to handleToolbar', () => {
         const mockPayload = {
-            dispatch: jest.fn(),
-            create: jest.fn(),
-            clear: jest.fn(),
-            resetState: jest.fn(),
-            nextIter: jest.fn(),
+            dispatch: vi.fn(),
+            create: vi.fn(),
+            clear: vi.fn(),
+            resetState: vi.fn(),
+            nextIter: vi.fn(),
             start: {},
         };
         const action: GridAction = {

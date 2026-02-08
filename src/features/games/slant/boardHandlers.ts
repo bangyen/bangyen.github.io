@@ -6,13 +6,11 @@ export const BACKWARD: CellState = 2;
 import { GAME_LOGIC_CONSTANTS } from './constants';
 import init, { generate_puzzle_wasm, find_cycles_wasm } from 'slant-wasm';
 
-// Initialize WASM
-try {
-    await init();
-} catch (e) {
+// Initialize the Wasm module
+init().catch((e: unknown) => {
     // eslint-disable-next-line no-console
     console.error('Failed to initialize Slant WASM:', e);
-}
+});
 
 export interface SlantState {
     grid: CellState[][];
@@ -440,6 +438,59 @@ function checkDeductiveSolvability(
     return true;
 }
 
+function pruneHints(
+    numbers: (number | null)[][],
+    rows: number,
+    cols: number,
+    density: number
+): (number | null)[][] {
+    const maskedNumbers = numbers.map(r => [...r]);
+    const coords: { r: number; c: number }[] = [];
+    for (let r = 0; r <= rows; r++) {
+        for (let c = 0; c <= cols; c++) {
+            coords.push({ r, c });
+        }
+    }
+
+    // Shuffle coordinates for hint removal
+    for (let i = coords.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const tempI = coords[i];
+        const tempJ = coords[j];
+        if (tempI && tempJ) {
+            coords[i] = tempJ;
+            coords[j] = tempI;
+        }
+    }
+
+    const targetHintCount = Math.floor((rows + 1) * (cols + 1) * density);
+    let currentHintCount = 0;
+    for (let r = 0; r <= rows; r++) {
+        for (let c = 0; c <= cols; c++) {
+            if (maskedNumbers[r]?.[c] !== null) currentHintCount++;
+        }
+    }
+
+    for (const { r, c } of coords) {
+        if (currentHintCount <= targetHintCount) break;
+
+        const rowArr = maskedNumbers[r];
+        if (!rowArr) continue;
+
+        const original = rowArr[c];
+        if (original === null || original === undefined) continue;
+
+        rowArr[c] = null;
+        if (checkDeductiveSolvability(maskedNumbers, rows, cols)) {
+            currentHintCount--;
+        } else {
+            rowArr[c] = original;
+        }
+    }
+
+    return maskedNumbers;
+}
+
 export function generatePuzzle(
     rows: number,
     cols: number
@@ -448,13 +499,27 @@ export function generatePuzzle(
         const seed = BigInt(
             Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
         );
-        const puzzle = generate_puzzle_wasm(rows, cols, seed) as {
+        const puzzle = generate_puzzle_wasm(
+            rows,
+            cols,
+            seed,
+            GAME_LOGIC_CONSTANTS.HINT_DENSITY
+        ) as {
             numbers: (number | null)[][];
             solution: number[][];
         };
 
+        // Even if WASM provides hints, we can prune them further in JS
+        // to reach the target density if needed.
+        const prunedNumbers = pruneHints(
+            puzzle.numbers,
+            rows,
+            cols,
+            GAME_LOGIC_CONSTANTS.HINT_DENSITY
+        );
+
         return {
-            numbers: puzzle.numbers,
+            numbers: prunedNumbers,
             solution: puzzle.solution as CellState[][],
         };
     } catch (_e) {
@@ -549,47 +614,12 @@ export function generatePuzzle(
 
     // 2. Calculate numbers for this solution
     const fullNumbers = calculateNumbers(grid, rows, cols);
-    const maskedNumbers: (number | null)[][] = fullNumbers.map(r => [...r]);
-
-    // 3. Shuffle coordinates for hint removal
-    const coords: { r: number; c: number }[] = [];
-    for (let r = 0; r <= rows; r++) {
-        for (let c = 0; c <= cols; c++) {
-            coords.push({ r, c });
-        }
-    }
-    for (let i = coords.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        const tempI = coords[i];
-        const tempJ = coords[j];
-        if (tempI && tempJ) {
-            coords[i] = tempJ;
-            coords[j] = tempI;
-        }
-    }
-
-    // 4. Remove hints while ensuring deductive solvability
-    const targetHintCount = Math.floor(
-        (rows + 1) * (cols + 1) * GAME_LOGIC_CONSTANTS.HINT_DENSITY
+    const maskedNumbers = pruneHints(
+        fullNumbers.map(r => r.map(n => n as number | null)),
+        rows,
+        cols,
+        GAME_LOGIC_CONSTANTS.HINT_DENSITY
     );
-    let currentHintCount = (rows + 1) * (cols + 1);
-
-    for (const { r, c } of coords) {
-        if (currentHintCount <= targetHintCount) continue;
-
-        const rowArr = maskedNumbers[r];
-        if (!rowArr) continue;
-
-        const original = rowArr[c];
-        if (original === null || original === undefined) continue;
-
-        rowArr[c] = null;
-        if (checkDeductiveSolvability(maskedNumbers, rows, cols)) {
-            currentHintCount--;
-        } else {
-            rowArr[c] = original;
-        }
-    }
 
     return { numbers: maskedNumbers, solution: grid };
 }

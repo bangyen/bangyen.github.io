@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import {
     useContainer,
@@ -10,11 +11,11 @@ import {
 import * as mui from '../components/mui';
 
 // Mock useMediaQuery from MUI
-jest.mock(
+vi.mock(
     '../components/mui',
     (): Record<string, unknown> => ({
-        ...jest.requireActual('../components/mui'),
-        useMediaQuery: jest.fn(),
+        ...vi.importActual('../components/mui'),
+        useMediaQuery: vi.fn(),
     })
 );
 
@@ -73,25 +74,25 @@ describe('Custom Hooks', () => {
 
     describe('useTimer', () => {
         beforeEach(() => {
-            jest.useFakeTimers();
+            vi.useFakeTimers();
         });
         afterEach(() => {
-            jest.useRealTimers();
+            vi.useRealTimers();
         });
 
         test('manages timer lifecycle', () => {
-            const repeatFn = jest.fn();
+            const repeatFn = vi.fn();
             const { result } = renderHook(() => useTimer(200));
 
             act(() => {
                 result.current.create({ repeat: repeatFn, speed: 200 });
-                jest.advanceTimersByTime(200);
+                vi.advanceTimersByTime(200);
             });
             expect(repeatFn).toHaveBeenCalled();
 
             act(() => {
                 result.current.clear();
-                jest.advanceTimersByTime(200);
+                vi.advanceTimersByTime(200);
             });
             expect(repeatFn).toHaveBeenCalledTimes(1);
         });
@@ -99,7 +100,7 @@ describe('Custom Hooks', () => {
 
     describe('useKeys', () => {
         test('handles keydown', () => {
-            const handler = jest.fn();
+            const handler = vi.fn();
             const { result, unmount } = renderHook(() => useKeys());
             act(() => {
                 result.current.create(handler);
@@ -116,11 +117,11 @@ describe('Custom Hooks', () => {
 
     describe('useMobile', () => {
         test('toggles mobile state', () => {
-            (mui.useMediaQuery as jest.Mock).mockReturnValue(true);
+            (mui.useMediaQuery as Mock).mockReturnValue(true);
             const { result, rerender } = renderHook(() => useMobile('sm'));
             expect(result.current).toBe(true);
 
-            (mui.useMediaQuery as jest.Mock).mockReturnValue(false);
+            (mui.useMediaQuery as Mock).mockReturnValue(false);
             rerender();
             expect(result.current).toBe(false);
         });
@@ -130,10 +131,10 @@ describe('Custom Hooks', () => {
         const getState = (s: { v: number }) => ({ ...s, v: s.v + 1 });
 
         beforeEach(() => {
-            jest.useFakeTimers();
+            vi.useFakeTimers();
         });
         afterEach(() => {
-            jest.useRealTimers();
+            vi.useRealTimers();
         });
 
         test('cycles through states with delay aware actions', () => {
@@ -152,7 +153,7 @@ describe('Custom Hooks', () => {
 
             // Wait for reset delay
             act(() => {
-                jest.advanceTimersByTime(100);
+                vi.advanceTimersByTime(100);
             });
 
             let s2;
@@ -163,7 +164,7 @@ describe('Custom Hooks', () => {
 
             // Wait for reset delay
             act(() => {
-                jest.advanceTimersByTime(100);
+                vi.advanceTimersByTime(100);
             });
 
             let s3;

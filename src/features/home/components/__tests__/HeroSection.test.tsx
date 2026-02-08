@@ -4,7 +4,7 @@ import { HeroSection } from '../HeroSection';
 import { PERSONAL_INFO } from '../../../../config/constants';
 
 // Mock scrollIntoView
-window.HTMLElement.prototype.scrollIntoView = jest.fn();
+window.HTMLElement.prototype.scrollIntoView = vi.fn();
 
 describe('HeroSection and Sub-components', () => {
     test('renders personal info correctly', () => {

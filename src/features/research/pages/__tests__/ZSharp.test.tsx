@@ -9,10 +9,11 @@ import {
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { ResearchDemoProps, ViewType } from '../../types';
+import { vi, type Mock } from 'vitest';
 import ZSharp from '../ZSharp';
 
 // Mocks
-jest.mock('../../ResearchDemo', () => ({
+vi.mock('../../ResearchDemo', () => ({
     __esModule: true,
     default: ({
         title,
@@ -28,7 +29,7 @@ jest.mock('../../ResearchDemo', () => ({
                 vt.dataProcessor(chartData);
                 vt.chartConfig.yAxisFormatter(0.5);
                 vt.chartConfig.tooltipFormatter(0.5, 'test');
-                vt.chartConfig.tooltipLabelFormatter(1);
+                void vt.chartConfig.tooltipLabelFormatter(1);
             });
         }
 
@@ -60,13 +61,13 @@ jest.mock('../../ResearchDemo', () => ({
 class MockDecompressionStream {
     writable = {
         getWriter: () => ({
-            write: jest.fn().mockResolvedValue(undefined),
-            close: jest.fn().mockResolvedValue(undefined),
+            write: vi.fn().mockResolvedValue(undefined),
+            close: vi.fn().mockResolvedValue(undefined),
         }),
     };
     readable = {
         getReader: () => ({
-            read: jest
+            read: vi
                 .fn()
                 .mockResolvedValueOnce({
                     done: false,
@@ -123,8 +124,8 @@ Object.defineProperty(global, 'Response', {
 
 describe('ZSharp Component', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
-        global.fetch = jest.fn();
+        vi.clearAllMocks();
+        global.fetch = vi.fn();
     });
 
     const renderZSharp = async () => {
@@ -143,7 +144,7 @@ describe('ZSharp Component', () => {
     };
 
     test('renders correctly and loads data', async () => {
-        (global.fetch as jest.Mock).mockResolvedValue({
+        (global.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new Uint8Array([0x1f, 0x8b, 0, 0]).buffer),
@@ -160,9 +161,7 @@ describe('ZSharp Component', () => {
     });
 
     test('handles fetch failure and uses fallback data', async () => {
-        (global.fetch as jest.Mock).mockRejectedValue(
-            new Error('Fetch failed')
-        );
+        (global.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
 
         await renderZSharp();
         await waitFor(() => {
@@ -174,7 +173,7 @@ describe('ZSharp Component', () => {
     });
 
     test('handles view type changes', async () => {
-        (global.fetch as jest.Mock).mockResolvedValue({
+        (global.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new TextEncoder().encode('{}').buffer),

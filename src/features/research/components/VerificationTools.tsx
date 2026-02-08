@@ -10,12 +10,40 @@ import {
     Tooltip,
     IconButton,
     Fade,
+    alpha,
 } from '../../../components/mui';
 import { HelpOutlineRounded, CloseRounded } from '../../../components/icons';
 import { COLORS, SPACING, TYPOGRAPHY } from '../../../config/theme';
 import { GlassCard } from '../../../components/ui/GlassCard';
 import { Pattern } from '../../games/lights-out/matrices';
 import { RESEARCH_STYLES } from '../constants';
+
+const MathText: React.FC<{ text: string }> = ({ text }) => {
+    const parts = text.split(/(\^{[^}]+})/g);
+    return (
+        <>
+            {parts.map((part, i) => {
+                const key = `${part}-${String(i)}`;
+                if (part.startsWith('^{') && part.endsWith('}')) {
+                    const exponent = part.slice(2, -1);
+                    return (
+                        <sup
+                            key={key}
+                            style={{
+                                fontSize: '0.6em',
+                                verticalAlign: 'super',
+                                marginLeft: '1px',
+                            }}
+                        >
+                            {exponent}
+                        </sup>
+                    );
+                }
+                return <span key={key}>{part}</span>;
+            })}
+        </>
+    );
+};
 
 interface WorkerResponse<T> {
     success: boolean;
@@ -225,7 +253,7 @@ const PeriodicityCalculator: React.FC = () => {
                                 width: 40,
                                 height: 40,
                                 borderRadius: '50%',
-                                border: `2px solid ${COLORS.primary.main}22`,
+                                border: `2px solid ${alpha(COLORS.primary.main, 0.1)}`,
                                 borderTopColor: COLORS.primary.main,
                                 ...RESEARCH_STYLES.ANIMATIONS.SPIN,
                             }}
@@ -274,7 +302,7 @@ const PeriodicityCalculator: React.FC = () => {
                                 backgroundColor:
                                     RESEARCH_STYLES.GLASS.TRANSPARENT,
                                 borderRadius: SPACING.borderRadius.md,
-                                border: `1px solid ${COLORS.primary.main}33`,
+                                border: `1px solid ${alpha(COLORS.primary.main, 0.2)}`,
                                 borderLeft: `4px solid ${COLORS.primary.main}`,
                                 display: 'flex',
                                 flexDirection: 'column',
@@ -292,62 +320,31 @@ const PeriodicityCalculator: React.FC = () => {
                                         borderBottom: `1px solid ${RESEARCH_STYLES.BORDER.SUBTLE}`,
                                     }}
                                 >
-                                    <Box>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                color: COLORS.primary.main,
-                                                fontWeight:
-                                                    TYPOGRAPHY.fontWeight.bold,
-                                                textTransform: 'uppercase',
-                                                letterSpacing: 1,
-                                                display: 'block',
-                                                lineHeight: 1,
-                                                mb: 0.5,
-                                            }}
-                                        >
-                                            Spectral Periodicity
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                color: COLORS.text.secondary,
-                                                fontSize:
-                                                    RESEARCH_STYLES.LAYOUT
-                                                        .FONT_SIZE_XS,
-                                            }}
-                                        >
-                                            Period z = {result.pattern.z}
-                                        </Typography>
-                                    </Box>
-                                    <Box sx={{ textAlign: 'right' }}>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                color: COLORS.text.primary,
-                                                fontFamily: 'monospace',
-                                                fontWeight:
-                                                    TYPOGRAPHY.fontWeight.bold,
-                                                fontSize:
-                                                    RESEARCH_STYLES.LAYOUT
-                                                        .FONT_SIZE_SM,
-                                            }}
-                                        >
-                                            z_seq: {result.pattern.z_seq}
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                color: COLORS.primary.light,
-                                                fontSize:
-                                                    RESEARCH_STYLES.LAYOUT
-                                                        .FONT_SIZE_XS,
-                                                display: 'block',
-                                            }}
-                                        >
-                                            Property: m mod z ∈ R
-                                        </Typography>
-                                    </Box>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            color: COLORS.primary.main,
+                                            fontWeight:
+                                                TYPOGRAPHY.fontWeight.bold,
+                                            textTransform: 'uppercase',
+                                            letterSpacing: 1,
+                                        }}
+                                    >
+                                        Spectral Periodicity
+                                    </Typography>
+                                    <Typography
+                                        sx={{
+                                            color: COLORS.text.primary,
+                                            fontFamily: 'monospace',
+                                            fontWeight:
+                                                TYPOGRAPHY.fontWeight.bold,
+                                            fontSize:
+                                                RESEARCH_STYLES.LAYOUT
+                                                    .FONT_SIZE_SM,
+                                        }}
+                                    >
+                                        z = {result.pattern.z}
+                                    </Typography>
                                 </Box>
                             </Box>
                             <Box
@@ -374,7 +371,7 @@ const PeriodicityCalculator: React.FC = () => {
                                     <Typography
                                         variant="caption"
                                         sx={{
-                                            color: COLORS.primary.light,
+                                            color: COLORS.primary.main,
                                             fontWeight: 'bold',
                                             display: 'block',
                                             mb: 0.5,
@@ -399,15 +396,15 @@ const PeriodicityCalculator: React.FC = () => {
                                                 sx={{
                                                     fontFamily: 'monospace',
                                                     fontSize: '0.7rem',
-                                                    px: 1,
+                                                    px: 1.25,
                                                     py: 0.5,
                                                     backgroundColor:
-                                                        RESEARCH_STYLES.CYAN
-                                                            .BG_SLIGHT,
+                                                        RESEARCH_STYLES.GLASS
+                                                            .DARK,
                                                     borderRadius:
                                                         SPACING.borderRadius.xs,
-                                                    color: COLORS.primary.light,
-                                                    border: `1px solid ${RESEARCH_STYLES.CYAN.BORDER_SLIGHT}`,
+                                                    color: COLORS.primary.main,
+                                                    border: `1px solid ${RESEARCH_STYLES.BORDER.VERY_SUBTLE}`,
                                                 }}
                                             >
                                                 {r}
@@ -435,24 +432,24 @@ const PeriodicityCalculator: React.FC = () => {
                                         sx={{
                                             p: 1.25,
                                             backgroundColor:
-                                                RESEARCH_STYLES.GLASS.STRONG,
+                                                RESEARCH_STYLES.CYAN.BG_SUBTLE,
                                             borderRadius:
                                                 RESEARCH_STYLES.LAYOUT
                                                     .CARD_RADIUS,
                                             fontFamily: 'monospace',
                                             fontSize: '0.75rem',
                                             color: COLORS.text.primary,
-                                            border: `1px solid ${RESEARCH_STYLES.BORDER.VERY_SUBTLE}`,
+                                            border: `1px solid ${RESEARCH_STYLES.CYAN.BORDER_SUBTLE}`,
                                             mb: 1.5,
                                         }}
                                     >
-                                        {result.minimalPoly}
+                                        <MathText text={result.minimalPoly} />
                                     </Box>
 
                                     <Typography
                                         variant="caption"
                                         sx={{
-                                            color: COLORS.text.secondary,
+                                            color: COLORS.primary.main,
                                             fontWeight: 'bold',
                                             display: 'block',
                                             mb: 0.5,
@@ -463,16 +460,22 @@ const PeriodicityCalculator: React.FC = () => {
                                     >
                                         Factorization
                                     </Typography>
-                                    <Typography
+                                    <Box
                                         sx={{
+                                            p: 1.25,
+                                            backgroundColor:
+                                                RESEARCH_STYLES.CYAN.BG_SUBTLE,
+                                            borderRadius:
+                                                RESEARCH_STYLES.LAYOUT
+                                                    .CARD_RADIUS,
                                             fontFamily: 'monospace',
                                             fontSize: '0.75rem',
-                                            color: COLORS.primary.light,
-                                            pl: 1,
+                                            color: COLORS.text.primary,
+                                            border: `1px solid ${RESEARCH_STYLES.CYAN.BORDER_SUBTLE}`,
                                         }}
                                     >
-                                        {result.factorization}
-                                    </Typography>
+                                        <MathText text={result.factorization} />
+                                    </Box>
                                 </Box>
 
                                 {result.proof && (
@@ -504,8 +507,8 @@ const PeriodicityCalculator: React.FC = () => {
                                                     RESEARCH_STYLES.LAYOUT
                                                         .CARD_RADIUS,
                                                 fontFamily: 'monospace',
-                                                fontSize: '0.7rem',
-                                                color: COLORS.text.secondary,
+                                                fontSize: '0.75rem',
+                                                color: COLORS.text.primary,
                                                 border: `1px solid ${RESEARCH_STYLES.CYAN.BORDER_SUBTLE}`,
                                             }}
                                         >
@@ -517,7 +520,11 @@ const PeriodicityCalculator: React.FC = () => {
                                                     mb: 0.5,
                                                 }}
                                             >
-                                                <span>{result.proof.eq1}</span>
+                                                <span>
+                                                    <MathText
+                                                        text={result.proof.eq1}
+                                                    />
+                                                </span>
                                                 <span
                                                     style={{
                                                         color: COLORS.data
@@ -528,7 +535,10 @@ const PeriodicityCalculator: React.FC = () => {
                                                                 .bold,
                                                     }}
                                                 >
-                                                    = {result.proof.res1}
+                                                    ={' '}
+                                                    <MathText
+                                                        text={result.proof.res1}
+                                                    />
                                                 </span>
                                             </Box>
                                             <Box
@@ -538,7 +548,11 @@ const PeriodicityCalculator: React.FC = () => {
                                                         'space-between',
                                                 }}
                                             >
-                                                <span>{result.proof.eq2}</span>
+                                                <span>
+                                                    <MathText
+                                                        text={result.proof.eq2}
+                                                    />
+                                                </span>
                                                 <span
                                                     style={{
                                                         color: COLORS.data
@@ -549,7 +563,10 @@ const PeriodicityCalculator: React.FC = () => {
                                                                 .bold,
                                                     }}
                                                 >
-                                                    = {result.proof.res2}
+                                                    ={' '}
+                                                    <MathText
+                                                        text={result.proof.res2}
+                                                    />
                                                 </span>
                                             </Box>
                                         </Box>
@@ -814,7 +831,12 @@ const SolvabilityAnalyzer: React.FC = () => {
                                 backgroundColor:
                                     RESEARCH_STYLES.GLASS.TRANSPARENT,
                                 borderRadius: SPACING.borderRadius.md,
-                                border: `1px solid ${result.nullity === 0 ? COLORS.data.green : COLORS.primary.main}33`,
+                                border: `1px solid ${alpha(
+                                    result.nullity === 0
+                                        ? COLORS.data.green
+                                        : COLORS.primary.main,
+                                    0.2
+                                )}`,
                                 borderLeft: `4px solid ${
                                     result.nullity === 0
                                         ? COLORS.data.green
@@ -837,68 +859,34 @@ const SolvabilityAnalyzer: React.FC = () => {
                                         borderBottom: `1px solid ${RESEARCH_STYLES.BORDER.SUBTLE}`,
                                     }}
                                 >
-                                    <Box>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                color: COLORS.primary.main,
-                                                fontWeight:
-                                                    TYPOGRAPHY.fontWeight.bold,
-                                                textTransform: 'uppercase',
-                                                letterSpacing: 1,
-                                                display: 'block',
-                                                lineHeight: 1,
-                                                mb: 0.5,
-                                            }}
-                                        >
-                                            Subspace Analysis
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                color: COLORS.text.secondary,
-                                                fontSize:
-                                                    RESEARCH_STYLES.LAYOUT
-                                                        .FONT_SIZE_XS,
-                                            }}
-                                        >
-                                            {result.reachableStates} Solvable
-                                            States
-                                        </Typography>
-                                    </Box>
-                                    <Box sx={{ textAlign: 'right' }}>
-                                        <Typography
-                                            variant="body2"
-                                            sx={{
-                                                color: COLORS.text.primary,
-                                                fontFamily: 'monospace',
-                                                fontWeight:
-                                                    TYPOGRAPHY.fontWeight.bold,
-                                                fontSize:
-                                                    RESEARCH_STYLES.LAYOUT
-                                                        .FONT_SIZE_SM,
-                                            }}
-                                        >
-                                            Rank: {result.gridRank} | Null:{' '}
-                                            {result.nullity}
-                                        </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            sx={{
-                                                color:
-                                                    result.nullity === 0
-                                                        ? COLORS.data.green
-                                                        : COLORS.primary.light,
-                                                fontSize:
-                                                    RESEARCH_STYLES.LAYOUT
-                                                        .FONT_SIZE_XS,
-                                                display: 'block',
-                                            }}
-                                        >
-                                            Solvability:{' '}
-                                            {result.solvablePercent}%
-                                        </Typography>
-                                    </Box>
+                                    <Typography
+                                        variant="caption"
+                                        sx={{
+                                            color: COLORS.primary.main,
+                                            fontWeight:
+                                                TYPOGRAPHY.fontWeight.bold,
+                                            textTransform: 'uppercase',
+                                            letterSpacing: 1,
+                                        }}
+                                    >
+                                        Subspace Analysis
+                                    </Typography>
+                                    <Typography
+                                        sx={{
+                                            color:
+                                                result.nullity === 0
+                                                    ? COLORS.data.green
+                                                    : COLORS.text.primary,
+                                            fontFamily: 'monospace',
+                                            fontWeight:
+                                                TYPOGRAPHY.fontWeight.bold,
+                                            fontSize:
+                                                RESEARCH_STYLES.LAYOUT
+                                                    .FONT_SIZE_SM,
+                                        }}
+                                    >
+                                        {result.solvablePercent}% Solvable
+                                    </Typography>
                                 </Box>
                             </Box>
                             <Box
@@ -962,7 +950,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                                 RESEARCH_STYLES
                                                                     .LAYOUT
                                                                     .FONT_SIZE_XS,
-                                                            px: 1,
+                                                            px: 1.25,
                                                             py: 0.5,
                                                             backgroundColor:
                                                                 RESEARCH_STYLES
@@ -972,7 +960,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                                     .borderRadius
                                                                     .xs,
                                                             color: COLORS
-                                                                .primary.light,
+                                                                .primary.main,
                                                             letterSpacing: 1,
                                                             border: `1px solid ${RESEARCH_STYLES.BORDER.VERY_SUBTLE}`,
                                                             wordBreak:
@@ -999,7 +987,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                                         <Typography
                                             variant="caption"
                                             sx={{
-                                                color: COLORS.data.green,
+                                                color: COLORS.primary.main,
                                                 fontWeight:
                                                     TYPOGRAPHY.fontWeight.bold,
                                                 display: 'block',
@@ -1079,15 +1067,15 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                                 RESEARCH_STYLES
                                                                     .LAYOUT
                                                                     .FONT_SIZE_XS,
-                                                            p: 0.75,
-                                                            px: 1,
+                                                            p: 1,
+                                                            px: 1.25,
                                                             backgroundColor:
                                                                 RESEARCH_STYLES
                                                                     .GLASS.DARK,
                                                             borderRadius:
-                                                                SPACING
-                                                                    .borderRadius
-                                                                    .xs,
+                                                                RESEARCH_STYLES
+                                                                    .LAYOUT
+                                                                    .CARD_RADIUS,
                                                             color: COLORS.text
                                                                 .primary,
                                                             border: `1px solid ${RESEARCH_STYLES.BORDER.VERY_SUBTLE}`,
@@ -1126,7 +1114,7 @@ const SolvabilityAnalyzer: React.FC = () => {
                                                             sx={{
                                                                 color: COLORS
                                                                     .primary
-                                                                    .light,
+                                                                    .main,
                                                                 flex: 1,
                                                                 textAlign:
                                                                     'right',
@@ -1181,15 +1169,18 @@ const SolvabilityAnalyzer: React.FC = () => {
                                     }}
                                 >
                                     <Typography
-                                        variant="body2"
                                         sx={{
                                             color: COLORS.data.green,
-                                            fontStyle: 'italic',
-                                            fontSize: '0.75rem',
-                                            fontWeight: 'bold',
+                                            fontFamily: 'monospace',
+                                            fontSize:
+                                                RESEARCH_STYLES.LAYOUT
+                                                    .FONT_SIZE_SM,
+                                            fontWeight:
+                                                TYPOGRAPHY.fontWeight.bold,
+                                            textTransform: 'uppercase',
                                         }}
                                     >
-                                        ✓ GRID IS FULLY SOLVABLE (Nullity = 0)
+                                        fully solvable (Nullity = 0)
                                     </Typography>
                                 </Box>
                             )}

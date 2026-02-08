@@ -1,10 +1,11 @@
+import { vi, type Mock } from 'vitest';
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import TextEditor from '../TextEditor';
 import * as hooks from '../../../../hooks';
 
 // Mock Editor sub-component - Correct path
-jest.mock('../../Editor', () => ({
+vi.mock('../../Editor', () => ({
     __esModule: true,
     default: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="editor">{children}</div>
@@ -12,7 +13,7 @@ jest.mock('../../Editor', () => ({
 }));
 
 // Mock TextArea sub-component - Correct path
-jest.mock('../../components/TextArea', () => ({
+vi.mock('../../components/TextArea', () => ({
     TextArea: ({
         value,
         handleChange,
@@ -29,14 +30,14 @@ jest.mock('../../components/TextArea', () => ({
 }));
 
 // Stable mocks
-const mockNextIter = jest.fn((action: { payload: unknown }) => action.payload);
-const mockStableTimer = { create: jest.fn(), clear: jest.fn() };
+const mockNextIter = vi.fn((action: { payload: unknown }) => action.payload);
+const mockStableTimer = { create: vi.fn(), clear: vi.fn() };
 
 // Mock hooks - Correct path
-jest.mock('../../../../hooks', () => ({
-    useContainer: jest.fn(() => ({ height: 400 })),
-    useTimer: jest.fn(() => mockStableTimer),
-    useCache: jest.fn(() => mockNextIter),
+vi.mock('../../../../hooks', () => ({
+    useContainer: vi.fn(() => ({ height: 400 })),
+    useTimer: vi.fn(() => mockStableTimer),
+    useCache: vi.fn(() => mockNextIter),
 }));
 
 describe('TextEditor Component', () => {
@@ -48,7 +49,7 @@ describe('TextEditor Component', () => {
     };
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('renders the editor and text area', () => {
@@ -68,7 +69,7 @@ describe('TextEditor Component', () => {
     });
 
     it('handles layout resizing', () => {
-        const mockUseContainer = hooks.useContainer as jest.Mock;
+        const mockUseContainer = hooks.useContainer as Mock;
         mockUseContainer.mockReturnValue({ height: 100, width: 100 });
 
         render(<TextEditor {...defaultProps} />);

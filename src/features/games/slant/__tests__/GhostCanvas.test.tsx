@@ -5,18 +5,19 @@ import { FORWARD, BACKWARD, CellState } from '../boardHandlers';
 import { SolverMessage, Conflict, CellInfo } from '../workers/solverWorker';
 
 // Mock slant-wasm before boardHandlers imports it (uses import.meta.url incompatible with Jest)
-jest.mock('slant-wasm', () => ({
-    default: jest.fn().mockResolvedValue(undefined),
-    generate_puzzle_wasm: jest.fn(),
-    find_cycles_wasm: jest.fn(),
+vi.mock('slant-wasm', () => ({
+    __esModule: true,
+    default: vi.fn().mockResolvedValue(undefined),
+    generate_puzzle_wasm: vi.fn(),
+    find_cycles_wasm: vi.fn(),
 }));
 
 // Mock hooks
-jest.mock('../../../../hooks', () => ({
+vi.mock('../../../../hooks', () => ({
     useMobile: () => false,
 }));
 
-jest.mock('../workerUtils', () => ({
+vi.mock('../workerUtils', () => ({
     createWorker: () => new MockWorker('mock-url'),
 }));
 
@@ -81,7 +82,7 @@ class MockWorker {
 global.Worker = MockWorker;
 
 // Mock theme
-jest.mock('../../../../config/theme', () => ({
+vi.mock('../../../../config/theme', () => ({
     COLORS: {
         text: { primary: 'black' },
         primary: { main: 'blue' },
@@ -105,7 +106,7 @@ jest.mock('../../../../config/theme', () => ({
 }));
 
 // Mock useGameInteraction
-jest.mock('../../hooks/useGameInteraction', () => ({
+vi.mock('../../hooks/useGameInteraction', () => ({
     useGameInteraction: ({
         onToggle,
     }: {
@@ -137,12 +138,12 @@ jest.mock('../../hooks/useGameInteraction', () => ({
 }));
 
 // Mock TooltipButton
-jest.mock('../../../../components/ui/TooltipButton', () => ({
+vi.mock('../../../../components/ui/TooltipButton', () => ({
     TooltipButton: () => <div data-testid="tooltip-button" />,
 }));
 
 // Mock CustomGrid to verify cell rendering
-jest.mock('../../../../components/ui/CustomGrid', () => ({
+vi.mock('../../../../components/ui/CustomGrid', () => ({
     CustomGrid: ({
         rows,
         cols,
@@ -190,7 +191,7 @@ jest.mock('../../../../components/ui/CustomGrid', () => ({
 }));
 
 // Mock MUI to ensure styles are applied
-jest.mock('@mui/material', () => ({
+vi.mock('@mui/material', () => ({
     Box: ({
         children,
         sx,
@@ -211,12 +212,12 @@ const DEFAULT_PROPS = {
     numbers: Array(4).fill(Array(4).fill(null)) as (number | null)[][],
     size: 2, // rem
     initialMoves: new Map<string, CellState>(),
-    onMove: jest.fn(),
+    onMove: vi.fn(),
 };
 
 describe('GhostCanvas', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('renders the grid correctly', () => {
@@ -228,7 +229,7 @@ describe('GhostCanvas', () => {
     });
 
     it('handles click interactions', () => {
-        const onMove = jest.fn();
+        const onMove = vi.fn();
         const { container } = render(
             <GhostCanvas {...DEFAULT_PROPS} onMove={onMove} />
         );
@@ -242,7 +243,7 @@ describe('GhostCanvas', () => {
     });
 
     it('handles drag interactions (paint mode)', () => {
-        const onMove = jest.fn();
+        const onMove = vi.fn();
         const { container } = render(
             <GhostCanvas {...DEFAULT_PROPS} onMove={onMove} />
         );

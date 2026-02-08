@@ -1,4 +1,5 @@
-import { defineConfig } from 'vite';
+/// <reference types="vitest" />
+import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import wasm from 'vite-plugin-wasm';
@@ -74,5 +75,35 @@ export default defineConfig({
     server: {
         open: true,
         port: 3000,
+    },
+    test: {
+        globals: true,
+        environment: 'jsdom',
+        setupFiles: './src/setupTests.ts',
+        include: ['src/**/*.test.{js,jsx,ts,tsx}'],
+        // Optimization: Disable CSS parsing for logic tests
+        css: false,
+        // Optimization: Fine-tune performance (Vitest 4 options)
+        pool: 'threads',
+        isolate: true,
+        fileParallelism: true,
+        maxWorkers: '50%',
+        sequence: {
+            hooks: 'list',
+        },
+        coverage: {
+            provider: 'v8',
+            reporter: ['text', 'lcov', 'html'],
+            exclude: [
+                'src/index.tsx',
+                'src/setupTests.ts',
+                'src/**/*.test.{js,jsx,ts,tsx}',
+                'src/**/*.d.ts',
+                'config/**',
+                'build/**',
+                'coverage/**',
+                '**/*.config.{js,ts,mjs}',
+            ],
+        },
     },
 });

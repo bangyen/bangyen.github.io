@@ -10,11 +10,11 @@ import {
 import { COLORS } from '../../../../config/theme';
 
 describe('Board Component', () => {
-    const mockFrontProps = jest.fn((r: number, c: number) => ({
+    const mockFrontProps = vi.fn((r: number, c: number) => ({
         'data-testid': `front-${String(r)}-${String(c)}`,
         children: 'Front',
     }));
-    const mockBackProps = jest.fn((r: number, c: number) => ({
+    const mockBackProps = vi.fn((r: number, c: number) => ({
         'data-testid': `back-${String(r)}-${String(c)}`,
         children: 'Back',
     }));
@@ -75,7 +75,7 @@ describe('useGetters', () => {
     };
 
     test('getColor returns correct front/back colors based on tile value', () => {
-        const getTile = jest.fn((r, c) => (r === 0 && c === 0 ? 1 : 0));
+        const getTile = vi.fn((r, c) => (r === 0 && c === 0 ? 1 : 0));
         const { result } = renderHook(() => useGetters(getTile, mockPalette));
 
         // Tile with value 1
@@ -94,7 +94,7 @@ describe('useGetters', () => {
     // Test borderHandler logic via getBorder
     test('getBorder calculates border radius correctly', () => {
         // Setup a 2x2 grid where (0,0) matches neighbors to affect borders
-        const getTile = jest.fn(() => 1); // All tiles are same
+        const getTile = vi.fn(() => 1); // All tiles are same
         const { result } = renderHook(() => useGetters(getTile, mockPalette));
 
         const borderProps = result.current.getBorder(1, 1);
@@ -108,7 +108,7 @@ describe('useGetters', () => {
 
     test('getBorder handles boundaries correctly', () => {
         // Setup a grid where neighbors are different
-        const getTile = jest.fn((r, c) => (r === 1 && c === 1 ? 1 : 0));
+        const getTile = vi.fn((r, c) => (r === 1 && c === 1 ? 1 : 0));
         const { result } = renderHook(() => useGetters(getTile, mockPalette));
 
         const borderProps = result.current.getBorder(1, 1);
@@ -125,14 +125,14 @@ describe('useGetters', () => {
         // Let's test specific conditions
 
         // All 1s -> total = 4. Condition false. color = true.
-        const getTileAllOnes = jest.fn(() => 1);
+        const getTileAllOnes = vi.fn(() => 1);
         const { result: res1 } = renderHook(() =>
             useGetters(getTileAllOnes, mockPalette)
         );
         expect(res1.current.getFiller(0, 0)).toBe('blue');
 
         // topLeft=0, others=0 -> total=0. (!0 || !0) is true. total < 3 is true. color = false.
-        const getTileAllZeros = jest.fn(() => 0);
+        const getTileAllZeros = vi.fn(() => 0);
         const { result: res2 } = renderHook(() =>
             useGetters(getTileAllZeros, mockPalette)
         );

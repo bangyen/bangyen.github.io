@@ -3,11 +3,11 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { KeySelector } from '../KeySelector';
 
 describe('KeySelector', () => {
-    const mockOnSelect = jest.fn();
+    const mockOnSelect = vi.fn();
     const keys = ['A', 'B', ' ', '1'];
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('renders all provided keys', () => {

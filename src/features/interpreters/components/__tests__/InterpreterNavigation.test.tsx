@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { InterpreterNavigation } from '../InterpreterNavigation';
 
 // Mock MUI Select/MenuItem to avoid complex DOM structure testing
-jest.mock('@mui/material', () => ({
+vi.mock('@mui/material', () => ({
     FormControl: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="form-control">{children}</div>
     ),
@@ -34,10 +34,10 @@ jest.mock('@mui/material', () => ({
 }));
 
 describe('InterpreterNavigation', () => {
-    const mockOnChange = jest.fn();
+    const mockOnChange = vi.fn();
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     test('renders with correct active value', () => {

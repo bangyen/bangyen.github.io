@@ -1,28 +1,29 @@
+import { vi, type Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
 
 import Example from '../Example';
 import * as chaseHandlers from '../chaseHandlers';
 
 // Mock chaseHandlers
-jest.mock('../chaseHandlers', () => ({
-    getStates: jest.fn(),
+vi.mock('../chaseHandlers', () => ({
+    getStates: vi.fn(),
 }));
 
 // Mock calculator to avoid real implementation issues
-jest.mock('../calculator', () => ({
-    getOutput: jest.fn(() => () => ({})),
-    useHandler: jest.fn(() => ({})),
-    getInput: jest.fn(() => () => ({})),
+vi.mock('../calculator', () => ({
+    getOutput: vi.fn(() => () => ({})),
+    useHandler: vi.fn(() => ({})),
+    getInput: vi.fn(() => () => ({})),
 }));
 
 // Mock icons
-jest.mock('../../../../components/icons', () => ({
+vi.mock('../../../../components/icons', () => ({
     EmojiEventsRounded: () => <div data-testid="emoji-events-rounded" />,
 }));
 
 // Mock CustomGrid to avoid complex rendering and animations
-jest.mock('../../../../components/ui/CustomGrid', () => ({
-    CustomGrid: jest.fn(
+vi.mock('../../../../components/ui/CustomGrid', () => ({
+    CustomGrid: vi.fn(
         ({
             cellProps,
             rows,
@@ -62,10 +63,10 @@ jest.mock('../../../../components/ui/CustomGrid', () => ({
 }));
 
 describe('Lights Out Example Component', () => {
-    const mockGetStates = chaseHandlers.getStates as jest.Mock;
+    const mockGetStates = chaseHandlers.getStates as Mock;
     const mockPalette = { primary: 'red', secondary: 'blue' };
-    const mockGetFrontProps = jest.fn(() => () => ({}));
-    const mockGetBackProps = jest.fn(() => () => ({}));
+    const mockGetFrontProps = vi.fn(() => () => ({}));
+    const mockGetBackProps = vi.fn(() => () => ({}));
 
     beforeEach(() => {
         const grid3x3 = [

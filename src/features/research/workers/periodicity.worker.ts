@@ -1,13 +1,13 @@
+import { getMatrix } from '../../games/lights-out/matrixAlgebra';
 import {
     findPattern,
-    getMatrix,
     getMinimalPolynomial,
     factorPoly,
     polyToString,
     toSuperscript,
     getPolynomial,
     polyMod,
-} from '../../games/lights-out/matrices';
+} from '../../games/lights-out/polynomialUtils';
 
 // Define the shape of the message we expect to receive
 interface WorkerMessage {

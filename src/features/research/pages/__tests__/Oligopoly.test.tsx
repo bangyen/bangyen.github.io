@@ -7,15 +7,19 @@ import {
 } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { vi, type Mock } from 'vitest';
 import Oligopoly from '../Oligopoly';
 import { ResearchDemoProps, Control } from '../../types';
 import pako from 'pako';
 
 // Mocks
-jest.mock('pako', () => ({
-    ungzip: jest.fn(),
+vi.mock('pako', () => ({
+    default: {
+        ungzip: vi.fn(),
+    },
+    ungzip: vi.fn(),
 }));
-jest.mock('../../ResearchDemo', () => ({
+vi.mock('../../ResearchDemo', () => ({
     __esModule: true,
     default: ({
         title,
@@ -28,7 +32,7 @@ jest.mock('../../ResearchDemo', () => ({
         if (chartConfig) {
             chartConfig.yAxisFormatter(0);
             chartConfig.rightYAxisFormatter?.(0);
-            chartConfig.tooltipLabelFormatter(0);
+            void chartConfig.tooltipLabelFormatter(0);
             chartConfig.tooltipFormatter(0, 'Market Price');
             chartConfig.tooltipFormatter(0, 'Other');
         }
@@ -78,8 +82,8 @@ Object.defineProperty(global, 'Response', {
 
 describe('Oligopoly Component', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
-        global.fetch = jest.fn();
+        vi.clearAllMocks();
+        global.fetch = vi.fn();
     });
 
     const renderOligopoly = async () => {
@@ -108,8 +112,8 @@ describe('Oligopoly Component', () => {
                 collusion_enabled: false,
             },
         ];
-        (pako.ungzip as jest.Mock).mockReturnValue(JSON.stringify(testData));
-        (global.fetch as jest.Mock).mockResolvedValue({
+        (pako.ungzip as Mock).mockReturnValue(JSON.stringify(testData));
+        (global.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new Uint8Array([0x1f, 0x8b, 0, 0]).buffer),
@@ -127,9 +131,7 @@ describe('Oligopoly Component', () => {
     });
 
     test('handles fetch failure and uses fallback data', async () => {
-        (global.fetch as jest.Mock).mockRejectedValue(
-            new Error('Fetch failed')
-        );
+        (global.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
 
         await renderOligopoly();
         await waitFor(() => {
@@ -153,7 +155,7 @@ describe('Oligopoly Component', () => {
                 collusion_enabled: false,
             },
         ];
-        (global.fetch as jest.Mock).mockResolvedValue({
+        (global.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(
@@ -170,7 +172,7 @@ describe('Oligopoly Component', () => {
     });
 
     test('handles control changes and reset', async () => {
-        (global.fetch as jest.Mock).mockResolvedValue({
+        (global.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new TextEncoder().encode('[]').buffer),
@@ -194,7 +196,7 @@ describe('Oligopoly Component', () => {
     });
 
     test('sets document title', async () => {
-        (global.fetch as jest.Mock).mockResolvedValue({
+        (global.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new TextEncoder().encode('[]').buffer),
@@ -205,7 +207,7 @@ describe('Oligopoly Component', () => {
     });
 
     test('handles edge case: data format error', async () => {
-        (global.fetch as jest.Mock).mockResolvedValue({
+        (global.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new TextEncoder().encode('not-json').buffer),
@@ -221,7 +223,7 @@ describe('Oligopoly Component', () => {
     });
 
     test('handles HTTP error 404', async () => {
-        (global.fetch as jest.Mock).mockResolvedValue({
+        (global.fetch as Mock).mockResolvedValue({
             ok: false,
             status: 404,
         });
@@ -243,7 +245,7 @@ describe('Oligopoly Component', () => {
             writable: true,
         });
 
-        (global.fetch as jest.Mock).mockResolvedValue({
+        (global.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new Uint8Array([0x1f, 0x8b, 0, 0]).buffer),
@@ -263,7 +265,7 @@ describe('Oligopoly Component', () => {
     });
 
     test('handles non-array matrix data', async () => {
-        (global.fetch as jest.Mock).mockResolvedValue({
+        (global.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(
@@ -292,7 +294,7 @@ describe('Oligopoly Component', () => {
                 collusion_enabled: false,
             },
         ];
-        (global.fetch as jest.Mock).mockResolvedValue({
+        (global.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(

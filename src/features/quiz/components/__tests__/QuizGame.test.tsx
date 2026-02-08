@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import QuizGame from '../QuizGame';
@@ -5,10 +6,10 @@ import type { QuizGameViewProps } from '../QuizGameView';
 import { useQuizEngine } from '../../hooks/quiz';
 
 // Mock the hook
-jest.mock('../../hooks/quiz');
+vi.mock('../../hooks/quiz');
 
 // Mock QuizGameView to simplify finding it and check props
-jest.mock('../QuizGameView', () => {
+vi.mock('../QuizGameView', () => {
     const MockQuizGameView = <T,>(props: QuizGameViewProps<T>) => (
         <div
             data-testid="quiz-game-view"
@@ -47,11 +48,11 @@ jest.mock('../QuizGameView', () => {
         </div>
     );
     MockQuizGameView.displayName = 'QuizGameView';
-    return MockQuizGameView;
+    return { default: MockQuizGameView };
 });
 
-const mockOnEndGame = jest.fn();
-const mockOnBackToMenu = jest.fn();
+const mockOnEndGame = vi.fn();
+const mockOnBackToMenu = vi.fn();
 
 const defaultProps = {
     quizType: 'cctld' as const,
@@ -63,8 +64,8 @@ const defaultProps = {
 
 // Mock state and actions
 const mockActions = {
-    submitAnswer: jest.fn(),
-    nextQuestion: jest.fn(),
+    submitAnswer: vi.fn(),
+    nextQuestion: vi.fn(),
 };
 
 const mockState = {
@@ -84,8 +85,8 @@ const mockState = {
 
 describe('QuizGame', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
-        (useQuizEngine as jest.Mock).mockReturnValue({
+        vi.clearAllMocks();
+        (useQuizEngine as Mock).mockReturnValue({
             state: mockState,
             actions: mockActions,
         });
@@ -119,7 +120,7 @@ describe('QuizGame', () => {
     });
 
     test('calls focus on input when feedback is hidden', () => {
-        jest.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => {
+        vi.spyOn(window, 'requestAnimationFrame').mockImplementation(cb => {
             cb(0);
             return 0;
         });
@@ -130,11 +131,11 @@ describe('QuizGame', () => {
     });
 
     test('does NOT focus on input if feedback is shown', () => {
-        (useQuizEngine as jest.Mock).mockReturnValue({
+        (useQuizEngine as Mock).mockReturnValue({
             state: { ...mockState, showFeedback: true },
             actions: mockActions,
         });
-        const requestSpy = jest.spyOn(window, 'requestAnimationFrame');
+        const requestSpy = vi.spyOn(window, 'requestAnimationFrame');
 
         render(<QuizGame {...defaultProps} />);
         expect(requestSpy).not.toHaveBeenCalled();
@@ -201,7 +202,7 @@ describe('QuizGame', () => {
     });
 
     test('ignores arrow keys when feedback is shown in Driving Side', () => {
-        (useQuizEngine as jest.Mock).mockReturnValue({
+        (useQuizEngine as Mock).mockReturnValue({
             state: { ...mockState, showFeedback: true },
             actions: mockActions,
         });

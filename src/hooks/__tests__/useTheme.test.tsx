@@ -3,18 +3,18 @@ import { renderHook, act } from '@testing-library/react';
 import { ThemeProvider, useThemeContext } from '../useTheme';
 
 describe('useTheme (ThemeProvider and useThemeContext)', () => {
-    let matchMediaSpy: jest.SpyInstance;
-    let addListener: jest.Mock;
-    let removeListener: jest.Mock;
+    let matchMediaSpy: any;
+    let addListener: any;
+    let removeListener: any;
 
     beforeEach(() => {
         localStorage.clear();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
 
-        addListener = jest.fn();
-        removeListener = jest.fn();
+        addListener = vi.fn();
+        removeListener = vi.fn();
 
-        matchMediaSpy = jest
+        matchMediaSpy = vi
             .spyOn(window, 'matchMedia')
             .mockImplementation(query => ({
                 matches: false,
@@ -24,7 +24,7 @@ describe('useTheme (ThemeProvider and useThemeContext)', () => {
                 removeListener,
                 addEventListener: addListener,
                 removeEventListener: removeListener,
-                dispatchEvent: jest.fn(),
+                dispatchEvent: vi.fn(),
             }));
     });
 
@@ -44,15 +44,15 @@ describe('useTheme (ThemeProvider and useThemeContext)', () => {
     });
 
     test('initializes with dark resolvedMode if system is dark', () => {
-        matchMediaSpy.mockImplementation(query => ({
+        matchMediaSpy.mockImplementation((query: string) => ({
             matches: true,
-            media: query as string,
+            media: query,
             onchange: null,
             addListener,
             removeListener,
             addEventListener: addListener,
             removeEventListener: removeListener,
-            dispatchEvent: jest.fn(),
+            dispatchEvent: vi.fn(),
         }));
 
         const { result } = renderHook(() => useThemeContext(), { wrapper });
@@ -130,7 +130,7 @@ describe('useTheme (ThemeProvider and useThemeContext)', () => {
 
     test('throws error if used outside of provider', () => {
         // Prevent console.error from cluttering the output
-        const consoleSpy = jest
+        const consoleSpy = vi
             .spyOn(console, 'error')
             .mockImplementation(() => {});
 

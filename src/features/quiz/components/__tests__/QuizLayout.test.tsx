@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import QuizLayout from '../QuizLayout';
 
 // Mock GlobalHeader to simplify Layout testing
-jest.mock('@/components/layout/GlobalHeader', () => ({
+vi.mock('@/components/layout/GlobalHeader', () => ({
     GlobalHeader: ({ infoUrl }: { infoUrl: string }) => (
         <div data-testid="global-header" data-infourl={infoUrl}>
             Global Header

@@ -1,37 +1,38 @@
-// jest-dom adds custom jest matchers for asserting on DOM nodes.
-// allows you to do things like:
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
+import { vi } from 'vitest';
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
     writable: true,
-    value: jest.fn().mockImplementation((query: string) => ({
+    value: vi.fn().mockImplementation((query: string) => ({
         matches: false,
         media: query,
         onchange: null,
-        addListener: jest.fn(), // deprecated
-        removeListener: jest.fn(), // deprecated
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn(),
-        dispatchEvent: jest.fn(),
+        addListener: vi.fn(), // deprecated
+        removeListener: vi.fn(), // deprecated
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
     })),
 });
 
 // Mock IntersectionObserver
-global.IntersectionObserver = jest.fn().mockImplementation(() => ({
-    disconnect: jest.fn(),
-    observe: jest.fn(),
-    unobserve: jest.fn(),
-}));
+global.IntersectionObserver = class {
+    constructor() {}
+    disconnect = vi.fn();
+    observe = vi.fn();
+    unobserve = vi.fn();
+} as unknown as typeof IntersectionObserver;
 
 // Mock ResizeObserver
-global.ResizeObserver = jest.fn().mockImplementation(() => ({
-    disconnect: jest.fn(),
-    observe: jest.fn(),
-    unobserve: jest.fn(),
-}));
+global.ResizeObserver = class {
+    constructor() {}
+    disconnect = vi.fn();
+    observe = vi.fn();
+    unobserve = vi.fn();
+} as unknown as typeof ResizeObserver;
 
 // Mock TextEncoder for Node.js environment
 global.TextEncoder = class TextEncoder {
@@ -87,15 +88,15 @@ Object.defineProperty(global, 'ReadableStream', {
         constructor(options: { start?: (controller: unknown) => void } = {}) {
             if (options.start) {
                 const controller = {
-                    enqueue: jest.fn(),
-                    close: jest.fn(),
+                    enqueue: vi.fn(),
+                    close: vi.fn(),
                 };
                 options.start(controller);
             }
         }
         getReader() {
             return {
-                read: jest.fn().mockResolvedValue({ done: true }),
+                read: vi.fn().mockResolvedValue({ done: true }),
             };
         }
     },
@@ -107,22 +108,29 @@ Object.defineProperty(global, 'DecompressionStream', {
     value: class DecompressionStream {
         writable = {
             getWriter: () => ({
-                write: jest.fn().mockResolvedValue(undefined),
-                close: jest.fn().mockResolvedValue(undefined),
+                write: vi.fn().mockResolvedValue(undefined),
+                close: vi.fn().mockResolvedValue(undefined),
             }),
         };
         readable = {
             getReader: () => ({
-                read: jest.fn().mockResolvedValue({ done: true }),
+                read: vi.fn().mockResolvedValue({ done: true }),
             }),
         };
     },
     writable: true,
 });
 
-// Mock WASM module
-jest.mock('lights-out-wasm', () => ({
-    invert_matrix: jest.fn((input: BigUint64Array) => input),
+// Mock WASM modules
+vi.mock('lights-out-wasm', () => ({
+    default: vi.fn().mockResolvedValue(undefined),
+    invert_matrix: vi.fn((input: BigUint64Array) => input),
+}));
+
+vi.mock('slant-wasm', () => ({
+    default: vi.fn().mockResolvedValue(undefined),
+    generate_puzzle_wasm: vi.fn(),
+    find_cycles_wasm: vi.fn(),
 }));
 
 // All warnings have been fixed at the root cause - no suppressions needed!

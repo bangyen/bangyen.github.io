@@ -4,7 +4,7 @@ import GridEditor from '../GridEditor';
 import { GridState } from '../eventHandlers';
 
 // Mock MUI to avoid complex rendering
-jest.mock('../../../../components/mui', () => ({
+vi.mock('../../../../components/mui', () => ({
     Box: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="mui-box">{children}</div>
     ),
@@ -19,22 +19,22 @@ jest.mock('../../../../components/mui', () => ({
     ),
 }));
 
-// Mock variables prefixed with 'mock' are allowed in jest.mock()
-const mockNextIter = jest.fn((action: { payload: unknown }) => action.payload);
-const mockStableTimer = { create: jest.fn(), clear: jest.fn() };
-const mockStableKeys = { create: jest.fn(), clear: jest.fn() };
+// Mock variables prefixed with 'mock' are allowed in vi.mock()
+const mockNextIter = vi.fn((action: { payload: unknown }) => action.payload);
+const mockStableTimer = { create: vi.fn(), clear: vi.fn() };
+const mockStableKeys = { create: vi.fn(), clear: vi.fn() };
 
 // Mock hooks
-jest.mock('../../../../hooks', () => ({
-    useContainer: jest.fn(() => ({ height: 400, width: 600 })),
-    useTimer: jest.fn(() => mockStableTimer),
-    useKeys: jest.fn(() => mockStableKeys),
-    useCache: jest.fn(() => mockNextIter),
-    useMobile: jest.fn(() => false),
+vi.mock('../../../../hooks', () => ({
+    useContainer: vi.fn(() => ({ height: 400, width: 600 })),
+    useTimer: vi.fn(() => mockStableTimer),
+    useKeys: vi.fn(() => mockStableKeys),
+    useCache: vi.fn(() => mockNextIter),
+    useMobile: vi.fn(() => false),
 }));
 
 // Mock Editor sub-component
-jest.mock('../../Editor', () => ({
+vi.mock('../../Editor', () => ({
     __esModule: true,
     default: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="editor">{children}</div>
@@ -42,7 +42,7 @@ jest.mock('../../Editor', () => ({
 }));
 
 // Mock GridArea and KeySelector
-jest.mock('../../components/GridArea', () => ({
+vi.mock('../../components/GridArea', () => ({
     GridArea: ({
         handleClick,
         options,
@@ -65,7 +65,7 @@ jest.mock('../../components/GridArea', () => ({
 }));
 
 // Mock KeySelector
-jest.mock('../../components/KeySelector', () => ({
+vi.mock('../../components/KeySelector', () => ({
     KeySelector: ({
         onSelect,
         keys,
@@ -98,7 +98,7 @@ describe('GridEditor Minimal', () => {
     };
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     it('renders without hanging', () => {

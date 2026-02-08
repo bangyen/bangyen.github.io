@@ -4,14 +4,12 @@ import QuizHistoryItem from '../QuizHistoryItem';
 import { QuizSettings, Question, QuizItem } from '../../types/quiz';
 
 // Mock dependencies
-const SkippedBadgeMock = () => <span data-testid="skipped-badge">Skipped</span>;
-SkippedBadgeMock.displayName = 'SkippedBadgeMock';
-jest.mock('../SkippedBadge', () => SkippedBadgeMock);
+vi.mock('../SkippedBadge', () => ({
+    default: () => <span data-testid="skipped-badge">Skipped</span>,
+}));
 
-const CheckCircleIconMock = () => <span data-testid="check-icon">Icon</span>;
-CheckCircleIconMock.displayName = 'CheckCircleIconMock';
-jest.mock('@mui/icons-material', () => ({
-    CheckCircleRounded: CheckCircleIconMock,
+vi.mock('@mui/icons-material', () => ({
+    CheckCircleRounded: () => <span data-testid="check-icon">Icon</span>,
 }));
 
 const mockItem = {
@@ -44,7 +42,7 @@ const mockSettings: QuizSettings = {
 };
 
 const mockConfig = {
-    renderFeedbackOrigin: jest.fn(),
+    renderFeedbackOrigin: vi.fn(),
 };
 
 describe('QuizHistoryItem', () => {
@@ -201,7 +199,7 @@ describe('QuizHistoryItem', () => {
 
     test('renders feedback origin if provided', () => {
         const activeConfigWithFeedback = {
-            renderFeedbackOrigin: jest
+            renderFeedbackOrigin: vi
                 .fn()
                 .mockReturnValue(<span>Feedback Origin</span>),
         };

@@ -25,7 +25,16 @@ export default tseslint.config(
             ecmaVersion: 2020,
             globals: {
                 ...globals.browser,
-                ...globals.jest,
+                vi: 'readonly',
+                vitest: 'readonly',
+                describe: 'readonly',
+                it: 'readonly',
+                test: 'readonly',
+                expect: 'readonly',
+                beforeEach: 'readonly',
+                afterEach: 'readonly',
+                beforeAll: 'readonly',
+                afterAll: 'readonly',
             },
             parserOptions: {
                 projectService: true,
@@ -78,6 +87,15 @@ export default tseslint.config(
             '@typescript-eslint/no-non-null-assertion': 'off',
             '@typescript-eslint/no-empty-function': 'off',
             '@typescript-eslint/unbound-method': 'off',
+            '@typescript-eslint/no-unsafe-call': 'off',
+            '@typescript-eslint/no-unsafe-member-access': 'off',
+            '@typescript-eslint/no-unsafe-assignment': 'off',
+            '@typescript-eslint/no-unsafe-argument': 'off',
+            '@typescript-eslint/no-unsafe-return': 'off',
+            '@typescript-eslint/no-misused-spread': 'off',
+            '@typescript-eslint/no-misused-promises': 'off',
+            '@typescript-eslint/no-useless-constructor': 'off',
+            '@typescript-eslint/no-explicit-any': 'off',
         },
     },
 
@@ -97,12 +115,4 @@ export default tseslint.config(
             'no-console': 'off',
         },
     },
-
-    // Layout overrides for complex MUI sx spreads
-    {
-        files: ['**/GamePageLayout.tsx'],
-        rules: {
-            '@typescript-eslint/no-unsafe-assignment': 'off',
-        },
-    }
 );

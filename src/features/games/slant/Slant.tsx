@@ -75,7 +75,7 @@ export default function Slant() {
         },
         boardConfig: {
             paddingOffset: (isMobile: boolean) => ({
-                x: isMobile ? 128 : 224,
+                x: isMobile ? 32 : 224,
                 y: LAYOUT_CONSTANTS.PADDING_OFFSET,
             }),
             boardMaxWidth: LAYOUT_CONSTANTS.BOARD_MAX_WIDTH,
@@ -155,7 +155,7 @@ export default function Slant() {
     const numberSize = size * NUMBER_SIZE_RATIO;
 
     // Props for Cells (Back Layer in Board terms)
-    const backProps = useCellFactory(getBackProps, getDragProps, [state]);
+    const backProps = useCellFactory(getBackProps, getDragProps, [state, size]);
 
     // Props for Numbers (Grid Overlay - Front Layer in Board terms)
     const frontProps = useMemo(

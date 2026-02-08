@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import {
     chaseLights,
     fillRow,
@@ -10,15 +11,15 @@ import * as matrices from '../matrices';
 import * as boardHandlers from '../boardHandlers';
 
 // Mock getProduct from matrices
-jest.mock('../matrices', () => ({
-    getProduct: jest.fn(),
+vi.mock('../matrices', () => ({
+    getProduct: vi.fn(),
 }));
 
 describe('Lights Out Chase Handlers', () => {
-    const mockProduct = matrices.getProduct as jest.Mock;
+    const mockProduct = matrices.getProduct as Mock;
 
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
     describe('chaseLights', () => {

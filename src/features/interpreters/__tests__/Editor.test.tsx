@@ -24,13 +24,13 @@ const mockEditorContext = {
     register: 42,
     height: 400,
     size: 20,
-    dispatch: jest.fn(),
+    dispatch: vi.fn(),
     fastForward: false,
     pause: false,
 };
 
 // Mock Display components to verify conditional rendering
-jest.mock('../Display', () => ({
+vi.mock('../Display', () => ({
     Program: () => <div data-testid="program-display" />,
     Tape: () => <div data-testid="tape-display" />,
     Output: () => <div data-testid="output-display" />,
@@ -38,7 +38,7 @@ jest.mock('../Display', () => ({
 }));
 
 // Mock Toolbar
-jest.mock('../Toolbar', () => ({
+vi.mock('../Toolbar', () => ({
     Toolbar: () => <div data-testid="toolbar" />,
 }));
 
@@ -58,34 +58,34 @@ const EditorProvider = ({
 
 describe('Editor Components', () => {
     beforeEach(() => {
-        jest.clearAllMocks();
+        vi.clearAllMocks();
 
         // Mock ResizeObserver
         global.ResizeObserver = class ResizeObserver {
-            observe = jest.fn();
-            unobserve = jest.fn();
-            disconnect = jest.fn();
+            observe = vi.fn();
+            unobserve = vi.fn();
+            disconnect = vi.fn();
         };
 
         // Mock matchMedia
         Object.defineProperty(window, 'matchMedia', {
             writable: true,
-            value: jest.fn().mockImplementation((query: string) => ({
+            value: vi.fn().mockImplementation((query: string) => ({
                 matches: false,
                 media: query,
                 onchange: null,
-                addListener: jest.fn(), // deprecated
-                removeListener: jest.fn(), // deprecated
-                addEventListener: jest.fn(),
-                removeEventListener: jest.fn(),
-                dispatchEvent: jest.fn(),
+                addListener: vi.fn(), // deprecated
+                removeListener: vi.fn(), // deprecated
+                addEventListener: vi.fn(),
+                removeEventListener: vi.fn(),
+                dispatchEvent: vi.fn(),
             })),
         });
     });
 
     describe('Editor', () => {
         // Mock Display components to verify conditional rendering
-        jest.mock('../Display', () => ({
+        vi.mock('../Display', () => ({
             Program: () => <div data-testid="program-display" />,
             Tape: () => <div data-testid="tape-display" />,
             Output: () => <div data-testid="output-display" />,
@@ -93,7 +93,7 @@ describe('Editor Components', () => {
         }));
 
         // Mock Toolbar
-        jest.mock('../Toolbar', () => ({
+        vi.mock('../Toolbar', () => ({
             Toolbar: () => <div data-testid="toolbar" />,
         }));
 
@@ -180,7 +180,7 @@ describe('Editor Components', () => {
         });
 
         test('throws error when used outside of EditorContext', () => {
-            const consoleSpy = jest
+            const consoleSpy = vi
                 .spyOn(console, 'error')
                 .mockImplementation(() => {});
 
@@ -198,8 +198,8 @@ describe('Editor Components', () => {
 
     describe('GridArea', () => {
         test('renders grid with correct dimensions', () => {
-            const handleClick = jest.fn();
-            const chooseColor = jest.fn(() => 'primary');
+            const handleClick = vi.fn();
+            const chooseColor = vi.fn(() => 'primary');
             const options = ['A', 'B', 'C'];
 
             render(
@@ -218,8 +218,8 @@ describe('Editor Components', () => {
         });
 
         test('calls handleClick when cell is clicked', () => {
-            const handleClick = jest.fn();
-            const chooseColor = jest.fn(() => 'primary');
+            const handleClick = vi.fn();
+            const chooseColor = vi.fn(() => 'primary');
             const options = ['A'];
 
             render(
@@ -238,8 +238,8 @@ describe('Editor Components', () => {
         });
 
         test('uses chooseColor to determine cell style', () => {
-            const handleClick = jest.fn();
-            const chooseColor = jest.fn(() => 'info');
+            const handleClick = vi.fn();
+            const chooseColor = vi.fn(() => 'info');
             const options = ['A'];
 
             render(
@@ -301,7 +301,7 @@ describe('Editor Components', () => {
         });
 
         test('calls handleChange when value changes', () => {
-            const handleChange = jest.fn();
+            const handleChange = vi.fn();
 
             render(
                 <EditorProvider>

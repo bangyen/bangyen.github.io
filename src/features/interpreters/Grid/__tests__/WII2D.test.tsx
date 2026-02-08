@@ -3,7 +3,7 @@ import React from 'react';
 import WII2D, { getState, WII2DState } from '../WII2D';
 
 // Mock GridEditor
-jest.mock('../GridEditor', () => ({
+vi.mock('../GridEditor', () => ({
     __esModule: true,
     default: ({ name }: { name: string }) => (
         <div data-testid="grid-editor">{name}</div>

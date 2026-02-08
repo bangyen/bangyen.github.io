@@ -4,39 +4,44 @@ import { PAGE_TITLES } from '../../../../config/constants';
 import * as boardHandlers from '../boardHandlers';
 import { BoardState, BoardAction } from '../boardHandlers';
 import * as hooks from '../../../../hooks';
+import { vi, type Mock } from 'vitest';
 import LightsOut from '../LightsOut';
 
 // Mock icons
-jest.mock('../../../../components/icons', () => ({
-    MenuBookRounded: () => <div data-testid="menu-icon" />,
-    CircleRounded: () => <div data-testid="circle-icon" />,
-    AddRounded: () => <div data-testid="add-icon" />,
-    RemoveRounded: () => <div data-testid="remove-icon" />,
-    EmojiEventsRounded: () => <div data-testid="trophy-icon" />,
-}));
+vi.mock('../../../../components/icons', async importOriginal => {
+    const actual = await importOriginal<Record<string, any>>();
+    return {
+        ...actual,
+        MenuBookRounded: () => <div data-testid="menu-icon" />,
+        CircleRounded: () => <div data-testid="circle-icon" />,
+        AddRounded: () => <div data-testid="add-icon" />,
+        RemoveRounded: () => <div data-testid="remove-icon" />,
+        EmojiEventsRounded: () => <div data-testid="trophy-icon" />,
+    };
+});
 
 // Mock hooks
-jest.mock('../../../../hooks', () => ({
-    useWindow: jest.fn(() => ({ height: 800, width: 1200 })),
-    useMobile: jest.fn(() => false),
-    useTimer: jest.fn(() => ({
-        create: jest.fn(),
-        clear: jest.fn(),
+vi.mock('../../../../hooks', () => ({
+    useWindow: vi.fn(() => ({ height: 800, width: 1200 })),
+    useMobile: vi.fn(() => false),
+    useTimer: vi.fn(() => ({
+        create: vi.fn(),
+        clear: vi.fn(),
     })),
-    useCache: jest.fn(() => [null, jest.fn()]),
+    useCache: vi.fn(() => [null, vi.fn()]),
 }));
 
 // Mock boardHandlers to control game logic
-jest.mock('../boardHandlers', () => ({
-    getGrid: jest.fn(() => Array(4).fill(Array(4).fill(0)) as number[][]),
-    getInitialState: jest.fn((rows: number, cols: number) => ({
+vi.mock('../boardHandlers', () => ({
+    getGrid: vi.fn(() => Array(4).fill(Array(4).fill(0)) as number[][]),
+    getInitialState: vi.fn((rows: number, cols: number) => ({
         grid: Array.from({ length: rows }, () => 0),
         score: 0,
         rows,
         cols,
         initialized: false,
     })),
-    handleBoard: jest.fn((state: BoardState, action: BoardAction) => {
+    handleBoard: vi.fn((state: BoardState, action: BoardAction) => {
         if (action.type === 'resize' && action.newRows && action.newCols)
             return {
                 ...state,
@@ -47,12 +52,12 @@ jest.mock('../boardHandlers', () => ({
         if (action.type === 'adjacent') return { ...state };
         return state;
     }),
-    getNextMove: jest.fn(),
-    isSolved: jest.fn(() => false),
+    getNextMove: vi.fn(),
+    isSolved: vi.fn(() => false),
 }));
 
 // Mock boardUtils
-jest.mock('../boardUtils', () => ({
+vi.mock('../boardUtils', () => ({
     useHandler: () => ({
         getColor: () => ({ front: 'white', back: 'black' }),
         getBorder: () => ({}),
@@ -62,7 +67,7 @@ jest.mock('../boardUtils', () => ({
 }));
 
 // Mock sub-components
-jest.mock('../../components/Board', () => ({
+vi.mock('../../components/Board', () => ({
     Board: function MockBoard({
         frontProps,
     }: {
@@ -86,7 +91,7 @@ jest.mock('../../components/Board', () => ({
     },
 }));
 
-jest.mock('../../../../components/ui/Controls', () => ({
+vi.mock('../../../../components/ui/Controls', () => ({
     Controls: function MockControls({
         children,
         onRefresh,
@@ -107,7 +112,7 @@ jest.mock('../../../../components/ui/Controls', () => ({
     },
 }));
 
-jest.mock('../../../../components/ui/TooltipButton', () => ({
+vi.mock('../../../../components/ui/TooltipButton', () => ({
     TooltipButton: function MockTooltipButton({
         title,
         onClick,
@@ -123,31 +128,29 @@ jest.mock('../../../../components/ui/TooltipButton', () => ({
     },
 }));
 
-jest.mock(
-    '../Info',
-    () =>
-        function MockInfo() {
-            return <div data-testid="info-modal">Info</div>;
-        }
-);
+vi.mock('../Info', () => ({
+    default: function MockInfo() {
+        return <div data-testid="info-modal">Info</div>;
+    },
+}));
 
 // Mock ThemeProvider
-jest.mock('../../../../hooks/useTheme', () => ({
+vi.mock('../../../../hooks/useTheme', () => ({
     useThemeContext: () => ({
         mode: 'light',
         resolvedMode: 'light',
-        toggleTheme: jest.fn(),
+        toggleTheme: vi.fn(),
     }),
 }));
 
 describe('LightsOut', () => {
-    let mockHandleBoard: jest.Mock;
+    let mockHandleBoard: any;
 
     beforeEach(() => {
-        mockHandleBoard = boardHandlers.handleBoard as jest.Mock;
+        mockHandleBoard = boardHandlers.handleBoard as Mock;
 
-        jest.clearAllMocks();
-        jest.useFakeTimers();
+        vi.clearAllMocks();
+        vi.useFakeTimers();
 
         mockHandleBoard.mockImplementation(
             (state: BoardState, action: BoardAction) => {
@@ -167,7 +170,7 @@ describe('LightsOut', () => {
     });
 
     afterEach(() => {
-        jest.useRealTimers();
+        vi.useRealTimers();
     });
 
     it('renders the game board and controls', () => {
@@ -182,7 +185,7 @@ describe('LightsOut', () => {
     });
 
     it('handles resize events', () => {
-        const mockUseWindow = hooks.useWindow as jest.Mock;
+        const mockUseWindow = hooks.useWindow as Mock;
         // Initial render
         const { rerender } = render(<LightsOut />);
 
@@ -235,7 +238,7 @@ describe('LightsOut', () => {
     });
 
     it('handles mobile layout offsets', () => {
-        const mockUseMobile = hooks.useMobile as jest.Mock;
+        const mockUseMobile = hooks.useMobile as Mock;
         mockUseMobile.mockReturnValue(true);
 
         render(<LightsOut />);

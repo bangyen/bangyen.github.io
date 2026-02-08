@@ -7,7 +7,7 @@ describe('ErrorBoundary', () => {
     const originalError = console.error;
 
     beforeEach(() => {
-        console.error = jest.fn();
+        console.error = vi.fn();
     });
 
     afterEach(() => {

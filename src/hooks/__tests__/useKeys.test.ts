@@ -2,12 +2,12 @@ import { renderHook, act } from '@testing-library/react';
 import { useKeys } from '../useKeys';
 
 describe('useKeys hook', () => {
-    let addSpy: jest.SpyInstance;
-    let removeSpy: jest.SpyInstance;
+    let addSpy: any;
+    let removeSpy: any;
 
     beforeEach(() => {
-        addSpy = jest.spyOn(document, 'addEventListener');
-        removeSpy = jest.spyOn(document, 'removeEventListener');
+        addSpy = vi.spyOn(document, 'addEventListener');
+        removeSpy = vi.spyOn(document, 'removeEventListener');
     });
 
     afterEach(() => {
@@ -16,7 +16,7 @@ describe('useKeys hook', () => {
     });
 
     test('binds event listener on create', () => {
-        const handler = jest.fn();
+        const handler = vi.fn();
         const { result } = renderHook(() => useKeys());
 
         act(() => {
@@ -27,7 +27,7 @@ describe('useKeys hook', () => {
     });
 
     test('removes event listener on clear', () => {
-        const handler = jest.fn();
+        const handler = vi.fn();
         const { result } = renderHook(() => useKeys());
 
         act(() => {
@@ -39,8 +39,8 @@ describe('useKeys hook', () => {
     });
 
     test('uses specific handler for clear if provided', () => {
-        const handler1 = jest.fn();
-        const handler2 = jest.fn();
+        const handler1 = vi.fn();
+        const handler2 = vi.fn();
         const { result } = renderHook(() => useKeys());
 
         act(() => {
@@ -52,7 +52,7 @@ describe('useKeys hook', () => {
     });
 
     test('cleans up on unmount', () => {
-        const handler = jest.fn();
+        const handler = vi.fn();
         const { result, unmount } = renderHook(() => useKeys());
 
         act(() => {

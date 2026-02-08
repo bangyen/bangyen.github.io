@@ -162,25 +162,25 @@ describe('Test Utilities', () => {
     });
 
     describe('testUtils', () => {
-        test('createMockFunction returns jest mock', () => {
+        test('createMockFunction returns vitest mock', () => {
             const mockFn = testUtils.createMockFunction();
 
-            expect(jest.isMockFunction(mockFn)).toBe(true);
+            expect(vi.isMockFunction(mockFn)).toBe(true);
         });
 
         test('suppressConsoleWarnings suppresses console methods', () => {
             const restore = testUtils.suppressConsoleWarnings();
 
             // Console methods should be mocked
-            expect(jest.isMockFunction(console.warn)).toBe(true);
-            expect(jest.isMockFunction(console.error)).toBe(true);
+            expect(vi.isMockFunction(console.warn)).toBe(true);
+            expect(vi.isMockFunction(console.error)).toBe(true);
 
             // Restore should work
             restore();
 
             // Console methods should be restored
-            expect(jest.isMockFunction(console.warn)).toBe(false);
-            expect(jest.isMockFunction(console.error)).toBe(false);
+            expect(vi.isMockFunction(console.warn)).toBe(false);
+            expect(vi.isMockFunction(console.error)).toBe(false);
         });
 
         test('suppressConsoleWarnings allows calling console methods', () => {
@@ -260,7 +260,7 @@ describe('Test Utilities', () => {
             });
 
             expect(theme).toBeDefined();
-            expect(jest.isMockFunction(mockFn)).toBe(true);
+            expect(vi.isMockFunction(mockFn)).toBe(true);
             expect(chartData).toHaveLength(3);
             expect(userData.name).toBe('Integration Test');
         });

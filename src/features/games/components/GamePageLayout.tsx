@@ -6,6 +6,12 @@ import { COLORS } from '../../../config/theme';
 import { useMobile } from '../../../hooks';
 import { TrophyOverlay } from './TrophyOverlay';
 
+/** Normalizes SxProps to an array for safe spreading in MUI sx prop. */
+function toSxArray(sx: SxProps<Theme> | undefined): SxProps<Theme>[] {
+    if (sx === undefined) return [];
+    return (Array.isArray(sx) ? sx : [sx]) as SxProps<Theme>[];
+}
+
 interface GamePageLayoutProps {
     children: React.ReactNode;
     controls: React.ReactNode;
@@ -62,29 +68,33 @@ export function GamePageLayout({
         >
             <GlobalHeader showHome={true} infoUrl={infoUrl} />
             <Box
-                sx={[
-                    {
-                        flex: 1,
-                        position: 'relative',
-                        width: '100%',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        overflow: 'hidden',
-                        pb: paddingBottom,
-                    },
-                    ...(Array.isArray(contentSx) ? contentSx : [contentSx]),
-                ]}
+                sx={
+                    [
+                        {
+                            flex: 1,
+                            position: 'relative',
+                            width: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            overflow: 'hidden',
+                            pb: paddingBottom,
+                        },
+                        ...toSxArray(contentSx),
+                    ] as SxProps<Theme>
+                }
             >
                 <Box
-                    sx={[
-                        {
-                            position: 'relative',
-                            width: 'fit-content',
-                        },
-                        ...(Array.isArray(boardSx) ? boardSx : [boardSx]),
-                    ]}
+                    sx={
+                        [
+                            {
+                                position: 'relative',
+                                width: 'fit-content',
+                            },
+                            ...toSxArray(boardSx),
+                        ] as SxProps<Theme>
+                    }
                 >
                     {children}
                     <TrophyOverlay

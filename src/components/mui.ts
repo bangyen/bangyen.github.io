@@ -48,6 +48,7 @@ export {
     createTheme,
     styled,
     keyframes,
+    alpha,
 } from '@mui/material/styles';
 
 // Core Styles
