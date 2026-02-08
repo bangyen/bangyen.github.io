@@ -36,9 +36,8 @@ class DSU {
         if (p !== i) {
             this.parent[i] = this.find(p);
         }
-        const root = this.parent[i];
-        if (root === undefined) throw new Error('Root not found');
-        return root;
+        if (this.parent[i] === undefined) throw new Error('Parent undefined');
+        return this.parent[i];
     }
 
     union(i: number, j: number): boolean {
@@ -49,6 +48,10 @@ class DSU {
             return true;
         }
         return false;
+    }
+
+    connected(i: number, j: number): boolean {
+        return this.find(i) === this.find(j);
     }
 }
 
@@ -265,8 +268,7 @@ function calculateNumbers(
 
 /**
  * Checks if a puzzle can be solved using deductive logic alone.
- * Rule 1: Node constraints (0, 1, 2, 3, 4 slants touch the node).
- * Rule 2: No cycles.
+ * Optimized to use local DSU checks for cycles avoiding O(N^2) behavior.
  */
 function checkDeductiveSolvability(
     maskedNumbers: (number | null)[][],
@@ -277,8 +279,10 @@ function checkDeductiveSolvability(
         { length: rows },
         () => Array(cols).fill(EMPTY) as CellState[]
     );
+    const dsu = new DSU((rows + 1) * (cols + 1));
     let changed = true;
 
+    // We loop until no more deductions can be made
     while (changed) {
         changed = false;
 
@@ -313,9 +317,21 @@ function checkDeductiveSolvability(
                     // All unknown must be "the other one"
                     for (const { gr, gc, pt } of unknown) {
                         const row = grid[gr];
-                        if (row) {
-                            row[gc] = pt === FORWARD ? BACKWARD : FORWARD;
+                        if (row?.[gc] === EMPTY) {
+                            const val = pt === FORWARD ? BACKWARD : FORWARD;
+                            row[gc] = val;
                             changed = true;
+                            // Update DSU
+                            const u =
+                                val === FORWARD
+                                    ? getNodeIndex(gr, gc + 1, cols)
+                                    : getNodeIndex(gr, gc, cols);
+                            const v =
+                                val === FORWARD
+                                    ? getNodeIndex(gr + 1, gc, cols)
+                                    : getNodeIndex(gr + 1, gc + 1, cols);
+                            if (dsu.connected(u, v)) return false; // Cycle created by forced move
+                            dsu.union(u, v);
                         }
                     }
                 } else if (
@@ -325,9 +341,20 @@ function checkDeductiveSolvability(
                     // All unknown must be "in"
                     for (const { gr, gc, pt } of unknown) {
                         const row = grid[gr];
-                        if (row) {
+                        if (row?.[gc] === EMPTY) {
                             row[gc] = pt;
                             changed = true;
+                            // Update DSU
+                            const u =
+                                pt === FORWARD
+                                    ? getNodeIndex(gr, gc + 1, cols)
+                                    : getNodeIndex(gr, gc, cols);
+                            const v =
+                                pt === FORWARD
+                                    ? getNodeIndex(gr + 1, gc, cols)
+                                    : getNodeIndex(gr + 1, gc + 1, cols);
+                            if (dsu.connected(u, v)) return false; // Cycle created by forced move
+                            dsu.union(u, v);
                         }
                     }
                 }
@@ -336,37 +363,37 @@ function checkDeductiveSolvability(
 
         if (changed) continue;
 
-        // Rule 2: Cycle prevention
-        // If one slant creates a cycle, we MUST pick the other.
+        // Rule 2: Cycle prevention (Optimized using DSU)
         for (let r = 0; r < rows; r++) {
             for (let c = 0; c < cols; c++) {
                 const rowArr = grid[r];
                 if (rowArr?.[c] !== EMPTY) continue;
 
-                // Try FORWARD
-                rowArr[c] = FORWARD;
-                if (hasCycle(grid, rows, cols)) {
+                // Check FORWARD option: connects (r, c+1) and (r+1, c)
+                const uF = getNodeIndex(r, c + 1, cols);
+                const vF = getNodeIndex(r + 1, c, cols);
+                const isCycleForward = dsu.connected(uF, vF);
+
+                // Check BACKWARD option: connects (r, c) and (r+1, c+1)
+                const uB = getNodeIndex(r, c, cols);
+                const vB = getNodeIndex(r + 1, c + 1, cols);
+                const isCycleBackward = dsu.connected(uB, vB);
+
+                if (isCycleForward && isCycleBackward) {
+                    return false; // Impossible state
+                }
+
+                if (isCycleForward) {
+                    // Must be BACKWARD
                     rowArr[c] = BACKWARD;
                     changed = true;
-                    if (hasCycle(grid, rows, cols)) {
-                        // Both create cycles? Unsolvable board state
-                        return false;
-                    }
-                    continue;
-                }
-
-                // Try BACKWARD
-                rowArr[c] = BACKWARD;
-                if (hasCycle(grid, rows, cols)) {
+                    dsu.union(uB, vB);
+                } else if (isCycleBackward) {
+                    // Must be FORWARD
                     rowArr[c] = FORWARD;
                     changed = true;
-                    if (hasCycle(grid, rows, cols)) {
-                        return false;
-                    }
-                    continue;
+                    dsu.union(uF, vF);
                 }
-
-                rowArr[c] = EMPTY;
             }
         }
     }
@@ -375,7 +402,7 @@ function checkDeductiveSolvability(
     const isFull = grid.every(row => row.every(cell => cell !== EMPTY));
     if (!isFull) return false;
 
-    // Verify constraints
+    // Verify constraints one last time (parity/counts)
     const currentNumbers = calculateNumbers(grid, rows, cols);
     for (let r = 0; r <= rows; r++) {
         for (let c = 0; c <= cols; c++) {
@@ -386,34 +413,96 @@ function checkDeductiveSolvability(
         }
     }
 
-    return !hasCycle(grid, rows, cols);
+    return true;
 }
 
 export function generatePuzzle(
     rows: number,
     cols: number
 ): { numbers: (number | null)[][]; solution: CellState[][] } {
-    const grid: CellState[][] = Array.from(
-        { length: rows },
-        () => Array(cols).fill(FORWARD) as CellState[]
-    );
+    let grid: CellState[][] = [];
+    let success = false;
 
-    // 1. Generate a valid random solution with no cycles
-    const iterations =
-        rows * cols * GAME_LOGIC_CONSTANTS.PUZZLE_GENERATION_ITERATIONS;
-    for (let i = 0; i < iterations; i++) {
-        const r = Math.floor(Math.random() * rows);
-        const c = Math.floor(Math.random() * cols);
-        const rowArr = grid[r];
-        if (!rowArr) continue;
-
-        const original = rowArr[c];
-        if (original === undefined) continue;
-
-        rowArr[c] = original === FORWARD ? BACKWARD : FORWARD;
-        if (hasCycle(grid, rows, cols)) {
-            rowArr[c] = original;
+    // Constructive generation (Randomized Kruskal's)
+    // Retry simplifies handling "stuck" states
+    for (let attempt = 0; attempt < 50 && !success; attempt++) {
+        grid = Array.from(
+            { length: rows },
+            () => Array(cols).fill(EMPTY) as CellState[]
+        );
+        const dsu = new DSU((rows + 1) * (cols + 1));
+        const cells: { r: number; c: number }[] = [];
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                cells.push({ r, c });
+            }
         }
+
+        // Shuffle cells
+        for (let i = cells.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            const temp = cells[i];
+            const swap = cells[j];
+            if (temp && swap) {
+                cells[i] = swap;
+                cells[j] = temp;
+            }
+        }
+
+        let stuck = false;
+        for (const { r, c } of cells) {
+            // Forward: (r, c+1) - (r+1, c)
+            const uF = getNodeIndex(r, c + 1, cols);
+            const vF = getNodeIndex(r + 1, c, cols);
+            const cycleF = dsu.connected(uF, vF);
+
+            // Backward: (r, c) - (r+1, c+1)
+            const uB = getNodeIndex(r, c, cols);
+            const vB = getNodeIndex(r + 1, c + 1, cols);
+            const cycleB = dsu.connected(uB, vB);
+
+            if (cycleF && cycleB) {
+                stuck = true;
+                break;
+            }
+
+            const rowArr = grid[r];
+            if (!rowArr) continue;
+
+            if (cycleF) {
+                // Must pick Backward
+                rowArr[c] = BACKWARD;
+                dsu.union(uB, vB);
+            } else if (cycleB) {
+                // Must pick Forward
+                rowArr[c] = FORWARD;
+                dsu.union(uF, vF);
+            } else {
+                // Random choice
+                if (Math.random() < 0.5) {
+                    rowArr[c] = FORWARD;
+                    dsu.union(uF, vF);
+                } else {
+                    rowArr[c] = BACKWARD;
+                    dsu.union(uB, vB);
+                }
+            }
+        }
+
+        if (!stuck) {
+            success = true;
+        }
+    }
+
+    if (!success) {
+        // Fallback to simple pattern if generation fails (unlikely)
+        grid = Array.from(
+            { length: rows },
+            (_, r) =>
+                Array(cols).fill(
+                    r % 2 === 0 ? FORWARD : BACKWARD
+                ) as CellState[]
+        );
     }
 
     // 2. Calculate numbers for this solution
@@ -438,14 +527,13 @@ export function generatePuzzle(
     }
 
     // 4. Remove hints while ensuring deductive solvability
-    // We aim for a target hint density (e.g., 35% of nodes)
     const targetHintCount = Math.floor(
         (rows + 1) * (cols + 1) * GAME_LOGIC_CONSTANTS.HINT_DENSITY
     );
     let currentHintCount = (rows + 1) * (cols + 1);
 
     for (const { r, c } of coords) {
-        if (currentHintCount <= targetHintCount) continue; // Keep going to see if we can reach it
+        if (currentHintCount <= targetHintCount) continue;
 
         const rowArr = maskedNumbers[r];
         if (!rowArr) continue;

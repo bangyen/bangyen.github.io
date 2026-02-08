@@ -55,31 +55,27 @@ export function isSolved(grid: number[][]): boolean {
 function randomize(rows: number, cols: number): number[][] {
     const grid = getGrid(rows, cols);
 
+    // Reuse neighbor offsets to avoid allocation in loop
+    const offsets: [number, number][] = [
+        [0, 0],
+        [-1, 0],
+        [1, 0],
+        [0, -1],
+        [0, 1],
+    ];
+
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
             if (Math.random() > 0.5) {
-                // Inline flipAdj logic to avoid cloning grid in every iteration
-                const neighbors = [
-                    [r, c],
-                    [r - 1, c],
-                    [r + 1, c],
-                    [r, c - 1],
-                    [r, c + 1],
-                ];
-
-                for (const neighbor of neighbors) {
-                    const nr = neighbor[0];
-                    const nc = neighbor[1];
-                    if (
-                        nr !== undefined &&
-                        nc !== undefined &&
-                        nr >= 0 &&
-                        nr < rows &&
-                        nc >= 0 &&
-                        nc < cols
-                    ) {
+                // Inline flipAdj logic optimized
+                for (const offset of offsets) {
+                    const dr = offset[0];
+                    const dc = offset[1];
+                    const nr = r + dr;
+                    const nc = c + dc;
+                    if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) {
                         const rowArr = grid[nr];
-                        if (rowArr && nc >= 0 && nc < rowArr.length) {
+                        if (rowArr) {
                             const val = rowArr[nc];
                             if (val !== undefined) {
                                 rowArr[nc] = val ^ 1;
