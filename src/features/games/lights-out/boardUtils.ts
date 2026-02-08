@@ -109,7 +109,7 @@ export function useHandler(state: GridState, palette: Palette): Getters {
 
     const getTile = useCallback(
         (row: number, col: number) => {
-            if (row < 0 || col < 0 || row >= rows || col >= cols) return 0; // Boundary check, return 0 for out of bounds
+            if (row < 0 || col < 0 || row >= rows || col >= cols) return -1; // Boundary check, return -1 to distinguish from off cells
             // Bitmask access: check if the c-th bit is set in row r.
             // Note: Typically bit 0 is LSB. Let's assume col 0 is LSB or MSB?
             // Usually visual representation: col 0 is left.
