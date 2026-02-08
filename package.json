@@ -15,6 +15,7 @@
     "depcheck": "^1.4.3",
     "gh-pages": "^6.3.0",
     "katex": "^0.16.28",
+    "lights-out-wasm": "file:lights-out-wasm/pkg",
     "pako": "^2.1.0",
     "prop-types": "^15.8.1",
     "react": "^19.2.3",
