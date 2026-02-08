@@ -98,7 +98,7 @@ export const getFrontProps =
                             ? COLORS.data.red
                             : COLORS.surface.background,
                         border:
-                            value !== null
+                            value != null
                                 ? `2px solid ${
                                       hasError
                                           ? COLORS.data.red
@@ -119,7 +119,7 @@ export const getFrontProps =
                                 ? 'none'
                                 : SLANT_STYLES.SHADOWS.HINT,
                         zIndex: 5,
-                        opacity: value !== null ? 1 : 0,
+                        opacity: value != null ? 1 : 0,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',

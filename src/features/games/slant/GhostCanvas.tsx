@@ -276,7 +276,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                         ? COLORS.data.red
                         : SLANT_STYLES.GHOST.HINT_BG, // Match dark bg
                     border:
-                        value !== null
+                        value != null
                             ? `2px solid ${
                                   hasConflict
                                       ? COLORS.data.red
@@ -289,7 +289,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                         ? SLANT_STYLES.COLORS.WHITE
                         : SLANT_STYLES.COLORS.WHITE, // Always white text
                     zIndex: 5,
-                    opacity: value !== null ? 1 : 0,
+                    opacity: value != null ? 1 : 0,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',

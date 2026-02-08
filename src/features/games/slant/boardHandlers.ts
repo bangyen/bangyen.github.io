@@ -4,6 +4,15 @@ export const FORWARD: CellState = 1;
 export const BACKWARD: CellState = 2;
 
 import { GAME_LOGIC_CONSTANTS } from './constants';
+import init, { generate_puzzle_wasm, find_cycles_wasm } from 'slant-wasm';
+
+// Initialize WASM
+try {
+    await init();
+} catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to initialize Slant WASM:', e);
+}
 
 export interface SlantState {
     grid: CellState[][];
@@ -64,6 +73,21 @@ export function findCycles(
     rows: number,
     cols: number
 ): Set<string> {
+    try {
+        const flatGrid = new Uint8Array(rows * cols);
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                flatGrid[r * cols + c] = grid[r]?.[c] ?? 0;
+            }
+        }
+        const cycles = find_cycles_wasm(flatGrid, rows, cols);
+        if (cycles.length > 0) {
+            return new Set(cycles);
+        }
+    } catch (_e) {
+        // Fallback to JS if WASM fails or isn't initialized
+    }
+
     const adj = new Map<number, { node: number; r: number; c: number }[]>();
     const cycleCells = new Set<string>();
 
@@ -420,6 +444,24 @@ export function generatePuzzle(
     rows: number,
     cols: number
 ): { numbers: (number | null)[][]; solution: CellState[][] } {
+    try {
+        const seed = BigInt(
+            Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
+        );
+        const puzzle = generate_puzzle_wasm(rows, cols, seed) as {
+            numbers: (number | null)[][];
+            solution: number[][];
+        };
+
+        return {
+            numbers: puzzle.numbers,
+            solution: puzzle.solution as CellState[][],
+        };
+    } catch (_e) {
+        // eslint-disable-next-line no-console
+        console.warn('WASM puzzle generation failed, falling back to JS', _e);
+    }
+
     let grid: CellState[][] = [];
     let success = false;
 
@@ -701,7 +743,7 @@ export const handleBoard = createGameReducer<SlantState, SlantAction>({
                 const numbersMatch = state.numbers.every((rowArr, r) =>
                     rowArr.every(
                         (val, c) =>
-                            val === null || val === currentNumbers[r]?.[c]
+                            val == null || val === currentNumbers[r]?.[c]
                     )
                 );
 
