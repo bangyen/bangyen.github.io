@@ -74,12 +74,7 @@ export function GamePageLayout({
                         overflow: 'hidden',
                         pb: paddingBottom,
                     },
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    ...(contentSx
-                        ? Array.isArray(contentSx)
-                            ? contentSx
-                            : [contentSx]
-                        : []),
+                    ...(Array.isArray(contentSx) ? contentSx : [contentSx]),
                 ]}
             >
                 <Box
@@ -88,12 +83,7 @@ export function GamePageLayout({
                             position: 'relative',
                             width: 'fit-content',
                         },
-                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                        ...(boardSx
-                            ? Array.isArray(boardSx)
-                                ? boardSx
-                                : [boardSx]
-                            : []),
+                        ...(Array.isArray(boardSx) ? boardSx : [boardSx]),
                     ]}
                 >
                     {children}

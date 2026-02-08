@@ -99,13 +99,21 @@ jest.mock('../../../../config/theme', () => ({
 
 // Mock useGameInteraction
 jest.mock('../../hooks/useGameInteraction', () => ({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    useGameInteraction: ({ onToggle }: any) => ({
+    useGameInteraction: ({
+        onToggle,
+    }: {
+        onToggle: (
+            r: number,
+            c: number,
+            right: boolean,
+            val?: number,
+            init?: boolean
+        ) => number | undefined;
+    }) => ({
         getDragProps: (pos: string) => ({
             onMouseDown: (_e: unknown) => {
                 const [r, c] = pos.split(',').map(Number);
                 if (r !== undefined && c !== undefined) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                     onToggle(r, c, false, undefined, true); // isInitialClick = true
                 }
             },
@@ -114,7 +122,6 @@ jest.mock('../../hooks/useGameInteraction', () => ({
                 // Simulate drag entering new cell
                 const [r, c] = pos.split(',').map(Number);
                 if (r !== undefined && c !== undefined) {
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
                     onToggle(r, c, false, 1, false); // draggingValue = 1 (FORWARD)
                 }
             },

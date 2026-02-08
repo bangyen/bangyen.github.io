@@ -204,8 +204,7 @@ export default function TextEditor({
             tapeFlag: tape ?? false,
             outFlag: output ?? false,
             regFlag: register ?? false,
-            // eslint-disable-next-line @typescript-eslint/no-misused-spread
-            code: state.code ? [...state.code] : [],
+            code: state.code ? Array.from(state.code) : [],
             index: (state.index as number) || 0,
             tape: state.tape ?? [],
             pointer: (state.pointer as number) || 0,

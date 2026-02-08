@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { renderHook, act } from '@testing-library/react';
 import { useSwipe } from '../useSwipe';
 import { TouchEvent } from 'react';
@@ -11,10 +10,10 @@ describe('useSwipe', () => {
         act(() => {
             result.current.onTouchStart({
                 targetTouches: [{ clientX: 0, clientY: 100 }],
-            } as any as TouchEvent);
+            } as unknown as TouchEvent);
             result.current.onTouchMove({
                 targetTouches: [{ clientX: 0, clientY: 0 }],
-            } as any as TouchEvent);
+            } as unknown as TouchEvent);
             result.current.onTouchEnd();
         });
 
@@ -28,10 +27,10 @@ describe('useSwipe', () => {
         act(() => {
             result.current.onTouchStart({
                 targetTouches: [{ clientX: 0, clientY: 0 }],
-            } as any as TouchEvent);
+            } as unknown as TouchEvent);
             result.current.onTouchMove({
                 targetTouches: [{ clientX: 0, clientY: 100 }],
-            } as any as TouchEvent);
+            } as unknown as TouchEvent);
             result.current.onTouchEnd();
         });
 
@@ -45,10 +44,10 @@ describe('useSwipe', () => {
         act(() => {
             result.current.onTouchStart({
                 targetTouches: [{ clientX: 100, clientY: 0 }],
-            } as any as TouchEvent);
+            } as unknown as TouchEvent);
             result.current.onTouchMove({
                 targetTouches: [{ clientX: 0, clientY: 0 }],
-            } as any as TouchEvent);
+            } as unknown as TouchEvent);
             result.current.onTouchEnd();
         });
 
@@ -62,10 +61,10 @@ describe('useSwipe', () => {
         act(() => {
             result.current.onTouchStart({
                 targetTouches: [{ clientX: 0, clientY: 0 }],
-            } as any as TouchEvent);
+            } as unknown as TouchEvent);
             result.current.onTouchMove({
                 targetTouches: [{ clientX: 100, clientY: 0 }],
-            } as any as TouchEvent);
+            } as unknown as TouchEvent);
             result.current.onTouchEnd();
         });
 
@@ -79,10 +78,10 @@ describe('useSwipe', () => {
         act(() => {
             result.current.onTouchStart({
                 targetTouches: [{ clientX: 0, clientY: 40 }],
-            } as any as TouchEvent);
+            } as unknown as TouchEvent);
             result.current.onTouchMove({
                 targetTouches: [{ clientX: 0, clientY: 0 }],
-            } as any as TouchEvent);
+            } as unknown as TouchEvent);
             result.current.onTouchEnd();
         });
 

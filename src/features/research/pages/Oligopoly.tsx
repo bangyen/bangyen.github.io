@@ -70,7 +70,6 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
 
         return matrixData;
     } catch (error) {
-        // eslint-disable-next-line no-console
         console.error('Error loading oligopoly data:', error);
         return [];
     }
