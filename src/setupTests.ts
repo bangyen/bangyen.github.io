@@ -120,4 +120,9 @@ Object.defineProperty(global, 'DecompressionStream', {
     writable: true,
 });
 
+// Mock WASM module
+jest.mock('lights-out-wasm', () => ({
+    invert_matrix: jest.fn((input: BigUint64Array) => input),
+}));
+
 // All warnings have been fixed at the root cause - no suppressions needed!

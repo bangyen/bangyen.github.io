@@ -2,6 +2,7 @@ import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { GhostCanvas } from '../GhostCanvas';
 import { FORWARD, BACKWARD, CellState } from '../boardHandlers';
+import { SolverMessage, Conflict, CellInfo } from '../workers/solverWorker';
 
 // Mock hooks
 jest.mock('../../../../hooks', () => ({
@@ -22,24 +23,18 @@ class MockWorker {
         this.onmessage = () => {};
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    postMessage(msg: any) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    postMessage(msg: SolverMessage) {
         if (msg.type === 'SOLVE') {
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
             const { numbers, userMoves } = msg.payload;
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const conflicts: any[] = [];
-            const gridState = new Map();
+            const conflicts: Conflict[] = [];
+            const gridState = new Map<string, CellInfo>();
 
             // Replicate minimal test logic
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-            userMoves.forEach((val: unknown, key: string) => {
+            userMoves.forEach((val: CellState, key: string) => {
                 gridState.set(key, { state: val, source: 'user' });
             });
 
             // specific test case: propagation
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             if (
                 numbers[0]?.[1] === 1 &&
                 userMoves.has('0,0') &&
@@ -49,13 +44,11 @@ class MockWorker {
             }
 
             // specific test case: conflict
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
             if (
                 numbers[0]?.[1] === 1 &&
                 userMoves.has('0,0') &&
                 userMoves.has('0,1')
             ) {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
                 if (userMoves.get('0,0') === 1 && userMoves.get('0,1') === 2) {
                     conflicts.push({ type: 'node', r: 0, c: 1 });
                 }

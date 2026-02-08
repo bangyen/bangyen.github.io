@@ -52,7 +52,7 @@ export function useHandler(row: number[], size: number, palette: Palette) {
     const getTile = useCallback(
         (r: number, c: number) => {
             if (r !== 0 || c < 0 || c >= size) return -1;
-            return row[c];
+            return row[c] ?? 0;
         },
         [row, size]
     );

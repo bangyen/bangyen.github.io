@@ -148,10 +148,7 @@ describe('useHandler', () => {
 
     test('getTile returns correct values from grid state', () => {
         const state = {
-            grid: [
-                [1, 0],
-                [0, 1],
-            ],
+            grid: [1, 2], // Row 0: bit 0 (1), Row 1: bit 1 (2)
             rows: 2,
             cols: 2,
         };
@@ -167,7 +164,7 @@ describe('useHandler', () => {
 
     test('getTile returns -1 for out of bounds', () => {
         const state = {
-            grid: [[1]],
+            grid: [1],
             rows: 1,
             cols: 1,
         };
