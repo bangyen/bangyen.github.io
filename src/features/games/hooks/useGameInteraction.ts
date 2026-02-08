@@ -7,7 +7,8 @@ interface UseGameInteractionOptions<T> {
         row: number,
         col: number,
         isRightClick: boolean,
-        draggingValue?: T
+        draggingValue?: T,
+        isInitialClick?: boolean
     ) => T | undefined;
     checkEnabled: () => boolean;
     touchTimeout?: number;
@@ -35,12 +36,21 @@ export function useGameInteraction<T>({
             if (r === undefined || c === undefined) return;
 
             if (isInitialClick) {
-                const result = onToggleRef.current(r, c, isRightClick);
-                if (result !== undefined) {
-                    draggingValue.current = result;
-                }
+                draggingValue.current = onToggleRef.current(
+                    r,
+                    c,
+                    isRightClick,
+                    undefined,
+                    true
+                );
             } else {
-                onToggleRef.current(r, c, isRightClick, draggingValue.current);
+                onToggleRef.current(
+                    r,
+                    c,
+                    isRightClick,
+                    draggingValue.current,
+                    false
+                );
             }
         },
         [checkEnabled]

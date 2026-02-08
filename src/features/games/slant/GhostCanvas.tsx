@@ -71,11 +71,12 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
             r: number,
             c: number,
             isRightClick: boolean,
-            draggingValue: CellState | undefined
+            draggingValue: CellState | undefined,
+            isInitialClick?: boolean
         ) => {
             const pos = `${String(r)},${String(c)}`;
 
-            if (draggingValue !== undefined) {
+            if (!isInitialClick) {
                 onMove(pos, draggingValue);
                 return;
             }
