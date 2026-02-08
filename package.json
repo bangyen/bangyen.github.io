@@ -124,6 +124,7 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.53.1",
     "vite": "^7.3.1",
+    "vite-plugin-wasm": "^3.5.0",
     "vite-tsconfig-paths": "^6.0.4",
     "worker-loader": "^3.0.8"
   }
