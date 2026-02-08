@@ -8,6 +8,78 @@ jest.mock('../../../../hooks', () => ({
     useMobile: () => false,
 }));
 
+jest.mock('../workerUtils', () => ({
+    createWorker: () => new MockWorker('mock-url'),
+}));
+
+// Mock Worker
+class MockWorker {
+    url: string;
+    onmessage: (msg: unknown) => void;
+
+    constructor(stringUrl: string) {
+        this.url = stringUrl;
+        this.onmessage = () => {};
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    postMessage(msg: any) {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        if (msg.type === 'SOLVE') {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+            const { numbers, userMoves } = msg.payload;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const conflicts: any[] = [];
+            const gridState = new Map();
+
+            // Replicate minimal test logic
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+            userMoves.forEach((val: unknown, key: string) => {
+                gridState.set(key, { state: val, source: 'user' });
+            });
+
+            // specific test case: propagation
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+            if (
+                numbers[0]?.[1] === 1 &&
+                userMoves.has('0,0') &&
+                userMoves.get('0,0') === 1
+            ) {
+                gridState.set('0,1', { state: 1, source: 'propagated' });
+            }
+
+            // specific test case: conflict
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+            if (
+                numbers[0]?.[1] === 1 &&
+                userMoves.has('0,0') &&
+                userMoves.has('0,1')
+            ) {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+                if (userMoves.get('0,0') === 1 && userMoves.get('0,1') === 2) {
+                    conflicts.push({ type: 'node', r: 0, c: 1 });
+                }
+            }
+
+            setTimeout(() => {
+                this.onmessage({
+                    data: {
+                        type: 'RESULT',
+                        payload: {
+                            gridState,
+                            conflicts,
+                            cycleCells: new Set(),
+                        },
+                    },
+                });
+            }, 50);
+        }
+    }
+    terminate() {}
+}
+// @ts-expect-error Global mock injection for testing environment
+global.Worker = MockWorker;
+
 // Mock theme
 jest.mock('../../../../config/theme', () => ({
     COLORS: {
@@ -30,6 +102,31 @@ jest.mock('../../../../config/theme', () => ({
     ANIMATIONS: { transition: 'none' },
     LAYOUT: { zIndex: { base: 1 } },
     SPACING: { borderRadius: { full: 999, sm: 4 } },
+}));
+
+// Mock useGameInteraction
+jest.mock('../../hooks/useGameInteraction', () => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    useGameInteraction: ({ onToggle }: any) => ({
+        getDragProps: (pos: string) => ({
+            onMouseDown: (_e: unknown) => {
+                const [r, c] = pos.split(',').map(Number);
+                if (r !== undefined && c !== undefined) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                    onToggle(r, c, false, undefined, true); // isInitialClick = true
+                }
+            },
+
+            onMouseEnter: (_e: unknown) => {
+                // Simulate drag entering new cell
+                const [r, c] = pos.split(',').map(Number);
+                if (r !== undefined && c !== undefined) {
+                    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+                    onToggle(r, c, false, 1, false); // draggingValue = 1 (FORWARD)
+                }
+            },
+        }),
+    }),
 }));
 
 // Mock TooltipButton
