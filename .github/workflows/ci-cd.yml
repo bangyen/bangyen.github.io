@@ -57,7 +57,7 @@ jobs:
           version: 'latest'
 
       - name: Build WASM
-        run: wasm-pack build ./lights-out-wasm --target web
+        run: wasm-pack build ./lights-out-wasm ./slant-wasm --target web
 
       - name: Install and Build
         run: |
