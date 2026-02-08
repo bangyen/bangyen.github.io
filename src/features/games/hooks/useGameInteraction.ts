@@ -1,6 +1,5 @@
 import { useRef, useCallback } from 'react';
 import { useDrag } from './useDrag';
-import { TIMING_CONSTANTS } from '../slant/constants';
 
 interface UseGameInteractionOptions<T> {
     onToggle: (
@@ -11,7 +10,7 @@ interface UseGameInteractionOptions<T> {
         isInitialClick?: boolean
     ) => T | undefined;
     checkEnabled: () => boolean;
-    touchTimeout?: number;
+    touchTimeout: number;
     transition?: string;
     posAttribute?: 'data-pos' | 'data-col';
 }
@@ -19,7 +18,7 @@ interface UseGameInteractionOptions<T> {
 export function useGameInteraction<T>({
     onToggle,
     checkEnabled,
-    touchTimeout = TIMING_CONSTANTS.TOUCH_HOLD_DELAY,
+    touchTimeout,
     transition,
     posAttribute,
 }: UseGameInteractionOptions<T>) {

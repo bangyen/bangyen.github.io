@@ -28,6 +28,7 @@ export function useCellFactory<T extends any[]>( // eslint-disable-line @typescr
 ): CellFactory {
     return useMemo(
         () => factory(getDragProps, ...dependencies),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         [factory, getDragProps, ...dependencies]
-    ); // eslint-disable-line react-hooks/exhaustive-deps
+    );
 }
