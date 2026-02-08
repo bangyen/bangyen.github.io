@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useReducer, useCallback } from 'react';
+import React, { useMemo, useReducer } from 'react';
 import { MenuBookRounded } from '../../../components/icons';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { Board } from '../components/Board';
@@ -15,63 +15,67 @@ import {
     LAYOUT_CONSTANTS,
     LIGHTS_OUT_STYLES,
 } from './constants';
-import { useGridSize } from '../hooks/useGridSize';
-import { useGamePersistence } from '../hooks/useGamePersistence';
+import { useBaseGame } from '../hooks/useBaseGame';
 import { useGameInteraction } from '../hooks/useGameInteraction';
-import { useWinTransition } from '../hooks/useWinTransition';
-import { usePageTitle } from '../hooks/usePageTitle';
 import { GamePageLayout } from '../components/GamePageLayout';
-import { useResponsiveBoardSize } from '../hooks/useResponsiveBoardSize';
 import { getFrontProps, getBackProps, getExampleProps } from './renderers';
 
-import { BoardState } from './boardHandlers';
+import { BoardState, BoardAction } from './boardHandlers';
 
 export default function LightsOut() {
     const {
         rows,
         cols,
-        dynamicSize,
-        handlePlus,
-        handleMinus,
+        state,
+        dispatch,
+        size,
         mobile,
-        minSize,
-        maxSize,
-    } = useGridSize({
-        storageKey: STORAGE_KEYS.SIZE,
-        defaultSize: null,
-        headerOffset: {
-            mobile: LAYOUT.headerHeight.xs,
-            desktop: LAYOUT.headerHeight.md,
+        solved,
+        handleNext,
+        controlsProps,
+    } = useBaseGame<BoardState, BoardAction>({
+        storageKeys: {
+            size: STORAGE_KEYS.SIZE,
+            state: STORAGE_KEYS.STATE,
         },
-        cellSizeReference: {
-            mobile: GAME_CONSTANTS.gridSizes.mobile,
-            desktop: GAME_CONSTANTS.gridSizes.desktop,
+        pageTitle: PAGE_TITLES.lightsOut,
+        gridConfig: {
+            defaultSize: null,
+            minSize: 2,
+            maxSize: 10,
+            headerOffset: {
+                mobile: LAYOUT.headerHeight.xs,
+                desktop: LAYOUT.headerHeight.md,
+            },
+            paddingOffset: 120,
+            cellSizeReference: {
+                mobile: GAME_CONSTANTS.gridSizes.mobile,
+                desktop: GAME_CONSTANTS.gridSizes.desktop,
+            },
+            mobileRowOffset: -2,
         },
-        paddingOffset: 120, // Reserve space for bottom controls
-        mobileRowOffset: -2,
-    });
-
-    const initial = useMemo(
-        () => ({
+        boardConfig: {
+            paddingOffset: 180,
+            boardMaxWidth: 1200,
+            boardSizeFactor: 0.9,
+            maxCellSize: 80,
+            remBase: 16,
+        },
+        reducer: handleBoard,
+        getInitialState: (rows, cols) => ({
             grid: getGrid(rows, cols),
             score: 0,
             rows,
             cols,
             initialized: false,
         }),
-        [rows, cols]
-    );
-
-    const [state, dispatch] = useReducer(handleBoard, initial);
+        winAnimationDelay: TIMING_CONSTANTS.WIN_ANIMATION_DELAY,
+        isSolved: s => s.initialized && isSolved(s.grid),
+    });
 
     const [open, toggleOpen] = useReducer((open: boolean) => !open, false);
 
     const palette = usePalette(state.score);
-
-    const solved = useMemo(
-        () => state.initialized && isSolved(state.grid),
-        [state.initialized, state.grid]
-    );
 
     const { getDragProps } = useGameInteraction({
         onToggle: (r, c) => {
@@ -83,51 +87,13 @@ export default function LightsOut() {
     });
 
     const allOn = useMemo(
-        () => state.initialized && state.grid.flat().every(cell => cell === 1),
+        () =>
+            state.initialized &&
+            state.grid.flat().every((cell: number) => cell === 1),
         [state.initialized, state.grid]
     );
 
-    const handleNext = useCallback(() => {
-        dispatch({ type: 'next' });
-    }, []);
-
-    useGamePersistence<BoardState>({
-        storageKey: STORAGE_KEYS.STATE,
-        rows,
-        cols,
-        state,
-        onRestore: saved => {
-            dispatch({ type: 'restore', state: saved });
-        },
-    });
-
-    useWinTransition(solved, handleNext, TIMING_CONSTANTS.WIN_ANIMATION_DELAY);
-
-    usePageTitle(PAGE_TITLES.lightsOut);
-
-    useEffect(() => {
-        dispatch({
-            type: 'resize',
-            newRows: rows,
-            newCols: cols,
-        });
-    }, [rows, cols]);
-
     const getters = useHandler(state, palette);
-
-    const size = useResponsiveBoardSize({
-        rows,
-        cols,
-        headerOffset: {
-            mobile: LAYOUT.headerHeight.xs,
-            desktop: LAYOUT.headerHeight.md,
-        },
-        paddingOffset: 180,
-        boardMaxWidth: 1200,
-        boardSizeFactor: 0.9,
-        maxCellSize: 80,
-        remBase: 16,
-    });
 
     const frontProps = useMemo(
         () => getFrontProps(getters, getDragProps),
@@ -136,16 +102,7 @@ export default function LightsOut() {
     const backProps = useMemo(() => getBackProps(getters), [getters]);
 
     const controls = (
-        <GameControls
-            rows={rows}
-            cols={cols}
-            dynamicSize={dynamicSize}
-            minSize={minSize}
-            maxSize={maxSize}
-            handlePlus={handlePlus}
-            handleMinus={handleMinus}
-            onRefresh={handleNext}
-        >
+        <GameControls {...controlsProps}>
             <TooltipButton
                 title="How to Play"
                 Icon={MenuBookRounded}

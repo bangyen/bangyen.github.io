@@ -1,5 +1,4 @@
 import React, {
-    useReducer,
     useEffect,
     useMemo,
     useState,
@@ -10,12 +9,10 @@ import { Box } from '../../../components/mui';
 import { Psychology } from '../../../components/icons';
 import { GhostCanvas } from './GhostCanvas';
 import { GameControls } from '../components/GameControls';
-import { CellState } from './boardHandlers';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { Board } from '../components/Board';
 import { PAGE_TITLES } from '../../../config/constants';
 import { COLORS } from '../../../config/theme';
-import { handleBoard, getInitialState, EMPTY } from './boardHandlers';
 import {
     NUMBER_SIZE_RATIO,
     STORAGE_KEYS,
@@ -25,15 +22,19 @@ import {
     MOBILE_PADDING,
     DESKTOP_PADDING,
 } from './constants';
-import { SlantState } from './boardHandlers';
-import { useGridSize } from '../hooks/useGridSize';
+import { useBaseGame } from '../hooks/useBaseGame';
 import { useGamePersistence } from '../hooks/useGamePersistence';
 import { useGameInteraction } from '../hooks/useGameInteraction';
-import { useWinTransition } from '../hooks/useWinTransition';
-import { usePageTitle } from '../hooks/usePageTitle';
 import { GamePageLayout } from '../components/GamePageLayout';
+import {
+    SlantAction,
+    SlantState,
+    CellState,
+    EMPTY,
+    getInitialState,
+    handleBoard,
+} from './boardHandlers';
 import { getBackProps, getFrontProps } from './renderers';
-import { useResponsiveBoardSize } from '../hooks/useResponsiveBoardSize';
 
 interface SavedSlantState extends Omit<
     SlantState,
@@ -45,76 +46,68 @@ interface SavedSlantState extends Omit<
 }
 
 export default function Slant() {
+    const [isGhostMode, setIsGhostMode] = useState(false);
+
     const {
         rows,
         cols,
-        handlePlus,
-        handleMinus,
-        mobile,
-        dynamicSize,
-        minSize,
-        maxSize,
-    } = useGridSize({
-        storageKey: STORAGE_KEYS.SIZE,
-        defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
-        minSize: GAME_LOGIC_CONSTANTS.MIN_SIZE,
-        headerOffset: {
-            mobile: LAYOUT_CONSTANTS.HEADER_OFFSET.MOBILE,
-            desktop: LAYOUT_CONSTANTS.HEADER_OFFSET.DESKTOP,
-        },
-        paddingOffset: 160,
-        widthLimit: LAYOUT_CONSTANTS.WIDTH_LIMIT,
-        cellSizeReference: 4,
-        mobileRowOffset: -2,
-    });
-
-    const [isGhostMode, setIsGhostMode] = useState(false);
-
-    const size = useResponsiveBoardSize({
-        rows: rows + 1,
-        cols: cols + 1,
-        headerOffset: {
-            mobile: LAYOUT_CONSTANTS.HEADER_OFFSET.MOBILE,
-            desktop: LAYOUT_CONSTANTS.HEADER_OFFSET.DESKTOP,
-        },
-        paddingOffset: {
-            x: mobile ? 128 : 224,
-            y: LAYOUT_CONSTANTS.PADDING_OFFSET,
-        },
-        boardMaxWidth: LAYOUT_CONSTANTS.BOARD_MAX_WIDTH,
-        boardSizeFactor: LAYOUT_CONSTANTS.BOARD_SIZE_FACTOR,
-        maxCellSize: LAYOUT_CONSTANTS.MAX_CELL_SIZE,
-        remBase: LAYOUT_CONSTANTS.REM_BASE,
-    });
-
-    const initial = useMemo(() => getInitialState(rows, cols), [rows, cols]);
-
-    const [state, dispatch] = useReducer(handleBoard, initial);
-
-    // Persistence for main game state
-    useGamePersistence<SlantState>({
-        storageKey: STORAGE_KEYS.STATE,
-        rows,
-        cols,
         state,
-        enabled: !isGhostMode,
-        onRestore: saved => {
-            dispatch({ type: 'hydrate', state: saved });
+        dispatch,
+        size,
+        mobile,
+        handleNext,
+        controlsProps,
+    } = useBaseGame<SlantState, SlantAction>({
+        storageKeys: {
+            size: STORAGE_KEYS.SIZE,
+            state: STORAGE_KEYS.STATE,
         },
-        serialize: s => ({
-            ...s,
-            errorNodes: Array.from(s.errorNodes),
-            cycleCells: Array.from(s.cycleCells),
-            satisfiedNodes: Array.from(s.satisfiedNodes),
-        }),
-        deserialize: (saved: unknown) => {
-            const s = saved as SavedSlantState;
-            return {
+        pageTitle: PAGE_TITLES.slant,
+        gridConfig: {
+            defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
+            minSize: GAME_LOGIC_CONSTANTS.MIN_SIZE,
+            headerOffset: {
+                mobile: LAYOUT_CONSTANTS.HEADER_OFFSET.MOBILE,
+                desktop: LAYOUT_CONSTANTS.HEADER_OFFSET.DESKTOP,
+            },
+            paddingOffset: 160,
+            widthLimit: LAYOUT_CONSTANTS.WIDTH_LIMIT,
+            cellSizeReference: 4,
+            mobileRowOffset: -2,
+        },
+        boardConfig: {
+            paddingOffset: (isMobile: boolean) => ({
+                x: isMobile ? 128 : 224,
+                y: LAYOUT_CONSTANTS.PADDING_OFFSET,
+            }),
+            boardMaxWidth: LAYOUT_CONSTANTS.BOARD_MAX_WIDTH,
+            boardSizeFactor: LAYOUT_CONSTANTS.BOARD_SIZE_FACTOR,
+            maxCellSize: LAYOUT_CONSTANTS.MAX_CELL_SIZE,
+            remBase: LAYOUT_CONSTANTS.REM_BASE,
+            rowOffset: 1,
+            colOffset: 1,
+        },
+        reducer: handleBoard,
+        getInitialState: (rows, cols) => getInitialState(rows, cols),
+        winAnimationDelay: TIMING_CONSTANTS.WIN_ANIMATION_DELAY,
+        isSolved: s => s.solved,
+        persistence: {
+            enabled: !isGhostMode,
+            serialize: s => ({
                 ...s,
-                errorNodes: new Set(s.errorNodes),
-                cycleCells: new Set(s.cycleCells),
-                satisfiedNodes: new Set(s.satisfiedNodes),
-            } as SlantState;
+                errorNodes: Array.from(s.errorNodes),
+                cycleCells: Array.from(s.cycleCells),
+                satisfiedNodes: Array.from(s.satisfiedNodes),
+            }),
+            deserialize: (saved: unknown) => {
+                const s = saved as SavedSlantState;
+                return {
+                    ...s,
+                    errorNodes: new Set(s.errorNodes),
+                    cycleCells: new Set(s.cycleCells),
+                    satisfiedNodes: new Set(s.satisfiedNodes),
+                } as SlantState;
+            },
         },
     });
 
@@ -146,17 +139,7 @@ export default function Slant() {
         lastPuzzleRef.current = puzzleId;
     }, [state.numbers, state.rows, state.cols]);
 
-    usePageTitle(PAGE_TITLES.slant);
-
-    const handleReset = useCallback(() => {
-        dispatch({ type: 'new' });
-    }, [dispatch]);
-
-    useWinTransition(
-        state.solved,
-        handleReset,
-        TIMING_CONSTANTS.WIN_ANIMATION_DELAY
-    );
+    const handleReset = handleNext;
 
     const { getDragProps } = useGameInteraction({
         onToggle: (r, c, isRightClick) => {
@@ -185,41 +168,6 @@ export default function Slant() {
         [state, numberSize]
     );
 
-    useEffect(() => {
-        dispatch({
-            type: 'resize',
-            rows,
-            cols,
-        });
-    }, [rows, cols]);
-
-    const controls = isGhostMode ? (
-        <></>
-    ) : (
-        <GameControls
-            rows={rows}
-            cols={cols}
-            dynamicSize={dynamicSize}
-            minSize={minSize}
-            maxSize={maxSize}
-            handlePlus={handlePlus}
-            handleMinus={handleMinus}
-            onRefresh={handleReset}
-            disabled={isGhostMode}
-        >
-            <TooltipButton
-                title={'Open Calculator'}
-                Icon={Psychology}
-                onClick={() => {
-                    setIsGhostMode(!isGhostMode);
-                }}
-                sx={{
-                    color: 'default',
-                }}
-            />
-        </GameControls>
-    );
-
     const handleGhostMove = useCallback((pos: string, val?: CellState) => {
         setGhostMoves(prev => {
             const next = new Map(prev);
@@ -231,8 +179,8 @@ export default function Slant() {
 
     const handleGhostCopy = useCallback(() => {
         const newMoves = new Map<string, CellState>();
-        state.grid.forEach((row, r) => {
-            row.forEach((cell, c) => {
+        state.grid.forEach((row: CellState[], r: number) => {
+            row.forEach((cell: CellState, c: number) => {
                 if (cell !== EMPTY) {
                     newMoves.set(`${String(r)},${String(c)}`, cell);
                 }
@@ -269,6 +217,23 @@ export default function Slant() {
             borderRadius: LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
         }),
         [mobile]
+    );
+
+    const controls = isGhostMode ? (
+        <></>
+    ) : (
+        <GameControls {...controlsProps} disabled={isGhostMode}>
+            <TooltipButton
+                title={'Open Calculator'}
+                Icon={Psychology}
+                onClick={() => {
+                    setIsGhostMode(!isGhostMode);
+                }}
+                sx={{
+                    color: 'default',
+                }}
+            />
+        </GameControls>
     );
 
     const boardContent = isGhostMode ? (

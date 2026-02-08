@@ -191,6 +191,7 @@ export function handleBoard(
             grid = getGrid(rows, cols);
             score = 0;
             break;
+        case 'new':
         case 'next':
             grid = randomize(rows, cols);
             score += 1;
