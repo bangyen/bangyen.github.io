@@ -1,3 +1,5 @@
+import { invert_matrix } from 'lights-out-wasm';
+
 export function getMatrix(cols: number): bigint[] {
     if (cols === 1) return [1n];
     const first = 7n << BigInt(cols - 2);
@@ -488,7 +490,23 @@ export function getProduct(
         const matrix = getMatrix(cols);
         const weights = getPolynomial(rows + 1);
         const product = evalPolynomial(matrix, weights);
-        inverseCache[key] = invertMatrix(product);
+
+        if (cols <= 64) {
+            try {
+                // Convert bigint[] to BigUint64Array for Wasm
+                // Note: BigInts in JS are arbitrary precision, but for <=64 cols they fit in 64 bits.
+                const input = new BigUint64Array(
+                    product.map(b => BigInt.asUintN(64, b))
+                );
+                const result = invert_matrix(input, product.length);
+                inverseCache[key] = Array.from(result);
+            } catch (_e) {
+                // console.warn('Wasm inversion failed, falling back to JS', e);
+                inverseCache[key] = invertMatrix(product);
+            }
+        } else {
+            inverseCache[key] = invertMatrix(product);
+        }
     }
 
     const inverse = inverseCache[key];
