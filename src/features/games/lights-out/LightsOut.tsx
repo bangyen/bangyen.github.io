@@ -9,15 +9,11 @@ import { GAME_CONSTANTS } from '../config/gameConfig';
 import { LAYOUT } from '../../../config/theme';
 import { getGrid, handleBoard, isSolved } from './boardHandlers';
 import Info from './Info';
-import {
-    TIMING_CONSTANTS,
-    STORAGE_KEYS,
-    LAYOUT_CONSTANTS,
-    LIGHTS_OUT_STYLES,
-} from './constants';
+import { STORAGE_KEYS, LAYOUT_CONSTANTS, LIGHTS_OUT_STYLES } from './constants';
 import { useBaseGame } from '../hooks/useBaseGame';
 import { useGameInteraction } from '../hooks/useGameInteraction';
 import { GamePageLayout } from '../components/GamePageLayout';
+import { useCellFactory } from '../utils/gameUtils';
 import { getFrontProps, getBackProps, getExampleProps } from './renderers';
 
 import { BoardState, BoardAction } from './boardHandlers';
@@ -69,7 +65,7 @@ export default function LightsOut() {
             cols,
             initialized: false,
         }),
-        winAnimationDelay: TIMING_CONSTANTS.WIN_ANIMATION_DELAY,
+        winAnimationDelay: GAME_CONSTANTS.timing.winAnimationDelay,
         isSolved: s => s.initialized && isSolved(s.grid),
     });
 
@@ -82,7 +78,7 @@ export default function LightsOut() {
             dispatch({ type: 'adjacent', row: r, col: c });
         },
         checkEnabled: () => !solved,
-        touchTimeout: TIMING_CONSTANTS.GHOST_CLICK_TIMEOUT,
+        touchTimeout: GAME_CONSTANTS.timing.interactionDelay,
         transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
     });
 
@@ -95,10 +91,7 @@ export default function LightsOut() {
 
     const getters = useHandler(state, palette);
 
-    const frontProps = useMemo(
-        () => getFrontProps(getters, getDragProps),
-        [getters, getDragProps]
-    );
+    const frontProps = useCellFactory(getFrontProps, getDragProps, [getters]);
     const backProps = useMemo(() => getBackProps(getters), [getters]);
 
     const controls = (

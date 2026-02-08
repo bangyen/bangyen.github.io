@@ -22,8 +22,8 @@ import {
     NUMBER_SIZE_RATIO,
     SLANT_STYLES,
     LAYOUT_CONSTANTS,
-    TIMING_CONSTANTS,
 } from './constants';
+import { GAME_CONSTANTS } from '../config/gameConfig';
 import { ANIMATIONS, SPACING } from '../../../config/theme';
 import { useGameInteraction } from '../hooks/useGameInteraction';
 
@@ -102,7 +102,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
             onMove(pos, newState);
             return newState;
         },
-        touchTimeout: TIMING_CONSTANTS.TOUCH_HOLD_DELAY,
+        touchTimeout: GAME_CONSTANTS.timing.touchHoldDelay,
         checkEnabled: () => true,
     });
 

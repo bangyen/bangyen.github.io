@@ -2,6 +2,7 @@ import React from 'react';
 import { Box } from '../../../components/mui';
 import { Getters } from '../components/Board';
 import { DragProps } from '../hooks/useDrag';
+import { getPosKey } from '../utils/gameUtils';
 import { LIGHTS_OUT_STYLES } from './constants';
 
 const ICON = (
@@ -16,15 +17,15 @@ const ICON = (
 );
 
 export function getFrontProps(
-    getters: Getters,
-    getDragProps: (pos: string) => DragProps
+    getDragProps: (pos: string) => DragProps,
+    getters: Getters
 ) {
     const { getColor, getBorder } = getters;
 
     return (row: number, col: number) => {
         const style = getBorder(row, col);
         const { front, back } = getColor(row, col);
-        const pos = `${row.toString()},${col.toString()}`;
+        const pos = getPosKey(row, col);
         const dragProps = getDragProps(pos);
 
         return {
@@ -54,13 +55,16 @@ export function getBackProps(getters: Getters) {
 }
 
 export function getExampleProps(getters: Getters) {
-    const frontProps = getFrontProps(getters, (pos: string) => ({
-        onMouseDown: () => undefined,
-        onMouseEnter: () => undefined,
-        onTouchStart: () => undefined,
-        'data-pos': pos,
-        sx: { touchAction: 'none' as const, transition: 'none' },
-    }));
+    const frontProps = getFrontProps(
+        (pos: string) => ({
+            onMouseDown: () => undefined,
+            onMouseEnter: () => undefined,
+            onTouchStart: () => undefined,
+            'data-pos': pos,
+            sx: { touchAction: 'none' as const, transition: 'none' },
+        }),
+        getters
+    );
 
     return (row: number, col: number) => {
         const props = frontProps(row, col);

@@ -12,11 +12,11 @@ import { GameControls } from '../components/GameControls';
 import { TooltipButton } from '../../../components/ui/TooltipButton';
 import { Board } from '../components/Board';
 import { PAGE_TITLES } from '../../../config/constants';
+import { GAME_CONSTANTS } from '../config/gameConfig';
 import { COLORS } from '../../../config/theme';
 import {
     NUMBER_SIZE_RATIO,
     STORAGE_KEYS,
-    TIMING_CONSTANTS,
     LAYOUT_CONSTANTS,
     GAME_LOGIC_CONSTANTS,
     MOBILE_PADDING,
@@ -35,6 +35,7 @@ import {
     handleBoard,
 } from './boardHandlers';
 import { getBackProps, getFrontProps } from './renderers';
+import { useCellFactory } from '../utils/gameUtils';
 
 interface SavedSlantState extends Omit<
     SlantState,
@@ -66,10 +67,7 @@ export default function Slant() {
         gridConfig: {
             defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
             minSize: GAME_LOGIC_CONSTANTS.MIN_SIZE,
-            headerOffset: {
-                mobile: LAYOUT_CONSTANTS.HEADER_OFFSET.MOBILE,
-                desktop: LAYOUT_CONSTANTS.HEADER_OFFSET.DESKTOP,
-            },
+            headerOffset: GAME_CONSTANTS.layout.headerHeight,
             paddingOffset: 160,
             widthLimit: LAYOUT_CONSTANTS.WIDTH_LIMIT,
             cellSizeReference: 4,
@@ -89,7 +87,7 @@ export default function Slant() {
         },
         reducer: handleBoard,
         getInitialState: (rows, cols) => getInitialState(rows, cols),
-        winAnimationDelay: TIMING_CONSTANTS.WIN_ANIMATION_DELAY,
+        winAnimationDelay: GAME_CONSTANTS.timing.winAnimationDelay,
         isSolved: s => s.solved,
         persistence: {
             enabled: !isGhostMode,
@@ -151,16 +149,13 @@ export default function Slant() {
             });
         },
         checkEnabled: () => !state.solved,
-        touchTimeout: TIMING_CONSTANTS.TOUCH_HOLD_DELAY,
+        touchTimeout: GAME_CONSTANTS.timing.touchHoldDelay,
     });
 
     const numberSize = size * NUMBER_SIZE_RATIO;
 
     // Props for Cells (Back Layer in Board terms)
-    const backProps = useMemo(
-        () => getBackProps(state, getDragProps),
-        [state, getDragProps]
-    );
+    const backProps = useCellFactory(getBackProps, getDragProps, [state]);
 
     // Props for Numbers (Grid Overlay - Front Layer in Board terms)
     const frontProps = useMemo(

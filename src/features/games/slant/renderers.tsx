@@ -4,12 +4,13 @@ import { COLORS, ANIMATIONS } from '../../../config/theme';
 import { SLANT_STYLES } from './constants';
 import { FORWARD, BACKWARD, SlantState } from './boardHandlers';
 import { DragProps } from '../hooks/useDrag';
+import { getPosKey } from '../utils/gameUtils';
 
 export const getBackProps =
-    (state: SlantState, getDragProps: (pos: string) => DragProps) =>
+    (getDragProps: (pos: string) => DragProps, state: SlantState) =>
     (r: number, c: number) => {
         const value = state.grid[r]?.[c];
-        const pos = `${String(r)},${String(c)}`;
+        const pos = getPosKey(r, c);
         const isError = state.cycleCells.has(pos);
         const dragProps = getDragProps(pos);
 
@@ -80,10 +81,9 @@ export const getBackProps =
 export const getFrontProps =
     (state: SlantState, numberSize: number) => (r: number, c: number) => {
         const value = state.numbers[r]?.[c];
-        const hasError = state.errorNodes.has(`${String(r)},${String(c)}`);
-        const isSatisfied = state.satisfiedNodes.has(
-            `${String(r)},${String(c)}`
-        );
+        const pos = getPosKey(r, c);
+        const hasError = state.errorNodes.has(pos);
+        const isSatisfied = state.satisfiedNodes.has(pos);
 
         return {
             sx: {
