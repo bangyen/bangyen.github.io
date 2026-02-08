@@ -1,4 +1,13 @@
-import { invert_matrix } from 'lights-out-wasm';
+import init, { invert_matrix } from 'lights-out-wasm';
+
+// Initialize the Wasm module
+// Since we use vite-plugin-top-level-await, we can wait for it here
+try {
+    await init();
+} catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('Failed to initialize Lights Out Wasm:', e);
+}
 
 export function getMatrix(cols: number): bigint[] {
     if (cols === 1) return [1n];
@@ -501,7 +510,8 @@ export function getProduct(
                 const result = invert_matrix(input, product.length);
                 inverseCache[key] = Array.from(result);
             } catch (_e) {
-                // console.warn('Wasm inversion failed, falling back to JS', e);
+                // eslint-disable-next-line no-console
+                console.warn('Wasm inversion failed, falling back to JS', _e);
                 inverseCache[key] = invertMatrix(product);
             }
         } else {
@@ -509,7 +519,7 @@ export function getProduct(
         }
     }
 
-    const inverse = inverseCache[key];
+    const inverse = inverseCache[key] as bigint[] | undefined;
     const binaryStr = input.join('');
     const binary = binaryStr ? BigInt('0b' + binaryStr) : 0n;
 
@@ -518,6 +528,10 @@ export function getProduct(
         const count = countBits(value);
         return count & 1;
     };
+
+    if (inverse === undefined) {
+        throw new Error('Inverse matrix not found in cache');
+    }
 
     return inverse.map(getParity);
 }
