@@ -6,6 +6,9 @@ import topLevelAwait from 'vite-plugin-top-level-await';
 
 export default defineConfig({
     plugins: [react(), tsconfigPaths(), wasm(), topLevelAwait()],
+    worker: {
+        format: 'es',
+    },
     build: {
         outDir: 'build', // Maintain 'build' for gh-pages compatibility
         // Enable source maps for production debugging (can be disabled for smaller builds)
