@@ -21,7 +21,6 @@ A personal website and portfolio showcasing interactive programming interpreters
 ### Interactive Games
 - **Slant**: Diagonal line logic puzzle
 - **Lights Out**: Grid puzzle game with [algebraic analysis](src/features/games/lights-out/README.md)
-- **Snake**: Classic retro arcade game
 
 ### Knowledge Collections
 - **Geography Quizzes**: Interactive map-based learning using Wikipedia data
@@ -80,6 +79,8 @@ npm start
 - `npm start` - Start Vite development server
 - `npm run build` - Create production build
 - `npm test` - Run Jest tests
+- `npm run test:ci` - Run tests in CI mode
+- `npm run type-check` - Run TypeScript type checking
 - `npm run lint:all` - Run all linting (ESLint, Prettier, Stylelint)
 - `npm run format` - Format code with Prettier
 - `npm run deploy` - Deploy to GitHub Pages
