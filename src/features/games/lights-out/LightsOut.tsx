@@ -7,7 +7,7 @@ import { GameControls } from '../components/GameControls';
 import { PAGE_TITLES } from '../../../config/constants';
 import { GAME_CONSTANTS } from '../config/gameConfig';
 import { LAYOUT } from '../../../config/theme';
-import { getGrid, handleBoard, isSolved } from './boardHandlers';
+import { handleBoard, isSolved, getInitialState } from './boardHandlers';
 import Info from './Info';
 import { STORAGE_KEYS, LAYOUT_CONSTANTS, LIGHTS_OUT_STYLES } from './constants';
 import { useBaseGame } from '../hooks/useBaseGame';
@@ -58,13 +58,7 @@ export default function LightsOut() {
             remBase: 16,
         },
         reducer: handleBoard,
-        getInitialState: (rows, cols) => ({
-            grid: getGrid(rows, cols),
-            score: 0,
-            rows,
-            cols,
-            initialized: false,
-        }),
+        getInitialState,
         winAnimationDelay: GAME_CONSTANTS.timing.winAnimationDelay,
         isSolved: s => s.initialized && isSolved(s.grid),
     });

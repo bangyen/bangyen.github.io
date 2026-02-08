@@ -657,12 +657,12 @@ export function getNextLogicalMove(
     return null;
 }
 
-export function handleBoard(
-    state: SlantState,
-    action: SlantAction
-): SlantState {
-    switch (action.type) {
-        case 'toggle': {
+import { createGameReducer } from '../utils/gameUtils';
+
+export const handleBoard = createGameReducer<SlantState, SlantAction>({
+    getInitialState,
+    customHandler: (state, action) => {
+        if (action.type === 'toggle') {
             if (state.solved) return state;
 
             const { row, col } = action;
@@ -736,59 +736,9 @@ export function handleBoard(
                 satisfiedNodes,
             };
         }
-        case 'hydrate': {
-            return {
-                ...action.state,
-            };
-        }
-        case 'resize': {
-            if (
-                action.rows < GAME_LOGIC_CONSTANTS.MIN_SIZE ||
-                action.cols < GAME_LOGIC_CONSTANTS.MIN_SIZE
-            )
-                return state;
-            const { numbers, solution } = generatePuzzle(
-                action.rows,
-                action.cols
-            );
-            return {
-                grid: Array.from(
-                    { length: action.rows },
-                    () => Array(action.cols).fill(EMPTY) as CellState[]
-                ),
-                numbers,
-                solution,
-                rows: action.rows,
-                cols: action.cols,
-                solved: false,
-                errorNodes: new Set(),
-                cycleCells: new Set(),
-                satisfiedNodes: new Set(),
-            };
-        }
-        case 'new': {
-            const { numbers, solution } = generatePuzzle(
-                state.rows,
-                state.cols
-            );
-            return {
-                ...state,
-                grid: Array.from(
-                    { length: state.rows },
-                    () => Array(state.cols).fill(EMPTY) as CellState[]
-                ),
-                numbers,
-                solution,
-                solved: false,
-                errorNodes: new Set(),
-                cycleCells: new Set(),
-                satisfiedNodes: new Set(),
-            };
-        }
-        default:
-            return state;
-    }
-}
+        return state;
+    },
+});
 
 export function getInitialState(rows: number, cols: number): SlantState {
     const { numbers, solution } = generatePuzzle(rows, cols);

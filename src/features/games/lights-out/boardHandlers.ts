@@ -1,5 +1,6 @@
 import { getProduct } from './matrices';
 import { PRECOMPUTED_SOLUTIONS } from './precomputedTables';
+import { createGameReducer } from '../utils/gameUtils';
 
 export interface BoardState {
     grid: number[];
@@ -9,15 +10,20 @@ export interface BoardState {
     initialized: boolean;
 }
 
-export interface BoardAction {
-    type: string;
-    row?: number;
-    col?: number;
-    moves?: { row: number; col: number }[];
-    newRows?: number;
-    newCols?: number;
-    state?: BoardState;
-}
+export type BoardAction =
+    | { type: 'adjacent'; row: number; col: number }
+    | { type: 'multi_adjacent'; moves: { row: number; col: number }[] }
+    | { type: 'random' | 'randomize' }
+    | {
+          type: 'resize';
+          rows?: number;
+          cols?: number;
+          newRows?: number;
+          newCols?: number;
+      }
+    | { type: 'reset' }
+    | { type: 'new' | 'next' }
+    | { type: 'restore' | 'hydrate'; state: BoardState };
 
 export function getGrid(rows: number, _cols: number): number[] {
     return Array.from({ length: rows }, () => 0);
@@ -128,20 +134,17 @@ function solveLastRow(
         }
     } else {
         // Fallback to getProduct
-        // Convert lastRow to number[]
         const input: number[] = [];
         for (let i = 0; i < cols; i++) {
             input.push((lastRow >> i) & 1);
         }
 
         const result = getProduct(input, rows, cols);
-        // result is number[] of 0s and 1s
         result.forEach((val, idx) => {
             if (val) solutionMask |= 1 << idx;
         });
     }
 
-    // Convert solutionMask to indices
     const indices: number[] = [];
     for (let c = 0; c < cols; c++) {
         if ((solutionMask >> c) & 1) {
@@ -157,44 +160,26 @@ export function getNextMove(
     rows: number,
     cols: number
 ): { row: number; col: number }[] | null {
-    // We shouldn't modify the input grid, but we need to simulate chasing.
-    // Copy steps:
     const tempGrid = [...grid];
     const moves: { row: number; col: number }[] = [];
 
-    // Phase 1: Chase lights down
     for (let r = 0; r < rows - 1; r++) {
         const currentRow = tempGrid[r];
         if (currentRow === undefined) continue;
         for (let c = 0; c < cols; c++) {
             if ((currentRow >> c) & 1) {
-                // Must click below
                 moves.push({ row: r + 1, col: c });
-                // Update tempGrid accordingly
-                // We only truly need to update the rows that affect future decisions.
-                // Clicking (r+1, c) affects (r, c) - clears it? Yes.
-                // Affects (r+1, c), (r+2, c), (r+1, c+/-1).
-                // We only care about clearing row r so we can move to r+1.
-                // Actually, to know the state of row r+1 (for step r+2), we must update row r+1.
-                // We don't care about row r anymore as it becomes 0.
-
-                // Toggle r+1 neighbors
                 flipAdjInPlace(r + 1, c, tempGrid, rows, cols);
             }
         }
     }
 
-    // Phase 1: Chase lights down completes
-
-    // If there are chase moves, return them immediately so the user can clear the board top-down
     if (moves.length > 0) {
         return moves;
     }
 
-    // Phase 2: Check last row
     const lastRow = tempGrid[rows - 1];
     if (lastRow !== undefined && lastRow !== 0) {
-        // Phase 3: Solve last row
         const solution = solveLastRow(rows, cols, lastRow);
         if (solution && solution.length > 0) {
             return solution.map(col => ({ row: 0, col }));
@@ -204,71 +189,68 @@ export function getNextMove(
     return null;
 }
 
-export function handleBoard(
-    state: BoardState,
-    action: BoardAction
-): BoardState {
-    const { type, row, col } = action;
+export function getInitialState(rows: number, cols: number): BoardState {
+    return {
+        grid: getGrid(rows, cols),
+        score: 0,
+        rows,
+        cols,
+        initialized: false,
+    };
+}
 
-    let { grid, score, rows, cols, initialized } = state;
+export const handleBoard = createGameReducer<BoardState, BoardAction>({
+    getInitialState,
+    customHandler: (state, action) => {
+        const { rows, cols } = state;
 
-    switch (type) {
-        case 'adjacent': {
-            if (row !== undefined && col !== undefined) {
-                grid = flipAdj(row, col, grid, rows, cols);
+        switch (action.type) {
+            case 'adjacent': {
+                return {
+                    ...state,
+                    grid: flipAdj(
+                        action.row,
+                        action.col,
+                        state.grid,
+                        rows,
+                        cols
+                    ),
+                };
             }
-            break;
-        }
-        case 'multi_adjacent': {
-            if (action.moves) {
-                // To support mass updates efficiently, we can clone once
-                const newGrid = [...grid];
+            case 'multi_adjacent': {
+                const newGrid = [...state.grid];
                 action.moves.forEach(({ row: r, col: c }) => {
                     flipAdjInPlace(r, c, newGrid, rows, cols);
                 });
-                grid = newGrid;
+                return { ...state, grid: newGrid };
             }
-            break;
-        }
-        case 'random':
-        case 'randomize': {
-            grid = randomize(rows, cols);
-            break;
-        }
-        case 'resize': {
-            const { newRows, newCols } = action;
-            if (newRows !== undefined && newCols !== undefined) {
-                rows = newRows;
-                cols = newCols;
-                grid = randomize(rows, cols);
-                initialized = true;
+            case 'random':
+            case 'randomize': {
+                return {
+                    ...state,
+                    grid: randomize(rows, cols),
+                    initialized: true,
+                };
             }
-            break;
-        }
-        case 'reset':
-            grid = getGrid(rows, cols);
-            score = 0;
-            break;
-        case 'new':
-        case 'next':
-            grid = randomize(rows, cols);
-            score += 1;
-            break;
-        case 'restore': {
-            if (action.state) {
-                return { ...action.state };
+            case 'resize': {
+                const r = action.newRows ?? action.rows ?? state.rows;
+                const c = action.newCols ?? action.cols ?? state.cols;
+                return {
+                    ...getInitialState(r, c),
+                    grid: randomize(r, c),
+                    initialized: true,
+                };
             }
-            break;
+            case 'new':
+            case 'next': {
+                return {
+                    ...getInitialState(rows, cols),
+                    grid: randomize(rows, cols),
+                    score: state.score + 1,
+                    initialized: true,
+                };
+            }
         }
-        default:
-            break;
-    }
-
-    return {
-        grid,
-        score,
-        rows,
-        cols,
-        initialized: initialized || false,
-    };
-}
+        return state;
+    },
+});
