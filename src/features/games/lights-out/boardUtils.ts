@@ -3,7 +3,7 @@ import { COLORS } from '../../../config/theme';
 import { Palette, Getters } from '../components/Board';
 
 interface GridState {
-    grid: number[][];
+    grid: number[];
     rows: number;
     cols: number;
 }
@@ -11,7 +11,7 @@ interface GridState {
 function borderHandler(
     row: number,
     col: number,
-    getTile: (row: number, col: number) => unknown
+    getTile: (row: number, col: number) => number
 ): Record<string, unknown> {
     const self = getTile(row, col);
     const up = getTile(row - 1, col);
@@ -36,7 +36,7 @@ function borderHandler(
 function fillerHandler(
     row: number,
     col: number,
-    getTile: (row: number, col: number) => unknown
+    getTile: (row: number, col: number) => number
 ): boolean {
     const topLeft = getTile(row, col);
     const topRight = getTile(row, col + 1);
@@ -44,8 +44,7 @@ function fillerHandler(
     const botRight = getTile(row + 1, col + 1);
     let color = true;
 
-    const total =
-        Number(topLeft) + Number(topRight) + Number(botLeft) + Number(botRight);
+    const total = topLeft + topRight + botLeft + botRight;
 
     if ((!topLeft || !botRight) && total < 3) color = false;
 
@@ -61,7 +60,7 @@ export function usePalette(_score: number): Palette {
 }
 
 export function useGetters(
-    getTile: (row: number, col: number) => unknown,
+    getTile: (row: number, col: number) => number,
     palette: Palette
 ): Getters {
     const getColor = useCallback(
@@ -110,8 +109,14 @@ export function useHandler(state: GridState, palette: Palette): Getters {
 
     const getTile = useCallback(
         (row: number, col: number) => {
-            if (row < 0 || col < 0 || row >= rows || col >= cols) return -1;
-            return grid[row]?.[col] ?? -1;
+            if (row < 0 || col < 0 || row >= rows || col >= cols) return 0; // Boundary check, return 0 for out of bounds
+            // Bitmask access: check if the c-th bit is set in row r.
+            // Note: Typically bit 0 is LSB. Let's assume col 0 is LSB or MSB?
+            // Usually visual representation: col 0 is left.
+            // In bitmask `1 << col`, col 0 is 1. That's fine.
+            const r = grid[row];
+            if (r === undefined) return 0;
+            return (r >> col) & 1;
         },
         [grid, rows, cols]
     );

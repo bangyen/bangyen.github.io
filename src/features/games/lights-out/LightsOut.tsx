@@ -85,8 +85,8 @@ export default function LightsOut() {
     const allOn = useMemo(
         () =>
             state.initialized &&
-            state.grid.flat().every((cell: number) => cell === 1),
-        [state.initialized, state.grid]
+            state.grid.every((row: number) => row === (1 << cols) - 1),
+        [state.initialized, state.grid, cols]
     );
 
     const getters = useHandler(state, palette);
