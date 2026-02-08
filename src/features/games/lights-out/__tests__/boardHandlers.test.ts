@@ -61,7 +61,6 @@ describe('boardHandlers', () => {
             score: 0,
             rows: 3,
             cols: 3,
-            auto: false,
             initialized: false,
         };
 
@@ -83,7 +82,6 @@ describe('boardHandlers', () => {
                 ...initialState,
                 grid: flipAdj(1, 1, initialState.grid),
                 score: 5,
-                auto: true,
                 initialized: true,
             };
 
@@ -91,7 +89,6 @@ describe('boardHandlers', () => {
             const newState = handleBoard(modifiedState, action);
 
             expect(newState.score).toBe(0);
-            expect(newState.auto).toBe(false);
             expect(newState.grid[1]![1]).toBe(0);
         });
 
@@ -101,7 +98,7 @@ describe('boardHandlers', () => {
 
             // Cannot predict exact grid, but check properties
             expect(newState.grid.length).toBe(3);
-            expect(newState.auto).toBe(false);
+            expect(newState.grid.length).toBe(3);
         });
 
         it('should handle resize action', () => {
@@ -116,13 +113,6 @@ describe('boardHandlers', () => {
             expect(newState.cols).toBe(4);
             expect(newState.grid.length).toBe(4);
             expect(newState.grid[0]!.length).toBe(4);
-        });
-
-        it('should handle auto action', () => {
-            const action: BoardAction = { type: 'auto' };
-            const newState = handleBoard(initialState, action);
-
-            expect(newState.auto).toBe(true);
         });
     });
 

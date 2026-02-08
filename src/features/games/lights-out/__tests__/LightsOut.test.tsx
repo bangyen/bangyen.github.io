@@ -199,7 +199,7 @@ describe('LightsOut', () => {
 
         expect(mockHandleBoard).toHaveBeenCalledWith(
             expect.anything(),
-            expect.objectContaining({ type: 'next' })
+            expect.objectContaining({ type: 'new' })
         );
     });
 

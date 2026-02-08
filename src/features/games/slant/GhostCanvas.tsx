@@ -301,6 +301,8 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
 
             return {
                 ...dragProps,
+                'data-pos': pos,
+                'data-type': 'cell',
                 sx: {
                     ...dragProps.sx,
                     cursor: 'pointer',

@@ -172,6 +172,14 @@ export function handleBoard(
             }
             break;
         }
+        case 'multi_adjacent': {
+            if (action.moves) {
+                action.moves.forEach(({ row, col }) => {
+                    grid = flipAdj(row, col, grid);
+                });
+            }
+            break;
+        }
         case 'random':
         case 'randomize': {
             grid = randomize(rows, cols);
