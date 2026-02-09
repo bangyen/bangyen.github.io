@@ -3,6 +3,7 @@
   "homepage": "https://bangyen.github.io",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "bun@1.3.9",
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
@@ -11,19 +12,19 @@
     "@types/pako": "^2.0.4",
     "gh-pages": "^6.3.0",
     "katex": "^0.16.28",
-    "lights-out-wasm": "file:lights-out-wasm/pkg",
+    "lights-out-wasm": "file:wasm/lights-out-wasm/pkg",
     "pako": "^2.1.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-router-dom": "^7.12.0",
     "recharts": "^3.2.1",
-    "slant-wasm": "file:slant-wasm/pkg"
+    "slant-wasm": "file:wasm/slant-wasm/pkg"
   },
   "scripts": {
-    "start": "bun x --bun vite",
+    "start": "vite",
     "predeploy": "bun run build",
     "deploy": "gh-pages -b gh-pages -d build",
-    "build": "bun x --bun vite build",
+    "build": "vite build",
     "build:analyze": "bun run build && du -sh build/ && ls -lh build/assets/*.js | awk '{print $5, $9}'",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -41,7 +42,7 @@
     "generate:art": "bun scripts/generateArtData.ts",
     "data:update": "bun scripts/updateResearchData.ts",
     "gods-number": "bun src/features/games/lights-out/scripts/gods_number.ts",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "prettier": {
     "semi": true,
@@ -110,7 +111,6 @@
     "stylelint": "^16.24.0",
     "stylelint-config-standard": "^39.0.0",
     "terser": "^5.46.0",
-    "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.53.1",
     "vite": "^7.3.1",

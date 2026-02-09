@@ -6,7 +6,7 @@ import {
     usePalette,
     useGetters,
     useHandler,
-} from '../../lights-out/boardUtils';
+} from '../../lights-out/hooks/boardUtils';
 import { COLORS } from '../../../../config/theme';
 
 describe('Board Component', () => {

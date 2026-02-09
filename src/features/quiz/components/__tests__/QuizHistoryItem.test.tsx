@@ -18,11 +18,17 @@ const mockItem = {
 };
 
 // We need to typecase loosely to test specific modes like CCTLD without strict type constraints in tests
-const mockCCTLDItem = { ...mockItem, code: '.tc', language: 'Test' };
-const mockPhoneItem = { ...mockItem, code: '+1' };
-const mockVehicleItem = { ...mockItem, code: 'TC' };
+const mockCCTLDItem = {
+    ...mockItem,
+    type: 'cctld' as const,
+    code: '.tc',
+    language: 'Test',
+};
+const mockPhoneItem = { ...mockItem, type: 'telephone' as const, code: '+1' };
+const mockVehicleItem = { ...mockItem, type: 'vehicle' as const, code: 'TC' };
 const mockDrivingSideItem = {
     ...mockItem,
+    type: 'driving_side' as const,
     side: 'Left' as const,
     switched: false,
 };

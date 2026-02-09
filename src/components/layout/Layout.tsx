@@ -2,33 +2,63 @@ import React from 'react';
 import { Container, Box } from '../mui';
 import { SPACING, COMPONENT_VARIANTS, COLORS } from '../../config/theme';
 
+/**
+ * Props for Section component.
+ */
 interface SectionProps {
+    /** Content to render inside the section */
     children: React.ReactNode;
+    /** Optional ID for anchor links */
     id?: string;
+    /** Vertical padding (default: SPACING.padding.lg) */
     paddingY?: string;
+    /** Horizontal padding (default: SPACING.padding.lg) */
     paddingX?: string;
+    /** Maximum width of content (default: SPACING.maxWidth.lg) */
     maxWidth?: string;
+    /** Additional MUI sx props */
     sx?: Record<string, unknown>;
+    /** Additional props passed to Container */
     [key: string]: unknown;
 }
 
+/**
+ * Props for BackgroundBox component.
+ */
 interface BackgroundBoxProps {
+    /** Background content (gradients, patterns, etc.) */
     children: React.ReactNode;
+    /** Additional MUI sx props */
     sx?: Record<string, unknown>;
+    /** Additional props passed to Box */
     [key: string]: unknown;
 }
 
+/**
+ * Props for HeroContainer component.
+ */
 interface HeroContainerProps {
+    /** Hero content to display */
     children: React.ReactNode;
+    /** Bottom padding (default: '4rem') */
     paddingBottom?: string;
+    /** Maximum width of content (default: SPACING.maxWidth.lg) */
     maxWidth?: string;
+    /** Additional MUI sx props */
     sx?: Record<string, unknown>;
+    /** Additional props passed to Container */
     [key: string]: unknown;
 }
 
+/**
+ * Props for PageLayout component.
+ */
 interface PageLayoutProps {
+    /** Page content */
     children: React.ReactNode;
+    /** Additional MUI sx props */
     sx?: Record<string, unknown>;
+    /** Additional props passed to Box */
     [key: string]: unknown;
 }
 

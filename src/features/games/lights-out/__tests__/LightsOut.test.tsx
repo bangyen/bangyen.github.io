@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { PAGE_TITLES } from '../../../../config/constants';
-import * as boardHandlers from '../boardHandlers';
-import { BoardState, BoardAction } from '../boardHandlers';
+import * as boardHandlers from '../utils/boardHandlers';
+import { BoardState, BoardAction } from '../utils/boardHandlers';
 import * as hooks from '../../../../hooks';
 import { vi, type Mock } from 'vitest';
-import LightsOut from '../LightsOut';
+import LightsOut from '../pages/LightsOut';
 
 // Mock icons
 vi.mock('../../../../components/icons', async importOriginal => {
@@ -32,7 +32,7 @@ vi.mock('../../../../hooks', () => ({
 }));
 
 // Mock boardHandlers to control game logic
-vi.mock('../boardHandlers', () => ({
+vi.mock('../utils/boardHandlers', () => ({
     getGrid: vi.fn(() => Array(4).fill(Array(4).fill(0)) as number[][]),
     getInitialState: vi.fn((rows: number, cols: number) => ({
         grid: Array.from({ length: rows }, () => 0),
@@ -57,7 +57,7 @@ vi.mock('../boardHandlers', () => ({
 }));
 
 // Mock boardUtils
-vi.mock('../boardUtils', () => ({
+vi.mock('../hooks/boardUtils', () => ({
     useHandler: () => ({
         getColor: () => ({ front: 'white', back: 'black' }),
         getBorder: () => ({}),
@@ -128,7 +128,7 @@ vi.mock('../../../../components/ui/TooltipButton', () => ({
     },
 }));
 
-vi.mock('../Info', () => ({
+vi.mock('../components/Info', () => ({
     default: function MockInfo() {
         return <div data-testid="info-modal">Info</div>;
     },

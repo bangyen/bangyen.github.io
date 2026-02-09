@@ -4,6 +4,7 @@ import { useGamePersistence } from './useGamePersistence';
 import { useWinTransition } from './useWinTransition';
 import { usePageTitle } from './usePageTitle';
 import { useResponsiveBoardSize } from './useResponsiveBoardSize';
+import { BaseGameState, BaseGameAction } from '@/utils/gameUtils';
 
 interface BaseGameConfig<S, A> {
     storageKeys: {
@@ -36,7 +37,7 @@ interface BaseGameConfig<S, A> {
         rowOffset?: number;
         colOffset?: number;
     };
-    reducer: (state: S, action: A) => S;
+    reducer: (state: S, action: A | BaseGameAction<S>) => S;
     getInitialState: (rows: number, cols: number) => S;
     onReset?: () => void;
     winAnimationDelay: number;
@@ -48,7 +49,10 @@ interface BaseGameConfig<S, A> {
     };
 }
 
-export function useBaseGame<S, A>({
+export function useBaseGame<
+    S extends BaseGameState,
+    A extends { type: string },
+>({
     storageKeys,
     pageTitle,
     gridConfig,
@@ -82,7 +86,7 @@ export function useBaseGame<S, A>({
     const solved = useMemo(() => isSolved(state), [state, isSolved]);
 
     const handleNext = useCallback(() => {
-        dispatch({ type: 'new' } as unknown as A);
+        dispatch({ type: 'new' });
     }, [dispatch]);
 
     useGamePersistence<S>({
@@ -91,9 +95,9 @@ export function useBaseGame<S, A>({
         cols,
         state,
         onRestore: saved => {
-            dispatch({ type: 'restore', state: saved } as unknown as A);
+            dispatch({ type: 'restore', state: saved });
             // Also handle 'hydrate' if that's what Slant uses
-            dispatch({ type: 'hydrate', state: saved } as unknown as A);
+            dispatch({ type: 'hydrate', state: saved });
         },
         ...persistence,
     });
@@ -108,7 +112,7 @@ export function useBaseGame<S, A>({
             cols,
             newRows: rows,
             newCols: cols,
-        } as unknown as A);
+        });
     }, [rows, cols, dispatch]);
 
     const resolvedPaddingOffset = useMemo(() => {

@@ -12,7 +12,8 @@ import {
     handleBoard,
     getNextMove,
     BoardAction,
-} from '../boardHandlers';
+} from '../utils/boardHandlers';
+import { createGridSize, createCellIndex } from '@/utils/types';
 
 // Helper to access bitmask grid
 function getBit(grid: number[], r: number, c: number): number {
@@ -74,16 +75,16 @@ describe('boardHandlers', () => {
         const initialState = {
             grid: getGrid(3, 3),
             score: 0,
-            rows: 3,
-            cols: 3,
+            rows: createGridSize(3),
+            cols: createGridSize(3),
             initialized: false,
         };
 
         it('should handle adjacent action', () => {
             const action: BoardAction = {
                 type: 'adjacent',
-                row: 1,
-                col: 1,
+                row: createCellIndex(1),
+                col: createCellIndex(1),
             };
             const newState = handleBoard(initialState, action);
 
@@ -173,8 +174,8 @@ describe('boardHandlers', () => {
             const state = {
                 grid: getGrid(3, 3),
                 score: 0,
-                rows: 3,
-                cols: 3,
+                rows: createGridSize(3),
+                cols: createGridSize(3),
                 auto: false,
                 initialized: true,
             };
@@ -190,15 +191,15 @@ describe('boardHandlers', () => {
             const state = {
                 grid: getGrid(3, 3),
                 score: 0,
-                rows: 3,
-                cols: 3,
+                rows: createGridSize(3),
+                cols: createGridSize(3),
                 auto: false,
                 initialized: true,
             };
 
             const moves = [
-                { row: 0, col: 0 },
-                { row: 0, col: 1 },
+                { row: createCellIndex(0), col: createCellIndex(0) },
+                { row: createCellIndex(0), col: createCellIndex(1) },
             ];
             const action: BoardAction = { type: 'multi_adjacent', moves };
 

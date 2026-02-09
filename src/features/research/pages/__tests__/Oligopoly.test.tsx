@@ -69,7 +69,7 @@ const originalResponse = (global as unknown as { Response: typeof Response })
     .Response;
 Object.defineProperty(global, 'Response', {
     value: class extends originalResponse {
-        async text() {
+        override async text() {
             const self = this as unknown as { _data: unknown };
             if (self._data instanceof ReadableStream) {
                 return '[{"round":1, "price":10, "hhi":0.5, "num_firms":3, "model_type":"cournot", "demand_elasticity":2.0, "base_price":40, "collusion_enabled":false}]';

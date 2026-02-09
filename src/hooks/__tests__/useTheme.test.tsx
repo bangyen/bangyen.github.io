@@ -1,11 +1,12 @@
 import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import { ThemeProvider, useThemeContext } from '../useTheme';
+import { Mock, MockInstance } from 'vitest';
 
 describe('useTheme (ThemeProvider and useThemeContext)', () => {
-    let matchMediaSpy: any;
-    let addListener: any;
-    let removeListener: any;
+    let matchMediaSpy: MockInstance;
+    let addListener: Mock;
+    let removeListener: Mock;
 
     beforeEach(() => {
         localStorage.clear();

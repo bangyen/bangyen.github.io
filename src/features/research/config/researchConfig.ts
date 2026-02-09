@@ -1,4 +1,4 @@
-import { ResearchConfig } from '../types/research';
+import { ResearchConfig } from '../types';
 
 export const RESEARCH_CONSTANTS: ResearchConfig = {
     oligopoly: {

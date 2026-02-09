@@ -1,3 +1,1 @@
-export * from './matrixAlgebra';
-export * from './polynomialUtils';
-export * from './inversion';
+export * from '../../../utils/math/gf2';

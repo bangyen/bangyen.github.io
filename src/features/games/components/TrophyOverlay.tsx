@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box } from '../../../components/mui';
 import { EmojiEventsRounded } from '../../../components/icons';
 
@@ -21,9 +21,29 @@ export function TrophyOverlay({
     secondaryColor,
     useSecondary = false,
 }: TrophyOverlayProps) {
+    const [isInteractive, setIsInteractive] = useState(false);
+
+    useEffect(() => {
+        if (show) {
+            const timer = setTimeout(() => {
+                setIsInteractive(true);
+            }, 500);
+            return () => {
+                clearTimeout(timer);
+            };
+        } else {
+            setIsInteractive(false);
+        }
+    }, [show]);
+
     return (
         <Box
-            onClick={onReset}
+            onClick={e => {
+                if (isInteractive && onReset) {
+                    e.stopPropagation();
+                    onReset();
+                }
+            }}
             sx={{
                 position: 'absolute',
                 inset: 0,
@@ -34,9 +54,10 @@ export function TrophyOverlay({
                 transform: show ? 'scale(1)' : 'scale(0.5)',
                 visibility: show ? 'visible' : 'hidden',
                 transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                cursor: 'pointer',
+                cursor: isInteractive ? 'pointer' : 'default',
                 zIndex: 10,
                 backgroundColor: 'transparent',
+                pointerEvents: show ? 'auto' : 'none',
             }}
         >
             {size > 0 && (

@@ -3,10 +3,30 @@ import { useQuizFilter } from '../hooks/quiz';
 import { QuizItem, DrivingSide, QuizSettings } from '../types/quiz';
 
 const MOCK_DATA: DrivingSide[] = [
-    { country: 'Country A', side: 'Left', switched: false },
-    { country: 'Country B', side: 'Right', switched: false },
-    { country: 'Country C', side: 'Left', switched: true },
-    { country: 'Country D', side: 'Right', switched: true },
+    {
+        type: 'driving_side',
+        country: 'Country A',
+        side: 'Left',
+        switched: false,
+    },
+    {
+        type: 'driving_side',
+        country: 'Country B',
+        side: 'Right',
+        switched: false,
+    },
+    {
+        type: 'driving_side',
+        country: 'Country C',
+        side: 'Left',
+        switched: true,
+    },
+    {
+        type: 'driving_side',
+        country: 'Country D',
+        side: 'Right',
+        switched: true,
+    },
 ];
 
 describe('useQuizFilter - Driving Side', () => {

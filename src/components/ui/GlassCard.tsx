@@ -3,14 +3,48 @@ import { Box } from '../mui';
 import { SPACING, COMPONENT_VARIANTS } from '../../config/theme';
 import type { SxProps, Theme } from '@mui/material/styles';
 
+/**
+ * Props for GlassCard component.
+ */
 interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
+    /** Content to render inside the card */
     children: ReactNode;
+    /** Padding around content (default: SPACING.padding.md) */
     padding?: number | string;
+    /** Additional MUI sx props */
     sx?: SxProps<Theme>;
+    /** CSS class name */
     className?: string;
+    /** Whether to apply interactive hover effects */
     interactive?: boolean;
 }
 
+/**
+ * Glassmorphism-styled card component with blur effect and semi-transparent background.
+ *
+ * Features:
+ * - Frosted glass aesthetic with backdrop blur
+ * - Optional interactive variant with hover effects
+ * - Customizable padding and styling
+ * - Forward ref support for DOM access
+ *
+ * @param props - Component props
+ * @param ref - Forwarded ref to the underlying div element
+ * @returns Styled card component
+ *
+ * @example
+ * ```tsx
+ * // Basic card
+ * <GlassCard>
+ *   <Typography>Content</Typography>
+ * </GlassCard>
+ *
+ * // Interactive card with custom padding
+ * <GlassCard interactive padding="2rem">
+ *   <Button>Click me</Button>
+ * </GlassCard>
+ * ```
+ */
 export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
     function GlassCard(
         {

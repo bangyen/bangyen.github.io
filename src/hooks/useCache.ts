@@ -1,12 +1,44 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { GLOBAL_CONFIG } from '../config/constants';
 
-// Cache Hook
+/**
+ * Action types for cache navigation and management.
+ */
 export interface CacheAction {
+    /** Action type: navigate forward, backward, or clear cache */
     type: 'next' | 'prev' | 'clear';
+    /** Payload to use as fallback or initial state */
     payload: unknown;
 }
 
+/**
+ * Custom hook for managing state history with undo/redo functionality.
+ *
+ * Implements a cache-based state management system that:
+ * - Maintains a history of states for undo/redo operations
+ * - Prevents double-processing when enabled in global config
+ * - Supports forward navigation (redo) and backward navigation (undo)
+ * - Allows clearing the entire cache
+ *
+ * @template T - Type of state being cached
+ * @param getState - Function to compute next state from current state
+ * @returns Cache dispatcher function that accepts CacheAction and returns state
+ *
+ * @example
+ * ```tsx
+ * const getNextState = (state: GameState) => ({ ...state, moves: state.moves + 1 });
+ * const dispatch = useCache(getNextState);
+ *
+ * // Navigate forward (redo or compute next)
+ * const newState = dispatch({ type: 'next', payload: initialState });
+ *
+ * // Navigate backward (undo)
+ * const prevState = dispatch({ type: 'prev', payload: initialState });
+ *
+ * // Clear cache
+ * dispatch({ type: 'clear', payload: resetState });
+ * ```
+ */
 export function useCache<T>(getState: (state: T) => T) {
     const cache = useRef<T[]>([]);
     const index = useRef<number>(0);

@@ -190,12 +190,12 @@ export function handleToolbar(
         });
     };
 
-    const pauseStateMap: Record<string, boolean> = {
+    const pauseStateMap = {
         run: false,
         stop: true,
         reset: true,
         prev: true,
-    };
+    } as const;
 
     switch (type) {
         case 'run':

@@ -6,9 +6,9 @@ import {
     getStates,
     handleChase,
     getCalculator,
-} from '../chaseHandlers';
+} from '../utils/chaseHandlers';
 import * as matrices from '../matrices';
-import * as boardHandlers from '../boardHandlers';
+import * as boardHandlers from '../utils/boardHandlers';
 
 // Mock getProduct from matrices
 vi.mock('../matrices', () => ({

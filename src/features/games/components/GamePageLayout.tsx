@@ -30,6 +30,7 @@ interface GamePageLayoutProps {
     secondaryColor?: string;
     useSecondaryTrophy?: boolean;
     boardSx?: SxProps<Theme>;
+    onClick?: (e: React.MouseEvent) => void;
 }
 
 export function GamePageLayout({
@@ -50,12 +51,14 @@ export function GamePageLayout({
     secondaryColor,
     useSecondaryTrophy = false,
     boardSx,
+    onClick,
 }: GamePageLayoutProps & { _title?: string }) {
     const _mobile = useMobile('sm');
 
     return (
         <Grid
             container
+            onClick={onClick}
             minHeight="100vh"
             flexDirection="column"
             sx={{

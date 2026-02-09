@@ -1,9 +1,10 @@
 import { renderHook, act } from '@testing-library/react';
 import { useKeys } from '../useKeys';
+import { MockInstance } from 'vitest';
 
 describe('useKeys hook', () => {
-    let addSpy: any;
-    let removeSpy: any;
+    let addSpy: MockInstance;
+    let removeSpy: MockInstance;
 
     beforeEach(() => {
         addSpy = vi.spyOn(document, 'addEventListener');

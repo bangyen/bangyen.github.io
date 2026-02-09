@@ -40,9 +40,9 @@ export const RESEARCH_STYLES = {
         RESULT_CARD_HEIGHT: 480,
         INNER_PADDING: '1rem',
         INNER_PADDING_SM: '0.6rem 0.8rem',
-        FONT_SIZE_XS: '0.65rem',
-        FONT_SIZE_SM: '0.75rem',
-        FONT_SIZE_MD: '0.85rem',
+        FONT_SIZE_XS: '0.75rem',
+        FONT_SIZE_SM: '0.85rem',
+        FONT_SIZE_MD: '0.95rem',
         CARD_RADIUS: '6px',
     },
     // Animations

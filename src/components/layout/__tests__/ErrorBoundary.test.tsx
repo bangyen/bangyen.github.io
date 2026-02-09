@@ -127,8 +127,8 @@ describe('ErrorBoundary', () => {
     });
 
     test('componentDidCatch in production environment', () => {
-        const originalEnv = process.env.NODE_ENV;
-        process.env.NODE_ENV = 'production';
+        const originalEnv = process.env['NODE_ENV'];
+        process.env['NODE_ENV'] = 'production';
 
         render(
             <ErrorBoundary>
@@ -139,6 +139,6 @@ describe('ErrorBoundary', () => {
         expect(console.error).toHaveBeenCalled();
 
         // Reset env
-        process.env.NODE_ENV = originalEnv;
+        process.env['NODE_ENV'] = originalEnv;
     });
 });

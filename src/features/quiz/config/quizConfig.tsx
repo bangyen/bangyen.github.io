@@ -10,24 +10,34 @@ import {
     DrivingSide,
     TelephoneCode,
     VehicleCode,
+    FilterFunction,
 } from '../types/quiz';
+import {
+    filterByLanguage,
+    filterByZone,
+    filterByConvention,
+    filterBySwitch,
+    filterBySide,
+    filterByLetter,
+} from './quizFilters';
 
-// Data imports
-import cctldsData from '../data/cctlds.json';
-import drivingSideData from '../data/driving_sides.json';
-import telephoneData from '../data/telephone_codes.json';
-import vehicleData from '../data/vehicle_codes.json';
+// Data imports are now handled dynamically via getData functions in QUIZ_CONFIGS
 
 export const QUIZ_TITLES = {
     wikipediaQuiz: 'Wikipedia Quizzes | Bangyen',
 };
 
+/**
+ * UI design tokens and constants used across the quiz feature.
+ */
 export const QUIZ_UI_CONSTANTS = {
+    /** Start button style overrides */
     START_BUTTON: {
         FONT_SIZE: { xs: '1rem', sm: '1.2rem' },
         MIN_WIDTH: { xs: 210, sm: 300 },
         LETTER_SPACING: '0.05em',
     },
+    /** Styles for the main question card */
     QUESTION_CARD: {
         FONT_SIZE: {
             DEFAULT: { xs: '3rem', sm: '4rem' },
@@ -36,20 +46,25 @@ export const QUIZ_UI_CONSTANTS = {
         MIN_HEIGHT: 360,
         MAX_WIDTH: 450,
     },
+    /** Button padding and font size for common actions */
     ACTION_BUTTON: {
         FONT_SIZE: '0.8rem',
         PY: 1.5,
     },
+    /** Progress bar height */
     PROGRESS_BAR: {
         HEIGHT: 4,
     },
+    /** Feedback UI constants (e.g., flag size) */
     FEEDBACK: {
         FLAG_HEIGHT: 24,
     },
+    /** History list item constants */
     HISTORY_ITEM: {
         FLAG_HEIGHT: 16,
         FLAG_BORDER_RADIUS: '1px',
     },
+    /** Badge dimensions and text size */
     BADGE: {
         HEIGHT: 20,
         FONT_SIZE: '0.75rem',
@@ -73,6 +88,10 @@ export const QUIZ_GAME_CONSTANTS = {
 
 export const CCTLD_LANGUAGES = ['All', 'English', 'Non-English'];
 
+/**
+ * Semantic aliases for country names to make the quiz more forgiving.
+ * Maps common abbreviations or shortened names to their full official names.
+ */
 export const CCTLD_ALIASES: Record<string, string[]> = {
     'united arab emirates': ['uae'],
     'united states': ['us', 'usa'],
@@ -125,24 +144,42 @@ export const DRIVING_SIDE_OPTIONS = [
     { label: 'Right', value: 'Right' },
 ];
 
+/**
+ * Configuration schema for a specific quiz type.
+ */
 export interface QuizConfig {
+    /** Main displayed title */
     title: string;
+    /** Short descriptive subtitle */
     subtitle: string;
+    /** Wikipedia or source documentation URL */
     infoUrl: string;
-    data: QuizItem[];
+    /** Function to load the raw data array for the quiz */
+    getData: () => Promise<QuizItem[]>;
+    /** Starting settings for new games */
     defaultSettings: QuizSettings;
+    /** Whether the quiz supports different game modes (e.g., Code -> Country vs Country -> Code) */
     hasModeSelect: boolean;
+    /** Available modes if hasModeSelect is true */
     modes?: { value: GameMode; label: string }[];
+    /** Allowable amounts of questions for a session */
     maxQuestionOptions: number[];
+    /** Renders the instructional prompt (e.g., "What is the code for...") */
     renderQuestionPrompt: (mode: string) => string;
+    /** Renders the central question content (big text or image) */
     renderQuestionContent: (item: QuizItem, mode: string) => React.ReactNode;
+    /** Validates user input against the correct answer */
     checkAnswer: (
         input: string,
         item: QuizItem,
         settings: QuizSettings
-    ) => { isCorrect: boolean; expected: string; points: number };
+    ) => Promise<{ isCorrect: boolean; expected: string; points: number }>;
+    /** Optional detailed feedback about the answer's origin/etymology */
     renderFeedbackOrigin?: (item: QuizItem) => React.ReactNode;
+    /** Optional custom rendering for the entire game area */
     customGameRender?: (props: unknown) => React.ReactNode;
+    /** Filter functions to apply to quiz data based on settings */
+    filters?: FilterFunction[];
 }
 
 export const ART_NATIONALITIES = [
@@ -171,7 +208,10 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
         title: 'Internet Domain Quiz',
         subtitle: 'Test your knowledge of Internet country codes',
         infoUrl: 'https://en.wikipedia.org/wiki/Country_code_top-level_domain',
-        data: cctldsData as CCTLD[],
+        getData: async () => {
+            const data = (await import('../data/cctlds.json')).default;
+            return data.map(item => ({ ...item, type: 'cctld' as const }));
+        },
         defaultSettings: {
             mode: 'toCountry',
             allowRepeats: false,
@@ -219,7 +259,11 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
                     normalizedInput = '.' + normalizedInput;
                 correct = normalize(normalizedInput) === normalize(expected);
             }
-            return { isCorrect: correct, expected, points: correct ? 1 : 0 };
+            return Promise.resolve({
+                isCorrect: correct,
+                expected,
+                points: correct ? 1 : 0,
+            });
         },
         renderFeedbackOrigin: item => {
             const cctldItem = item as CCTLD;
@@ -239,12 +283,22 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
                 </Typography>
             );
         },
+        filters: [filterByLanguage, filterByLetter],
     },
     driving_side: {
         title: 'Driving Side Quiz',
         subtitle: 'Test your knowledge of global road rules',
         infoUrl: 'https://en.wikipedia.org/wiki/Left-_and_right-hand_traffic',
-        data: drivingSideData as DrivingSide[],
+        getData: async () => {
+            const data = (await import('../data/driving_sides.json')).default;
+            return data.map(
+                item =>
+                    ({
+                        ...item,
+                        type: 'driving_side',
+                    }) as DrivingSide
+            );
+        },
         defaultSettings: {
             mode: 'guessing',
             allowRepeats: false,
@@ -328,21 +382,21 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
                     drivingItem.country,
                     CCTLD_ALIASES
                 );
-                return {
+                return Promise.resolve({
                     isCorrect,
                     expected: drivingItem.country,
                     points: isCorrect ? 1 : 0,
-                };
+                });
             }
 
             const normalizedInput = normalize(input);
             const normalizedCorrect = normalize(drivingItem.side);
             const isCorrect = normalizedInput === normalizedCorrect;
-            return {
+            return Promise.resolve({
                 isCorrect,
                 expected: drivingItem.side,
                 points: isCorrect ? 1 : 0,
-            };
+            });
         },
         renderFeedbackOrigin: item => {
             const drivingItem = item as DrivingSide;
@@ -363,13 +417,23 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
                 </Typography>
             );
         },
+        filters: [filterBySwitch, filterBySide, filterByLetter],
     },
     telephone: {
         title: 'Telephone Code Quiz',
         subtitle: "Master the world's calling codes",
         infoUrl:
             'https://en.wikipedia.org/wiki/List_of_telephone_country_codes',
-        data: telephoneData as TelephoneCode[],
+        getData: async () => {
+            const data = (await import('../data/telephone_codes.json')).default;
+            return data.map(
+                item =>
+                    ({
+                        ...item,
+                        type: 'telephone',
+                    }) as TelephoneCode
+            );
+        },
         defaultSettings: {
             mode: 'toCountry',
             allowRepeats: false,
@@ -421,15 +485,29 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
                 const norm = (s: string) => s.replace(/[^0-9+]/g, '');
                 correct = norm(normalizedInput) === norm(expected);
             }
-            return { isCorrect: correct, expected, points: correct ? 1 : 0 };
+            return Promise.resolve({
+                isCorrect: correct,
+                expected,
+                points: correct ? 1 : 0,
+            });
         },
+        filters: [filterByZone, filterByLetter],
     },
     vehicle: {
         title: 'License Plate Quiz',
         subtitle: 'Identify international vehicle registration codes',
         infoUrl:
             'https://en.wikipedia.org/wiki/International_vehicle_registration_code',
-        data: vehicleData as VehicleCode[],
+        getData: async () => {
+            const data = (await import('../data/vehicle_codes.json')).default;
+            return data.map(
+                item =>
+                    ({
+                        ...item,
+                        type: 'vehicle',
+                    }) as VehicleCode
+            );
+        },
         defaultSettings: {
             mode: 'toCountry',
             allowRepeats: false,
@@ -467,15 +545,16 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
                 </Typography>
             );
         },
-        checkAnswer: (input, item, settings) => {
+        checkAnswer: async (input, item, settings) => {
             const vehicleItem = item as VehicleCode;
             let correct = false;
             let expected = '';
             if (settings.mode === 'toCountry') {
                 // Find all valid countries for this code
-                const allMatches = (vehicleData as VehicleCode[]).filter(
-                    v => v.code === vehicleItem.code
-                );
+                const allMatches = (
+                    (await import('../data/vehicle_codes.json'))
+                        .default as VehicleCode[]
+                ).filter(v => v.code === vehicleItem.code);
 
                 // Check if input matches ANY of the valid countries
                 correct = allMatches.some(match =>
@@ -501,5 +580,6 @@ export const QUIZ_CONFIGS: Record<QuizType, QuizConfig> = {
             }
             return { isCorrect: correct, expected, points: correct ? 1 : 0 };
         },
+        filters: [filterByConvention, filterByLetter],
     },
 };

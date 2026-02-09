@@ -11,8 +11,18 @@ const mockSettings: QuizSettings = {
 describe('useQuizFilter', () => {
     test('filters by language (cctld)', () => {
         const data = [
-            { country: 'USA', language: 'English' },
-            { country: 'France', language: 'French' },
+            {
+                type: 'cctld' as const,
+                country: 'USA',
+                language: 'English',
+                code: '.xx',
+            },
+            {
+                type: 'cctld' as const,
+                country: 'France',
+                language: 'French',
+                code: '.xx',
+            },
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
@@ -27,8 +37,18 @@ describe('useQuizFilter', () => {
 
     test('filters by specific language (not All/Non-English)', () => {
         const data = [
-            { country: 'USA', language: 'English' },
-            { country: 'France', language: 'French' },
+            {
+                type: 'cctld' as const,
+                country: 'USA',
+                language: 'English',
+                code: '.xx',
+            },
+            {
+                type: 'cctld' as const,
+                country: 'France',
+                language: 'French',
+                code: '.xx',
+            },
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
@@ -43,8 +63,18 @@ describe('useQuizFilter', () => {
 
     test('filters by non-english language (cctld)', () => {
         const data = [
-            { country: 'USA', language: 'English' },
-            { country: 'France', language: 'French' },
+            {
+                type: 'cctld' as const,
+                country: 'USA',
+                language: 'English',
+                code: '.xx',
+            },
+            {
+                type: 'cctld' as const,
+                country: 'France',
+                language: 'French',
+                code: '.xx',
+            },
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
@@ -59,8 +89,8 @@ describe('useQuizFilter', () => {
 
     test('filters by zone (telephone)', () => {
         const data = [
-            { country: 'USA', code: '+1' },
-            { country: 'UK', code: '+44' },
+            { type: 'telephone' as const, country: 'USA', code: '+1' },
+            { type: 'telephone' as const, country: 'UK', code: '+44' },
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
@@ -75,9 +105,9 @@ describe('useQuizFilter', () => {
 
     test('filters by multiple zones (telephone)', () => {
         const data = [
-            { country: 'USA', code: '+1' },
-            { country: 'UK', code: '+44' },
-            { country: 'France', code: '+33' },
+            { type: 'telephone' as const, country: 'USA', code: '+1' },
+            { type: 'telephone' as const, country: 'UK', code: '+44' },
+            { type: 'telephone' as const, country: 'France', code: '+33' },
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
@@ -91,8 +121,18 @@ describe('useQuizFilter', () => {
 
     test('filters by convention (vehicle)', () => {
         const data = [
-            { country: 'A', conventions: [1909] },
-            { country: 'B', conventions: [1949] },
+            {
+                type: 'vehicle' as const,
+                country: 'A',
+                code: 'XX',
+                conventions: [1909],
+            },
+            {
+                type: 'vehicle' as const,
+                country: 'B',
+                code: 'XX',
+                conventions: [1949],
+            },
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
@@ -107,8 +147,18 @@ describe('useQuizFilter', () => {
 
     test('filters by switch (driving_side)', () => {
         const data = [
-            { country: 'A', switched: true },
-            { country: 'B', switched: false },
+            {
+                type: 'driving_side' as const,
+                country: 'A',
+                side: 'Left' as const,
+                switched: true,
+            },
+            {
+                type: 'driving_side' as const,
+                country: 'B',
+                side: 'Left' as const,
+                switched: false,
+            },
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
@@ -141,9 +191,24 @@ describe('useQuizFilter', () => {
 
     test('filters by side in toCountry mode (driving_side)', () => {
         const data = [
-            { country: 'A', side: 'Left', switched: true },
-            { country: 'B', side: 'Right', switched: true },
-            { country: 'C', side: 'Left', switched: false },
+            {
+                type: 'driving_side' as const,
+                country: 'A',
+                side: 'Left' as const,
+                switched: true,
+            },
+            {
+                type: 'driving_side' as const,
+                country: 'B',
+                side: 'Right' as const,
+                switched: true,
+            },
+            {
+                type: 'driving_side' as const,
+                country: 'C',
+                side: 'Left' as const,
+                switched: false,
+            },
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
@@ -162,9 +227,24 @@ describe('useQuizFilter', () => {
 
     test('handles complex filterLetter logic', () => {
         const data = [
-            { country: 'Apple', code: '.ap' },
-            { country: 'Banana', code: '.ba' },
-            { country: 'Cherry', code: '.ch' },
+            {
+                type: 'cctld' as const,
+                country: 'Apple',
+                code: '.ap',
+                language: 'English',
+            },
+            {
+                type: 'cctld' as const,
+                country: 'Banana',
+                code: '.ba',
+                language: 'English',
+            },
+            {
+                type: 'cctld' as const,
+                country: 'Cherry',
+                code: '.ch',
+                language: 'English',
+            },
         ];
 
         // Space separated
@@ -198,8 +278,8 @@ describe('useQuizFilter', () => {
 
     test('filters by letters for other quiz types', () => {
         const vehicles = [
-            { country: 'Albania', code: 'AL' },
-            { country: 'Belgium', code: 'B' },
+            { type: 'vehicle' as const, country: 'Albania', code: 'AL' },
+            { type: 'vehicle' as const, country: 'Belgium', code: 'B' },
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
@@ -218,8 +298,8 @@ describe('useQuizFilter', () => {
 
     test('filters by letters for driving_side and telephone', () => {
         const data = [
-            { country: 'USA', code: '+1' },
-            { country: 'UK', code: '+44' },
+            { type: 'telephone' as const, country: 'USA', code: '+1' },
+            { type: 'telephone' as const, country: 'UK', code: '+44' },
         ];
         // Telephone
         const { result: res1 } = renderHook(() =>
@@ -235,8 +315,16 @@ describe('useQuizFilter', () => {
         const { result: res2 } = renderHook(() =>
             useQuizFilter({
                 data: [
-                    { country: 'Albania' },
-                    { country: 'Belgium' },
+                    {
+                        type: 'driving_side' as const,
+                        country: 'Albania',
+                        side: 'Left' as const,
+                    },
+                    {
+                        type: 'driving_side' as const,
+                        country: 'Belgium',
+                        side: 'Right' as const,
+                    },
                 ] as unknown as QuizItem[],
                 quizType: 'driving_side',
                 settings: { ...mockSettings, filterLetter: 'a' },
@@ -246,7 +334,20 @@ describe('useQuizFilter', () => {
     });
 
     test('returns all if maxQuestions is All', () => {
-        const data = [{ country: 'A' }, { country: 'B' }];
+        const data = [
+            {
+                type: 'cctld' as const,
+                country: 'A',
+                code: '.a',
+                language: 'English',
+            },
+            {
+                type: 'cctld' as const,
+                country: 'B',
+                code: '.b',
+                language: 'English',
+            },
+        ];
         const { result } = renderHook(() =>
             useQuizFilter({
                 data: data as unknown as QuizItem[],
@@ -259,8 +360,18 @@ describe('useQuizFilter', () => {
 
     test('filters by switch in toCountry mode (driving_side) - branch coverage', () => {
         const data = [
-            { country: 'A', switched: true },
-            { country: 'B', switched: false },
+            {
+                type: 'driving_side' as const,
+                country: 'A',
+                side: 'Left' as const,
+                switched: true,
+            },
+            {
+                type: 'driving_side' as const,
+                country: 'B',
+                side: 'Left' as const,
+                switched: false,
+            },
         ];
         const { result } = renderHook(() =>
             useQuizFilter({
@@ -278,7 +389,14 @@ describe('useQuizFilter', () => {
     });
 
     test('filters by letters with empty/whitespace input', () => {
-        const data = [{ country: 'A' }];
+        const data = [
+            {
+                type: 'cctld' as const,
+                country: 'A',
+                code: '.a',
+                language: 'English',
+            },
+        ];
         const { result } = renderHook(() =>
             useQuizFilter({
                 data: data as unknown as QuizItem[],
@@ -290,7 +408,9 @@ describe('useQuizFilter', () => {
     });
 
     test('filters by letters in toCode mode for vehicle', () => {
-        const data = [{ country: 'Albania', code: 'AL' }];
+        const data = [
+            { type: 'vehicle' as const, country: 'Albania', code: 'AL' },
+        ];
         const { result } = renderHook(() =>
             useQuizFilter({
                 data: data as unknown as QuizItem[],
@@ -306,7 +426,20 @@ describe('useQuizFilter', () => {
     });
 
     test('filters by comma separated letters', () => {
-        const data = [{ country: 'Apple' }, { country: 'Banana' }];
+        const data = [
+            {
+                type: 'cctld' as const,
+                country: 'Apple',
+                code: '.ap',
+                language: 'English',
+            },
+            {
+                type: 'cctld' as const,
+                country: 'Banana',
+                code: '.ba',
+                language: 'English',
+            },
+        ];
         const { result } = renderHook(() =>
             useQuizFilter({
                 data: data as unknown as QuizItem[],
@@ -318,8 +451,17 @@ describe('useQuizFilter', () => {
     });
 
     test('filters by letters in guessing mode for cctld and vehicle', () => {
-        const cctlds = [{ country: 'Albania', code: '.al' }];
-        const vehicles = [{ country: 'Belgium', code: 'B' }];
+        const cctlds = [
+            {
+                type: 'cctld' as const,
+                country: 'Albania',
+                code: '.al',
+                language: 'Albanian',
+            },
+        ];
+        const vehicles = [
+            { type: 'vehicle' as const, country: 'Belgium', code: 'B' },
+        ];
 
         // cctld guessing mode
         const { result: res1 } = renderHook(() =>
@@ -364,7 +506,12 @@ describe('useQuizFilter', () => {
         const { result: res4 } = renderHook(() =>
             useQuizFilter({
                 data: [
-                    { country: 'Albania', code: '.al' },
+                    {
+                        type: 'cctld' as const,
+                        country: 'Albania',
+                        code: '.al',
+                        language: 'Albanian',
+                    },
                 ] as unknown as QuizItem[],
                 quizType: 'cctld',
                 settings: {
@@ -378,7 +525,26 @@ describe('useQuizFilter', () => {
     });
 
     test('respects max questions', () => {
-        const data = [{ country: 'A' }, { country: 'B' }, { country: 'C' }];
+        const data = [
+            {
+                type: 'cctld' as const,
+                country: 'A',
+                code: '.a',
+                language: 'English',
+            },
+            {
+                type: 'cctld' as const,
+                country: 'B',
+                code: '.b',
+                language: 'English',
+            },
+            {
+                type: 'cctld' as const,
+                country: 'C',
+                code: '.c',
+                language: 'English',
+            },
+        ];
         const { result } = renderHook(() =>
             useQuizFilter({
                 data: data as unknown as QuizItem[],

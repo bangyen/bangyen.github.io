@@ -40,7 +40,10 @@ def run():
 
         # Ensure we capture output
         try:
-            output = train(config)
+            # TrainingConfig is a Pydantic model, needs dict unpacking
+            from src.constants import TrainingConfig
+            config_obj = TrainingConfig(**config)
+            output = train(config_obj)
             if not output:
                 print(f"Failed to run {name}")
                 continue

@@ -10,85 +10,109 @@ permissions:
   contents: write
 
 jobs:
-  lint:
-    name: Linting
+  build-wasm:
+    name: Build WASM
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
+      
       - name: Setup Rust
         uses: dtolnay/rust-toolchain@stable
+        
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          prefix-key: "v1-rust"
+          shared-key: "wasm-cache"
+          workspaces: |
+            wasm/lights-out-wasm
+            wasm/slant-wasm
+            
       - name: Setup wasm-pack
         uses: jetli/wasm-pack-action@v0.4.0
         with:
           version: 'latest'
-      - name: Build WASM
+          
+      - name: Build WASM Modules
         run: |
-          wasm-pack build ./lights-out-wasm --target web
-          wasm-pack build ./slant-wasm --target web
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-      - name: Run all linting checks
-        run: bun run lint:all
+          wasm-pack build ./wasm/lights-out-wasm --target web
+          wasm-pack build ./wasm/slant-wasm --target web
+          
+      - name: Upload WASM Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wasm-packages
+          path: |
+            wasm/lights-out-wasm/pkg
+            wasm/slant-wasm/pkg
+          retention-days: 1
 
-      - name: Run Type Checking
-        run: bun run type-check
-
-  test:
-    name: Testing
+  quality-check:
+    name: Quality Check
+    needs: build-wasm
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-      - name: Setup wasm-pack
-        uses: jetli/wasm-pack-action@v0.4.0
+          
+      - name: Download WASM Artifacts
+        uses: actions/download-artifact@v4
         with:
-          version: 'latest'
-      - name: Build WASM
-        run: |
-          wasm-pack build ./lights-out-wasm --target web
-          wasm-pack build ./slant-wasm --target web
+          name: wasm-packages
+          path: wasm
+          
+      - name: Restore Bun Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+            
       - name: Install dependencies
         run: bun install --frozen-lockfile
-      - name: Run automated tests
+        
+      - name: Lint and Type Check
+        run: |
+          bun run lint:all
+          bun run type-check
+          
+      - name: Run Tests
         run: bun run test:ci
 
   deploy:
+    name: Deploy
+    needs: quality-check
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
-
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-
-      - name: Setup wasm-pack
-        uses: jetli/wasm-pack-action@v0.4.0
-        with:
-          version: 'latest'
-
-      - name: Build WASM
-        run: |
-          wasm-pack build ./lights-out-wasm --target web
-          wasm-pack build ./slant-wasm --target web
-
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      
+      - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-
+          
+      - name: Download WASM Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: wasm-packages
+          path: wasm
+          
+      - name: Restore Bun Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json') }}
+          
       - name: Install and Build
         run: |
           bun install --frozen-lockfile
           bun run build
-
-      - name: Deploy
+          
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}

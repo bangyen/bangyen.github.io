@@ -1,35 +1,203 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import {
-    QuizSettings,
-    Question,
-    QuizType,
-    QuizItem,
-    CCTLD,
-    TelephoneCode,
-    VehicleCode,
-    DrivingSide,
-} from '../types/quiz';
+import { useReducer, useEffect, useRef, useCallback, useMemo } from 'react';
+import { QuizItem, QuizSettings, QuizType, Question } from '../types/quiz';
+import { QUIZ_CONFIGS } from '../config/quizConfig';
+import { applyQuestionLimit } from '../config/quizFilters';
 
-// Quiz Engine Hook
+/**
+ * State managed by the quiz engine reducer.
+ */
+interface QuizEngineState<T> {
+    /** Whether the quiz has been initialized */
+    hasInitialized: boolean;
+    /** History of all answered questions */
+    history: Question<T>[];
+    /** Remaining questions in the pool */
+    pool: T[];
+    /** Current question being displayed */
+    currentQuestion: T | null;
+    /** Total number of questions in the quiz */
+    totalQuestions: number;
+    /** Current input value from the user */
+    inputValue: string;
+    /** Whether feedback is currently being shown */
+    showFeedback: boolean;
+    /** Feedback message to display */
+    feedbackMessage: string;
+    /** Whether the last answer was correct (null if no answer yet) */
+    isCorrect: boolean | null;
+    /** Whether the hint is currently visible */
+    showHint: boolean;
+    /** Current score */
+    score: number;
+}
+
+/**
+ * Actions that can be dispatched to the quiz engine reducer.
+ */
+type QuizEngineAction<T> =
+    | {
+          type: 'INITIALIZE';
+          payload: {
+              pool: T[];
+              totalQuestions: number;
+              currentQuestion: T | null;
+          };
+      }
+    | { type: 'NEXT_QUESTION' }
+    | {
+          type: 'SUBMIT_ANSWER';
+          payload: {
+              question: Question<T>;
+              feedbackMessage: string;
+              points: number;
+          };
+      }
+    | {
+          type: 'SKIP_QUESTION';
+          payload: { question: Question<T>; feedbackMessage: string };
+      }
+    | { type: 'SET_INPUT'; payload: string }
+    | { type: 'TOGGLE_HINT' }
+    | { type: 'END_GAME' };
+
+/**
+ * Reducer for managing quiz engine state.
+ * Centralizes all state transitions for better predictability and debugging.
+ */
+function quizEngineReducer<T>(
+    state: QuizEngineState<T>,
+    action: QuizEngineAction<T>
+): QuizEngineState<T> {
+    switch (action.type) {
+        case 'INITIALIZE':
+            return {
+                ...state,
+                pool: action.payload.pool,
+                currentQuestion: action.payload.currentQuestion,
+                totalQuestions: action.payload.totalQuestions,
+                history: [],
+                score: 0,
+                inputValue: '',
+                showFeedback: false,
+                showHint: false,
+                isCorrect: null,
+                hasInitialized: true,
+            };
+
+        case 'NEXT_QUESTION': {
+            if (state.pool.length === 0) {
+                return { ...state, currentQuestion: null };
+            }
+            const next = state.pool[0] ?? null;
+            return {
+                ...state,
+                currentQuestion: next,
+                pool: state.pool.slice(1),
+                inputValue: '',
+                showFeedback: false,
+                showHint: false,
+                isCorrect: null,
+            };
+        }
+
+        case 'SUBMIT_ANSWER':
+            return {
+                ...state,
+                history: [...state.history, action.payload.question],
+                score: action.payload.question.isCorrect
+                    ? state.score + action.payload.points
+                    : state.score,
+                feedbackMessage: action.payload.feedbackMessage,
+                isCorrect: action.payload.question.isCorrect,
+                showFeedback: true,
+            };
+
+        case 'SKIP_QUESTION':
+            return {
+                ...state,
+                history: [...state.history, action.payload.question],
+                feedbackMessage: action.payload.feedbackMessage,
+                isCorrect: false,
+                showFeedback: true,
+            };
+
+        case 'SET_INPUT':
+            return {
+                ...state,
+                inputValue: action.payload,
+            };
+
+        case 'TOGGLE_HINT':
+            return {
+                ...state,
+                showHint: !state.showHint,
+            };
+
+        case 'END_GAME':
+            return {
+                ...state,
+                pool: [],
+                currentQuestion: null,
+            };
+
+        default:
+            return state;
+    }
+}
+
+/**
+ * Props for the quiz engine hook.
+ */
 interface QuizEngineProps<T> {
+    /** Initial pool of questions */
     initialPool: T[];
+    /** Quiz settings */
     settings: QuizSettings;
+    /** Callback when the game ends */
     onEndGame: (history: Question<T>[], score: number) => void;
+    /** Function to check if an answer is correct */
     checkAnswer: (
         input: string,
         item: T,
         settings: QuizSettings
-    ) => {
+    ) => Promise<{
         isCorrect: boolean;
         expected: string;
         points: number;
-    };
+    }>;
+    /** Delay before advancing to next question */
     advanceDelay?: {
         correct: number;
         incorrect: number;
     };
 }
 
+/**
+ * Custom hook for managing quiz game state and logic.
+ *
+ * This hook uses useReducer for centralized state management, making state
+ * transitions more predictable and easier to debug. All complex state updates
+ * like "Submit Answer", "Next Question", and "End Game" are handled through
+ * a single reducer function.
+ *
+ * @template T - Type of quiz items
+ * @param props - Configuration for the quiz engine
+ * @returns Quiz state and action handlers
+ *
+ * @example
+ * ```tsx
+ * const { state, actions } = useQuizEngine({
+ *   initialPool: questions,
+ *   settings: quizSettings,
+ *   onEndGame: (history, score) => console.log('Final score:', score),
+ *   checkAnswer: async (input, item, settings) => ({
+ *     isCorrect: input === item.answer,
+ *     expected: item.answer,
+ *     points: 10
+ *   })
+ * });
+ * ```
+ */
 export const useQuizEngine = <T>({
     initialPool,
     settings,
@@ -37,29 +205,31 @@ export const useQuizEngine = <T>({
     checkAnswer,
     advanceDelay = { correct: 1000, incorrect: 3000 },
 }: QuizEngineProps<T>) => {
-    const [hasInitialized, setHasInitialized] = useState(false);
-    const [history, setHistory] = useState<Question<T>[]>([]);
-    const [, setPool] = useState<T[]>([]);
-    const [currentQuestion, setCurrentQuestion] = useState<T | null>(null);
-    const [totalQuestions, setTotalQuestions] = useState(0);
-    const [inputValue, setInputValue] = useState('');
-    const [showFeedback, setShowFeedback] = useState(false);
-    const [feedbackMessage, setFeedbackMessage] = useState('');
-    const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
-    const [showHint, setShowHint] = useState(false);
-    const [score, setScore] = useState(0);
+    const [state, dispatch] = useReducer(quizEngineReducer<T>, {
+        hasInitialized: false,
+        history: [],
+        pool: [],
+        currentQuestion: null,
+        totalQuestions: 0,
+        inputValue: '',
+        showFeedback: false,
+        feedbackMessage: '',
+        isCorrect: null,
+        showHint: false,
+        score: 0,
+    });
 
-    const historyRef = useRef(history);
-    const scoreRef = useRef(score);
     const advanceTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const onEndGameRef = useRef(onEndGame);
 
+    // Keep onEndGame ref up to date
     useEffect(() => {
-        historyRef.current = history;
-    }, [history]);
-    useEffect(() => {
-        scoreRef.current = score;
-    }, [score]);
+        onEndGameRef.current = onEndGame;
+    }, [onEndGame]);
 
+    /**
+     * Initializes the quiz with a shuffled pool of questions.
+     */
     const initialize = useCallback((newPool: T[]) => {
         const shuffled = [...newPool].sort(() => Math.random() - 0.5);
         return {
@@ -69,79 +239,71 @@ export const useQuizEngine = <T>({
         };
     }, []);
 
+    // Initialize quiz when pool changes
     useEffect(() => {
         const init = initialize(initialPool);
-        setCurrentQuestion(init.currentQuestion);
-        setPool(init.pool);
-        setTotalQuestions(init.totalQuestions);
-        setHistory([]);
-        setScore(0);
-        setInputValue('');
-        setShowFeedback(false);
-        setShowHint(false);
-        setIsCorrect(null);
-        setHasInitialized(true);
+        dispatch({
+            type: 'INITIALIZE',
+            payload: init,
+        });
     }, [initialPool, initialize]);
 
+    /**
+     * Advances to the next question or ends the game if no questions remain.
+     */
     const nextQuestion = useCallback(() => {
-        setPool(prevPool => {
-            if (prevPool.length === 0) {
-                onEndGame(historyRef.current, scoreRef.current);
-                return [];
-            }
+        if (advanceTimerRef.current) {
+            clearTimeout(advanceTimerRef.current);
+            advanceTimerRef.current = null;
+        }
 
-            if (advanceTimerRef.current) {
-                clearTimeout(advanceTimerRef.current);
-                advanceTimerRef.current = null;
-            }
+        if (state.pool.length === 0) {
+            dispatch({ type: 'END_GAME' });
+            onEndGameRef.current(state.history, state.score);
+            return;
+        }
 
-            const next = prevPool[0] ?? null;
-            setCurrentQuestion(next);
-            setInputValue('');
-            setShowFeedback(false);
-            setShowHint(false);
-            setIsCorrect(null);
-            return prevPool.slice(1);
-        });
-    }, [onEndGame]);
+        dispatch({ type: 'NEXT_QUESTION' });
+    }, [state.pool.length, state.history, state.score]);
 
+    /**
+     * Submits an answer and schedules advancement to the next question.
+     */
     const submitAnswer = useCallback(
-        (value: string) => {
-            if (!currentQuestion || showFeedback) return;
+        async (value: string) => {
+            if (!state.currentQuestion || state.showFeedback) return;
 
             const {
                 isCorrect: correct,
                 expected,
                 points,
-            } = checkAnswer(value, currentQuestion, settings);
+            } = await checkAnswer(value, state.currentQuestion, settings);
 
             const newQuestion: Question<T> = {
                 id: crypto.randomUUID(),
-                item: currentQuestion,
+                item: state.currentQuestion,
                 userAnswer: value,
                 isCorrect: correct,
                 pointsEarned: points,
             };
 
-            setHistory(prev => [...prev, newQuestion]);
-            if (correct) {
-                setScore(prev => prev + points);
-                setFeedbackMessage('Correct!');
-                setIsCorrect(true);
-            } else {
-                setFeedbackMessage(expected);
-                setIsCorrect(false);
-            }
+            dispatch({
+                type: 'SUBMIT_ANSWER',
+                payload: {
+                    question: newQuestion,
+                    feedbackMessage: correct ? 'Correct!' : expected,
+                    points,
+                },
+            });
 
-            setShowFeedback(true);
             advanceTimerRef.current = setTimeout(
                 nextQuestion,
                 correct ? advanceDelay.correct : advanceDelay.incorrect
             );
         },
         [
-            currentQuestion,
-            showFeedback,
+            state.currentQuestion,
+            state.showFeedback,
             checkAnswer,
             settings,
             nextQuestion,
@@ -149,67 +311,90 @@ export const useQuizEngine = <T>({
         ]
     );
 
-    const handleSkip = useCallback(() => {
-        if (!currentQuestion) return;
+    /**
+     * Skips the current question and shows the correct answer.
+     */
+    const handleSkip = useCallback(async () => {
+        if (!state.currentQuestion) return;
 
-        if (showFeedback) {
+        if (state.showFeedback) {
             nextQuestion();
             return;
         }
 
-        const { expected } = checkAnswer('', currentQuestion, settings);
+        const { expected } = await checkAnswer(
+            '',
+            state.currentQuestion,
+            settings
+        );
 
         const newQuestion: Question<T> = {
             id: crypto.randomUUID(),
-            item: currentQuestion,
+            item: state.currentQuestion,
             userAnswer: '',
             isCorrect: false,
             pointsEarned: 0,
         };
 
-        setHistory(prev => [...prev, newQuestion]);
-        setFeedbackMessage(expected);
-        setIsCorrect(false);
-        setShowFeedback(true);
+        dispatch({
+            type: 'SKIP_QUESTION',
+            payload: {
+                question: newQuestion,
+                feedbackMessage: expected,
+            },
+        });
 
         advanceTimerRef.current = setTimeout(
             nextQuestion,
             advanceDelay.incorrect
         );
     }, [
-        currentQuestion,
-        showFeedback,
+        state.currentQuestion,
+        state.showFeedback,
         nextQuestion,
         checkAnswer,
         settings,
         advanceDelay.incorrect,
     ]);
 
+    /**
+     * Handles form submission.
+     */
     const handleSubmit = useCallback(
-        (e?: React.SyntheticEvent) => {
+        async (e?: React.SyntheticEvent) => {
             e?.preventDefault();
-            submitAnswer(inputValue);
+            await submitAnswer(state.inputValue);
         },
-        [inputValue, submitAnswer]
+        [state.inputValue, submitAnswer]
     );
 
+    /**
+     * Toggles hint visibility.
+     */
     const toggleHint = useCallback(() => {
-        setShowHint(prev => !prev);
+        dispatch({ type: 'TOGGLE_HINT' });
+    }, []);
+
+    /**
+     * Updates the input value.
+     */
+    const setInputValue = useCallback((value: string) => {
+        dispatch({ type: 'SET_INPUT', payload: value });
     }, []);
 
     return {
         state: {
-            history,
-            currentQuestion,
-            inputValue,
-            showFeedback,
-            feedbackMessage,
-            isCorrect,
-            totalQuestions,
-            showHint,
-            score,
-            currentIndex: history.length,
-            hasInitialized,
+            history: state.history,
+            currentQuestion: state.currentQuestion,
+            inputValue: state.inputValue,
+            showFeedback: state.showFeedback,
+            feedbackMessage: state.feedbackMessage,
+            isCorrect: state.isCorrect,
+            totalQuestions: state.totalQuestions,
+            showHint: state.showHint,
+            score: state.score,
+            currentIndex: state.history.length,
+            hasInitialized: state.hasInitialized,
         },
         actions: {
             setInputValue,
@@ -222,162 +407,57 @@ export const useQuizEngine = <T>({
     };
 };
 
-// Quiz Filter Hook
+/**
+ * Props for the quiz filter hook.
+ */
 interface UseQuizFilterProps {
+    /** Quiz items to filter */
     data: QuizItem[];
+    /** Type of quiz */
     quizType: QuizType;
+    /** Quiz settings containing filter criteria */
     settings: QuizSettings;
 }
 
+/**
+ * Custom hook for filtering quiz items based on settings.
+ *
+ * Applies all configured filters for the quiz type and limits the number
+ * of questions based on settings. Results are memoized for performance.
+ *
+ * @param props - Filter configuration
+ * @returns Filtered array of quiz items
+ *
+ * @example
+ * ```tsx
+ * const filteredQuestions = useQuizFilter({
+ *   data: allQuestions,
+ *   quizType: 'cctld',
+ *   settings: { filterLanguage: 'English', maxQuestions: 10 }
+ * });
+ * ```
+ */
 export const useQuizFilter = ({
     data,
     quizType,
     settings,
 }: UseQuizFilterProps) => {
     return useMemo(() => {
+        const config = QUIZ_CONFIGS[quizType];
         let filtered = data;
 
-        if (
-            settings.filterLanguage &&
-            settings.filterLanguage !== 'All' &&
-            quizType === 'cctld'
-        ) {
-            if (settings.filterLanguage === 'Non-English') {
-                filtered = filtered.filter(
-                    (item: QuizItem) => (item as CCTLD).language !== 'English'
-                );
-            } else {
-                filtered = filtered.filter(
-                    (item: QuizItem) =>
-                        (item as CCTLD).language === settings.filterLanguage
-                );
+        // Apply all configured filters for this quiz type
+        // Config might be undefined for unknown quiz types (e.g., in tests)
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition, @typescript-eslint/prefer-optional-chain
+        if (config && config.filters) {
+            for (const filterFn of config.filters) {
+                filtered = filterFn(filtered, settings);
             }
         }
 
-        if (
-            settings.filterZone &&
-            settings.filterZone !== 'All' &&
-            quizType === 'telephone'
-        ) {
-            const zones = (settings.filterZone as string).split(',');
-            filtered = filtered.filter((item: QuizItem) =>
-                zones.some((z: string) =>
-                    (item as TelephoneCode).code.startsWith(`+${z}`)
-                )
-            );
-        }
+        // Apply question limit (randomization + slicing)
+        filtered = applyQuestionLimit(filtered, settings);
 
-        if (
-            settings.filterConvention &&
-            settings.filterConvention !== 'All' &&
-            quizType === 'vehicle'
-        ) {
-            filtered = filtered.filter((item: QuizItem) => {
-                const vehicleItem = item as VehicleCode;
-                return vehicleItem.conventions?.includes(
-                    Number(settings.filterConvention)
-                );
-            });
-        }
-
-        if (
-            settings.filterSwitch &&
-            settings.filterSwitch !== 'All' &&
-            quizType === 'driving_side'
-        ) {
-            // In 'toCountry' mode for driving_side, we ONLY show switched countries
-            // The switch filter is effectively ignored/replaced by this logic,
-            // but we keep the block structure for existing 'guessing' mode.
-            if (settings.mode === 'toCountry') {
-                filtered = filtered.filter(
-                    (item: QuizItem) => (item as DrivingSide).switched
-                );
-            } else {
-                filtered = filtered.filter((item: QuizItem) =>
-                    settings.filterSwitch === 'Switched'
-                        ? (item as DrivingSide).switched
-                        : !(item as DrivingSide).switched
-                );
-            }
-        } else if (
-            quizType === 'driving_side' &&
-            settings.mode === 'toCountry'
-        ) {
-            // Even if filterSwitch wasn't set (shouldn't happen given default settings, but for safety),
-            // force switched=true for toCountry mode
-            filtered = filtered.filter(
-                (item: QuizItem) => (item as DrivingSide).switched
-            );
-        }
-
-        if (
-            settings.filterSide &&
-            settings.filterSide !== 'All' &&
-            quizType === 'driving_side' &&
-            settings.mode === 'toCountry'
-        ) {
-            filtered = filtered.filter(
-                (item: QuizItem) =>
-                    (item as DrivingSide).side === settings.filterSide
-            );
-        }
-
-        if (
-            typeof settings.filterLetter === 'string' &&
-            settings.filterLetter !== ''
-        ) {
-            let letters = settings.filterLetter
-                .toLowerCase()
-                .split(',')
-                .map((l: string) => l.trim())
-                .filter((l: string) => l);
-
-            if (letters.length <= 1 && !settings.filterLetter.includes(',')) {
-                const spaceSplit = settings.filterLetter
-                    .toLowerCase()
-                    .split(/\s+/)
-                    .filter((l: string) => l);
-                if (spaceSplit.length > 1) {
-                    letters = spaceSplit;
-                } else {
-                    letters = settings.filterLetter
-                        .toLowerCase()
-                        .split('')
-                        .filter((l: string) => l.trim());
-                }
-            }
-
-            if (letters.length > 0) {
-                filtered = filtered.filter((item: QuizItem) => {
-                    let text = '';
-                    if (quizType === 'cctld') {
-                        text =
-                            settings.mode === 'toCountry'
-                                ? (item as CCTLD).code
-                                      .toLowerCase()
-                                      .replace('.', '')
-                                : (item as CCTLD).country.toLowerCase();
-                    } else if (quizType === 'driving_side') {
-                        text = (item as DrivingSide).country.toLowerCase();
-                    } else if (quizType === 'telephone') {
-                        text = (item as TelephoneCode).country.toLowerCase();
-                    } else {
-                        const vehicleItem = item as VehicleCode;
-                        text =
-                            settings.mode === 'toCountry'
-                                ? vehicleItem.code.toLowerCase()
-                                : vehicleItem.country.toLowerCase();
-                    }
-                    return letters.some((l: string) => text.startsWith(l));
-                });
-            }
-        }
-
-        if (settings.maxQuestions !== 'All') {
-            return [...filtered]
-                .sort(() => Math.random() - 0.5)
-                .slice(0, settings.maxQuestions);
-        }
         return filtered;
     }, [data, quizType, settings]);
 };

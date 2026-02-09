@@ -6,17 +6,52 @@ import React, {
     ReactNode,
 } from 'react';
 
+/**
+ * Theme mode setting - can be explicitly set or follow system preference.
+ * - 'light': Force light theme
+ * - 'dark': Force dark theme
+ * - 'system': Follow OS/browser preference
+ */
 type ThemeMode = 'light' | 'dark' | 'system';
+
+/**
+ * Resolved theme mode after system preference is applied.
+ * Always resolves to either 'light' or 'dark'.
+ */
 type ResolvedThemeMode = 'light' | 'dark';
 
+/**
+ * Context value provided by ThemeProvider.
+ */
 interface ThemeContextType {
+    /** Current theme mode setting (may be 'system') */
     mode: ThemeMode;
+    /** Actual resolved theme ('light' or 'dark') */
     resolvedMode: ResolvedThemeMode;
+    /** Cycles through light → dark → system → light */
     toggleTheme: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+/**
+ * Provides theme context to the application.
+ *
+ * Features:
+ * - Persists theme preference to localStorage
+ * - Supports system preference detection via `prefers-color-scheme`
+ * - Updates `data-theme` attribute on document root for CSS styling
+ * - Automatically responds to system theme changes when mode is 'system'
+ *
+ * @param children - React children to wrap with theme context
+ *
+ * @example
+ * ```tsx
+ * <ThemeProvider>
+ *   <App />
+ * </ThemeProvider>
+ * ```
+ */
 export function ThemeProvider({ children }: { children: ReactNode }) {
     // 1. Initialize state from localStorage or default to 'system'
     const [mode, setMode] = useState<ThemeMode>(() => {
@@ -77,6 +112,20 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     );
 }
 
+/**
+ * Hook to access theme context.
+ *
+ * @returns Theme context with mode, resolvedMode, and toggleTheme
+ * @throws Error if used outside of ThemeProvider
+ *
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   const { resolvedMode, toggleTheme } = useThemeContext();
+ *   return <button onClick={toggleTheme}>{resolvedMode}</button>;
+ * }
+ * ```
+ */
 export function useThemeContext() {
     const context = useContext(ThemeContext);
     if (context === undefined) {

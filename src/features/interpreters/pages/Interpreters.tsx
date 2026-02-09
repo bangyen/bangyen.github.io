@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Box } from '../../../components/mui';
 import { StunStep, Suffolk, WII2D, Back } from '..';
 import { InterpreterNavigation } from '../components/InterpreterNavigation';
+import { InterpreterErrorBoundary } from '../components/InterpreterErrorBoundary';
 import { PAGE_TITLES } from '../../../config/constants';
 import { COLORS, SPACING } from '../../../config/theme';
 
@@ -78,7 +79,9 @@ export default function Interpreters(): React.ReactElement {
                     boxSizing: 'border-box',
                 }}
             >
-                {renderInterpreter()}
+                <InterpreterErrorBoundary>
+                    {renderInterpreter()}
+                </InterpreterErrorBoundary>
             </Box>
         </Box>
     );

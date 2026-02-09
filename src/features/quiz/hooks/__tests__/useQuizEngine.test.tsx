@@ -67,8 +67,8 @@ describe('useQuizEngine', () => {
         expect(result.current.state.inputValue).toBe('test');
     });
 
-    test('handles correct answer submission', () => {
-        mockCheckAnswer.mockReturnValue({
+    test('handles correct answer submission', async () => {
+        mockCheckAnswer.mockResolvedValue({
             isCorrect: true,
             expected: 'A',
             points: 10,
@@ -84,8 +84,8 @@ describe('useQuizEngine', () => {
             })
         );
 
-        act(() => {
-            result.current.actions.submitAnswer('A');
+        await act(async () => {
+            await result.current.actions.submitAnswer('A');
         });
 
         expect(result.current.state.score).toBe(10);
@@ -102,8 +102,8 @@ describe('useQuizEngine', () => {
         expect(result.current.state.inputValue).toBe('');
     });
 
-    test('handles incorrect answer submission', () => {
-        mockCheckAnswer.mockReturnValue({
+    test('handles incorrect answer submission', async () => {
+        mockCheckAnswer.mockResolvedValue({
             isCorrect: false,
             expected: 'Expected A',
             points: 0,
@@ -118,8 +118,8 @@ describe('useQuizEngine', () => {
             })
         );
 
-        act(() => {
-            result.current.actions.submitAnswer('Wrong');
+        await act(async () => {
+            await result.current.actions.submitAnswer('Wrong');
         });
 
         expect(result.current.state.score).toBe(0);
@@ -128,29 +128,30 @@ describe('useQuizEngine', () => {
         expect(result.current.state.showFeedback).toBe(true);
     });
 
-    test('handleSkip works correctly', () => {
+    test('handleSkip works correctly', async () => {
         const { result } = renderHook(() =>
             useQuizEngine({
                 initialPool: mockQuestions,
                 settings: mockSettings,
                 onEndGame: mockOnEndGame,
-                checkAnswer: () => ({
-                    isCorrect: false,
-                    expected: 'Skipped',
-                    points: 0,
-                }),
+                checkAnswer: () =>
+                    Promise.resolve({
+                        isCorrect: false,
+                        expected: 'Skipped',
+                        points: 0,
+                    }),
             })
         );
 
-        act(() => {
-            result.current.actions.handleSkip();
+        await act(async () => {
+            await result.current.actions.handleSkip();
         });
 
         expect(result.current.state.showFeedback).toBe(true);
         expect(result.current.state.feedbackMessage).toBe('Skipped');
     });
 
-    test('skip advances manually if feedback shown', () => {
+    test('skip advances manually if feedback shown', async () => {
         const { result } = renderHook(() =>
             useQuizEngine({
                 initialPool: mockQuestions,
@@ -161,19 +162,19 @@ describe('useQuizEngine', () => {
         );
 
         // Trigger generic feedback state
-        act(() => {
-            result.current.actions.handleSkip(); // First skip shows feedback
+        await act(async () => {
+            await result.current.actions.handleSkip(); // First skip shows feedback
         });
         expect(result.current.state.showFeedback).toBe(true);
 
         // Second skip (Next) should advance immediately
-        act(() => {
-            result.current.actions.handleSkip();
+        await act(async () => {
+            await result.current.actions.handleSkip();
         });
         expect(result.current.state.showFeedback).toBe(false);
     });
 
-    test('ends game when questions run out', () => {
+    test('ends game when questions run out', async () => {
         const singleQuestionPool = [mockQuestions[0]];
 
         const { result } = renderHook(() =>
@@ -186,8 +187,8 @@ describe('useQuizEngine', () => {
         );
 
         // Answer 1
-        act(() => {
-            result.current.actions.handleSkip();
+        await act(async () => {
+            await result.current.actions.handleSkip();
         });
 
         // Advance to finish
@@ -219,8 +220,8 @@ describe('useQuizEngine', () => {
         expect(result.current.state.showHint).toBe(false);
     });
 
-    test('handleSubmit calls submitAnswer', () => {
-        mockCheckAnswer.mockReturnValue({
+    test('handleSubmit calls submitAnswer', async () => {
+        mockCheckAnswer.mockResolvedValue({
             isCorrect: true,
             expected: '',
             points: 10,
@@ -238,8 +239,8 @@ describe('useQuizEngine', () => {
             result.current.actions.setInputValue('test');
         });
 
-        act(() => {
-            result.current.actions.handleSubmit({
+        await act(async () => {
+            await result.current.actions.handleSubmit({
                 preventDefault: vi.fn(),
             } as unknown as React.SyntheticEvent);
         });
@@ -247,13 +248,13 @@ describe('useQuizEngine', () => {
         expect(result.current.state.score).toBe(10);
     });
 
-    test('submitAnswer returns early if already showing feedback', () => {
+    test('submitAnswer returns early if already showing feedback', async () => {
         const { result } = renderHook(() =>
             useQuizEngine({
                 initialPool: mockQuestions,
                 settings: mockSettings,
                 onEndGame: mockOnEndGame,
-                checkAnswer: mockCheckAnswer.mockReturnValue({
+                checkAnswer: mockCheckAnswer.mockResolvedValue({
                     isCorrect: true,
                     expected: '',
                     points: 1,
@@ -261,25 +262,25 @@ describe('useQuizEngine', () => {
             })
         );
 
-        act(() => {
-            result.current.actions.submitAnswer('ans1');
+        await act(async () => {
+            await result.current.actions.submitAnswer('ans1');
         });
         expect(result.current.state.showFeedback).toBe(true);
         expect(mockCheckAnswer).toHaveBeenCalledTimes(1);
 
-        act(() => {
-            result.current.actions.submitAnswer('ans2');
+        await act(async () => {
+            await result.current.actions.submitAnswer('ans2');
         });
         expect(mockCheckAnswer).toHaveBeenCalledTimes(1);
     });
 
-    test('nextQuestion clears advance timer', () => {
+    test('nextQuestion clears advance timer', async () => {
         const { result } = renderHook(() =>
             useQuizEngine({
                 initialPool: mockQuestions,
                 settings: mockSettings,
                 onEndGame: mockOnEndGame,
-                checkAnswer: mockCheckAnswer.mockReturnValue({
+                checkAnswer: mockCheckAnswer.mockResolvedValue({
                     isCorrect: true,
                     expected: '',
                     points: 1,
@@ -287,8 +288,8 @@ describe('useQuizEngine', () => {
             })
         );
 
-        act(() => {
-            result.current.actions.submitAnswer('ans');
+        await act(async () => {
+            await result.current.actions.submitAnswer('ans');
         });
 
         act(() => {
@@ -313,7 +314,7 @@ describe('useQuizEngine', () => {
         expect(result.current.state.showFeedback).toBe(false);
     });
 
-    test('handleSkip returns early if no current question', () => {
+    test('handleSkip returns early if no current question', async () => {
         const emptyPool: unknown[] = [];
         const { result } = renderHook(() =>
             useQuizEngine({
@@ -324,8 +325,8 @@ describe('useQuizEngine', () => {
             })
         );
 
-        act(() => {
-            result.current.actions.handleSkip();
+        await act(async () => {
+            await result.current.actions.handleSkip();
         });
         expect(result.current.state.showFeedback).toBe(false);
     });

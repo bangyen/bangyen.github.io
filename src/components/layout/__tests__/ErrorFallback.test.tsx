@@ -48,18 +48,18 @@ describe('ErrorFallback', () => {
     });
 
     describe('Development mode details', () => {
-        const originalEnv = process.env.NODE_ENV;
+        const originalEnv = process.env['NODE_ENV'];
 
         beforeEach(() => {
             vi.resetModules();
         });
 
         afterEach(() => {
-            process.env.NODE_ENV = originalEnv;
+            process.env['NODE_ENV'] = originalEnv;
         });
 
         test('shows error details in development', () => {
-            process.env.NODE_ENV = 'development';
+            process.env['NODE_ENV'] = 'development';
             renderWithRouter(<ErrorFallback {...mockProps} />);
             expect(screen.getByText(/Test error message/)).toBeInTheDocument();
             expect(screen.getByText(/component/)).toBeInTheDocument();
@@ -67,7 +67,7 @@ describe('ErrorFallback', () => {
         });
 
         test('hides error details in production', () => {
-            process.env.NODE_ENV = 'production';
+            process.env['NODE_ENV'] = 'production';
             renderWithRouter(<ErrorFallback {...mockProps} />);
             expect(
                 screen.queryByText(/Test error message/)

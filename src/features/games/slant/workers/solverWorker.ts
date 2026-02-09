@@ -1,10 +1,6 @@
-import {
-    CellState,
-    EMPTY,
-    BACKWARD,
-    FORWARD,
-    findCycles,
-} from '../boardHandlers';
+import { CellState, EMPTY, BACKWARD, FORWARD } from '../utils/types';
+import { findCycles } from '../utils/cycleDetection';
+import { getPosKey } from '../../../../utils/gameUtils';
 
 export type CellSource = 'user' | 'propagated';
 
@@ -58,7 +54,7 @@ self.onmessage = (e: MessageEvent<SolverMessage>) => {
         // Helper to get current cell state
         const getCell = (r: number, c: number): CellState => {
             if (r < 0 || r >= rows || c < 0 || c >= cols) return EMPTY;
-            const pos = `${String(r)},${String(c)}`;
+            const pos = getPosKey(r, c);
             return newGrid.get(pos)?.state ?? EMPTY;
         };
 
@@ -68,7 +64,7 @@ self.onmessage = (e: MessageEvent<SolverMessage>) => {
             state: CellState,
             source: CellSource
         ) => {
-            const pos = `${String(r)},${String(c)}`;
+            const pos = getPosKey(r, c);
             const existing = newGrid.get(pos);
 
             if (existing) {
@@ -136,11 +132,7 @@ self.onmessage = (e: MessageEvent<SolverMessage>) => {
 
                 // If this update was propagated, we stop here.
                 // We checked for conflicts (above), but we don't trigger further chains.
-                if (
-                    newGrid.get(`${String(cr)},${String(cc)}`)?.source !==
-                    'user'
-                )
-                    continue;
+                if (newGrid.get(getPosKey(cr, cc))?.source !== 'user') continue;
 
                 if (connected === limit && unknowns.length > 0) {
                     for (const unk of unknowns) {

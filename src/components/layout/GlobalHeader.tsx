@@ -22,6 +22,9 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
     return (
         <Box
             component="header"
+            onClick={e => {
+                e.stopPropagation();
+            }}
             sx={{
                 position: 'relative',
                 top: 0,

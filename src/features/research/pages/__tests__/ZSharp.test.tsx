@@ -99,7 +99,7 @@ Object.defineProperty(global, 'DecompressionStream', {
 
 Object.defineProperty(global, 'Response', {
     value: class extends originalResponse {
-        async text() {
+        override async text() {
             const self = this as unknown as { _data: unknown };
             if (self._data instanceof ReadableStream) {
                 return JSON.stringify({

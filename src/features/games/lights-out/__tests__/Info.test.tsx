@@ -1,11 +1,11 @@
 import { vi, type Mock } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Info from '../Info';
-import * as calculator from '../calculator';
+import Info from '../components/Info';
+import * as calculator from '../components/Calculator';
 import { DragProps } from '../../hooks/useDrag';
 
 // Mock dependencies
-vi.mock('../Example', () => ({
+vi.mock('../components/Example', () => ({
     __esModule: true,
     default: function MockExample() {
         return <div data-testid="example-component" />;
@@ -78,7 +78,7 @@ vi.mock('../../../../components/icons', () => ({
 }));
 
 // Mock calculator helpers
-vi.mock('../calculator', () => ({
+vi.mock('../components/Calculator', () => ({
     getInput: vi.fn(),
     getOutput: vi.fn(),
     useHandler: vi.fn(),

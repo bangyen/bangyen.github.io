@@ -16,7 +16,9 @@ import { ThemeProvider, useThemeContext } from './hooks/useTheme';
 // Lazy load pages
 const Home = lazy(() => import('./features/home/pages/Home'));
 const Error = lazy(() => import('./pages/Error'));
-const LightsOut = lazy(() => import('./features/games/lights-out/LightsOut'));
+const LightsOut = lazy(
+    () => import('./features/games/lights-out/pages/LightsOut')
+);
 const ZSharp = lazy(() => import('./features/research/pages/ZSharp'));
 const Oligopoly = lazy(() => import('./features/research/pages/Oligopoly'));
 const Interpreters = lazy(
@@ -28,7 +30,7 @@ const WikipediaQuiz = lazy(
 const LightsOutResearch = lazy(
     () => import('./features/research/pages/LightsOut')
 );
-const Slant = lazy(() => import('./features/games/slant/Slant'));
+const Slant = lazy(() => import('./features/games/slant/pages/Slant'));
 
 const App = (): React.ReactElement => {
     const { resolvedMode } = useThemeContext();

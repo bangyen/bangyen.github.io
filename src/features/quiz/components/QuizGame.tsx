@@ -67,10 +67,10 @@ const QuizGame: React.FC<QuizGameProps> = ({
                     if (state.showFeedback) return;
                     if (e.key === 'ArrowLeft') {
                         e.preventDefault();
-                        actions.submitAnswer('Left');
+                        void actions.submitAnswer('Left');
                     } else if (e.key === 'ArrowRight') {
                         e.preventDefault();
-                        actions.submitAnswer('Right');
+                        void actions.submitAnswer('Right');
                     }
                 }}
                 renderQuestionContent={item =>
@@ -80,7 +80,9 @@ const QuizGame: React.FC<QuizGameProps> = ({
                     <>
                         <Button
                             variant="contained"
-                            onClick={() => actions.submitAnswer?.('Left')}
+                            onClick={() => {
+                                void actions.submitAnswer?.('Left');
+                            }}
                             disabled={state.showFeedback}
                             sx={{
                                 flex: 1,
@@ -98,7 +100,9 @@ const QuizGame: React.FC<QuizGameProps> = ({
                         </Button>
                         <Button
                             variant="contained"
-                            onClick={() => actions.submitAnswer?.('Right')}
+                            onClick={() => {
+                                void actions.submitAnswer?.('Right');
+                            }}
                             disabled={state.showFeedback}
                             sx={{
                                 flex: 1,

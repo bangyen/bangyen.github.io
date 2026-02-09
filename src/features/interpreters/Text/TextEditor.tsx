@@ -28,6 +28,9 @@ export interface TextState extends ToolbarState {
     code: string;
     tape?: number[];
     output?: string;
+    index?: number;
+    pointer?: number;
+    register?: number;
 }
 
 export interface TextActionPayload {
@@ -205,11 +208,11 @@ export default function TextEditor({
             outFlag: output ?? false,
             regFlag: register ?? false,
             code: state.code ? Array.from(state.code) : [],
-            index: (state.index as number) || 0,
+            index: state.index ?? 0,
             tape: state.tape ?? [],
-            pointer: (state.pointer as number) || 0,
+            pointer: state.pointer ?? 0,
             output: state.output ?? '',
-            register: (state.register as number) || 0,
+            register: state.register ?? 0,
             height,
             size: 0,
             dispatch: wrapDispatch,

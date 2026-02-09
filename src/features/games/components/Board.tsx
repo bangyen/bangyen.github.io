@@ -25,7 +25,11 @@ export interface Getters {
     getFiller: (row: number, col: number) => string;
 }
 
-export type CellProps = Record<string, unknown>;
+export interface CellProps {
+    children?: React.ReactNode;
+    sx?: object;
+    [key: string]: unknown;
+}
 
 export type PropsFactory = (
     getters: Getters

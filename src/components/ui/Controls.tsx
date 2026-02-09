@@ -23,11 +23,7 @@ import type { SxProps, Theme } from '@mui/material/styles';
 import { Navigation } from '../layout/Navigation';
 import { COLORS } from '../../config/theme';
 
-type IconComponent = React.ElementType;
-
-type IconMap = Record<string, IconComponent>;
-
-export const ICON_MAP: IconMap = {
+export const ICON_MAP = {
     Code: Code,
     Psychology: Psychology,
     Cloud: Cloud,
@@ -36,16 +32,28 @@ export const ICON_MAP: IconMap = {
     NorthEast: NorthEastRounded,
     SouthEast: SouthEastRounded,
     SouthWest: SouthWestRounded,
-};
+} as const;
 
 import { TooltipButton } from './TooltipButton';
 export { TooltipButton };
 
+/**
+ * Props for the HomeButton component.
+ */
 interface HomeButtonProps {
+    /** Whether to hide the button entirely */
     hide?: boolean;
+    /** Additional props passed to TooltipButton */
     [key: string]: unknown;
 }
 
+/**
+ * A standardized button that navigates the user back to the home page.
+ * Uses a house icon and includes a "Navigate to Home" tooltip.
+ *
+ * @param props - HomeButton components props
+ * @returns Home arrow button or null if hidden
+ */
 export function HomeButton({ hide = false, ...rest }: HomeButtonProps) {
     if (hide) return null;
 
@@ -62,18 +70,36 @@ export function HomeButton({ hide = false, ...rest }: HomeButtonProps) {
     );
 }
 
+/**
+ * Props for the RandomButton component.
+ */
 interface RandomButtonProps {
+    /** Tooltip and label text */
     title?: string;
+    /** Click handler */
     onClick: () => void;
+    /** Current status (if used as a toggle) */
     enabled?: boolean;
+    /** Tooltip text when enabled */
     enabledTitle?: string;
+    /** Tooltip text when disabled */
     disabledTitle?: string;
+    /** Whether to visually indicate the enabled/disabled state */
     showToggleState?: boolean;
+    /** Whether to hide the button */
     hide?: boolean;
+    /** MUI style overrides */
     sx?: SxProps<Theme>;
+    /** Additional props passed to TooltipButton */
     [key: string]: unknown;
 }
 
+/**
+ * A button used to trigger randomization or toggle automatic/random moves.
+ * Supports a toggle state with visual feedback.
+ *
+ * @param props - RandomButton component props
+ */
 export function RandomButton({
     title = 'Randomize',
     onClick,
@@ -124,13 +150,25 @@ export function RandomButton({
     );
 }
 
+/**
+ * Props for the RefreshButton component.
+ */
 interface RefreshButtonProps {
+    /** Click handler */
     onClick: () => void;
+    /** Tooltip and label text */
     title?: string;
+    /** Whether to hide the button */
     hide?: boolean;
+    /** Additional props passed to TooltipButton */
     [key: string]: unknown;
 }
 
+/**
+ * A button used to reset a game or generate a new puzzle.
+ *
+ * @param props - RefreshButton component props
+ */
 export function RefreshButton({
     onClick,
     title = 'New Puzzle',
@@ -150,16 +188,32 @@ export function RefreshButton({
     );
 }
 
+/**
+ * Props for the Controls container component.
+ */
 interface ControlsProps {
+    /** Logic handler for directional moves (deprecated/placeholder) */
     handler?: (direction: string) => () => void;
+    /** Randomization callback */
     onRandom?: () => void;
+    /** Randomization toggle status */
     randomEnabled?: boolean;
+    /** Refresh/New Puzzle callback */
     onRefresh?: () => void;
+    /** Additional action buttons or children */
     children?: React.ReactNode;
+    /** Icon size for buttons */
     size?: 'small' | 'medium' | 'large' | 'inherit';
+    /** Whether to hide the entire controls bar */
     hide?: boolean;
 }
 
+/**
+ * A container component for game actions like randomization and refresh.
+ * Provides a consistent navigation-style layout for sub-components.
+ *
+ * @param props - Controls component props
+ */
 export function Controls({
     handler: _handler,
     onRandom,
@@ -192,14 +246,31 @@ export function Controls({
     );
 }
 
+/**
+ * Props for the ArrowsButton component.
+ */
 interface ArrowsButtonProps {
+    /** Whether the directional grid is currently visible */
     show?: boolean;
+    /** Callback to toggle visibility */
     setShow: (show: boolean) => void;
+    /** Logic handler for directional movements */
     handler: (direction: string) => () => void;
+    /** Size of the icons */
     size?: 'small' | 'medium' | 'large' | 'inherit';
+    /** Whether to hide the component entirely */
     hide?: boolean;
+    /** Whether to show diagonal move buttons (8-way instead of 4-way) */
+    diagonals?: boolean;
 }
 
+/**
+ * A directional control component for games requiring d-pad style input.
+ * Supports toggling between a single "Gamepad" icon and a full grid of arrows.
+ * Can be configured for 4-way (WASD style) or 8-way navigation.
+ *
+ * @param props - ArrowsButton component props
+ */
 export function ArrowsButton({
     show = false,
     setShow,
@@ -207,7 +278,7 @@ export function ArrowsButton({
     size = 'large',
     hide = false,
     diagonals = false,
-}: ArrowsButtonProps & { diagonals?: boolean }) {
+}: ArrowsButtonProps) {
     const flip = useCallback(() => {
         setShow(!show);
     }, [show, setShow]);
@@ -243,7 +314,7 @@ export function ArrowsButton({
                 <Grid container gap={0.5} wrap="nowrap">
                     <TooltipButton
                         title="Move Up Left"
-                        Icon={ICON_MAP.NorthWest ?? NorthWestRounded}
+                        Icon={ICON_MAP.NorthWest}
                         onClick={handler('up-left')}
                         aria-label="Move up left"
                         size={size}
@@ -257,7 +328,7 @@ export function ArrowsButton({
                     />
                     <TooltipButton
                         title="Move Up Right"
-                        Icon={ICON_MAP.NorthEast ?? NorthEastRounded}
+                        Icon={ICON_MAP.NorthEast}
                         onClick={handler('up-right')}
                         aria-label="Move up right"
                         size={size}
@@ -295,7 +366,7 @@ export function ArrowsButton({
                 <Grid container gap={0.5} wrap="nowrap">
                     <TooltipButton
                         title="Move Down Left"
-                        Icon={ICON_MAP.SouthWest ?? SouthWestRounded}
+                        Icon={ICON_MAP.SouthWest}
                         onClick={handler('down-left')}
                         aria-label="Move down left"
                         size={size}
@@ -309,7 +380,7 @@ export function ArrowsButton({
                     />
                     <TooltipButton
                         title="Move Down Right"
-                        Icon={ICON_MAP.SouthEast ?? SouthEastRounded}
+                        Icon={ICON_MAP.SouthEast}
                         onClick={handler('down-right')}
                         aria-label="Move down right"
                         size={size}

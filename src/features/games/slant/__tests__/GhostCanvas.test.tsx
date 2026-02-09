@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import { GhostCanvas } from '../GhostCanvas';
-import { FORWARD, BACKWARD, CellState } from '../boardHandlers';
+import { GhostCanvas } from '../components/GhostCanvas';
+import { FORWARD, BACKWARD, CellState } from '../utils/types';
 import { SolverMessage, Conflict, CellInfo } from '../workers/solverWorker';
 
 // Mock slant-wasm before boardHandlers imports it (uses import.meta.url incompatible with Jest)
@@ -130,7 +130,7 @@ vi.mock('../../hooks/useGameInteraction', () => ({
                 // Simulate drag entering new cell
                 const [r, c] = pos.split(',').map(Number);
                 if (r !== undefined && c !== undefined) {
-                    onToggle(r, c, false, 1, false); // draggingValue = 1 (FORWARD)
+                    onToggle(r, c, false, 2, false); // draggingValue = 2 (BACKWARD)
                 }
             },
         }),
@@ -239,7 +239,7 @@ describe('GhostCanvas', () => {
 
         // Simulate click (mouse down)
         fireEvent.mouseDown(cell!, { button: 0 });
-        expect(onMove).toHaveBeenCalledWith('0,0', FORWARD);
+        expect(onMove).toHaveBeenCalledWith('0,0', BACKWARD);
     });
 
     it('handles drag interactions (paint mode)', () => {
@@ -253,11 +253,11 @@ describe('GhostCanvas', () => {
 
         // Start drag on cell1
         fireEvent.mouseDown(cell1!, { button: 0 });
-        expect(onMove).toHaveBeenCalledWith('0,0', FORWARD);
+        expect(onMove).toHaveBeenCalledWith('0,0', BACKWARD);
 
         // Move to cell2
         fireEvent.mouseEnter(cell2!);
-        expect(onMove).toHaveBeenCalledWith('0,1', FORWARD);
+        expect(onMove).toHaveBeenCalledWith('0,1', BACKWARD);
     });
 
     it('propagates constraints (shallow propagation check)', async () => {

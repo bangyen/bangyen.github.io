@@ -23,6 +23,9 @@ export function Navigation({ children, ...rest }: NavigationProps) {
             component="nav"
             role="navigation"
             aria-label="Game controls navigation"
+            onClick={e => {
+                e.stopPropagation();
+            }}
             sx={{
                 transform: 'translateX(-50%)',
                 position: 'absolute',

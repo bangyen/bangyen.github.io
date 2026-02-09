@@ -94,7 +94,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                             onChange={e => {
                                 onSettingsChange({
                                     ...settings,
-                                    filterLanguage: e.target.value,
+                                    filterLanguage: e.target.value as string,
                                 });
                             }}
                             sx={{
@@ -125,7 +125,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                             onChange={e => {
                                 onSettingsChange({
                                     ...settings,
-                                    filterZone: e.target.value,
+                                    filterZone: e.target.value as string,
                                 });
                             }}
                             sx={{
@@ -173,7 +173,7 @@ const QuizFilters: React.FC<QuizFiltersProps> = ({
                             onChange={e => {
                                 onSettingsChange({
                                     ...settings,
-                                    filterConvention: e.target.value,
+                                    filterConvention: e.target.value as string,
                                 });
                             }}
                             sx={{

@@ -11,14 +11,18 @@ import {
 } from '../../types/quiz';
 
 // Utils for testing checkAnswer
-const testCheckAnswer = (
+const testCheckAnswer = async (
     quizType: keyof typeof QUIZ_CONFIGS,
     input: string,
     item: QuizItem,
     settings: QuizSettings,
     shouldBeCorrect: boolean
 ) => {
-    const result = QUIZ_CONFIGS[quizType].checkAnswer(input, item, settings);
+    const result = await QUIZ_CONFIGS[quizType].checkAnswer(
+        input,
+        item,
+        settings
+    );
     expect(result.isCorrect).toBe(shouldBeCorrect);
     if (shouldBeCorrect) {
         expect(result.points).toBe(1);
@@ -31,6 +35,7 @@ describe('QUIZ_CONFIGS', () => {
     describe('cctld', () => {
         const config = QUIZ_CONFIGS.cctld;
         const mockItem: CCTLD = {
+            type: 'cctld',
             code: '.us',
             country: 'United States',
             flag: 'us.png',
@@ -38,8 +43,8 @@ describe('QUIZ_CONFIGS', () => {
         };
 
         describe('checkAnswer', () => {
-            test('toCountry: handles exact match', () => {
-                testCheckAnswer(
+            test('toCountry: handles exact match', async () => {
+                await testCheckAnswer(
                     'cctld',
                     'United States',
                     mockItem,
@@ -47,8 +52,8 @@ describe('QUIZ_CONFIGS', () => {
                     true
                 );
             });
-            test('toCountry: handles case insensitive', () => {
-                testCheckAnswer(
+            test('toCountry: handles case insensitive', async () => {
+                await testCheckAnswer(
                     'cctld',
                     'united states',
                     mockItem,
@@ -56,8 +61,8 @@ describe('QUIZ_CONFIGS', () => {
                     true
                 );
             });
-            test('toCountry: handles aliases', () => {
-                testCheckAnswer(
+            test('toCountry: handles aliases', async () => {
+                await testCheckAnswer(
                     'cctld',
                     'USA',
                     mockItem,
@@ -65,8 +70,8 @@ describe('QUIZ_CONFIGS', () => {
                     true
                 );
             });
-            test('toCountry: rejects wrong answer', () => {
-                testCheckAnswer(
+            test('toCountry: rejects wrong answer', async () => {
+                await testCheckAnswer(
                     'cctld',
                     'Canada',
                     mockItem,
@@ -75,8 +80,8 @@ describe('QUIZ_CONFIGS', () => {
                 );
             });
 
-            test('toCode: handles exact match', () => {
-                testCheckAnswer(
+            test('toCode: handles exact match', async () => {
+                await testCheckAnswer(
                     'cctld',
                     '.us',
                     mockItem,
@@ -84,8 +89,8 @@ describe('QUIZ_CONFIGS', () => {
                     true
                 );
             });
-            test('toCode: handles missing dot', () => {
-                testCheckAnswer(
+            test('toCode: handles missing dot', async () => {
+                await testCheckAnswer(
                     'cctld',
                     'us',
                     mockItem,
@@ -93,8 +98,8 @@ describe('QUIZ_CONFIGS', () => {
                     true
                 );
             });
-            test('toCode: case insensitive', () => {
-                testCheckAnswer(
+            test('toCode: case insensitive', async () => {
+                await testCheckAnswer(
                     'cctld',
                     'US',
                     mockItem,
@@ -151,14 +156,15 @@ describe('QUIZ_CONFIGS', () => {
     describe('telephone', () => {
         const config = QUIZ_CONFIGS.telephone;
         const mockItem: TelephoneCode = {
+            type: 'telephone',
             code: '+1',
             country: 'United States',
             flag: 'us.png',
         };
 
         describe('checkAnswer', () => {
-            test('toCountry: exact match', () => {
-                testCheckAnswer(
+            test('toCountry: exact match', async () => {
+                await testCheckAnswer(
                     'telephone',
                     'United States',
                     mockItem,
@@ -167,8 +173,8 @@ describe('QUIZ_CONFIGS', () => {
                 );
             });
 
-            test('toCode: handles with plus', () => {
-                testCheckAnswer(
+            test('toCode: handles with plus', async () => {
+                await testCheckAnswer(
                     'telephone',
                     '+1',
                     mockItem,
@@ -176,8 +182,8 @@ describe('QUIZ_CONFIGS', () => {
                     true
                 );
             });
-            test('toCode: handles without plus', () => {
-                testCheckAnswer(
+            test('toCode: handles without plus', async () => {
+                await testCheckAnswer(
                     'telephone',
                     '1',
                     mockItem,
@@ -186,8 +192,8 @@ describe('QUIZ_CONFIGS', () => {
                 );
             });
             // Some crazy formats ?
-            test('toCode: handles spaces', () => {
-                testCheckAnswer(
+            test('toCode: handles spaces', async () => {
+                await testCheckAnswer(
                     'telephone',
                     ' + 1 ',
                     mockItem,
@@ -221,14 +227,15 @@ describe('QUIZ_CONFIGS', () => {
     describe('vehicle', () => {
         const config = QUIZ_CONFIGS.vehicle;
         const mockItem: VehicleCode = {
+            type: 'vehicle',
             code: 'USA',
             country: 'United States',
             flag: 'us.png',
         };
 
         describe('checkAnswer', () => {
-            test('toCode: handles correct code', () => {
-                testCheckAnswer(
+            test('toCode: handles correct code', async () => {
+                await testCheckAnswer(
                     'vehicle',
                     'USA',
                     mockItem,
@@ -236,8 +243,8 @@ describe('QUIZ_CONFIGS', () => {
                     true
                 );
             });
-            test('toCode: case insensitive', () => {
-                testCheckAnswer(
+            test('toCode: case insensitive', async () => {
+                await testCheckAnswer(
                     'vehicle',
                     'usa',
                     mockItem,
@@ -245,8 +252,8 @@ describe('QUIZ_CONFIGS', () => {
                     true
                 );
             });
-            test('toCountry: handles correct country', () => {
-                testCheckAnswer(
+            test('toCountry: handles correct country', async () => {
+                await testCheckAnswer(
                     'vehicle',
                     'United States',
                     mockItem,
@@ -269,6 +276,7 @@ describe('QUIZ_CONFIGS', () => {
     describe('driving_side', () => {
         const config = QUIZ_CONFIGS.driving_side;
         const mockItem: DrivingSide = {
+            type: 'driving_side',
             side: 'Right',
             country: 'United States',
             flag: 'us.png',
@@ -276,9 +284,9 @@ describe('QUIZ_CONFIGS', () => {
         };
 
         describe('checkAnswer', () => {
-            test('guessing (side): correct', () => {
+            test('guessing (side): correct', async () => {
                 // mode 'guessing' (default) -> user types side
-                testCheckAnswer(
+                await testCheckAnswer(
                     'driving_side',
                     'Right',
                     mockItem,
@@ -286,8 +294,8 @@ describe('QUIZ_CONFIGS', () => {
                     true
                 );
             });
-            test('guessing (side): case insensitive', () => {
-                testCheckAnswer(
+            test('guessing (side): case insensitive', async () => {
+                await testCheckAnswer(
                     'driving_side',
                     'right',
                     mockItem,
@@ -295,8 +303,8 @@ describe('QUIZ_CONFIGS', () => {
                     true
                 );
             });
-            test('guessing (side): wrong', () => {
-                testCheckAnswer(
+            test('guessing (side): wrong', async () => {
+                await testCheckAnswer(
                     'driving_side',
                     'left',
                     mockItem,
@@ -305,8 +313,8 @@ describe('QUIZ_CONFIGS', () => {
                 );
             });
 
-            test('toCountry: correct', () => {
-                testCheckAnswer(
+            test('toCountry: correct', async () => {
+                await testCheckAnswer(
                     'driving_side',
                     'United States',
                     mockItem,

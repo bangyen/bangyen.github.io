@@ -41,17 +41,15 @@ const WikipediaQuizPage: React.FC = () => {
         return 'cctld';
     }, [searchParams]);
 
-    const [gameState, setGameState] = useState<GameState>('menu');
+    const [gameState, setGameState] = useState<GameState>({ status: 'menu' });
 
     // Initialize settings based on selected quiz
     const [settings, setSettings] = useState<QuizSettings>(
         QUIZ_CONFIGS[selectedQuiz].defaultSettings
     );
 
-    const [lastScore, setLastScore] = useState(0);
-    const [lastHistory, setLastHistory] = useState<Question<QuizItem>[]>([]);
-
-    // Reset settings and game state when quiz type changes (via URL)
+    const [quizData, setQuizData] = useState<QuizItem[]>([]);
+    const [isLoadingData, setIsLoadingData] = useState(true);
 
     // URL sync
     const handleQuizChange = (event: SelectChangeEvent<unknown>) => {
@@ -61,31 +59,53 @@ const WikipediaQuizPage: React.FC = () => {
 
     const activeConfig = QUIZ_CONFIGS[selectedQuiz];
 
+    // Initialize/Reset data when quiz type changes
+    useEffect(() => {
+        let isMounted = true;
+        const loadData = async () => {
+            setIsLoadingData(true);
+            try {
+                const data = await activeConfig.getData();
+                if (isMounted) {
+                    setQuizData(data);
+                    setIsLoadingData(false);
+                }
+            } catch (err) {
+                // eslint-disable-next-line no-console
+                console.error('Failed to load quiz data:', err);
+                if (isMounted) setIsLoadingData(false);
+            }
+        };
+
+        void loadData();
+        return () => {
+            isMounted = false;
+        };
+    }, [selectedQuiz, activeConfig]);
+
     // Update document title
     useEffect(() => {
         document.title = `${activeConfig.title} | Bangyen`;
     }, [selectedQuiz, activeConfig.title]);
 
     const filteredPool = useQuizFilter({
-        data: activeConfig.data,
+        data: quizData,
         quizType: selectedQuiz,
         settings,
     });
 
     const handleStart = () => {
         if (filteredPool.length > 0) {
-            setGameState('playing');
+            setGameState({ status: 'playing' });
         }
     };
 
     const handleEndGame = (history: Question<QuizItem>[], score: number) => {
-        setLastHistory(history);
-        setLastScore(score);
-        setGameState('summary');
+        setGameState({ status: 'summary', history, score });
     };
 
     const handleBackToMenu = () => {
-        setGameState('menu');
+        setGameState({ status: 'menu' });
     };
 
     return (
@@ -100,7 +120,7 @@ const WikipediaQuizPage: React.FC = () => {
                 />
             }
         >
-            {gameState === 'menu' && (
+            {gameState.status === 'menu' && (
                 <Fade in>
                     <Box
                         sx={{
@@ -137,7 +157,9 @@ const WikipediaQuizPage: React.FC = () => {
                                 variant="contained"
                                 size="large"
                                 onClick={handleStart}
-                                disabled={filteredPool.length === 0}
+                                disabled={
+                                    isLoadingData || filteredPool.length === 0
+                                }
                                 sx={{
                                     px: { xs: 4, sm: 8 },
                                     py: 1.5,
@@ -160,16 +182,18 @@ const WikipediaQuizPage: React.FC = () => {
                                     },
                                 }}
                             >
-                                {filteredPool.length === 0
-                                    ? 'No Questions Found'
-                                    : `Start Quiz (${filteredPool.length.toString()})`}
+                                {isLoadingData
+                                    ? 'Loading Data...'
+                                    : filteredPool.length === 0
+                                      ? 'No Questions Found'
+                                      : `Start Quiz (${filteredPool.length.toString()})`}
                             </Button>
                         </Box>
                     </Box>
                 </Fade>
             )}
 
-            {gameState === 'playing' && (
+            {gameState.status === 'playing' && (
                 <QuizGame
                     quizType={selectedQuiz}
                     settings={settings}
@@ -179,10 +203,10 @@ const WikipediaQuizPage: React.FC = () => {
                 />
             )}
 
-            {gameState === 'summary' && (
+            {gameState.status === 'summary' && (
                 <QuizSummaryView<QuizItem>
-                    score={lastScore}
-                    history={lastHistory}
+                    score={gameState.score}
+                    history={gameState.history}
                     onRestart={handleStart}
                     onBackToMenu={handleBackToMenu}
                     renderHistoryItem={q => (

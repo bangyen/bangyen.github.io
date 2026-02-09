@@ -4,9 +4,22 @@ import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import wasm from 'vite-plugin-wasm';
 import topLevelAwait from 'vite-plugin-top-level-await';
+import path from 'path';
 
 export default defineConfig({
     plugins: [react(), tsconfigPaths(), wasm(), topLevelAwait()],
+    resolve: {
+        alias: {
+            'lights-out-wasm': path.resolve(
+                import.meta.dirname,
+                'wasm/lights-out-wasm/pkg/lights_out_wasm.js'
+            ),
+            'slant-wasm': path.resolve(
+                import.meta.dirname,
+                'wasm/slant-wasm/pkg/slant_wasm.js'
+            ),
+        },
+    },
     worker: {
         format: 'es',
     },
@@ -49,6 +62,9 @@ export default defineConfig({
                         }
                         if (id.includes('recharts')) {
                             return 'vendor_recharts';
+                        }
+                        if (id.includes('katex')) {
+                            return 'vendor_math';
                         }
                         if (
                             id.includes('/node_modules/react/') ||
