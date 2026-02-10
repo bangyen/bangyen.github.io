@@ -1,13 +1,13 @@
 import {
-    getPolynomial,
-    evalPolynomial,
-} from '../../../utils/math/gf2/polynomialUtils';
-import {
     getMatrix,
     getKernelBasis,
     getImageMapping,
     getMinWeightSolution,
-} from '../../games/lights-out';
+} from '../../../utils/math/gf2';
+import {
+    getPolynomial,
+    evalPolynomial,
+} from '../../../utils/math/gf2/polynomialUtils';
 
 // Define the shape of the message we expect to receive
 interface WorkerMessage {
