@@ -1,4 +1,7 @@
 import { vi, type Mock } from 'vitest';
+
+import * as matrices from '../matrices';
+import * as boardHandlers from '../utils/boardHandlers';
 import {
     chaseLights,
     fillRow,
@@ -7,8 +10,6 @@ import {
     handleChase,
     getCalculator,
 } from '../utils/chaseHandlers';
-import * as matrices from '../matrices';
-import * as boardHandlers from '../utils/boardHandlers';
 
 // Mock getProduct from matrices
 vi.mock('../matrices', () => ({

@@ -1,11 +1,12 @@
 import init, { invert_matrix } from 'lights-out-wasm';
-import { getPosKey } from '../../gameUtils';
 
 import { countBits, invertMatrix } from './gf2Operations';
 import { getMatrix } from './matrixOperations';
 import { evalPolynomial, getPolynomial } from './polynomialUtils';
+import { getPosKey } from '../../gameUtils';
 
 // Initialize the Wasm module
+
 init().catch((e: unknown) => {
     // eslint-disable-next-line no-console
     console.error('Failed to initialize Lights Out Wasm:', e);
@@ -18,32 +19,25 @@ init().catch((e: unknown) => {
 const inverseCache: Record<string, bigint[]> = {};
 
 /**
- * Computes the solution vector for a Lights Out puzzle using matrix inversion.
+ * Computes the solution vector for a Lights Out puzzle using algebraic matrix inversion.
  *
- * This function:
- * 1. Generates the game matrix based on grid dimensions
- * 2. Computes the characteristic polynomial
- * 3. Evaluates the polynomial to get the product matrix
- * 4. Inverts the matrix (using Wasm for grids ≤64 cols, otherwise pure JS)
- * 5. Multiplies the inverse by the input state to get the solution
+ * This function implements the algebraic solution for an $n \times m$ grid.
+ * The system of equations can be reduced from $n \cdot m$ variables to a much smaller
+ * system of $n$ variables by realizing that the relation between rows follows the
+ * polynomial sequence $P_k(A)$.
  *
- * Results are cached by grid dimensions for performance.
+ * Specifically, the entire board state is solvable if and only if $P_{m+1}(A)$ is invertible
+ * (or the target state is in its image). The solution is found by:
+ * 1. Generating $A$, the $n \times n$ adjacency matrix for a 1D line.
+ * 2. Computing $P_{m+1}(x)$ from the predefined sequence.
+ * 3. Evaluating $M = P_{m+1}(A)$ in GF(2).
+ * 4. Finding $M^{-1}$ (the inverse operator).
+ * 5. Operating on the initial state vector with the inverse.
  *
- * @param input - Binary array representing the current puzzle state (1 = light on, 0 = light off)
- * @param rows - Number of rows in the grid
- * @param cols - Number of columns in the grid
- * @returns Binary array representing which buttons to press (1 = press, 0 = don't press)
- *
- * @example
- * ```ts
- * // Solve a 3x3 grid where only the center light is on
- * const solution = getProduct(
- *   [0,0,0, 0,1,0, 0,0,0],
- *   3,
- *   3
- * );
- * // solution tells you which buttons to press to turn off all lights
- * ```
+ * @param input - Binary array representing the current puzzle state (1 = on)
+ * @param rows - Number of rows ($m$)
+ * @param cols - Number of columns ($n$)
+ * @returns Binary array representing which buttons to press to solve the puzzle
  */
 export function getProduct(
     input: number[],
@@ -64,11 +58,14 @@ export function getProduct(
                 const input = new BigUint64Array(
                     product.map(b => BigInt.asUintN(64, b))
                 );
+
                 const result = invert_matrix(input, product.length);
+
                 inverseCache[key] = Array.from(result);
             } catch (_e) {
                 // eslint-disable-next-line no-console
                 console.warn('Wasm inversion failed, falling back to JS', _e);
+
                 inverseCache[key] = invertMatrix(product);
             }
         } else {

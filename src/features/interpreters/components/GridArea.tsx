@@ -1,8 +1,10 @@
 import React, { useContext, useMemo } from 'react';
-import { EditorContext } from '../EditorContext';
-import { CustomGrid } from '../../../components/ui/CustomGrid';
+
 import { Text } from './Text';
-import { COLORS, SPACING, ANIMATIONS } from '../../../config/theme';
+import { EditorContext } from '../EditorContext';
+
+import { CustomGrid } from '@/components/ui/CustomGrid';
+import { COLORS, SPACING, ANIMATIONS } from '@/config/theme';
 
 export interface GridAreaProps {
     handleClick: (pos: number) => () => void;
@@ -72,6 +74,15 @@ export function GridArea({
             color: cellStyle.text,
             backgroundColor: cellStyle.bg,
             onClick: handleClick(pos),
+            onKeyDown: (e: React.KeyboardEvent) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleClick(pos)();
+                }
+            },
+            role: 'button',
+            tabIndex: 0,
+            'aria-label': `Cell ${String(row + 1)}, ${String(col + 1)}, value ${value}`,
             children: <Text text={value} />,
             sx: {
                 borderRadius: SPACING.borderRadius.md,

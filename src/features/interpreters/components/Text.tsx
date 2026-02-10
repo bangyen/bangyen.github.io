@@ -1,6 +1,7 @@
-import React from 'react';
-import { Typography } from '../../../components/mui';
 import type { SxProps, Theme } from '@mui/material/styles';
+import React from 'react';
+
+import { Typography } from '@/components/mui';
 
 export interface TextProps {
     text: string | number;

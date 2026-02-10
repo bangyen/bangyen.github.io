@@ -1,10 +1,12 @@
 import React, { useState, useCallback } from 'react';
-import { Box, Typography, Alert } from '../../../components/mui';
-import { COLORS, SPACING } from '../../../config/theme';
-import { RESEARCH_STYLES } from '../constants';
-import { useWorker } from '../../../hooks';
+
 import { SolvabilityHeader } from './solvability/SolvabilityHeader';
 import { SolvabilityResults } from './solvability/SolvabilityResults';
+import { useWorker } from '../../../hooks';
+import { RESEARCH_STYLES } from '../constants';
+
+import { Box, Typography, Alert } from '@/components/mui';
+import { COLORS, SPACING } from '@/config/theme';
 
 export const SolvabilityAnalyzer: React.FC = () => {
     const [n, setN] = useState<string>('5');

@@ -1,8 +1,4 @@
 import React from 'react';
-import { Box, Typography } from '../../../components/mui';
-import { CHART_DIMENSIONS, CHART_FORMATTING } from '../config/researchConfig';
-import { COLORS, SPACING, TYPOGRAPHY } from '../../../config/theme';
-import { GlassCard } from '../../../components/ui/GlassCard';
 import {
     LineChart,
     Line,
@@ -12,7 +8,13 @@ import {
     Tooltip as RechartsTooltip,
     ResponsiveContainer,
 } from 'recharts';
+
+import { CHART_DIMENSIONS, CHART_FORMATTING } from '../config/researchConfig';
 import { ChartConfig } from '../types';
+
+import { Box, Typography } from '@/components/mui';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';
 
 interface ResearchChartProps<T> {
     currentData: T[];

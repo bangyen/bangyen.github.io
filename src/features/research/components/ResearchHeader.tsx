@@ -1,7 +1,8 @@
 import React from 'react';
-import { Box, Typography, Button } from '../../../components/mui';
-import { COLORS, TYPOGRAPHY } from '../../../config/theme';
-import { ArrowBackRounded as Back } from '../../../components/icons';
+
+import { ArrowBackRounded as Back } from '@/components/icons';
+import { Box, Typography, Button } from '@/components/mui';
+import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
 interface ResearchHeaderProps {
     title: string;

@@ -1,9 +1,10 @@
-import { vi, type Mock } from 'vitest';
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
+import { vi, type Mock } from 'vitest';
+
+import { useQuizEngine } from '../../hooks/quiz';
 import QuizGame from '../QuizGame';
 import type { QuizGameViewProps } from '../QuizGameView';
-import { useQuizEngine } from '../../hooks/quiz';
 
 // Mock the hook
 vi.mock('../../hooks/quiz');

@@ -1,12 +1,19 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 
+/**
+ * Props to apply to draggable DOM elements.
+ * Contains all event handlers and attributes needed for drag interactions.
+ */
 export interface DragProps {
     onMouseDown: (e: React.MouseEvent) => void;
     onMouseEnter: () => void;
     onTouchStart: (e: React.TouchEvent) => void;
+    onKeyDown: (e: React.KeyboardEvent) => void;
     onContextMenu?: (e: React.MouseEvent) => void;
     'data-pos'?: string;
     'data-col'?: string;
+    role: string;
+    tabIndex: number;
     sx: {
         touchAction: 'none';
         transition: string;
@@ -14,19 +21,57 @@ export interface DragProps {
     };
 }
 
+/**
+ * Configuration options for the useDrag hook.
+ */
 interface UseDragOptions {
+    /** Callback when a cell is interacted with (mouse/touch/keyboard) */
     onAction: (
         pos: string,
         isRightClick: boolean,
         isInitialClick: boolean
     ) => void;
+    /** Optional check to enable/disable drag interactions */
     checkEnabled?: () => boolean;
+    /** Timeout in ms to debounce touch from mouse (default: 500) */
     touchTimeout?: number;
+    /** Data attribute to use for position tracking */
     posAttribute?: 'data-pos' | 'data-col';
+    /** Whether to prevent default browser behavior (default: true) */
     preventDefault?: boolean;
+    /** CSS transition property for visual feedback */
     transition?: string;
 }
 
+/**
+ * Custom hook for managing drag interactions across mouse, touch, and keyboard.
+ *
+ * Handles:
+ * - Left/right-click dragging with continuous action on hover
+ * - Touch dragging with movement tracking
+ * - Keyboard activation (Enter/Space)
+ * - Accessibility with proper ARIA roles
+ *
+ * @param options - Configuration for drag behavior
+ * @returns Object with drag state and getDragProps function
+ *
+ * @example
+ * ```tsx
+ * const { isDragging, getDragProps } = useDrag({
+ *   onAction: (pos, isRight, initial) => {
+ *     console.log(`Cell ${pos}: right=${isRight}, initial=${initial}`);
+ *   },
+ *   checkEnabled: () => !isGameOver,
+ *   touchTimeout: 500
+ * });
+ *
+ * return (
+ *   <div {...getDragProps('0,0')}>
+ *     Cell Content
+ *   </div>
+ * );
+ * ```
+ */
 export function useDrag({
     onAction,
     checkEnabled = () => true,
@@ -115,10 +160,19 @@ export function useDrag({
                 onAction(pos, false, true);
                 draggedItems.current.add(pos);
             },
+            onKeyDown: (e: React.KeyboardEvent) => {
+                if (!checkEnabled()) return;
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    onAction(pos, false, true);
+                }
+            },
             onContextMenu: (e: React.MouseEvent) => {
                 if (preventDefault) e.preventDefault();
             },
             [posAttribute]: pos,
+            role: 'button',
+            tabIndex: 0,
             sx: {
                 touchAction: 'none',
                 transition,

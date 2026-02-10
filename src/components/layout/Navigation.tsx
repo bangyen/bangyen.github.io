@@ -1,14 +1,15 @@
+import type { SxProps, Theme } from '@mui/material/styles';
 import React, { ReactNode } from 'react';
+
 import { Paper, Grid } from '../mui';
+
 import {
     SPACING,
     SHADOWS,
     COMPONENT_VARIANTS,
     LAYOUT,
     ANIMATIONS,
-} from '../../config/theme';
-
-import type { SxProps, Theme } from '@mui/material/styles';
+} from '@/config/theme';
 
 interface NavigationProps {
     children: ReactNode;

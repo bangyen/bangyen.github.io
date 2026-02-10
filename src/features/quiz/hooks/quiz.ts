@@ -1,7 +1,8 @@
 import { useReducer, useEffect, useRef, useCallback, useMemo } from 'react';
-import { QuizItem, QuizSettings, QuizType, Question } from '../types/quiz';
+
 import { QUIZ_CONFIGS } from '../config/quizConfig';
 import { applyQuestionLimit } from '../config/quizFilters';
+import { QuizItem, QuizSettings, QuizType, Question } from '../types/quiz';
 
 /**
  * State managed by the quiz engine reducer.

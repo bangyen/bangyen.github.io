@@ -1,16 +1,12 @@
 import React from 'react';
-import {
-    Box,
-    Paper,
-    Typography,
-    Fade,
-    alpha,
-} from '../../../../components/mui';
-import { COLORS, SPACING, TYPOGRAPHY } from '../../../../config/theme';
-import { RESEARCH_STYLES } from '../../constants';
+
 import { AlgebraicMetrics } from './AlgebraicMetrics';
-import { KernelBasisView } from './KernelBasisView';
 import { ImageMappingView } from './ImageMappingView';
+import { KernelBasisView } from './KernelBasisView';
+import { RESEARCH_STYLES } from '../../constants';
+
+import { Box, Paper, Typography, Fade, alpha } from '@/components/mui';
+import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';
 
 interface SolvabilityResultsProps {
     result: {

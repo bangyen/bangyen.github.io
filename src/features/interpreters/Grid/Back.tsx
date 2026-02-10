@@ -1,8 +1,8 @@
-import { gridMove } from '../utils/gridUtils';
-import GridEditor from './GridEditor';
 import React from 'react';
 
 import { GridState } from './eventHandlers';
+import GridEditor from './GridEditor';
+import { gridMove } from '../utils/gridUtils';
 
 export interface BackState extends GridState {
     velocity: number;

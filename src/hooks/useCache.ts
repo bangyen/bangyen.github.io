@@ -1,5 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react';
-import { GLOBAL_CONFIG } from '../config/constants';
+
+import { GLOBAL_CONFIG } from '@/config/constants';
 
 /**
  * Action types for cache navigation and management.

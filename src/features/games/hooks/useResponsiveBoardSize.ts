@@ -1,20 +1,57 @@
 import { useMemo } from 'react';
+
 import { useWindow, useMobile } from '../../../hooks';
 
+/**
+ * Configuration for responsive board size calculations.
+ */
 interface ResponsiveSizeConfig {
+    /** Number of rows in the grid */
     rows: number;
+    /** Number of columns in the grid */
     cols: number;
+    /** Header height in rem for available space calculation */
     headerOffset: {
         mobile: number;
         desktop: number;
     };
+    /** Padding to subtract from available space */
     paddingOffset: number | { x: number; y: number };
+    /** Maximum board width in pixels */
     boardMaxWidth: number;
+    /** Factor to reduce available space (0-1) */
     boardSizeFactor: number;
+    /** Maximum cell size in pixels */
     maxCellSize: number;
+    /** Rem base value (typically 16) */
     remBase: number;
 }
 
+/**
+ * Custom hook for calculating responsive board cell size.
+ *
+ * Calculates the largest uniform cell size that fits within the viewport
+ * while respecting min/max constraints. Returns size in rem units.
+ *
+ * @param config - Board sizing configuration
+ * @returns Cell size in rem units
+ *
+ * @example
+ * ```tsx
+ * const cellSize = useResponsiveBoardSize({
+ *   rows: 5,
+ *   cols: 5,
+ *   headerOffset: { mobile: 56, desktop: 64 },
+ *   paddingOffset: 16,
+ *   boardMaxWidth: 1200,
+ *   boardSizeFactor: 0.9,
+ *   maxCellSize: 100,
+ *   remBase: 16
+ * });
+ *
+ * return <div style={{ fontSize: `${cellSize}rem` }}>Board</div>;
+ * ```
+ */
 export function useResponsiveBoardSize({
     rows,
     cols,

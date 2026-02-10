@@ -5,15 +5,8 @@ import React, {
     useCallback,
     useMemo,
 } from 'react';
-import Editor from '../Editor';
-import { EditorContext, EditorContextType } from '../EditorContext';
-import { GridArea } from '../components/GridArea';
-import { KeySelector } from '../components/KeySelector';
-import { convertPixels } from '../utils/gridUtils';
-import { handleAction, GridState, GridAction } from './eventHandlers';
-import { PAGE_TITLES } from '../../../config/constants';
-import { ToolbarPayload } from '../Toolbar';
 
+import { handleAction, GridState, GridAction } from './eventHandlers';
 import {
     useContainer,
     useTimer,
@@ -22,6 +15,14 @@ import {
     CacheAction,
     useMobile,
 } from '../../../hooks';
+import { GridArea } from '../components/GridArea';
+import { KeySelector } from '../components/KeySelector';
+import Editor from '../Editor';
+import { EditorContext, EditorContextType } from '../EditorContext';
+import { ToolbarPayload } from '../Toolbar';
+import { convertPixels } from '../utils/gridUtils';
+
+import { PAGE_TITLES } from '@/config/constants';
 
 // gridCache stores { rows, cols } for different interpreters
 // Using a map to store cache per interpreter name if needed, or just a single cache

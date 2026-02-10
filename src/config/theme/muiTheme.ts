@@ -4,10 +4,11 @@
  */
 
 import { createTheme } from '@mui/material/styles';
-import { COLORS, DARK_COLORS, LIGHT_COLORS } from './colors';
-import { TYPOGRAPHY } from './typography';
-import { SPACING } from './spacing';
+
 import { ANIMATIONS } from './animations';
+import { COLORS, DARK_COLORS, LIGHT_COLORS } from './colors';
+import { SPACING } from './spacing';
+import { TYPOGRAPHY } from './typography';
 
 export function createAppTheme(mode: 'light' | 'dark' = 'dark') {
     const palette = mode === 'light' ? LIGHT_COLORS : DARK_COLORS;

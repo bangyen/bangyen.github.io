@@ -1,7 +1,9 @@
-import React from 'react';
 import { Typography, Grid, Card } from '@mui/material';
-import { SPACING, COMPONENT_VARIANTS } from '../../../config/theme';
+import React from 'react';
+
 import { QuizSettings } from '../types/quiz';
+
+import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
 
 interface QuizSettingsProps<S extends QuizSettings> {
     settings: S;

@@ -1,13 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Box, MenuItem, Typography } from '../../../../components/mui';
-import {
-    COLORS,
-    SPACING,
-    TYPOGRAPHY,
-    ANIMATIONS,
-} from '../../../../config/theme';
+
 import { PROJECT_CATEGORIES } from '../data';
+
+import { Box, MenuItem, Typography } from '@/components/mui';
+import { COLORS, SPACING, TYPOGRAPHY, ANIMATIONS } from '@/config/theme';
 
 export function ProjectDropdown(): React.ReactElement {
     return (

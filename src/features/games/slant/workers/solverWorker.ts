@@ -1,6 +1,6 @@
-import { CellState, EMPTY, BACKWARD, FORWARD } from '../utils/types';
-import { findCycles } from '../utils/cycleDetection';
 import { getPosKey } from '../../../../utils/gameUtils';
+import { findCycles } from '../utils/cycleDetection';
+import { CellState, EMPTY, BACKWARD, FORWARD } from '../utils/types';
 
 export type CellSource = 'user' | 'propagated';
 

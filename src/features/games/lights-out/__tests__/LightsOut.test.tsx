@@ -1,14 +1,16 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { PAGE_TITLES } from '../../../../config/constants';
+import React from 'react';
+import { vi, type Mock } from 'vitest';
+
+import * as hooks from '../../../../hooks';
+import LightsOut from '../pages/LightsOut';
 import * as boardHandlers from '../utils/boardHandlers';
 import { BoardState, BoardAction } from '../utils/boardHandlers';
-import * as hooks from '../../../../hooks';
-import { vi, type Mock } from 'vitest';
-import LightsOut from '../pages/LightsOut';
+
+import { PAGE_TITLES } from '@/config/constants';
 
 // Mock icons
-vi.mock('../../../../components/icons', async importOriginal => {
+vi.mock('@/components/icons', async importOriginal => {
     const actual = await importOriginal<Record<string, any>>();
     return {
         ...actual,
@@ -91,7 +93,7 @@ vi.mock('../../components/Board', () => ({
     },
 }));
 
-vi.mock('../../../../components/ui/Controls', () => ({
+vi.mock('@/components/ui/Controls', () => ({
     Controls: function MockControls({
         children,
         onRefresh,
@@ -112,7 +114,7 @@ vi.mock('../../../../components/ui/Controls', () => ({
     },
 }));
 
-vi.mock('../../../../components/ui/TooltipButton', () => ({
+vi.mock('@/components/ui/TooltipButton', () => ({
     TooltipButton: function MockTooltipButton({
         title,
         onClick,
@@ -135,7 +137,7 @@ vi.mock('../components/Info', () => ({
 }));
 
 // Mock ThemeProvider
-vi.mock('../../../../hooks/useTheme', () => ({
+vi.mock('@/hooks/useTheme', () => ({
     useThemeContext: () => ({
         mode: 'light',
         resolvedMode: 'light',

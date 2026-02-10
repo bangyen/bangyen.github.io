@@ -1,7 +1,9 @@
-import React, { forwardRef, ReactNode } from 'react';
-import { Box } from '../mui';
-import { SPACING, COMPONENT_VARIANTS } from '../../config/theme';
 import type { SxProps, Theme } from '@mui/material/styles';
+import React, { forwardRef, ReactNode } from 'react';
+
+import { Box } from '../mui';
+
+import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
 
 /**
  * Props for GlassCard component.

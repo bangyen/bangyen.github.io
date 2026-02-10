@@ -1,9 +1,10 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { FeaturedWork } from '../FeaturedWork';
-import { PublicationCard, Publication } from '../FeaturedWork/PublicationCard';
-import { ProjectCard, Project } from '../FeaturedWork/ProjectCard';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+
+import { FeaturedWork } from '../FeaturedWork';
+import { ProjectCard, Project } from '../FeaturedWork/ProjectCard';
+import { PublicationCard, Publication } from '../FeaturedWork/PublicationCard';
 
 describe('FeaturedWork Components', () => {
     const mockPublication: Publication = {

@@ -1,7 +1,9 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
+
 import { HeroSection } from '../HeroSection';
-import { PERSONAL_INFO } from '../../../../config/constants';
+
+import { PERSONAL_INFO } from '@/config/constants';
 
 // Mock scrollIntoView
 window.HTMLElement.prototype.scrollIntoView = vi.fn();

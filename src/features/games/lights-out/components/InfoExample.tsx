@@ -1,7 +1,9 @@
 import React from 'react';
-import { Box } from '@/components/mui';
+
 import Example from './Example';
 import { Palette, PropsFactory } from '../../components/Board';
+
+import { Box } from '@/components/mui';
 
 interface InfoExampleProps {
     size: number;

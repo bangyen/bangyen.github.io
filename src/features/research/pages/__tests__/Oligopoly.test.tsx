@@ -1,3 +1,4 @@
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
     render,
     screen,
@@ -5,12 +6,12 @@ import {
     act,
     waitFor,
 } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { vi, type Mock } from 'vitest';
-import Oligopoly from '../Oligopoly';
-import { ResearchDemoProps, Control } from '../../types';
 import pako from 'pako';
+import { BrowserRouter } from 'react-router-dom';
+import { vi, type Mock } from 'vitest';
+
+import { ResearchDemoProps, Control } from '../../types';
+import Oligopoly from '../Oligopoly';
 
 // Mocks
 vi.mock('pako', () => ({

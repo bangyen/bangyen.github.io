@@ -1,7 +1,8 @@
 import { getProduct } from '../matrices';
 import { PRECOMPUTED_SOLUTIONS } from './precomputedTables';
+
 import { createGameReducer, getPosKey } from '@/utils/gameUtils';
-import { GridSize, CellIndex } from '@/utils/types';
+import { GridSize, CellIndex, createGridSize } from '@/utils/types';
 
 export interface BoardState {
     grid: number[];
@@ -189,8 +190,6 @@ export function getNextMove(
 
     return null;
 }
-
-import { createGridSize } from '@/utils/types';
 
 export function getInitialState(rows: number, cols: number): BoardState {
     return {

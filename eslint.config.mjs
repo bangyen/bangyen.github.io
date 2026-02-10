@@ -5,6 +5,8 @@ import reactPlugin from 'eslint-plugin-react';
 import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
 
+import importPlugin from 'eslint-plugin-import';
+
 export default tseslint.config(
     { ignores: ['build/**', 'node_modules/**', 'coverage/**', 'config/**', 'dist/**', 'public/**'] },
 
@@ -20,6 +22,7 @@ export default tseslint.config(
             react: reactPlugin,
             'react-hooks': reactHooksPlugin,
             'jsx-a11y': jsxA11yPlugin,
+            import: importPlugin,
         },
         languageOptions: {
             ecmaVersion: 2020,
@@ -50,10 +53,29 @@ export default tseslint.config(
             },
         },
         rules: {
-            // React Recommended Rules (manually applied as some plugins don't fully support flat config spread yet)
+            // React Recommended Rules
             ...reactPlugin.configs.recommended.rules,
             ...reactHooksPlugin.configs.recommended.rules,
             ...jsxA11yPlugin.configs.recommended.rules,
+
+            // Import rules
+            'import/order': [
+                'error',
+                {
+                    groups: [
+                        'builtin',
+                        'external',
+                        'internal',
+                        ['parent', 'sibling'],
+                        'index',
+                        'object',
+                    ],
+                    'newlines-between': 'always',
+                    alphabetize: { order: 'asc', caseInsensitive: true },
+                },
+            ],
+            'import/no-duplicates': 'error',
+            'import/no-unresolved': 'off', // TypeScript handles this
 
             // Custom Rules
             '@typescript-eslint/no-explicit-any': 'error',
@@ -65,13 +87,16 @@ export default tseslint.config(
                     caughtErrorsIgnorePattern: '^_',
                 },
             ],
-            // Disable noisy type-checked rules for migration
-
 
             'react/prop-types': 'off',
             'react/react-in-jsx-scope': 'off',
             'react/self-closing-comp': 'error',
             'react/no-array-index-key': 'error',
+            'react/jsx-no-useless-fragment': 'error',
+            'react/jsx-curly-brace-presence': [
+                'error',
+                { props: 'never', children: 'never' },
+            ],
             'jsx-a11y/anchor-is-valid': 'off',
             'no-console': 'error',
             'prefer-const': 'error',

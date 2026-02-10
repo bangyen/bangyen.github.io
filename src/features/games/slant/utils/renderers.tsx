@@ -1,9 +1,11 @@
 import React from 'react';
+
+import { SLANT_STYLES } from './constants';
+import { FORWARD, BACKWARD, EMPTY, SlantState } from './types';
+import { DragProps } from '../../hooks/useDrag';
+
 import { Box } from '@/components/mui';
 import { COLORS, ANIMATIONS } from '@/config/theme';
-import { SLANT_STYLES } from './constants';
-import { FORWARD, BACKWARD, SlantState } from './types';
-import { DragProps } from '../../hooks/useDrag';
 import { getPosKey } from '@/utils/gameUtils';
 
 export const getBackProps =
@@ -18,8 +20,30 @@ export const getBackProps =
         const isError = state.cycleCells.has(pos);
         const dragProps = getDragProps(pos);
 
+        const clues = [
+            { v: state.numbers[r]?.[c], p: getPosKey(r, c) },
+            { v: state.numbers[r]?.[c + 1], p: getPosKey(r, c + 1) },
+            { v: state.numbers[r + 1]?.[c], p: getPosKey(r + 1, c) },
+            { v: state.numbers[r + 1]?.[c + 1], p: getPosKey(r + 1, c + 1) },
+        ].map(({ v, p }) => {
+            if (v == null) return '-';
+            const status = state.errorNodes.has(p)
+                ? 'Error'
+                : state.satisfiedNodes.has(p)
+                  ? 'Ok'
+                  : 'Pending';
+            return `${String(v)} (${status})`;
+        });
+
         return {
             ...dragProps,
+            'aria-label': `Cell ${String(r + 1)}, ${String(c + 1)}. Clues: ${clues.join(', ')}. ${
+                value === EMPTY
+                    ? 'Empty'
+                    : value === FORWARD
+                      ? 'Forward Slash'
+                      : 'Backward Slash'
+            }${isError ? ', Loop Error' : ''}`,
             sx: {
                 ...dragProps.sx,
                 cursor: 'pointer',

@@ -1,9 +1,9 @@
-import { gridMove, getDirection } from '../utils/gridUtils';
 import {
     handleToolbar,
     type ToolbarState,
     type ToolbarAction,
 } from '../Toolbar';
+import { gridMove, getDirection } from '../utils/gridUtils';
 
 export interface GridState {
     grid: string;

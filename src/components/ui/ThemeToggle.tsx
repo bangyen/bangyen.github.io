@@ -1,7 +1,9 @@
 import React from 'react';
-import { useThemeContext } from '../../hooks/useTheme';
+
 import { LightModeRounded, DarkModeRounded, DevicesRounded } from '../icons';
 import { TooltipButton } from './TooltipButton';
+
+import { useThemeContext } from '@/hooks/useTheme';
 
 export function ThemeToggle() {
     const { mode, toggleTheme } = useThemeContext();

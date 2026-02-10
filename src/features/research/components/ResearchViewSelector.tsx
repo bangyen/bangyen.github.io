@@ -1,14 +1,16 @@
 import React from 'react';
-import { Button, Box } from '../../../components/mui';
+
+import { RESEARCH_STYLES } from '../constants';
+import { ViewType } from '../types';
+
+import { Button, Box } from '@/components/mui';
 import {
     COLORS,
     SPACING,
     TYPOGRAPHY,
     SHADOWS,
     ANIMATIONS,
-} from '../../../config/theme';
-import { ViewType } from '../types';
-import { RESEARCH_STYLES } from '../constants';
+} from '@/config/theme';
 
 interface ResearchViewSelectorProps<T> {
     viewTypes: ViewType<T>[];

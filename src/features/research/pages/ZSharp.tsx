@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
 import pako from 'pako';
+import React, { useState, useEffect } from 'react';
+
+import { RESEARCH_CONSTANTS, PERCENTAGE } from '../config/researchConfig';
+import ResearchDemo from '../ResearchDemo';
+import { ViewType } from '../types';
+
 import {
     BarChartRounded,
     TrendingUpRounded,
     ShowChartRounded,
     AnalyticsRounded,
-} from '../../../components/icons';
-import { URLS, PAGE_TITLES } from '../../../config/constants';
-import { RESEARCH_CONSTANTS, PERCENTAGE } from '../config/researchConfig';
-import { COLORS } from '../../../config/theme';
-import ResearchDemo from '../ResearchDemo';
-import { ViewType } from '../types';
+} from '@/components/icons';
+import { URLS, PAGE_TITLES } from '@/config/constants';
+import { COLORS } from '@/config/theme';
 
 interface DataPoint {
     epoch: number;

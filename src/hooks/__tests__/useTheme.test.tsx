@@ -1,7 +1,8 @@
-import React from 'react';
 import { renderHook, act } from '@testing-library/react';
-import { ThemeProvider, useThemeContext } from '../useTheme';
+import React from 'react';
 import { Mock, MockInstance } from 'vitest';
+
+import { ThemeProvider, useThemeContext } from '../useTheme';
 
 describe('useTheme (ThemeProvider and useThemeContext)', () => {
     let matchMediaSpy: MockInstance;

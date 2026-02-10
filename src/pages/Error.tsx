@@ -1,13 +1,14 @@
-import { Grid, Typography, Box, Fade, Button } from '../components/mui';
-import { HomeRounded } from '../components/icons';
 import { Link } from 'react-router-dom';
-import { PAGE_TITLES } from '../config/constants';
+
+import { HomeRounded } from '@/components/icons';
+import { Grid, Typography, Box, Fade, Button } from '@/components/mui';
+import { PAGE_TITLES } from '@/config/constants';
 import {
     COLORS,
     SPACING,
     TYPOGRAPHY,
     COMPONENT_VARIANTS,
-} from '../config/theme';
+} from '@/config/theme';
 
 export default function Error(): React.ReactElement {
     document.title = PAGE_TITLES.error;

@@ -1,5 +1,6 @@
-import TextEditor from './TextEditor';
 import React, { useCallback } from 'react';
+
+import TextEditor from './TextEditor';
 
 export interface StunStepState {
     pointer: number;

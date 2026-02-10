@@ -1,8 +1,9 @@
-import { vi, type Mock } from 'vitest';
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import TextEditor from '../TextEditor';
+import React from 'react';
+import { vi, type Mock } from 'vitest';
+
 import * as hooks from '../../../../hooks';
+import TextEditor from '../TextEditor';
 
 // Mock Editor sub-component - Correct path
 vi.mock('../../Editor', () => ({

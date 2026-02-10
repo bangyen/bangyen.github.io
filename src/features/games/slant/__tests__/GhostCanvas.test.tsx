@@ -1,5 +1,6 @@
-import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
+import React from 'react';
+
 import { GhostCanvas } from '../components/GhostCanvas';
 import { FORWARD, BACKWARD, CellState } from '../utils/types';
 import { SolverMessage, Conflict, CellInfo } from '../workers/solverWorker';
@@ -82,7 +83,7 @@ class MockWorker {
 global.Worker = MockWorker;
 
 // Mock theme
-vi.mock('../../../../config/theme', () => ({
+vi.mock('@/config/theme', () => ({
     COLORS: {
         text: { primary: 'black' },
         primary: { main: 'blue' },
@@ -138,12 +139,12 @@ vi.mock('../../hooks/useGameInteraction', () => ({
 }));
 
 // Mock TooltipButton
-vi.mock('../../../../components/ui/TooltipButton', () => ({
+vi.mock('@/components/ui/TooltipButton', () => ({
     TooltipButton: () => <div data-testid="tooltip-button" />,
 }));
 
 // Mock CustomGrid to verify cell rendering
-vi.mock('../../../../components/ui/CustomGrid', () => ({
+vi.mock('@/components/ui/CustomGrid', () => ({
     CustomGrid: ({
         rows,
         cols,

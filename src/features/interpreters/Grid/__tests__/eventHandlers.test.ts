@@ -1,6 +1,7 @@
 import { vi, type Mock } from 'vitest';
-import { handleAction, GridState, GridAction } from '../eventHandlers';
+
 import * as gridUtils from '../../utils/gridUtils';
+import { handleAction, GridState, GridAction } from '../eventHandlers';
 
 vi.mock('../../utils/gridUtils', () => ({
     gridMove: vi.fn(),

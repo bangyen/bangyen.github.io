@@ -39,11 +39,19 @@ export function polyToString(p: bigint): string {
 }
 
 /**
- * Computes the k-th polynomial in a specific sequence used for Lights Out analysis.
- * This sequence satisfies P_k(x) = x * P_{k-1}(x) + P_{k-2}(x).
+ * Computes the k-th polynomial in the specific sequence used for algebraic analysis of Lights Out.
  *
- * @param index - The index k in the sequence
- * @returns The k-th polynomial as a bigint
+ * This sequence of polynomials is defined by:
+ * $P_0(x) = 0$
+ * $P_1(x) = 1$
+ * $P_k(x) = x \cdot P_{k-1}(x) + P_{k-2}(x)$ (for $k \ge 2$)
+ *
+ * These polynomials are the characteristic polynomials of the adjacency matrix for paths/cycles.
+ * Specifically, for an $n$-length 1D line of lights with adjacency matrix $A$, the state
+ * after $k$ steps of row-reduction can be described by these polynomials evaluated at $A$.
+ *
+ * @param index - The index $k$ in the sequence
+ * @returns The $k$-th polynomial as a bitmask (bigint)
  */
 export function getPolynomial(index: number): bigint {
     const output = [0n, 1n];
@@ -307,11 +315,18 @@ export interface Pattern {
 }
 
 /**
- * Finds the period pattern for an n x n Lights Out grid.
- * This is used to analyze properties of larger grids based on their minimal polynomials.
+ * Finds the algebraic period pattern for an $n \times m$ Lights Out grid.
  *
- * @param n - The grid dimension
- * @returns The pattern data including period and identity indices
+ * This function calculates the minimal period $z$ of the polynomial sequence modulo
+ * the characteristic polynomial of grid dimension $n$. This periodic behavior allows
+ * us to predict property patterns (like solvability and nullity) for grids of
+ * arbitrary height $m$, as these properties depend on $P_{m+1}(A)$.
+ *
+ * It uses a space-optimized sequence progression to find when the identity state
+ * (or a cycle thereof) repeats.
+ *
+ * @param n - The fixed grid dimension (e.g., width)
+ * @returns The pattern data including period $z$ and indices $R$ where $P_k(A) = I$.
  */
 export function findPattern(n: number): Pattern {
     const A = getMatrix(n);

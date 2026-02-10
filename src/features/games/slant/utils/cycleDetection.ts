@@ -1,8 +1,9 @@
-import { CellState, EMPTY, FORWARD } from './types';
-import { getPosKey } from '../../../../utils/gameUtils';
-import { DSU } from '../../../../utils/DSU';
 import { find_cycles_wasm } from 'slant-wasm';
+
+import { CellState, EMPTY, FORWARD } from './types';
 import { isWasmReady } from './wasmInit';
+import { DSU } from '../../../../utils/DSU';
+import { getPosKey } from '../../../../utils/gameUtils';
 
 /**
  * Maps grid node coordinates (intersections) to a flat index.
@@ -42,7 +43,9 @@ export function findCycles(
                     flatGrid[r * cols + c] = grid[r]?.[c] ?? 0;
                 }
             }
+
             const cycles = find_cycles_wasm(flatGrid, rows, cols);
+
             if (cycles.length > 0) {
                 return new Set(cycles);
             }

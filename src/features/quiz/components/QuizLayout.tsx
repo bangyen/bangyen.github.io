@@ -1,7 +1,9 @@
 import { Box, Typography, Grid } from '@mui/material';
+import React from 'react';
 
-import { Grid as MuiGrid } from '../../../components/mui';
-import { COLORS, TYPOGRAPHY } from '../../../config/theme';
+import { PageLayout } from '@/components/layout/PageLayout';
+import { Grid as MuiGrid } from '@/components/mui';
+import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
 interface QuizLayoutProps {
     title: string;
@@ -11,8 +13,6 @@ interface QuizLayoutProps {
     headerContent?: React.ReactNode;
 }
 
-import { GlobalHeader } from '../../../components/layout/GlobalHeader';
-
 const QuizLayout: React.FC<QuizLayoutProps> = ({
     title,
     subtitle,
@@ -21,15 +21,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
     headerContent,
 }) => {
     return (
-        <Box
-            sx={{
-                minHeight: '100vh',
-                display: 'flex',
-                flexDirection: 'column',
-                background: COLORS.surface.background,
-            }}
-        >
-            <GlobalHeader showHome={true} infoUrl={infoUrl} />
+        <PageLayout infoUrl={infoUrl}>
             <Grid
                 container
                 flex={1}
@@ -148,7 +140,7 @@ const QuizLayout: React.FC<QuizLayoutProps> = ({
 
                 {children}
             </Grid>
-        </Box>
+        </PageLayout>
     );
 };
 

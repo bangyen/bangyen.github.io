@@ -1,11 +1,10 @@
-import { ROUTES } from '../config/constants';
+import { ROUTES } from '@/config/constants';
 
-export { default as Home } from '../features/home/pages/Home';
+export { Home } from '@/features/home';
 export { default as Error } from './Error';
-export { default as Lights_Out } from '../features/games/lights-out/pages/LightsOut';
-export { default as ZSharp } from '../features/research/pages/ZSharp';
-export { default as Oligopoly } from '../features/research/pages/Oligopoly';
-export { default as Interpreters } from '../features/interpreters/pages/Interpreters';
-export { default as WikipediaQuiz } from '../features/quiz/pages/WikipediaQuizPage';
+export { LightsOut } from '@/features/games';
+export { ZSharp, Oligopoly } from '@/features/research';
+export { Interpreters } from '@/features/interpreters';
+export { WikipediaQuiz } from '@/features/quiz';
 
 export const pages = ROUTES.pages;

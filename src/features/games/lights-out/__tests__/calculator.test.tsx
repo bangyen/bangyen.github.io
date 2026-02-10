@@ -1,8 +1,9 @@
-import { vi, type Mock } from 'vitest';
 import { renderHook } from '@testing-library/react';
+import { vi, type Mock } from 'vitest';
+
+import { DragProps } from '../../hooks/useDrag';
 import { getInput, getOutput, useHandler } from '../components/Calculator';
 import { useGetters } from '../hooks/boardUtils';
-import { DragProps } from '../../hooks/useDrag';
 
 // Mock useGetters from boardUtils
 vi.mock('../hooks/boardUtils', () => ({
@@ -36,6 +37,9 @@ describe('Lights Out Calculator UI Helpers', () => {
                 onMouseDown: vi.fn(),
                 onMouseEnter: vi.fn(),
                 onTouchStart: vi.fn(),
+                onKeyDown: vi.fn(),
+                role: 'button',
+                tabIndex: 0,
                 'data-pos': pos,
                 sx: { touchAction: 'none' as const, transition: 'none' },
             }));
@@ -55,7 +59,22 @@ describe('Lights Out Calculator UI Helpers', () => {
         it('calls getters with correct coordinates', () => {
             const getProps = getInput(
                 mockGetters,
-                vi.fn(() => ({}) as DragProps)
+                vi.fn(
+                    (pos: string) =>
+                        ({
+                            onMouseDown: vi.fn(),
+                            onMouseEnter: vi.fn(),
+                            onTouchStart: vi.fn(),
+                            onKeyDown: vi.fn(),
+                            role: 'button',
+                            tabIndex: 0,
+                            'data-pos': pos,
+                            sx: {
+                                touchAction: 'none' as const,
+                                transition: 'none',
+                            },
+                        }) as DragProps
+                )
             );
             getProps(1, 2);
             expect(mockGetters.getColor).toHaveBeenCalledWith(1, 2);

@@ -1,10 +1,12 @@
 import React from 'react';
-import { Box, Typography, Fade } from '../../../components/mui';
-import { Section } from '../../../components/layout/Layout';
-import { PUBLICATIONS, PROJECTS } from '../../../config/constants';
+
 import { ProjectCard } from './FeaturedWork/ProjectCard';
 import { PublicationCard } from './FeaturedWork/PublicationCard';
-import { ANIMATIONS, COLORS, TYPOGRAPHY } from '../../../config/theme';
+
+import { Section } from '@/components/layout/Layout';
+import { Box, Typography, Fade } from '@/components/mui';
+import { PUBLICATIONS, PROJECTS } from '@/config/constants';
+import { ANIMATIONS, COLORS, TYPOGRAPHY } from '@/config/theme';
 
 interface AnimatedCardProps {
     index: number;

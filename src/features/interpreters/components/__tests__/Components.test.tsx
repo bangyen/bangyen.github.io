@@ -1,13 +1,14 @@
-import { vi, type Mock } from 'vitest';
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
+import { vi, type Mock } from 'vitest';
+
+import { useMobile } from '../../../../hooks';
+import { EditorContext, EditorContextType } from '../../EditorContext';
+import { GridArea } from '../GridArea';
 import { InterpreterNavigation } from '../InterpreterNavigation';
+import { KeySelector } from '../KeySelector';
 import { Text } from '../Text';
 import { TextArea } from '../TextArea';
-import { GridArea } from '../GridArea';
-import { KeySelector } from '../KeySelector';
-import { EditorContext, EditorContextType } from '../../EditorContext';
-import { useMobile } from '../../../../hooks';
 
 // Mocks
 vi.mock('@mui/material', () => ({
@@ -36,7 +37,7 @@ vi.mock('@mui/material', () => ({
     ),
 }));
 
-vi.mock('../../../../components/mui', () => ({
+vi.mock('@/components/mui', () => ({
     Typography: ({
         children,
         ...props
@@ -101,7 +102,7 @@ vi.mock('../../../../hooks', () => ({
     useMobile: vi.fn(() => false),
 }));
 
-vi.mock('../../../../components/ui/CustomGrid', () => ({
+vi.mock('@/components/ui/CustomGrid', () => ({
     CustomGrid: ({
         cellProps,
         rows,

@@ -1,13 +1,15 @@
 import React from 'react';
-import { Box, Grid, useMediaQuery } from '../../components/mui';
-import { COLORS, SPACING, COMPONENT_VARIANTS } from '../../config/theme';
-import { ResearchDemoProps } from './types';
-import ResearchViewSelector from './components/ResearchViewSelector';
-import ResearchControls from './components/ResearchControls';
-import { GlobalHeader } from '../../components/layout/GlobalHeader';
+
 import { ResearchChart } from './components/ResearchChart';
-import { ResearchHeader } from './components/ResearchHeader';
+import ResearchControls from './components/ResearchControls';
 import { ResearchErrorBoundary } from './components/ResearchErrorBoundary';
+import { ResearchHeader } from './components/ResearchHeader';
+import ResearchViewSelector from './components/ResearchViewSelector';
+import { ResearchDemoProps } from './types';
+
+import { PageLayout } from '@/components/layout/PageLayout';
+import { Box, Grid, useMediaQuery } from '@/components/mui';
+import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
 
 const ResearchDemo = <T,>({
     title,
@@ -70,15 +72,7 @@ const ResearchDemo = <T,>({
 
     return (
         <ResearchErrorBoundary>
-            <Box
-                sx={{
-                    minHeight: '100vh',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    background: COLORS.surface.background,
-                }}
-            >
-                <GlobalHeader showHome={true} githubUrl={githubUrl} />
+            <PageLayout githubUrl={githubUrl}>
                 <Grid
                     container={true}
                     flex={1}
@@ -153,7 +147,7 @@ const ResearchDemo = <T,>({
                         </Box>
                     </Grid>
                 </Grid>
-            </Box>
+            </PageLayout>
         </ResearchErrorBoundary>
     );
 };

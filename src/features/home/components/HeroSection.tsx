@@ -1,17 +1,19 @@
 import React from 'react';
-import { Grid, Box, Typography, Fade } from '../../../components/mui';
-import { HeroContainer } from '../../../components/layout/Layout';
-import { LocationOn, ArrowForward } from '../../../components/icons';
-import { PERSONAL_INFO } from '../../../config/constants';
+
+import { ConnectSection } from './HeroSection/ConnectSection';
+import { TechStack } from './HeroSection/TechStack';
+
+import { LocationOn, ArrowForward } from '@/components/icons';
+import { HeroContainer } from '@/components/layout/Layout';
+import { Grid, Box, Typography, Fade } from '@/components/mui';
+import { PERSONAL_INFO } from '@/config/constants';
 import {
     COLORS,
     TYPOGRAPHY,
     SPACING,
     ANIMATIONS,
     SHADOWS,
-} from '../../../config/theme';
-import { TechStack } from './HeroSection/TechStack';
-import { ConnectSection } from './HeroSection/ConnectSection';
+} from '@/config/theme';
 
 export function HeroSection(): React.ReactElement {
     return (

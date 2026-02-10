@@ -1,5 +1,5 @@
-import { Publication, Project } from './types';
 import { URLS } from './identity';
+import { Publication, Project } from './types';
 
 export const PUBLICATIONS: Publication[] = [
     {

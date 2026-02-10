@@ -6,4 +6,4 @@ export { useWindow, useMobile, useContainer } from './layout';
 export type { Size, RefObject } from './layout';
 export { useWorker } from './useWorker';
 export type { WorkerResponse, UseWorkerOptions } from './useWorker';
-export * from '../features/quiz/hooks/quiz';
+export * from '@/features/quiz/hooks';

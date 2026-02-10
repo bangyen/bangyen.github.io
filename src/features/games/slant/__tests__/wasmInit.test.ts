@@ -1,4 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest';
+
 import { ensureWasmInitialized, isWasmReady } from '../utils/wasmInit';
 
 describe('WASM Initialization', () => {

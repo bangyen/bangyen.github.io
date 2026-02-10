@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { Grid, Box } from '../../../components/mui';
-import { HeroSection } from '../components/HeroSection';
+
 import { FeaturedWork } from '../components/FeaturedWork';
-import { PAGE_TITLES } from '../../../config/constants';
-import { COLORS } from '../../../config/theme';
-import { GlobalHeader } from '../../../components/layout/GlobalHeader';
+import { HeroSection } from '../components/HeroSection';
+
+import { PageLayout } from '@/components/layout/PageLayout';
+import { Box } from '@/components/mui';
+import { PAGE_TITLES } from '@/config/constants';
 
 export default function Home(): React.ReactElement {
     useEffect(() => {
@@ -12,32 +13,16 @@ export default function Home(): React.ReactElement {
     }, []);
 
     return (
-        <Grid
-            container
-            minHeight="100vh"
-            flexDirection="column"
-            sx={{
-                position: 'relative',
-                background: COLORS.surface.background,
-                boxSizing: 'border-box',
-                width: '100%',
-                maxWidth: '100vw',
-                overflowX: 'hidden',
-            }}
-        >
-            <GlobalHeader />
+        <PageLayout>
+            <Box
+                sx={{
+                    height: { xs: '10rem', md: '5rem' },
+                }}
+            />
 
-            <Box component="main" sx={{ width: '100%', flex: 1 }}>
-                <Box
-                    sx={{
-                        height: { xs: '10rem', md: '5rem' },
-                    }}
-                />
+            <HeroSection />
 
-                <HeroSection />
-
-                <FeaturedWork />
-            </Box>
-        </Grid>
+            <FeaturedWork />
+        </PageLayout>
     );
 }

@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
-import { useKeys } from '../useKeys';
 import { MockInstance } from 'vitest';
+
+import { useKeys } from '../useKeys';
 
 describe('useKeys hook', () => {
     let addSpy: MockInstance;

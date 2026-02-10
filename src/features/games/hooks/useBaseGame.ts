@@ -1,17 +1,25 @@
 import { useReducer, useEffect, useMemo, useCallback } from 'react';
-import { useGridSize } from './useGridSize';
+
 import { useGamePersistence } from './useGamePersistence';
-import { useWinTransition } from './useWinTransition';
+import { useGridSize } from './useGridSize';
 import { usePageTitle } from './usePageTitle';
 import { useResponsiveBoardSize } from './useResponsiveBoardSize';
+import { useWinTransition } from './useWinTransition';
+
 import { BaseGameState, BaseGameAction } from '@/utils/gameUtils';
 
+/**
+ * Configuration for initializing a game with full state management.
+ */
 interface BaseGameConfig<S, A> {
+    /** Storage keys for grid size and game state */
     storageKeys: {
         size: string;
         state: string;
     };
+    /** Page title for the document */
     pageTitle: string;
+    /** Grid sizing configuration (see useGridSize) */
     gridConfig: {
         defaultSize: number | null;
         minSize?: number;
@@ -25,6 +33,7 @@ interface BaseGameConfig<S, A> {
         cellSizeReference: number | { mobile: number; desktop: number };
         mobileRowOffset?: number;
     };
+    /** Board rendering configuration */
     boardConfig: {
         paddingOffset:
             | number
@@ -37,11 +46,17 @@ interface BaseGameConfig<S, A> {
         rowOffset?: number;
         colOffset?: number;
     };
+    /** State reducer function */
     reducer: (state: S, action: A | BaseGameAction<S>) => S;
+    /** Function to create initial state for given grid dimensions */
     getInitialState: (rows: number, cols: number) => S;
+    /** Optional callback when game is reset */
     onReset?: () => void;
+    /** Delay before advancing after win (ms) */
     winAnimationDelay: number;
+    /** Function to check if current state is solved */
     isSolved: (state: S) => boolean;
+    /** Custom serialization/deserialization for persistence */
     persistence?: {
         serialize?: (state: S) => unknown;
         deserialize?: (saved: unknown) => S;
@@ -49,6 +64,39 @@ interface BaseGameConfig<S, A> {
     };
 }
 
+/**
+ * Custom hook that orchestrates all game state management.
+ *
+ * Combines:
+ * - Grid sizing and responsiveness
+ * - Game state with custom reducer
+ * - State persistence to localStorage
+ * - Win detection and animation timing
+ * - Board size calculations
+ *
+ * @template S - Game state type
+ * @template A - Game action type
+ * @param config - Complete game configuration
+ * @returns Game state, dispatch, and UI control properties
+ *
+ * @example
+ * ```tsx
+ * const { rows, cols, state, dispatch, solved } = useBaseGame({
+ *   storageKeys: { size: 'lights-out-size', state: 'lights-out-state' },
+ *   pageTitle: 'Lights Out',
+ *   gridConfig: { ... },
+ *   boardConfig: { ... },
+ *   reducer: lightsOutReducer,
+ *   getInitialState: (rows, cols) => initializeLightsOut(rows, cols),
+ *   isSolved: (state) => state.board.every(cell => !cell),
+ *   winAnimationDelay: 2000
+ * });
+ *
+ * if (solved) {
+ *   return <WinScreen onNext={() => dispatch({ type: 'new' })} />;
+ * }
+ * ```
+ */
 export function useBaseGame<
     S extends BaseGameState,
     A extends { type: string },

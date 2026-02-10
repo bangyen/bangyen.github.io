@@ -1,13 +1,14 @@
 import React from 'react';
-import { Box, Typography } from '../../../../components/mui';
-import { GlassCard } from '../../../../components/ui/GlassCard';
-import { OpenInNew } from '../../../../components/icons';
+
+import { OpenInNew } from '@/components/icons';
+import { Box, Typography } from '@/components/mui';
+import { GlassCard } from '@/components/ui/GlassCard';
 import {
     COLORS,
     TYPOGRAPHY,
     SPACING,
     COMPONENT_VARIANTS,
-} from '../../../../config/theme';
+} from '@/config/theme';
 
 export interface Publication {
     title: string;

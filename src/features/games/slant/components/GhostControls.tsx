@@ -1,12 +1,13 @@
-import React from 'react';
 import { Box } from '@mui/material';
-import { COLORS, LAYOUT } from '../../../../config/theme';
-import { TooltipButton } from '../../../../components/ui/TooltipButton';
+import React from 'react';
+
 import {
     CloseRounded,
     ContentCopyRounded,
     DeleteRounded,
-} from '../../../../components/icons';
+} from '@/components/icons';
+import { TooltipButton } from '@/components/ui/TooltipButton';
+import { COLORS, LAYOUT } from '@/config/theme';
 
 interface GhostControlsProps {
     onCopy?: () => void;

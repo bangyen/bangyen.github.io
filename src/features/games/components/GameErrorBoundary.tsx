@@ -1,8 +1,9 @@
 import React from 'react';
-import { Typography, Button, Box } from '../../../components/mui';
-import { GlassCard } from '../../../components/ui/GlassCard';
-import { ErrorBoundary } from '../../../components/layout/ErrorBoundary';
-import { COLORS, SPACING } from '../../../config/theme';
+
+import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
+import { Typography, Button, Box } from '@/components/mui';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { COLORS, SPACING } from '@/config/theme';
 
 export const GameErrorBoundary: React.FC<{ children: React.ReactNode }> = ({
     children,

@@ -1,7 +1,8 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import QuizSettingsView from '../QuizSettingsView';
+import React from 'react';
+
 import { QuizSettings } from '../../types/quiz';
+import QuizSettingsView from '../QuizSettingsView';
 
 describe('QuizSettingsView', () => {
     const mockSettings: QuizSettings = {

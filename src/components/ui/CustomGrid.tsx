@@ -1,8 +1,10 @@
 import React, { useMemo, memo } from 'react';
+
 import { Box } from '../mui';
-import { getSpace } from '../../features/interpreters/utils/gridUtils';
-import { TYPOGRAPHY, COMPONENT_VARIANTS } from '../../config/theme';
-import { GRID_CONFIG } from '../../features/interpreters/config/interpretersConfig';
+
+import { TYPOGRAPHY, COMPONENT_VARIANTS } from '@/config/theme';
+import { GRID_CONFIG } from '@/features/interpreters/config';
+import { getSpace } from '@/features/interpreters/utils';
 
 interface CellProps {
     size: number;
@@ -54,6 +56,7 @@ const Cell = memo(function Cell({ size, children, ...rest }: CellProps) {
 
     return (
         <Box
+            role="gridcell"
             {...props}
             {...domProps}
             sx={{
@@ -93,6 +96,7 @@ const Row = memo(function Row({
 }: RowProps) {
     return (
         <Box
+            role="row"
             sx={{
                 display: 'flex',
                 gap: spacing,

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Box, Menu } from '../../../components/mui';
-import { TooltipButton } from '../../../components/ui/TooltipButton';
-import { ViewModuleRounded } from '../../../components/icons';
-import { COLORS, SHADOWS, ANIMATIONS, SPACING } from '../../../config/theme';
+
 import { ProjectDropdown } from './ProjectMenu/ProjectDropdown';
+
+import { ViewModuleRounded } from '@/components/icons';
+import { Box, Menu } from '@/components/mui';
+import { TooltipButton } from '@/components/ui/TooltipButton';
+import { COLORS, SHADOWS, ANIMATIONS, SPACING } from '@/config/theme';
 
 function clickHandler(setAnchor: (anchor: HTMLElement | null) => void) {
     return (event: React.MouseEvent<HTMLElement>) => {

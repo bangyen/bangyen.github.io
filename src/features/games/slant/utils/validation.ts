@@ -1,4 +1,5 @@
 import { CellState, EMPTY, FORWARD, BACKWARD } from './types';
+
 import { getPosKey } from '@/utils/gameUtils';
 
 export function calculateNumbers(

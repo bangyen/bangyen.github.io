@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box, Button } from '@/components/mui';
+
 import { NavigateBeforeRounded, NavigateNextRounded } from '@/components/icons';
+import { Box, Button } from '@/components/mui';
 import { COLORS } from '@/config/theme';
 
 interface InfoNavigationProps {

@@ -1,14 +1,10 @@
 import React from 'react';
-import { Box, Typography, Fade } from '../../../../components/mui';
-import { GlassCard } from '../../../../components/ui/GlassCard';
-import { Work, Code, Psychology, Cloud } from '../../../../components/icons';
-import { SKILLS } from '../../../../config/constants';
-import {
-    COLORS,
-    TYPOGRAPHY,
-    SPACING,
-    ANIMATIONS,
-} from '../../../../config/theme';
+
+import { Work, Code, Psychology, Cloud } from '@/components/icons';
+import { Box, Typography, Fade } from '@/components/mui';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { SKILLS } from '@/config/constants';
+import { COLORS, TYPOGRAPHY, SPACING, ANIMATIONS } from '@/config/theme';
 
 const ICON_MAP: Record<string, React.ElementType> = {
     Code,

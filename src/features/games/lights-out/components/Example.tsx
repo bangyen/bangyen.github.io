@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Grid, Box } from '@/components/mui';
-import { EmojiEventsRounded } from '@/components/icons';
-import { getStates } from '../utils/chaseHandlers';
-import { CustomGrid } from '@/components/ui/CustomGrid';
+
+import { GridWithKeyframes } from './AnimatedGrid';
+import { getOutput, useHandler as useCalculatorHandler } from './Calculator';
 import { Board, Palette, PropsFactory } from '../../components/Board';
 import { useHandler as useBoardHandler } from '../hooks/boardUtils';
-import { getOutput, useHandler as useCalculatorHandler } from './Calculator';
-import { COLORS } from '@/config/theme';
-import { LIGHTS_OUT_STYLES } from '../utils/constants';
 import {
     getBoardIconFrames,
     getInputIconFrames,
 } from '../utils/animationFrames';
-import { GridWithKeyframes } from './AnimatedGrid';
+import { getStates } from '../utils/chaseHandlers';
+import { LIGHTS_OUT_STYLES } from '../utils/constants';
+
+import { EmojiEventsRounded } from '@/components/icons';
+import { Typography, Grid, Box } from '@/components/mui';
+import { CustomGrid } from '@/components/ui/CustomGrid';
+import { COLORS } from '@/config/theme';
 
 /**
  * Creates icon handler for board cells

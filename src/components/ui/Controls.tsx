@@ -1,5 +1,7 @@
+import type { SxProps, Theme } from '@mui/material/styles';
 import React, { useCallback } from 'react';
-import { IconButton, Grid } from '../mui';
+import { Link } from 'react-router-dom';
+
 import {
     Refresh,
     HomeRounded,
@@ -18,10 +20,13 @@ import {
     SouthEastRounded,
     SouthWestRounded,
 } from '../icons';
-import { Link } from 'react-router-dom';
-import type { SxProps, Theme } from '@mui/material/styles';
 import { Navigation } from '../layout/Navigation';
-import { COLORS } from '../../config/theme';
+import { IconButton, Grid } from '../mui';
+import { TooltipButton } from './TooltipButton';
+
+import { COLORS } from '@/config/theme';
+
+export { TooltipButton };
 
 export const ICON_MAP = {
     Code: Code,
@@ -33,9 +38,6 @@ export const ICON_MAP = {
     SouthEast: SouthEastRounded,
     SouthWest: SouthWestRounded,
 } as const;
-
-import { TooltipButton } from './TooltipButton';
-export { TooltipButton };
 
 /**
  * Props for the HomeButton component.

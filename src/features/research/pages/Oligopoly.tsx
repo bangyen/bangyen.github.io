@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
 import pako from 'pako';
-import { URLS, PAGE_TITLES } from '../../../config/constants';
+import React, { useState, useEffect } from 'react';
+
 import { RESEARCH_CONSTANTS } from '../config/researchConfig';
-import { COLORS } from '../../../config/theme';
+import ResearchDemo from '../ResearchDemo';
+
 import {
     BusinessRounded,
     TrendingUpRounded,
     AttachMoneyRounded,
-} from '../../../components/icons';
-import ResearchDemo from '../ResearchDemo';
+} from '@/components/icons';
+import { URLS, PAGE_TITLES } from '@/config/constants';
+import { COLORS } from '@/config/theme';
 
 interface MatrixItem {
     round: number;

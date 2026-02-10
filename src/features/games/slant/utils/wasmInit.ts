@@ -16,6 +16,7 @@ export async function ensureWasmInitialized(): Promise<void> {
         .then(() => {
             wasmInitialized = true;
         })
+
         .catch((e: unknown) => {
             // eslint-disable-next-line no-console
             console.error('Failed to initialize Slant WASM:', e);

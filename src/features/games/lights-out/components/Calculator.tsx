@@ -1,9 +1,11 @@
 import React, { useCallback } from 'react';
-import { CircleRounded } from '@/components/icons';
+
 import { Getters, Palette } from '../../components/Board';
+import { DragProps } from '../../hooks/useDrag';
 import { useGetters } from '../hooks/boardUtils';
 import { LIGHTS_OUT_STYLES } from '../utils/constants';
-import { DragProps } from '../../hooks/useDrag';
+
+import { CircleRounded } from '@/components/icons';
 
 export function getInput(
     getters: Getters,

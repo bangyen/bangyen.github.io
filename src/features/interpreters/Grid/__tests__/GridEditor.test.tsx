@@ -1,10 +1,11 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import GridEditor from '../GridEditor';
+import React from 'react';
+
 import { GridState } from '../eventHandlers';
+import GridEditor from '../GridEditor';
 
 // Mock MUI to avoid complex rendering
-vi.mock('../../../../components/mui', () => ({
+vi.mock('@/components/mui', () => ({
     Box: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="mui-box">{children}</div>
     ),

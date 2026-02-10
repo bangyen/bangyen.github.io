@@ -153,6 +153,14 @@ export function symmetricPow(
     return output;
 }
 
+/**
+ * Sorts rows of two matrices simultaneously based on the values in the first matrix.
+ * This is used as a helper for Gaussian elimination to find suitable pivot rows.
+ *
+ * @param matrix - The main matrix whose values determine the sort order
+ * @param identity - A secondary matrix (usually an identity or target) whose rows are swapped in sync
+ * @returns A tuple containing the sorted [original, secondary] matrices
+ */
 export function sortMatrices(
     matrix: bigint[],
     identity: bigint[]

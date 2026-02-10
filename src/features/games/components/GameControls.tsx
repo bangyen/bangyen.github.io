@@ -1,7 +1,8 @@
 import React from 'react';
-import { Controls } from '../../../components/ui/Controls';
-import { TooltipButton } from '../../../components/ui/TooltipButton';
-import { RemoveRounded, AddRounded } from '../../../components/icons';
+
+import { RemoveRounded, AddRounded } from '@/components/icons';
+import { Controls } from '@/components/ui/Controls';
+import { TooltipButton } from '@/components/ui/TooltipButton';
 
 interface GameControlsProps {
     rows: number;

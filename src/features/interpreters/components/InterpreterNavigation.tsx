@@ -4,7 +4,9 @@ import {
     FormControl,
     SelectChangeEvent,
 } from '@mui/material';
-import { COLORS, SPACING, TYPOGRAPHY, ANIMATIONS } from '../../../config/theme';
+
+import { ROUTES } from '@/config/constants';
+import { COLORS, SPACING, TYPOGRAPHY, ANIMATIONS } from '@/config/theme';
 
 interface InterpreterNavigationProps {
     active: string;
@@ -89,10 +91,12 @@ export const InterpreterNavigation: React.FC<InterpreterNavigationProps> = ({
                     },
                 }}
             >
-                <MenuItem value="stun-step">Stun Step</MenuItem>
-                <MenuItem value="suffolk">Suffolk</MenuItem>
-                <MenuItem value="wii2d">WII2D</MenuItem>
-                <MenuItem value="back">Back</MenuItem>
+                <MenuItem value={ROUTES.interpreters.StunStep}>
+                    Stun Step
+                </MenuItem>
+                <MenuItem value={ROUTES.interpreters.Suffolk}>Suffolk</MenuItem>
+                <MenuItem value={ROUTES.interpreters.WII2D}>WII2D</MenuItem>
+                <MenuItem value={ROUTES.interpreters.Back}>Back</MenuItem>
             </Select>
         </FormControl>
     );

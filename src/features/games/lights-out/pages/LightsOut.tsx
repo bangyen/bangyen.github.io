@@ -1,31 +1,37 @@
 import React, { useMemo, useReducer } from 'react';
-import { MenuBookRounded } from '@/components/icons';
-import { TooltipButton } from '@/components/ui/TooltipButton';
+
 import { Board } from '../../components/Board';
-import { useHandler, usePalette } from '../hooks/boardUtils';
 import { GameControls } from '../../components/GameControls';
-import { PAGE_TITLES } from '@/config/constants';
+import { GameErrorBoundary } from '../../components/GameErrorBoundary';
+import { GamePageLayout } from '../../components/GamePageLayout';
 import { GAME_CONSTANTS } from '../../config/gameConfig';
-import { LAYOUT } from '@/config/theme';
-import { handleBoard, isSolved, getInitialState } from '../utils/boardHandlers';
+import { useBaseGame } from '../../hooks/useBaseGame';
+import { useGameInteraction } from '../../hooks/useGameInteraction';
 import Info from '../components/Info';
+import { useHandler, usePalette } from '../hooks/boardUtils';
+import {
+    handleBoard,
+    isSolved,
+    getInitialState,
+    BoardState,
+    BoardAction,
+} from '../utils/boardHandlers';
 import {
     STORAGE_KEYS,
     LAYOUT_CONSTANTS,
     LIGHTS_OUT_STYLES,
 } from '../utils/constants';
-import { useBaseGame } from '../../hooks/useBaseGame';
-import { useGameInteraction } from '../../hooks/useGameInteraction';
-import { GamePageLayout } from '../../components/GamePageLayout';
-import { useCellFactory } from '@/utils/gameUtils';
 import {
     getFrontProps,
     getBackProps,
     getExampleProps,
 } from '../utils/renderers';
-import { GameErrorBoundary } from '../../components/GameErrorBoundary';
 
-import { BoardState, BoardAction } from '../utils/boardHandlers';
+import { MenuBookRounded } from '@/components/icons';
+import { TooltipButton } from '@/components/ui/TooltipButton';
+import { PAGE_TITLES } from '@/config/constants';
+import { LAYOUT } from '@/config/theme';
+import { useCellFactory } from '@/utils/gameUtils';
 import { createCellIndex } from '@/utils/types';
 
 export default function LightsOut() {
@@ -70,7 +76,7 @@ export default function LightsOut() {
         reducer: handleBoard,
         getInitialState,
         winAnimationDelay: GAME_CONSTANTS.timing.winAnimationDelay,
-        isSolved: s => s.initialized && isSolved(s.grid),
+        isSolved: (s: BoardState) => s.initialized && isSolved(s.grid),
     });
 
     const [open, toggleOpen] = useReducer((open: boolean) => !open, false);
@@ -78,7 +84,7 @@ export default function LightsOut() {
     const palette = usePalette(state.score);
 
     const { getDragProps } = useGameInteraction({
-        onToggle: (r, c) => {
+        onToggle: (r: number, c: number) => {
             dispatch({
                 type: 'adjacent',
                 row: createCellIndex(r),

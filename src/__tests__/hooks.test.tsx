@@ -1,5 +1,6 @@
-import { vi, type Mock } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
+import { vi, type Mock } from 'vitest';
+
 import {
     useContainer,
     useWindow,
@@ -8,13 +9,14 @@ import {
     useCache,
     useMobile,
 } from '../hooks';
-import * as mui from '../components/mui';
+
+import * as mui from '@/components/mui';
 
 // Mock useMediaQuery from MUI
 vi.mock(
-    '../components/mui',
+    '@/components/mui',
     (): Record<string, unknown> => ({
-        ...vi.importActual('../components/mui'),
+        ...vi.importActual('@/components/mui'),
         useMediaQuery: vi.fn(),
     })
 );

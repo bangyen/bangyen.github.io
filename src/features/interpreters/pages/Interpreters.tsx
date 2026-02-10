@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Box } from '../../../components/mui';
-import { StunStep, Suffolk, WII2D, Back } from '..';
-import { InterpreterNavigation } from '../components/InterpreterNavigation';
-import { InterpreterErrorBoundary } from '../components/InterpreterErrorBoundary';
-import { PAGE_TITLES } from '../../../config/constants';
-import { COLORS, SPACING } from '../../../config/theme';
 
-import { GlobalHeader } from '../../../components/layout/GlobalHeader';
+import { StunStep, Suffolk, WII2D, Back } from '..';
+import { InterpreterErrorBoundary } from '../components/InterpreterErrorBoundary';
+import { InterpreterNavigation } from '../components/InterpreterNavigation';
+
+import { PageLayout } from '@/components/layout/PageLayout';
+import { PAGE_TITLES, ROUTES } from '@/config/constants';
+import { SPACING } from '@/config/theme';
 
 export default function Interpreters(): React.ReactElement {
     const [searchParams, setSearchParams] = useSearchParams();
-    const active = searchParams.get('type') ?? 'stun-step';
+    const active = searchParams.get('type') ?? ROUTES.interpreters.StunStep;
 
     useEffect(() => {
         document.title = PAGE_TITLES.interpreters;
@@ -24,10 +24,10 @@ export default function Interpreters(): React.ReactElement {
     // Map interpreter types to their display names for the wiki URL
     const getInterpreterName = (type: string): string => {
         const nameMap: Record<string, string> = {
-            'stun-step': 'Stun Step',
-            suffolk: 'Suffolk',
-            wii2d: 'WII2D',
-            back: 'Back',
+            [ROUTES.interpreters.StunStep]: 'Stun Step',
+            [ROUTES.interpreters.Suffolk]: 'Suffolk',
+            [ROUTES.interpreters.WII2D]: 'WII2D',
+            [ROUTES.interpreters.Back]: 'Back',
         };
         return nameMap[type] ?? 'Stun Step';
     };
@@ -40,13 +40,13 @@ export default function Interpreters(): React.ReactElement {
         );
 
         switch (active) {
-            case 'stun-step':
+            case ROUTES.interpreters.StunStep:
                 return <StunStep navigation={navigation} />;
-            case 'suffolk':
+            case ROUTES.interpreters.Suffolk:
                 return <Suffolk navigation={navigation} />;
-            case 'wii2d':
+            case ROUTES.interpreters.WII2D:
                 return <WII2D navigation={navigation} />;
-            case 'back':
+            case ROUTES.interpreters.Back:
                 return <Back navigation={navigation} />;
             default:
                 return <StunStep navigation={navigation} />;
@@ -54,35 +54,25 @@ export default function Interpreters(): React.ReactElement {
     };
 
     return (
-        <Box
-            sx={{
+        <PageLayout
+            infoUrl={infoUrl}
+            containerSx={{
                 height: { xs: '100dvh', md: '100vh' },
+            }}
+            sx={{
                 width: '100%',
-                boxSizing: 'border-box',
-                background: COLORS.surface.background,
+                maxWidth: SPACING.maxWidth.lg,
+                margin: '0 auto',
+                flex: 1,
                 display: 'flex',
-                flexDirection: 'column',
+                justifyContent: 'center',
                 overflow: 'hidden',
-                position: 'relative',
+                boxSizing: 'border-box',
             }}
         >
-            <GlobalHeader showHome={true} infoUrl={infoUrl} />
-            <Box
-                sx={{
-                    width: '100%',
-                    maxWidth: SPACING.maxWidth.lg,
-                    margin: '0 auto',
-                    flex: 1,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                    boxSizing: 'border-box',
-                }}
-            >
-                <InterpreterErrorBoundary>
-                    {renderInterpreter()}
-                </InterpreterErrorBoundary>
-            </Box>
-        </Box>
+            <InterpreterErrorBoundary>
+                {renderInterpreter()}
+            </InterpreterErrorBoundary>
+        </PageLayout>
     );
 }

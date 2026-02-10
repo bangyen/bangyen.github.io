@@ -1,11 +1,13 @@
-import React from 'react';
 import { Box, Typography, Fade, Card } from '@mui/material';
-import { SPACING, COMPONENT_VARIANTS } from '../../../config/theme';
+import React from 'react';
+
+import { QuizFeedback } from './QuizFeedback';
+import { QuizHeader } from './QuizHeader';
+import { QuizInput } from './QuizInput';
 import { QUIZ_UI_CONSTANTS } from '../config/quizConfig';
 import { Question } from '../types/quiz';
-import { QuizHeader } from './QuizHeader';
-import { QuizFeedback } from './QuizFeedback';
-import { QuizInput } from './QuizInput';
+
+import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
 
 export interface QuizGameViewProps<T> {
     gameState: {

@@ -1,9 +1,11 @@
 import React from 'react';
-import { Box } from '@/components/mui';
+
+import { LIGHTS_OUT_STYLES } from './constants';
 import { Getters } from '../../components/Board';
 import { DragProps } from '../../hooks/useDrag';
+
+import { Box } from '@/components/mui';
 import { getPosKey } from '@/utils/gameUtils';
-import { LIGHTS_OUT_STYLES } from './constants';
 
 const ICON = (
     <Box
@@ -34,6 +36,7 @@ export function getFrontProps(
             backgroundColor: front,
             color: front,
             style,
+            'aria-label': `Cell at row ${String(row + 1)}, column ${String(col + 1)}`,
             sx: {
                 ...dragProps.sx,
                 '&:hover': {
@@ -60,7 +63,10 @@ export function getExampleProps(getters: Getters) {
             onMouseDown: () => undefined,
             onMouseEnter: () => undefined,
             onTouchStart: () => undefined,
+            onKeyDown: () => undefined,
             'data-pos': pos,
+            role: 'presentation',
+            tabIndex: -1,
             sx: { touchAction: 'none' as const, transition: 'none' },
         }),
         getters

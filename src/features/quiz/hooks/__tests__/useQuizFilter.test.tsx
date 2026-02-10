@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react';
-import { useQuizFilter } from '../quiz';
+
 import { QuizSettings, QuizItem, QuizType } from '../../types/quiz';
+import { useQuizFilter } from '../quiz';
 
 const mockSettings: QuizSettings = {
     mode: 'guessing',

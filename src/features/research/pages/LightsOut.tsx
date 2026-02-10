@@ -1,4 +1,11 @@
 import React from 'react';
+
+import { VerificationTools } from '../components/VerificationTools';
+import { RESEARCH_CONSTANTS } from '../config/researchConfig';
+import { RESEARCH_STYLES } from '../constants';
+import ResearchDemo from '../ResearchDemo';
+
+import { LaunchRounded } from '@/components/icons';
 import {
     Box,
     Typography,
@@ -10,16 +17,11 @@ import {
     TableRow,
     Paper,
     Button,
-} from '../../../components/mui';
-import { LaunchRounded } from '../../../components/icons';
-import { COLORS, SPACING, TYPOGRAPHY } from '../../../config/theme';
-import { GlassCard } from '../../../components/ui/GlassCard';
-import { Latex } from '../../../components/ui/Latex';
-import { URLS, ROUTES } from '../../../config/constants';
-import ResearchDemo from '../ResearchDemo';
-import { VerificationTools } from '../components/VerificationTools';
-import { RESEARCH_STYLES } from '../constants';
-import { RESEARCH_CONSTANTS } from '../config/researchConfig';
+} from '@/components/mui';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { Latex } from '@/components/ui/Latex';
+import { URLS, ROUTES } from '@/config/constants';
+import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';
 
 interface PeriodicityData {
     n: number;
@@ -68,7 +70,7 @@ const LightsOutResearch: React.FC = () => {
             chartData={periodicityData}
             chartConfig={chartConfig}
             chartTitle="Identity Matrix Periodicity"
-            backUrl={ROUTES.pages.Lights_Out}
+            backUrl={ROUTES.pages.LightsOut}
         >
             <Box sx={{ mt: 6, textAlign: 'left' }}>
                 <Typography

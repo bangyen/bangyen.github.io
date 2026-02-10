@@ -1,4 +1,4 @@
-import React from 'react';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
     render,
     screen,
@@ -6,10 +6,11 @@ import {
     act,
     waitFor,
 } from '@testing-library/react';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { ResearchDemoProps, ViewType } from '../../types';
 import { vi, type Mock } from 'vitest';
+
+import { ResearchDemoProps, ViewType } from '../../types';
 import ZSharp from '../ZSharp';
 
 // Mocks

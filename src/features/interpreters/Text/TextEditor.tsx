@@ -1,14 +1,16 @@
 import React, { useEffect, useCallback, useReducer, useMemo } from 'react';
+
+import { useTimer, useCache, useContainer } from '../../../hooks';
+import { TextArea } from '../components/TextArea';
 import Editor from '../Editor';
 import { EditorContext } from '../EditorContext';
-import { TextArea } from '../components/TextArea';
-import { useTimer, useCache, useContainer } from '../../../hooks';
 import {
     handleToolbar,
     type ToolbarState,
     type ToolbarAction,
 } from '../Toolbar';
-import { PAGE_TITLES } from '../../../config/constants';
+
+import { PAGE_TITLES } from '@/config/constants';
 
 let textCache: { height: number } | null = null;
 

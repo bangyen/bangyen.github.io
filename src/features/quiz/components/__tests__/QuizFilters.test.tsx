@@ -1,7 +1,8 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import QuizFilters from '../QuizFilters';
+import React from 'react';
+
 import { QuizType, QuizSettings, GameMode } from '../../types/quiz';
+import QuizFilters from '../QuizFilters';
 
 const mockSettings: QuizSettings = {
     mode: 'toCountry',

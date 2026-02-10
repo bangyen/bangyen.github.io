@@ -1,11 +1,13 @@
-import React from 'react';
-import { Box, Typography, Button, Fade, Stack, Card } from '@mui/material';
 import {
     ArrowBackRounded as ArrowBackIcon,
     RefreshRounded as RefreshIcon,
 } from '@mui/icons-material';
-import { COLORS, SPACING, COMPONENT_VARIANTS } from '../../../config/theme';
+import { Box, Typography, Button, Fade, Stack, Card } from '@mui/material';
+import React from 'react';
+
 import { Question } from '../types/quiz';
+
+import { COLORS, SPACING, COMPONENT_VARIANTS } from '@/config/theme';
 
 interface QuizSummaryViewProps<T> {
     score: number;

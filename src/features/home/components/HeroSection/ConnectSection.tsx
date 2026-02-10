@@ -1,9 +1,10 @@
 import React from 'react';
-import { Box, Typography, Button } from '../../../../components/mui';
-import { GlassCard } from '../../../../components/ui/GlassCard';
-import { GitHub, ArrowForward } from '../../../../components/icons';
-import { URLS, PERSONAL_INFO } from '../../../../config/constants';
-import { COLORS, TYPOGRAPHY } from '../../../../config/theme';
+
+import { GitHub, ArrowForward } from '@/components/icons';
+import { Box, Typography, Button } from '@/components/mui';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { URLS, PERSONAL_INFO } from '@/config/constants';
+import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
 export function ConnectSection(): React.ReactElement {
     return (

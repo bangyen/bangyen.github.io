@@ -1,10 +1,11 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
+
 import { Program, Tape, Output, Register, DisplayModeToggle } from '../Display';
 import { EditorContext, EditorContextType } from '../EditorContext';
 
 // Mocks
-vi.mock('../../../components/mui', () => ({
+vi.mock('@/components/mui', () => ({
     Box: ({
         children,
         sx: _sx,
@@ -42,13 +43,13 @@ vi.mock('../components/Text', () => ({
     ),
 }));
 
-vi.mock('../../../components/ui/GlassCard', () => ({
+vi.mock('@/components/ui/GlassCard', () => ({
     GlassCard: ({ children }: { children: React.ReactNode }) => (
         <div data-testid="glass-card">{children}</div>
     ),
 }));
 
-vi.mock('../../../components/icons', () => ({
+vi.mock('@/components/icons', () => ({
     CodeRounded: () => <svg data-testid="icon-code" />,
     DataArrayRounded: () => <svg data-testid="icon-tape" />,
     TextFieldsRounded: () => <svg data-testid="icon-output" />,

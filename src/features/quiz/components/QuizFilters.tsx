@@ -1,4 +1,3 @@
-import React from 'react';
 import {
     FormControl,
     Select,
@@ -9,7 +8,8 @@ import {
     Box,
     SelectProps,
 } from '@mui/material';
-import { COLORS } from '../../../config/theme';
+import React from 'react';
+
 import {
     CCTLD_LANGUAGES,
     TELEPHONE_ZONES,
@@ -19,6 +19,8 @@ import {
     QuizConfig,
 } from '../config/quizConfig';
 import { QuizSettings, QuizType, GameMode } from '../types/quiz';
+
+import { COLORS } from '@/config/theme';
 
 interface QuizFiltersProps {
     selectedQuiz: QuizType;

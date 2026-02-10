@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+
 import { Palette } from '../../components/Board';
 import {
     getBoardIconFrames,

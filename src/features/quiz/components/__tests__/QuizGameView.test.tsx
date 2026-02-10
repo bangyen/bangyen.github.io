@@ -1,5 +1,6 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
+
 import QuizGameView from '../QuizGameView';
 
 // Mock the icon to prevent rendering issues

@@ -1,7 +1,8 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { MenuButton } from '../ProjectMenu';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+
+import { MenuButton } from '../ProjectMenu';
 
 describe('ProjectMenu', () => {
     test('renders menu button and toggles menu', () => {

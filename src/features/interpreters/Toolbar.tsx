@@ -1,9 +1,6 @@
 import React, { useContext, useMemo } from 'react';
 
-import { TooltipButton } from '../../components/ui/Controls';
 import { EditorContext } from './EditorContext';
-import { useMediaQuery } from '../../components/mui';
-import { GLOBAL_CONFIG } from '../../config/constants';
 
 import {
     NavigateBeforeRounded,
@@ -12,7 +9,10 @@ import {
     FirstPageRounded,
     LastPageRounded,
     PauseRounded,
-} from '../../components/icons';
+} from '@/components/icons';
+import { useMediaQuery } from '@/components/mui';
+import { TooltipButton } from '@/components/ui/Controls';
+import { GLOBAL_CONFIG } from '@/config/constants';
 
 interface ButtonData {
     icon: React.ElementType;

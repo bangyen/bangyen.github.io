@@ -1,8 +1,9 @@
-import { vi, type Mock } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Info from '../components/Info';
-import * as calculator from '../components/Calculator';
+import { vi, type Mock } from 'vitest';
+
 import { DragProps } from '../../hooks/useDrag';
+import * as calculator from '../components/Calculator';
+import Info from '../components/Info';
 
 // Mock dependencies
 vi.mock('../components/Example', () => ({
@@ -11,7 +12,7 @@ vi.mock('../components/Example', () => ({
         return <div data-testid="example-component" />;
     },
 }));
-vi.mock('../../../../components/ui/GlassCard', () => ({
+vi.mock('@/components/ui/GlassCard', () => ({
     GlassCard: function MockGlassCard({
         children,
         sx,
@@ -47,7 +48,7 @@ vi.mock('../matrices', () => ({
 }));
 
 // Mock MUI components
-vi.mock('../../../../components/mui', async importOriginal => {
+vi.mock('@/components/mui', async importOriginal => {
     const actual = await importOriginal<Record<string, any>>();
     return {
         ...actual,
@@ -63,7 +64,7 @@ vi.mock('../../../../components/mui', async importOriginal => {
 });
 
 // Mock Icons
-vi.mock('../../../../components/icons', () => ({
+vi.mock('@/components/icons', () => ({
     KeyboardArrowDown: () => <div data-testid="keyboardarrowdown-icon" />,
     Calculate: () => <div data-testid="calculate-icon" />,
     Replay: () => <div data-testid="replay-icon" />,

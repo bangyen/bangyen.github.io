@@ -1,7 +1,9 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { render, screen } from '@testing-library/react';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+
+import { Navigation } from '../../layout/Navigation';
 import {
     TooltipButton,
     HomeButton,
@@ -9,9 +11,8 @@ import {
     Controls,
     ArrowsButton,
 } from '../Controls';
-import { GlassCard } from '../GlassCard';
 import { CustomGrid } from '../CustomGrid';
-import { Navigation } from '../../layout/Navigation';
+import { GlassCard } from '../GlassCard';
 
 const theme = createTheme();
 

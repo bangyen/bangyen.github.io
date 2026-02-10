@@ -1,11 +1,13 @@
 import React, { useContext, ReactNode, RefObject } from 'react';
-import { Program, Output, Tape, Register } from './Display';
-import { Grid, Typography, Box } from '../../components/mui';
-import { Toolbar } from './Toolbar';
-import { LAYOUT, COLORS, TYPOGRAPHY } from '../../config/theme';
-import { EditorContext } from './EditorContext';
+
 import { TextArea, TextAreaProps } from './components/TextArea';
 import { GRID_CONFIG } from './config/interpretersConfig';
+import { Program, Output, Tape, Register } from './Display';
+import { EditorContext } from './EditorContext';
+import { Toolbar } from './Toolbar';
+
+import { Grid, Typography, Box } from '@/components/mui';
+import { LAYOUT, COLORS, TYPOGRAPHY } from '@/config/theme';
 
 interface EditorProps {
     container?: RefObject<HTMLDivElement | null>;

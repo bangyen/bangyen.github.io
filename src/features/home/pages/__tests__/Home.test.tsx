@@ -1,14 +1,16 @@
-import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+
+import Home from '../Home';
+
 import {
     ThemeProvider as MuiThemeProvider,
     createTheme,
     grey,
     blueGrey,
-} from '../../../../components/mui';
-import { ThemeProvider } from '../../../../hooks/useTheme';
-import Home from '../Home';
+} from '@/components/mui';
+import { ThemeProvider } from '@/hooks/useTheme';
 
 // Create a test theme
 const testTheme = createTheme({

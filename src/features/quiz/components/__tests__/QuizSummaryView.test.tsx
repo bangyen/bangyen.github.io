@@ -1,8 +1,9 @@
-import { vi } from 'vitest';
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import QuizSummaryView from '../QuizSummaryView';
+import React from 'react';
+import { vi } from 'vitest';
+
 import { Question } from '../../types/quiz';
+import QuizSummaryView from '../QuizSummaryView';
 
 // Mock MUI icons
 vi.mock('@mui/icons-material', () => ({

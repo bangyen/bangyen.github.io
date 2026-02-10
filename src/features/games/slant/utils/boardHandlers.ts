@@ -1,3 +1,5 @@
+import { findCycles, hasCycle } from './cycleDetection';
+import { generatePuzzle } from './generation';
 import {
     SlantState,
     SlantAction,
@@ -11,8 +13,7 @@ import {
     getErrorNodes,
     getSatisfiedNodes,
 } from './validation';
-import { findCycles, hasCycle } from './cycleDetection';
-import { generatePuzzle } from './generation';
+
 import { createGameReducer } from '@/utils/gameUtils';
 import { createGridSize } from '@/utils/types';
 

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { useMediaQuery } from '../components/mui';
+
+import { useMediaQuery } from '@/components/mui';
 
 /**
  * Represents dimensions of a DOM element or window.

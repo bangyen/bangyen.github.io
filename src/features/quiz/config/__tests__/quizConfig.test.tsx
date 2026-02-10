@@ -1,6 +1,6 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { QUIZ_CONFIGS } from '../quizConfig';
+import React from 'react';
+
 import {
     QuizItem,
     CCTLD,
@@ -9,6 +9,7 @@ import {
     DrivingSide,
     QuizSettings,
 } from '../../types/quiz';
+import { QUIZ_CONFIGS } from '../quizConfig';
 
 // Utils for testing checkAnswer
 const testCheckAnswer = async (

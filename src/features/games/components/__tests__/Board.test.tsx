@@ -1,13 +1,14 @@
+import { render, screen, renderHook } from '@testing-library/react';
 import React from 'react';
-import { render, screen } from '@testing-library/react';
-import { renderHook } from '@testing-library/react';
-import { Board } from '../Board';
+
 import {
     usePalette,
     useGetters,
     useHandler,
 } from '../../lights-out/hooks/boardUtils';
-import { COLORS } from '../../../../config/theme';
+import { Board } from '../Board';
+
+import { COLORS } from '@/config/theme';
 
 describe('Board Component', () => {
     const mockFrontProps = vi.fn((r: number, c: number) => ({

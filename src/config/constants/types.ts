@@ -95,16 +95,18 @@ export interface GameConstants {
 
 export interface Routes {
     pages: {
+        Home: string;
+        Error: string;
         Oligopoly: string;
         ZSharp: string;
-        Lights_Out: string;
+        LightsOut: string;
         Interpreters: string;
         Geography: string;
         LightsOutResearch: string;
         Slant: string;
     };
     interpreters: {
-        Stun_Step: string;
+        StunStep: string;
         Suffolk: string;
         WII2D: string;
         Back: string;

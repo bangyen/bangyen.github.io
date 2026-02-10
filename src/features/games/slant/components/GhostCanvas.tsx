@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { useMobile } from '@/hooks';
 import { Box } from '@mui/material';
-import { COLORS, LAYOUT } from '@/config/theme';
-import { FORWARD, BACKWARD, EMPTY, CellState } from '../utils/types';
-import { type SolverMessage } from '../workers/solverWorker';
-import { createWorker } from '../utils/workerUtils';
-import { CustomGrid } from '@/components/ui/CustomGrid';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
+
+import { GhostCell } from './GhostCell';
+import { GhostControls } from './GhostControls';
+import { GhostHint } from './GhostHint';
+import { GAME_CONSTANTS } from '../../config/gameConfig';
+import { useGameInteraction } from '../../hooks/useGameInteraction';
 import {
     MOBILE_PADDING,
     DESKTOP_PADDING,
@@ -13,13 +13,14 @@ import {
     SLANT_STYLES,
     LAYOUT_CONSTANTS,
 } from '../utils/constants';
-import { GAME_CONSTANTS } from '../../config/gameConfig';
-import { useGameInteraction } from '../../hooks/useGameInteraction';
-import { getPosKey } from '@/utils/gameUtils';
+import { FORWARD, BACKWARD, EMPTY, CellState } from '../utils/types';
+import { createWorker } from '../utils/workerUtils';
+import { type SolverMessage } from '../workers/solverWorker';
 
-import { GhostControls } from './GhostControls';
-import { GhostCell } from './GhostCell';
-import { GhostHint } from './GhostHint';
+import { CustomGrid } from '@/components/ui/CustomGrid';
+import { COLORS, LAYOUT } from '@/config/theme';
+import { useMobile } from '@/hooks';
+import { getPosKey } from '@/utils/gameUtils';
 
 interface GhostBoardProps {
     rows: number;

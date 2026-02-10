@@ -1,10 +1,12 @@
-import { CellState, EMPTY, FORWARD, BACKWARD } from './types';
-import { DSU } from '@/utils/DSU';
 import { generate_puzzle_wasm } from 'slant-wasm';
+
 import { GAME_LOGIC_CONSTANTS } from './constants';
-import { calculateNumbers } from './validation';
 import { getNodeIndex } from './cycleDetection';
+import { CellState, EMPTY, FORWARD, BACKWARD } from './types';
+import { calculateNumbers } from './validation';
 import { isWasmReady } from './wasmInit';
+
+import { DSU } from '@/utils/DSU';
 
 /**
  * Checks if a puzzle can be solved using deductive logic alone.
@@ -254,6 +256,7 @@ export function generatePuzzle(
             const seed = BigInt(
                 Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
             );
+
             const puzzle = generate_puzzle_wasm(
                 rows,
                 cols,

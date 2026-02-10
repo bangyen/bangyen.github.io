@@ -1,7 +1,8 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { ErrorFallback } from '../ErrorFallback';
+import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
+
+import { ErrorFallback } from '../ErrorFallback';
 
 // Mock HomeButton as it uses navigation
 vi.mock('../../ui/Controls', () => ({

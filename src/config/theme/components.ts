@@ -2,9 +2,9 @@
  * Reusable component style variants
  */
 
+import { ANIMATIONS } from './animations';
 import { COLORS } from './colors';
 import { SPACING } from './spacing';
-import { ANIMATIONS } from './animations';
 
 export interface ComponentVariants {
     card: {

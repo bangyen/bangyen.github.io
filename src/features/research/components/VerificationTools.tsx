@@ -1,8 +1,10 @@
 import React from 'react';
-import { Box, Typography, Grid } from '../../../components/mui';
-import { COLORS, TYPOGRAPHY } from '../../../config/theme';
-import { GlassCard } from '../../../components/ui/GlassCard';
+
 import { RESEARCH_STYLES } from '../constants';
+
+import { Box, Typography, Grid } from '@/components/mui';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { COLORS, TYPOGRAPHY } from '@/config/theme';
 const PeriodicityCalculator = React.lazy(() =>
     import('./PeriodicityCalculator').then(m => ({
         default: m.PeriodicityCalculator,

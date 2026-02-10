@@ -5,16 +5,17 @@ import React, {
     useCallback,
     useRef,
 } from 'react';
-import { Box } from '@/components/mui';
-import { Psychology } from '@/components/icons';
-import { GhostCanvas } from '../components/GhostCanvas';
-import { GameControls } from '../../components/GameControls';
-import { TooltipButton } from '@/components/ui/TooltipButton';
+
 import { Board } from '../../components/Board';
+import { GameControls } from '../../components/GameControls';
 import { GameErrorBoundary } from '../../components/GameErrorBoundary';
-import { PAGE_TITLES } from '@/config/constants';
+import { GamePageLayout } from '../../components/GamePageLayout';
 import { GAME_CONSTANTS } from '../../config/gameConfig';
-import { COLORS } from '@/config/theme';
+import { useBaseGame } from '../../hooks/useBaseGame';
+import { useGameInteraction } from '../../hooks/useGameInteraction';
+import { useGamePersistence } from '../../hooks/useGamePersistence';
+import { GhostCanvas } from '../components/GhostCanvas';
+import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import {
     NUMBER_SIZE_RATIO,
     STORAGE_KEYS,
@@ -23,15 +24,15 @@ import {
     MOBILE_PADDING,
     DESKTOP_PADDING,
 } from '../utils/constants';
-import { useBaseGame } from '../../hooks/useBaseGame';
-import { useGamePersistence } from '../../hooks/useGamePersistence';
-import { useGameInteraction } from '../../hooks/useGameInteraction';
-import { GamePageLayout } from '../../components/GamePageLayout';
-import { SlantAction, SlantState, CellState, EMPTY } from '../utils/types';
-import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import { getBackProps, getFrontProps } from '../utils/renderers';
-import { useCellFactory } from '@/utils/gameUtils';
-import { getPosKey } from '@/utils/gameUtils';
+import { SlantAction, SlantState, CellState, EMPTY } from '../utils/types';
+
+import { Psychology } from '@/components/icons';
+import { Box } from '@/components/mui';
+import { TooltipButton } from '@/components/ui/TooltipButton';
+import { PAGE_TITLES } from '@/config/constants';
+import { COLORS } from '@/config/theme';
+import { useCellFactory, getPosKey } from '@/utils/gameUtils';
 import { createCellIndex } from '@/utils/types';
 
 interface SavedSlantState extends Omit<
@@ -83,12 +84,13 @@ export default function Slant() {
             colOffset: 1,
         },
         reducer: handleBoard,
-        getInitialState: (rows, cols) => getInitialState(rows, cols),
+        getInitialState: (rows: number, cols: number) =>
+            getInitialState(rows, cols),
         winAnimationDelay: GAME_CONSTANTS.timing.winAnimationDelay,
-        isSolved: s => s.solved,
+        isSolved: (s: SlantState) => s.solved,
         persistence: {
             enabled: !isGhostMode,
-            serialize: s => ({
+            serialize: (s: SlantState) => ({
                 ...s,
                 errorNodes: Array.from(s.errorNodes),
                 cycleCells: Array.from(s.cycleCells),
@@ -116,10 +118,10 @@ export default function Slant() {
         rows,
         cols,
         state: ghostMoves,
-        onRestore: saved => {
+        onRestore: (saved: Map<string, CellState>) => {
             setGhostMoves(saved);
         },
-        serialize: m => Array.from(m.entries()),
+        serialize: (m: Map<string, CellState>) => Array.from(m.entries()),
         deserialize: (saved: unknown) =>
             new Map(saved as [string, CellState][]),
     });
@@ -137,7 +139,7 @@ export default function Slant() {
     const handleReset = handleNext;
 
     const { getDragProps } = useGameInteraction({
-        onToggle: (r, c, isRightClick) => {
+        onToggle: (r: number, c: number, isRightClick: boolean) => {
             dispatch({
                 type: 'toggle',
                 row: createCellIndex(r),
@@ -210,12 +212,10 @@ export default function Slant() {
         [mobile]
     );
 
-    const controls = isGhostMode ? (
-        <></>
-    ) : (
+    const controls = isGhostMode ? null : (
         <GameControls {...controlsProps} disabled={isGhostMode}>
             <TooltipButton
-                title={'Open Calculator'}
+                title="Open Calculator"
                 Icon={Psychology}
                 onClick={() => {
                     setIsGhostMode(!isGhostMode);

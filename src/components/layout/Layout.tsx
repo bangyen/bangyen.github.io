@@ -1,6 +1,8 @@
 import React from 'react';
+
 import { Container, Box } from '../mui';
-import { SPACING, COMPONENT_VARIANTS, COLORS } from '../../config/theme';
+
+import { SPACING, COMPONENT_VARIANTS, COLORS } from '@/config/theme';
 
 /**
  * Props for Section component.

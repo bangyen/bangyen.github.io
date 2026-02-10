@@ -1,7 +1,9 @@
-import React from 'react';
 import { Box, TextField, Stack, Button, Fade } from '@mui/material';
-import { COLORS, SPACING } from '../../../config/theme';
+import React from 'react';
+
 import { QUIZ_UI_CONSTANTS } from '../config/quizConfig';
+
+import { COLORS, SPACING } from '@/config/theme';
 
 /**
  * Props for QuizInput component.

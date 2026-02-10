@@ -1,7 +1,9 @@
-import React from 'react';
 import { LinearProgress } from '@mui/material';
-import { COLORS, SPACING } from '../../../config/theme';
+import React from 'react';
+
 import { QUIZ_UI_CONSTANTS } from '../config/quizConfig';
+
+import { COLORS, SPACING } from '@/config/theme';
 
 /**
  * Props for QuizProgress component.

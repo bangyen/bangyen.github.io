@@ -1,7 +1,9 @@
-import React from 'react';
 import { Chip } from '@mui/material';
-import { COLORS, TYPOGRAPHY } from '../../../config/theme';
+import React from 'react';
+
 import { QUIZ_UI_CONSTANTS } from '../config/quizConfig';
+
+import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
 const SkippedBadge: React.FC = () => (
     <Chip

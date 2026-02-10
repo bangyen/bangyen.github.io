@@ -1,6 +1,7 @@
-import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+
 import Interpreters from '../Interpreters';
 
 // Mock child components
@@ -68,13 +69,13 @@ vi.mock('../../components/InterpreterNavigation', () => ({
         </select>
     ),
 }));
-vi.mock('../../../../components/ui/TooltipButton', () => ({
+vi.mock('@/components/ui/TooltipButton', () => ({
     TooltipButton: ({ title }: { title: string }) => (
         <button aria-label={title}>{title}</button>
     ),
 }));
 
-vi.mock('../../../../components/ui/Controls', () => ({
+vi.mock('@/components/ui/Controls', () => ({
     TooltipButton: ({ title }: { title: string }) => (
         <button aria-label={title}>{title}</button>
     ),
@@ -84,7 +85,7 @@ vi.mock('../../../../components/ui/Controls', () => ({
 }));
 
 // Mock the ThemeProvider since we just need the context to exist
-vi.mock('../../../../hooks/useTheme', () => ({
+vi.mock('@/hooks/useTheme', () => ({
     useThemeContext: () => ({
         mode: 'light',
         resolvedMode: 'light',

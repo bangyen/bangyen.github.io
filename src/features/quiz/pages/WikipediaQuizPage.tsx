@@ -1,8 +1,16 @@
+import { Box, Button, Fade, SelectChangeEvent } from '@mui/material';
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Box, Button, Fade, SelectChangeEvent } from '@mui/material';
-import { SPACING, COLORS } from '../../../config/theme';
+
+import QuizFilters from '../components/QuizFilters';
+import QuizGame from '../components/QuizGame';
+import QuizHistoryItem from '../components/QuizHistoryItem';
+import QuizLayout from '../components/QuizLayout';
+import QuizSettingsView from '../components/QuizSettingsView';
+import QuizSummaryView from '../components/QuizSummaryView';
+import QuizTopicSelector from '../components/QuizTopicSelector';
 import { QUIZ_CONFIGS, QUIZ_UI_CONSTANTS } from '../config/quizConfig';
+import { useQuizFilter } from '../hooks/quiz';
 import {
     QuizSettings,
     QuizType,
@@ -10,16 +18,8 @@ import {
     GameState,
     QuizItem,
 } from '../types/quiz';
-import { useQuizFilter } from '../hooks/quiz';
 
-import QuizLayout from '../components/QuizLayout';
-import QuizSettingsView from '../components/QuizSettingsView';
-import QuizSummaryView from '../components/QuizSummaryView';
-import QuizGame from '../components/QuizGame';
-
-import QuizTopicSelector from '../components/QuizTopicSelector';
-import QuizFilters from '../components/QuizFilters';
-import QuizHistoryItem from '../components/QuizHistoryItem';
+import { SPACING, COLORS } from '@/config/theme';
 
 const commonSelectProps = {
     MenuProps: {

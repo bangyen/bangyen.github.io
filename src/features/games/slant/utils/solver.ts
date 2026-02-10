@@ -1,5 +1,5 @@
-import { SlantState, EMPTY, FORWARD, BACKWARD, CellState } from './types';
 import { hasCycle } from './cycleDetection';
+import { SlantState, EMPTY, FORWARD, BACKWARD, CellState } from './types';
 
 export function getNextLogicalMove(
     state: SlantState

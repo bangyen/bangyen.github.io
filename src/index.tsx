@@ -1,13 +1,12 @@
-import { createRoot } from 'react-dom/client';
 import React, { Suspense, lazy } from 'react';
-
+import { createRoot } from 'react-dom/client';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 
+import ErrorBoundary from './components/layout/ErrorBoundary';
 import {
     ThemeProvider as MuiThemeProvider,
     CssBaseline,
 } from './components/mui';
-import ErrorBoundary from './components/layout/ErrorBoundary';
 import './styles/animations.css';
 import { ROUTES } from './config/constants';
 import { COLORS, createAppTheme } from './config/theme';
@@ -58,12 +57,21 @@ const App = (): React.ReactElement => {
                 }
             >
                 <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/error" element={<Error />} />
-                    <Route path="/interpreters" element={<Interpreters />} />
-                    <Route path="/lights-out" element={<LightsOut />} />
-                    <Route path="/zsharp" element={<ZSharp />} />
-                    <Route path="/oligopoly" element={<Oligopoly />} />
+                    <Route path={ROUTES.pages.Home} element={<Home />} />
+                    <Route path={ROUTES.pages.Error} element={<Error />} />
+                    <Route
+                        path={ROUTES.pages.Interpreters}
+                        element={<Interpreters />}
+                    />
+                    <Route
+                        path={ROUTES.pages.LightsOut}
+                        element={<LightsOut />}
+                    />
+                    <Route path={ROUTES.pages.ZSharp} element={<ZSharp />} />
+                    <Route
+                        path={ROUTES.pages.Oligopoly}
+                        element={<Oligopoly />}
+                    />
                     <Route
                         path={ROUTES.pages.Geography}
                         element={<WikipediaQuiz />}

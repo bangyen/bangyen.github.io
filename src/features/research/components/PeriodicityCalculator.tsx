@@ -1,4 +1,11 @@
 import React, { useState, useCallback } from 'react';
+
+import { useWorker } from '../../../hooks';
+import { Pattern } from '../../games/lights-out/matrices';
+import { RESEARCH_STYLES } from '../constants';
+import { MathText } from './MathText';
+
+import { HelpOutlineRounded, CloseRounded } from '@/components/icons';
 import {
     Box,
     Typography,
@@ -11,13 +18,8 @@ import {
     IconButton,
     Fade,
     alpha,
-} from '../../../components/mui';
-import { HelpOutlineRounded, CloseRounded } from '../../../components/icons';
-import { COLORS, SPACING, TYPOGRAPHY } from '../../../config/theme';
-import { Pattern } from '../../games/lights-out/matrices';
-import { RESEARCH_STYLES } from '../constants';
-import { useWorker } from '../../../hooks';
-import { MathText } from './MathText';
+} from '@/components/mui';
+import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';
 
 export const PeriodicityCalculator: React.FC = () => {
     const [cols, setCols] = useState<string>('5');

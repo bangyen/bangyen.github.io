@@ -1,6 +1,8 @@
 import { useMemo, useCallback } from 'react';
-import { COLORS } from '@/config/theme';
+
 import { Palette, Getters } from '../../components/Board';
+
+import { COLORS } from '@/config/theme';
 
 interface GridState {
     grid: number[];

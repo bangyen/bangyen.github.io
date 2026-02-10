@@ -1,7 +1,8 @@
-import { Psychology, GamepadRounded, Code } from '../../../components/icons';
-import { COLORS } from '../../../config/theme';
-import { ROUTES } from '../../../config/constants';
 import React from 'react';
+
+import { Psychology, GamepadRounded, Code } from '@/components/icons';
+import { ROUTES } from '@/config/constants';
+import { COLORS } from '@/config/theme';
 
 export interface ProjectInfo {
     path: string;
@@ -40,7 +41,7 @@ export const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
         color: COLORS.primary.main,
         projects: {
             Lights_Out: {
-                path: ROUTES.pages.Lights_Out,
+                path: ROUTES.pages.LightsOut,
                 description: 'Grid-based logic puzzle',
                 technology: 'JavaScript',
             },

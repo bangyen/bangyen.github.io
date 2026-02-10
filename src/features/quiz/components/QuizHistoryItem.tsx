@@ -1,9 +1,9 @@
-import React from 'react';
-import { Card, Box, Typography } from '@mui/material';
 import { CheckCircleRounded as CheckCircleIcon } from '@mui/icons-material';
-import { COLORS, TYPOGRAPHY } from '../../../config/theme';
-import { QuizConfig, QUIZ_UI_CONSTANTS } from '../config/quizConfig';
+import { Card, Box, Typography } from '@mui/material';
+import React from 'react';
+
 import SkippedBadge from './SkippedBadge';
+import { QuizConfig, QUIZ_UI_CONSTANTS } from '../config/quizConfig';
 import {
     Question,
     QuizItem,
@@ -14,6 +14,8 @@ import {
     TelephoneCode,
     VehicleCode,
 } from '../types/quiz';
+
+import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
 interface QuizHistoryItemProps {
     question: Question<QuizItem>;

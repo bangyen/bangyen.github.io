@@ -1,13 +1,15 @@
 import React from 'react';
+
+import { Refresh } from '../icons';
 import { Grid, Typography, Box, Button } from '../mui';
 import { HomeButton } from '../ui/Controls';
-import { Refresh } from '../icons';
+
 import {
     COLORS,
     TYPOGRAPHY,
     SPACING,
     COMPONENT_VARIANTS,
-} from '../../config/theme';
+} from '@/config/theme';
 
 interface ErrorFallbackProps {
     error: Error | null;

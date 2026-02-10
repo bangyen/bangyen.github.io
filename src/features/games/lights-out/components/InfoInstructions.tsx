@@ -1,7 +1,9 @@
 import React from 'react';
-import { Box } from '@/components/mui';
-import { KeyboardArrowDown, Calculate, Replay } from '@/components/icons';
+
 import { InstructionItem } from './Content';
+
+import { KeyboardArrowDown, Calculate, Replay } from '@/components/icons';
+import { Box } from '@/components/mui';
 
 export function InfoInstructions() {
     return (

@@ -1,12 +1,14 @@
-import React from 'react';
 import {
     FormControl,
     Select,
     MenuItem,
     SelectChangeEvent,
 } from '@mui/material';
-import { COLORS, SPACING, ANIMATIONS } from '../../../config/theme';
+import React from 'react';
+
 import { QuizType } from '../types/quiz';
+
+import { COLORS, SPACING, ANIMATIONS } from '@/config/theme';
 
 interface QuizTopicSelectorProps {
     uniqueId: string;

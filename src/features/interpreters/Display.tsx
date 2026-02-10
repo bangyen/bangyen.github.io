@@ -1,9 +1,7 @@
 import React, { useContext, memo } from 'react';
-import { Box, Typography, Chip, IconButton } from '../../components/mui';
-import { EditorContext } from './EditorContext';
+
 import { Text } from './components/Text';
-import { COLORS, TYPOGRAPHY } from '../../config/theme';
-import { GlassCard } from '../../components/ui/GlassCard';
+import { EditorContext } from './EditorContext';
 
 import {
     CodeRounded,
@@ -12,7 +10,10 @@ import {
     PlusOneRounded,
     ViewModuleRounded,
     ViewListRounded,
-} from '../../components/icons';
+} from '@/components/icons';
+import { Box, Typography, Chip, IconButton } from '@/components/mui';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
 // Type assertion for GlassCard component
 const TypedGlassCard = GlassCard as React.ComponentType<{

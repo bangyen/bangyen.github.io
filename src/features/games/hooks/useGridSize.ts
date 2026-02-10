@@ -1,22 +1,67 @@
 import { useState, useMemo, useEffect } from 'react';
+
 import { useWindow, useMobile } from '../../../hooks';
 import { convertPixels } from '../../interpreters/utils/gridUtils';
 
+/**
+ * Configuration for grid size calculations and persistence.
+ */
 interface GridSizeConfig {
+    /** localStorage key for persisting user's grid size preference */
     storageKey: string;
+    /** Default grid size if no saved preference (null = auto-calculated) */
     defaultSize: number | null;
+    /** Minimum allowed grid size (default: 2) */
     minSize?: number;
+    /** Maximum allowed grid size (default: 10) */
     maxSize?: number;
+    /** Header height in rem for available space calculation */
     headerOffset: {
         mobile: number;
         desktop: number;
     };
+    /** Extra padding to subtract from available space (default: 0) */
     paddingOffset?: number;
+    /** Maximum viewport width to consider (default: 1300px) */
     widthLimit?: number;
+    /** Reference cell size in rem for calculating grid dimensions */
     cellSizeReference: number | { mobile: number; desktop: number };
+    /** Extra rows to add on mobile devices (default: 0) */
     mobileRowOffset?: number;
 }
 
+/**
+ * Custom hook for calculating and managing game grid dimensions.
+ *
+ * Features:
+ * - Responsive grid sizing based on viewport
+ * - Persistence of user preferences to localStorage
+ * - Separate dynamic (auto) and user-selected sizes
+ * - Size increment/decrement controls
+ *
+ * @param config - Grid sizing configuration
+ * @returns Object with current dimensions, handlers, and sizing state
+ *
+ * @example
+ * ```tsx
+ * const { rows, cols, handlePlus, handleMinus } = useGridSize({
+ *   storageKey: 'slant-size',
+ *   defaultSize: null,
+ *   minSize: 2,
+ *   maxSize: 10,
+ *   headerOffset: { mobile: 56, desktop: 64 },
+ *   cellSizeReference: 1.5
+ * });
+ *
+ * return (
+ *   <div>
+ *     <button onClick={handlePlus}>+</button>
+ *     Grid: {rows}x{cols}
+ *     <button onClick={handleMinus}>-</button>
+ *   </div>
+ * );
+ * ```
+ */
 export function useGridSize({
     storageKey,
     defaultSize,

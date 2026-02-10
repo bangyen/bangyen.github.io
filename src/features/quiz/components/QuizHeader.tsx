@@ -1,8 +1,10 @@
-import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
 import { ArrowBackRounded as ArrowBackIcon } from '@mui/icons-material';
-import { COLORS, TYPOGRAPHY } from '../../../config/theme';
+import { Box, Typography, Button } from '@mui/material';
+import React from 'react';
+
 import { QuizProgress } from './QuizProgress';
+
+import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
 interface QuizHeaderProps {
     modeLabel: string;

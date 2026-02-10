@@ -1,8 +1,10 @@
-import React from 'react';
 import { Box } from '@mui/material';
-import { FORWARD, BACKWARD, CellState } from '../utils/types';
-import { ANIMATIONS, SPACING } from '@/config/theme';
+import React from 'react';
+
 import { SLANT_STYLES, LAYOUT_CONSTANTS } from '../utils/constants';
+import { FORWARD, BACKWARD, CellState } from '../utils/types';
+
+import { ANIMATIONS, SPACING } from '@/config/theme';
 
 interface GhostCellProps {
     value: CellState;

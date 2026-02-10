@@ -1,7 +1,8 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import QuizHistoryItem from '../QuizHistoryItem';
+import React from 'react';
+
 import { QuizSettings, Question, QuizItem } from '../../types/quiz';
+import QuizHistoryItem from '../QuizHistoryItem';
 
 // Mock dependencies
 vi.mock('../SkippedBadge', () => ({

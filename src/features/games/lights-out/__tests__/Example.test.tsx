@@ -1,5 +1,5 @@
-import { vi, type Mock } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { vi, type Mock } from 'vitest';
 
 import Example from '../components/Example';
 import * as chaseHandlers from '../utils/chaseHandlers';
@@ -17,12 +17,12 @@ vi.mock('../components/Calculator', () => ({
 }));
 
 // Mock icons
-vi.mock('../../../../components/icons', () => ({
+vi.mock('@/components/icons', () => ({
     EmojiEventsRounded: () => <div data-testid="emoji-events-rounded" />,
 }));
 
 // Mock CustomGrid to avoid complex rendering and animations
-vi.mock('../../../../components/ui/CustomGrid', () => ({
+vi.mock('@/components/ui/CustomGrid', () => ({
     CustomGrid: vi.fn(
         ({
             cellProps,

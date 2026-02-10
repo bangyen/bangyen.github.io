@@ -1,6 +1,7 @@
 import React from 'react';
-import { Box, Button, Grid } from '../../../components/mui';
-import { COLORS, SPACING } from '../../../config/theme';
+
+import { Box, Button, Grid } from '@/components/mui';
+import { COLORS, SPACING } from '@/config/theme';
 
 interface KeySelectorProps {
     keys: string[];

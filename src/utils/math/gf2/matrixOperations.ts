@@ -36,12 +36,18 @@ export function getMatrix(cols: number): bigint[] {
 
 /**
  * Computes the kernel basis (nullspace) of a matrix in GF(2).
- * The kernel represents state patterns that result in a zero vector when acted upon.
- * In Lights Out, these correspond to "quiet patterns" that don't change any lights.
+ *
+ * The kernel represents all vectors $v$ such that $Mv = 0$.
+ * In Lights Out, these correspond to "quiet patterns" or "syzygies" — sets of clicks that,
+ * when performed together, result in no net change to the board.
+ *
+ * This is crucial for solvability analysis (the dimension of the kernel, or "nullity",
+ * determines how many distinct solutions exist for any solvable state) and for
+ * finding the minimum-click solution.
  *
  * @param matrix - Input matrix rows
  * @param size - Dimension of the matrix (number of columns)
- * @returns Array of basis vectors for the kernel
+ * @returns Array of basis vectors for the kernel (nullspace)
  */
 export function getKernelBasis(matrix: bigint[], size: number): bigint[] {
     const rows = [...matrix];
@@ -225,13 +231,16 @@ export function getMinWeightSolution(
 }
 
 /**
- * Computes the image basis of a matrix in GF(2).
- * The image represents all states that can be reached/expressed by the operator.
- * In solver context, this determines the subspace of solvable configurations.
+ * Computes the image basis (column space) of a matrix in GF(2).
  *
- * @param matrix - Input matrix
- * @param size - Matrix column dimension
- * @returns Array of basis vectors for the column space
+ * The image represents all possible output states that can be "mapped to" by this matrix.
+ * In a Lights Out context, if the operator represents the game's rules, the image basis
+ * describes the subspace of all solvable board configurations. Any configuration that
+ * cannot be expressed as a linear combination of these basis vectors is impossible to solve.
+ *
+ * @param matrix - Input matrix representing a linear transformation
+ * @param size - Matrix column dimension (number of variables)
+ * @returns Array of basis vectors for the reachable workspace (image)
  */
 export function getImageBasis(matrix: bigint[], size: number): bigint[] {
     const rows = [...matrix];

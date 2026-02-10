@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { Box, Typography } from '@/components/mui';
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
 

@@ -1,19 +1,21 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Backdrop, Modal, Box, IconButton, Button } from '@/components/mui';
-import { CloseRounded, AnalyticsRounded } from '@/components/icons';
-import { COLORS } from '@/config/theme';
-import { GlassCard } from '@/components/ui/GlassCard';
+
 import { getProduct } from '../matrices';
-import { useMobile } from '@/hooks';
-import { ROUTES } from '@/config/constants';
 import { getInput, getOutput, useHandler } from './Calculator';
-import { Palette, PropsFactory } from '../../components/Board';
 import { StepTitle, INFO_TITLES } from './Content';
-import { useDrag } from '../../hooks/useDrag';
-import { InfoInstructions } from './InfoInstructions';
-import { InfoExample } from './InfoExample';
 import { InfoCalculator } from './InfoCalculator';
+import { InfoExample } from './InfoExample';
+import { InfoInstructions } from './InfoInstructions';
 import { InfoNavigation } from './InfoNavigation';
+import { Palette, PropsFactory } from '../../components/Board';
+import { useDrag } from '../../hooks/useDrag';
+
+import { CloseRounded, AnalyticsRounded } from '@/components/icons';
+import { Backdrop, Modal, Box, IconButton, Button } from '@/components/mui';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { ROUTES } from '@/config/constants';
+import { COLORS } from '@/config/theme';
+import { useMobile } from '@/hooks';
 
 // Type assertion for GlassCard component
 const TypedGlassCard = GlassCard as React.ComponentType<{

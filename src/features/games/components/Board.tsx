@@ -1,8 +1,8 @@
 import React from 'react';
-import { Box } from '../../../components/mui';
 
-import { CustomGrid } from '../../../components/ui/CustomGrid';
-import { LAYOUT } from '../../../config/theme';
+import { Box } from '@/components/mui';
+import { CustomGrid } from '@/components/ui/CustomGrid';
+import { LAYOUT } from '@/config/theme';
 
 export interface BoardProps {
     frontProps: (row: number, col: number) => Record<string, unknown>;
@@ -46,6 +46,15 @@ export function Board(props: BoardProps): React.ReactElement {
         backLayerSx,
     } = props;
 
+    const isFrontDecorative =
+        frontLayerSx &&
+        'pointerEvents' in frontLayerSx &&
+        frontLayerSx.pointerEvents === 'none';
+    const isBackDecorative =
+        backLayerSx &&
+        'pointerEvents' in backLayerSx &&
+        backLayerSx.pointerEvents === 'none';
+
     return (
         <Box
             sx={{
@@ -65,6 +74,9 @@ export function Board(props: BoardProps): React.ReactElement {
                     rows={rows - 1}
                     cols={cols - 1}
                     cellProps={backProps}
+                    {...(isBackDecorative
+                        ? { role: 'presentation', 'aria-hidden': true }
+                        : {})}
                 />
             </Box>
             <Box
@@ -80,6 +92,9 @@ export function Board(props: BoardProps): React.ReactElement {
                     rows={rows}
                     cols={cols}
                     cellProps={frontProps}
+                    {...(isFrontDecorative
+                        ? { role: 'presentation', 'aria-hidden': true }
+                        : {})}
                 />
             </Box>
         </Box>

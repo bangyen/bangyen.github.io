@@ -1,16 +1,12 @@
-import React from 'react';
-import { Box, Grid } from '../../../components/mui';
 import { SxProps, Theme } from '@mui/material';
-import { GlobalHeader } from '../../../components/layout/GlobalHeader';
-import { COLORS } from '../../../config/theme';
-import { useMobile } from '../../../hooks';
+import React from 'react';
+
 import { TrophyOverlay } from './TrophyOverlay';
 
-/** Normalizes SxProps to an array for safe spreading in MUI sx prop. */
-function toSxArray(sx: SxProps<Theme> | undefined): SxProps<Theme>[] {
-    if (sx === undefined) return [];
-    return (Array.isArray(sx) ? sx : [sx]) as SxProps<Theme>[];
-}
+import { PageLayout } from '@/components/layout/PageLayout';
+import { Box } from '@/components/mui';
+import { COLORS } from '@/config/theme';
+import { toSxArray } from '@/utils/muiUtils';
 
 interface GamePageLayoutProps {
     children: React.ReactNode;
@@ -53,23 +49,21 @@ export function GamePageLayout({
     boardSx,
     onClick,
 }: GamePageLayoutProps & { _title?: string }) {
-    const _mobile = useMobile('sm');
-
     return (
-        <Grid
-            container
-            onClick={onClick}
-            minHeight="100vh"
-            flexDirection="column"
-            sx={{
-                background,
-                position: 'relative',
-                overflow: 'hidden',
+        <PageLayout
+            infoUrl={infoUrl}
+            background={background}
+            containerSx={{
                 height: '100vh',
                 transition: 'background 0.5s ease-in-out',
+                cursor: onClick ? 'pointer' : 'inherit',
             }}
+            sx={{
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+            onClick={onClick}
         >
-            <GlobalHeader showHome={true} infoUrl={infoUrl} />
             <Box
                 sx={
                     [
@@ -112,6 +106,6 @@ export function GamePageLayout({
                 </Box>
             </Box>
             {controls}
-        </Grid>
+        </PageLayout>
     );
 }

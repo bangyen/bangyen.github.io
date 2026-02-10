@@ -1,11 +1,13 @@
-import React from 'react';
 import { render, screen, renderHook } from '@testing-library/react';
+import React from 'react';
 import { vi, type Mock } from 'vitest';
+
 import ResearchDemo from '../ResearchDemo';
-import { URLS } from '../../../config/constants';
+
+import { URLS } from '@/config/constants';
 
 // Mock the icons
-vi.mock('../../../components/icons', async importOriginal => {
+vi.mock('@/components/icons', async importOriginal => {
     const original = await importOriginal<Record<string, any>>();
     return {
         ...original,
@@ -18,7 +20,7 @@ vi.mock('../../../components/icons', async importOriginal => {
 });
 
 // Mock useTheme
-vi.mock('../../../hooks/useTheme', () => ({
+vi.mock('@/hooks/useTheme', () => ({
     useThemeContext: () => ({
         mode: 'light',
         resolvedMode: 'light',
@@ -38,7 +40,7 @@ vi.mock('@mui/material', async importOriginal => {
 mockUseMediaQuery.mockReturnValue(false); // Default
 
 // Mock the helpers
-vi.mock('../../../components/ui/GlassCard', () => ({
+vi.mock('@/components/ui/GlassCard', () => ({
     GlassCard: ({ children, ...props }: { children: React.ReactNode }) => (
         <div data-testid="glass-card" {...props}>
             {children}
@@ -46,7 +48,7 @@ vi.mock('../../../components/ui/GlassCard', () => ({
     ),
 }));
 
-vi.mock('../../../components/ui/TooltipButton', () => ({
+vi.mock('@/components/ui/TooltipButton', () => ({
     TooltipButton: ({
         title,
         Icon,
@@ -61,7 +63,7 @@ vi.mock('../../../components/ui/TooltipButton', () => ({
     ),
 }));
 
-vi.mock('../../../components/ui/Controls', () => ({
+vi.mock('@/components/ui/Controls', () => ({
     TooltipButton: ({
         title,
         Icon,

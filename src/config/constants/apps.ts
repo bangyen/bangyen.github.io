@@ -1,5 +1,5 @@
-import { PageTitles, Routes } from './types';
 import { PERSONAL_INFO } from './identity';
+import { PageTitles, Routes } from './types';
 
 export const PAGE_TITLES: PageTitles = {
     home: `${PERSONAL_INFO.name} - ${PERSONAL_INFO.title}`,
@@ -16,19 +16,21 @@ export const PAGE_TITLES: PageTitles = {
 
 export const ROUTES: Routes = {
     pages: {
+        Home: '/',
+        Error: '/error',
         Oligopoly: '/oligopoly',
         ZSharp: '/zsharp',
-        Lights_Out: '/lights-out',
+        LightsOut: '/lights-out',
         Interpreters: '/interpreters',
         Geography: '/geography',
         LightsOutResearch: '/research/lights-out',
         Slant: '/slant',
     },
     interpreters: {
-        Stun_Step: '/stun-step',
-        Suffolk: '/suffolk',
-        WII2D: '/wii2d',
-        Back: '/back',
+        StunStep: 'stun-step',
+        Suffolk: 'suffolk',
+        WII2D: 'wii2d',
+        Back: 'back',
     },
 };
 

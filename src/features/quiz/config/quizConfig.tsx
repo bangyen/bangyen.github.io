@@ -1,6 +1,14 @@
-import React from 'react';
 import { Typography, Box } from '@mui/material';
-import { normalize, isSmartMatch } from '../utils/quizUtils';
+import React from 'react';
+
+import {
+    filterByLanguage,
+    filterByZone,
+    filterByConvention,
+    filterBySwitch,
+    filterBySide,
+    filterByLetter,
+} from './quizFilters';
 import {
     QuizType,
     GameMode,
@@ -12,14 +20,7 @@ import {
     VehicleCode,
     FilterFunction,
 } from '../types/quiz';
-import {
-    filterByLanguage,
-    filterByZone,
-    filterByConvention,
-    filterBySwitch,
-    filterBySide,
-    filterByLetter,
-} from './quizFilters';
+import { normalize, isSmartMatch } from '../utils/quizUtils';
 
 // Data imports are now handled dynamically via getData functions in QUIZ_CONFIGS
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Box } from '../../../components/mui';
-import { EmojiEventsRounded } from '../../../components/icons';
+
+import { EmojiEventsRounded } from '@/components/icons';
+import { Box } from '@/components/mui';
 
 interface TrophyOverlayProps {
     show: boolean;

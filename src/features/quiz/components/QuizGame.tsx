@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from 'react';
 import { Button, Typography } from '@mui/material';
-import { useQuizEngine } from '../hooks/quiz';
+import React, { useEffect, useRef } from 'react';
+
 import QuizGameView from './QuizGameView';
+import { QUIZ_CONFIGS, QUIZ_UI_CONSTANTS } from '../config/quizConfig';
+import { useQuizEngine } from '../hooks/quiz';
 import {
     CCTLD,
     QuizType,
@@ -9,8 +11,8 @@ import {
     Question,
     QuizItem,
 } from '../types/quiz';
-import { QUIZ_CONFIGS, QUIZ_UI_CONSTANTS } from '../config/quizConfig';
-import { COLORS, SHADOWS, SPACING } from '../../../config/theme';
+
+import { COLORS, SHADOWS, SPACING } from '@/config/theme';
 
 interface QuizGameProps {
     quizType: QuizType;

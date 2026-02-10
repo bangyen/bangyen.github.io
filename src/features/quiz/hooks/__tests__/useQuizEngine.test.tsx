@@ -1,6 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
-import { useQuizEngine } from '../quiz';
+
 import { QuizSettings } from '../../types/quiz';
+import { useQuizEngine } from '../quiz';
 
 // Mock crypto.randomUUID
 Object.defineProperty(global, 'crypto', {

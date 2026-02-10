@@ -1,4 +1,9 @@
 import React from 'react';
+
+import { RESEARCH_STYLES } from '../constants';
+import { Control } from '../types';
+
+import { Refresh } from '@/components/icons';
 import {
     Box,
     Button,
@@ -6,17 +11,14 @@ import {
     Typography,
     ToggleButton,
     ToggleButtonGroup,
-} from '../../../components/mui';
-import { Refresh } from '../../../components/icons';
+} from '@/components/mui';
 import {
     COLORS,
     SPACING,
     TYPOGRAPHY,
     SHADOWS,
     ANIMATIONS,
-} from '../../../config/theme';
-import { Control } from '../types';
-import { RESEARCH_STYLES } from '../constants';
+} from '@/config/theme';
 
 interface ResearchControlsProps {
     controls: Control[];

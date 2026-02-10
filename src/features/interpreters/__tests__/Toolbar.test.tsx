@@ -1,11 +1,12 @@
-import { vi, type Mock } from 'vitest';
-import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { Toolbar, handleToolbar, ToolbarPayload } from '../Toolbar';
+import React from 'react';
+import { vi, type Mock } from 'vitest';
+
 import { EditorContext, EditorContextType } from '../EditorContext';
+import { Toolbar, handleToolbar, ToolbarPayload } from '../Toolbar';
 
 // Mock components
-vi.mock('../../../components/ui/Controls', () => ({
+vi.mock('@/components/ui/Controls', () => ({
     TooltipButton: ({
         title,
         onClick,
@@ -26,7 +27,7 @@ vi.mock('../../../components/ui/Controls', () => ({
 }));
 
 // Mock icons
-vi.mock('../../../components/icons', () => ({
+vi.mock('@/components/icons', () => ({
     FirstPageRounded: () => <span>First</span>,
     LastPageRounded: () => <span>Last</span>,
     NavigateBeforeRounded: () => <span>Prev</span>,
@@ -36,7 +37,7 @@ vi.mock('../../../components/icons', () => ({
 }));
 
 // Mock useMediaQuery
-vi.mock('../../../components/mui', () => ({
+vi.mock('@/components/mui', () => ({
     useMediaQuery: vi.fn(() => true), // Desktop by default
 }));
 

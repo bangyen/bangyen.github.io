@@ -1,6 +1,7 @@
-import React from 'react';
 import { Box, Typography, Fade } from '@mui/material';
-import { COLORS, SHADOWS, TYPOGRAPHY } from '../../../config/theme';
+import React from 'react';
+
+import { COLORS, SHADOWS, TYPOGRAPHY } from '@/config/theme';
 
 interface QuizFeedbackProps<T> {
     showFeedback: boolean;

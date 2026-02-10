@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
-import { TextField } from '../../../components/mui';
-import { EditorContext } from '../EditorContext';
-import { COLORS, SPACING } from '../../../config/theme';
 
 import { useMobile } from '../../../hooks';
+import { EditorContext } from '../EditorContext';
+
+import { TextField } from '@/components/mui';
+import { COLORS, SPACING } from '@/config/theme';
 
 export interface TextAreaProps {
     value?: string;

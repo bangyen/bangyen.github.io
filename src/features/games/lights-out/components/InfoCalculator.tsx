@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box, Typography, Button } from '@/components/mui';
+
 import { Refresh } from '@/components/icons';
-import { COLORS } from '@/config/theme';
+import { Box, Typography, Button } from '@/components/mui';
 import { CustomGrid } from '@/components/ui/CustomGrid';
+import { COLORS } from '@/config/theme';
 
 interface InfoCalculatorProps {
     cols: number;

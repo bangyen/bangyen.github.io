@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+
+import { getMatrix } from '../matrixOperations';
 import {
     polyDegree,
     polyDiv,
@@ -10,7 +12,6 @@ import {
     getDivisors,
     findPattern,
 } from '../polynomialUtils';
-import { getMatrix } from '../matrixOperations';
 
 describe('polynomialUtils', () => {
     describe('polyDegree', () => {

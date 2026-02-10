@@ -32,10 +32,12 @@
                 "src/*"
             ],
             "slant-wasm": [
-                "./wasm/slant-wasm/pkg"
+                "./wasm/slant-wasm/pkg",
+                "./src/types/slant-wasm.d.ts"
             ],
             "lights-out-wasm": [
-                "./wasm/lights-out-wasm/pkg"
+                "./wasm/lights-out-wasm/pkg",
+                "./src/types/lights-out-wasm.d.ts"
             ]
         },
         "types": [

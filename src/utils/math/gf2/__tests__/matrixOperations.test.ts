@@ -1,4 +1,6 @@
 import { describe, it, expect } from 'vitest';
+
+import { getIdentity } from '../gf2Operations';
 import {
     getMatrix,
     getKernelBasis,
@@ -6,7 +8,6 @@ import {
     getImageBasis,
     getImageMapping,
 } from '../matrixOperations';
-import { getIdentity } from '../gf2Operations';
 
 describe('matrixOperations', () => {
     describe('getMatrix', () => {
