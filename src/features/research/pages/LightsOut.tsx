@@ -1,9 +1,9 @@
 import React from 'react';
 
+import { ResearchDemo } from '../components';
 import { VerificationTools } from '../components/VerificationTools';
+import { RESEARCH_STYLES } from '../config/constants';
 import { RESEARCH_CONSTANTS } from '../config/researchConfig';
-import { RESEARCH_STYLES } from '../constants';
-import ResearchDemo from '../ResearchDemo';
 
 import { LaunchRounded } from '@/components/icons';
 import {
@@ -48,7 +48,7 @@ const LightsOutResearch: React.FC = () => {
         yAxisFormatter: (value: number) => value.toString(),
         yAxisDomain: ['0', String(RESEARCH_CONSTANTS.lightsOut.yAxisMax)],
         tooltipLabelFormatter: (value: number) =>
-            `Grid Width n=${value.toString()}`,
+            `Grid Width n = ${value.toString()} `,
         tooltipFormatter: (value: number): [string, string] => [
             value.toString(),
             'Period (z)',
@@ -174,7 +174,7 @@ const LightsOutResearch: React.FC = () => {
                     sx={{
                         mb: 6,
                         p: 4,
-                        borderLeft: `4px solid ${COLORS.primary.main}`,
+                        borderLeft: `4px solid ${COLORS.primary.main} `,
                     }}
                 >
                     <Typography

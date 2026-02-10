@@ -3,7 +3,7 @@ import React, { useState, useCallback } from 'react';
 import { SolvabilityHeader } from './solvability/SolvabilityHeader';
 import { SolvabilityResults } from './solvability/SolvabilityResults';
 import { useWorker } from '../../../hooks';
-import { RESEARCH_STYLES } from '../constants';
+import { RESEARCH_STYLES } from '../config/constants';
 
 import { Box, Typography, Alert } from '@/components/mui';
 import { COLORS, SPACING } from '@/config/theme';

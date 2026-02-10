@@ -20,7 +20,7 @@ vi.mock('pako', () => ({
     },
     ungzip: vi.fn(),
 }));
-vi.mock('../../ResearchDemo', () => ({
+vi.mock('../../components/ResearchDemo', () => ({
     __esModule: true,
     default: ({
         title,

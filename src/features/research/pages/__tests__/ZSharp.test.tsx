@@ -14,7 +14,7 @@ import { ResearchDemoProps, ViewType } from '../../types';
 import ZSharp from '../ZSharp';
 
 // Mocks
-vi.mock('../../ResearchDemo', () => ({
+vi.mock('../../components/ResearchDemo', () => ({
     __esModule: true,
     default: ({
         title,

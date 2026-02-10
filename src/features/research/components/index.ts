@@ -8,3 +8,4 @@ export { ResearchHeader } from './ResearchHeader';
 export { default as ResearchViewSelector } from './ResearchViewSelector';
 export { SolvabilityAnalyzer } from './SolvabilityAnalyzer';
 export { VerificationTools } from './VerificationTools';
+export { default as ResearchDemo } from './ResearchDemo';

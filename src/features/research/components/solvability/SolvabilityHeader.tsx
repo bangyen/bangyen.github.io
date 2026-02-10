@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { RESEARCH_STYLES } from '../../constants';
+import { RESEARCH_STYLES } from '../../config/constants';
 
 import { HelpOutlineRounded, CloseRounded } from '@/components/icons';
 import {

@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { ResearchChart } from './components/ResearchChart';
-import ResearchControls from './components/ResearchControls';
-import { ResearchErrorBoundary } from './components/ResearchErrorBoundary';
-import { ResearchHeader } from './components/ResearchHeader';
-import ResearchViewSelector from './components/ResearchViewSelector';
-import { ResearchDemoProps } from './types';
+import { ResearchChart } from './ResearchChart';
+import ResearchControls from './ResearchControls';
+import { ResearchErrorBoundary } from './ResearchErrorBoundary';
+import { ResearchHeader } from './ResearchHeader';
+import ResearchViewSelector from './ResearchViewSelector';
+import { ResearchDemoProps } from '../types';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Box, Grid, useMediaQuery } from '@/components/mui';

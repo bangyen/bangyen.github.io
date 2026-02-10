@@ -1,9 +1,9 @@
 import React, { useState, useCallback } from 'react';
 
+import { MathText } from './MathText';
 import { useWorker } from '../../../hooks';
 import { Pattern } from '../../games/lights-out/matrices';
-import { RESEARCH_STYLES } from '../constants';
-import { MathText } from './MathText';
+import { RESEARCH_STYLES } from '../config/constants';
 
 import { HelpOutlineRounded, CloseRounded } from '@/components/icons';
 import {
