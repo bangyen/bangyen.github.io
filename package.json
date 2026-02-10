@@ -1,0 +1,86 @@
+{
+  "name": "website",
+  "homepage": "https://bangyen.github.io",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@babel/plugin-transform-private-property-in-object": "^7.24.7",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "@mui/icons-material": "^6.0.1",
+    "@mui/material": "^6.0.1",
+    "depcheck": "^1.4.3",
+    "gh-pages": "^3.2.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-icons": "^4.3.1",
+    "react-router-dom": "^6.8.0",
+    "react-scripts": "^5.0.1",
+    "simplex-noise": "^4.0.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -b gh-pages -d build",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint src/ --ext .js,.jsx --config config/eslint.config.js",
+    "lint:fix": "eslint src/ --ext .js,.jsx --fix --config config/eslint.config.js",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/",
+    "stylelint": "stylelint src/**/*.{css,scss} --config config/stylelint.config.js",
+    "stylelint:fix": "stylelint src/**/*.{css,scss} --fix --config config/stylelint.config.js",
+    "lint:all": "npm run lint && npm run format:check && npm run stylelint",
+    "prepare": "husky install"
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 80,
+    "tabWidth": 4,
+    "useTabs": false,
+    "bracketSpacing": true,
+    "arrowParens": "avoid",
+    "endOfLine": "lf"
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx}": [
+      "eslint --fix --config config/eslint.config.js",
+      "prettier --write"
+    ],
+    "src/**/*.{css,scss}": [
+      "stylelint --fix --config config/stylelint.config.js",
+      "prettier --write"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^14.4.3",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "husky": "^9.1.7",
+    "jest-environment-jsdom": "^29.5.0",
+    "lint-staged": "^16.1.6",
+    "prettier": "^3.6.2",
+    "stylelint": "^16.24.0",
+    "stylelint-config-standard": "^39.0.0"
+  }
+}
