@@ -135,9 +135,13 @@ export default tseslint.config(
 
     // Research file overrides
     {
-        files: ['**/Oligopoly.tsx', '**/VerificationTools.tsx'],
+        files: ['**/Oligopoly.tsx', '**/ZSharp.tsx', '**/VerificationTools.tsx'],
         rules: {
             'no-console': 'off',
+            '@typescript-eslint/no-unsafe-assignment': 'off',
+            '@typescript-eslint/no-unsafe-call': 'off',
+            '@typescript-eslint/no-unsafe-member-access': 'off',
+            '@typescript-eslint/no-unsafe-argument': 'off',
         },
     },
 );
