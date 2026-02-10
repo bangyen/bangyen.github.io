@@ -1,5 +1,5 @@
 import { getGrid, flipAdj } from './boardHandlers';
-import { getProduct } from '../matrices';
+import { getProduct } from './matrices';
 
 export function chaseLights(states: number[][], dims: number): number[][] {
     const newStates = [...states];

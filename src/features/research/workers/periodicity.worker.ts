@@ -7,7 +7,7 @@ import {
     getPolynomial,
     polyMod,
 } from '../../../utils/math/gf2/polynomialUtils';
-import { getMatrix } from '../../games/lights-out/matrices';
+import { getMatrix } from '../../games/lights-out';
 
 // Define the shape of the message we expect to receive
 interface WorkerMessage {

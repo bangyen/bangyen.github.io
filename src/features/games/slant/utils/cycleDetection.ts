@@ -1,6 +1,6 @@
-import { CellState, EMPTY, FORWARD } from './types';
 import { DSU } from '../../../../utils/DSU';
 import { getPosKey } from '../../../../utils/gameUtils';
+import { CellState, EMPTY, FORWARD } from '../types';
 
 /**
  * Maps grid node coordinates (intersections) to a flat index.

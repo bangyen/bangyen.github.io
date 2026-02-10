@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { SLANT_STYLES } from './constants';
-import { FORWARD, BACKWARD, EMPTY, SlantState } from './types';
 import { DragProps } from '../../hooks/useDrag';
+import { SLANT_STYLES } from '../config';
+import { FORWARD, BACKWARD, EMPTY, SlantState } from '../types';
 
 import { Box } from '@/components/mui';
 import { COLORS, ANIMATIONS } from '@/config/theme';

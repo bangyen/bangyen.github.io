@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
-import { getProduct } from '../matrices';
+import { getProduct } from '../utils';
 import { getInput, getOutput, useHandler } from './Calculator';
 import { StepTitle, INFO_TITLES } from './Content';
 import { InfoCalculator } from './InfoCalculator';

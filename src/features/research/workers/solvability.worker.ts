@@ -7,7 +7,7 @@ import {
     getKernelBasis,
     getImageMapping,
     getMinWeightSolution,
-} from '../../games/lights-out/matrices';
+} from '../../games/lights-out';
 
 // Define the shape of the message we expect to receive
 interface WorkerMessage {

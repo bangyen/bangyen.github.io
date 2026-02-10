@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import React from 'react';
 
-import { SLANT_STYLES, LAYOUT_CONSTANTS } from '../utils/constants';
-import { FORWARD, BACKWARD, CellState } from '../utils/types';
+import { SLANT_STYLES, LAYOUT_CONSTANTS } from '../config';
+import { FORWARD, BACKWARD, CellState } from '../types';
 
 import { ANIMATIONS, SPACING } from '@/config/theme';
 

@@ -7,7 +7,7 @@ import {
     EMPTY,
     FORWARD,
     BACKWARD,
-} from './types';
+} from '../types';
 import {
     calculateNumbers,
     getErrorNodes,
@@ -19,7 +19,7 @@ import { createGridSize } from '@/utils/types';
 
 // Export everything from types for backward compatibility where needed,
 // though moving to direct imports is preferred.
-export * from './types';
+export * from '../types';
 export { findCycles } from './cycleDetection';
 
 export const handleBoard = createGameReducer<SlantState, SlantAction>({

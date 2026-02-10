@@ -1,4 +1,4 @@
-import { getProduct } from '../matrices';
+import { getProduct } from './matrices';
 import { PRECOMPUTED_SOLUTIONS } from './precomputedTables';
 
 import { createGameReducer, getPosKey } from '@/utils/gameUtils';

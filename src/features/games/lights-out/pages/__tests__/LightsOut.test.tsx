@@ -2,12 +2,15 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { vi, type Mock } from 'vitest';
 
-import * as hooks from '../../../../hooks';
-import LightsOut from '../pages/LightsOut';
-import * as boardHandlers from '../utils/boardHandlers';
-import { BoardState, BoardAction } from '../utils/boardHandlers';
+import LightsOut from '../LightsOut';
 
 import { PAGE_TITLES } from '@/config/constants';
+import {
+    BoardState,
+    BoardAction,
+} from '@/features/games/lights-out/utils/boardHandlers';
+import * as boardHandlers from '@/features/games/lights-out/utils/boardHandlers';
+import * as hooks from '@/hooks';
 
 // Mock icons
 vi.mock('@/components/icons', async importOriginal => {
@@ -23,7 +26,7 @@ vi.mock('@/components/icons', async importOriginal => {
 });
 
 // Mock hooks
-vi.mock('../../../../hooks', () => ({
+vi.mock('@/hooks', () => ({
     useWindow: vi.fn(() => ({ height: 800, width: 1200 })),
     useMobile: vi.fn(() => false),
     useTimer: vi.fn(() => ({
@@ -34,7 +37,7 @@ vi.mock('../../../../hooks', () => ({
 }));
 
 // Mock boardHandlers to control game logic
-vi.mock('../utils/boardHandlers', () => ({
+vi.mock('@/features/games/lights-out/utils/boardHandlers', () => ({
     getGrid: vi.fn(() => Array(4).fill(Array(4).fill(0)) as number[][]),
     getInitialState: vi.fn((rows: number, cols: number) => ({
         grid: Array.from({ length: rows }, () => 0),
@@ -59,7 +62,7 @@ vi.mock('../utils/boardHandlers', () => ({
 }));
 
 // Mock boardUtils
-vi.mock('../hooks/boardUtils', () => ({
+vi.mock('@/features/games/lights-out/hooks/boardUtils', () => ({
     useHandler: () => ({
         getColor: () => ({ front: 'white', back: 'black' }),
         getBorder: () => ({}),
@@ -69,7 +72,7 @@ vi.mock('../hooks/boardUtils', () => ({
 }));
 
 // Mock sub-components
-vi.mock('../../components/Board', () => ({
+vi.mock('@/features/games/components/Board', () => ({
     Board: function MockBoard({
         frontProps,
     }: {
@@ -130,7 +133,7 @@ vi.mock('@/components/ui/TooltipButton', () => ({
     },
 }));
 
-vi.mock('../components/Info', () => ({
+vi.mock('@/features/games/lights-out/components/Info', () => ({
     default: function MockInfo() {
         return <div data-testid="info-modal">Info</div>;
     },

@@ -1,12 +1,12 @@
 import { renderHook } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
-import { DragProps } from '../../hooks/useDrag';
-import { getInput, getOutput, useHandler } from '../components/Calculator';
-import { useGetters } from '../hooks/boardUtils';
+import { DragProps } from '../../../hooks/useDrag';
+import { useGetters } from '../../hooks/boardUtils';
+import { getInput, getOutput, useHandler } from '../Calculator';
 
 // Mock useGetters from boardUtils
-vi.mock('../hooks/boardUtils', () => ({
+vi.mock('../../hooks/boardUtils', () => ({
     useGetters: vi.fn(
         (
             _getTile: (r: number, c: number) => number,

@@ -5,3 +5,4 @@ export { default as Slant } from './slant/pages/Slant';
 export * from './components';
 export * from './hooks';
 export * from './types';
+export * from './config';

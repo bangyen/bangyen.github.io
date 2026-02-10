@@ -5,3 +5,4 @@ export * from './chaseHandlers';
 export * from './constants';
 export * from './precomputedTables';
 export * from './renderers';
+export * from './matrices';

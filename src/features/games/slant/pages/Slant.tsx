@@ -15,7 +15,6 @@ import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
 import { useGamePersistence } from '../../hooks/useGamePersistence';
 import { GhostCanvas } from '../components/GhostCanvas';
-import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import {
     NUMBER_SIZE_RATIO,
     STORAGE_KEYS,
@@ -23,9 +22,10 @@ import {
     GAME_LOGIC_CONSTANTS,
     MOBILE_PADDING,
     DESKTOP_PADDING,
-} from '../utils/constants';
+} from '../config';
+import { SlantAction, SlantState, CellState, EMPTY } from '../types';
+import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import { getBackProps, getFrontProps } from '../utils/renderers';
-import { SlantAction, SlantState, CellState, EMPTY } from '../utils/types';
 
 import { Psychology } from '@/components/icons';
 import { Box } from '@/components/mui';

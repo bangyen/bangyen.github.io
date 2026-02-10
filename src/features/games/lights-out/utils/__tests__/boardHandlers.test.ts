@@ -12,7 +12,7 @@ import {
     handleBoard,
     getNextMove,
     BoardAction,
-} from '../utils/boardHandlers';
+} from '../boardHandlers';
 
 import { createGridSize, createCellIndex } from '@/utils/types';
 

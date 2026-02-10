@@ -1,6 +1,6 @@
-import { GAME_LOGIC_CONSTANTS } from './constants';
+import { GAME_LOGIC_CONSTANTS } from '../config';
 import { getNodeIndex } from './cycleDetection';
-import { CellState, EMPTY, FORWARD, BACKWARD } from './types';
+import { CellState, EMPTY, FORWARD, BACKWARD } from '../types';
 import { calculateNumbers } from './validation';
 
 import { DSU } from '@/utils/DSU';

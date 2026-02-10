@@ -6,7 +6,7 @@ import {
     polyDiv,
     getMinimalPolynomial,
     factorPoly,
-} from '../matrices';
+} from '../utils';
 
 const COLORS = {
     reset: '\x1b[0m',

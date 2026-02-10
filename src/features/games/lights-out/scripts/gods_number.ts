@@ -1,4 +1,4 @@
-import { getImageBasis } from '../matrices';
+import { getImageBasis } from '../utils';
 
 const COLORS = {
     reset: '\x1b[0m',

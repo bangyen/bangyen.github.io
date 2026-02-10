@@ -6,7 +6,7 @@ import {
     getImageBasis,
     getMinWeightSolution,
     countBits,
-} from '../matrices';
+} from '../utils';
 
 function drawProgressBar(current: number, total: number, width = 30) {
     const progress = Math.min(1, current / total);

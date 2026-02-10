@@ -1,16 +1,16 @@
 import { render, screen } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
-import Example from '../components/Example';
-import * as chaseHandlers from '../utils/chaseHandlers';
+import * as chaseHandlers from '../../utils/chaseHandlers';
+import Example from '../Example';
 
 // Mock chaseHandlers
-vi.mock('../utils/chaseHandlers', () => ({
+vi.mock('../../utils/chaseHandlers', () => ({
     getStates: vi.fn(),
 }));
 
 // Mock calculator to avoid real implementation issues
-vi.mock('../components/Calculator', () => ({
+vi.mock('../Calculator', () => ({
     getOutput: vi.fn(() => () => ({})),
     useHandler: vi.fn(() => ({})),
     getInput: vi.fn(() => () => ({})),

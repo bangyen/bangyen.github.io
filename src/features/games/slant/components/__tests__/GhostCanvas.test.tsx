@@ -1,9 +1,9 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { GhostCanvas } from '../components/GhostCanvas';
-import { FORWARD, BACKWARD, CellState } from '../utils/types';
-import { SolverMessage, Conflict, CellInfo } from '../workers/solverWorker';
+import { FORWARD, BACKWARD, CellState } from '../../types';
+import { SolverMessage, Conflict, CellInfo } from '../../workers/solverWorker';
+import { GhostCanvas } from '../GhostCanvas';
 
 // Mock slant-wasm before boardHandlers imports it (uses import.meta.url incompatible with Jest)
 vi.mock('slant-wasm', () => ({
@@ -14,11 +14,11 @@ vi.mock('slant-wasm', () => ({
 }));
 
 // Mock hooks
-vi.mock('../../../../hooks', () => ({
+vi.mock('../../../../../hooks', () => ({
     useMobile: () => false,
 }));
 
-vi.mock('../workerUtils', () => ({
+vi.mock('../../utils/workerUtils', () => ({
     createWorker: () => new MockWorker('mock-url'),
 }));
 
@@ -107,7 +107,7 @@ vi.mock('@/config/theme', () => ({
 }));
 
 // Mock useGameInteraction
-vi.mock('../../hooks/useGameInteraction', () => ({
+vi.mock('../../../hooks/useGameInteraction', () => ({
     useGameInteraction: ({
         onToggle,
     }: {

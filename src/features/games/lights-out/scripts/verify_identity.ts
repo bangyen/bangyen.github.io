@@ -10,12 +10,7 @@
     npx tsx src/features/games/lights-out/verify_identity.ts
 */
 
-import {
-    getMatrix,
-    getPolynomial,
-    evalPolynomial,
-    isIdentity,
-} from '../matrices';
+import { getMatrix, getPolynomial, evalPolynomial, isIdentity } from '../utils';
 
 function check(rows: number, cols: number): boolean {
     const matrix = getMatrix(cols);

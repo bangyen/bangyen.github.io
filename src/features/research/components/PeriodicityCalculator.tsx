@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 
 import { MathText } from './MathText';
 import { useWorker } from '../../../hooks';
-import { Pattern } from '../../games/lights-out/matrices';
+import { Pattern } from '../../games/lights-out/utils/matrices';
 import { RESEARCH_STYLES } from '../config/constants';
 
 import { HelpOutlineRounded, CloseRounded } from '@/components/icons';
@@ -261,7 +261,14 @@ export const PeriodicityCalculator: React.FC = () => {
                                                     .FONT_SIZE_SM,
                                         }}
                                     >
-                                        z = {result.pattern.z}
+                                        z ={' '}
+                                        {
+                                            (
+                                                result.pattern as unknown as {
+                                                    z: number;
+                                                }
+                                            ).z
+                                        }
                                     </Typography>
                                 </Box>
                             </Box>
@@ -308,7 +315,11 @@ export const PeriodicityCalculator: React.FC = () => {
                                             mb: 1.5,
                                         }}
                                     >
-                                        {result.pattern.R.map(r => (
+                                        {(
+                                            result.pattern as unknown as {
+                                                R: number[];
+                                            }
+                                        ).R.map((r: number) => (
                                             <Box
                                                 key={r}
                                                 sx={{

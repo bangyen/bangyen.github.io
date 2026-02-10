@@ -12,8 +12,8 @@ import {
     NUMBER_SIZE_RATIO,
     SLANT_STYLES,
     LAYOUT_CONSTANTS,
-} from '../utils/constants';
-import { FORWARD, BACKWARD, EMPTY, CellState } from '../utils/types';
+} from '../config';
+import { FORWARD, BACKWARD, EMPTY, CellState } from '../types';
 import { createWorker } from '../utils/workerUtils';
 import { type SolverMessage } from '../workers/solverWorker';
 
