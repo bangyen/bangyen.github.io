@@ -38,13 +38,12 @@ export function MenuButton(): React.ReactElement {
                 aria-controls={define('projects-menu')}
                 aria-expanded={define('true')}
                 aria-haspopup="true"
-                onClick={handleClick}
                 sx={{
                     '&:hover': {
                         backgroundColor: COLORS.interactive.hover,
-                        transform: 'scale(1.05)',
                     },
                 }}
+                onClick={handleClick}
             />
             <Menu
                 id="projects-menu"

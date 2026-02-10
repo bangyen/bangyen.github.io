@@ -31,6 +31,7 @@
     "lint:fix": "eslint src/ --fix",
     "format": "prettier --write src/",
     "format:check": "prettier --check src/",
+    "fix": "bun run lint:fix && bun run format",
     "lint:all": "bun run lint && bun run format:check",
     "data:update": "bun scripts/updateResearchData.ts",
     "prepare": "husky"
