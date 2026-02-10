@@ -1,21 +1,8 @@
-import React from 'react';
+import { ProjectCategory } from '../types';
 
 import { Psychology, GamepadRounded } from '@/components/icons';
 import { ROUTES } from '@/config/constants';
 import { COLORS } from '@/config/theme';
-
-export interface ProjectInfo {
-    path: string;
-    description: string;
-    technology: string;
-}
-
-export interface ProjectCategory {
-    title: string;
-    icon: React.ElementType;
-    color: string;
-    projects: Record<string, ProjectInfo>;
-}
 
 export const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
     research: {

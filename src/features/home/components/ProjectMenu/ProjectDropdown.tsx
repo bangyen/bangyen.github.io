@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { PROJECT_CATEGORIES } from '../data';
+import { PROJECT_CATEGORIES } from '../../config';
 
 import { Box, MenuItem, Typography } from '@/components/mui';
 import { COLORS, SPACING, TYPOGRAPHY, ANIMATIONS } from '@/config/theme';
