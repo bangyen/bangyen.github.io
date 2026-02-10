@@ -54,9 +54,12 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
         // Check for GZIP magic number (0x1f 0x8b)
         const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
 
-        const text = isGzipped
-            ? (pako.ungzip(view, { to: 'string' }) as unknown as string)
-            : new TextDecoder().decode(buffer);
+        let text: string;
+        if (isGzipped) {
+            text = pako.ungzip(view, { to: 'string' });
+        } else {
+            text = new TextDecoder().decode(buffer);
+        }
         const realData = JSON.parse(text) as RealData;
 
         const data: DataPoint[] = [];
