@@ -152,7 +152,7 @@ describe('Home Component', () => {
 
         expect(screen.getByText('ZSharp')).toBeInTheDocument();
         expect(screen.getByText('Lights Out')).toBeInTheDocument();
-        expect(screen.getByText('Interpreters')).toBeInTheDocument();
+        expect(screen.getByText('Slant')).toBeInTheDocument();
     });
 
     test('closes menu when clicking outside', async () => {

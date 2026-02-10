@@ -18,13 +18,14 @@
   },
   "scripts": {
     "start": "vite",
+    "dev": "vite",
+    "preview": "vite preview",
     "predeploy": "bun run build",
     "deploy": "gh-pages -b gh-pages -d build",
     "build": "vite build",
     "build:analyze": "bun run build && du -sh build/ && ls -lh build/assets/*.js | awk '{print $5, $9}'",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:ci": "vitest run",
     "test:coverage": "vitest run --coverage",
     "type-check": "bun x tsc --noEmit",
     "lint": "eslint src/",
@@ -33,6 +34,7 @@
     "format:check": "prettier --check src/",
     "fix": "bun run lint:fix && bun run format",
     "lint:all": "bun run lint && bun run format:check",
+    "ci": "bun run lint:all && bun run type-check && bun run test",
     "data:update": "bun scripts/updateResearchData.ts",
     "prepare": "husky"
   },
