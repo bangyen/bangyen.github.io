@@ -51,18 +51,13 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
         const buffer = await response.arrayBuffer();
         const view = new Uint8Array(buffer);
 
-        let realData: RealData;
-
         // Check for GZIP magic number (0x1f 0x8b)
         const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
 
-        if (isGzipped) {
-            const decompressed = pako.ungzip(view, { to: 'string' });
-            realData = JSON.parse(decompressed) as RealData;
-        } else {
-            const text = new TextDecoder().decode(buffer);
-            realData = JSON.parse(text) as RealData;
-        }
+        const text = isGzipped
+            ? (pako.ungzip(view, { to: 'string' }) as unknown as string)
+            : new TextDecoder().decode(buffer);
+        const realData = JSON.parse(text) as RealData;
 
         const data: DataPoint[] = [];
         const sgdAccuracies = realData['SGD Baseline']?.train_accuracies ?? [];

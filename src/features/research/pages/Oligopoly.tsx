@@ -61,7 +61,7 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
         const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
 
         const text = isGzipped
-            ? pako.ungzip(view, { to: 'string' })
+            ? (pako.ungzip(view, { to: 'string' }) as unknown as string)
             : new TextDecoder().decode(data);
 
         const matrixData = JSON.parse(text) as MatrixItem[];
