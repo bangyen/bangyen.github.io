@@ -20,12 +20,6 @@ const LightsOut = lazy(
 );
 const ZSharp = lazy(() => import('./features/research/pages/ZSharp'));
 const Oligopoly = lazy(() => import('./features/research/pages/Oligopoly'));
-const Interpreters = lazy(
-    () => import('./features/interpreters/pages/Interpreters')
-);
-const WikipediaQuiz = lazy(
-    () => import('./features/quiz/pages/WikipediaQuizPage')
-);
 const LightsOutResearch = lazy(
     () => import('./features/research/pages/LightsOut')
 );
@@ -60,10 +54,6 @@ const App = (): React.ReactElement => {
                     <Route path={ROUTES.pages.Home} element={<Home />} />
                     <Route path={ROUTES.pages.Error} element={<Error />} />
                     <Route
-                        path={ROUTES.pages.Interpreters}
-                        element={<Interpreters />}
-                    />
-                    <Route
                         path={ROUTES.pages.LightsOut}
                         element={<LightsOut />}
                     />
@@ -71,10 +61,6 @@ const App = (): React.ReactElement => {
                     <Route
                         path={ROUTES.pages.Oligopoly}
                         element={<Oligopoly />}
-                    />
-                    <Route
-                        path={ROUTES.pages.Geography}
-                        element={<WikipediaQuiz />}
                     />
                     <Route
                         path={ROUTES.pages.LightsOutResearch}

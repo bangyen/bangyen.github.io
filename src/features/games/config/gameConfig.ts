@@ -20,6 +20,17 @@ export const GAME_CONSTANTS = {
     },
 };
 
+export const GRID_CONFIG = {
+    cellSize: {
+        divisor: 4,
+        fontSizeMultiplier: 0.375,
+    },
+};
+
+export function getSpace(size: number): string {
+    return `${(size * GRID_CONFIG.cellSize.divisor).toString()}px`;
+}
+
 export const PAGE_TITLES = {
     lightsOut: 'Lights Out | Bangyen',
     slant: 'Slant | Bangyen',

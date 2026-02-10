@@ -2,34 +2,12 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
-import path from 'path';
 
-export default defineConfig(async ({ mode }) => {
-    const isTest = mode === 'test' || !!process.env.VITEST;
-
+export default defineConfig(() => {
     const plugins = [react(), tsconfigPaths()];
-
-    if (!isTest) {
-        const wasm = (await import('vite-plugin-wasm')).default;
-        const topLevelAwait = (await import('vite-plugin-top-level-await'))
-            .default;
-        plugins.push(wasm(), topLevelAwait());
-    }
 
     return {
         plugins,
-        resolve: {
-            alias: {
-                'lights-out-wasm': path.resolve(
-                    import.meta.dirname,
-                    'wasm/lights-out-wasm/pkg/lights_out_wasm.js'
-                ),
-                'slant-wasm': path.resolve(
-                    import.meta.dirname,
-                    'wasm/slant-wasm/pkg/slant_wasm.js'
-                ),
-            },
-        },
         worker: {
             format: 'es',
         },
@@ -105,15 +83,7 @@ export default defineConfig(async ({ mode }) => {
             environment: 'jsdom',
             setupFiles: './src/setupTests.ts',
             include: ['src/**/*.test.{js,jsx,ts,tsx}'],
-            // Exclude tests that require WASM modules (must be built with wasm-pack first)
-            exclude: [
-                'src/features/games/lights-out/__tests__/Example.test.tsx',
-                'src/features/games/lights-out/__tests__/boardHandlers.test.ts',
-                'src/features/games/lights-out/__tests__/matrices.test.ts',
-                'src/features/games/slant/__tests__/wasmInit.test.ts',
-                'src/utils/math/gf2/__tests__/inversion.test.ts',
-                'node_modules',
-            ],
+            exclude: ['node_modules'],
             // Optimization: Disable CSS parsing for logic tests
             css: false,
             isolate: true,

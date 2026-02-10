@@ -1,18 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 
 import { getProduct } from '../inversion';
 
-// Mock lights-out-wasm
-vi.mock('lights-out-wasm', () => ({
-    default: vi.fn(() => Promise.resolve()),
-    invert_matrix: vi.fn((_input, size) => new BigUint64Array(size)),
-}));
-
 describe('inversion', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-    });
-
     it('should compute product for simple grid (3x3)', () => {
         // Lights Out 3x3 is solvable.
         // getProduct takes the current state (as 0/1 array) and returns the toggle pattern.

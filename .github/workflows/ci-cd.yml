@@ -12,59 +12,15 @@ permissions:
   pages: write
 
 jobs:
-  build-wasm:
-    name: Build WASM
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-        
-      - name: Rust Cache
-        uses: Swatinem/rust-cache@v2
-        with:
-          prefix-key: "v1-rust"
-          shared-key: "wasm-cache"
-          workspaces: |
-            wasm/lights-out-wasm
-            wasm/slant-wasm
-            
-      - name: Setup wasm-pack
-        uses: jetli/wasm-pack-action@v0.4.0
-        with:
-          version: 'latest'
-          
-      - name: Build WASM Modules
-        run: |
-          wasm-pack build ./wasm/lights-out-wasm --target web
-          wasm-pack build ./wasm/slant-wasm --target web
-          
-      - name: Upload WASM Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: wasm-packages
-          path: |
-            wasm/lights-out-wasm/pkg
-            wasm/slant-wasm/pkg
-          retention-days: 1
-
   quality-check:
     name: Quality Check
-    needs: build-wasm
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-          
-      - name: Download WASM Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: wasm-packages
-          path: wasm
           
       - name: Restore Bun Cache
         uses: actions/cache@v4
@@ -92,16 +48,10 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: latest
-          
-      - name: Download WASM Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: wasm-packages
-          path: wasm
           
       - name: Restore Bun Cache
         uses: actions/cache@v4

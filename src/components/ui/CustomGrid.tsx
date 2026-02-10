@@ -3,8 +3,7 @@ import React, { useMemo, memo } from 'react';
 import { Box } from '../mui';
 
 import { TYPOGRAPHY, COMPONENT_VARIANTS } from '@/config/theme';
-import { GRID_CONFIG } from '@/features/interpreters/config';
-import { getSpace } from '@/features/interpreters/utils';
+import { GRID_CONFIG, getSpace } from '@/features/games/config/gameConfig';
 
 interface CellProps {
     size: number;

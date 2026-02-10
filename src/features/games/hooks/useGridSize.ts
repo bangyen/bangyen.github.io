@@ -1,7 +1,22 @@
 import { useState, useMemo, useEffect } from 'react';
 
 import { useWindow, useMobile } from '../../../hooks';
-import { convertPixels } from '../../interpreters/utils/gridUtils';
+
+/**
+ * Convert pixel dimensions to grid rows/cols based on cell size
+ */
+function convertPixels(
+    cellSizeRem: number,
+    availableHeightPx: number,
+    availableWidthPx: number
+): { rows: number; cols: number } {
+    const remToPx = 16; // 1rem = 16px by default
+    const cellSizePx = cellSizeRem * remToPx;
+    return {
+        rows: Math.floor(availableHeightPx / cellSizePx),
+        cols: Math.floor(availableWidthPx / cellSizePx),
+    };
+}
 
 /**
  * Configuration for grid size calculations and persistence.

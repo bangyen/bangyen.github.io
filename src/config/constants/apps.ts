@@ -7,9 +7,6 @@ export const PAGE_TITLES: PageTitles = {
     zsharp: 'ZSharp - Sharpness-Aware Minimization',
     oligopoly: 'Oligopoly - Cournot Competition',
     error: 'Page Not Found | Bangyen',
-    interpreters: `Interpreters - ${PERSONAL_INFO.name}`,
-    interpreter: (name: string) => `${name} Interpreter | Bangyen`,
-    geography: 'Geography | Bangyen',
     lightsOutResearch: 'Lights Out Mechanics | Bangyen',
     slant: 'Slant | Bangyen',
 };
@@ -21,16 +18,8 @@ export const ROUTES: Routes = {
         Oligopoly: '/oligopoly',
         ZSharp: '/zsharp',
         LightsOut: '/lights-out',
-        Interpreters: '/interpreters',
-        Geography: '/geography',
         LightsOutResearch: '/research/lights-out',
         Slant: '/slant',
-    },
-    interpreters: {
-        StunStep: 'stun-step',
-        Suffolk: 'suffolk',
-        WII2D: 'wii2d',
-        Back: 'back',
     },
 };
 

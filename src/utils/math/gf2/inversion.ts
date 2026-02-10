@@ -1,16 +1,7 @@
-import init, { invert_matrix } from 'lights-out-wasm';
-
 import { countBits, invertMatrix } from './gf2Operations';
 import { getMatrix } from './matrixOperations';
 import { evalPolynomial, getPolynomial } from './polynomialUtils';
 import { getPosKey } from '../../gameUtils';
-
-// Initialize the Wasm module
-
-init().catch((e: unknown) => {
-    // eslint-disable-next-line no-console
-    console.error('Failed to initialize Lights Out Wasm:', e);
-});
 
 /**
  * Cache for matrix inversions.
@@ -51,26 +42,7 @@ export function getProduct(
         const weights = getPolynomial(rows + 1);
         const product = evalPolynomial(matrix, weights);
 
-        if (cols <= 64) {
-            try {
-                // Convert bigint[] to BigUint64Array for Wasm
-                // Note: BigInts in JS are arbitrary precision, but for <=64 cols they fit in 64 bits.
-                const input = new BigUint64Array(
-                    product.map(b => BigInt.asUintN(64, b))
-                );
-
-                const result = invert_matrix(input, product.length);
-
-                inverseCache[key] = Array.from(result);
-            } catch (_e) {
-                // eslint-disable-next-line no-console
-                console.warn('Wasm inversion failed, falling back to JS', _e);
-
-                inverseCache[key] = invertMatrix(product);
-            }
-        } else {
-            inverseCache[key] = invertMatrix(product);
-        }
+        inverseCache[key] = invertMatrix(product);
     }
 
     const inverse = inverseCache[key] as bigint[] | undefined;

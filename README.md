@@ -6,46 +6,37 @@
 [![GitHub Pages](https://img.shields.io/badge/Deployed%20on-GitHub%20Pages-green.svg?logo=github)](https://pages.github.com/)
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A personal website and portfolio showcasing interactive programming interpreters, games, and web development projects. Built with React and optimized with Vite.
+A personal portfolio showcasing interactive games, algorithm implementation, and research visualization. Built with React and optimized with Vite.
 
 **Live Site**: [https://bangyen.github.io](https://bangyen.github.io)
 
 ## Features
 
-### Programming Language Interpreters
-- **Stun Step**: Brainfuck-like esoteric language
-- **Suffolk**: Minimal register-based language
-- **WII2D**: 2D grid-based programming language
-- **Back**: Grid-based language with mirror reflections
-
 ### Interactive Games
-- **Slant**: Diagonal line logic puzzle
-- **Lights Out**: Grid puzzle game with [algebraic analysis](src/features/games/lights-out/README.md)
+- **Lights Out**: Grid puzzle game with [algebraic solver](src/features/games/lights-out/README.md) (pure TypeScript GF(2) linear algebra)
+- **Slant**: Diagonal line logic puzzle with procedural generation and cycle detection
 
-### Knowledge Collections
-- **Geography Quizzes**: Interactive map-based learning using Wikipedia data
+### Research & Visualization
+- **ZSharp**: Sharpness-Aware Minimization (SAM) visualization comparing ML optimization algorithms
+- **Oligopoly**: Cournot competition economic simulation with interactive parameter controls
 
-
-### Data Visualization
-- **Oligopoly**: Economic simulation with market dynamics
-- **ZSharp**: ML experiment comparing optimization algorithms
-
-### Technical Features
-- **Modern React**: Leverages React 19 features and MUI 7 components.
-- **Fast Build System**: Migrated from CRA to Vite for lightning-fast HMR and optimized builds.
-- **Zero-Warning Linting**: Strict ESLint 9 (Flat Config) standard for code quality.
-- **Responsive UI**: Glassmorphism aesthetics with Material-UI v7.
-- **Step-by-step Execution**: Real-time program visualization for interpreters.
+### Technical Highlights
+- **Pure TypeScript**: All game logic and algorithms implemented in TypeScript (no WASM)
+- **Algorithm Showcase**: Lights Out (GF(2) linear algebra), Slant (graph theory + DSU)
+- **Responsive Design**: Glassmorphism UI with dark/light theme toggle
+- **Game Features**: Grid sizing, localStorage persistence, algebraic solving, procedural generation
+- **Modern React**: React 19 with hooks, Material-UI 7, Vite 7 for fast builds
+- **Streamlined Tooling**: ESLint 9 (Flat Config) + Prettier for code quality
 
 ## Tech Stack
 
 - **Frontend**: React 19, Material-UI 7, React Router 7
 - **Build Tooling**: Vite 7, TypeScript 5, Bun
 - **Styling**: Vanilla CSS, Emotion
-- **Data**: KaTeX (Math), Recharts (Visuals)
+- **Data & Visualization**: KaTeX (Math), Recharts (Charts)
 - **Testing**: Vitest 4, React Testing Library
 - **Quality Control**: ESLint 9 (Flat Config), Prettier 3, Husky, lint-staged
-- **Deployment**: GitHub Pages
+- **Deployment**: GitHub Pages, Bun (package manager)
 
 
 ## Getting Started
@@ -76,31 +67,50 @@ bun start
 
 ## Available Scripts
 
-- `bun start` - Start Vite development server
-- `bun run build` - Create production build
+- `bun start` - Start Vite development server on localhost:3000
+- `bun run build` - Create production build in `build/` directory
+- `bun run build:analyze` - Build and analyze bundle sizes
 - `bun test` - Run Vitest tests
-- `bun run test:ci` - Run tests in CI mode
+- `bun run test:watch` - Run tests in watch mode
+- `bun run test:ci` - Run tests in CI mode (used by GitHub Actions)
+- `bun run test:coverage` - Generate coverage report
 - `bun run type-check` - Run TypeScript type checking
-- `bun run lint:all` - Run all linting (ESLint, Prettier, Stylelint)
+- `bun run lint` - Run ESLint checks
+- `bun run lint:fix` - Auto-fix ESLint issues
 - `bun run format` - Format code with Prettier
-- `bun run deploy` - Deploy to GitHub Pages
-- `bun run scrape:quizzes` - Scrape quiz data from Wikipedia
-- `bun run data:update` - Update research data (requires repo cloning)
+- `bun run format:check` - Check Prettier formatting
+- `bun run lint:all` - Run lint and format checking
+- `bun run deploy` - Deploy to GitHub Pages (gh-pages branch)
 
 ## Project Structure
 
 ```
 src/
-├── components/      # Shared UI components (Cores, UI, Layout)
-├── config/          # Global configurations & themes
-├── features/        # Feature-based components (Games, Interpreters, Quiz, Research)
-│   ├── games/
-│   ├── interpreters/
-│   ├── quiz/
-│   └── research/
-├── hooks/           # Custom React hooks
-├── utils/           # Shared utility functions
-└── index.tsx        # Application entry point
+├── components/           # Shared UI components
+│   ├── layout/          # PageLayout, Navigation, ErrorBoundary
+│   ├── ui/              # Reusable controls (CustomGrid, GlassCard, etc.)
+│   └── icons/           # Material-UI icons
+├── config/              # Global configuration
+│   ├── constants/       # Routes, page titles, app configuration
+│   └── theme/           # MUI theme, colors, typography
+├── features/            # Feature-based architecture
+│   ├── games/          # Lights Out & Slant games
+│   │   ├── lights-out/ # Lights Out solver & UI
+│   │   ├── slant/      # Slant puzzle generator & solver
+│   │   ├── components/ # Shared game components (Board, etc.)
+│   │   ├── hooks/      # Game-specific hooks
+│   │   ├── types/      # Game type definitions
+│   │   └── config/     # Game configuration & constants
+│   ├── research/       # Research data visualization
+│   │   ├── pages/      # ZSharp, Oligopoly pages
+│   │   └── workers/    # Web Workers for computation
+│   └── home/           # Landing page with projects
+├── hooks/              # Global React hooks (useTheme, useWorker, etc.)
+├── utils/              # Shared utilities
+│   ├── math/gf2/      # GF(2) linear algebra (Lights Out solver)
+│   └── DSU.ts         # Disjoint Set Union (Slant cycle detection)
+├── styles/             # Global CSS (animations)
+└── index.tsx          # App entry point with routing
 ```
 
 ## Development

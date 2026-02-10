@@ -100,16 +100,8 @@ export interface Routes {
         Oligopoly: string;
         ZSharp: string;
         LightsOut: string;
-        Interpreters: string;
-        Geography: string;
         LightsOutResearch: string;
         Slant: string;
-    };
-    interpreters: {
-        StunStep: string;
-        Suffolk: string;
-        WII2D: string;
-        Back: string;
     };
 }
 
@@ -186,9 +178,6 @@ export interface PageTitles {
     zsharp: string;
     oligopoly: string;
     error: string;
-    interpreters: string;
-    geography: string;
     lightsOutResearch: string;
     slant: string;
-    interpreter: (name: string) => string;
 }

@@ -1,10 +1,7 @@
-import { generate_puzzle_wasm } from 'slant-wasm';
-
 import { GAME_LOGIC_CONSTANTS } from './constants';
 import { getNodeIndex } from './cycleDetection';
 import { CellState, EMPTY, FORWARD, BACKWARD } from './types';
 import { calculateNumbers } from './validation';
-import { isWasmReady } from './wasmInit';
 
 import { DSU } from '@/utils/DSU';
 
@@ -238,9 +235,8 @@ export function pruneHints(
  * Generates a new Slant puzzle and its corresponding solution.
  *
  * Generation Pipeline:
- * 1. Attempts high-performance generation via WebAssembly (WASM).
- * 2. If WASM fails, uses a JavaScript randomized constructive algorithm.
- * 3. Prunes clues to a desired density while maintaining unique solvability.
+ * Uses a JavaScript randomized constructive algorithm (Kruskal's-based approach)
+ * and prunes clues to a desired density while maintaining unique solvability.
  *
  * @param rows - Vertical dimension
  * @param cols - Horizontal dimension
@@ -250,45 +246,6 @@ export function generatePuzzle(
     rows: number,
     cols: number
 ): { numbers: (number | null)[][]; solution: CellState[][] } {
-    // Only try WASM if it's initialized
-    if (isWasmReady()) {
-        try {
-            const seed = BigInt(
-                Math.floor(Math.random() * Number.MAX_SAFE_INTEGER)
-            );
-
-            const puzzle = generate_puzzle_wasm(
-                rows,
-                cols,
-                seed,
-                GAME_LOGIC_CONSTANTS.HINT_DENSITY
-            ) as {
-                numbers: (number | null)[][];
-                solution: number[][];
-            };
-
-            // Even if WASM provides hints, we can prune them further in JS
-            // to reach the target density if needed.
-            const prunedNumbers = pruneHints(
-                puzzle.numbers,
-                rows,
-                cols,
-                GAME_LOGIC_CONSTANTS.HINT_DENSITY
-            );
-
-            return {
-                numbers: prunedNumbers,
-                solution: puzzle.solution as CellState[][],
-            };
-        } catch (_e) {
-            // eslint-disable-next-line no-console
-            console.warn(
-                'WASM puzzle generation failed, falling back to JS',
-                _e
-            );
-        }
-    }
-
     let grid: CellState[][] = [];
     let success = false;
 

@@ -1,7 +1,4 @@
-import { find_cycles_wasm } from 'slant-wasm';
-
 import { CellState, EMPTY, FORWARD } from './types';
-import { isWasmReady } from './wasmInit';
 import { DSU } from '../../../../utils/DSU';
 import { getPosKey } from '../../../../utils/gameUtils';
 
@@ -20,9 +17,7 @@ export function getNodeIndex(r: number, c: number, cols: number): number {
 /**
  * Finds all cells that are part of any cycle in the Slant grid.
  *
- * Implementation:
- * 1. Attempts to use optimized WebAssembly (WASM) implementation if available.
- * 2. Falls back to a JavaScript DFS-based cycle detection.
+ * Uses a JavaScript DFS-based cycle detection algorithm.
  *
  * @param grid - Current 2D grid of cell states
  * @param rows - Grid rows
@@ -34,26 +29,6 @@ export function findCycles(
     rows: number,
     cols: number
 ): Set<string> {
-    // Only try WASM if it's initialized
-    if (isWasmReady()) {
-        try {
-            const flatGrid = new Uint8Array(rows * cols);
-            for (let r = 0; r < rows; r++) {
-                for (let c = 0; c < cols; c++) {
-                    flatGrid[r * cols + c] = grid[r]?.[c] ?? 0;
-                }
-            }
-
-            const cycles = find_cycles_wasm(flatGrid, rows, cols);
-
-            if (cycles.length > 0) {
-                return new Set(cycles);
-            }
-        } catch (_e) {
-            // Fallback to JS if WASM fails
-        }
-    }
-
     const adj = new Map<number, { node: number; r: number; c: number }[]>();
     const cycleCells = new Set<string>();
 

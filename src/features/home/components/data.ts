@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Psychology, GamepadRounded, Code } from '@/components/icons';
+import { Psychology, GamepadRounded } from '@/components/icons';
 import { ROUTES } from '@/config/constants';
 import { COLORS } from '@/config/theme';
 
@@ -49,23 +49,6 @@ export const PROJECT_CATEGORIES: Record<string, ProjectCategory> = {
                 path: ROUTES.pages.Slant,
                 description: 'Diagonal line puzzle',
                 technology: 'TypeScript',
-            },
-        },
-    },
-    collections: {
-        title: 'Collections',
-        icon: Code,
-        color: COLORS.data.amber,
-        projects: {
-            Interpreters: {
-                path: ROUTES.pages.Interpreters,
-                description: 'Esoteric language demos',
-                technology: 'JavaScript',
-            },
-            Geography: {
-                path: ROUTES.pages.Geography,
-                description: 'Geography and map quizzes',
-                technology: 'React',
             },
         },
     },

@@ -9,16 +9,12 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.7",
     "@mui/material": "^7.3.7",
-    "@types/pako": "^2.0.4",
     "gh-pages": "^6.3.0",
     "katex": "^0.16.28",
-    "lights-out-wasm": "file:wasm/lights-out-wasm/pkg",
-    "pako": "^2.1.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-router-dom": "^7.12.0",
-    "recharts": "^3.2.1",
-    "slant-wasm": "file:wasm/slant-wasm/pkg"
+    "recharts": "^3.2.1"
   },
   "scripts": {
     "start": "vite",
@@ -35,13 +31,8 @@
     "lint:fix": "eslint src/ --fix",
     "format": "prettier --write src/",
     "format:check": "prettier --check src/",
-    "stylelint": "stylelint \"src/**/*.{css,scss}\" --config config/stylelint.config.js --allow-empty-input",
-    "stylelint:fix": "stylelint \"src/**/*.{css,scss}\" --fix --config config/stylelint.config.js --allow-empty-input",
-    "lint:all": "bun run lint && bun run format:check && bun run stylelint",
-    "scrape:quizzes": "bun scripts/scrapeQuizzes.ts",
-    "generate:art": "bun scripts/generateArtData.ts",
+    "lint:all": "bun run lint && bun run format:check",
     "data:update": "bun scripts/updateResearchData.ts",
-    "gods-number": "bun src/features/games/lights-out/scripts/gods_number.ts",
     "prepare": "husky"
   },
   "prettier": {
@@ -61,7 +52,6 @@
       "prettier --write"
     ],
     "src/**/*.{css,scss}": [
-      "stylelint --fix --config config/stylelint.config.js --allow-empty-input",
       "prettier --write"
     ]
   },
@@ -83,9 +73,6 @@
     "@babel/core": "^7.22.0"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.28.3",
-    "@babel/preset-react": "^7.27.1",
-    "@babel/preset-typescript": "^7.27.1",
     "@eslint/js": "^9.39.2",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
@@ -96,7 +83,6 @@
     "@types/react-dom": "^19.2.2",
     "@vitejs/plugin-react": "^5.1.2",
     "@vitest/coverage-v8": "^4.0.18",
-    "cheerio": "^1.1.2",
     "eslint": "^9.39.2",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",
@@ -107,14 +93,10 @@
     "jsdom": "^28.0.0",
     "lint-staged": "^16.1.6",
     "prettier": "^3.6.2",
-    "stylelint": "^16.24.0",
-    "stylelint-config-standard": "^39.0.0",
     "terser": "^5.46.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.53.1",
     "vite": "^7.3.1",
-    "vite-plugin-top-level-await": "^1.6.0",
-    "vite-plugin-wasm": "^3.5.0",
     "vite-tsconfig-paths": "^6.0.4",
     "vitest": "^4.0.18"
   }
