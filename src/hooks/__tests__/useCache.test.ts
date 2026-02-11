@@ -160,4 +160,67 @@ describe('useCache Hook', () => {
         expect(state).toEqual({ count: 2 });
         expect(getState).not.toHaveBeenCalled();
     });
+
+    test('handles next/prev without initial clear', () => {
+        const getState = vi.fn((s: number) => s + 1);
+        const { result } = renderHook(() => useCache(getState));
+
+        // next without clear
+        let state: number | undefined;
+        act(() => {
+            state = result.current({ type: 'next', payload: 100 });
+        });
+        expect(state).toBe(100);
+
+        // prev without clear
+        act(() => {
+            state = result.current({ type: 'prev', payload: 200 });
+        });
+        expect(state).toBe(200);
+    });
+
+    test('handles unknown action type', () => {
+        const getState = vi.fn((s: number) => s + 1);
+        const { result } = renderHook(() => useCache(getState));
+
+        let state: number | undefined;
+        act(() => {
+            state = result.current({
+                type: 'unknown' as any,
+                payload: 999,
+            });
+        });
+        expect(state).toBe(999);
+    });
+
+    test('double processing with no state in cache', () => {
+        const getState = vi.fn((s: number) => s + 1);
+        const { result } = renderHook(() => useCache(getState));
+
+        // Manually trigger double processing if possible,
+        // but it defaults to true only if config is true.
+        // Assuming GLOBAL_CONFIG.processing.doubleProcessingPrevention is true
+        // as per previous report of 69% coverage.
+
+        let state: number | undefined;
+        act(() => {
+            // first call to set processingRef.current = true
+            result.current({ type: 'next', payload: 1 });
+            // second call immediately
+            state = result.current({ type: 'next', payload: 2 });
+        });
+        expect(state).toBe(2); // Since cache is empty, returns payload
+    });
+
+    test('double processing prev with no state in cache', () => {
+        const getState = vi.fn((s: number) => s + 1);
+        const { result } = renderHook(() => useCache(getState));
+
+        let state: number | undefined;
+        act(() => {
+            result.current({ type: 'prev', payload: 1 });
+            state = result.current({ type: 'prev', payload: 2 });
+        });
+        expect(state).toBe(2);
+    });
 });

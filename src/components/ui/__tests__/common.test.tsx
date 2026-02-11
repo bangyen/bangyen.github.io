@@ -10,6 +10,7 @@ import {
     RandomButton,
     Controls,
     ArrowsButton,
+    RefreshButton,
 } from '../Controls';
 import { CustomGrid } from '../CustomGrid';
 import { GlassCard } from '../GlassCard';
@@ -528,57 +529,164 @@ describe('Helper Components', () => {
         });
     });
 
-    describe('Navigation', () => {
-        test('renders navigation container', () => {
-            render(
+    test('uses auto space when space not provided', () => {
+        const cellProps = vi.fn((row: number, col: number) => ({
+            children: `${String(row)}-${String(col)}`,
+        }));
+
+        render(
+            <CustomGrid size={20} rows={2} cols={2} cellProps={cellProps} />
+        );
+
+        expect(screen.getByRole('grid')).toBeInTheDocument();
+    });
+
+    test('cell with transition string prop', () => {
+        const cellProps = vi.fn((_row: number, _col: number) => ({
+            children: `cell`,
+            transition: 'opacity 300ms ease',
+        }));
+
+        const { container } = render(
+            <CustomGrid size={10} rows={1} cols={1} cellProps={cellProps} />
+        );
+
+        const cell = container.querySelector('[role="gridcell"]');
+        // We can't easily check style but we ensure it renders with the prop passed
+        expect(cell).toBeInTheDocument();
+    });
+});
+
+describe('RandomButton additional branches', () => {
+    test('renders in enabled state with toggle', () => {
+        const onClick = vi.fn();
+        render(
+            <RandomButton
+                onClick={onClick}
+                enabled={true}
+                showToggleState={true}
+            />
+        );
+        expect(
+            screen.getAllByLabelText('Disable Random')[0]
+        ).toBeInTheDocument();
+    });
+
+    test('renders with custom sx as array', () => {
+        render(
+            <RandomButton
+                onClick={vi.fn()}
+                sx={[{ margin: 1 }, { padding: 2 }]}
+            />
+        );
+        expect(screen.getByRole('button')).toBeInTheDocument();
+    });
+});
+
+describe('ArrowsButton additional branches', () => {
+    test('renders with diagonals', () => {
+        const setShow = vi.fn();
+        render(
+            <ArrowsButton
+                show={true}
+                setShow={setShow}
+                handler={() => vi.fn()}
+                diagonals={true}
+            />
+        );
+        expect(screen.getByLabelText('Move up left')).toBeInTheDocument();
+        expect(screen.getByLabelText('Move up right')).toBeInTheDocument();
+        expect(screen.getByLabelText('Move down left')).toBeInTheDocument();
+        expect(screen.getByLabelText('Move down right')).toBeInTheDocument();
+    });
+
+    test('handles size inherit', () => {
+        const setShow = vi.fn();
+        render(
+            <ArrowsButton
+                show={true}
+                setShow={setShow}
+                handler={() => vi.fn()}
+                size="inherit"
+            />
+        );
+        expect(screen.getByLabelText('Hide controls')).toBeInTheDocument();
+    });
+
+    test('handles diagonal size inherit', () => {
+        const setShow = vi.fn();
+        render(
+            <ArrowsButton
+                show={true}
+                setShow={setShow}
+                handler={() => vi.fn()}
+                diagonals={true}
+                size="inherit"
+            />
+        );
+        expect(screen.getByLabelText('Hide controls')).toBeInTheDocument();
+    });
+});
+
+describe('RefreshButton branch', () => {
+    test('returns null when hide is true', () => {
+        const { container } = render(
+            <RefreshButton onClick={vi.fn()} hide={true} />
+        );
+        expect(container.firstChild).toBeNull();
+    });
+});
+
+describe('Navigation', () => {
+    test('renders navigation container', () => {
+        render(
+            <Navigation>
+                <button>Test Button</button>
+            </Navigation>
+        );
+
+        expect(screen.getByRole('navigation')).toBeInTheDocument();
+    });
+
+    test('renders children with correct aria-label', () => {
+        render(
+            <Navigation>
+                <button>Test Button</button>
+            </Navigation>
+        );
+
+        expect(screen.getByText('Test Button')).toBeInTheDocument();
+        expect(
+            screen.getByLabelText('Game controls navigation')
+        ).toBeInTheDocument();
+    });
+
+    test('has correct aria-label', () => {
+        render(
+            <Navigation>
+                <button>Test Button</button>
+            </Navigation>
+        );
+
+        expect(
+            screen.getByLabelText('Game controls navigation')
+        ).toBeInTheDocument();
+    });
+
+    test('stops click propagation', () => {
+        const handleParentClick = vi.fn();
+        render(
+            // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+            <div onClick={handleParentClick}>
                 <Navigation>
-                    <button>Test Button</button>
+                    <button>Test</button>
                 </Navigation>
-            );
+            </div>
+        );
 
-            expect(screen.getByRole('navigation')).toBeInTheDocument();
-        });
+        const nav = screen.getByRole('navigation');
+        nav.click();
 
-        test('renders children with correct aria-label', () => {
-            render(
-                <Navigation>
-                    <button>Test Button</button>
-                </Navigation>
-            );
-
-            expect(screen.getByText('Test Button')).toBeInTheDocument();
-            expect(
-                screen.getByLabelText('Game controls navigation')
-            ).toBeInTheDocument();
-        });
-
-        test('has correct aria-label', () => {
-            render(
-                <Navigation>
-                    <button>Test Button</button>
-                </Navigation>
-            );
-
-            expect(
-                screen.getByLabelText('Game controls navigation')
-            ).toBeInTheDocument();
-        });
-
-        test('stops click propagation', () => {
-            const handleParentClick = vi.fn();
-            render(
-                // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-                <div onClick={handleParentClick}>
-                    <Navigation>
-                        <button>Test</button>
-                    </Navigation>
-                </div>
-            );
-
-            const nav = screen.getByRole('navigation');
-            nav.click();
-
-            expect(handleParentClick).not.toHaveBeenCalled();
-        });
+        expect(handleParentClick).not.toHaveBeenCalled();
     });
 });

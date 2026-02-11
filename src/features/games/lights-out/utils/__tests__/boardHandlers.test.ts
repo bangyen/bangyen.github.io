@@ -395,5 +395,56 @@ describe('boardHandlers', () => {
 
             expect(newState.cols).toBe(6);
         });
+
+        it('should handle resize with action.rows and action.cols', () => {
+            const state = {
+                grid: getGrid(3, 3),
+                score: 0,
+                rows: createGridSize(3),
+                cols: createGridSize(3),
+                initialized: false,
+            };
+
+            const action: BoardAction = {
+                type: 'resize',
+                rows: 7,
+                cols: 8,
+            } as any;
+            const newState = handleBoard(state, action);
+            expect(newState.rows).toBe(7);
+            expect(newState.cols).toBe(8);
+        });
+    });
+
+    describe('handleBoard - unknown action', () => {
+        it('should return current state for unknown action', () => {
+            const state = {
+                grid: getGrid(3, 3),
+                score: 0,
+                rows: createGridSize(3),
+                cols: createGridSize(3),
+                initialized: false,
+            };
+            const action = { type: 'unknown' } as any;
+            const newState = handleBoard(state, action);
+            expect(newState).toBe(state);
+        });
+    });
+
+    describe('getNextMove - more edge cases', () => {
+        it('should handle undefined rows', () => {
+            const grid = [0, 0];
+            const moves = getNextMove(grid, 4, 2);
+            expect(moves).toBeNull();
+        });
+
+        it('should return null when solveLastRow returns empty', () => {
+            // This happens if indices.length is 0.
+            // solveLastRow returns indices.length > 0 ? indices : null;
+            // 2x2 grid, last row is 0.
+            const grid = [0, 0];
+            const moves = getNextMove(grid, 2, 2);
+            expect(moves).toBeNull();
+        });
     });
 });

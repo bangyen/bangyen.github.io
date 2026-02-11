@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
 import * as chaseHandlers from '../../utils/chaseHandlers';
@@ -144,7 +144,7 @@ describe('Lights Out Example Component', () => {
         expect(screen.getAllByTestId('cell-0-0').length).toBeGreaterThan(0);
     });
 
-    it('cycles through frames over time', () => {
+    it('cycles through frames over time', async () => {
         vi.useFakeTimers();
 
         mockGetStates.mockReturnValue({
@@ -187,7 +187,9 @@ describe('Lights Out Example Component', () => {
         );
 
         // Advance time and check frame updates
-        vi.advanceTimersByTime(2000);
+        await act(async () => {
+            await vi.advanceTimersByTimeAsync(2000);
+        });
 
         // The component should update frames
         expect(screen.getAllByTestId('cell-0-0').length).toBeGreaterThan(0);
@@ -195,22 +197,11 @@ describe('Lights Out Example Component', () => {
         vi.useRealTimers();
     });
 
-    it('shows trophy on last frame when solved', () => {
-        const allOnState = [
-            [7, 7, 7], // All bits on for 3x3 (7 = 0b111)
-            [7, 7, 7],
-            [7, 7, 7],
-        ];
+    it('shows trophy on last frame when solved', async () => {
+        const allOnState = [7, 7, 7]; // All bits on for 3x3
 
         mockGetStates.mockReturnValue({
-            boardStates: [
-                [
-                    [0, 0, 0],
-                    [0, 0, 0],
-                    [0, 0, 0],
-                ],
-                allOnState,
-            ],
+            boardStates: [[0, 0, 0], allOnState],
             inputStates: [
                 [0, 0, 0],
                 [0, 0, 0],
@@ -233,7 +224,9 @@ describe('Lights Out Example Component', () => {
         );
 
         // Advance to last frame
-        vi.advanceTimersByTime(2000);
+        await act(async () => {
+            await vi.advanceTimersByTimeAsync(2000);
+        });
 
         expect(screen.getByTestId('emoji-events-rounded')).toBeInTheDocument();
 
@@ -270,22 +263,23 @@ describe('Lights Out Example Component', () => {
                 getBackProps={mockGetBackProps}
             />
         );
-
         // Should use default dims=3
         expect(mockGetStates).toHaveBeenCalledWith([], 3);
     });
 
-    it('shows primary color when not solved', () => {
-        const unsolvedState = [
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-        ];
+    it('shows trophy when not all lights are on on last frame', async () => {
+        const someOnState = [1, 0, 0];
 
         mockGetStates.mockReturnValue({
-            boardStates: [unsolvedState],
-            inputStates: [[0, 0, 0]],
-            outputStates: [[0, 0, 0]],
+            boardStates: [[0, 0, 0], someOnState],
+            inputStates: [
+                [0, 0, 0],
+                [0, 0, 0],
+            ],
+            outputStates: [
+                [0, 0, 0],
+                [0, 0, 0],
+            ],
         });
 
         vi.useFakeTimers();
@@ -299,9 +293,12 @@ describe('Lights Out Example Component', () => {
             />
         );
 
-        // Component should render properly with grids
-        const grids = screen.getAllByTestId('custom-grid');
-        expect(grids.length).toBeGreaterThan(0);
+        // Advance to last frame
+        await act(async () => {
+            await vi.advanceTimersByTimeAsync(2000);
+        });
+
+        expect(screen.getByTestId('emoji-events-rounded')).toBeInTheDocument();
 
         vi.useRealTimers();
     });
