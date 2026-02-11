@@ -163,6 +163,16 @@ describe('boardHandlers', () => {
                 expect(has01).toBe(true);
             }
         });
+
+        it('should use precomputed solutions for last row (5x5)', () => {
+            const grid5 = getGrid(5, 5);
+            grid5[4] = 1;
+
+            const moves = getNextMove(grid5, 5, 5);
+            expect(moves).toBeDefined();
+            // Should contain moves for the first row as suggestions for the last row
+            expect(moves!.every(m => m.row === 0)).toBe(true);
+        });
     });
 
     describe('handleBoard - Win Condition', () => {

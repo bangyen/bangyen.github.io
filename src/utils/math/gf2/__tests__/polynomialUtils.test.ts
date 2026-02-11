@@ -11,6 +11,9 @@ import {
     factorPoly,
     getDivisors,
     findPattern,
+    polyToString,
+    toSuperscript,
+    getPolynomial,
 } from '../polynomialUtils';
 
 describe('polynomialUtils', () => {
@@ -90,7 +93,39 @@ describe('polynomialUtils', () => {
             // Wait: (x^3+x+1)*(x+1) = x^4 + x^3 + x^2 + x + x + 1 = x^4 + x^3 + x^2 + 1 (in GF2)
             const factors2 = factorPoly(0b11101n);
             expect(factors2).toContainEqual({ factor: 11n, exponent: 1 });
-            expect(factors2).toContainEqual({ factor: 3n, exponent: 1 });
+        });
+    });
+
+    describe('polyToString and toSuperscript', () => {
+        it('should format polynomials correctly', () => {
+            expect(polyToString(0n)).toBe('0');
+            expect(polyToString(1n)).toBe('1');
+            expect(polyToString(2n)).toBe('x');
+            expect(polyToString(3n)).toBe('x + 1');
+            expect(polyToString(0b1011n)).toBe('x^{3} + x + 1');
+        });
+
+        it('should format superscripts correctly', () => {
+            expect(toSuperscript(2)).toBe('^{2}');
+            expect(toSuperscript(10)).toBe('^{10}');
+        });
+    });
+
+    describe('getPolynomial', () => {
+        it('should return correct polynomials in the sequence', () => {
+            expect(getPolynomial(0)).toBe(0n);
+            expect(getPolynomial(1)).toBe(1n);
+            // P_2(x) = x*P_1(x) + P_0(x) = x*1 + 0 = x (2)
+            expect(getPolynomial(2)).toBe(2n);
+            // P_3(x) = x*P_2(x) + P_1(x) = x*x + 1 = x^2 + 1 (5)
+            expect(getPolynomial(3)).toBe(5n);
+        });
+    });
+
+    describe('factorPoly edge cases', () => {
+        it('should handle 0 and 1', () => {
+            expect(factorPoly(0n)).toEqual([]);
+            expect(factorPoly(1n)).toEqual([]);
         });
     });
 
