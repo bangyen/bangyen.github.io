@@ -26,6 +26,13 @@ bun-debug.log*
 
 /.vs
 
+# IDE and editor configs
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
 # Uncompressed data files (keep only .gz versions)
 /public/*.json
 /public/*.csv
