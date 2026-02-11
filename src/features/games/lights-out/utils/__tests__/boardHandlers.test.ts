@@ -6,14 +6,9 @@ vi.mock('lights-out-wasm', () => ({
     },
 }));
 
-import {
-    getGrid,
-    flipAdj,
-    handleBoard,
-    getNextMove,
-    BoardAction,
-} from '../boardHandlers';
+import { getGrid, flipAdj, handleBoard, getNextMove } from '../boardHandlers';
 
+import { BoardAction } from '@/features/games/lights-out/types';
 import { createGridSize, createCellIndex } from '@/utils/types';
 
 // Helper to access bitmask grid
