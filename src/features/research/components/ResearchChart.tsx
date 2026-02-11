@@ -9,7 +9,7 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 
-import { CHART_DIMENSIONS, CHART_FORMATTING } from '../config/researchConfig';
+import { CHART_DIMENSIONS, CHART_FORMATTING } from '../config';
 import { ChartConfig } from '../types';
 
 import { Box, Typography } from '@/components/mui';

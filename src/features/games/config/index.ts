@@ -1,1 +1,1 @@
-export * from './gameConfig';
+export * from './constants';

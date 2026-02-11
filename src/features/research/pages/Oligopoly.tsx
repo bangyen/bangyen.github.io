@@ -2,7 +2,7 @@ import pako from 'pako';
 import React, { useState, useEffect } from 'react';
 
 import { ResearchDemo } from '../components';
-import { RESEARCH_CONSTANTS } from '../config/researchConfig';
+import { RESEARCH_CONSTANTS } from '../config';
 
 import {
     BusinessRounded,

@@ -4,7 +4,7 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { GhostCell } from './GhostCell';
 import { GhostControls } from './GhostControls';
 import { GhostHint } from './GhostHint';
-import { GAME_CONSTANTS } from '../../config/gameConfig';
+import { GAME_CONSTANTS } from '../../config';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
 import {
     MOBILE_PADDING,

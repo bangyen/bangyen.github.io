@@ -2,8 +2,8 @@ import React from 'react';
 
 import { ResearchDemo } from '../components';
 import { VerificationTools } from '../components/VerificationTools';
+import { RESEARCH_CONSTANTS } from '../config';
 import { RESEARCH_STYLES } from '../config/constants';
-import { RESEARCH_CONSTANTS } from '../config/researchConfig';
 
 import { LaunchRounded } from '@/components/icons';
 import {

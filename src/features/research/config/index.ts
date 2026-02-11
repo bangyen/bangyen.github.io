@@ -1,3 +1,3 @@
 // Research config exports
-export * from './researchConfig';
 export * from './constants';
+export * from './constants_base';

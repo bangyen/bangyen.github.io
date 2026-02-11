@@ -4,7 +4,7 @@ import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
 import { GameErrorBoundary } from '../../components/GameErrorBoundary';
 import { GamePageLayout } from '../../components/GamePageLayout';
-import { GAME_CONSTANTS } from '../../config/gameConfig';
+import { GAME_CONSTANTS } from '../../config';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
 import Info from '../components/Info';

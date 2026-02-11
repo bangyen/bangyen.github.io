@@ -1,2 +1,1 @@
-// Games types exports
-export * from './games';
+export * from './types';
