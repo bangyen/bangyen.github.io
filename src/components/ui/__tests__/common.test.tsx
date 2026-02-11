@@ -58,6 +58,47 @@ describe('Helper Components', () => {
 
             expect(handleClick).toHaveBeenCalledTimes(1);
         });
+
+        test('renders with size small', () => {
+            const MockIcon = () => <div>Icon</div>;
+            render(
+                <TestWrapper>
+                    <TooltipButton Icon={MockIcon} title="Small" size="small" />
+                </TestWrapper>
+            );
+
+            expect(screen.getAllByLabelText('Small')[0]).toBeInTheDocument();
+        });
+
+        test('renders with size medium', () => {
+            const MockIcon = () => <div>Icon</div>;
+            render(
+                <TestWrapper>
+                    <TooltipButton
+                        Icon={MockIcon}
+                        title="Medium"
+                        size="medium"
+                    />
+                </TestWrapper>
+            );
+
+            expect(screen.getAllByLabelText('Medium')[0]).toBeInTheDocument();
+        });
+
+        test('renders with size inherit', () => {
+            const MockIcon = () => <div>Icon</div>;
+            render(
+                <TestWrapper>
+                    <TooltipButton
+                        Icon={MockIcon}
+                        title="Inherit"
+                        size="inherit"
+                    />
+                </TestWrapper>
+            );
+
+            expect(screen.getAllByLabelText('Inherit')[0]).toBeInTheDocument();
+        });
     });
 
     describe('GlassCard', () => {
@@ -107,6 +148,33 @@ describe('Helper Components', () => {
             );
 
             expect(ref.current).toBeInTheDocument();
+        });
+
+        test('applies custom className', () => {
+            render(
+                <GlassCard className="custom-class" data-testid="card">
+                    <div>Test</div>
+                </GlassCard>
+            );
+
+            const card = screen.getByTestId('card');
+            expect(card).toHaveClass('glass-card');
+            expect(card).toHaveClass('custom-class');
+        });
+
+        test('applies sx as array', () => {
+            render(
+                <GlassCard
+                    sx={[{ color: 'red' }, { margin: 1 }]}
+                    data-testid="card"
+                >
+                    <div>Test</div>
+                </GlassCard>
+            );
+
+            const card = screen.getByTestId('card');
+            expect(card).toBeInTheDocument();
+            expect(card).toHaveClass('glass-card');
         });
     });
 
@@ -416,6 +484,47 @@ describe('Helper Components', () => {
             );
 
             expect(screen.getByRole('grid')).toBeInTheDocument();
+        });
+
+        test('cell with transition false prop', () => {
+            const cellProps = vi.fn((row: number, col: number) => ({
+                children: `${String(row)}-${String(col)}`,
+                transition: false,
+            }));
+
+            const { container } = render(
+                <CustomGrid size={20} rows={1} cols={1} cellProps={cellProps} />
+            );
+
+            const cell = container.querySelector('[role="gridcell"]');
+            expect(cell).toBeInTheDocument();
+        });
+
+        test('cell with custom transition string', () => {
+            const cellProps = vi.fn((row: number, col: number) => ({
+                children: `${String(row)}-${String(col)}`,
+                transition: 'opacity 500ms ease',
+            }));
+
+            const { container } = render(
+                <CustomGrid size={20} rows={1} cols={1} cellProps={cellProps} />
+            );
+
+            const cell = container.querySelector('[role="gridcell"]');
+            expect(cell).toBeInTheDocument();
+        });
+
+        test('cell with default transition prop', () => {
+            const cellProps = vi.fn((row: number, col: number) => ({
+                children: `${String(row)}-${String(col)}`,
+            }));
+
+            const { container } = render(
+                <CustomGrid size={20} rows={1} cols={1} cellProps={cellProps} />
+            );
+
+            const cell = container.querySelector('[role="gridcell"]');
+            expect(cell).toBeInTheDocument();
         });
     });
 

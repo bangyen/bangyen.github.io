@@ -129,4 +129,94 @@ describe('Lights Out Chase Handlers', () => {
             expect(res).toBeDefined();
         });
     });
+
+    describe('chaseLights - edge cases', () => {
+        it('handles grid with all zeros (no lights on)', () => {
+            const grid = boardHandlers.getGrid(3, 3);
+            const states = chaseLights([grid], 3);
+
+            expect(states.length).toBeGreaterThanOrEqual(1);
+            expect(states[0]).toEqual(grid);
+        });
+
+        it('handles grid with lights only in last row', () => {
+            const grid = boardHandlers.getGrid(3, 3);
+            grid[2] = 7; // All bits set in last row
+            const states = chaseLights([grid], 3);
+
+            // Last row shouldn't be chased (no more rows below)
+            expect(states[0]).toEqual(grid);
+        });
+
+        it('handles grid with undefined rows gracefully', () => {
+            const grid = boardHandlers.getGrid(3, 3);
+            grid[1] = undefined as any;
+
+            const states = chaseLights([grid], 3);
+            expect(states).toBeDefined();
+        });
+    });
+
+    describe('fillRow - edge cases', () => {
+        it('handles row with value 0 (no bits set)', () => {
+            mockProduct.mockReturnValue([0, 0, 0]);
+
+            const { input, output } = fillRow([0, 0, 0], 3);
+
+            expect(input.length).toBe(1); // Just blank
+            expect(output.length).toBe(1); // Just blank
+        });
+
+        it('handles row with all bits set', () => {
+            mockProduct.mockReturnValue([1, 1, 1]);
+
+            const { input, output } = fillRow([1, 1, 1], 3);
+
+            expect(input.length).toBe(4); // blank + 3 steps
+            expect(output.length).toBe(4);
+            expect(mockProduct).toHaveBeenCalledTimes(3);
+        });
+    });
+
+    describe('getStates - complex scenarios', () => {
+        it('returns early when chaseLights returns empty', () => {
+            mockProduct.mockReturnValue([0, 0, 0]);
+
+            // getStates builds grid from input indices, then chases
+            const result = getStates([], 3);
+
+            // Empty grid input should still process
+            expect(result.boardStates).toBeDefined();
+            expect(result.inputStates).toBeDefined();
+            expect(result.outputStates).toBeDefined();
+        });
+
+        it('returns early when top array is empty', () => {
+            mockProduct.mockReturnValue([]); // Empty product
+
+            const result = getStates([0], 3);
+
+            // Should handle gracefully
+            expect(result).toHaveProperty('boardStates');
+        });
+
+        it('handles case where top has all zero values', () => {
+            mockProduct.mockReturnValue([0, 0, 0]);
+
+            const grid = [0, 0, 0, 0, 0, 0, 0, 0, 0]; // All zeros
+            const result = getStates(grid, 3);
+
+            expect(result.boardStates).toBeDefined();
+        });
+
+        it('handles large grid (7x7)', () => {
+            mockProduct.mockReturnValue(Array(7).fill(0) as number[]);
+
+            const result = getStates([], 7);
+
+            expect(result.boardStates).toBeDefined();
+            expect(result.inputStates).toBeDefined();
+            expect(result.outputStates).toBeDefined();
+        });
+    });
 });

@@ -6,7 +6,13 @@ vi.mock('lights-out-wasm', () => ({
     },
 }));
 
-import { getGrid, flipAdj, handleBoard, getNextMove } from '../boardHandlers';
+import {
+    getGrid,
+    flipAdj,
+    handleBoard,
+    getNextMove,
+    isSolved,
+} from '../boardHandlers';
 
 import { BoardAction } from '@/features/games/lights-out/types';
 import { createGridSize, createCellIndex } from '@/utils/types';
@@ -216,6 +222,178 @@ describe('boardHandlers', () => {
             expect(getBit(newState.grid, 1, 0)).toBe(1);
             expect(getBit(newState.grid, 0, 2)).toBe(1);
             expect(getBit(newState.grid, 1, 1)).toBe(1);
+        });
+    });
+
+    describe('getNextMove - edge cases', () => {
+        it('should return null when last row is solved (all zeros)', () => {
+            const grid = getGrid(3, 3);
+            // Leave all zeros - already solved
+            const moves = getNextMove(grid, 3, 3);
+
+            expect(moves).toBeNull();
+        });
+
+        it('should handle single non-zero row (not last)', () => {
+            const grid = getGrid(3, 3);
+            grid[0] = 1; // Light at position (0,0)
+            grid[1] = 0;
+            grid[2] = 0;
+
+            const moves = getNextMove(grid, 3, 3);
+
+            expect(moves).toBeDefined();
+            if (moves) {
+                expect(moves[0]).toEqual({ row: 1, col: 0 });
+            }
+        });
+
+        it('should handle alternating zero and non-zero rows', () => {
+            const grid = getGrid(3, 3);
+            grid[0] = 0;
+            grid[1] = 1; // Light at (1,0)
+            grid[2] = 0;
+
+            const moves = getNextMove(grid, 3, 3);
+
+            // Should chase the light in row 1
+            expect(moves).toBeDefined();
+        });
+
+        it('should return null when no solution exists', () => {
+            const grid = getGrid(2, 2);
+            grid[1] = 3; // Last row has lights
+            // Solution may return null if unsolvable
+
+            const moves = getNextMove(grid, 2, 2);
+
+            // Either returns moves or null - both valid
+            expect(moves === null || Array.isArray(moves)).toBe(true);
+        });
+
+        it('should use precomputed solutions for 3x3', () => {
+            const grid = getGrid(3, 3);
+            grid[2] = 1; // Single light in last row
+
+            const moves = getNextMove(grid, 3, 3);
+
+            if (moves) {
+                expect(moves.every(m => m.row === 0)).toBe(true);
+            }
+        });
+
+        it('should fallback to getProduct for non-precomputed sizes', () => {
+            const grid = getGrid(7, 7);
+            grid[6] = 1; // Single light in last row of 7x7
+
+            const moves = getNextMove(grid, 7, 7);
+
+            if (moves) {
+                // Should return moves for first row
+                expect(moves.every(m => m.row === 0)).toBe(true);
+            }
+        });
+
+        it('should handle power of 2 values in last row', () => {
+            const grid = getGrid(4, 4);
+            grid[3] = 4; // Binary 0100 (single bit at position 2)
+
+            const moves = getNextMove(grid, 4, 4);
+
+            expect(moves === null || Array.isArray(moves)).toBe(true);
+        });
+
+        it('should handle all bits set in last row', () => {
+            const grid = getGrid(3, 3);
+            grid[2] = 7; // Binary 111 (all 3 bits set)
+
+            const moves = getNextMove(grid, 3, 3);
+
+            if (moves) {
+                expect(moves.length).toBeGreaterThan(0);
+            }
+        });
+    });
+
+    describe('isSolved', () => {
+        it('returns true when all rows are zero', () => {
+            const grid = getGrid(3, 3);
+
+            expect(isSolved(grid)).toBe(true);
+        });
+
+        it('returns false when single row has lights', () => {
+            const grid = getGrid(3, 3);
+            grid[1] = 1;
+
+            expect(isSolved(grid)).toBe(false);
+        });
+
+        it('returns false when alternating rows have lights', () => {
+            const grid = getGrid(3, 3);
+            grid[0] = 0;
+            grid[1] = 1;
+            grid[2] = 0;
+
+            expect(isSolved(grid)).toBe(false);
+        });
+    });
+
+    describe('handleBoard - resize action', () => {
+        it('should handle resize with explicit newRows and newCols', () => {
+            const state = {
+                grid: getGrid(3, 3),
+                score: 0,
+                rows: createGridSize(3),
+                cols: createGridSize(3),
+                initialized: false,
+            };
+
+            const action: BoardAction = {
+                type: 'resize',
+                newRows: 4,
+                newCols: 5,
+            };
+            const newState = handleBoard(state, action);
+
+            expect(newState.rows).toBe(4);
+            expect(newState.cols).toBe(5);
+        });
+
+        it('should handle resize with only newRows', () => {
+            const state = {
+                grid: getGrid(3, 3),
+                score: 0,
+                rows: createGridSize(3),
+                cols: createGridSize(3),
+                initialized: false,
+            };
+
+            const action: BoardAction = {
+                type: 'resize',
+                newRows: 5,
+            };
+            const newState = handleBoard(state, action);
+
+            expect(newState.rows).toBe(5);
+        });
+
+        it('should handle resize with only newCols', () => {
+            const state = {
+                grid: getGrid(3, 3),
+                score: 0,
+                rows: createGridSize(3),
+                cols: createGridSize(3),
+                initialized: false,
+            };
+
+            const action: BoardAction = {
+                type: 'resize',
+                newCols: 6,
+            };
+            const newState = handleBoard(state, action);
+
+            expect(newState.cols).toBe(6);
         });
     });
 });

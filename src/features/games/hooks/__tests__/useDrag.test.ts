@@ -158,4 +158,277 @@ describe('useDrag', () => {
 
         expect(onAction).toHaveBeenCalledWith('0,1', false, false);
     });
+
+    it('should handle touch move when elementFromPoint returns null', () => {
+        const { result } = renderHook(() => useDrag(defaultOptions));
+        const props = result.current.getDragProps('0,0');
+
+        act(() => {
+            props.onTouchStart({
+                preventDefault: vi.fn(),
+                cancelable: true,
+            } as any);
+        });
+
+        document.elementFromPoint = vi.fn().mockReturnValue(null);
+
+        act(() => {
+            const touchMoveEvent = new CustomEvent('touchmove') as any;
+            touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
+            window.dispatchEvent(touchMoveEvent);
+        });
+
+        expect(onAction).toHaveBeenCalledTimes(1); // Only initial touch start
+    });
+
+    it('should handle touch move when closest returns null', () => {
+        const { result } = renderHook(() => useDrag(defaultOptions));
+        const props = result.current.getDragProps('0,0');
+
+        act(() => {
+            props.onTouchStart({
+                preventDefault: vi.fn(),
+                cancelable: true,
+            } as any);
+        });
+
+        const mockElement = {
+            closest: vi.fn().mockReturnValue(null),
+        };
+        document.elementFromPoint = vi.fn().mockReturnValue(mockElement);
+
+        act(() => {
+            const touchMoveEvent = new CustomEvent('touchmove') as any;
+            touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
+            window.dispatchEvent(touchMoveEvent);
+        });
+
+        expect(onAction).toHaveBeenCalledTimes(1); // Only initial touch start
+    });
+
+    it('should handle touch move when getAttribute returns null', () => {
+        const { result } = renderHook(() => useDrag(defaultOptions));
+        const props = result.current.getDragProps('0,0');
+
+        act(() => {
+            props.onTouchStart({
+                preventDefault: vi.fn(),
+                cancelable: true,
+            } as any);
+        });
+
+        const mockElement = {
+            closest: vi.fn().mockReturnValue({
+                getAttribute: vi.fn().mockReturnValue(null),
+            }),
+        };
+        document.elementFromPoint = vi.fn().mockReturnValue(mockElement);
+
+        act(() => {
+            const touchMoveEvent = new CustomEvent('touchmove') as any;
+            touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
+            window.dispatchEvent(touchMoveEvent);
+        });
+
+        expect(onAction).toHaveBeenCalledTimes(1); // Only initial touch start
+    });
+
+    it('should not call action when dragging to already-dragged position', () => {
+        const { result } = renderHook(() => useDrag(defaultOptions));
+        const props = result.current.getDragProps('0,0');
+
+        // Start drag
+        act(() => {
+            props.onMouseDown({
+                button: 0,
+                preventDefault: vi.fn(),
+            } as any);
+        });
+
+        expect(onAction).toHaveBeenCalledTimes(1);
+
+        // Try to hover the same cell again
+        act(() => {
+            props.onMouseEnter();
+        });
+
+        // Should not be called again
+        expect(onAction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should filter middle mouse button (button=1)', () => {
+        const { result } = renderHook(() => useDrag(defaultOptions));
+        const props = result.current.getDragProps('0,0');
+
+        act(() => {
+            props.onMouseDown({
+                button: 1,
+                preventDefault: vi.fn(),
+            } as any);
+        });
+
+        expect(result.current.isDragging).toBe(false);
+        expect(onAction).not.toHaveBeenCalled();
+    });
+
+    it('should debounce mouse events after touch', () => {
+        const { result } = renderHook(() =>
+            useDrag({ ...defaultOptions, touchTimeout: 500 })
+        );
+        const props = result.current.getDragProps('0,0');
+
+        // Start with touch (sets lastTouchTime)
+        act(() => {
+            props.onTouchStart({
+                preventDefault: vi.fn(),
+                cancelable: true,
+            } as any);
+        });
+
+        // Immediately try mouse down (within 500ms) - should be blocked
+        // The code checks: if (Date.now() - lastTouchTime.current < touchTimeout) return
+        const mockMouseDown = vi.fn();
+        act(() => {
+            const e = {
+                button: 0,
+                preventDefault: mockMouseDown,
+            } as any;
+            props.onMouseDown(e);
+        });
+
+        // isDragging should still be from touch (value 0 treated as truthy for null checks)
+        // Actually the touch sets isDragging = 0, and mouse down within timeout returns early
+        // So the state from touch should persist
+        expect(result.current.isDragging).toBe(true);
+    });
+
+    it('should allow mouse events after touch timeout', () => {
+        vi.useFakeTimers();
+        try {
+            const { result } = renderHook(() =>
+                useDrag({ ...defaultOptions, touchTimeout: 500 })
+            );
+            const props = result.current.getDragProps('0,0');
+
+            // Start with touch
+            act(() => {
+                props.onTouchStart({
+                    preventDefault: vi.fn(),
+                    cancelable: true,
+                } as any);
+            });
+
+            // Wait past timeout
+            act(() => {
+                vi.advanceTimersByTime(600);
+            });
+
+            // Now mouse down should work
+            act(() => {
+                props.onMouseDown({
+                    button: 0,
+                    preventDefault: vi.fn(),
+                } as any);
+            });
+
+            expect(result.current.isDragging).toBe(true);
+        } finally {
+            vi.useRealTimers();
+        }
+    });
+
+    it('should respect preventDefault option', () => {
+        const { result } = renderHook(() =>
+            useDrag({ ...defaultOptions, preventDefault: false })
+        );
+        const props = result.current.getDragProps('0,0');
+
+        const mockPreventDefault = vi.fn();
+        act(() => {
+            props.onMouseDown({
+                button: 0,
+                preventDefault: mockPreventDefault,
+            } as any);
+        });
+
+        expect(mockPreventDefault).not.toHaveBeenCalled();
+    });
+
+    it('should handle onContextMenu with preventDefault option', () => {
+        const { result } = renderHook(() =>
+            useDrag({ ...defaultOptions, preventDefault: false })
+        );
+        const props = result.current.getDragProps('0,0');
+
+        const mockPreventDefault = vi.fn();
+        act(() => {
+            props.onContextMenu?.({
+                preventDefault: mockPreventDefault,
+            } as any);
+        });
+
+        expect(mockPreventDefault).not.toHaveBeenCalled();
+    });
+
+    it('should use custom posAttribute', () => {
+        const { result } = renderHook(() =>
+            useDrag({ ...defaultOptions, posAttribute: 'data-col' })
+        );
+        const props = result.current.getDragProps('0,0');
+
+        expect(props['data-col']).toBe('0,0');
+        expect(props['data-pos']).toBeUndefined();
+    });
+
+    it('should handle checkEnabled returning false', () => {
+        const { result } = renderHook(() =>
+            useDrag({
+                ...defaultOptions,
+                checkEnabled: () => false,
+            })
+        );
+        const props = result.current.getDragProps('0,0');
+
+        act(() => {
+            props.onMouseDown({
+                button: 0,
+                preventDefault: vi.fn(),
+            } as any);
+        });
+
+        expect(result.current.isDragging).toBe(false);
+    });
+
+    it('should not continue dragging if checkEnabled becomes false on hover', () => {
+        let enabledState = true;
+        const { result, rerender } = renderHook(() =>
+            useDrag({
+                ...defaultOptions,
+                checkEnabled: () => enabledState,
+            })
+        );
+        const props = result.current.getDragProps('0,0');
+
+        // Start drag
+        act(() => {
+            props.onMouseDown({
+                button: 0,
+                preventDefault: vi.fn(),
+            } as any);
+        });
+
+        expect(result.current.isDragging).toBe(true);
+
+        // Disable and try hover
+        enabledState = false;
+        rerender();
+
+        const props2 = result.current.getDragProps('0,1');
+        act(() => {
+            props2.onMouseEnter();
+        });
+
+        // Should not add new position
+        expect(onAction).toHaveBeenCalledTimes(1);
+    });
 });
