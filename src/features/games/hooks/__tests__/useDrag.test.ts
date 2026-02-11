@@ -431,4 +431,78 @@ describe('useDrag', () => {
         // Should not add new position
         expect(onAction).toHaveBeenCalledTimes(1);
     });
+
+    it('should use default checkEnabled if not provided', () => {
+        const { result } = renderHook(() => useDrag({ onAction: vi.fn() }));
+        const props = result.current.getDragProps('0,0');
+
+        act(() => {
+            props.onMouseDown({
+                button: 0,
+                preventDefault: vi.fn(),
+            } as any);
+        });
+
+        expect(result.current.isDragging).toBe(true);
+    });
+
+    it('should handle onContextMenu with preventDefault: true', () => {
+        const { result } = renderHook(() =>
+            useDrag({ ...defaultOptions, preventDefault: true })
+        );
+        const props = result.current.getDragProps('0,0');
+
+        const mockPreventDefault = vi.fn();
+        act(() => {
+            props.onContextMenu?.({
+                preventDefault: mockPreventDefault,
+            } as any);
+        });
+
+        expect(mockPreventDefault).toHaveBeenCalled();
+    });
+
+    it('should not trigger action for other keys in onKeyDown', () => {
+        const { result } = renderHook(() => useDrag(defaultOptions));
+        const props = result.current.getDragProps('0,0');
+
+        act(() => {
+            props.onKeyDown({
+                key: 'Shift',
+                preventDefault: vi.fn(),
+            } as any);
+        });
+
+        expect(onAction).not.toHaveBeenCalled();
+    });
+
+    it('should handle right-click touch move (hypothetically)', () => {
+        const { result } = renderHook(() => useDrag(defaultOptions));
+        const props = result.current.getDragProps('0,0');
+
+        // Start right-click drag (simulated)
+        // Note: useDrag treats touch as button 0, but we can manually set isDragging for tests
+        act(() => {
+            props.onMouseDown({
+                button: 2,
+                preventDefault: vi.fn(),
+            } as any);
+        });
+
+        // Mock document.elementFromPoint
+        const mockElement = {
+            closest: vi.fn().mockReturnValue({
+                getAttribute: vi.fn().mockReturnValue('0,1'),
+            }),
+        };
+        document.elementFromPoint = vi.fn().mockReturnValue(mockElement);
+
+        act(() => {
+            const touchMoveEvent = new CustomEvent('touchmove') as any;
+            touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
+            window.dispatchEvent(touchMoveEvent);
+        });
+
+        expect(onAction).toHaveBeenCalledWith('0,1', true, false);
+    });
 });

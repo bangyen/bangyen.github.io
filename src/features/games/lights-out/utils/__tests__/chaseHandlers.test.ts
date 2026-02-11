@@ -218,5 +218,35 @@ describe('Lights Out Chase Handlers', () => {
             expect(result.inputStates).toBeDefined();
             expect(result.outputStates).toBeDefined();
         });
+
+        it('handles top row with set bits during final processing', () => {
+            // Mock product to return row with some bits set
+            mockProduct.mockReturnValue([1, 0, 1]);
+
+            const result = getStates([], 3);
+
+            expect(result.boardStates.length).toBeGreaterThan(0);
+        });
+
+        it('handles empty last row mask gracefully', () => {
+            // Mock getGrid/flipAdj/chaseLights implicitly by giving small dims
+            const result = getStates([], 0); // dims = 0
+            expect(result.boardStates).toEqual([[]]);
+        });
+
+        it('handles undefined last state in getStates', () => {
+            // This is hard to hit because getGrid always returns an array
+            // But we can test it by passing large dims that might cause issues?
+            // Or just check that it doesn't crash if mocks were used.
+            // Actually line 88 is: if (!last) return ...
+            // getStates calls chaseLights([board], dims)
+            // chaseLights([board], dims) returns [board, ...]
+            // so states.at(-1) is at least board.
+            // If board is empty? getGrid(0,0) returns []
+            // chaseLights([], 0) returns []
+            // then states.at(-1) is undefined.
+            const result = getStates([], 0);
+            expect(result.boardStates).toEqual([[]]);
+        });
     });
 });

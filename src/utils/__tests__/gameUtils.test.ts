@@ -100,4 +100,48 @@ describe('gameUtils', () => {
             expect(factory).toHaveBeenCalledTimes(2);
         });
     });
+
+    describe('createGameReducer - edge cases', () => {
+        it('should handle partial resize properties', () => {
+            const getInitialState = (rows: number, cols: number) => ({
+                rows,
+                cols,
+            });
+            const reducer = createGameReducer({ getInitialState });
+            const state = { rows: 5, cols: 5 };
+
+            expect(reducer(state, { type: 'resize', rows: 3 } as any)).toEqual({
+                rows: 3,
+                cols: 5,
+            });
+            expect(reducer(state, { type: 'resize', cols: 3 } as any)).toEqual({
+                rows: 5,
+                cols: 3,
+            });
+        });
+
+        it('should return state for resize without props', () => {
+            const reducer = createGameReducer({
+                getInitialState: (r, c) => ({ rows: r, cols: c }),
+            });
+            const state = { rows: 5, cols: 5 };
+            expect(reducer(state, { type: 'resize' } as any)).toBe(state);
+        });
+
+        it('should return state for restore/hydrate without state prop', () => {
+            const reducer = createGameReducer({
+                getInitialState: (r, c) => ({ rows: r, cols: c }),
+            });
+            const state = { rows: 5, cols: 5 };
+            expect(reducer(state, { type: 'restore' } as any)).toBe(state);
+        });
+
+        it('should work without customHandler', () => {
+            const reducer = createGameReducer({
+                getInitialState: (r, c) => ({ rows: r, cols: c }),
+            });
+            const state = { rows: 5, cols: 5 };
+            expect(reducer(state, { type: 'new' })).toEqual(state);
+        });
+    });
 });

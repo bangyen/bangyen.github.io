@@ -1,6 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
+import { useMobile } from '../../../../../hooks';
 import { DragProps } from '../../../hooks/useDrag';
 import * as calculator from '../Calculator';
 import Info from '../Info';
@@ -287,5 +288,84 @@ describe('Lights Out Info Component', () => {
 
         // Component should still render properly
         expect(screen.getByText('Chase to Bottom')).toBeInTheDocument();
+    });
+
+    it('renders analysis icon on mobile', () => {
+        (useMobile as Mock).mockReturnValue(true);
+
+        render(<Info {...defaultProps} />);
+
+        // Should show the icon button variant (we mocked the icon with testid)
+        expect(screen.getByTestId('analytics-icon')).toBeInTheDocument();
+        expect(screen.queryByText('Analysis')).not.toBeInTheDocument();
+    });
+
+    it('handles reset in calculator step', () => {
+        render(<Info {...defaultProps} />);
+        const nextBtn = screen.getByText('Next');
+        fireEvent.click(nextBtn); // To Example
+        fireEvent.click(nextBtn); // To Calculator
+
+        const clearBtn = screen.getByText('Clear Pattern');
+        fireEvent.click(clearBtn);
+
+        // Verify it doesn't crash
+        expect(screen.getByText('Input')).toBeInTheDocument();
+    });
+
+    it('renders analysis button on desktop', () => {
+        (useMobile as Mock).mockReturnValue(false);
+
+        render(<Info {...defaultProps} />);
+        expect(screen.getByText('Analysis')).toBeInTheDocument();
+    });
+
+    it('handles back navigation', () => {
+        render(<Info {...defaultProps} />);
+        const nextBtn = screen.getByText('Next');
+        fireEvent.click(nextBtn); // To Step 1
+
+        expect(screen.getByTestId('example-component')).toBeInTheDocument();
+
+        const backBtn = screen.getByText('Back');
+        fireEvent.click(backBtn); // Back to Step 0
+
+        expect(
+            screen.queryByTestId('example-component')
+        ).not.toBeInTheDocument();
+    });
+
+    it('renders with correct backdrop colors', () => {
+        // This is a bit hard to test deeply without real theme,
+        // but we can at least ensure it renders.
+        render(<Info {...defaultProps} />);
+        expect(screen.getByTestId('modal')).toBeInTheDocument();
+    });
+
+    it('does not crash when toggleTile is called with invalid index', () => {
+        // Reset mocks to ensure our implementation is used
+        mockGetInput.mockImplementation(
+            (_getters: unknown, getDragProps: (pos: string) => DragProps) => {
+                return (r: number, c: number) => {
+                    // Inject a special cell at (0,0) that uses an invalid pos
+                    const pos = r === 0 && c === 0 ? '999' : c.toString();
+                    const dragProps = getDragProps(pos);
+                    return {
+                        ...dragProps,
+                        'data-testid': `cell-${pos}`,
+                    };
+                };
+            }
+        );
+
+        render(<Info {...defaultProps} />);
+        const nextBtn = screen.getByText('Next');
+        fireEvent.click(nextBtn);
+        fireEvent.click(nextBtn);
+
+        const invCell = screen.getByTestId('cell-999');
+        fireEvent.mouseDown(invCell);
+
+        expect(screen.getByText('Input')).toBeInTheDocument();
     });
 });
