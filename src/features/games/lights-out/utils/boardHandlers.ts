@@ -1,31 +1,9 @@
 import { getProduct } from './matrices';
 import { PRECOMPUTED_SOLUTIONS } from './precomputedTables';
+import { BoardState, BoardAction } from '../types';
 
 import { createGameReducer, getPosKey } from '@/utils/gameUtils';
-import { GridSize, CellIndex, createGridSize } from '@/utils/types';
-
-export interface BoardState {
-    grid: number[];
-    score: number;
-    rows: GridSize;
-    cols: GridSize;
-    initialized: boolean;
-}
-
-export type BoardAction =
-    | { type: 'adjacent'; row: CellIndex; col: CellIndex }
-    | { type: 'multi_adjacent'; moves: { row: CellIndex; col: CellIndex }[] }
-    | { type: 'random' | 'randomize' }
-    | {
-          type: 'resize';
-          rows?: number;
-          cols?: number;
-          newRows?: number;
-          newCols?: number;
-      }
-    | { type: 'reset' }
-    | { type: 'new' | 'next' }
-    | { type: 'restore' | 'hydrate'; state: BoardState };
+import { createGridSize } from '@/utils/types';
 
 export function getGrid(rows: number, _cols: number): number[] {
     return Array.from({ length: rows }, () => 0);

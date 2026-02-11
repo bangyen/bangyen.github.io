@@ -5,10 +5,7 @@ import { vi, type Mock } from 'vitest';
 import LightsOut from '../LightsOut';
 
 import { PAGE_TITLES } from '@/config/constants';
-import {
-    BoardState,
-    BoardAction,
-} from '@/features/games/lights-out/utils/boardHandlers';
+import { BoardState, BoardAction } from '@/features/games/lights-out/types';
 import * as boardHandlers from '@/features/games/lights-out/utils/boardHandlers';
 import * as hooks from '@/hooks';
 

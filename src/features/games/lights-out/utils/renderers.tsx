@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { LIGHTS_OUT_STYLES } from './constants';
 import { Getters } from '../../components/Board';
 import { DragProps } from '../../hooks/useDrag';
+import { LIGHTS_OUT_STYLES } from '../config';
 
 import { Box } from '@/components/mui';
 import { getPosKey } from '@/utils/gameUtils';

@@ -3,13 +3,13 @@ import React, { useState, useEffect } from 'react';
 import { GridWithKeyframes } from './AnimatedGrid';
 import { getOutput, useHandler as useCalculatorHandler } from './Calculator';
 import { Board, Palette, PropsFactory } from '../../components/Board';
+import { LIGHTS_OUT_STYLES } from '../config';
 import { useHandler as useBoardHandler } from '../hooks/boardUtils';
 import {
     getBoardIconFrames,
     getInputIconFrames,
 } from '../utils/animationFrames';
 import { getStates } from '../utils/chaseHandlers';
-import { LIGHTS_OUT_STYLES } from '../utils/constants';
 
 import { EmojiEventsRounded } from '@/components/icons';
 import { Typography, Grid, Box } from '@/components/mui';

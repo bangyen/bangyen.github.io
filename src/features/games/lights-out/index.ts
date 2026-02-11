@@ -1,5 +1,6 @@
-// Lights Out feature exports - Page exported separately for lazy loading
+// Lights Out feature exports
 export { default as LightsOut } from './pages/LightsOut';
 
-// Utils exports for worker compatibility
 export * from './utils';
+export * from './types';
+export * from './config';

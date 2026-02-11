@@ -8,19 +8,10 @@ import { GAME_CONSTANTS } from '../../config/gameConfig';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
 import Info from '../components/Info';
+import { STORAGE_KEYS, LAYOUT_CONSTANTS, LIGHTS_OUT_STYLES } from '../config';
 import { useHandler, usePalette } from '../hooks/boardUtils';
-import {
-    handleBoard,
-    isSolved,
-    getInitialState,
-    BoardState,
-    BoardAction,
-} from '../utils/boardHandlers';
-import {
-    STORAGE_KEYS,
-    LAYOUT_CONSTANTS,
-    LIGHTS_OUT_STYLES,
-} from '../utils/constants';
+import { BoardState, BoardAction } from '../types';
+import { handleBoard, isSolved, getInitialState } from '../utils/boardHandlers';
 import {
     getFrontProps,
     getBackProps,
