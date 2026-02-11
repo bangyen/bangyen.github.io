@@ -96,10 +96,10 @@ export default defineConfig(() => {
                 provider: 'v8',
                 reporter: ['text', 'lcov', 'html'],
                 thresholds: {
-                    statements: 85,
-                    branches: 75,
-                    functions: 85,
-                    lines: 85,
+                    statements: 90,
+                    branches: 78,
+                    functions: 90,
+                    lines: 90,
                 },
                 exclude: [
                     'src/index.tsx',

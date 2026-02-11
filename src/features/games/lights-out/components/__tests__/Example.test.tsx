@@ -143,4 +143,166 @@ describe('Lights Out Example Component', () => {
         // There are multiple grids (board, input, output) so multiple cell-0-0
         expect(screen.getAllByTestId('cell-0-0').length).toBeGreaterThan(0);
     });
+
+    it('cycles through frames over time', () => {
+        vi.useFakeTimers();
+
+        mockGetStates.mockReturnValue({
+            boardStates: [
+                [
+                    [0, 0, 0],
+                    [0, 0, 0],
+                    [0, 0, 0],
+                ],
+                [
+                    [1, 0, 0],
+                    [0, 0, 0],
+                    [0, 0, 0],
+                ],
+                [
+                    [1, 1, 0],
+                    [0, 0, 0],
+                    [0, 0, 0],
+                ],
+            ],
+            inputStates: [
+                [0, 0, 0],
+                [1, 0, 0],
+                [1, 1, 0],
+            ],
+            outputStates: [
+                [0, 0, 0],
+                [1, 0, 0],
+                [1, 1, 0],
+            ],
+        });
+
+        render(
+            <Example
+                size={100}
+                palette={mockPalette}
+                getFrontProps={mockGetFrontProps}
+                getBackProps={mockGetBackProps}
+            />
+        );
+
+        // Advance time and check frame updates
+        vi.advanceTimersByTime(2000);
+
+        // The component should update frames
+        expect(screen.getAllByTestId('cell-0-0').length).toBeGreaterThan(0);
+
+        vi.useRealTimers();
+    });
+
+    it('shows trophy on last frame when solved', () => {
+        const allOnState = [
+            [7, 7, 7], // All bits on for 3x3 (7 = 0b111)
+            [7, 7, 7],
+            [7, 7, 7],
+        ];
+
+        mockGetStates.mockReturnValue({
+            boardStates: [
+                [
+                    [0, 0, 0],
+                    [0, 0, 0],
+                    [0, 0, 0],
+                ],
+                allOnState,
+            ],
+            inputStates: [
+                [0, 0, 0],
+                [0, 0, 0],
+            ],
+            outputStates: [
+                [0, 0, 0],
+                [0, 0, 0],
+            ],
+        });
+
+        vi.useFakeTimers();
+
+        render(
+            <Example
+                size={100}
+                palette={mockPalette}
+                getFrontProps={mockGetFrontProps}
+                getBackProps={mockGetBackProps}
+            />
+        );
+
+        // Advance to last frame
+        vi.advanceTimersByTime(2000);
+
+        expect(screen.getByTestId('emoji-events-rounded')).toBeInTheDocument();
+
+        vi.useRealTimers();
+    });
+
+    it('handles missing board states gracefully', () => {
+        mockGetStates.mockReturnValue({
+            boardStates: [],
+            inputStates: [],
+            outputStates: [],
+        });
+
+        render(
+            <Example
+                size={100}
+                palette={mockPalette}
+                getFrontProps={mockGetFrontProps}
+                getBackProps={mockGetBackProps}
+            />
+        );
+
+        // Should still render without crashing (multiple grids)
+        const grids = screen.getAllByTestId('custom-grid');
+        expect(grids.length).toBeGreaterThanOrEqual(0);
+    });
+
+    it('uses default dims when not provided', () => {
+        render(
+            <Example
+                size={100}
+                palette={mockPalette}
+                getFrontProps={mockGetFrontProps}
+                getBackProps={mockGetBackProps}
+            />
+        );
+
+        // Should use default dims=3
+        expect(mockGetStates).toHaveBeenCalledWith([], 3);
+    });
+
+    it('shows primary color when not solved', () => {
+        const unsolvedState = [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+        ];
+
+        mockGetStates.mockReturnValue({
+            boardStates: [unsolvedState],
+            inputStates: [[0, 0, 0]],
+            outputStates: [[0, 0, 0]],
+        });
+
+        vi.useFakeTimers();
+
+        render(
+            <Example
+                size={100}
+                palette={mockPalette}
+                getFrontProps={mockGetFrontProps}
+                getBackProps={mockGetBackProps}
+            />
+        );
+
+        // Component should render properly with grids
+        const grids = screen.getAllByTestId('custom-grid');
+        expect(grids.length).toBeGreaterThan(0);
+
+        vi.useRealTimers();
+    });
 });

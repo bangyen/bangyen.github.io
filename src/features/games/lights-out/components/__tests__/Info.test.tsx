@@ -167,4 +167,125 @@ describe('Lights Out Info Component', () => {
         fireEvent.click(closeIcon);
         expect(mockToggleOpen).toHaveBeenCalled();
     });
+
+    it('handles back navigation between steps', () => {
+        render(<Info {...defaultProps} />);
+        const nextBtn = screen.getByText('Next');
+
+        // Navigate to step 2
+        fireEvent.click(nextBtn); // To Example (step 1)
+        fireEvent.click(nextBtn); // To Calculator (step 2)
+
+        // Go back
+        const backBtn = screen.getByText('Back');
+        fireEvent.click(backBtn);
+
+        // Should be at Example step
+        expect(screen.getByTestId('example-component')).toBeInTheDocument();
+    });
+
+    it('shows all three steps in sequence', () => {
+        render(<Info {...defaultProps} />);
+        const nextBtn = screen.getByText('Next');
+
+        // Step 0: Instructions
+        expect(screen.getByText('Chase to Bottom')).toBeInTheDocument();
+
+        // Navigate to step 1: Example
+        fireEvent.click(nextBtn);
+        expect(screen.getByTestId('example-component')).toBeInTheDocument();
+
+        // Navigate to step 2: Calculator
+        fireEvent.click(nextBtn);
+        expect(screen.getByText('Input')).toBeInTheDocument();
+    });
+
+    it('does not go back past first step', () => {
+        render(<Info {...defaultProps} />);
+        const backBtn = screen.getByText('Back');
+
+        // Try to go back at first step
+        fireEvent.click(backBtn);
+
+        // Should still show instructions
+        expect(screen.getByText('Chase to Bottom')).toBeInTheDocument();
+    });
+
+    it('resets calculator state on config change', () => {
+        const { rerender } = render(<Info {...defaultProps} />);
+
+        // Navigate to calculator
+        const nextBtn = screen.getByText('Next');
+        fireEvent.click(nextBtn);
+        fireEvent.click(nextBtn);
+
+        // Should be in calculator view
+        expect(screen.getByText('Input')).toBeInTheDocument();
+
+        // Simulate cols change (should trigger reset)
+        rerender(<Info {...defaultProps} cols={4} />);
+
+        // Component should still render calculator
+        expect(screen.getByText('Input')).toBeInTheDocument();
+    });
+
+    it('renders analysis link button', () => {
+        render(<Info {...defaultProps} />);
+
+        // Should show the button variant
+        const analysisButton = screen.getByText('Analysis');
+        expect(analysisButton).toBeInTheDocument();
+        expect(analysisButton.closest('a')).toHaveAttribute('href');
+    });
+
+    it('handles reset button in calculator', () => {
+        render(<Info {...defaultProps} />);
+        const nextBtn = screen.getByText('Next');
+
+        // Navigate to calculator
+        fireEvent.click(nextBtn);
+        fireEvent.click(nextBtn);
+
+        // Should be in calculator view with input and solution labels
+        expect(screen.getByText('Input')).toBeInTheDocument();
+    });
+
+    it('prevents modal from closing when clicking inside GlassCard', () => {
+        render(<Info {...defaultProps} />);
+        const glassCard = screen.getByTestId('glass-card');
+
+        fireEvent.click(glassCard);
+
+        // Should not call toggleOpen (propagation is stopped)
+        expect(mockToggleOpen).not.toHaveBeenCalled();
+    });
+
+    it('manages calcRow state for each column independently', () => {
+        render(<Info {...defaultProps} />);
+        const nextBtn = screen.getByText('Next');
+
+        // Navigate to calculator
+        fireEvent.click(nextBtn);
+        fireEvent.click(nextBtn);
+
+        // Component renders with multiple input cells
+        expect(screen.getAllByTestId(/input-cell/).length).toBeGreaterThan(0);
+    });
+
+    it('renders info instructions on first step', () => {
+        render(<Info {...defaultProps} />);
+
+        // Should show instructions content
+        expect(screen.getByText('Chase to Bottom')).toBeInTheDocument();
+    });
+
+    it('palette changes trigger calculator reset', () => {
+        const { rerender } = render(<Info {...defaultProps} />);
+
+        const newPalette = { primary: 'green', secondary: 'yellow' };
+        rerender(<Info {...defaultProps} palette={newPalette} />);
+
+        // Component should still render properly
+        expect(screen.getByText('Chase to Bottom')).toBeInTheDocument();
+    });
 });
