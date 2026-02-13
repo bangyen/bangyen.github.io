@@ -9,7 +9,7 @@ export const LAYOUT_CONSTANTS = {
     PADDING_OFFSET: 100,
     WIDTH_LIMIT: 1000,
     BOARD_MAX_WIDTH: 1200,
-    BOARD_SIZE_FACTOR: 0.98,
+    BOARD_SIZE_FACTOR: 0.94,
     HEIGHT_OFFSET: 240,
     MAX_CELL_SIZE: 100,
     REM_BASE: 16,
@@ -25,7 +25,7 @@ export const STORAGE_KEYS = {
 export const GAME_LOGIC_CONSTANTS = {
     HINT_DENSITY: 0, // 0 means remove as many clues as possible while remaining deductively solvable
     MIN_SIZE: 3,
-    MAX_SIZE: 25,
+    MAX_SIZE: 8,
     DEFAULT_SIZE: 5,
     PUZZLE_GENERATION_ITERATIONS: 30,
 };

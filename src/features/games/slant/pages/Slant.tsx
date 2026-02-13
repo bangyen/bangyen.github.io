@@ -59,6 +59,7 @@ export default function Slant() {
             gridConfig: {
                 defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
                 minSize: GAME_LOGIC_CONSTANTS.MIN_SIZE,
+                maxSize: GAME_LOGIC_CONSTANTS.MAX_SIZE,
                 headerOffset: GAME_CONSTANTS.layout.headerHeight,
                 paddingOffset: {
                     x: mobile ? 48 : 80,
