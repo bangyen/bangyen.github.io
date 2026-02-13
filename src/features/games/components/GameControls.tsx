@@ -29,9 +29,9 @@ export function GameControls({
     disabled = false,
     children,
 }: GameControlsProps) {
-    const isAtMin = rows <= minSize && cols <= minSize;
+    const isAtMin = Math.min(rows, cols) <= minSize;
     const isAtMax =
-        (rows >= maxSize && cols >= maxSize) ||
+        Math.min(rows, cols) >= maxSize ||
         (rows === dynamicSize.rows && cols === dynamicSize.cols);
 
     return (
