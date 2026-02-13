@@ -2,6 +2,7 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import os from 'os';
 
 export default defineConfig(() => {
     const plugins = [react(), tsconfigPaths()];
@@ -78,7 +79,7 @@ export default defineConfig(() => {
             port: 3000,
         },
         test: {
-            pool: 'forks', // Use forks for better compatibility with Bun/Node environments
+            pool: 'threads', // Use threads for better performance
             globals: true,
             environment: 'jsdom',
             setupFiles: './src/setupTests.ts',
@@ -86,9 +87,10 @@ export default defineConfig(() => {
             exclude: ['node_modules'],
             // Optimization: Disable CSS parsing for logic tests
             css: false,
-            isolate: true,
             fileParallelism: true,
-            maxWorkers: '50%',
+            isolate: true,
+            // Use 100% of cores in CI (usually 2), but cap locally to 80% for peak performance
+            maxWorkers: process.env.CI ? '100%' : '80%',
             sequence: {
                 hooks: 'list',
             },
