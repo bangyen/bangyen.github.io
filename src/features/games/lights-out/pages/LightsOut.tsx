@@ -44,7 +44,7 @@ export default function LightsOut() {
         pageTitle: PAGE_TITLES.lightsOut,
         gridConfig: {
             defaultSize: null,
-            minSize: 2,
+            minSize: 3,
             maxSize: 10,
             headerOffset: {
                 mobile: LAYOUT.headerHeight.xs,
