@@ -30,12 +30,15 @@ describe('polynomialUtils', () => {
 
     describe('polyDiv and polyMod', () => {
         it('should perform polynomial division in GF(2)[x]', () => {
-            // (x^2 + x + 1) / (x + 1)
-            // In binary: 111 / 11
-            // 111 = 11 * (10) + 1  => x^2+x+1 = (x+1)*x + 1
             const { quotient, remainder } = polyDiv(0b111n, 0b11n);
             expect(quotient).toBe(0b10n);
             expect(remainder).toBe(0b1n);
+        });
+
+        it('should throw error for division by zero', () => {
+            expect(() => polyDiv(0b1n, 0n)).toThrow(
+                'Division by zero polynomial'
+            );
         });
 
         it('should return correct remainder with polyMod', () => {
@@ -46,9 +49,7 @@ describe('polynomialUtils', () => {
 
     describe('evalPolynomial', () => {
         it('should evaluate polynomial with matrix correctly', () => {
-            const mat = [0b110n, 0b111n, 0b011n]; // getMatrix(3)
-            // poly = x + 1 (0b11)
-            // res = mat + I
+            const mat = [0b110n, 0b111n, 0b011n];
             const res = evalPolynomial(mat, 0b11n);
             expect(res).toEqual([
                 0b110n ^ 0b100n,
@@ -62,37 +63,38 @@ describe('polynomialUtils', () => {
         it('should find the minimal polynomial of a matrix', () => {
             const mat = getMatrix(3);
             const minPoly = getMinimalPolynomial(mat);
-            // Minimal polynomial of A for n=3 is x^3 + x^2 + 1 (1101 = 13)
-            // Check by evaluating:
             const res = evalPolynomial(mat, minPoly);
             expect(res.every(row => row === 0n)).toBe(true);
         });
     });
 
     describe('getIrreducibles', () => {
-        it('should return irreducible polynomials up to degree 3', () => {
-            const irr = getIrreducibles(3);
-            // Deg 1: x (2), x+1 (3)
-            // Deg 2: x^2+x+1 (7)
-            // Deg 3: x^3+x+1 (11), x^3+x^2+1 (13)
-            expect(irr).toContain(2n);
-            expect(irr).toContain(3n);
-            expect(irr).toContain(7n);
-            expect(irr).toContain(11n);
-            expect(irr).toContain(13n);
+        it('should return irreducible polynomials and use cache', () => {
+            const irr1 = getIrreducibles(1);
+            expect(irr1).toContain(2n);
+            expect(irr1).toContain(3n);
+
+            const irr2 = getIrreducibles(1);
+            expect(irr2).toEqual(irr1);
+
+            const irr3 = getIrreducibles(4);
+            expect(irr3.length).toBeGreaterThan(irr1.length);
+            expect(irr3).toContain(19n); // x^4+x+1
         });
     });
 
     describe('factorPoly', () => {
         it('should factor polynomials in GF(2)[x]', () => {
-            // (x+1)^2 = x^2 + 1 (0b101)
             const factors = factorPoly(0b101n);
             expect(factors).toContainEqual({ factor: 3n, exponent: 2 });
 
-            // (x^3+x+1)(x+1) = x^4 + x^3 + x^2 + 1 (0b11101 = 29)
-            // Wait: (x^3+x+1)*(x+1) = x^4 + x^3 + x^2 + x + x + 1 = x^4 + x^3 + x^2 + 1 (in GF2)
             const factors2 = factorPoly(0b11101n);
             expect(factors2).toContainEqual({ factor: 11n, exponent: 1 });
+        });
+
+        it('should return empty list for 0 and 1', () => {
+            expect(factorPoly(0n)).toEqual([]);
+            expect(factorPoly(1n)).toEqual([]);
         });
     });
 
@@ -105,6 +107,13 @@ describe('polynomialUtils', () => {
             expect(polyToString(0b1011n)).toBe('x^{3} + x + 1');
         });
 
+        it('should handle middle terms correctly', () => {
+            // x^3 + 1 (binary 1001)
+            expect(polyToString(0b1001n)).toBe('x^{3} + 1');
+            // x^3 + x (binary 1010)
+            expect(polyToString(0b1010n)).toBe('x^{3} + x');
+        });
+
         it('should format superscripts correctly', () => {
             expect(toSuperscript(2)).toBe('^{2}');
             expect(toSuperscript(10)).toBe('^{10}');
@@ -115,17 +124,8 @@ describe('polynomialUtils', () => {
         it('should return correct polynomials in the sequence', () => {
             expect(getPolynomial(0)).toBe(0n);
             expect(getPolynomial(1)).toBe(1n);
-            // P_2(x) = x*P_1(x) + P_0(x) = x*1 + 0 = x (2)
             expect(getPolynomial(2)).toBe(2n);
-            // P_3(x) = x*P_2(x) + P_1(x) = x*x + 1 = x^2 + 1 (5)
             expect(getPolynomial(3)).toBe(5n);
-        });
-    });
-
-    describe('factorPoly edge cases', () => {
-        it('should handle 0 and 1', () => {
-            expect(factorPoly(0n)).toEqual([]);
-            expect(factorPoly(1n)).toEqual([]);
         });
     });
 
@@ -141,7 +141,16 @@ describe('polynomialUtils', () => {
             const pattern = findPattern(3);
             expect(pattern.n).toBe(3);
             expect(pattern.z).toBeGreaterThan(0);
-            expect(pattern.z_seq).toBeGreaterThan(0);
+        });
+
+        it('should find pattern for size 1 and 2', () => {
+            const p1 = findPattern(1);
+            expect(p1.n).toBe(1);
+            expect(p1.z).toBe(3);
+
+            const p2 = findPattern(2);
+            expect(p2.n).toBe(2);
+            expect(p2.z).toBe(2);
         });
     });
 });

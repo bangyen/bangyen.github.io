@@ -33,15 +33,21 @@ describe('matrixOperations', () => {
         });
 
         it('should find non-empty kernel for singular matrix', () => {
-            // Matrix:
-            // 1 1 0
-            // 1 1 0
-            // 0 0 1
             const mat = [0b110n, 0b110n, 0b001n];
             const kernel = getKernelBasis(mat, 3);
             expect(kernel).toHaveLength(1);
-            // Kernel should be [1, 1, 0] = 0b110 = 6n
             expect(kernel[0]).toBe(0b110n);
+        });
+
+        it('should handle matrix where some columns have no pivot', () => {
+            // Matrix with middle column zero:
+            // 1 0 0
+            // 0 0 0
+            // 0 0 1
+            const mat = [0b100n, 0b000n, 0b001n];
+            const kernel = getKernelBasis(mat, 3);
+            // Nullity should be size - rank = 3 - 2 = 1
+            expect(kernel).toHaveLength(1);
         });
     });
 
@@ -66,9 +72,6 @@ describe('matrixOperations', () => {
             const solution = getMinWeightSolution(mat, target, 3);
             expect(solution).not.toBe(-1n);
 
-            // Verify: multiplySym(mat, solution) == target
-            // Note: multiplySym treats the first argument as a list of rows.
-            // For a vector x, M*x is computed by XORing rows where x[i] is 1.
             let res = 0n;
             for (let i = 0; i < 3; i++) {
                 if ((solution >> BigInt(3 - 1 - i)) & 1n) {
@@ -80,26 +83,29 @@ describe('matrixOperations', () => {
 
         it('should return -1n for unsolvable system', () => {
             const mat = [0b110n, 0b110n, 0b001n];
-            const target = 0b100n; // Can't toggle just the first light without the second
+            const target = 0b100n;
             const solution = getMinWeightSolution(mat, target, 3);
             expect(solution).toBe(-1n);
         });
 
         it('should find minimum weight solution in presence of kernel', () => {
-            // Lights out 3x1 has a kernel [1, 0, 1] if we use a different operator?
-            // Let's create a custom system where there are multiple solutions
-            const mat = [
-                0b100n, // row 0: affects light 0
-                0b100n, // row 1: affects light 0 (redundant)
-                0b001n, // row 2: affects light 2
-            ];
-            // Target: 0b101n (lights 0 and 2)
-            // Solutions:
-            // 0b101n (toggles 0 and 2) - weight 2
-            // 0b011n (toggles 1 and 2) - weight 2
-            // 0b111n (toggles 0, 1, 2) - weight 3
+            const mat = [0b100n, 0b100n, 0b001n];
             const solution = getMinWeightSolution(mat, 0b101n, 3);
             expect(countBits(solution)).toBe(2);
+        });
+
+        it('should return particular solution early for very large kernels', () => {
+            // kernel size > 20
+            // We can simulate this with a matrix of size 30 and rank 5
+            const size = 30;
+            const mat = Array(size).fill(0n);
+            for (let i = 0; i < 5; i++) mat[i] = 1n << BigInt(size - 1 - i);
+            const target = 0b11111n << BigInt(size - 5);
+            const solution = getMinWeightSolution(mat, target, size);
+            expect(solution).not.toBe(-1n);
+            // Since kernel length > 20, it returns the particular solution
+            // which in this case is just the first 5 bits
+            expect(solution).toBe(target);
         });
     });
 
@@ -118,6 +124,13 @@ describe('matrixOperations', () => {
                 }
                 expect(res).toBe(state);
             }
+        });
+
+        it('should handle singular matrices', () => {
+            const mat = [0b100n, 0b100n, 0b001n];
+            const mapping = getImageMapping(mat, 3);
+            // Rank is 2, so mapping should have 2 entries
+            expect(mapping).toHaveLength(2);
         });
     });
 });

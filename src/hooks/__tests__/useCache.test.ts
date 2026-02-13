@@ -213,14 +213,90 @@ describe('useCache Hook', () => {
     });
 
     test('double processing prev with no state in cache', () => {
-        const getState = vi.fn((s: number) => s + 1);
+        const getState = vi.fn((s: { v: number }) => ({ v: s.v + 1 }));
         const { result } = renderHook(() => useCache(getState));
 
-        let state: number | undefined;
+        let state: { v: number } | undefined;
         act(() => {
-            result.current({ type: 'prev', payload: 1 });
-            state = result.current({ type: 'prev', payload: 2 });
+            result.current({ type: 'prev', payload: { v: 1 } });
+            state = result.current({ type: 'prev', payload: { v: 2 } }) as {
+                v: number;
+            };
         });
-        expect(state).toBe(2);
+        expect(state.v).toBe(2);
+    });
+
+    test('prev at boundary (index 0)', () => {
+        const getState = vi.fn((s: { v: number }) => ({ v: s.v + 1 }));
+        const { result } = renderHook(() => useCache(getState));
+
+        act(() => {
+            result.current({ type: 'clear', payload: { v: 10 } });
+        });
+
+        let state: { v: number } | undefined;
+        act(() => {
+            state = result.current({ type: 'prev', payload: null }) as {
+                v: number;
+            };
+        });
+
+        expect(state.v).toBe(10);
+        // Repeated prev at boundary
+        act(() => {
+            vi.advanceTimersByTime(200);
+            state = result.current({ type: 'prev', payload: null }) as {
+                v: number;
+            };
+        });
+        expect(state.v).toBe(10);
+    });
+
+    test('next when getState returns same object (no-op)', () => {
+        const stateObj = { count: 1 };
+        const getState = vi.fn(() => stateObj);
+        const { result } = renderHook(() => useCache(getState));
+
+        act(() => {
+            result.current({ type: 'clear', payload: stateObj });
+        });
+
+        act(() => {
+            vi.advanceTimersByTime(200);
+            result.current({ type: 'next', payload: null });
+        });
+
+        // If it was a no-op, index should still be 0, and prev should return same state
+        act(() => {
+            vi.advanceTimersByTime(200);
+            const res = result.current({ type: 'prev', payload: null }) as {
+                count: number;
+            };
+            // Note: useCache implementation returns a NEW object via spread: { ...s }
+            expect(res.count).toBe(stateObj.count);
+        });
+    });
+
+    test('double processing returns current state when cache is not empty', () => {
+        const getState = vi.fn((s: { v: number }) => ({ v: s.v + 1 }));
+        const { result } = renderHook(() => useCache(getState));
+
+        act(() => {
+            result.current({ type: 'clear', payload: { v: 10 } });
+        });
+
+        let state: { v: number } | undefined;
+        act(() => {
+            vi.advanceTimersByTime(200);
+            // First call triggers processingRef = true
+            result.current({ type: 'next', payload: null });
+            // Second call immediately should return states[index.current]
+            state = result.current({ type: 'next', payload: { v: 999 } }) as {
+                v: number;
+            };
+        });
+
+        expect(state.v).toBe(11);
+        expect(state.v).not.toBe(999);
     });
 });
