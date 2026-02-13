@@ -28,7 +28,7 @@ interface BaseGameConfig<S, A> {
             mobile: number;
             desktop: number;
         };
-        paddingOffset: number;
+        paddingOffset: number | { x: number; y: number };
         widthLimit?: number;
         cellSizeReference: number | { mobile: number; desktop: number };
         mobileRowOffset?: number;

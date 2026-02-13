@@ -36,7 +36,7 @@ interface GridSizeConfig {
         desktop: number;
     };
     /** Extra padding to subtract from available space (default: 0) */
-    paddingOffset?: number;
+    paddingOffset?: number | { x: number; y: number };
     /** Maximum viewport width to consider (default: 1300px) */
     widthLimit?: number;
     /** Reference cell size in rem for calculating grid dimensions */
@@ -109,10 +109,14 @@ export function useGridSize({
                   ? cellSizeReference.mobile
                   : cellSizeReference.desktop;
 
+        const pX = typeof paddingOffset === 'number' ? 0 : paddingOffset.x;
+        const pY =
+            typeof paddingOffset === 'number' ? paddingOffset : paddingOffset.y;
+
         const converted = convertPixels(
             referenceSize,
-            height - currentHeaderOffset - paddingOffset,
-            Math.min(width, widthLimit)
+            height - currentHeaderOffset - pY,
+            Math.min(width, widthLimit) - pX
         );
 
         let r = converted.rows - 1;

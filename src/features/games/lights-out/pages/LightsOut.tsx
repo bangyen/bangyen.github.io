@@ -22,17 +22,18 @@ import { MenuBookRounded } from '@/components/icons';
 import { TooltipButton } from '@/components/ui/TooltipButton';
 import { PAGE_TITLES } from '@/config/constants';
 import { LAYOUT } from '@/config/theme';
+import { useMobile } from '@/hooks';
 import { useCellFactory } from '@/utils/gameUtils';
 import { createCellIndex } from '@/utils/types';
 
 export default function LightsOut() {
+    const mobile = useMobile('sm');
     const {
         rows,
         cols,
         state,
         dispatch,
         size,
-        mobile,
         solved,
         handleNext,
         controlsProps,
@@ -50,7 +51,10 @@ export default function LightsOut() {
                 mobile: LAYOUT.headerHeight.xs,
                 desktop: LAYOUT.headerHeight.md,
             },
-            paddingOffset: 60,
+            paddingOffset: {
+                x: mobile ? 60 : 80,
+                y: 60,
+            },
             cellSizeReference: {
                 mobile: GAME_CONSTANTS.gridSizes.mobile,
                 desktop: GAME_CONSTANTS.gridSizes.desktop,
@@ -58,7 +62,10 @@ export default function LightsOut() {
             mobileRowOffset: 2,
         },
         boardConfig: {
-            paddingOffset: 100,
+            paddingOffset: {
+                x: mobile ? 40 : 120,
+                y: 100,
+            },
             boardMaxWidth: 1200,
             boardSizeFactor: 0.94,
             maxCellSize: 80,
@@ -125,6 +132,9 @@ export default function LightsOut() {
                     marginTop: mobile
                         ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
                         : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
+                    padding: mobile ? '18px' : '24px',
+                    borderRadius: '24px',
+                    border: '2px solid transparent',
                 }}
                 controls={controls}
             >
