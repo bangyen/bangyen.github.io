@@ -50,7 +50,7 @@ const Cell = memo(function Cell({ size, children, ...rest }: CellProps) {
             fontWeight: TYPOGRAPHY.fontWeight.semibold,
             fontFamily: 'monospace',
         }),
-        [radius, remSize, size]
+        [radius, remSize, size],
     );
 
     return (

@@ -87,7 +87,7 @@ describe('useBaseGame', () => {
                     ...defaultProps.boardConfig,
                     paddingOffset: paddingOffsetFn,
                 },
-            })
+            }),
         );
 
         expect(paddingOffsetFn).toHaveBeenCalled();

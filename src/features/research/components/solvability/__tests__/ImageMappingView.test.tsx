@@ -18,7 +18,7 @@ describe('ImageMappingView', () => {
 
     it('renders nothing when imageMapping is empty', () => {
         const { container } = render(
-            <ImageMappingView imageMapping={[]} isFullSubspace={true} />
+            <ImageMappingView imageMapping={[]} isFullSubspace={true} />,
         );
         expect(container.firstChild).toBeNull();
     });
@@ -30,14 +30,14 @@ describe('ImageMappingView', () => {
                     imageMapping={imageMapping}
                     isFullSubspace={true}
                 />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         expect(screen.getByText('Chasing Table')).toBeInTheDocument();
         expect(screen.getByText('0x1')).toBeInTheDocument();
         expect(screen.getByText('0x3')).toBeInTheDocument();
         expect(
-            screen.queryByText('... and other reachable combinations')
+            screen.queryByText('... and other reachable combinations'),
         ).not.toBeInTheDocument();
     });
 
@@ -48,7 +48,7 @@ describe('ImageMappingView', () => {
                     imageMapping={imageMapping}
                     isFullSubspace={true}
                 />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         expect(screen.getByText('BOTTOM RESIDUAL')).toBeInTheDocument();
@@ -62,12 +62,12 @@ describe('ImageMappingView', () => {
                     imageMapping={imageMapping}
                     isFullSubspace={false}
                 />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         expect(screen.getByText('Image Basis')).toBeInTheDocument();
         expect(
-            screen.getByText('... and other reachable combinations')
+            screen.getByText('... and other reachable combinations'),
         ).toBeInTheDocument();
     });
 });

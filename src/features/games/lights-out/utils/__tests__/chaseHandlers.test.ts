@@ -210,7 +210,9 @@ describe('Lights Out Chase Handlers', () => {
         });
 
         it('handles large grid (7x7)', () => {
-            mockProduct.mockReturnValue(Array(7).fill(0) as number[]);
+            mockProduct.mockReturnValue(
+                Array.from({ length: 7 }).fill(0) as number[],
+            );
 
             const result = getStates([], 7);
 

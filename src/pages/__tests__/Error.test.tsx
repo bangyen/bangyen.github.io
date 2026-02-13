@@ -9,13 +9,13 @@ describe('Error Page', () => {
         render(
             <BrowserRouter>
                 <Error />
-            </BrowserRouter>
+            </BrowserRouter>,
         );
 
         expect(screen.getByText('404')).toBeInTheDocument();
         expect(screen.getByText('Page Not Found')).toBeInTheDocument();
         expect(
-            screen.getByText(/The page you're looking for doesn't exist/i)
+            screen.getByText(/The page you're looking for doesn't exist/i),
         ).toBeInTheDocument();
     });
 
@@ -23,7 +23,7 @@ describe('Error Page', () => {
         render(
             <BrowserRouter>
                 <Error />
-            </BrowserRouter>
+            </BrowserRouter>,
         );
         expect(document.title).toBe('Page Not Found | Bangyen');
     });
@@ -32,7 +32,7 @@ describe('Error Page', () => {
         render(
             <BrowserRouter>
                 <Error />
-            </BrowserRouter>
+            </BrowserRouter>,
         );
         const homeLink = screen.getByRole('link', { name: /Back to Home/i });
         expect(homeLink).toHaveAttribute('href', '/');

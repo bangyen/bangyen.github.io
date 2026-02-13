@@ -41,12 +41,10 @@ export function ResearchHeader({
         </Button>
     );
 
-    let subtitleComponent;
-
-    if (backUrl && isMobile) {
-        subtitleComponent = backButton(0);
-    } else {
-        subtitleComponent = (
+    const subtitleComponent =
+        backUrl && isMobile ? (
+            backButton(0)
+        ) : (
             <Typography
                 variant="h5"
                 sx={{
@@ -66,7 +64,6 @@ export function ResearchHeader({
                 {subtitle}
             </Typography>
         );
-    }
 
     return (
         <Box

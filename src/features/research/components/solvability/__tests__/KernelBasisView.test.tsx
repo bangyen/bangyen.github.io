@@ -20,7 +20,7 @@ describe('KernelBasisView', () => {
         render(
             <TestWrapper>
                 <KernelBasisView quietPatterns={['0x123', '0x456']} />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         expect(screen.getByText('Quiet Patterns (Kernel)')).toBeInTheDocument();
@@ -31,16 +31,16 @@ describe('KernelBasisView', () => {
     it('handles large number of patterns', () => {
         const patterns = Array.from(
             { length: 10 },
-            (_, i) => `0x${i.toString(16)}`
+            (_, i) => `0x${i.toString(16)}`,
         );
         render(
             <TestWrapper>
                 <KernelBasisView quietPatterns={patterns} />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
-        patterns.forEach(p => {
+        for (const p of patterns) {
             expect(screen.getByText(p)).toBeInTheDocument();
-        });
+        }
     });
 });

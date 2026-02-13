@@ -8,12 +8,12 @@ import { COLORS, TYPOGRAPHY } from '@/config/theme';
 const PeriodicityCalculator = React.lazy(() =>
     import('./PeriodicityCalculator').then(m => ({
         default: m.PeriodicityCalculator,
-    }))
+    })),
 );
 const SolvabilityAnalyzer = React.lazy(() =>
     import('./SolvabilityAnalyzer').then(m => ({
         default: m.SolvabilityAnalyzer,
-    }))
+    })),
 );
 
 export const VerificationTools: React.FC = () => {

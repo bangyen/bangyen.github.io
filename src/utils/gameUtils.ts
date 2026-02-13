@@ -118,8 +118,9 @@ export function createGameReducer<
                 return state;
             }
             case 'new':
-            case 'next':
+            case 'next': {
                 return config.getInitialState(state.rows, state.cols);
+            }
             case 'restore':
             case 'hydrate': {
                 if ('state' in action) {
@@ -127,10 +128,12 @@ export function createGameReducer<
                 }
                 return state;
             }
-            case 'reset':
+            case 'reset': {
                 return config.getInitialState(state.rows, state.cols);
-            default:
+            }
+            default: {
                 return state;
+            }
         }
     };
 }
@@ -154,7 +157,7 @@ export interface CellRenderProps {
  */
 export type CellFactory<R = Record<string, unknown>> = (
     row: number,
-    col: number
+    col: number,
 ) => R;
 
 /**
@@ -193,10 +196,10 @@ export type CellFactory<R = Record<string, unknown>> = (
 export function useCellFactory<T extends unknown[], P, R>(
     factory: (getDragProps: (pos: string) => P, ...args: T) => CellFactory<R>,
     getDragProps: (pos: string) => P,
-    dependencies: T
+    dependencies: T,
 ): CellFactory<R> {
     return useMemo(
         () => factory(getDragProps, ...dependencies),
-        [factory, getDragProps, dependencies]
+        [factory, getDragProps, dependencies],
     );
 }

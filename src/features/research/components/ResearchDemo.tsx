@@ -3,14 +3,14 @@ import React from 'react';
 const ResearchChart = React.lazy(() =>
     import('./ResearchChart').then(module => ({
         default: module.ResearchChart,
-    }))
+    })),
 );
 
 import ResearchControls from './ResearchControls';
 import { ResearchErrorBoundary } from './ResearchErrorBoundary';
 import { ResearchHeader } from './ResearchHeader';
 import ResearchViewSelector from './ResearchViewSelector';
-import { ResearchDemoProps } from '../types';
+import type { ResearchDemoProps } from '../types';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Box, Grid, useMediaQuery } from '@/components/mui';
@@ -38,7 +38,7 @@ const ResearchDemo = <T,>({
     },
     viewTypes = [],
     currentViewType = 'default',
-    onViewTypeChange = () => undefined,
+    onViewTypeChange = () => {},
     controls = [],
     loading = false,
     loadingMessage = 'Loading data...',
@@ -51,10 +51,10 @@ const ResearchDemo = <T,>({
     const getCurrentChartData = () => {
         if (chartData.length === 0) return [];
 
-        if (!viewTypes.length) return chartData;
+        if (viewTypes.length === 0) return chartData;
 
         const currentView = viewTypes.find(
-            view => view.key === currentViewType
+            view => view.key === currentViewType,
         );
         if (!currentView?.dataProcessor) return chartData;
 

@@ -1,7 +1,8 @@
-/* eslint-disable no-console */
+ 
 
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
+
 import * as cheerio from 'cheerio';
 
 const CACHE_DIR = path.join(process.cwd(), 'scripts/.cache');
@@ -10,7 +11,7 @@ const CACHE_DIR = path.join(process.cwd(), 'scripts/.cache');
  * Clean text by removing citations and trimming.
  */
 export function cleanText(text: string): string {
-    return text.replace(/\[.*?\]/g, '').trim();
+    return text.replaceAll(/\[.*?\]/g, '').trim();
 }
 
 /**
@@ -18,9 +19,9 @@ export function cleanText(text: string): string {
  */
 export function slugify(text: string): string {
     return text.toString().toLowerCase()
-        .replace(/\s+/g, '_')
-        .replace(/[^\w-]+/g, '')
-        .replace(/--+/g, '_')
+        .replaceAll(/\s+/g, '_')
+        .replaceAll(/[^\w-]+/g, '')
+        .replaceAll(/--+/g, '_')
         .replace(/^-+/, '')
         .replace(/-+$/, '');
 }
@@ -47,7 +48,7 @@ export async function fetchWithCache(url: string, cacheFilename?: string): Promi
 
         if (age < MAX_AGE_MS) {
             console.log(`[Cache] Hit: ${filename} (Age: ${(age / 1000 / 60).toFixed(1)}m)`);
-            const text = fs.readFileSync(cachePath, 'utf-8');
+            const text = fs.readFileSync(cachePath, 'utf8');
             return cheerio.load(text);
         } else {
             console.log(`[Cache] Expired: ${filename} (Age: ${(age / 1000 / 60 / 60).toFixed(1)}h)`);

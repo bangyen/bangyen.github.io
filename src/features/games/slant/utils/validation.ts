@@ -1,15 +1,16 @@
-import { CellState, EMPTY, FORWARD, BACKWARD } from '../types';
+import type { CellState } from '../types';
+import { EMPTY, FORWARD, BACKWARD } from '../types';
 
 import { getPosKey } from '@/utils/gameUtils';
 
 export function calculateNumbers(
     grid: CellState[][],
     rows: number,
-    cols: number
+    cols: number,
 ): number[][] {
     const numbers: number[][] = Array.from(
         { length: rows + 1 },
-        () => Array(cols + 1).fill(0) as number[]
+        () => new Array(cols + 1).fill(0) as number[],
     );
 
     for (let r = 0; r < rows; r++) {
@@ -49,7 +50,7 @@ export function getErrorNodes(
     grid: CellState[][],
     numbers: (number | null)[][],
     rows: number,
-    cols: number
+    cols: number,
 ): Set<string> {
     const errors = new Set<string>();
     const currentNumbers = calculateNumbers(grid, rows, cols);
@@ -79,7 +80,7 @@ export function getErrorNodes(
                     gr < rows &&
                     gc >= 0 &&
                     gc < cols &&
-                    grid[gr]?.[gc] === EMPTY
+                    grid[gr]?.[gc] === EMPTY,
             ).length;
 
             if (current + possible < target) {
@@ -94,7 +95,7 @@ export function getSatisfiedNodes(
     grid: CellState[][],
     numbers: (number | null)[][],
     rows: number,
-    cols: number
+    cols: number,
 ): Set<string> {
     const satisfied = new Set<string>();
     const currentNumbers = calculateNumbers(grid, rows, cols);

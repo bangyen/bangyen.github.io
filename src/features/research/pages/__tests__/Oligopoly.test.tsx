@@ -10,7 +10,7 @@ import pako from 'pako';
 import { BrowserRouter } from 'react-router-dom';
 import { vi, type Mock } from 'vitest';
 
-import { ResearchDemoProps, Control } from '../../types';
+import type { ResearchDemoProps, Control } from '../../types';
 import Oligopoly from '../Oligopoly';
 
 // Mocks
@@ -66,9 +66,10 @@ vi.mock('../../components/ResearchDemo', () => ({
 }));
 
 // Better Response mock for this test
-const originalResponse = (global as unknown as { Response: typeof Response })
-    .Response;
-Object.defineProperty(global, 'Response', {
+const originalResponse = (
+    globalThis as unknown as { Response: typeof Response }
+).Response;
+Object.defineProperty(globalThis, 'Response', {
     value: class extends originalResponse {
         override async text() {
             const self = this as unknown as { _data: unknown };
@@ -84,7 +85,7 @@ Object.defineProperty(global, 'Response', {
 describe('Oligopoly Component', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        global.fetch = vi.fn();
+        globalThis.fetch = vi.fn();
     });
 
     const renderOligopoly = async () => {
@@ -94,7 +95,7 @@ describe('Oligopoly Component', () => {
                     <ThemeProvider theme={createTheme()}>
                         <Oligopoly />
                     </ThemeProvider>
-                </BrowserRouter>
+                </BrowserRouter>,
             );
             await Promise.resolve();
         });
@@ -108,13 +109,13 @@ describe('Oligopoly Component', () => {
                 hhi: 0.99,
                 num_firms: 3,
                 model_type: 'cournot',
-                demand_elasticity: 2.0,
+                demand_elasticity: 2,
                 base_price: 40,
                 collusion_enabled: false,
             },
         ];
         (pako.ungzip as Mock).mockReturnValue(JSON.stringify(testData));
-        (global.fetch as Mock).mockResolvedValue({
+        (globalThis.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new Uint8Array([0x1f, 0x8b, 0, 0]).buffer),
@@ -126,18 +127,18 @@ describe('Oligopoly Component', () => {
         await waitFor(() => {
             // Check for exactly 1 item to ensure it's NOT fallback data (which has 15 items)
             expect(screen.getByTestId('chart-data-count')).toHaveTextContent(
-                '1'
+                '1',
             );
         });
     });
 
     test('handles fetch failure and uses fallback data', async () => {
-        (global.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
+        (globalThis.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
 
         await renderOligopoly();
         await waitFor(() => {
-            const count = parseInt(
-                screen.getByTestId('chart-data-count').textContent || '0'
+            const count = Number.parseInt(
+                screen.getByTestId('chart-data-count').textContent || '0',
             );
             expect(count).toBeGreaterThan(0);
         });
@@ -151,29 +152,29 @@ describe('Oligopoly Component', () => {
                 hhi: 0.5,
                 num_firms: 3,
                 model_type: 'cournot',
-                demand_elasticity: 2.0,
+                demand_elasticity: 2,
                 base_price: 40,
                 collusion_enabled: false,
             },
         ];
-        (global.fetch as Mock).mockResolvedValue({
+        (globalThis.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(
-                    new TextEncoder().encode(JSON.stringify(data)).buffer
+                    new TextEncoder().encode(JSON.stringify(data)).buffer,
                 ),
         });
 
         await renderOligopoly();
         await waitFor(() => {
             expect(
-                screen.getByTestId('chart-data-count')
+                screen.getByTestId('chart-data-count'),
             ).not.toHaveTextContent('0');
         });
     });
 
     test('handles control changes and reset', async () => {
-        (global.fetch as Mock).mockResolvedValue({
+        (globalThis.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new TextEncoder().encode('[]').buffer),
@@ -197,7 +198,7 @@ describe('Oligopoly Component', () => {
     });
 
     test('sets document title', async () => {
-        (global.fetch as Mock).mockResolvedValue({
+        (globalThis.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new TextEncoder().encode('[]').buffer),
@@ -208,7 +209,7 @@ describe('Oligopoly Component', () => {
     });
 
     test('handles edge case: data format error', async () => {
-        (global.fetch as Mock).mockResolvedValue({
+        (globalThis.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new TextEncoder().encode('not-json').buffer),
@@ -216,15 +217,15 @@ describe('Oligopoly Component', () => {
 
         await renderOligopoly();
         await waitFor(() => {
-            const count = parseInt(
-                screen.getByTestId('chart-data-count').textContent || '0'
+            const count = Number.parseInt(
+                screen.getByTestId('chart-data-count').textContent || '0',
             );
             expect(count).toBeGreaterThan(0);
         });
     });
 
     test('handles HTTP error 404', async () => {
-        (global.fetch as Mock).mockResolvedValue({
+        (globalThis.fetch as Mock).mockResolvedValue({
             ok: false,
             status: 404,
         });
@@ -232,21 +233,21 @@ describe('Oligopoly Component', () => {
         await renderOligopoly();
         await waitFor(() => {
             expect(
-                screen.getByTestId('chart-data-count')
+                screen.getByTestId('chart-data-count'),
             ).not.toHaveTextContent('0');
         });
     });
 
     test('handles missing DecompressionStream', async () => {
         const originalDS = (
-            global as unknown as { DecompressionStream: unknown }
+            globalThis as unknown as { DecompressionStream: unknown }
         ).DecompressionStream;
-        Object.defineProperty(global, 'DecompressionStream', {
+        Object.defineProperty(globalThis, 'DecompressionStream', {
             value: undefined,
             writable: true,
         });
 
-        (global.fetch as Mock).mockResolvedValue({
+        (globalThis.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new Uint8Array([0x1f, 0x8b, 0, 0]).buffer),
@@ -255,29 +256,29 @@ describe('Oligopoly Component', () => {
         await renderOligopoly();
         await waitFor(() => {
             expect(
-                screen.getByTestId('chart-data-count')
+                screen.getByTestId('chart-data-count'),
             ).not.toHaveTextContent('0');
         });
 
-        Object.defineProperty(global, 'DecompressionStream', {
+        Object.defineProperty(globalThis, 'DecompressionStream', {
             value: originalDS,
             writable: true,
         });
     });
 
     test('handles non-array matrix data', async () => {
-        (global.fetch as Mock).mockResolvedValue({
+        (globalThis.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(
-                    new TextEncoder().encode('{"not": "an-array"}').buffer
+                    new TextEncoder().encode('{"not": "an-array"}').buffer,
                 ),
         });
 
         await renderOligopoly();
         await waitFor(() => {
             expect(
-                screen.getByTestId('chart-data-count')
+                screen.getByTestId('chart-data-count'),
             ).not.toHaveTextContent('0');
         });
     });
@@ -295,11 +296,11 @@ describe('Oligopoly Component', () => {
                 collusion_enabled: false,
             },
         ];
-        (global.fetch as Mock).mockResolvedValue({
+        (globalThis.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(
-                    new TextEncoder().encode(JSON.stringify(data)).buffer
+                    new TextEncoder().encode(JSON.stringify(data)).buffer,
                 ),
         });
 
@@ -307,7 +308,7 @@ describe('Oligopoly Component', () => {
 
         await waitFor(() => {
             expect(
-                screen.getByTestId('chart-data-count')
+                screen.getByTestId('chart-data-count'),
             ).not.toHaveTextContent('0');
         });
     });

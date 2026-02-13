@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material';
 
 /** Normalizes SxProps to an array for safe spreading in MUI sx prop. */
 export function toSxArray(sx: SxProps<Theme> | undefined): SxProps<Theme>[] {

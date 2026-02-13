@@ -51,7 +51,7 @@ export function useGamePersistence<T>({
                 const _deserialize =
                     deserializeRef.current ?? ((s: unknown) => s as T);
                 onRestoreRef.current(_deserialize(parsed));
-            } catch (_e) {
+            } catch {
                 localStorage.removeItem(key);
             }
         }

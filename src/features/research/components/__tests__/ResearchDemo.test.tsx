@@ -174,7 +174,7 @@ it('renders the chart with correct data', async () => {
     expect(chart).toBeInTheDocument();
     expect(chart).toHaveAttribute(
         'data-chart-data',
-        JSON.stringify(mockChartData)
+        JSON.stringify(mockChartData),
     );
 });
 
@@ -185,11 +185,11 @@ it('renders chart lines based on configuration', async () => {
     expect(screen.getByTestId('line-z')).toBeInTheDocument();
     expect(screen.getByTestId('line-y')).toHaveAttribute(
         'data-name',
-        'Metric Y'
+        'Metric Y',
     );
     expect(screen.getByTestId('line-z')).toHaveAttribute(
         'data-name',
-        'Metric Z'
+        'Metric Z',
     );
 });
 
@@ -199,7 +199,7 @@ it('shows loading state when loading is true', () => {
             {...defaultProps}
             loading={true}
             loadingMessage="Loading test data..."
-        />
+        />,
     );
 
     expect(screen.getByText('Loading test data...')).toBeInTheDocument();
@@ -233,7 +233,7 @@ it('renders view type buttons when viewTypes are provided', () => {
             onViewTypeChange={() => {
                 /* empty */
             }}
-        />
+        />,
     );
 
     expect(screen.getByText('View 1')).toBeInTheDocument();
@@ -288,7 +288,7 @@ it('renders reset button when onReset is provided', () => {
             controls={controls}
             onReset={mockReset}
             resetLabel="Reset Test"
-        />
+        />,
     );
 
     expect(screen.getByText('Reset Test')).toBeInTheDocument();
@@ -343,7 +343,7 @@ it('uses default chartConfig values and fallback onViewTypeChange', () => {
 
 it('processes data using viewType dataProcessor', async () => {
     const mockProcessor = vi.fn((data: { x: number }[]) =>
-        data.map(d => ({ ...d, x: d.x * 2 }))
+        data.map(d => ({ ...d, x: d.x * 2 })),
     );
     const viewTypes = [
         {
@@ -361,12 +361,12 @@ it('processes data using viewType dataProcessor', async () => {
             {...defaultProps}
             viewTypes={viewTypes}
             currentViewType="view1"
-        />
+        />,
     );
 
     expect(mockProcessor).toHaveBeenCalled();
     const chart = await screen.findByTestId('line-chart');
-    const attr = chart.getAttribute('data-chart-data');
+    const attr = chart.dataset['chartData'];
     const processedData = JSON.parse(attr ?? '[]') as { x: number }[];
     expect(processedData[0]?.x).toBe(2); // 1 * 2
 });
@@ -388,7 +388,7 @@ it('renders correct chartTitle based on viewTypes and props', async () => {
             {...defaultProps}
             viewTypes={viewTypes}
             currentViewType="view1"
-        />
+        />,
     );
     expect(await screen.findByText('Custom View Title')).toBeInTheDocument();
 
@@ -420,7 +420,7 @@ it('uses default rightYAxisFormatter and onViewTypeChange', () => {
             {...defaultProps}
             chartConfig={dualAxisConfig}
             onViewTypeChange={undefined} // Trigger default
-        />
+        />,
     );
 
     // The mock Tooltip/YAxis will call the formatters if we updated them to do so

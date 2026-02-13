@@ -30,7 +30,7 @@ export interface UseWorkerOptions<TOutput> {
             setResult: (res: TOutput) => void;
             setError: (err: string | null) => void;
             setLoading: (l: boolean) => void;
-        }
+        },
     ) => void;
 }
 
@@ -99,7 +99,7 @@ export interface UseWorkerReturn<TInput, TOutput> {
  */
 export function useWorker<TInput, TOutput>(
     createWorker: () => Worker,
-    options: UseWorkerOptions<TOutput> = {}
+    options: UseWorkerOptions<TOutput> = {},
 ): UseWorkerReturn<TInput, TOutput> {
     const [result, setResult] = useState<TOutput | null>(null);
     const [loading, setLoading] = useState(false);
@@ -156,16 +156,16 @@ export function useWorker<TInput, TOutput>(
                 };
 
                 worker.postMessage(input);
-            } catch (err) {
+            } catch (error_) {
                 // eslint-disable-next-line no-console
-                console.error('Failed to start worker:', err);
+                console.error('Failed to start worker:', error_);
                 const errMsg = 'Failed to start calculation worker.';
                 setError(errMsg);
                 options.onError?.(errMsg);
                 setLoading(false);
             }
         },
-        [createWorker, options, terminate]
+        [createWorker, options, terminate],
     );
 
     useEffect(() => {

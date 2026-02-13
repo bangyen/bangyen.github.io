@@ -63,21 +63,7 @@ export const SolvabilityHeader: React.FC<SolvabilityHeaderProps> = ({
                     sx={{ input: { color: COLORS.text.primary } }}
                 />
             </Box>
-            {!loading ? (
-                <Button
-                    fullWidth
-                    variant="contained"
-                    onClick={onAnalyze}
-                    sx={{
-                        backgroundColor: COLORS.primary.main,
-                        border: '1px solid transparent',
-                        height: RESEARCH_STYLES.LAYOUT.BUTTON_HEIGHT,
-                        '&:hover': { backgroundColor: COLORS.primary.dark },
-                    }}
-                >
-                    Analyze Solvability
-                </Button>
-            ) : (
+            {loading ? (
                 <Button
                     fullWidth
                     variant="outlined"
@@ -94,6 +80,20 @@ export const SolvabilityHeader: React.FC<SolvabilityHeaderProps> = ({
                     }}
                 >
                     Cancel Analysis
+                </Button>
+            ) : (
+                <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={onAnalyze}
+                    sx={{
+                        backgroundColor: COLORS.primary.main,
+                        border: '1px solid transparent',
+                        height: RESEARCH_STYLES.LAYOUT.BUTTON_HEIGHT,
+                        '&:hover': { backgroundColor: COLORS.primary.dark },
+                    }}
+                >
+                    Analyze Solvability
                 </Button>
             )}
         </>

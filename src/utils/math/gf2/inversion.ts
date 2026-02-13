@@ -33,7 +33,7 @@ const inverseCache: Record<string, bigint[]> = {};
 export function getProduct(
     input: number[],
     rows: number,
-    cols: number
+    cols: number,
 ): number[] {
     const key = getPosKey(rows, cols);
 

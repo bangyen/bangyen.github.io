@@ -9,7 +9,7 @@ describe('ProjectMenu', () => {
         render(
             <BrowserRouter>
                 <MenuButton />
-            </BrowserRouter>
+            </BrowserRouter>,
         );
 
         const button = screen.getByRole('button');

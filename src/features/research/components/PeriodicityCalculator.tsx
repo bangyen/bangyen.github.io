@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 
 import { MathText } from './MathText';
 import { useWorker } from '../../../hooks';
-import { Pattern } from '../../games/lights-out/utils/matrices';
+import type { Pattern } from '../../games/lights-out/utils/matrices';
 import { RESEARCH_STYLES } from '../config/constants';
 
 import { HelpOutlineRounded, CloseRounded } from '@/components/icons';
@@ -27,9 +27,9 @@ export const PeriodicityCalculator: React.FC = () => {
         () =>
             new Worker(
                 new URL('../workers/periodicity.worker.ts', import.meta.url),
-                { type: 'module' }
+                { type: 'module' },
             ),
-        []
+        [],
     );
 
     const { result, loading, error, run, terminate, setError } = useWorker<
@@ -48,7 +48,7 @@ export const PeriodicityCalculator: React.FC = () => {
     >(createWorker);
 
     const handleCalculate = () => {
-        const n = parseInt(cols, 10);
+        const n = Number.parseInt(cols, 10);
         if (isNaN(n) || n <= 0) {
             setError('Please enter a valid positive integer.');
             return;
@@ -103,21 +103,7 @@ export const PeriodicityCalculator: React.FC = () => {
                     />
                 </Grid>
             </Grid>
-            {!loading ? (
-                <Button
-                    fullWidth
-                    variant="contained"
-                    onClick={handleCalculate}
-                    sx={{
-                        backgroundColor: COLORS.primary.main,
-                        border: '1px solid transparent',
-                        height: RESEARCH_STYLES.LAYOUT.BUTTON_HEIGHT,
-                        '&:hover': { backgroundColor: COLORS.primary.dark },
-                    }}
-                >
-                    Discover Patterns
-                </Button>
-            ) : (
+            {loading ? (
                 <Button
                     fullWidth
                     variant="outlined"
@@ -134,6 +120,20 @@ export const PeriodicityCalculator: React.FC = () => {
                     }}
                 >
                     Cancel Calculation
+                </Button>
+            ) : (
+                <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={handleCalculate}
+                    sx={{
+                        backgroundColor: COLORS.primary.main,
+                        border: '1px solid transparent',
+                        height: RESEARCH_STYLES.LAYOUT.BUTTON_HEIGHT,
+                        '&:hover': { backgroundColor: COLORS.primary.dark },
+                    }}
+                >
+                    Discover Patterns
                 </Button>
             )}
 

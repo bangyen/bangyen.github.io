@@ -42,7 +42,7 @@ describe('ErrorBoundary', () => {
         render(
             <ErrorBoundary>
                 <ThrowingComponent shouldThrow={false} />
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
         expect(screen.getByText('Healthy Component')).toBeInTheDocument();
         expect(screen.queryByTestId('error-fallback')).not.toBeInTheDocument();
@@ -52,7 +52,7 @@ describe('ErrorBoundary', () => {
         render(
             <ErrorBoundary>
                 <ThrowingComponent shouldThrow={true} />
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
         expect(screen.getByTestId('error-fallback')).toBeInTheDocument();
         expect(screen.queryByText('Healthy Component')).not.toBeInTheDocument();
@@ -62,12 +62,12 @@ describe('ErrorBoundary', () => {
         render(
             <ErrorBoundary>
                 <ThrowingComponent shouldThrow={true} />
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
         expect(console.error).toHaveBeenCalledWith(
             expect.stringContaining('Error caught by boundary:'),
             expect.any(Error),
-            expect.any(Object)
+            expect.any(Object),
         );
     });
 
@@ -115,7 +115,7 @@ describe('ErrorBoundary', () => {
         render(
             <ErrorBoundary>
                 <ThrowingComponent shouldThrow={true} />
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
 
         // We trigger the reload. Even if JSDOM doesn't implement it,
@@ -134,7 +134,7 @@ describe('ErrorBoundary', () => {
         render(
             <ErrorBoundary>
                 <ThrowingComponent shouldThrow={true} />
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
 
         expect(console.error).toHaveBeenCalled();
@@ -154,7 +154,7 @@ describe('ErrorBoundary', () => {
         render(
             <ErrorBoundary FallbackComponent={CustomFallback}>
                 <ThrowError />
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
 
         expect(screen.getByTestId('custom-fallback')).toBeInTheDocument();
@@ -170,7 +170,7 @@ describe('ErrorBoundary', () => {
         render(
             <ErrorBoundary fallback={SimpleFallback}>
                 <ThrowError />
-            </ErrorBoundary>
+            </ErrorBoundary>,
         );
 
         expect(screen.getByTestId('simple-fallback')).toBeInTheDocument();

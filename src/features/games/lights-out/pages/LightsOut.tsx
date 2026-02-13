@@ -10,7 +10,7 @@ import { useGameInteraction } from '../../hooks/useGameInteraction';
 import Info from '../components/Info';
 import { STORAGE_KEYS, LAYOUT_CONSTANTS, LIGHTS_OUT_STYLES } from '../config';
 import { useHandler, usePalette } from '../hooks/boardUtils';
-import { BoardState, BoardAction } from '../types';
+import type { BoardState, BoardAction } from '../types';
 import { handleBoard, isSolved, getInitialState } from '../utils/boardHandlers';
 import {
     getFrontProps,
@@ -98,7 +98,7 @@ export default function LightsOut() {
         () =>
             state.initialized &&
             state.grid.every((row: number) => row === (1 << cols) - 1),
-        [state.initialized, state.grid, cols]
+        [state.initialized, state.grid, cols],
     );
 
     const getters = useHandler(state, palette);

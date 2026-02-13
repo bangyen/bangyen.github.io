@@ -10,21 +10,24 @@ export function ThemeToggle() {
 
     const getToggleConfig = () => {
         switch (mode) {
-            case 'light':
+            case 'light': {
                 return {
                     title: 'Switch to dark mode',
                     Icon: DarkModeRounded,
                 };
-            case 'dark':
+            }
+            case 'dark': {
                 return {
                     title: 'Switch to system theme',
                     Icon: DevicesRounded,
                 };
-            case 'system':
+            }
+            case 'system': {
                 return {
                     title: 'Switch to light mode',
                     Icon: LightModeRounded,
                 };
+            }
         }
     };
 

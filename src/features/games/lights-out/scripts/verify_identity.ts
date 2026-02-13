@@ -20,17 +20,17 @@ function check(rows: number, cols: number): boolean {
 }
 
 const args = process.argv.slice(2);
-const MAX_SEARCH = parseInt(args[0] ?? '30', 10);
+const MAX_SEARCH = Number.parseInt(args[0] ?? '30', 10);
 
 if (isNaN(MAX_SEARCH) || MAX_SEARCH <= 0) {
     console.error(
-        'Invalid argument. Please provide a positive integer for the max grid size.'
+        'Invalid argument. Please provide a positive integer for the max grid size.',
     );
     process.exit(1);
 }
 
 console.log(
-    `Searching for Identity Matrix cases (Rows x Cols) up to ${MAX_SEARCH}x${MAX_SEARCH}...`
+    `Searching for Identity Matrix cases (Rows x Cols) up to ${MAX_SEARCH}x${MAX_SEARCH}...`,
 );
 console.log('----------------------------------------------------------------');
 

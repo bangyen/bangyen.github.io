@@ -8,12 +8,12 @@ describe('TechStack Logic', () => {
     });
 
     it('all skills have name and icon properties', () => {
-        constants.SKILLS.forEach(skill => {
+        for (const skill of constants.SKILLS) {
             expect(skill).toHaveProperty('name');
             expect(skill).toHaveProperty('icon');
             expect(typeof skill.name).toBe('string');
             expect(typeof skill.icon).toBe('string');
-        });
+        }
     });
 
     it('contains expected skills in SKILLS config', () => {
@@ -35,15 +35,15 @@ describe('TechStack Logic', () => {
             Work: true,
         };
 
-        constants.SKILLS.forEach(skill => {
+        for (const skill of constants.SKILLS) {
             // Either icon is in map or falls back to Work
             const isValidIcon = skill.icon in ICON_MAP;
-            const fallbackIcon = !isValidIcon ? 'Work' : skill.icon;
+            const fallbackIcon = isValidIcon ? skill.icon : 'Work';
 
             expect([skill.icon, fallbackIcon]).toContain(
-                skill.icon in ICON_MAP ? skill.icon : 'Work'
+                skill.icon in ICON_MAP ? skill.icon : 'Work',
             );
-        });
+        }
     });
 
     it('handles fallback icon mapping for unknown icons', () => {
@@ -74,9 +74,9 @@ describe('TechStack Logic', () => {
         });
 
         expect(validIcons.length).toBe(constants.SKILLS.length);
-        validIcons.forEach(icon => {
+        for (const icon of validIcons) {
             expect(ICON_MAP[icon]).toBe(true);
-        });
+        }
     });
 
     it('renders with grid layout structure (3 columns)', () => {

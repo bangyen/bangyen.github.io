@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Example from './Example';
-import { Palette, PropsFactory } from '../../components/Board';
+import type { Palette, PropsFactory } from '../../components/Board';
 
 import { Box } from '@/components/mui';
 

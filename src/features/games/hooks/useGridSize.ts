@@ -8,7 +8,7 @@ import { useWindow, useMobile } from '../../../hooks';
 function convertPixels(
     cellSizeRem: number,
     availableHeightPx: number,
-    availableWidthPx: number
+    availableWidthPx: number,
 ): { rows: number; cols: number } {
     const remToPx = 16; // 1rem = 16px by default
     const cellSizePx = cellSizeRem * remToPx;
@@ -94,7 +94,7 @@ export function useGridSize({
     const [desiredSize, setDesiredSize] = useState<number | null>(() => {
         const saved = localStorage.getItem(storageKey);
         if (saved === 'null') return null;
-        return saved ? parseInt(saved, 10) : defaultSize;
+        return saved ? Number.parseInt(saved, 10) : defaultSize;
     });
 
     const dynamicSize = useMemo(() => {
@@ -116,7 +116,7 @@ export function useGridSize({
         const converted = convertPixels(
             referenceSize,
             height - currentHeaderOffset - pY,
-            Math.min(width, widthLimit) - pX
+            Math.min(width, widthLimit) - pX,
         );
 
         let r = converted.rows - 1;

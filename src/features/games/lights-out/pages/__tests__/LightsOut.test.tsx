@@ -5,7 +5,10 @@ import { vi, type Mock } from 'vitest';
 import LightsOut from '../LightsOut';
 
 import { PAGE_TITLES } from '@/config/constants';
-import { BoardState, BoardAction } from '@/features/games/lights-out/types';
+import type {
+    BoardState,
+    BoardAction,
+} from '@/features/games/lights-out/types';
 import * as boardHandlers from '@/features/games/lights-out/utils/boardHandlers';
 import * as hooks from '@/hooks';
 
@@ -35,7 +38,12 @@ vi.mock('@/hooks', () => ({
 
 // Mock boardHandlers to control game logic
 vi.mock('@/features/games/lights-out/utils/boardHandlers', () => ({
-    getGrid: vi.fn(() => Array(4).fill(Array(4).fill(0)) as number[][]),
+    getGrid: vi.fn(
+        () =>
+            Array.from({ length: 4 }).fill(
+                Array.from({ length: 4 }).fill(0),
+            ) as number[][],
+    ),
     getInitialState: vi.fn((rows: number, cols: number) => ({
         grid: Array.from({ length: rows }, () => 0),
         score: 0,
@@ -49,7 +57,9 @@ vi.mock('@/features/games/lights-out/utils/boardHandlers', () => ({
                 ...state,
                 rows: action.newRows,
                 cols: action.newCols,
-                grid: Array(action.newRows).fill(Array(action.newCols).fill(0)),
+                grid: new Array(action.newRows).fill(
+                    new Array(action.newCols).fill(0),
+                ),
             };
         if (action.type === 'adjacent') return { ...state };
         return state;
@@ -75,7 +85,7 @@ vi.mock('@/features/games/components/Board', () => ({
     }: {
         frontProps: (
             r: number,
-            c: number
+            c: number,
         ) => { onMouseDown: (e: React.MouseEvent) => void };
     }) {
         return (
@@ -167,7 +177,7 @@ describe('LightsOut', () => {
                         cols: action.newCols,
                     };
                 return state;
-            }
+            },
         );
     });
 
@@ -199,7 +209,7 @@ describe('LightsOut', () => {
         // Should dispatch resize
         expect(mockHandleBoard).toHaveBeenCalledWith(
             expect.anything(),
-            expect.objectContaining({ type: 'resize' })
+            expect.objectContaining({ type: 'resize' }),
         );
     });
 
@@ -211,7 +221,7 @@ describe('LightsOut', () => {
 
         expect(mockHandleBoard).toHaveBeenCalledWith(
             expect.anything(),
-            expect.objectContaining({ type: 'new' })
+            expect.objectContaining({ type: 'new' }),
         );
     });
 
@@ -235,7 +245,7 @@ describe('LightsOut', () => {
         fireEvent.mouseDown(cell);
         expect(mockHandleBoard).toHaveBeenCalledWith(
             expect.anything(),
-            expect.objectContaining({ type: 'adjacent', row: 0, col: 0 })
+            expect.objectContaining({ type: 'adjacent', row: 0, col: 0 }),
         );
     });
 
@@ -248,7 +258,7 @@ describe('LightsOut', () => {
         // Coverage achieved by executing mobile-specific branches in useMemo
         expect(mockHandleBoard).toHaveBeenCalledWith(
             expect.anything(),
-            expect.objectContaining({ type: 'resize' })
+            expect.objectContaining({ type: 'resize' }),
         );
     });
 });

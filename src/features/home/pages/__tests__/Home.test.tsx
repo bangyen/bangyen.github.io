@@ -73,7 +73,7 @@ describe('Home Component', () => {
         render(
             <TestWrapper>
                 <Home />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         // Check main heading
@@ -82,7 +82,7 @@ describe('Home Component', () => {
 
         // Check subtitle
         expect(
-            screen.getByText('Backend Developer & AI/ML Engineer')
+            screen.getByText('Backend Developer & AI/ML Engineer'),
         ).toBeInTheDocument();
 
         // Check location
@@ -93,11 +93,11 @@ describe('Home Component', () => {
         render(
             <TestWrapper>
                 <Home />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         expect(document.title).toBe(
-            'Bangyen Pham - Backend Developer & AI/ML Engineer'
+            'Bangyen Pham - Backend Developer & AI/ML Engineer',
         );
     });
 
@@ -105,7 +105,7 @@ describe('Home Component', () => {
         render(
             <TestWrapper>
                 <Home />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         // Check menu button
@@ -119,7 +119,7 @@ describe('Home Component', () => {
         render(
             <TestWrapper>
                 <Home />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         // Check skill chips are rendered
@@ -127,7 +127,7 @@ describe('Home Component', () => {
             () => {
                 expect(screen.getByText('Python')).toBeInTheDocument();
             },
-            { timeout: 5000 }
+            { timeout: 5000 },
         );
 
         expect(screen.getAllByText('PyTorch')).toHaveLength(2);
@@ -137,7 +137,7 @@ describe('Home Component', () => {
         render(
             <TestWrapper>
                 <Home />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         const menuButton = screen
@@ -159,7 +159,7 @@ describe('Home Component', () => {
         render(
             <TestWrapper>
                 <Home />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         const menuButton = screen
@@ -186,7 +186,7 @@ describe('Home Component', () => {
         render(
             <TestWrapper>
                 <Home />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         // Check that location icon is present (email/phone icons may not be in the current implementation)
@@ -197,7 +197,7 @@ describe('Home Component', () => {
         render(
             <TestWrapper>
                 <Home />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         // Get the navigation GitHub link specifically
@@ -206,7 +206,7 @@ describe('Home Component', () => {
         });
         expect(navigationGithubLink).toHaveAttribute(
             'href',
-            'https://github.com/bangyen'
+            'https://github.com/bangyen',
         );
     });
 
@@ -214,7 +214,7 @@ describe('Home Component', () => {
         render(
             <TestWrapper>
                 <Home />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         const menuButton = screen
@@ -227,7 +227,7 @@ describe('Home Component', () => {
         render(
             <TestWrapper>
                 <Home />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         // Check that the main container has proper styling

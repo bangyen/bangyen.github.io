@@ -14,7 +14,7 @@ interface WorkerMessage {
     n: number;
 }
 
-self.onmessage = (e: MessageEvent<WorkerMessage>) => {
+globalThis.onmessage = (e: MessageEvent<WorkerMessage>) => {
     const { n } = e.data;
 
     try {
@@ -37,7 +37,7 @@ self.onmessage = (e: MessageEvent<WorkerMessage>) => {
                     f =>
                         `(${polyToString(f.factor)})${
                             f.exponent > 1 ? toSuperscript(f.exponent) : ''
-                        }`
+                        }`,
                 )
                 .join(' · '),
             proof: {
@@ -49,12 +49,12 @@ self.onmessage = (e: MessageEvent<WorkerMessage>) => {
         };
 
         self.postMessage({ success: true, result });
-    } catch (err) {
+    } catch (error) {
         self.postMessage({
             success: false,
             error:
-                err instanceof Error
-                    ? err.message
+                error instanceof Error
+                    ? error.message
                     : 'Unknown error occurred in worker',
         });
     }

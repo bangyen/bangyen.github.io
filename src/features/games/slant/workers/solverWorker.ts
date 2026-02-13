@@ -1,5 +1,6 @@
 import { getPosKey } from '../../../../utils/gameUtils';
-import { CellState, EMPTY, BACKWARD, FORWARD } from '../types';
+import type { CellState } from '../types';
+import { EMPTY, BACKWARD, FORWARD } from '../types';
 import { findCycles } from '../utils/cycleDetection';
 
 export type CellSource = 'user' | 'propagated';
@@ -34,7 +35,7 @@ export type SolverMessage =
           };
       };
 
-self.onmessage = (e: MessageEvent<SolverMessage>) => {
+globalThis.onmessage = (e: MessageEvent<SolverMessage>) => {
     if (e.data.type === 'SOLVE') {
         const { rows, cols, numbers, userMoves } = e.data.payload;
 
@@ -62,7 +63,7 @@ self.onmessage = (e: MessageEvent<SolverMessage>) => {
             r: number,
             c: number,
             state: CellState,
-            source: CellSource
+            source: CellSource,
         ) => {
             const pos = getPosKey(r, c);
             const existing = newGrid.get(pos);
@@ -154,14 +155,14 @@ self.onmessage = (e: MessageEvent<SolverMessage>) => {
         // Cycle Detection
         const tempGrid: CellState[][] = Array.from(
             { length: rows },
-            () => Array(cols).fill(EMPTY) as CellState[]
+            () => new Array(cols).fill(EMPTY) as CellState[],
         );
-        newGrid.forEach((info, key) => {
+        for (const [key, info] of newGrid.entries()) {
             const [r, c] = key.split(',').map(Number);
             if (r !== undefined && c !== undefined && tempGrid[r]) {
                 tempGrid[r][c] = info.state;
             }
-        });
+        }
 
         const cycles = findCycles(tempGrid, rows, cols);
 

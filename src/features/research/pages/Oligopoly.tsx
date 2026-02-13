@@ -50,7 +50,7 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
         const response = await fetch('/oligopoly_data.json.gz');
         if (!response.ok) {
             throw new Error(
-                `HTTP error! status: ${response.status.toString()} - Failed to load Oligopoly data`
+                `HTTP error! status: ${response.status.toString()} - Failed to load Oligopoly data`,
             );
         }
 
@@ -60,17 +60,14 @@ const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
         // Check for GZIP magic number (0x1f 0x8b)
         const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
 
-        let text: string;
-        if (isGzipped) {
-            text = pako.ungzip(view, { to: 'string' }) as unknown as string;
-        } else {
-            text = new TextDecoder().decode(data);
-        }
+        const text: string = isGzipped
+            ? (pako.ungzip(view, { to: 'string' }) as unknown as string)
+            : new TextDecoder().decode(data);
 
         const matrixData = JSON.parse(text) as MatrixItem[];
 
         if (!Array.isArray(matrixData)) {
-            throw new Error('Invalid data format: expected array');
+            throw new TypeError('Invalid data format: expected array');
         }
 
         return matrixData;
@@ -86,7 +83,7 @@ const filterMatrixData = (
     modelType: string,
     demandElasticity: number,
     basePrice: number,
-    collusionEnabled: boolean
+    collusionEnabled: boolean,
 ): MarketDataPoint[] => {
     if (matrixData.length === 0) {
         return generateFallbackOligopolyData();
@@ -98,12 +95,13 @@ const filterMatrixData = (
             item.model_type === modelType &&
             item.demand_elasticity === demandElasticity &&
             item.base_price === basePrice &&
-            item.collusion_enabled === collusionEnabled
+            item.collusion_enabled === collusionEnabled,
     );
 
     if (filtered.length === 0) {
         const closest = matrixData.filter(
-            item => item.num_firms === numFirms && item.model_type === modelType
+            item =>
+                item.num_firms === numFirms && item.model_type === modelType,
         );
         const sorted = closest.sort((a, b) => a.round - b.round);
         return sorted.slice(0, RESEARCH_CONSTANTS.oligopoly.maxRounds);
@@ -133,13 +131,13 @@ const generateFallbackOligopolyData = (): MarketDataPoint[] => {
 
 const Oligopoly: React.FC = () => {
     const [numFirms, setNumFirms] = useState(
-        RESEARCH_CONSTANTS.oligopoly.defaultFirms
+        RESEARCH_CONSTANTS.oligopoly.defaultFirms,
     );
     const [demandElasticity, setDemandElasticity] = useState(
-        RESEARCH_CONSTANTS.oligopoly.defaultElasticity
+        RESEARCH_CONSTANTS.oligopoly.defaultElasticity,
     );
     const [basePrice, setBasePrice] = useState(
-        RESEARCH_CONSTANTS.oligopoly.defaultBasePrice
+        RESEARCH_CONSTANTS.oligopoly.defaultBasePrice,
     );
     const [marketData, setMarketData] = useState<MarketDataPoint[]>([]);
     const [matrixData, setMatrixData] = useState<MatrixItem[]>([]);
@@ -162,10 +160,10 @@ const Oligopoly: React.FC = () => {
                     modelType,
                     demandElasticity,
                     basePrice,
-                    collusionEnabled
+                    collusionEnabled,
                 );
                 setMarketData(initialData);
-            } catch (_error) {
+            } catch {
                 // Error loading data, use fallback
                 setMarketData(generateFallbackOligopolyData());
             } finally {
@@ -184,7 +182,7 @@ const Oligopoly: React.FC = () => {
                 modelType,
                 demandElasticity,
                 basePrice,
-                collusionEnabled
+                collusionEnabled,
             );
             setMarketData(filteredData);
         }

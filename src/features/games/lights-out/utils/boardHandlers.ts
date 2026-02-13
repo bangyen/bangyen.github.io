@@ -1,6 +1,6 @@
 import { getProduct } from './matrices';
 import { PRECOMPUTED_SOLUTIONS } from './precomputedTables';
-import { BoardState, BoardAction } from '../types';
+import type { BoardState, BoardAction } from '../types';
 
 import { createGameReducer, getPosKey } from '@/utils/gameUtils';
 import { createGridSize } from '@/utils/types';
@@ -14,7 +14,7 @@ export function flipAdj(
     col: number,
     grid: number[],
     rows: number,
-    cols: number
+    cols: number,
 ): number[] {
     const newGrid = [...grid];
 
@@ -46,7 +46,7 @@ function flipAdjInPlace(
     col: number,
     grid: number[],
     rows: number,
-    cols: number
+    cols: number,
 ): void {
     let mask = 1 << col;
     if (col > 0) mask |= 1 << (col - 1);
@@ -86,7 +86,7 @@ function randomize(rows: number, cols: number): number[] {
 function solveLastRow(
     rows: number,
     cols: number,
-    lastRow: number
+    lastRow: number,
 ): number[] | null {
     // Check precomputed
     const key = getPosKey(rows, cols);
@@ -120,9 +120,9 @@ function solveLastRow(
         }
 
         const result = getProduct(input, rows, cols);
-        result.forEach((val, idx) => {
+        for (const [idx, val] of result.entries()) {
             if (val) solutionMask |= 1 << idx;
-        });
+        }
     }
 
     const indices: number[] = [];
@@ -138,7 +138,7 @@ function solveLastRow(
 export function getNextMove(
     grid: number[],
     rows: number,
-    cols: number
+    cols: number,
 ): { row: number; col: number }[] | null {
     const tempGrid = [...grid];
     const moves: { row: number; col: number }[] = [];
@@ -193,15 +193,15 @@ export const handleBoard = createGameReducer<BoardState, BoardAction>({
                         action.col,
                         state.grid,
                         rows,
-                        cols
+                        cols,
                     ),
                 };
             }
             case 'multi_adjacent': {
                 const newGrid = [...state.grid];
-                action.moves.forEach(({ row: r, col: c }) => {
+                for (const { row: r, col: c } of action.moves) {
                     flipAdjInPlace(r, c, newGrid, rows, cols);
-                });
+                }
                 return { ...state, grid: newGrid };
             }
             case 'random':

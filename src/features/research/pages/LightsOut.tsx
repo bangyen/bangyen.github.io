@@ -20,7 +20,7 @@ import {
 } from '@/components/mui';
 import { GlassCard } from '@/components/ui/GlassCard';
 const Latex = React.lazy(() =>
-    import('@/components/ui/Latex').then(module => ({ default: module.Latex }))
+    import('@/components/ui/Latex').then(module => ({ default: module.Latex })),
 );
 import { URLS, ROUTES } from '@/config/constants';
 import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';

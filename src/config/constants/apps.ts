@@ -1,5 +1,5 @@
 import { PERSONAL_INFO } from './identity';
-import { PageTitles, Routes } from './types';
+import type { PageTitles, Routes } from './types';
 
 export const PAGE_TITLES: PageTitles = {
     home: `${PERSONAL_INFO.name} - ${PERSONAL_INFO.title}`,

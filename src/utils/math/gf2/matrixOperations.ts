@@ -130,7 +130,7 @@ export function getKernelBasis(matrix: bigint[], size: number): bigint[] {
 export function getMinWeightSolution(
     matrix: bigint[],
     target: bigint,
-    size: number
+    size: number,
 ): bigint {
     const rows = [...matrix];
     const basis: bigint[] = getIdentity(size);
@@ -212,12 +212,9 @@ export function getMinWeightSolution(
 
     for (let i = 1; i < 1 << kernel.length; i++) {
         let candidate = particular;
-        for (let j = 0; j < kernel.length; j++) {
-            if ((i >> j) & 1) {
-                const kernelJ = kernel[j];
-                if (kernelJ !== undefined) {
-                    candidate ^= kernelJ;
-                }
+        for (const [j, kernelJ] of kernel.entries()) {
+            if ((i >> j) & 1 && kernelJ !== undefined) {
+                candidate ^= kernelJ;
             }
         }
         const weight = countBits(candidate);
@@ -286,7 +283,7 @@ export function getImageBasis(matrix: bigint[], size: number): bigint[] {
  */
 export function getImageMapping(
     matrix: bigint[],
-    size: number
+    size: number,
 ): { state: bigint; toggle: bigint }[] {
     const rows = [...matrix];
     const mapping: bigint[] = getIdentity(size);

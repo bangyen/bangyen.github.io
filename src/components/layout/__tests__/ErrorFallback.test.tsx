@@ -27,7 +27,7 @@ describe('ErrorFallback', () => {
         renderWithRouter(<ErrorFallback {...mockProps} />);
         expect(screen.getByText('Something went wrong')).toBeInTheDocument();
         expect(
-            screen.getByText(/An unexpected error occurred/)
+            screen.getByText(/An unexpected error occurred/),
         ).toBeInTheDocument();
     });
 
@@ -71,7 +71,7 @@ describe('ErrorFallback', () => {
             process.env['NODE_ENV'] = 'production';
             renderWithRouter(<ErrorFallback {...mockProps} />);
             expect(
-                screen.queryByText(/Test error message/)
+                screen.queryByText(/Test error message/),
             ).not.toBeInTheDocument();
         });
     });

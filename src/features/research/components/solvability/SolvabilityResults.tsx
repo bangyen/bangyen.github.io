@@ -35,7 +35,7 @@ export const SolvabilityResults: React.FC<SolvabilityResultsProps> = ({
                         result.nullity === 0
                             ? COLORS.data.green
                             : COLORS.primary.main,
-                        0.2
+                        0.2,
                     )}`,
                     borderLeft: `4px solid ${
                         result.nullity === 0

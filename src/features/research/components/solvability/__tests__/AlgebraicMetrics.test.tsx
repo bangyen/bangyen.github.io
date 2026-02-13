@@ -17,7 +17,7 @@ describe('AlgebraicMetrics', () => {
         render(
             <TestWrapper>
                 <AlgebraicMetrics nullity={2} solvablePercent="25" />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         expect(screen.getByText('Subspace Analysis')).toBeInTheDocument();
@@ -28,7 +28,7 @@ describe('AlgebraicMetrics', () => {
         const { getByText } = render(
             <TestWrapper>
                 <AlgebraicMetrics nullity={0} solvablePercent="100" />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         const percentText = getByText('100% Solvable');
@@ -39,7 +39,7 @@ describe('AlgebraicMetrics', () => {
         const { getByText } = render(
             <TestWrapper>
                 <AlgebraicMetrics nullity={1} solvablePercent="50" />
-            </TestWrapper>
+            </TestWrapper>,
         );
         const percentText = getByText('50% Solvable');
         expect(percentText).toBeInTheDocument();

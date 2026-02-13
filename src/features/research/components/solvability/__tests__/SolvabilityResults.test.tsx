@@ -25,7 +25,7 @@ describe('SolvabilityResults', () => {
         render(
             <TestWrapper>
                 <SolvabilityResults result={result} />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         expect(screen.getByText('25% Solvable')).toBeInTheDocument();
@@ -45,16 +45,16 @@ describe('SolvabilityResults', () => {
         render(
             <TestWrapper>
                 <SolvabilityResults result={fullSolvableResult} />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         expect(
-            screen.getByText('fully solvable (Nullity = 0)')
+            screen.getByText('fully solvable (Nullity = 0)'),
         ).toBeInTheDocument();
         expect(screen.getByText('100% Solvable')).toBeInTheDocument();
         // Should not render quiet patterns section since list is empty
         expect(
-            screen.queryByText('Quiet Patterns (Kernel)')
+            screen.queryByText('Quiet Patterns (Kernel)'),
         ).not.toBeInTheDocument();
     });
 });

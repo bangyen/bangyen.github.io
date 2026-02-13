@@ -18,7 +18,7 @@ describe('Lights Out Matrix Utilities', () => {
         expect(countBits(1n)).toBe(1);
         expect(countBits(3n)).toBe(2); // 11
         expect(countBits(7n)).toBe(3); // 111
-        expect(countBits(0b10101n)).toBe(3);
+        expect(countBits(0b1_0101n)).toBe(3);
     });
 
     test('getIdentity returns identity matrix', () => {

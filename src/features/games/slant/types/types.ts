@@ -1,4 +1,4 @@
-import { GridSize, CellIndex } from '../../../../utils/types';
+import type { GridSize, CellIndex } from '../../../../utils/types';
 
 /**
  * Cell state in Slant puzzle.

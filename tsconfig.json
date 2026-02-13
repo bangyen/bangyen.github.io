@@ -47,7 +47,11 @@
         ]
     },
     "include": [
-        "src/**/*"
+        "src/**/*",
+        "scripts/**/*.ts",
+        "vite.config.ts",
+        "vitest.config.ts",
+        "eslint.config.mjs"
     ],
     "exclude": [
         "node_modules",

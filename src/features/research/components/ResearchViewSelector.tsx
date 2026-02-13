@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { RESEARCH_STYLES } from '../config/constants';
-import { ViewType } from '../types';
+import type { ViewType } from '../types';
 
 import { Button, Box } from '@/components/mui';
 import {

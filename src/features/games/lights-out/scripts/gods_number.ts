@@ -1,15 +1,15 @@
 import { getImageBasis } from '../utils';
 
 const COLORS = {
-    reset: '\x1b[0m',
-    bold: '\x1b[1m',
-    dim: '\x1b[2m',
-    green: '\x1b[32m',
-    yellow: '\x1b[33m',
-    blue: '\x1b[34m',
-    magenta: '\x1b[35m',
-    cyan: '\x1b[36m',
-    red: '\x1b[31m',
+    reset: '\u001B[0m',
+    bold: '\u001B[1m',
+    dim: '\u001B[2m',
+    green: '\u001B[32m',
+    yellow: '\u001B[33m',
+    blue: '\u001B[34m',
+    magenta: '\u001B[35m',
+    cyan: '\u001B[36m',
+    red: '\u001B[31m',
 };
 
 function getToggleVector(r: number, c: number, n: number): bigint {
@@ -62,8 +62,7 @@ function getPivots(basis: bigint[], size: number): number[] {
 
 function toIndex(state: bigint, pivots: number[]): number {
     let index = 0;
-    for (let i = 0; i < pivots.length; i++) {
-        const p = pivots[i];
+    for (const [i, p] of pivots.entries()) {
         if (p !== undefined && (state >> BigInt(p)) & 1n) {
             index |= 1 << i;
         }
@@ -89,13 +88,13 @@ function analyzeGodsNumber(n: number) {
     const rightPadDirection = Math.ceil(padding);
 
     console.log(
-        `\n${COLORS.bold}${COLORS.cyan}╔${'═'.repeat(boxWidth)}╗${COLORS.reset}`
+        `\n${COLORS.bold}${COLORS.cyan}╔${'═'.repeat(boxWidth)}╗${COLORS.reset}`,
     );
     console.log(
-        `${COLORS.bold}${COLORS.cyan}║${' '.repeat(leftPadDirection)}${title}${' '.repeat(rightPadDirection)}║${COLORS.reset}`
+        `${COLORS.bold}${COLORS.cyan}║${' '.repeat(leftPadDirection)}${title}${' '.repeat(rightPadDirection)}║${COLORS.reset}`,
     );
     console.log(
-        `${COLORS.bold}${COLORS.cyan}╚${'═'.repeat(boxWidth)}╝${COLORS.reset}`
+        `${COLORS.bold}${COLORS.cyan}╚${'═'.repeat(boxWidth)}╝${COLORS.reset}`,
     );
 
     const toggleVectors = getToggleVectors(n);
@@ -105,28 +104,28 @@ function analyzeGodsNumber(n: number) {
 
     console.log(`  ${COLORS.dim}Total States:${COLORS.reset} 2^${n * n}`);
     console.log(
-        `  ${COLORS.dim}Reachable States (Image):${COLORS.reset} 2^${r}`
+        `  ${COLORS.dim}Reachable States (Image):${COLORS.reset} 2^${r}`,
     );
     console.log(
-        `  ${COLORS.dim}Kernel Dimension (Nullity):${COLORS.reset} ${nullity}`
+        `  ${COLORS.dim}Kernel Dimension (Nullity):${COLORS.reset} ${nullity}`,
     );
 
     if (r === n * n) {
         console.log(
-            `\n  ${COLORS.bold}${COLORS.green}● FULLY INVERTIBLE GRID${COLORS.reset}`
+            `\n  ${COLORS.bold}${COLORS.green}● FULLY INVERTIBLE GRID${COLORS.reset}`,
         );
         console.log(
-            `    The toggle matrix is surjective. Every state is solvable.`
+            `    The toggle matrix is surjective. Every state is solvable.`,
         );
         console.log(
-            `    God's Number is exactly the maximum moves: ${COLORS.bold}${n * n}${COLORS.reset}`
+            `    God's Number is exactly the maximum moves: ${COLORS.bold}${n * n}${COLORS.reset}`,
         );
         console.log(
-            `    (Achieved by the state require all cells to be toggled)`
+            `    (Achieved by the state require all cells to be toggled)`,
         );
     } else if (r <= 24) {
         console.log(
-            `\n  ${COLORS.bold}${COLORS.blue}● EXHAUSTIVE BFS SEARCH${COLORS.reset}`
+            `\n  ${COLORS.bold}${COLORS.blue}● EXHAUSTIVE BFS SEARCH${COLORS.reset}`,
         );
         console.log(`    Exploring ${1 << r} states layer by layer...`);
 
@@ -135,8 +134,7 @@ function analyzeGodsNumber(n: number) {
 
         console.log(`    Pre-calculating toggle transitions...`);
         const toggleIndices = new Uint32Array(toggleVectors.length);
-        for (let i = 0; i < toggleVectors.length; i++) {
-            const v = toggleVectors[i];
+        for (const [i, v] of toggleVectors.entries()) {
             if (v !== undefined) {
                 toggleIndices[i] = toIndex(v, pivots);
             }
@@ -146,7 +144,7 @@ function analyzeGodsNumber(n: number) {
 
         const getVisited = (idx: number) => {
             const byte = visited[idx >> 3];
-            return byte !== undefined ? (byte >> (idx & 7)) & 1 : 0;
+            return byte === undefined ? 0 : (byte >> (idx & 7)) & 1;
         };
         const setVisited = (idx: number) => {
             const current = visited[idx >> 3];
@@ -168,7 +166,7 @@ function analyzeGodsNumber(n: number) {
         while (currentSize > 0) {
             let nextSize = 0;
             process.stdout.write(
-                `    Layer ${distance.toString().padStart(2)}: `
+                `    Layer ${distance.toString().padStart(2)}: `,
             );
 
             for (let i = 0; i < currentSize; i++) {
@@ -186,20 +184,20 @@ function analyzeGodsNumber(n: number) {
                     }
                 }
 
-                if (currentSize > 10000 && i % 1000 === 0) {
+                if (currentSize > 10_000 && i % 1000 === 0) {
                     drawProgressBar(i + 1, currentSize);
                 }
             }
 
-            if (currentSize > 10000) drawProgressBar(currentSize, currentSize);
+            if (currentSize > 10_000) drawProgressBar(currentSize, currentSize);
             else process.stdout.write(`${nextSize} states\n`);
 
             if (nextSize === 0) break;
 
             distance++;
-            if (currentSize > 10000) {
+            if (currentSize > 10_000) {
                 console.log(
-                    `    Layer ${distance.toString().padStart(2)} confirmed: ${nextSize.toString().padStart(8)} states`
+                    `    Layer ${distance.toString().padStart(2)} confirmed: ${nextSize.toString().padStart(8)} states`,
                 );
             }
 
@@ -212,29 +210,29 @@ function analyzeGodsNumber(n: number) {
 
         console.log(`\n  ${COLORS.bold}${COLORS.green}● RESULT${COLORS.reset}`);
         console.log(
-            `    God's Number for ${n}x${n}: ${COLORS.bold}${distance}${COLORS.reset}`
+            `    God's Number for ${n}x${n}: ${COLORS.bold}${distance}${COLORS.reset}`,
         );
         console.log(`    Total reachable states verified: ${totalVisited}`);
     } else {
         console.log(
-            `\n  ${COLORS.bold}${COLORS.yellow}● STATE SPACE TOO LARGE${COLORS.reset}`
+            `\n  ${COLORS.bold}${COLORS.yellow}● STATE SPACE TOO LARGE${COLORS.reset}`,
         );
         console.log(
-            `    State space 2^${r} exceeds reasonable computation limits for this script.`
+            `    State space 2^${r} exceeds reasonable computation limits for this script.`,
         );
         console.log(
-            `    However, we know God's Number is bounded by ${n * n}.`
+            `    However, we know God's Number is bounded by ${n * n}.`,
         );
     }
 
     console.log(
-        `\n${COLORS.bold}${COLORS.cyan}══════════════════════════════════════════════════════════════${COLORS.reset}\n`
+        `\n${COLORS.bold}${COLORS.cyan}══════════════════════════════════════════════════════════════${COLORS.reset}\n`,
     );
 }
 
 function main() {
     const nArg = process.argv[2] ?? '5';
-    const n = parseInt(nArg, 10);
+    const n = Number.parseInt(nArg, 10);
     if (!isNaN(n)) {
         analyzeGodsNumber(n);
     }

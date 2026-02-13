@@ -46,7 +46,7 @@ describe('useWorker', () => {
     it('should handle successful worker response', () => {
         const onSuccess = vi.fn();
         const { result } = renderHook(() =>
-            useWorker(mockCreateWorker, { onSuccess })
+            useWorker(mockCreateWorker, { onSuccess }),
         );
         const input = { data: 'test' };
 
@@ -72,7 +72,7 @@ describe('useWorker', () => {
     it('should handle error worker response', () => {
         const onError = vi.fn();
         const { result } = renderHook(() =>
-            useWorker(mockCreateWorker, { onError })
+            useWorker(mockCreateWorker, { onError }),
         );
         const input = { data: 'test' };
 
@@ -98,7 +98,7 @@ describe('useWorker', () => {
     it('should handle native worker error', () => {
         const onError = vi.fn();
         const { result } = renderHook(() =>
-            useWorker(mockCreateWorker, { onError })
+            useWorker(mockCreateWorker, { onError }),
         );
 
         // Suppress console.error for this test
@@ -118,7 +118,7 @@ describe('useWorker', () => {
 
         expect(result.current.loading).toBe(false);
         expect(result.current.error).toBe(
-            'An error occurred in the background worker.'
+            'An error occurred in the background worker.',
         );
         expect(onError).toHaveBeenCalled();
 
@@ -141,7 +141,7 @@ describe('useWorker', () => {
 
         expect(result.current.loading).toBe(false);
         expect(result.current.error).toBe(
-            'Failed to start calculation worker.'
+            'Failed to start calculation worker.',
         );
 
         consoleSpy.mockRestore();
@@ -149,7 +149,7 @@ describe('useWorker', () => {
 
     it('should terminate worker on unmount', () => {
         const { result, unmount } = renderHook(() =>
-            useWorker(mockCreateWorker)
+            useWorker(mockCreateWorker),
         );
 
         act(() => {
@@ -167,7 +167,7 @@ describe('useWorker', () => {
             setLoading(false);
         });
         const { result } = renderHook(() =>
-            useWorker(mockCreateWorker, { onMessage })
+            useWorker(mockCreateWorker, { onMessage }),
         );
 
         act(() => {

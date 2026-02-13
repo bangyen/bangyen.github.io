@@ -14,9 +14,9 @@ export const SolvabilityAnalyzer: React.FC = () => {
         () =>
             new Worker(
                 new URL('../workers/solvability.worker.ts', import.meta.url),
-                { type: 'module' }
+                { type: 'module' },
             ),
-        []
+        [],
     );
 
     const { result, loading, error, run, terminate, setError } = useWorker<
@@ -39,7 +39,7 @@ export const SolvabilityAnalyzer: React.FC = () => {
     };
 
     const handleAnalyze = () => {
-        const size = parseInt(n, 10);
+        const size = Number.parseInt(n, 10);
         if (isNaN(size) || size < 1) {
             setError('Please enter a valid positive integer.');
             return;

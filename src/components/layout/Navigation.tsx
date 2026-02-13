@@ -1,5 +1,6 @@
 import type { SxProps, Theme } from '@mui/material/styles';
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React from 'react';
 
 import { Paper, Grid } from '../mui';
 

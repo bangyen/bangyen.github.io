@@ -5,14 +5,14 @@
  */
 
 export default function init(
-    input?: BufferSource | WebAssembly.Instance
+    input?: BufferSource | WebAssembly.Instance,
 ): Promise<void>;
 
 export function generate_puzzle_wasm(
     rows: number,
     cols: number,
     seed: bigint,
-    hint_density: number
+    hint_density: number,
 ): {
     numbers: (number | null)[][];
     solution: number[][];
@@ -21,5 +21,5 @@ export function generate_puzzle_wasm(
 export function find_cycles_wasm(
     grid: Uint8Array,
     rows: number,
-    cols: number
+    cols: number,
 ): string[];

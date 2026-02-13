@@ -1,5 +1,5 @@
 import { flipAdj } from './boardHandlers';
-import { Palette } from '../../components/Board';
+import type { Palette } from '../../components/Board';
 
 export interface AnimationFrame {
     opacity: number;
@@ -20,7 +20,7 @@ export function getBoardIconFrames(
     col: number,
     dims: number,
     palette: Palette,
-    speed = 1
+    speed = 1,
 ): KeyframeMap {
     const length = states.length;
     const frames: KeyframeMap = {};
@@ -120,7 +120,7 @@ export function getBoardIconFrames(
 export function getInputIconFrames(
     states: number[][],
     col: number,
-    palette: Palette
+    palette: Palette,
 ): KeyframeMap {
     const length = states.length;
     const frames: KeyframeMap = {};
@@ -138,14 +138,15 @@ export function getInputIconFrames(
         const currentState = states[k];
         const nextState = k + 1 < length ? states[k + 1] : null;
 
-        if (currentState && nextState) {
-            // Input states are just rows (number[]), so we check the specific cell
-            if (currentState[col] !== nextState[col]) {
-                match = true;
-                const isOne = currentState[col] === 1;
-                color = isOne ? palette.secondary : palette.primary;
-                predictedContent = `"${String(k + 1)}"`;
-            }
+        if (
+            currentState &&
+            nextState && // Input states are just rows (number[]), so we check the specific cell
+            currentState[col] !== nextState[col]
+        ) {
+            match = true;
+            const isOne = currentState[col] === 1;
+            color = isOne ? palette.secondary : palette.primary;
+            predictedContent = `"${String(k + 1)}"`;
         }
 
         if (match) {

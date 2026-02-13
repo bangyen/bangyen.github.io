@@ -10,7 +10,7 @@ import {
 } from 'recharts';
 
 import { CHART_DIMENSIONS, CHART_FORMATTING } from '../config';
-import { ChartConfig } from '../types';
+import type { ChartConfig } from '../types';
 
 import { Box, Typography } from '@/components/mui';
 import { GlassCard } from '@/components/ui/GlassCard';
@@ -157,7 +157,7 @@ export function ResearchChart<T>({
                                 }
                                 formatter={(
                                     value: number | undefined,
-                                    name: string | undefined
+                                    name: string | undefined,
                                 ) => {
                                     if (value === undefined) {
                                         throw new Error('Value is undefined');
@@ -167,7 +167,7 @@ export function ResearchChart<T>({
                                     }
                                     return currentChartConfig.tooltipFormatter(
                                         value,
-                                        name
+                                        name,
                                     );
                                 }}
                             />
@@ -196,7 +196,7 @@ export function ResearchChart<T>({
                                             r: CHART_DIMENSIONS.dotRadius,
                                         }}
                                     />
-                                )
+                                ),
                             )}
                         </LineChart>
                     </ResponsiveContainer>

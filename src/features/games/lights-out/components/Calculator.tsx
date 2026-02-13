@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 
-import { Getters, Palette } from '../../components/Board';
-import { DragProps } from '../../hooks/useDrag';
+import type { Getters, Palette } from '../../components/Board';
+import type { DragProps } from '../../hooks/useDrag';
 import { LIGHTS_OUT_STYLES } from '../config';
 import { useGetters } from '../hooks/boardUtils';
 
@@ -9,7 +9,7 @@ import { CircleRounded } from '@/components/icons';
 
 export function getInput(
     getters: Getters,
-    getDragProps: (pos: string) => DragProps
+    getDragProps: (pos: string) => DragProps,
 ) {
     const { getColor, getBorder } = getters;
 
@@ -56,7 +56,7 @@ export function useHandler(row: number[], size: number, palette: Palette) {
             if (r !== 0 || c < 0 || c >= size) return -1;
             return row[c] ?? 0;
         },
-        [row, size]
+        [row, size],
     );
 
     return useGetters(getTile, palette);

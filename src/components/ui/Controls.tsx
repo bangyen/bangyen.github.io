@@ -26,8 +26,6 @@ import { TooltipButton } from './TooltipButton';
 
 import { COLORS } from '@/config/theme';
 
-export { TooltipButton };
-
 export const ICON_MAP = {
     Code: Code,
     Psychology: Psychology,
@@ -461,3 +459,5 @@ export function ArrowsButton({
         </Grid>
     );
 }
+
+export { TooltipButton } from './TooltipButton';

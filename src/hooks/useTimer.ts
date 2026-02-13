@@ -78,7 +78,7 @@ export function useTimer(delay: number) {
                 globalTimer = setInterval(globalRepeat, globalSpeed);
             }
         },
-        []
+        [],
     );
 
     const clear = useCallback(() => {

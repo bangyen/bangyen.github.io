@@ -1,6 +1,7 @@
 import { DSU } from '../../../../utils/DSU';
 import { getPosKey } from '../../../../utils/gameUtils';
-import { CellState, EMPTY, FORWARD } from '../types';
+import type { CellState } from '../types';
+import { EMPTY, FORWARD } from '../types';
 
 /**
  * Maps grid node coordinates (intersections) to a flat index.
@@ -27,7 +28,7 @@ export function getNodeIndex(r: number, c: number, cols: number): number {
 export function findCycles(
     grid: CellState[][],
     rows: number,
-    cols: number
+    cols: number,
 ): Set<string> {
     const adj = new Map<number, { node: number; r: number; c: number }[]>();
     const cycleCells = new Set<string>();
@@ -105,7 +106,7 @@ export function findCycles(
 export function hasCycle(
     grid: CellState[][],
     rows: number,
-    cols: number
+    cols: number,
 ): boolean {
     const dsu = new DSU((rows + 1) * (cols + 1));
 

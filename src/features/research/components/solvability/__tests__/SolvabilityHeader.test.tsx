@@ -23,7 +23,7 @@ describe('SolvabilityHeader', () => {
         render(
             <TestWrapper>
                 <SolvabilityHeader {...defaultProps} />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         expect(screen.getByText('Solvability Analyzer')).toBeInTheDocument();
@@ -35,7 +35,7 @@ describe('SolvabilityHeader', () => {
         render(
             <TestWrapper>
                 <SolvabilityHeader {...defaultProps} />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         const input = screen.getByLabelText('Grid Size (n)');
@@ -48,7 +48,7 @@ describe('SolvabilityHeader', () => {
         render(
             <TestWrapper>
                 <SolvabilityHeader {...defaultProps} />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         const button = screen.getByText('Analyze Solvability');
@@ -61,11 +61,11 @@ describe('SolvabilityHeader', () => {
         render(
             <TestWrapper>
                 <SolvabilityHeader {...defaultProps} loading={true} />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         expect(
-            screen.queryByText('Analyze Solvability')
+            screen.queryByText('Analyze Solvability'),
         ).not.toBeInTheDocument();
         const cancelButton = screen.getByText('Cancel Analysis');
         expect(cancelButton).toBeInTheDocument();
@@ -78,11 +78,11 @@ describe('SolvabilityHeader', () => {
         render(
             <TestWrapper>
                 <SolvabilityHeader {...defaultProps} />
-            </TestWrapper>
+            </TestWrapper>,
         );
 
         expect(
-            screen.getByLabelText('Solvability analyzer documentation')
+            screen.getByLabelText('Solvability analyzer documentation'),
         ).toBeInTheDocument();
     });
 });

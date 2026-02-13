@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 
 import { ResearchDemo } from '../components';
 import { RESEARCH_CONSTANTS, PERCENTAGE } from '../config';
-import { ViewType } from '../types';
+import type { ViewType } from '../types';
 
 import {
     BarChartRounded,
@@ -45,7 +45,7 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
         const response = await fetch('/zsharp_data.json.gz');
         if (!response.ok) {
             throw new Error(
-                `HTTP error! status: ${response.status.toString()}`
+                `HTTP error! status: ${response.status.toString()}`,
             );
         }
         const buffer = await response.arrayBuffer();
@@ -54,12 +54,9 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
         // Check for GZIP magic number (0x1f 0x8b)
         const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
 
-        let text: string;
-        if (isGzipped) {
-            text = pako.ungzip(view, { to: 'string' }) as unknown as string;
-        } else {
-            text = new TextDecoder().decode(buffer);
-        }
+        const text: string = isGzipped
+            ? (pako.ungzip(view, { to: 'string' }) as unknown as string)
+            : new TextDecoder().decode(buffer);
         const realData = JSON.parse(text) as RealData;
 
         const data: DataPoint[] = [];
@@ -70,7 +67,7 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
 
         const maxEpochs = Math.max(
             sgdAccuracies.length,
-            zsharpAccuracies.length
+            zsharpAccuracies.length,
         );
 
         for (let i = 0; i < maxEpochs; i++) {
@@ -84,7 +81,7 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
         }
 
         return data;
-    } catch (_error) {
+    } catch {
         return generateFallbackData();
     }
 };
@@ -130,7 +127,7 @@ const ZSharp: React.FC = () => {
             try {
                 const data = await loadRealZSharpData();
                 setChartData(data);
-            } catch (_error) {
+            } catch {
                 // Error loading data, use fallback
                 setChartData(generateFallbackData());
             } finally {
@@ -184,7 +181,7 @@ const ZSharp: React.FC = () => {
                         epoch: point.epoch,
                         sgd: point.sgdLoss,
                         zsharp: point.zsharpLoss,
-                    })
+                    }),
                 ),
             chartConfig: {
                 type: 'line',
@@ -224,7 +221,7 @@ const ZSharp: React.FC = () => {
                     (point): ProcessedDataPoint => ({
                         epoch: point.epoch,
                         gap: point.zsharp - point.sgd,
-                    })
+                    }),
                 ),
             chartConfig: {
                 type: 'line',

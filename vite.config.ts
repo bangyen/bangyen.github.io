@@ -1,11 +1,12 @@
 /// <reference types="vitest" />
-import { defineConfig } from 'vitest/config';
+
 import react from '@vitejs/plugin-react';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
 import { VitePWA } from 'vite-plugin-pwa';
-import os from 'os';
+import tsconfigPaths from 'vite-tsconfig-paths';
+import { defineConfig } from 'vitest/config';
+
 
 export default defineConfig(() => {
     const plugins = [
@@ -152,7 +153,7 @@ export default defineConfig(() => {
             fileParallelism: true,
             isolate: true,
             // Use 100% of cores in CI (usually 2), but cap locally to 80% for peak performance
-            maxWorkers: process.env.CI ? '100%' : '80%',
+            maxWorkers: process.env['CI'] ? '100%' : '80%',
             sequence: {
                 hooks: 'list',
             },

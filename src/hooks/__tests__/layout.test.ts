@@ -21,12 +21,12 @@ describe('Layout Hooks and Helpers', () => {
     beforeEach(() => {
         vi.clearAllMocks();
         // Reset window dimensions
-        Object.defineProperty(window, 'innerWidth', {
+        Object.defineProperty(globalThis, 'innerWidth', {
             writable: true,
             configurable: true,
             value: 1024,
         });
-        Object.defineProperty(window, 'innerHeight', {
+        Object.defineProperty(globalThis, 'innerHeight', {
             writable: true,
             configurable: true,
             value: 768,
@@ -64,7 +64,7 @@ describe('Layout Hooks and Helpers', () => {
 
             act(() => {
                 getSize.mockReturnValue({ width: 200, height: 200 });
-                window.dispatchEvent(new Event('resize'));
+                globalThis.dispatchEvent(new Event('resize'));
             });
 
             expect(result.current.size).toEqual({ width: 200, height: 200 });
@@ -111,7 +111,7 @@ describe('Layout Hooks and Helpers', () => {
                 ({ ref }) => useContainer(ref),
                 {
                     initialProps: { ref: ref1 },
-                }
+                },
             );
 
             expect(result.current).toEqual({ width: 100, height: 100 });
@@ -142,7 +142,7 @@ describe('Layout Hooks and Helpers', () => {
                 Object.defineProperty(mockElement, 'offsetHeight', {
                     value: 150,
                 });
-                window.dispatchEvent(new Event('resize'));
+                globalThis.dispatchEvent(new Event('resize'));
             });
 
             expect(result.current).toEqual({ width: 150, height: 150 });

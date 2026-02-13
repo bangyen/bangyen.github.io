@@ -1,8 +1,9 @@
 import React from 'react';
 
-import { DragProps } from '../../hooks/useDrag';
+import type { DragProps } from '../../hooks/useDrag';
 import { SLANT_STYLES } from '../config';
-import { FORWARD, BACKWARD, EMPTY, SlantState } from '../types';
+import type { SlantState } from '../types';
+import { FORWARD, BACKWARD, EMPTY } from '../types';
 
 import { Box } from '@/components/mui';
 import { COLORS, ANIMATIONS } from '@/config/theme';
@@ -12,7 +13,7 @@ export const getBackProps =
     (
         getDragProps: (pos: string) => DragProps,
         state: SlantState,
-        size: number
+        size: number,
     ) =>
     (r: number, c: number) => {
         const value = state.grid[r]?.[c];
@@ -126,15 +127,15 @@ export const getFrontProps =
                             ? COLORS.data.red
                             : COLORS.surface.background,
                         border:
-                            value != null
-                                ? `2px solid ${
+                            value == null
+                                ? 'none'
+                                : `2px solid ${
                                       hasError
                                           ? COLORS.data.red
                                           : isSatisfied
                                             ? 'transparent'
                                             : COLORS.border.subtle
-                                  }`
-                                : 'none',
+                                  }`,
                         fontSize: `${String(numberSize * 0.5)}rem`,
                         fontWeight: '800',
                         color: hasError
@@ -147,7 +148,7 @@ export const getFrontProps =
                                 ? 'none'
                                 : SLANT_STYLES.SHADOWS.HINT,
                         zIndex: 5,
-                        opacity: value != null ? 1 : 0,
+                        opacity: value == null ? 0 : 1,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',

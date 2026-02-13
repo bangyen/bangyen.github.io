@@ -14,7 +14,7 @@ interface WorkerMessage {
     n: number;
 }
 
-self.onmessage = (e: MessageEvent<WorkerMessage>) => {
+globalThis.onmessage = (e: MessageEvent<WorkerMessage>) => {
     const { n: size } = e.data;
 
     try {
@@ -58,7 +58,7 @@ self.onmessage = (e: MessageEvent<WorkerMessage>) => {
                 const minToggle = getMinWeightSolution(
                     matrix,
                     combinedState,
-                    cols
+                    cols,
                 );
                 mapping.push({
                     state: combinedState.toString(2).padStart(cols, '0'),
@@ -68,13 +68,13 @@ self.onmessage = (e: MessageEvent<WorkerMessage>) => {
             // Sort by state for consistency
             mapping.sort((a, b) => a.state.localeCompare(b.state));
         } else {
-            imageBasis.forEach(m => {
+            for (const m of imageBasis) {
                 const minToggle = getMinWeightSolution(matrix, m.state, cols);
                 mapping.push({
                     state: m.state.toString(2).padStart(cols, '0'),
                     toggle: minToggle.toString(2).padStart(cols, '0'),
                 });
-            });
+            }
         }
 
         const result = {
@@ -82,7 +82,7 @@ self.onmessage = (e: MessageEvent<WorkerMessage>) => {
             nullity,
             gridRank,
             solvablePercent: ((1 / Math.pow(2, nullity)) * 100).toFixed(
-                nullity === 0 ? 0 : 2
+                nullity === 0 ? 0 : 2,
             ),
             quietPatterns: kernel.map(k => k.toString(2).padStart(cols, '0')),
             totalStates: formatLarge(totalCells),
@@ -92,12 +92,12 @@ self.onmessage = (e: MessageEvent<WorkerMessage>) => {
         };
 
         self.postMessage({ success: true, result });
-    } catch (err) {
+    } catch (error) {
         self.postMessage({
             success: false,
             error:
-                err instanceof Error
-                    ? err.message
+                error instanceof Error
+                    ? error.message
                     : 'Unknown error occurred in worker',
         });
     }

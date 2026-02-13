@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { MockInstance } from 'vitest';
+import type { MockInstance } from 'vitest';
 
 import { useKeys } from '../useKeys';
 

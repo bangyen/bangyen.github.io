@@ -31,7 +31,7 @@ vi.mock('@/components/ui/CustomGrid', () => ({
         }: {
             cellProps: (
                 r: number,
-                c: number
+                c: number,
             ) => { backgroundColor?: string; color?: string };
             rows: number;
             cols: number;
@@ -58,7 +58,7 @@ vi.mock('@/components/ui/CustomGrid', () => ({
                     );
                 })}
             </div>
-        )
+        ),
     ),
 }));
 
@@ -94,7 +94,7 @@ describe('Lights Out Example Component', () => {
                 palette={mockPalette}
                 getFrontProps={mockGetFrontProps}
                 getBackProps={mockGetBackProps}
-            />
+            />,
         );
 
         // Should render exactly 4 grids: 2 from board (3x3 + 2x2) + 1 input (1x3) + 1 output (1x3)
@@ -123,7 +123,7 @@ describe('Lights Out Example Component', () => {
                 dims={3}
                 getFrontProps={mockGetFrontProps}
                 getBackProps={mockGetBackProps}
-            />
+            />,
         );
         expect(mockGetStates).toHaveBeenCalledWith(start, 3);
     });
@@ -138,7 +138,7 @@ describe('Lights Out Example Component', () => {
                 palette={mockPalette}
                 getFrontProps={mockGetFrontProps}
                 getBackProps={mockGetBackProps}
-            />
+            />,
         );
         // There are multiple grids (board, input, output) so multiple cell-0-0
         expect(screen.getAllByTestId('cell-0-0').length).toBeGreaterThan(0);
@@ -183,7 +183,7 @@ describe('Lights Out Example Component', () => {
                 palette={mockPalette}
                 getFrontProps={mockGetFrontProps}
                 getBackProps={mockGetBackProps}
-            />
+            />,
         );
 
         // Advance time and check frame updates
@@ -220,7 +220,7 @@ describe('Lights Out Example Component', () => {
                 palette={mockPalette}
                 getFrontProps={mockGetFrontProps}
                 getBackProps={mockGetBackProps}
-            />
+            />,
         );
 
         // Advance to last frame
@@ -246,7 +246,7 @@ describe('Lights Out Example Component', () => {
                 palette={mockPalette}
                 getFrontProps={mockGetFrontProps}
                 getBackProps={mockGetBackProps}
-            />
+            />,
         );
 
         // Should still render without crashing (multiple grids)
@@ -261,7 +261,7 @@ describe('Lights Out Example Component', () => {
                 palette={mockPalette}
                 getFrontProps={mockGetFrontProps}
                 getBackProps={mockGetBackProps}
-            />
+            />,
         );
         // Should use default dims=3
         expect(mockGetStates).toHaveBeenCalledWith([], 3);
@@ -290,7 +290,7 @@ describe('Lights Out Example Component', () => {
                 palette={mockPalette}
                 getFrontProps={mockGetFrontProps}
                 getBackProps={mockGetBackProps}
-            />
+            />,
         );
 
         // Advance to last frame

@@ -54,7 +54,7 @@ export function countBits(num: bigint): number {
  * ```
  */
 export function getIdentity(size: number): bigint[] {
-    const output = Array<bigint>(size).fill(1n);
+    const output = new Array<bigint>(size).fill(1n);
     for (let r = 0; r < size; r++) {
         const val = output[r];
         if (val !== undefined) output[r] = val << BigInt(size - r - 1);
@@ -133,7 +133,7 @@ export function multiplySym(matrixA: bigint[], matrixB: bigint[]): bigint[] {
 export function symmetricPow(
     matrix: bigint[],
     power: number,
-    cache?: Map<number, bigint[]>
+    cache?: Map<number, bigint[]>,
 ): bigint[] {
     const cached = cache?.get(power);
     if (cached) return cached;
@@ -163,10 +163,10 @@ export function symmetricPow(
  */
 export function sortMatrices(
     matrix: bigint[],
-    identity: bigint[]
+    identity: bigint[],
 ): [bigint[], bigint[]] {
     const size = matrix.length;
-    const sorted = [...Array(size).keys()].sort((a, b) => {
+    const sorted = [...new Array(size).keys()].sort((a, b) => {
         const valB = matrix[b];
         const valA = matrix[a];
         if (valB === undefined || valA === undefined) return 0;

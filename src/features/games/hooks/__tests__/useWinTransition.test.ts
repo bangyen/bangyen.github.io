@@ -66,7 +66,7 @@ describe('useWinTransition', () => {
             },
             {
                 initialProps: { solved: true },
-            }
+            },
         );
 
         act(() => {

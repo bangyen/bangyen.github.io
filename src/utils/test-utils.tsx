@@ -51,7 +51,7 @@ interface RenderWithProvidersOptions extends Omit<RenderOptions, 'wrapper'> {
  */
 export const renderWithProviders = (
     ui: React.ReactElement,
-    options: RenderWithProvidersOptions = {}
+    options: RenderWithProvidersOptions = {},
 ): RenderResult => {
     const { theme = createTestTheme(), ...renderOptions } = options;
 
@@ -68,7 +68,7 @@ export const renderWithProviders = (
 export const mockData = {
     zsharp: {
         train_accuracies: [0.1, 0.2, 0.3, 0.4, 0.5],
-        train_losses: [2.0, 1.5, 1.0, 0.8, 0.6],
+        train_losses: [2, 1.5, 1, 0.8, 0.6],
     },
     oligopoly: [
         { round: 1, price: 30, hhi: 0.25 },
@@ -85,9 +85,7 @@ export const mockFetchResponses = {
         ok: true,
         arrayBuffer: () => {
             const uint8Array = new Uint8Array(
-                JSON.stringify(data)
-                    .split('')
-                    .map(c => c.charCodeAt(0))
+                [...JSON.stringify(data)].map(c => c.charCodeAt(0)),
             );
             return Promise.resolve(uint8Array.buffer);
         },
@@ -108,12 +106,12 @@ export const testUtils = {
      * Mocks console methods to suppress expected warnings in tests
      */
     suppressConsoleWarnings: (): (() => void) => {
-        const warnSpy = vi
-            .spyOn(console, 'warn')
-            .mockImplementation(() => undefined);
-        const errorSpy = vi
-            .spyOn(console, 'error')
-            .mockImplementation(() => undefined);
+        const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {
+            // Noop for testing
+        });
+        const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {
+            // Noop for testing
+        });
 
         return () => {
             warnSpy.mockRestore();

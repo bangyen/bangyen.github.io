@@ -69,7 +69,7 @@ describe('useDrag', () => {
         expect(result.current.isDragging).toBe(true);
 
         act(() => {
-            window.dispatchEvent(new MouseEvent('mouseup'));
+            globalThis.dispatchEvent(new MouseEvent('mouseup'));
         });
 
         expect(result.current.isDragging).toBe(false);
@@ -118,7 +118,7 @@ describe('useDrag', () => {
             useDrag({
                 ...defaultOptions,
                 checkEnabled: () => false,
-            })
+            }),
         );
         const props = result.current.getDragProps('0,0');
 
@@ -153,7 +153,7 @@ describe('useDrag', () => {
         act(() => {
             const touchMoveEvent = new CustomEvent('touchmove') as any;
             touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
-            window.dispatchEvent(touchMoveEvent);
+            globalThis.dispatchEvent(touchMoveEvent);
         });
 
         expect(onAction).toHaveBeenCalledWith('0,1', false, false);
@@ -175,7 +175,7 @@ describe('useDrag', () => {
         act(() => {
             const touchMoveEvent = new CustomEvent('touchmove') as any;
             touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
-            window.dispatchEvent(touchMoveEvent);
+            globalThis.dispatchEvent(touchMoveEvent);
         });
 
         expect(onAction).toHaveBeenCalledTimes(1); // Only initial touch start
@@ -200,7 +200,7 @@ describe('useDrag', () => {
         act(() => {
             const touchMoveEvent = new CustomEvent('touchmove') as any;
             touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
-            window.dispatchEvent(touchMoveEvent);
+            globalThis.dispatchEvent(touchMoveEvent);
         });
 
         expect(onAction).toHaveBeenCalledTimes(1); // Only initial touch start
@@ -227,7 +227,7 @@ describe('useDrag', () => {
         act(() => {
             const touchMoveEvent = new CustomEvent('touchmove') as any;
             touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
-            window.dispatchEvent(touchMoveEvent);
+            globalThis.dispatchEvent(touchMoveEvent);
         });
 
         expect(onAction).toHaveBeenCalledTimes(1); // Only initial touch start
@@ -273,7 +273,7 @@ describe('useDrag', () => {
 
     it('should debounce mouse events after touch', () => {
         const { result } = renderHook(() =>
-            useDrag({ ...defaultOptions, touchTimeout: 500 })
+            useDrag({ ...defaultOptions, touchTimeout: 500 }),
         );
         const props = result.current.getDragProps('0,0');
 
@@ -306,7 +306,7 @@ describe('useDrag', () => {
         vi.useFakeTimers();
         try {
             const { result } = renderHook(() =>
-                useDrag({ ...defaultOptions, touchTimeout: 500 })
+                useDrag({ ...defaultOptions, touchTimeout: 500 }),
             );
             const props = result.current.getDragProps('0,0');
 
@@ -339,7 +339,7 @@ describe('useDrag', () => {
 
     it('should respect preventDefault option', () => {
         const { result } = renderHook(() =>
-            useDrag({ ...defaultOptions, preventDefault: false })
+            useDrag({ ...defaultOptions, preventDefault: false }),
         );
         const props = result.current.getDragProps('0,0');
 
@@ -356,7 +356,7 @@ describe('useDrag', () => {
 
     it('should handle onContextMenu with preventDefault option', () => {
         const { result } = renderHook(() =>
-            useDrag({ ...defaultOptions, preventDefault: false })
+            useDrag({ ...defaultOptions, preventDefault: false }),
         );
         const props = result.current.getDragProps('0,0');
 
@@ -372,7 +372,7 @@ describe('useDrag', () => {
 
     it('should use custom posAttribute', () => {
         const { result } = renderHook(() =>
-            useDrag({ ...defaultOptions, posAttribute: 'data-col' })
+            useDrag({ ...defaultOptions, posAttribute: 'data-col' }),
         );
         const props = result.current.getDragProps('0,0');
 
@@ -385,7 +385,7 @@ describe('useDrag', () => {
             useDrag({
                 ...defaultOptions,
                 checkEnabled: () => false,
-            })
+            }),
         );
         const props = result.current.getDragProps('0,0');
 
@@ -405,7 +405,7 @@ describe('useDrag', () => {
             useDrag({
                 ...defaultOptions,
                 checkEnabled: () => enabledState,
-            })
+            }),
         );
         const props = result.current.getDragProps('0,0');
 
@@ -448,7 +448,7 @@ describe('useDrag', () => {
 
     it('should handle onContextMenu with preventDefault: true', () => {
         const { result } = renderHook(() =>
-            useDrag({ ...defaultOptions, preventDefault: true })
+            useDrag({ ...defaultOptions, preventDefault: true }),
         );
         const props = result.current.getDragProps('0,0');
 
@@ -500,7 +500,7 @@ describe('useDrag', () => {
         act(() => {
             const touchMoveEvent = new CustomEvent('touchmove') as any;
             touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
-            window.dispatchEvent(touchMoveEvent);
+            globalThis.dispatchEvent(touchMoveEvent);
         });
 
         expect(onAction).toHaveBeenCalledWith('0,1', true, false);

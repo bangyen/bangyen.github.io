@@ -98,9 +98,9 @@ describe('matrixOperations', () => {
             // kernel size > 20
             // We can simulate this with a matrix of size 30 and rank 5
             const size = 30;
-            const mat = Array(size).fill(0n);
+            const mat = new Array<bigint>(size).fill(0n);
             for (let i = 0; i < 5; i++) mat[i] = 1n << BigInt(size - 1 - i);
-            const target = 0b11111n << BigInt(size - 5);
+            const target = 0b1_1111n << BigInt(size - 5);
             const solution = getMinWeightSolution(mat, target, size);
             expect(solution).not.toBe(-1n);
             // Since kernel length > 20, it returns the particular solution

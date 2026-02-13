@@ -36,7 +36,7 @@ class ErrorBoundary extends React.Component<
 
     override componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
         // Log error details for debugging
-        window.console.error('Error caught by boundary:', error, errorInfo);
+        globalThis.console.error('Error caught by boundary:', error, errorInfo);
         this.setState({
             error,
             errorInfo,
@@ -44,16 +44,16 @@ class ErrorBoundary extends React.Component<
 
         // In production, you might want to log this to an error reporting service
         if (
-            typeof process !== 'undefined'
-                ? process.env['NODE_ENV'] === 'production'
-                : import.meta.env.PROD
+            typeof process === 'undefined'
+                ? import.meta.env.PROD
+                : process.env['NODE_ENV'] === 'production'
         ) {
             // Example: logErrorToService(error, errorInfo);
         }
     }
 
     handleReload = (): void => {
-        window.location.reload();
+        globalThis.location.reload();
     };
 
     handleReset = (): void => {

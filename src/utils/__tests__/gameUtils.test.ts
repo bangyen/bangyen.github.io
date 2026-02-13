@@ -21,7 +21,7 @@ describe('gameUtils', () => {
         const getInitialState = (rows: number, cols: number): GameState => ({
             rows,
             cols,
-            board: Array.from({ length: rows }, () => Array(cols).fill(0)),
+            board: Array.from({ length: rows }, () => new Array(cols).fill(0)),
         });
 
         const reducer = createGameReducer<GameState, { type: 'custom' }>({
@@ -84,7 +84,7 @@ describe('gameUtils', () => {
                 ({ deps }) => useCellFactory(factory, getDragProps, deps),
                 {
                     initialProps: { deps: d1 as any[] },
-                }
+                },
             );
 
             expect(result.current(0, 0)).toEqual({ r: 0, c: 0 });

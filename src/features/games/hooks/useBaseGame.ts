@@ -6,7 +6,7 @@ import { usePageTitle } from './usePageTitle';
 import { useResponsiveBoardSize } from './useResponsiveBoardSize';
 import { useWinTransition } from './useWinTransition';
 
-import { BaseGameState, BaseGameAction } from '@/utils/gameUtils';
+import type { BaseGameState, BaseGameAction } from '@/utils/gameUtils';
 
 /**
  * Configuration for initializing a game with full state management.
@@ -127,7 +127,7 @@ export function useBaseGame<
 
     const initial = useMemo(
         () => getInitialState(rows, cols),
-        [rows, cols, getInitialState]
+        [rows, cols, getInitialState],
     );
     const [state, dispatch] = useReducer(reducer, initial);
 

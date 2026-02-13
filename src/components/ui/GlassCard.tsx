@@ -1,5 +1,6 @@
 import type { SxProps, Theme } from '@mui/material/styles';
-import React, { forwardRef, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React, { forwardRef } from 'react';
 
 import { Box } from '../mui';
 
@@ -57,7 +58,7 @@ export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
             interactive = false,
             ...props
         },
-        ref
+        ref,
     ) {
         return (
             <Box
@@ -81,5 +82,5 @@ export const GlassCard = forwardRef<HTMLDivElement, GlassCardProps>(
                 {children}
             </Box>
         );
-    }
+    },
 );

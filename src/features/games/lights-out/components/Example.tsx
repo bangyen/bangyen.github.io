@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 
 import { GridWithKeyframes } from './AnimatedGrid';
 import { getOutput, useHandler as useCalculatorHandler } from './Calculator';
-import { Board, Palette, PropsFactory } from '../../components/Board';
+import type { Palette, PropsFactory } from '../../components/Board';
+import { Board } from '../../components/Board';
 import { LIGHTS_OUT_STYLES } from '../config';
 import { useHandler as useBoardHandler } from '../hooks/boardUtils';
 import {
@@ -24,7 +25,7 @@ function iconHandler(
     states: number[][],
     dims: number,
     id: string,
-    palette: Palette
+    palette: Palette,
 ) {
     return (row: number, col: number): Record<string, unknown> => {
         const frames = getBoardIconFrames(states, row, col, dims, palette);
@@ -70,7 +71,7 @@ function inputIconHandler(
     states: number[][],
     dims: number,
     id: string,
-    palette: Palette
+    palette: Palette,
 ) {
     return (row: number, col: number): Record<string, unknown> => {
         const frames = getInputIconFrames(states, col, palette);
@@ -174,7 +175,7 @@ export default function Example({
                 </>
             ),
             sx: {
-                ...(baseProps.sx ?? {}),
+                ...baseProps.sx,
                 position: 'relative',
             },
         };
@@ -183,12 +184,12 @@ export default function Example({
     const inputGetters = useCalculatorHandler(
         inputStates[remainder] ?? [],
         dims,
-        palette
+        palette,
     );
     const outputGetters = useCalculatorHandler(
         outputStates[remainder] ?? [],
         dims,
-        palette
+        palette,
     );
     const baseInputProps = getOutput(inputGetters);
     const outputProps = getOutput(outputGetters);
@@ -198,7 +199,7 @@ export default function Example({
         inputStates,
         dims,
         'example',
-        palette
+        palette,
     );
 
     // Merge props to add icons to input
@@ -290,7 +291,7 @@ export default function Example({
                                         boardStates[inputStates.length - 1];
                                     const allOn = finalState?.every(
                                         (rowVal: number) =>
-                                            rowVal === (1 << dims) - 1
+                                            rowVal === (1 << dims) - 1,
                                     );
                                     return (
                                         <EmojiEventsRounded

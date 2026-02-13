@@ -127,12 +127,14 @@ export function useCache<T>(getState: (state: T) => T) {
 
                 return prevResult;
             }
-            case 'clear':
+            case 'clear': {
                 cache.current = [{ ...(payload as T) }];
                 index.current = 0;
                 break;
-            default:
+            }
+            default: {
                 break;
+            }
         }
 
         return payload as T;

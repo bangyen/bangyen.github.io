@@ -9,8 +9,8 @@ export const MathText: React.FC<{ text: string }> = ({ text }) => {
     return (
         <span
             aria-label={text
-                .replace(/\^{([^}]+)}/g, ' to the power of $1')
-                .replace(/\*/g, ' times ')}
+                .replaceAll(/\^{([^}]+)}/g, ' to the power of $1')
+                .replaceAll('*', ' times ')}
         >
             <span aria-hidden="true">
                 {parts.map((part, i) => {

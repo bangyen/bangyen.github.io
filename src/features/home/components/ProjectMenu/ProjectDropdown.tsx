@@ -117,11 +117,11 @@ export function ProjectDropdown(): React.ReactElement {
                                             {project.description}
                                         </Typography>
                                     </MenuItem>
-                                )
+                                ),
                             )}
                         </Box>
                     );
-                }
+                },
             )}
         </Box>
     );

@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
 import { useMobile } from '../../../../../hooks';
-import { DragProps } from '../../../hooks/useDrag';
+import type { DragProps } from '../../../hooks/useDrag';
 import * as calculator from '../Calculator';
 import Info from '../Info';
 
@@ -117,7 +117,7 @@ describe('Lights Out Info Component', () => {
                         'data-testid': `input-cell-${String(c)}`,
                     };
                 };
-            }
+            },
         );
         mockGetOutput.mockReturnValue(() => ({}));
     });
@@ -126,7 +126,7 @@ describe('Lights Out Info Component', () => {
         render(<Info {...defaultProps} />);
         expect(screen.getByText('Chase to Bottom')).toBeInTheDocument();
         expect(
-            screen.queryByTestId('example-component')
+            screen.queryByTestId('example-component'),
         ).not.toBeInTheDocument();
     });
 
@@ -331,7 +331,7 @@ describe('Lights Out Info Component', () => {
         fireEvent.click(backBtn); // Back to Step 0
 
         expect(
-            screen.queryByTestId('example-component')
+            screen.queryByTestId('example-component'),
         ).not.toBeInTheDocument();
     });
 
@@ -355,7 +355,7 @@ describe('Lights Out Info Component', () => {
                         'data-testid': `cell-${pos}`,
                     };
                 };
-            }
+            },
         );
 
         render(<Info {...defaultProps} />);

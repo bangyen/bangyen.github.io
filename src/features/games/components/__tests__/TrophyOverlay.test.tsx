@@ -41,7 +41,7 @@ describe('TrophyOverlay', () => {
 
     it('should not be visible when show is false', () => {
         const { container } = render(
-            <TrophyOverlay {...defaultProps} show={false} />
+            <TrophyOverlay {...defaultProps} show={false} />,
         );
         const overlay = container.firstChild as HTMLElement;
         expect(overlay).toHaveStyle('opacity: 0');
@@ -54,7 +54,7 @@ describe('TrophyOverlay', () => {
                 {...defaultProps}
                 useSecondary={true}
                 secondaryColor="rgb(0, 0, 255)"
-            />
+            />,
         );
         const icon = container.querySelector('svg');
         expect(icon).toHaveStyle('color: rgb(0, 0, 255)');
@@ -62,7 +62,7 @@ describe('TrophyOverlay', () => {
 
     it('should cleanup timeout on unmount', () => {
         const { unmount } = render(<TrophyOverlay {...defaultProps} />);
-        const clearTimeoutSpy = vi.spyOn(window, 'clearTimeout');
+        const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout');
         unmount();
         expect(clearTimeoutSpy).toHaveBeenCalled();
     });

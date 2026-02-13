@@ -69,7 +69,7 @@ describe('useGamePersistence', () => {
             props => {
                 useGamePersistence(props);
             },
-            { initialProps: defaultOptions }
+            { initialProps: defaultOptions },
         );
 
         const newState = { board: [1, 1] };

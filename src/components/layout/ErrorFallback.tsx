@@ -99,9 +99,9 @@ export function ErrorFallback({
                         An unexpected error occurred while rendering this page.
                     </Typography>
 
-                    {(typeof process !== 'undefined'
-                        ? process.env['NODE_ENV'] === 'development'
-                        : import.meta.env.DEV) &&
+                    {(typeof process === 'undefined'
+                        ? import.meta.env.DEV
+                        : process.env['NODE_ENV'] === 'development') &&
                         error && (
                             <Box
                                 sx={{

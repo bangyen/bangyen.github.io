@@ -1,9 +1,9 @@
 
-/* eslint-disable no-console */
-import fs from 'fs';
-import path from 'path';
-import { execSync } from 'child_process';
-import zlib from 'zlib';
+ 
+import { execSync } from 'node:child_process';
+import fs from 'node:fs';
+import path from 'node:path';
+import zlib from 'node:zlib';
 
 const TEMP_DIR = path.resolve(process.cwd(), 'temp_research_repos');
 const PUBLIC_DIR = path.resolve(process.cwd(), 'public');
@@ -24,11 +24,11 @@ function runCmd(cmd: string, cwd: string = process.cwd(), env: NodeJS.ProcessEnv
 }
 
 function setupVenv(): { pipCmd: string; pythonCmd: string } {
-    if (!fs.existsSync(VENV_DIR)) {
+    if (fs.existsSync(VENV_DIR)) {
+        console.log('Using existing virtual environment...');
+    } else {
         console.log('Creating virtual environment...');
         execSync(`python3 -m venv ${VENV_DIR}`, { stdio: 'inherit' });
-    } else {
-        console.log('Using existing virtual environment...');
     }
 
     const binDir = IS_WIN ? 'Scripts' : 'bin';

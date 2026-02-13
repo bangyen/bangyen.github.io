@@ -114,8 +114,8 @@ export function HeroSection(): React.ReactElement {
                             <Box
                                 onClick={() => {
                                     const element =
-                                        document.getElementById(
-                                            'featured-work'
+                                        document.querySelector(
+                                            '#featured-work',
                                         );
                                     if (element) {
                                         element.scrollIntoView({

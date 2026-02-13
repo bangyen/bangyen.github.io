@@ -32,7 +32,7 @@ export interface CellProps {
 }
 
 export type PropsFactory = (
-    getters: Getters
+    getters: Getters,
 ) => (row: number, col: number) => CellProps;
 
 export function Board(props: BoardProps): React.ReactElement {

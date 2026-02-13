@@ -29,7 +29,7 @@ describe('useResponsiveBoardSize', () => {
     it('should calculate cell size with numeric paddingOffset', () => {
         (useWindow as any).mockReturnValue({ width: 1000, height: 1000 });
         const { result } = renderHook(() =>
-            useResponsiveBoardSize(defaultConfig)
+            useResponsiveBoardSize(defaultConfig),
         );
 
         // pX = 0, pY = 20
@@ -46,7 +46,7 @@ describe('useResponsiveBoardSize', () => {
             useResponsiveBoardSize({
                 ...defaultConfig,
                 paddingOffset: { x: 50, y: 100 },
-            })
+            }),
         );
 
         // pX = 50, pY = 100
@@ -64,7 +64,7 @@ describe('useResponsiveBoardSize', () => {
             useResponsiveBoardSize({
                 ...defaultConfig,
                 paddingOffset: 0,
-            })
+            }),
         );
 
         // pX=0, pY=0

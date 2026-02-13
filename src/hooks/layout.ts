@@ -25,7 +25,7 @@ export interface RefObject<T> {
  * @returns Object with width and height of the browser window
  */
 export function getWindow(): Size {
-    const { innerWidth: width, innerHeight: height } = window;
+    const { innerWidth: width, innerHeight: height } = globalThis;
     return { width, height };
 }
 

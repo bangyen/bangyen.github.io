@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import { vi } from 'vitest';
 
 // Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(globalThis, 'matchMedia', {
     writable: true,
     value: vi.fn().mockImplementation((query: string) => ({
         matches: false,
@@ -19,7 +19,7 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Mock IntersectionObserver
-global.IntersectionObserver = class {
+globalThis.IntersectionObserver = class {
     constructor() {}
     disconnect = vi.fn();
     observe = vi.fn();
@@ -27,7 +27,7 @@ global.IntersectionObserver = class {
 } as unknown as typeof IntersectionObserver;
 
 // Mock ResizeObserver
-global.ResizeObserver = class {
+globalThis.ResizeObserver = class {
     constructor() {}
     disconnect = vi.fn();
     observe = vi.fn();
@@ -35,14 +35,14 @@ global.ResizeObserver = class {
 } as unknown as typeof ResizeObserver;
 
 // Mock TextEncoder for Node.js environment
-global.TextEncoder = class TextEncoder {
+globalThis.TextEncoder = class TextEncoder {
     encoding = 'utf-8';
     encode(str: string): Uint8Array {
         return new Uint8Array(str.split('').map(c => c.charCodeAt(0)));
     }
     encodeInto(
         source: string,
-        destination: Uint8Array
+        destination: Uint8Array,
     ): { read: number; written: number } {
         const encoded = this.encode(source);
         destination.set(encoded);
@@ -50,7 +50,7 @@ global.TextEncoder = class TextEncoder {
     }
 } as unknown as typeof TextEncoder;
 
-global.TextDecoder = class TextDecoder {
+globalThis.TextDecoder = class TextDecoder {
     encoding = 'utf-8';
     fatal = false;
     ignoreBOM = false;
@@ -62,7 +62,7 @@ global.TextDecoder = class TextDecoder {
 } as unknown as typeof TextDecoder;
 
 // Mock Response for fetch and decompression
-Object.defineProperty(global, 'Response', {
+Object.defineProperty(globalThis, 'Response', {
     value: class Response {
         _data: unknown;
         constructor(data: unknown) {
@@ -83,7 +83,7 @@ Object.defineProperty(global, 'Response', {
 });
 
 // Mock ReadableStream
-Object.defineProperty(global, 'ReadableStream', {
+Object.defineProperty(globalThis, 'ReadableStream', {
     value: class ReadableStream {
         constructor(options: { start?: (controller: unknown) => void } = {}) {
             if (options.start) {
@@ -104,7 +104,7 @@ Object.defineProperty(global, 'ReadableStream', {
 });
 
 // Mock DecompressionStream
-Object.defineProperty(global, 'DecompressionStream', {
+Object.defineProperty(globalThis, 'DecompressionStream', {
     value: class DecompressionStream {
         writable = {
             getWriter: () => ({

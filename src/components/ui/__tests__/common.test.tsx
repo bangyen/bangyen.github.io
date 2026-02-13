@@ -34,11 +34,11 @@ describe('Helper Components', () => {
             render(
                 <TestWrapper>
                     <TooltipButton Icon={MockIcon} title="Test Button" />
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             expect(
-                screen.getAllByLabelText('Test Button')[0]
+                screen.getAllByLabelText('Test Button')[0],
             ).toBeInTheDocument();
         });
 
@@ -51,7 +51,7 @@ describe('Helper Components', () => {
                     Icon={MockIcon}
                     title="Clickable"
                     onClick={handleClick}
-                />
+                />,
             );
 
             const buttons = screen.getAllByLabelText('Clickable');
@@ -65,7 +65,7 @@ describe('Helper Components', () => {
             render(
                 <TestWrapper>
                     <TooltipButton Icon={MockIcon} title="Small" size="small" />
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             expect(screen.getAllByLabelText('Small')[0]).toBeInTheDocument();
@@ -80,7 +80,7 @@ describe('Helper Components', () => {
                         title="Medium"
                         size="medium"
                     />
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             expect(screen.getAllByLabelText('Medium')[0]).toBeInTheDocument();
@@ -95,7 +95,7 @@ describe('Helper Components', () => {
                         title="Inherit"
                         size="inherit"
                     />
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             expect(screen.getAllByLabelText('Inherit')[0]).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe('Helper Components', () => {
             render(
                 <GlassCard data-testid="glass-card">
                     <div data-testid="content">Test Content</div>
-                </GlassCard>
+                </GlassCard>,
             );
 
             expect(screen.getByTestId('content')).toBeInTheDocument();
@@ -119,7 +119,7 @@ describe('Helper Components', () => {
             render(
                 <GlassCard padding="20px" data-testid="test">
                     <div>Test</div>
-                </GlassCard>
+                </GlassCard>,
             );
 
             const card = screen.getByTestId('test');
@@ -131,7 +131,7 @@ describe('Helper Components', () => {
             render(
                 <GlassCard interactive={true} data-testid="interactive">
                     <div>Test</div>
-                </GlassCard>
+                </GlassCard>,
             );
 
             const card = screen.getByTestId('interactive');
@@ -145,7 +145,7 @@ describe('Helper Components', () => {
             render(
                 <GlassCard ref={ref}>
                     <div>Test</div>
-                </GlassCard>
+                </GlassCard>,
             );
 
             expect(ref.current).toBeInTheDocument();
@@ -155,7 +155,7 @@ describe('Helper Components', () => {
             render(
                 <GlassCard className="custom-class" data-testid="card">
                     <div>Test</div>
-                </GlassCard>
+                </GlassCard>,
             );
 
             const card = screen.getByTestId('card');
@@ -170,7 +170,7 @@ describe('Helper Components', () => {
                     data-testid="card"
                 >
                     <div>Test</div>
-                </GlassCard>
+                </GlassCard>,
             );
 
             const card = screen.getByTestId('card');
@@ -184,11 +184,11 @@ describe('Helper Components', () => {
             render(
                 <TestWrapper>
                     <HomeButton />
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             expect(
-                screen.getByLabelText('Navigate to Home page')
+                screen.getByLabelText('Navigate to Home page'),
             ).toBeInTheDocument();
         });
 
@@ -196,11 +196,11 @@ describe('Helper Components', () => {
             render(
                 <TestWrapper>
                     <HomeButton hide={true} />
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             expect(
-                screen.queryByLabelText('Navigate to Home page')
+                screen.queryByLabelText('Navigate to Home page'),
             ).not.toBeInTheDocument();
         });
     });
@@ -212,7 +212,7 @@ describe('Helper Components', () => {
             render(<RandomButton onClick={handleClick} />);
 
             expect(
-                screen.getAllByLabelText('Randomize')[0]
+                screen.getAllByLabelText('Randomize')[0],
             ).toBeInTheDocument();
         });
 
@@ -220,11 +220,11 @@ describe('Helper Components', () => {
             const handleClick = vi.fn();
 
             render(
-                <RandomButton onClick={handleClick} title="Custom Random" />
+                <RandomButton onClick={handleClick} title="Custom Random" />,
             );
 
             expect(
-                screen.getAllByLabelText('Custom Random')[0]
+                screen.getAllByLabelText('Custom Random')[0],
             ).toBeInTheDocument();
         });
 
@@ -236,11 +236,11 @@ describe('Helper Components', () => {
                     onClick={handleClick}
                     enabled={true}
                     showToggleState={true}
-                />
+                />,
             );
 
             expect(
-                screen.getAllByLabelText('Disable Random')[0]
+                screen.getAllByLabelText('Disable Random')[0],
             ).toBeInTheDocument();
         });
 
@@ -252,11 +252,11 @@ describe('Helper Components', () => {
                     onClick={handleClick}
                     enabled={false}
                     showToggleState={true}
-                />
+                />,
             );
 
             expect(
-                screen.getAllByLabelText('Enable Random')[0]
+                screen.getAllByLabelText('Enable Random')[0],
             ).toBeInTheDocument();
         });
 
@@ -266,7 +266,7 @@ describe('Helper Components', () => {
             render(<RandomButton onClick={handleClick} hide={true} />);
 
             expect(
-                screen.queryByLabelText('Randomize')
+                screen.queryByLabelText('Randomize'),
             ).not.toBeInTheDocument();
         });
 
@@ -289,7 +289,7 @@ describe('Helper Components', () => {
                     <Controls>
                         <button>Test Button</button>
                     </Controls>
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             expect(screen.getByText('Test Button')).toBeInTheDocument();
@@ -303,11 +303,11 @@ describe('Helper Components', () => {
                     <Controls>
                         <HomeButton />
                     </Controls>
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             expect(
-                screen.getByLabelText('Navigate to Home page')
+                screen.getByLabelText('Navigate to Home page'),
             ).toBeInTheDocument();
         });
 
@@ -317,11 +317,11 @@ describe('Helper Components', () => {
             render(
                 <TestWrapper>
                     <Controls onRandom={handleRandom} />
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             expect(
-                screen.getAllByLabelText('Randomize')[0]
+                screen.getAllByLabelText('Randomize')[0],
             ).toBeInTheDocument();
         });
 
@@ -329,11 +329,11 @@ describe('Helper Components', () => {
             render(
                 <TestWrapper>
                     <Controls />
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             expect(
-                screen.queryByLabelText('Randomize')
+                screen.queryByLabelText('Randomize'),
             ).not.toBeInTheDocument();
         });
 
@@ -341,7 +341,7 @@ describe('Helper Components', () => {
             render(
                 <TestWrapper>
                     <Controls hide={true} />
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             // Navigation is still rendered but with reduced opacity
@@ -360,11 +360,11 @@ describe('Helper Components', () => {
                     show={false}
                     setShow={mockSetShow}
                     handler={mockHandler}
-                />
+                />,
             );
 
             expect(
-                screen.getByLabelText('Show game controls')
+                screen.getByLabelText('Show game controls'),
             ).toBeInTheDocument();
         });
 
@@ -374,7 +374,7 @@ describe('Helper Components', () => {
                     show={true}
                     setShow={mockSetShow}
                     handler={mockHandler}
-                />
+                />,
             );
 
             expect(screen.getByLabelText('Move up')).toBeInTheDocument();
@@ -389,7 +389,7 @@ describe('Helper Components', () => {
                     show={true}
                     setShow={mockSetShow}
                     handler={mockHandler}
-                />
+                />,
             );
 
             const upButton = screen.getByLabelText('Move up');
@@ -404,7 +404,7 @@ describe('Helper Components', () => {
                     show={false}
                     setShow={mockSetShow}
                     handler={mockHandler}
-                />
+                />,
             );
 
             const gamepadButton = screen.getByLabelText('Show game controls');
@@ -419,7 +419,7 @@ describe('Helper Components', () => {
                     show={true}
                     setShow={mockSetShow}
                     handler={mockHandler}
-                />
+                />,
             );
 
             const closeButton = screen.getByLabelText('Hide controls');
@@ -435,11 +435,11 @@ describe('Helper Components', () => {
                     setShow={mockSetShow}
                     handler={mockHandler}
                     hide={true}
-                />
+                />,
             );
 
             expect(
-                screen.queryByLabelText('Show game controls')
+                screen.queryByLabelText('Show game controls'),
             ).not.toBeInTheDocument();
         });
     });
@@ -451,7 +451,12 @@ describe('Helper Components', () => {
             }));
 
             render(
-                <CustomGrid size={20} rows={3} cols={3} cellProps={cellProps} />
+                <CustomGrid
+                    size={20}
+                    rows={3}
+                    cols={3}
+                    cellProps={cellProps}
+                />,
             );
 
             expect(screen.getByRole('grid')).toBeInTheDocument();
@@ -463,7 +468,12 @@ describe('Helper Components', () => {
             }));
 
             render(
-                <CustomGrid size={20} rows={2} cols={2} cellProps={cellProps} />
+                <CustomGrid
+                    size={20}
+                    rows={2}
+                    cols={2}
+                    cellProps={cellProps}
+                />,
             );
 
             expect(cellProps).toHaveBeenCalled();
@@ -481,7 +491,7 @@ describe('Helper Components', () => {
                     cols={2}
                     cellProps={cellProps}
                     space={2}
-                />
+                />,
             );
 
             expect(screen.getByRole('grid')).toBeInTheDocument();
@@ -494,7 +504,12 @@ describe('Helper Components', () => {
             }));
 
             const { container } = render(
-                <CustomGrid size={20} rows={1} cols={1} cellProps={cellProps} />
+                <CustomGrid
+                    size={20}
+                    rows={1}
+                    cols={1}
+                    cellProps={cellProps}
+                />,
             );
 
             const cell = container.querySelector('[role="gridcell"]');
@@ -508,7 +523,12 @@ describe('Helper Components', () => {
             }));
 
             const { container } = render(
-                <CustomGrid size={20} rows={1} cols={1} cellProps={cellProps} />
+                <CustomGrid
+                    size={20}
+                    rows={1}
+                    cols={1}
+                    cellProps={cellProps}
+                />,
             );
 
             const cell = container.querySelector('[role="gridcell"]');
@@ -521,7 +541,12 @@ describe('Helper Components', () => {
             }));
 
             const { container } = render(
-                <CustomGrid size={20} rows={1} cols={1} cellProps={cellProps} />
+                <CustomGrid
+                    size={20}
+                    rows={1}
+                    cols={1}
+                    cellProps={cellProps}
+                />,
             );
 
             const cell = container.querySelector('[role="gridcell"]');
@@ -535,7 +560,7 @@ describe('Helper Components', () => {
         }));
 
         render(
-            <CustomGrid size={20} rows={2} cols={2} cellProps={cellProps} />
+            <CustomGrid size={20} rows={2} cols={2} cellProps={cellProps} />,
         );
 
         expect(screen.getByRole('grid')).toBeInTheDocument();
@@ -548,7 +573,7 @@ describe('Helper Components', () => {
         }));
 
         const { container } = render(
-            <CustomGrid size={10} rows={1} cols={1} cellProps={cellProps} />
+            <CustomGrid size={10} rows={1} cols={1} cellProps={cellProps} />,
         );
 
         const cell = container.querySelector('[role="gridcell"]');
@@ -565,10 +590,10 @@ describe('RandomButton additional branches', () => {
                 onClick={onClick}
                 enabled={true}
                 showToggleState={true}
-            />
+            />,
         );
         expect(
-            screen.getAllByLabelText('Disable Random')[0]
+            screen.getAllByLabelText('Disable Random')[0],
         ).toBeInTheDocument();
     });
 
@@ -577,7 +602,7 @@ describe('RandomButton additional branches', () => {
             <RandomButton
                 onClick={vi.fn()}
                 sx={[{ margin: 1 }, { padding: 2 }]}
-            />
+            />,
         );
         expect(screen.getByRole('button')).toBeInTheDocument();
     });
@@ -592,7 +617,7 @@ describe('ArrowsButton additional branches', () => {
                 setShow={setShow}
                 handler={() => vi.fn()}
                 diagonals={true}
-            />
+            />,
         );
         expect(screen.getByLabelText('Move up left')).toBeInTheDocument();
         expect(screen.getByLabelText('Move up right')).toBeInTheDocument();
@@ -608,7 +633,7 @@ describe('ArrowsButton additional branches', () => {
                 setShow={setShow}
                 handler={() => vi.fn()}
                 size="inherit"
-            />
+            />,
         );
         expect(screen.getByLabelText('Hide controls')).toBeInTheDocument();
     });
@@ -622,7 +647,7 @@ describe('ArrowsButton additional branches', () => {
                 handler={() => vi.fn()}
                 diagonals={true}
                 size="inherit"
-            />
+            />,
         );
         expect(screen.getByLabelText('Hide controls')).toBeInTheDocument();
     });
@@ -631,7 +656,7 @@ describe('ArrowsButton additional branches', () => {
 describe('RefreshButton branch', () => {
     test('returns null when hide is true', () => {
         const { container } = render(
-            <RefreshButton onClick={vi.fn()} hide={true} />
+            <RefreshButton onClick={vi.fn()} hide={true} />,
         );
         expect(container.firstChild).toBeNull();
     });
@@ -642,7 +667,7 @@ describe('Navigation', () => {
         render(
             <Navigation>
                 <button>Test Button</button>
-            </Navigation>
+            </Navigation>,
         );
 
         expect(screen.getByRole('navigation')).toBeInTheDocument();
@@ -652,12 +677,12 @@ describe('Navigation', () => {
         render(
             <Navigation>
                 <button>Test Button</button>
-            </Navigation>
+            </Navigation>,
         );
 
         expect(screen.getByText('Test Button')).toBeInTheDocument();
         expect(
-            screen.getByLabelText('Game controls navigation')
+            screen.getByLabelText('Game controls navigation'),
         ).toBeInTheDocument();
     });
 
@@ -665,11 +690,11 @@ describe('Navigation', () => {
         render(
             <Navigation>
                 <button>Test Button</button>
-            </Navigation>
+            </Navigation>,
         );
 
         expect(
-            screen.getByLabelText('Game controls navigation')
+            screen.getByLabelText('Game controls navigation'),
         ).toBeInTheDocument();
     });
 
@@ -681,7 +706,7 @@ describe('Navigation', () => {
                 <Navigation>
                     <button>Test</button>
                 </Navigation>
-            </div>
+            </div>,
         );
 
         const nav = screen.getByRole('navigation');

@@ -1,13 +1,7 @@
 import { findCycles, hasCycle } from './cycleDetection';
 import { generatePuzzle } from './generation';
-import {
-    SlantState,
-    SlantAction,
-    CellState,
-    EMPTY,
-    FORWARD,
-    BACKWARD,
-} from '../types';
+import type { SlantState, SlantAction, CellState } from '../types';
+import { EMPTY, FORWARD, BACKWARD } from '../types';
 import {
     calculateNumbers,
     getErrorNodes,
@@ -59,13 +53,13 @@ export const handleBoard = createGameReducer<SlantState, SlantAction>({
                 const currentNumbers = calculateNumbers(
                     newGrid,
                     state.rows,
-                    state.cols
+                    state.cols,
                 );
                 const numbersMatch = state.numbers.every((rowArr, r) =>
                     rowArr.every(
                         (val, c) =>
-                            val == null || val === currentNumbers[r]?.[c]
-                    )
+                            val == null || val === currentNumbers[r]?.[c],
+                    ),
                 );
 
                 if (
@@ -80,14 +74,14 @@ export const handleBoard = createGameReducer<SlantState, SlantAction>({
                 newGrid,
                 state.numbers,
                 state.rows,
-                state.cols
+                state.cols,
             );
             const cycleCells = findCycles(newGrid, state.rows, state.cols);
             const satisfiedNodes = getSatisfiedNodes(
                 newGrid,
                 state.numbers,
                 state.rows,
-                state.cols
+                state.cols,
             );
 
             return {
@@ -108,7 +102,7 @@ export function getInitialState(rows: number, cols: number): SlantState {
     return {
         grid: Array.from(
             { length: rows },
-            () => Array(cols).fill(EMPTY) as CellState[]
+            () => new Array(cols).fill(EMPTY) as CellState[],
         ),
         numbers,
         solution,

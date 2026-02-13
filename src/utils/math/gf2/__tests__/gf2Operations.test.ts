@@ -10,13 +10,13 @@ describe('gf2Operations', () => {
             expect(gf2.countBits(2n)).toBe(1);
             expect(gf2.countBits(3n)).toBe(2);
             expect(gf2.countBits(7n)).toBe(3);
-            expect(gf2.countBits(0b101101n)).toBe(4);
+            expect(gf2.countBits(0b10_1101n)).toBe(4);
             expect(gf2.countBits(0xffn)).toBe(8);
         });
 
         it('should throw error for negative bigints', () => {
             expect(() => gf2.countBits(-1n)).toThrow(
-                'countBits called on negative bigint'
+                'countBits called on negative bigint',
             );
         });
     });
@@ -69,7 +69,7 @@ describe('gf2Operations', () => {
             expect(gf2.symmetricPow(A, 1)).toEqual(A);
             expect(gf2.symmetricPow(A, 2)).toEqual(gf2.multiplySym(A, A));
             expect(gf2.symmetricPow(A, 3)).toEqual(
-                gf2.multiplySym(gf2.multiplySym(A, A), A)
+                gf2.multiplySym(gf2.multiplySym(A, A), A),
             );
         });
 

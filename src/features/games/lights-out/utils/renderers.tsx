@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Getters } from '../../components/Board';
-import { DragProps } from '../../hooks/useDrag';
+import type { Getters } from '../../components/Board';
+import type { DragProps } from '../../hooks/useDrag';
 import { LIGHTS_OUT_STYLES } from '../config';
 
 import { Box } from '@/components/mui';
@@ -20,7 +20,7 @@ const ICON = (
 
 export function getFrontProps(
     getDragProps: (pos: string) => DragProps,
-    getters: Getters
+    getters: Getters,
 ) {
     const { getColor, getBorder } = getters;
 
@@ -60,16 +60,16 @@ export function getBackProps(getters: Getters) {
 export function getExampleProps(getters: Getters) {
     const frontProps = getFrontProps(
         (pos: string) => ({
-            onMouseDown: () => undefined,
-            onMouseEnter: () => undefined,
-            onTouchStart: () => undefined,
-            onKeyDown: () => undefined,
+            onMouseDown: () => {},
+            onMouseEnter: () => {},
+            onTouchStart: () => {},
+            onKeyDown: () => {},
             'data-pos': pos,
             role: 'presentation',
             tabIndex: -1,
             sx: { touchAction: 'none' as const, transition: 'none' },
         }),
-        getters
+        getters,
     );
 
     return (row: number, col: number) => {

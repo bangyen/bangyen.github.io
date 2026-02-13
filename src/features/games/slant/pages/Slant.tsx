@@ -24,7 +24,8 @@ import {
     MOBILE_PADDING,
     DESKTOP_PADDING,
 } from '../config';
-import { SlantAction, SlantState, CellState, EMPTY } from '../types';
+import type { SlantAction, SlantState, CellState } from '../types';
+import { EMPTY } from '../types';
 import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import { getBackProps, getFrontProps } from '../utils/renderers';
 
@@ -92,9 +93,9 @@ export default function Slant() {
                 enabled: !isGhostMode,
                 serialize: (s: SlantState) => ({
                     ...s,
-                    errorNodes: Array.from(s.errorNodes),
-                    cycleCells: Array.from(s.cycleCells),
-                    satisfiedNodes: Array.from(s.satisfiedNodes),
+                    errorNodes: [...s.errorNodes],
+                    cycleCells: [...s.cycleCells],
+                    satisfiedNodes: [...s.satisfiedNodes],
                 }),
                 deserialize: (saved: unknown) => {
                     const s = saved as SavedSlantState;
@@ -109,7 +110,7 @@ export default function Slant() {
         });
 
     const [ghostMoves, setGhostMoves] = useState<Map<string, CellState>>(
-        new Map()
+        new Map(),
     );
 
     // Persistence for ghost moves
@@ -121,7 +122,7 @@ export default function Slant() {
         onRestore: (saved: Map<string, CellState>) => {
             setGhostMoves(saved);
         },
-        serialize: (m: Map<string, CellState>) => Array.from(m.entries()),
+        serialize: (m: Map<string, CellState>) => [...m.entries()],
         deserialize: (saved: unknown) =>
             new Map(saved as [string, CellState][]),
     });
@@ -159,7 +160,7 @@ export default function Slant() {
     // Props for Numbers (Grid Overlay - Front Layer in Board terms)
     const frontProps = useMemo(
         () => getFrontProps(state, numberSize),
-        [state, numberSize]
+        [state, numberSize],
     );
 
     const handleGhostMove = useCallback((pos: string, val?: CellState) => {
@@ -199,7 +200,7 @@ export default function Slant() {
         () => ({
             padding: mobile ? '1rem' : '2rem',
         }),
-        [mobile]
+        [mobile],
     );
 
     const boardSx = useMemo(
@@ -213,7 +214,7 @@ export default function Slant() {
             border: '2px solid transparent',
             borderRadius: LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
         }),
-        [mobile, isGhostMode]
+        [mobile, isGhostMode],
     );
 
     const controls = isGhostMode ? null : (

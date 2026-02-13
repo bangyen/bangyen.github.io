@@ -1,8 +1,9 @@
 import { hasCycle } from './cycleDetection';
-import { SlantState, EMPTY, FORWARD, BACKWARD, CellState } from '../types';
+import type { SlantState, CellState } from '../types';
+import { EMPTY, FORWARD, BACKWARD } from '../types';
 
 export function getNextLogicalMove(
-    state: SlantState
+    state: SlantState,
 ): { row: number; col: number; reverse?: boolean } | null {
     const { grid, numbers, rows, cols } = state;
 
@@ -18,7 +19,7 @@ export function getNextLogicalMove(
                 { gr: r, gc: c - 1, pt: FORWARD },
                 { gr: r, gc: c, pt: BACKWARD },
             ].filter(
-                ({ gr, gc }) => gr >= 0 && gr < rows && gc >= 0 && gc < cols
+                ({ gr, gc }) => gr >= 0 && gr < rows && gc >= 0 && gc < cols,
             );
 
             let currentIn = 0;

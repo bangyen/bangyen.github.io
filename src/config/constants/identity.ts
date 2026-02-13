@@ -1,4 +1,4 @@
-import { PersonalInfo, Urls, Skill, Meta } from './types';
+import type { PersonalInfo, Urls, Skill, Meta } from './types';
 
 export const PERSONAL_INFO: PersonalInfo = {
     name: 'Bangyen Pham',

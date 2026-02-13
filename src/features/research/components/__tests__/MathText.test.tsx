@@ -38,7 +38,7 @@ describe('MathText', () => {
         render(<MathText text="2^{10} * 3^{5}" />);
 
         const wrapper = screen.getByLabelText(
-            '2 to the power of 10 times 3 to the power of 5'
+            '2 to the power of 10 times 3 to the power of 5',
         );
         expect(wrapper).toBeInTheDocument();
     });

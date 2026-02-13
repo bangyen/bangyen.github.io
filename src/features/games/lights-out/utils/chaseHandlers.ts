@@ -26,12 +26,12 @@ export function chaseLights(states: number[][], dims: number): number[][] {
 
 export function fillRow(
     row: number[],
-    dims: number
+    dims: number,
 ): {
     input: number[][];
     output: number[][];
 } {
-    const blank = Array(dims).fill(0) as number[];
+    const blank = new Array(dims).fill(0) as number[];
 
     const inputStates: number[][] = [blank];
     const outputStates: number[][] = [blank];
@@ -68,7 +68,7 @@ export function extendBack(states: number[][], size: number): number[][] {
 
 export function getStates(
     grid: number[],
-    dims: number
+    dims: number,
 ): {
     boardStates: number[][];
     inputStates: number[][];
@@ -150,7 +150,7 @@ export function handleChase(state: unknown, action: unknown): unknown {
 
 export function getCalculator(rows: number, _cols: number, dims: number) {
     return (
-        row: number[]
+        row: number[],
     ): {
         boardStates: number[][];
         inputStates: number[][];

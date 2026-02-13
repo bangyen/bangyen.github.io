@@ -1,6 +1,7 @@
 import { GAME_LOGIC_CONSTANTS } from '../config';
 import { getNodeIndex } from './cycleDetection';
-import { CellState, EMPTY, FORWARD, BACKWARD } from '../types';
+import type { CellState } from '../types';
+import { EMPTY, FORWARD, BACKWARD } from '../types';
 import { calculateNumbers } from './validation';
 
 import { DSU } from '@/utils/DSU';
@@ -26,11 +27,11 @@ import { DSU } from '@/utils/DSU';
 export function checkDeductiveSolvability(
     maskedNumbers: (number | null)[][],
     rows: number,
-    cols: number
+    cols: number,
 ): boolean {
     const grid: CellState[][] = Array.from(
         { length: rows },
-        () => Array(cols).fill(EMPTY) as CellState[]
+        () => new Array(cols).fill(EMPTY) as CellState[],
     );
     const dsu = new DSU((rows + 1) * (cols + 1));
     let changed = true;
@@ -51,7 +52,8 @@ export function checkDeductiveSolvability(
                     { gr: r, gc: c - 1, pt: FORWARD },
                     { gr: r, gc: c, pt: BACKWARD },
                 ].filter(
-                    ({ gr, gc }) => gr >= 0 && gr < rows && gc >= 0 && gc < cols
+                    ({ gr, gc }) =>
+                        gr >= 0 && gr < rows && gc >= 0 && gc < cols,
                 );
 
                 let confirmedIn = 0;
@@ -160,9 +162,12 @@ export function checkDeductiveSolvability(
     for (let r = 0; r <= rows; r++) {
         for (let c = 0; c <= cols; c++) {
             const target = maskedNumbers[r]?.[c];
-            if (target !== null && target !== undefined) {
-                if (currentNumbers[r]?.[c] !== target) return false;
-            }
+            if (
+                target !== null &&
+                target !== undefined &&
+                currentNumbers[r]?.[c] !== target
+            )
+                return false;
         }
     }
 
@@ -182,7 +187,7 @@ export function pruneHints(
     numbers: (number | null)[][],
     rows: number,
     cols: number,
-    density: number
+    density: number,
 ): (number | null)[][] {
     const maskedNumbers = numbers.map(r => [...r]);
     const coords: { r: number; c: number }[] = [];
@@ -244,7 +249,7 @@ export function pruneHints(
  */
 export function generatePuzzle(
     rows: number,
-    cols: number
+    cols: number,
 ): { numbers: (number | null)[][]; solution: CellState[][] } {
     let grid: CellState[][] = [];
     let success = false;
@@ -254,7 +259,7 @@ export function generatePuzzle(
     for (let attempt = 0; attempt < 50 && !success; attempt++) {
         grid = Array.from(
             { length: rows },
-            () => Array(cols).fill(EMPTY) as CellState[]
+            () => new Array(cols).fill(EMPTY) as CellState[],
         );
         const dsu = new DSU((rows + 1) * (cols + 1));
         const cells: { r: number; c: number }[] = [];
@@ -325,9 +330,9 @@ export function generatePuzzle(
         grid = Array.from(
             { length: rows },
             (_, r) =>
-                Array(cols).fill(
-                    r % 2 === 0 ? FORWARD : BACKWARD
-                ) as CellState[]
+                new Array(cols).fill(
+                    r % 2 === 0 ? FORWARD : BACKWARD,
+                ) as CellState[],
         );
     }
 
@@ -337,7 +342,7 @@ export function generatePuzzle(
         fullNumbers.map(r => r.map(n => n as number | null)),
         rows,
         cols,
-        GAME_LOGIC_CONSTANTS.HINT_DENSITY
+        GAME_LOGIC_CONSTANTS.HINT_DENSITY,
     );
 
     return { numbers: maskedNumbers, solution: grid };

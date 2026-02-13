@@ -14,7 +14,7 @@ import {
     isSolved,
 } from '../boardHandlers';
 
-import { BoardAction } from '@/features/games/lights-out/types';
+import type { BoardAction } from '@/features/games/lights-out/types';
 import { createGridSize, createCellIndex } from '@/utils/types';
 
 // Helper to access bitmask grid
@@ -31,9 +31,9 @@ describe('boardHandlers', () => {
 
             expect(grid.length).toBe(rows);
             // Each row should be 0
-            grid.forEach(row => {
+            for (const row of grid) {
                 expect(row).toBe(0);
-            });
+            }
         });
     });
 

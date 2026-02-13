@@ -44,7 +44,7 @@ describe('Test Utilities', () => {
             render(
                 <TestWrapper>
                     <MockComponent />
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             expect(screen.getByTestId('mock-component')).toBeInTheDocument();
@@ -57,7 +57,7 @@ describe('Test Utilities', () => {
             render(
                 <TestWrapper theme={customTheme}>
                     <MockComponent />
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             expect(screen.getByTestId('mock-component')).toBeInTheDocument();
@@ -67,7 +67,7 @@ describe('Test Utilities', () => {
             render(
                 <TestWrapper>
                     <MockComponent />
-                </TestWrapper>
+                </TestWrapper>,
             );
 
             // Should render without router errors
@@ -114,11 +114,11 @@ describe('Test Utilities', () => {
             expect(mockData.oligopoly).toBeInstanceOf(Array);
             expect(mockData.oligopoly).toHaveLength(3);
 
-            mockData.oligopoly.forEach(item => {
+            for (const item of mockData.oligopoly) {
                 expect(item).toHaveProperty('round');
                 expect(item).toHaveProperty('price');
                 expect(item).toHaveProperty('hhi');
-            });
+            }
         });
 
         test('has correct data types', () => {
@@ -153,9 +153,7 @@ describe('Test Utilities', () => {
             const response = mockFetchResponses.success(testData);
 
             const buffer = await response.arrayBuffer();
-            const decoded = String.fromCharCode(
-                ...Array.from(new Uint8Array(buffer))
-            );
+            const decoded = String.fromCharCode(...new Uint8Array(buffer));
             const parsed = JSON.parse(decoded) as unknown;
 
             expect(parsed).toEqual(testData);
@@ -210,12 +208,12 @@ describe('Test Utilities', () => {
         test('generateChartData creates valid data structure', () => {
             const data = testDataGenerators.generateChartData(3);
 
-            data.forEach((item, index) => {
+            for (const [index, item] of data.entries()) {
                 expect(item).toHaveProperty('x', index + 1);
                 expect(item).toHaveProperty('y');
                 expect(typeof item.x).toBe('number');
                 expect(typeof item.y).toBe('number');
-            });
+            }
         });
 
         test('generateChartData uses default length', () => {
@@ -276,7 +274,7 @@ describe('Test Utilities', () => {
             renderWithProviders(<TestComponent />);
 
             expect(screen.getByTestId('data-test')).toHaveTextContent(
-                '5 accuracy points'
+                '5 accuracy points',
             );
         });
 
@@ -285,9 +283,7 @@ describe('Test Utilities', () => {
             const response = mockFetchResponses.success(testData);
 
             const buffer = await response.arrayBuffer();
-            const decoded = String.fromCharCode(
-                ...Array.from(new Uint8Array(buffer))
-            );
+            const decoded = String.fromCharCode(...new Uint8Array(buffer));
             const parsed = JSON.parse(decoded) as unknown;
 
             expect(parsed).toEqual(testData);
@@ -313,7 +309,7 @@ describe('Test Utilities', () => {
             const user = testDataGenerators.generateUserData(
                 null as unknown as Partial<
                     ReturnType<typeof testDataGenerators.generateUserData>
-                >
+                >,
             );
 
             expect(user).toHaveProperty('id', 1);

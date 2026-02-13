@@ -7,7 +7,7 @@ import { InfoCalculator } from './InfoCalculator';
 import { InfoExample } from './InfoExample';
 import { InfoInstructions } from './InfoInstructions';
 import { InfoNavigation } from './InfoNavigation';
-import { Palette, PropsFactory } from '../../components/Board';
+import type { Palette, PropsFactory } from '../../components/Board';
 import { useDrag } from '../../hooks/useDrag';
 
 import { CloseRounded, AnalyticsRounded } from '@/components/icons';
@@ -53,15 +53,15 @@ export default function Info(props: InfoProps): React.ReactElement {
     const TOTAL_STEPS = 3;
 
     // Calculator State (hoisted to persist across steps)
-    const [calcRow, setCalcRow] = useState<number[]>(Array(cols).fill(0));
+    const [calcRow, setCalcRow] = useState<number[]>(new Array(cols).fill(0));
 
     useEffect(() => {
-        setCalcRow(Array(cols).fill(0));
+        setCalcRow(new Array(cols).fill(0));
     }, [cols, palette]); // Reset only on config change
 
     const toggleTile = useCallback(
         (colAttr: string) => {
-            const col = parseInt(colAttr, 10);
+            const col = Number.parseInt(colAttr, 10);
             setCalcRow(prev => {
                 const next = [...prev];
                 if (next[col] !== undefined) {
@@ -70,7 +70,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                 return next;
             });
         },
-        [setCalcRow]
+        [setCalcRow],
     );
 
     const res = getProduct(calcRow, rows, cols);
@@ -88,7 +88,7 @@ export default function Info(props: InfoProps): React.ReactElement {
 
     // Reset functionality
     const handleReset = () => {
-        setCalcRow(Array(cols).fill(0));
+        setCalcRow(new Array(cols).fill(0));
     };
 
     const handleNext = () => {
@@ -105,46 +105,40 @@ export default function Info(props: InfoProps): React.ReactElement {
     };
 
     const href = `#${ROUTES.pages.LightsOutResearch}`;
-    let analysisButton;
-
-    if (isMobile) {
-        analysisButton = (
-            <IconButton
-                component="a"
-                href={href}
-                size="small"
-                sx={{
-                    color: COLORS.text.secondary,
-                }}
-            >
-                <AnalyticsRounded />
-            </IconButton>
-        );
-    } else {
-        analysisButton = (
-            <Button
-                component="a"
-                href={href}
-                variant="outlined"
-                size="small"
-                startIcon={<AnalyticsRounded />}
-                sx={{
-                    borderColor: COLORS.border.subtle,
-                    color: COLORS.text.secondary,
-                    fontSize: '0.75rem',
-                    py: 0.75,
-                    px: 1.5,
-                    '&:hover': {
-                        borderColor: COLORS.primary.main,
-                        color: COLORS.primary.main,
-                        backgroundColor: COLORS.interactive.hover,
-                    },
-                }}
-            >
-                Analysis
-            </Button>
-        );
-    }
+    const analysisButton = isMobile ? (
+        <IconButton
+            component="a"
+            href={href}
+            size="small"
+            sx={{
+                color: COLORS.text.secondary,
+            }}
+        >
+            <AnalyticsRounded />
+        </IconButton>
+    ) : (
+        <Button
+            component="a"
+            href={href}
+            variant="outlined"
+            size="small"
+            startIcon={<AnalyticsRounded />}
+            sx={{
+                borderColor: COLORS.border.subtle,
+                color: COLORS.text.secondary,
+                fontSize: '0.75rem',
+                py: 0.75,
+                px: 1.5,
+                '&:hover': {
+                    borderColor: COLORS.primary.main,
+                    color: COLORS.primary.main,
+                    backgroundColor: COLORS.interactive.hover,
+                },
+            }}
+        >
+            Analysis
+        </Button>
+    );
 
     return (
         <Modal

@@ -1,8 +1,13 @@
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 
-import { FORWARD, BACKWARD, CellState } from '../../types';
-import { SolverMessage, Conflict, CellInfo } from '../../workers/solverWorker';
+import type { CellState } from '../../types';
+import { FORWARD, BACKWARD } from '../../types';
+import type {
+    SolverMessage,
+    Conflict,
+    CellInfo,
+} from '../../workers/solverWorker';
 import { GhostCanvas } from '../GhostCanvas';
 
 // Mock slant-wasm before boardHandlers imports it (uses import.meta.url incompatible with Jest)
@@ -56,11 +61,11 @@ class MockWorker {
             if (
                 numbers[0]?.[1] === 1 &&
                 userMoves.has('0,0') &&
-                userMoves.has('0,1')
+                userMoves.has('0,1') &&
+                userMoves.get('0,0') === 1 &&
+                userMoves.get('0,1') === 2
             ) {
-                if (userMoves.get('0,0') === 1 && userMoves.get('0,1') === 2) {
-                    conflicts.push({ type: 'node', r: 0, c: 1 });
-                }
+                conflicts.push({ type: 'node', r: 0, c: 1 });
             }
 
             setTimeout(() => {
@@ -80,7 +85,7 @@ class MockWorker {
     terminate() {}
 }
 // @ts-expect-error Global mock injection for testing environment
-global.Worker = MockWorker;
+globalThis.Worker = MockWorker;
 
 // Mock theme
 vi.mock('@/config/theme', () => ({
@@ -116,7 +121,7 @@ vi.mock('../../../hooks/useGameInteraction', () => ({
             c: number,
             right: boolean,
             val?: number,
-            init?: boolean
+            init?: boolean,
         ) => number | undefined;
     }) => ({
         getDragProps: (pos: string) => ({
@@ -154,7 +159,7 @@ vi.mock('@/components/ui/CustomGrid', () => ({
         cols: number;
         cellProps: (
             r: number,
-            c: number
+            c: number,
         ) => {
             sx?: Record<string, unknown>;
             children: React.ReactNode;
@@ -167,14 +172,14 @@ vi.mock('@/components/ui/CustomGrid', () => ({
                     // Sanitize sx for style prop
                     const sanitizedStyle: Record<string, unknown> = {};
                     if (sx) {
-                        Object.keys(sx).forEach(key => {
+                        for (const key of Object.keys(sx)) {
                             if (
                                 !key.startsWith('&') &&
                                 typeof sx[key] !== 'object'
                             ) {
                                 sanitizedStyle[key] = sx[key];
                             }
-                        });
+                        }
                     }
                     return (
                         <div
@@ -185,7 +190,7 @@ vi.mock('@/components/ui/CustomGrid', () => ({
                             {props.children}
                         </div>
                     );
-                })
+                }),
             )}
         </div>
     ),
@@ -210,7 +215,9 @@ vi.mock('@mui/material', () => ({
 const DEFAULT_PROPS = {
     rows: 3,
     cols: 3,
-    numbers: Array(4).fill(Array(4).fill(null)) as (number | null)[][],
+    numbers: new Array(4)
+        .fill(null)
+        .map(() => new Array<number | null>(4).fill(null)),
     size: 2, // rem
     initialMoves: new Map<string, CellState>(),
     onMove: vi.fn(),
@@ -232,7 +239,7 @@ describe('GhostCanvas', () => {
     it('handles click interactions', () => {
         const onMove = vi.fn();
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} onMove={onMove} />
+            <GhostCanvas {...DEFAULT_PROPS} onMove={onMove} />,
         );
 
         const cell = container.querySelector('[data-pos="0,0"]');
@@ -246,7 +253,7 @@ describe('GhostCanvas', () => {
     it('handles drag interactions (paint mode)', () => {
         const onMove = vi.fn();
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} onMove={onMove} />
+            <GhostCanvas {...DEFAULT_PROPS} onMove={onMove} />,
         );
 
         const cell1 = container.querySelector('[data-pos="0,0"]');
@@ -262,11 +269,12 @@ describe('GhostCanvas', () => {
     });
 
     it('propagates constraints (shallow propagation check)', async () => {
-        const numbers = Array(4)
+        const numbers = new Array(4)
+            .fill(null)
             .fill(null)
             .map(
                 (): (number | null)[] =>
-                    Array(4).fill(null) as (number | null)[]
+                    new Array(4).fill(null) as (number | null)[],
             );
         const row0 = numbers[0];
         if (row0) {
@@ -281,12 +289,12 @@ describe('GhostCanvas', () => {
                 {...DEFAULT_PROPS}
                 numbers={numbers}
                 initialMoves={initialMoves}
-            />
+            />,
         );
 
         await waitFor(() => {
             const cell01 = container.querySelector(
-                '[data-type="cell"][data-pos="0,1"]'
+                '[data-type="cell"][data-pos="0,1"]',
             );
             expect(cell01).toBeInTheDocument();
             // Use precise traversal: Wrapper (div) -> Line (div)
@@ -295,17 +303,18 @@ describe('GhostCanvas', () => {
             expect(innerLine).toBeInTheDocument();
             expect(innerLine).toHaveAttribute(
                 'style',
-                expect.stringMatching(/background-color:\s*green/)
+                expect.stringMatching(/background-color:\s*green/),
             );
         });
     });
 
     it('detects conflicts (red highlight)', async () => {
-        const numbers = Array(4)
+        const numbers = new Array(4)
+            .fill(null)
             .fill(null)
             .map(
                 (): (number | null)[] =>
-                    Array(4).fill(null) as (number | null)[]
+                    new Array(4).fill(null) as (number | null)[],
             );
         const row0 = numbers[0];
         if (row0) {
@@ -321,7 +330,7 @@ describe('GhostCanvas', () => {
                 {...DEFAULT_PROPS}
                 numbers={numbers}
                 initialMoves={initialMoves}
-            />
+            />,
         );
 
         await waitFor(() => {
@@ -329,13 +338,13 @@ describe('GhostCanvas', () => {
             // Cell lines only turn red if there is a cell-level conflict.
             // So we check the Hint element at (0,1).
             const hint01 = container.querySelector(
-                '[data-type="hint"][data-pos="0,1"]'
+                '[data-type="hint"][data-pos="0,1"]',
             );
             expect(hint01).toBeInTheDocument();
             // Hint style is on the wrapper or inner?
             expect(hint01).toHaveAttribute(
                 'style',
-                expect.stringMatching(/background-color:\s*red/)
+                expect.stringMatching(/background-color:\s*red/),
             );
         });
     });
@@ -350,7 +359,7 @@ describe('GhostCanvas', () => {
                 {...DEFAULT_PROPS}
                 initialMoves={initialMoves}
                 onMove={onMove}
-            />
+            />,
         );
 
         const cell = container.querySelector('[data-pos="0,0"]');
@@ -368,12 +377,12 @@ describe('GhostCanvas', () => {
                 onCopy={onCopy}
                 onClear={onClear}
                 onClose={onClose}
-            />
+            />,
         );
 
         // Verify tooltip button exists
         expect(
-            container.querySelector('[data-testid="tooltip-button"]')
+            container.querySelector('[data-testid="tooltip-button"]'),
         ).toBeInTheDocument();
     });
 
@@ -387,7 +396,7 @@ describe('GhostCanvas', () => {
                 {...DEFAULT_PROPS}
                 initialMoves={initialMoves}
                 onMove={onMove}
-            />
+            />,
         );
 
         // Change initialMoves to trigger update
@@ -400,7 +409,7 @@ describe('GhostCanvas', () => {
                 {...DEFAULT_PROPS}
                 initialMoves={updatedMoves}
                 onMove={onMove}
-            />
+            />,
         );
 
         await waitFor(() => {
@@ -411,12 +420,13 @@ describe('GhostCanvas', () => {
     });
 
     it('displays empty state for missing numbers', async () => {
-        const numbers: (number | null)[][] = Array(4)
+        const numbers: (number | null)[][] = new Array(4)
             .fill(null)
-            .map(() => Array(4).fill(null));
+            .fill(null)
+            .map(() => new Array(4).fill(null));
 
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} numbers={numbers} />
+            <GhostCanvas {...DEFAULT_PROPS} numbers={numbers} />,
         );
 
         await waitFor(() => {
@@ -430,7 +440,7 @@ describe('GhostCanvas', () => {
 
         // Component should render with grid
         expect(
-            container.querySelector('[data-type="cell"]')
+            container.querySelector('[data-type="cell"]'),
         ).toBeInTheDocument();
 
         // Verify numbers grid overlay exists
@@ -442,7 +452,7 @@ describe('GhostCanvas', () => {
         const onMove = vi.fn();
 
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} onMove={onMove} />
+            <GhostCanvas {...DEFAULT_PROPS} onMove={onMove} />,
         );
 
         const cell = container.querySelector('[data-pos="0,0"]');
@@ -460,9 +470,10 @@ describe('GhostCanvas', () => {
 
     it('shows cycle cells with distinct color', async () => {
         // This test verifies the cycle cell coloring logic
-        const numbers = Array(4)
+        const numbers = new Array(4)
             .fill(null)
-            .map((): (number | null)[] => Array(4).fill(null));
+            .fill(null)
+            .map((): (number | null)[] => new Array(4).fill(null));
 
         const initialMoves = new Map<string, CellState>();
         initialMoves.set('0,0', FORWARD);
@@ -472,7 +483,7 @@ describe('GhostCanvas', () => {
                 {...DEFAULT_PROPS}
                 numbers={numbers}
                 initialMoves={initialMoves}
-            />
+            />,
         );
 
         await waitFor(() => {
@@ -486,7 +497,7 @@ describe('GhostCanvas', () => {
         initialMoves.set('0,0', FORWARD);
 
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} initialMoves={initialMoves} />
+            <GhostCanvas {...DEFAULT_PROPS} initialMoves={initialMoves} />,
         );
 
         const cell = container.querySelector('[data-pos="0,0"]');
@@ -494,9 +505,10 @@ describe('GhostCanvas', () => {
     });
 
     it('color logic: propagated cells show green', async () => {
-        const numbers = Array(4)
+        const numbers = new Array(4)
             .fill(null)
-            .map((): (number | null)[] => Array(4).fill(null));
+            .fill(null)
+            .map((): (number | null)[] => new Array(4).fill(null));
         const row0 = numbers[0];
         if (row0) {
             row0[1] = 1;
@@ -510,7 +522,7 @@ describe('GhostCanvas', () => {
                 {...DEFAULT_PROPS}
                 numbers={numbers}
                 initialMoves={initialMoves}
-            />
+            />,
         );
 
         await waitFor(() => {
@@ -520,16 +532,17 @@ describe('GhostCanvas', () => {
     });
 
     it('number hints display when value is present', () => {
-        const numbers = Array(4)
+        const numbers = new Array(4)
             .fill(null)
-            .map((): (number | null)[] => Array(4).fill(null));
+            .fill(null)
+            .map((): (number | null)[] => new Array(4).fill(null));
         const row0 = numbers[0];
         if (row0) {
             row0[1] = 3;
         }
 
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} numbers={numbers} />
+            <GhostCanvas {...DEFAULT_PROPS} numbers={numbers} />,
         );
 
         const hints = container.querySelectorAll('[data-type="hint"]');
@@ -537,12 +550,13 @@ describe('GhostCanvas', () => {
     });
 
     it('number hints are hidden when value is null', () => {
-        const numbers: (number | null)[][] = Array(4)
+        const numbers: (number | null)[][] = new Array(4)
             .fill(null)
-            .map(() => Array(4).fill(null));
+            .fill(null)
+            .map(() => new Array(4).fill(null));
 
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} numbers={numbers} />
+            <GhostCanvas {...DEFAULT_PROPS} numbers={numbers} />,
         );
 
         const hints = container.querySelectorAll('[data-type="hint"]');

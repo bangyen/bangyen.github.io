@@ -37,7 +37,7 @@ describe('polynomialUtils', () => {
 
         it('should throw error for division by zero', () => {
             expect(() => polyDiv(0b1n, 0n)).toThrow(
-                'Division by zero polynomial'
+                'Division by zero polynomial',
             );
         });
 
@@ -88,7 +88,7 @@ describe('polynomialUtils', () => {
             const factors = factorPoly(0b101n);
             expect(factors).toContainEqual({ factor: 3n, exponent: 2 });
 
-            const factors2 = factorPoly(0b11101n);
+            const factors2 = factorPoly(0b1_1101n);
             expect(factors2).toContainEqual({ factor: 11n, exponent: 1 });
         });
 

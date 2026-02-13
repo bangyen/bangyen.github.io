@@ -33,5 +33,5 @@ export const GhostHint: React.FC<GhostHintProps> = React.memo(
                 {value ?? ''}
             </Box>
         );
-    }
+    },
 );

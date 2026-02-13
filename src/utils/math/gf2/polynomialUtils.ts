@@ -88,7 +88,7 @@ export function polyDegree(p: bigint): number {
  */
 export function polyDiv(
     a: bigint,
-    b: bigint
+    b: bigint,
 ): { quotient: bigint; remainder: bigint } {
     if (b === 0n) throw new Error('Division by zero polynomial');
     let quotient = 0n;
@@ -126,10 +126,10 @@ export function polyMod(a: bigint, b: bigint): bigint {
 export function evalPolynomial(
     matrix: bigint[],
     poly: bigint,
-    cache?: Map<number, bigint[]>
+    cache?: Map<number, bigint[]>,
 ): bigint[] {
     const size = matrix.length;
-    let output = Array<bigint>(size).fill(0n);
+    let output = new Array<bigint>(size).fill(0n);
     let degree = 0;
 
     let p = poly;
@@ -351,7 +351,7 @@ export function findPattern(n: number): Pattern {
     let curr = [...I];
     const R: number[] = [0];
 
-    for (let k = 2; k <= 10000000; k++) {
+    for (let k = 2; k <= 10_000_000; k++) {
         const next: bigint[] = [];
         for (let r = 0; r < n; r++) {
             let nextRow = prev[r] ?? 0n;

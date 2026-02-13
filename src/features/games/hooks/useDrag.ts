@@ -29,7 +29,7 @@ interface UseDragOptions {
     onAction: (
         pos: string,
         isRightClick: boolean,
-        isInitialClick: boolean
+        isInitialClick: boolean,
     ) => void;
     /** Optional check to enable/disable drag interactions */
     checkEnabled?: () => boolean;
@@ -98,7 +98,7 @@ export function useDrag({
 
             const element = document.elementFromPoint(
                 touch.clientX,
-                touch.clientY
+                touch.clientY,
             );
             if (!element) return;
 
@@ -111,22 +111,22 @@ export function useDrag({
                 }
             }
         },
-        [isDragging, onAction, posAttribute]
+        [isDragging, onAction, posAttribute],
     );
 
     useEffect(() => {
-        window.addEventListener('mouseup', stopDragging);
-        window.addEventListener('touchend', stopDragging);
-        window.addEventListener('touchcancel', stopDragging);
-        window.addEventListener('touchmove', handleTouchMove, {
+        globalThis.addEventListener('mouseup', stopDragging);
+        globalThis.addEventListener('touchend', stopDragging);
+        globalThis.addEventListener('touchcancel', stopDragging);
+        globalThis.addEventListener('touchmove', handleTouchMove, {
             passive: false,
         });
 
         return () => {
-            window.removeEventListener('mouseup', stopDragging);
-            window.removeEventListener('touchend', stopDragging);
-            window.removeEventListener('touchcancel', stopDragging);
-            window.removeEventListener('touchmove', handleTouchMove);
+            globalThis.removeEventListener('mouseup', stopDragging);
+            globalThis.removeEventListener('touchend', stopDragging);
+            globalThis.removeEventListener('touchcancel', stopDragging);
+            globalThis.removeEventListener('touchmove', handleTouchMove);
         };
     }, [stopDragging, handleTouchMove]);
 
@@ -186,7 +186,7 @@ export function useDrag({
             posAttribute,
             preventDefault,
             transition,
-        ]
+        ],
     );
 
     return {

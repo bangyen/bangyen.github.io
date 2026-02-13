@@ -28,7 +28,7 @@ describe('Board Component', () => {
                 size={20}
                 rows={2}
                 cols={2}
-            />
+            />,
         );
 
         // Check front grid items (2x2)
@@ -49,7 +49,7 @@ describe('Board Component', () => {
                 size={20}
                 rows={2}
                 cols={2}
-            />
+            />,
         );
 
         const outerBox = container.firstChild as HTMLElement;
@@ -67,7 +67,7 @@ describe('Board Component', () => {
                 cols={2}
                 frontLayerSx={{ pointerEvents: 'none' }}
                 backLayerSx={{ pointerEvents: 'none' }}
-            />
+            />,
         );
 
         // This triggers the branches:
@@ -150,14 +150,14 @@ describe('useGetters', () => {
         // All 1s -> total = 4. Condition false. color = true.
         const getTileAllOnes = vi.fn(() => 1);
         const { result: res1 } = renderHook(() =>
-            useGetters(getTileAllOnes, mockPalette)
+            useGetters(getTileAllOnes, mockPalette),
         );
         expect(res1.current.getFiller(0, 0)).toBe('blue');
 
         // topLeft=0, others=0 -> total=0. (!0 || !0) is true. total < 3 is true. color = false.
         const getTileAllZeros = vi.fn(() => 0);
         const { result: res2 } = renderHook(() =>
-            useGetters(getTileAllZeros, mockPalette)
+            useGetters(getTileAllZeros, mockPalette),
         );
         expect(res2.current.getFiller(0, 0)).toBe('red');
     });

@@ -13,9 +13,10 @@ import {
     SLANT_STYLES,
     LAYOUT_CONSTANTS,
 } from '../config';
-import { FORWARD, BACKWARD, EMPTY, CellState } from '../types';
+import type { CellState } from '../types';
+import { FORWARD, BACKWARD, EMPTY } from '../types';
 import { createWorker } from '../utils/workerUtils';
-import { type SolverMessage } from '../workers/solverWorker';
+import type { SolverMessage } from '../workers/solverWorker';
 
 import { CustomGrid } from '@/components/ui/CustomGrid';
 import { COLORS, LAYOUT } from '@/config/theme';
@@ -67,7 +68,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
             c: number,
             isRightClick: boolean,
             draggingValue: CellState | undefined,
-            isInitialClick?: boolean
+            isInitialClick?: boolean,
         ) => {
             const pos = getPosKey(r, c);
 
@@ -103,7 +104,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
 
     // Computed state
     const [gridState, setGridState] = useState<Map<string, CellInfo>>(
-        new Map()
+        new Map(),
     );
     const [conflicts, setConflicts] = useState<Conflict[]>([]);
     const [cycleCells, setCycleCells] = useState<Set<string>>(new Set());
@@ -156,18 +157,18 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
             new Set(
                 conflicts
                     .filter(c => c.type === 'cell')
-                    .map(c => getPosKey(c.r, c.c))
+                    .map(c => getPosKey(c.r, c.c)),
             ),
-        [conflicts]
+        [conflicts],
     );
     const nodeConflictSet = useMemo(
         () =>
             new Set(
                 conflicts
                     .filter(c => c.type === 'node')
-                    .map(c => getPosKey(c.r, c.c))
+                    .map(c => getPosKey(c.r, c.c)),
             ),
-        [conflicts]
+        [conflicts],
     );
 
     const getCellProps = useCallback(
@@ -210,7 +211,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 children: <GhostCell value={value} color={color} />,
             };
         },
-        [gridState, conflictSet, cycleCells, getDragProps]
+        [gridState, conflictSet, cycleCells, getDragProps],
     );
 
     const getNumberProps = useCallback(
@@ -234,21 +235,21 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                         ? COLORS.data.red
                         : SLANT_STYLES.GHOST.HINT_BG,
                     border:
-                        value != null
-                            ? `2px solid ${
+                        value == null
+                            ? 'none'
+                            : `2px solid ${
                                   hasConflict
                                       ? COLORS.data.red
                                       : SLANT_STYLES.GHOST.HINT_BORDER
-                              }`
-                            : 'none',
+                              }`,
                     zIndex: 5,
-                    opacity: value != null ? 1 : 0,
+                    opacity: value == null ? 0 : 1,
                     position: 'relative',
                     pointerEvents: 'none',
                 },
             };
         },
-        [numbers, nodeConflictSet, numberSize]
+        [numbers, nodeConflictSet, numberSize],
     );
 
     return (

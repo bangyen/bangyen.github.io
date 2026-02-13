@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 
-import { Palette } from '../../components/Board';
+import type { Palette } from '../../components/Board';
 import {
     getBoardIconFrames,
     getInputIconFrames,
@@ -37,10 +37,10 @@ export function GridWithKeyframes({
                     r,
                     c,
                     dims,
-                    palette
+                    palette,
                 );
                 return { name, frames };
-            })
+            }),
         );
 
         // Generate keyframes for input row
@@ -64,7 +64,7 @@ export function GridWithKeyframes({
                         kf.frames as unknown as Record<
                             string,
                             Record<string, string>
-                        >
+                        >,
                     )
                         .map(
                             ([p, s]) => `
@@ -72,15 +72,15 @@ export function GridWithKeyframes({
                             ${Object.entries(s)
                                 .map(
                                     ([k, v]) =>
-                                        `${k.replace(/[A-Z]/g, m => `-${m.toLowerCase()}`)}: ${v};`
+                                        `${k.replaceAll(/[A-Z]/g, m => `-${m.toLowerCase()}`)}: ${v};`,
                                 )
                                 .join(' ')}
                         }
-                    `
+                    `,
                         )
                         .join('')}
                 }
-            `
+            `,
                     )
                     .join('')}
             </style>

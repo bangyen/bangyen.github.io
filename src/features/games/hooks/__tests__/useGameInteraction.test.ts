@@ -56,7 +56,7 @@ describe('useGameInteraction', () => {
             useGameInteraction({
                 ...defaultOptions,
                 checkEnabled: () => false,
-            })
+            }),
         );
 
         act(() => {

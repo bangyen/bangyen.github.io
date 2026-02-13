@@ -2,7 +2,8 @@ import { Box } from '@mui/material';
 import React from 'react';
 
 import { SLANT_STYLES, LAYOUT_CONSTANTS } from '../config';
-import { FORWARD, BACKWARD, CellState } from '../types';
+import type { CellState } from '../types';
+import { FORWARD, BACKWARD } from '../types';
 
 import { ANIMATIONS, SPACING } from '@/config/theme';
 
@@ -57,5 +58,5 @@ export const GhostCell: React.FC<GhostCellProps> = React.memo(
                 )}
             </Box>
         );
-    }
+    },
 );

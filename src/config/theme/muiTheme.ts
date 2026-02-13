@@ -61,7 +61,7 @@ export function createAppTheme(mode: 'light' | 'dark' = 'dark') {
             },
         },
         shape: {
-            borderRadius: parseInt(SPACING.borderRadius.md),
+            borderRadius: Number.parseInt(SPACING.borderRadius.md),
         },
         components: {
             MuiCssBaseline: {

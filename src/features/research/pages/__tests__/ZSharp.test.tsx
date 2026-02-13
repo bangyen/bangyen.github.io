@@ -10,7 +10,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { vi, type Mock } from 'vitest';
 
-import { ResearchDemoProps, ViewType } from '../../types';
+import type { ResearchDemoProps, ViewType } from '../../types';
 import ZSharp from '../ZSharp';
 
 // Mocks
@@ -82,7 +82,7 @@ class MockDecompressionStream {
                                 train_accuracies: [82, 87],
                                 train_losses: [0.45, 0.35],
                             },
-                        })
+                        }),
                     ),
                 })
                 .mockResolvedValueOnce({ done: true }),
@@ -90,15 +90,16 @@ class MockDecompressionStream {
     };
 }
 
-const originalResponse = (global as unknown as { Response: typeof Response })
-    .Response;
+const originalResponse = (
+    globalThis as unknown as { Response: typeof Response }
+).Response;
 
-Object.defineProperty(global, 'DecompressionStream', {
+Object.defineProperty(globalThis, 'DecompressionStream', {
     value: MockDecompressionStream,
     writable: true,
 });
 
-Object.defineProperty(global, 'Response', {
+Object.defineProperty(globalThis, 'Response', {
     value: class extends originalResponse {
         override async text() {
             const self = this as unknown as { _data: unknown };
@@ -126,7 +127,7 @@ Object.defineProperty(global, 'Response', {
 describe('ZSharp Component', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-        global.fetch = vi.fn();
+        globalThis.fetch = vi.fn();
     });
 
     const renderZSharp = async () => {
@@ -137,7 +138,7 @@ describe('ZSharp Component', () => {
                     <ThemeProvider theme={createTheme()}>
                         <ZSharp />
                     </ThemeProvider>
-                </BrowserRouter>
+                </BrowserRouter>,
             );
             await Promise.resolve();
         });
@@ -145,7 +146,7 @@ describe('ZSharp Component', () => {
     };
 
     test('renders correctly and loads data', async () => {
-        (global.fetch as Mock).mockResolvedValue({
+        (globalThis.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new Uint8Array([0x1f, 0x8b, 0, 0]).buffer),
@@ -156,25 +157,25 @@ describe('ZSharp Component', () => {
 
         await waitFor(() => {
             expect(
-                screen.getByTestId('chart-data-count')
+                screen.getByTestId('chart-data-count'),
             ).not.toHaveTextContent('0');
         });
     });
 
     test('handles fetch failure and uses fallback data', async () => {
-        (global.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
+        (globalThis.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
 
         await renderZSharp();
         await waitFor(() => {
-            const count = parseInt(
-                screen.getByTestId('chart-data-count').textContent || '0'
+            const count = Number.parseInt(
+                screen.getByTestId('chart-data-count').textContent || '0',
             );
             expect(count).toBeGreaterThan(0);
         });
     });
 
     test('handles view type changes', async () => {
-        (global.fetch as Mock).mockResolvedValue({
+        (globalThis.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
                 Promise.resolve(new TextEncoder().encode('{}').buffer),
@@ -183,7 +184,7 @@ describe('ZSharp Component', () => {
         await renderZSharp();
         await waitFor(() => {
             expect(screen.getByTestId('current-view')).toHaveTextContent(
-                'accuracy'
+                'accuracy',
             );
         });
 

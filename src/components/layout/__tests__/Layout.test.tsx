@@ -9,7 +9,7 @@ describe('Layout Components', () => {
             render(
                 <Section data-testid="section">
                     <div>Test Content</div>
-                </Section>
+                </Section>,
             );
             expect(screen.getByText('Test Content')).toBeInTheDocument();
             // Verify the inner Box with maxWidth is rendered
@@ -29,7 +29,7 @@ describe('Layout Components', () => {
             render(
                 <Section paddingY="10px" paddingX="20px" data-testid="section">
                     Test
-                </Section>
+                </Section>,
             );
             const section = screen.getByTestId('section');
             expect(section).toBeInTheDocument();
@@ -40,7 +40,7 @@ describe('Layout Components', () => {
     describe('BackgroundBox', () => {
         test('renders children with absolute positioning', () => {
             render(
-                <BackgroundBox data-testid="bg-box">BG Content</BackgroundBox>
+                <BackgroundBox data-testid="bg-box">BG Content</BackgroundBox>,
             );
             expect(screen.getByText('BG Content')).toBeInTheDocument();
             const box = screen.getByTestId('bg-box');
@@ -59,7 +59,7 @@ describe('Layout Components', () => {
             render(
                 <HeroContainer data-testid="hero-container">
                     Hero Content
-                </HeroContainer>
+                </HeroContainer>,
             );
             expect(screen.getByText('Hero Content')).toBeInTheDocument();
             // HeroContainer uses COMPONENT_VARIANTS.flexCenter for centering
@@ -71,7 +71,7 @@ describe('Layout Components', () => {
     describe('PageLayout', () => {
         test('renders children with full-height layout', () => {
             render(
-                <PageLayout data-testid="page-layout">Page Content</PageLayout>
+                <PageLayout data-testid="page-layout">Page Content</PageLayout>,
             );
             expect(screen.getByText('Page Content')).toBeInTheDocument();
             const layout = screen.getByTestId('page-layout');

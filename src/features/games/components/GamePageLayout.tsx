@@ -1,4 +1,4 @@
-import { SxProps, Theme } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material';
 import React from 'react';
 
 import { TrophyOverlay } from './TrophyOverlay';
@@ -42,7 +42,7 @@ export function GamePageLayout({
     showTrophy = false,
     onReset,
     boardSize = 0,
-    iconSizeRatio = 1.0,
+    iconSizeRatio = 1,
     primaryColor,
     secondaryColor,
     useSecondaryTrophy = false,

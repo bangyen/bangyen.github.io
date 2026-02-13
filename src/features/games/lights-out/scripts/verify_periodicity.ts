@@ -9,16 +9,16 @@ import {
 } from '../utils';
 
 const COLORS = {
-    reset: '\x1b[0m',
-    bold: '\x1b[1m',
-    dim: '\x1b[2m',
-    italic: '\x1b[3m',
-    green: '\x1b[32m',
-    yellow: '\x1b[33m',
-    blue: '\x1b[34m',
-    magenta: '\x1b[35m',
-    cyan: '\x1b[36m',
-    red: '\x1b[31m',
+    reset: '\u001B[0m',
+    bold: '\u001B[1m',
+    dim: '\u001B[2m',
+    italic: '\u001B[3m',
+    green: '\u001B[32m',
+    yellow: '\u001B[33m',
+    blue: '\u001B[34m',
+    magenta: '\u001B[35m',
+    cyan: '\u001B[36m',
+    red: '\u001B[31m',
 };
 
 function toSuperscript(num: number): string {
@@ -73,26 +73,26 @@ function verifyPattern(n: number, pattern: Pattern) {
         `  ${COLORS.dim}${label.padEnd(labelWidth)}${COLORS.reset} ${value}`;
 
     console.log(
-        `\n${COLORS.bold}${COLORS.cyan}╔════════════════════════════════════════════════════════════╗${COLORS.reset}`
+        `\n${COLORS.bold}${COLORS.cyan}╔════════════════════════════════════════════════════════════╗${COLORS.reset}`,
     );
     console.log(
-        `${COLORS.bold}${COLORS.cyan}║             MATHEMATICAL CERTIFICATE OF PERIODICITY        ║${COLORS.reset}`
+        `${COLORS.bold}${COLORS.cyan}║             MATHEMATICAL CERTIFICATE OF PERIODICITY        ║${COLORS.reset}`,
     );
     console.log(
-        `${COLORS.bold}${COLORS.cyan}╚════════════════════════════════════════════════════════════╝${COLORS.reset}`
+        `${COLORS.bold}${COLORS.cyan}╚════════════════════════════════════════════════════════════╝${COLORS.reset}`,
     );
 
     console.log(
         formatRow(
             'Target Configuration',
-            `${COLORS.bold}n = ${n}${COLORS.reset}`
-        )
+            `${COLORS.bold}n = ${n}${COLORS.reset}`,
+        ),
     );
     console.log(
         formatRow(
             'Minimal Polynomial M(x)',
-            `${COLORS.magenta}${polyToString(M)}${COLORS.reset}`
-        )
+            `${COLORS.magenta}${polyToString(M)}${COLORS.reset}`,
+        ),
     );
     console.log(
         formatRow(
@@ -100,25 +100,25 @@ function verifyPattern(n: number, pattern: Pattern) {
             factors
                 .map(
                     f =>
-                        `${COLORS.yellow}(${polyToString(f.factor)})${f.exponent > 1 ? toSuperscript(f.exponent) : ''}${COLORS.reset}`
+                        `${COLORS.yellow}(${polyToString(f.factor)})${f.exponent > 1 ? toSuperscript(f.exponent) : ''}${COLORS.reset}`,
                 )
-                .join(' * ')
-        )
+                .join(' * '),
+        ),
     );
     console.log(
-        formatRow('Property Period (z)', `${COLORS.bold}${z}${COLORS.reset}`)
+        formatRow('Property Period (z)', `${COLORS.bold}${z}${COLORS.reset}`),
     );
     console.log(
         formatRow(
             'Sequence Period (z_seq)',
-            `${COLORS.bold}${z_seq}${COLORS.reset}`
-        )
+            `${COLORS.bold}${z_seq}${COLORS.reset}`,
+        ),
     );
     console.log(
         formatRow(
             'Remainder Set (R)',
-            `{${R.filter(r => r !== z).join(', ')}}\n`
-        )
+            `{${R.filter(r => r !== z).join(', ')}}\n`,
+        ),
     );
 
     const fz = getPolynomial(z_seq);
@@ -137,44 +137,44 @@ function verifyPattern(n: number, pattern: Pattern) {
     const proofWidth = Math.max(proofEq1.length, proofEq2.length);
 
     console.log(
-        `\n  ${COLORS.bold}${COLORS.blue}● STEP 1: CONVERGENCE PROOF${COLORS.reset}`
+        `\n  ${COLORS.bold}${COLORS.blue}● STEP 1: CONVERGENCE PROOF${COLORS.reset}`,
     );
     console.log(
-        `    ${COLORS.italic}Verify that sequence returns to (0, I) periodically.${COLORS.reset}`
+        `    ${COLORS.italic}Verify that sequence returns to (0, I) periodically.${COLORS.reset}`,
     );
 
     console.log(`    ${COLORS.dim}Base Polynomials:${COLORS.reset}`);
     console.log(
-        `    ${eq1.padEnd(defWidth)} = ${COLORS.dim}${polyToString(fz)}${COLORS.reset}`
+        `    ${eq1.padEnd(defWidth)} = ${COLORS.dim}${polyToString(fz)}${COLORS.reset}`,
     );
     console.log(
-        `    ${eq2.padEnd(defWidth)} = ${COLORS.dim}${polyToString(fz1 ^ 1n)}${COLORS.reset}`
+        `    ${eq2.padEnd(defWidth)} = ${COLORS.dim}${polyToString(fz1 ^ 1n)}${COLORS.reset}`,
     );
     console.log('');
 
     console.log(
-        `    ${proofEq1.padEnd(proofWidth)} = ${COLORS.cyan}${polyToString(modZ)}${COLORS.reset}`
+        `    ${proofEq1.padEnd(proofWidth)} = ${COLORS.cyan}${polyToString(modZ)}${COLORS.reset}`,
     );
     console.log(
-        `    ${proofEq2.padEnd(proofWidth)} = ${COLORS.cyan}${polyToString(modZ1)}${COLORS.reset}`
+        `    ${proofEq2.padEnd(proofWidth)} = ${COLORS.cyan}${polyToString(modZ1)}${COLORS.reset}`,
     );
 
     if (modZ === 0n && modZ1 === 0n) {
         console.log(
-            `    ${COLORS.green}Verification successful. Periodicity is established.${COLORS.reset}`
+            `    ${COLORS.green}Verification successful. Periodicity is established.${COLORS.reset}`,
         );
     } else {
         console.log(
-            `    ${COLORS.red}Verification failed. Pattern is mathematically invalid.${COLORS.reset}`
+            `    ${COLORS.red}Verification failed. Pattern is mathematically invalid.${COLORS.reset}`,
         );
         return;
     }
 
     console.log(
-        `\n  ${COLORS.bold}${COLORS.blue}● STEP 2: FINITE ENUMERATION${COLORS.reset}`
+        `\n  ${COLORS.bold}${COLORS.blue}● STEP 2: FINITE ENUMERATION${COLORS.reset}`,
     );
     console.log(
-        `    ${COLORS.italic}Exhaustive check of the remainder set over one period.${COLORS.reset}`
+        `    ${COLORS.italic}Exhaustive check of the remainder set over one period.${COLORS.reset}`,
     );
 
     const glossaryItems = R.filter(r => r < z).map(r => ({
@@ -183,13 +183,13 @@ function verifyPattern(n: number, pattern: Pattern) {
     }));
     const glossaryWidth = Math.max(
         ...glossaryItems.map(i => i.label.length),
-        0
+        0,
     );
 
     console.log(`    ${COLORS.dim}Polynomial Glossary:${COLORS.reset}`);
     for (const item of glossaryItems) {
         console.log(
-            `    ${item.label.padEnd(glossaryWidth)} = ${COLORS.dim}${polyToString(item.poly)}${COLORS.reset}`
+            `    ${item.label.padEnd(glossaryWidth)} = ${COLORS.dim}${polyToString(item.poly)}${COLORS.reset}`,
         );
     }
     console.log('');
@@ -206,7 +206,7 @@ function verifyPattern(n: number, pattern: Pattern) {
 
         if (isSolution !== inR) {
             console.log(
-                `    ${COLORS.red}✖ DISCREPANCY at m = ${m}${COLORS.reset}`
+                `    ${COLORS.red}✖ DISCREPANCY at m = ${m}${COLORS.reset}`,
             );
             allRCorrect = false;
         }
@@ -222,24 +222,24 @@ function verifyPattern(n: number, pattern: Pattern) {
     const enumWidth = Math.max(...enumItems.map(i => i.label.length), 0);
     for (const item of enumItems) {
         console.log(
-            `    ${item.label.padEnd(enumWidth)} = [${COLORS.dim}${polyToString(item.quotient).padEnd(20)}${COLORS.reset}] * M(x) ${COLORS.green}✔${COLORS.reset}`
+            `    ${item.label.padEnd(enumWidth)} = [${COLORS.dim}${polyToString(item.quotient).padEnd(20)}${COLORS.reset}] * M(x) ${COLORS.green}✔${COLORS.reset}`,
         );
     }
 
     if (allRCorrect) {
         console.log(
-            `\n  ${COLORS.bold}${COLORS.green}STATUS: MATHEMATICALLY PROVEN${COLORS.reset}`
+            `\n  ${COLORS.bold}${COLORS.green}STATUS: MATHEMATICALLY PROVEN${COLORS.reset}`,
         );
         console.log(
-            `  ${COLORS.dim}The pattern m mod ${z} ∈ {${R.filter(r => r !== z).join(', ')}} is valid ∀ m ∈ ℕ.${COLORS.reset}`
+            `  ${COLORS.dim}The pattern m mod ${z} ∈ {${R.filter(r => r !== z).join(', ')}} is valid ∀ m ∈ ℕ.${COLORS.reset}`,
         );
     } else {
         console.log(
-            `\n  ${COLORS.bold}${COLORS.red}STATUS: DISPROVEN${COLORS.reset}`
+            `\n  ${COLORS.bold}${COLORS.red}STATUS: DISPROVEN${COLORS.reset}`,
         );
     }
     console.log(
-        `${COLORS.bold}${COLORS.cyan}══════════════════════════════════════════════════════════════${COLORS.reset}\n`
+        `${COLORS.bold}${COLORS.cyan}══════════════════════════════════════════════════════════════${COLORS.reset}\n`,
     );
 }
 
@@ -250,12 +250,12 @@ function main() {
 
     let nRange: number[] = [];
     if (nArg.includes('-')) {
-        const [start, end] = nArg.split('-').map(v => parseInt(v, 10));
+        const [start, end] = nArg.split('-').map(v => Number.parseInt(v, 10));
         if (start !== undefined && end !== undefined) {
             for (let i = start; i <= end; i++) nRange.push(i);
         }
     } else {
-        nRange = [parseInt(nArg, 10)];
+        nRange = [Number.parseInt(nArg, 10)];
     }
 
     if (!proofFlag) {
@@ -277,18 +277,18 @@ function main() {
         // Calculate dynamic column widths
         const maxNWidth = Math.max(
             1,
-            ...patterns.map(p => p.n.toString().length)
+            ...patterns.map(p => p.n.toString().length),
         );
         const maxZWidth = Math.max(
             6,
-            ...patterns.map(p => p.z.toString().length)
+            ...patterns.map(p => p.z.toString().length),
         );
         const maxRWidth = Math.max(
             10,
             ...patterns.map(p => {
                 const filtered = p.R.filter(r => r !== p.z);
-                return JSON.stringify(filtered).replace(/,/g, ', ').length;
-            })
+                return JSON.stringify(filtered).replaceAll(',', ', ').length;
+            }),
         );
 
         // Print table header
@@ -301,7 +301,7 @@ function main() {
                 '|' +
                 '-'.repeat(maxZWidth + 2) +
                 '|' +
-                '-'.repeat(maxRWidth + 2)
+                '-'.repeat(maxRWidth + 2),
         );
 
         // Print table rows
@@ -309,7 +309,7 @@ function main() {
             const nStr = pattern.n.toString().padStart(maxNWidth);
             const zStr = pattern.z.toString().padStart(maxZWidth);
             const filtered = pattern.R.filter(r => r !== pattern.z);
-            const rStr = JSON.stringify(filtered).replace(/,/g, ', ');
+            const rStr = JSON.stringify(filtered).replaceAll(',', ', ');
             console.log(` ${nStr} | ${zStr} | ${rStr} `);
         }
     }

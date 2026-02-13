@@ -1,10 +1,5 @@
-import React, {
-    createContext,
-    useContext,
-    useState,
-    useEffect,
-    ReactNode,
-} from 'react';
+import type { ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 /**
  * Theme mode setting - can be explicitly set or follow system preference.
@@ -67,14 +62,16 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     // 2. Effect to determine resolvedMode based on mode and system preference
     useEffect(() => {
         const handleSystemChange = (
-            e: MediaQueryListEvent | MediaQueryList
+            e: MediaQueryListEvent | MediaQueryList,
         ) => {
             if (mode === 'system') {
                 setResolvedMode(e.matches ? 'dark' : 'light');
             }
         };
 
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const mediaQuery = globalThis.matchMedia(
+            '(prefers-color-scheme: dark)',
+        );
 
         if (mode === 'system') {
             handleSystemChange(mediaQuery); // Set initial value
@@ -94,7 +91,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     }, [mode]);
 
     useEffect(() => {
-        document.documentElement.setAttribute('data-theme', resolvedMode);
+        document.documentElement.dataset['theme'] = resolvedMode;
     }, [resolvedMode]);
 
     const toggleTheme = () => {

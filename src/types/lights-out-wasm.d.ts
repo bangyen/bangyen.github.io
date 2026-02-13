@@ -5,10 +5,10 @@
  */
 
 export default function init(
-    input?: BufferSource | WebAssembly.Instance
+    input?: BufferSource | WebAssembly.Instance,
 ): Promise<void>;
 
 export function invert_matrix(
     matrix: BigUint64Array,
-    size: number
+    size: number,
 ): BigUint64Array;

@@ -3,8 +3,10 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { FeaturedWork } from '../FeaturedWork';
-import { ProjectCard, Project } from '../FeaturedWork/ProjectCard';
-import { PublicationCard, Publication } from '../FeaturedWork/PublicationCard';
+import type { Project } from '../FeaturedWork/ProjectCard';
+import { ProjectCard } from '../FeaturedWork/ProjectCard';
+import type { Publication } from '../FeaturedWork/PublicationCard';
+import { PublicationCard } from '../FeaturedWork/PublicationCard';
 
 describe('FeaturedWork Components', () => {
     const mockPublication: Publication = {
@@ -26,7 +28,7 @@ describe('FeaturedWork Components', () => {
             render(
                 <BrowserRouter>
                     <FeaturedWork />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
             expect(screen.getByText(/Featured Work/i)).toBeInTheDocument();
         });
@@ -37,7 +39,7 @@ describe('FeaturedWork Components', () => {
             render(<PublicationCard publication={mockPublication} />);
             expect(screen.getByText(mockPublication.title)).toBeInTheDocument();
             expect(
-                screen.getByText(mockPublication.description)
+                screen.getByText(mockPublication.description),
             ).toBeInTheDocument();
         });
     });
@@ -47,11 +49,11 @@ describe('FeaturedWork Components', () => {
             render(
                 <BrowserRouter>
                     <ProjectCard project={mockProject} />
-                </BrowserRouter>
+                </BrowserRouter>,
             );
             expect(screen.getByText(mockProject.title)).toBeInTheDocument();
             expect(
-                screen.getByText(mockProject.description)
+                screen.getByText(mockProject.description),
             ).toBeInTheDocument();
             expect(screen.getByText('React')).toBeInTheDocument();
         });

@@ -6,7 +6,7 @@ import { HeroSection } from '../HeroSection';
 import { PERSONAL_INFO } from '@/config/constants';
 
 // Mock scrollIntoView
-window.HTMLElement.prototype.scrollIntoView = vi.fn();
+globalThis.HTMLElement.prototype.scrollIntoView = vi.fn();
 
 describe('HeroSection and Sub-components', () => {
     test('renders personal info correctly', () => {
@@ -37,7 +37,7 @@ describe('HeroSection and Sub-components', () => {
         // Create the element that scrollIntoView targets
         const featuredWork = document.createElement('div');
         featuredWork.id = 'featured-work';
-        document.body.appendChild(featuredWork);
+        document.body.append(featuredWork);
 
         render(<HeroSection />);
 
@@ -48,10 +48,10 @@ describe('HeroSection and Sub-components', () => {
             expect.objectContaining({
                 behavior: 'smooth',
                 block: 'start',
-            })
+            }),
         );
 
-        document.body.removeChild(featuredWork);
+        featuredWork.remove();
     });
 
     test('handles missing element gracefully on View Work click', () => {

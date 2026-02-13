@@ -12,7 +12,7 @@ interface UseGameInteractionOptions<T> {
         col: number,
         isRightClick: boolean,
         draggingValue?: T,
-        isInitialClick?: boolean
+        isInitialClick?: boolean,
     ) => T | undefined;
     /** Check if interactions are enabled */
     checkEnabled: () => boolean;
@@ -79,7 +79,7 @@ export function useGameInteraction<T>({
                     c,
                     isRightClick,
                     undefined,
-                    true
+                    true,
                 );
             } else {
                 onToggleRef.current(
@@ -87,11 +87,11 @@ export function useGameInteraction<T>({
                     c,
                     isRightClick,
                     draggingValue.current,
-                    false
+                    false,
                 );
             }
         },
-        [checkEnabled]
+        [checkEnabled],
     );
 
     const { getDragProps } = useDrag({

@@ -84,7 +84,7 @@ describe('useGridSize', () => {
                 ...defaultGridConfig,
                 minSize: 3,
                 maxSize: 8,
-            })
+            }),
         );
 
         // Very small window
@@ -96,7 +96,7 @@ describe('useGridSize', () => {
             useGridSize({
                 ...defaultGridConfig,
                 minSize: 3,
-            })
+            }),
         );
         expect(result2.current.rows).toBeGreaterThanOrEqual(3);
     });

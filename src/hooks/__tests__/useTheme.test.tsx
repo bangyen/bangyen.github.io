@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import React from 'react';
-import { Mock, MockInstance } from 'vitest';
+import type { Mock, MockInstance } from 'vitest';
 
 import { ThemeProvider, useThemeContext } from '../useTheme';
 
@@ -17,7 +17,7 @@ describe('useTheme (ThemeProvider and useThemeContext)', () => {
         removeListener = vi.fn();
 
         matchMediaSpy = vi
-            .spyOn(window, 'matchMedia')
+            .spyOn(globalThis, 'matchMedia')
             .mockImplementation(query => ({
                 matches: false,
                 media: query,
@@ -97,17 +97,13 @@ describe('useTheme (ThemeProvider and useThemeContext)', () => {
             result.current.toggleTheme();
         }); // light
         expect(localStorage.getItem('theme-mode')).toBe('light');
-        expect(document.documentElement.getAttribute('data-theme')).toBe(
-            'light'
-        );
+        expect(document.documentElement.dataset['theme']).toBe('light');
 
         act(() => {
             result.current.toggleTheme();
         }); // dark
         expect(localStorage.getItem('theme-mode')).toBe('dark');
-        expect(document.documentElement.getAttribute('data-theme')).toBe(
-            'dark'
-        );
+        expect(document.documentElement.dataset['theme']).toBe('dark');
     });
 
     test('responds to system theme changes in system mode', () => {
@@ -137,7 +133,7 @@ describe('useTheme (ThemeProvider and useThemeContext)', () => {
             .mockImplementation(() => {});
 
         expect(() => renderHook(() => useThemeContext())).toThrow(
-            'useThemeContext must be used within a ThemeProvider'
+            'useThemeContext must be used within a ThemeProvider',
         );
 
         consoleSpy.mockRestore();

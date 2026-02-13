@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
-import { DragProps } from '../../../hooks/useDrag';
+import type { DragProps } from '../../../hooks/useDrag';
 import { useGetters } from '../../hooks/boardUtils';
 import { getInput, getOutput, useHandler } from '../Calculator';
 
@@ -10,7 +10,7 @@ vi.mock('../../hooks/boardUtils', () => ({
     useGetters: vi.fn(
         (
             _getTile: (r: number, c: number) => number,
-            palette: { primary: string; secondary: string }
+            palette: { primary: string; secondary: string },
         ) => ({
             getColor: (_r: number, _c: number) => ({
                 front: palette.primary,
@@ -19,7 +19,7 @@ vi.mock('../../hooks/boardUtils', () => ({
             getBorder: (_r: number, _c: number) => ({
                 border: '1px solid black',
             }),
-        })
+        }),
     ),
 }));
 
@@ -73,8 +73,8 @@ describe('Lights Out Calculator UI Helpers', () => {
                                 touchAction: 'none' as const,
                                 transition: 'none',
                             },
-                        }) as DragProps
-                )
+                        }) as DragProps,
+                ),
             );
             getProps(1, 2);
             expect(mockGetters.getColor).toHaveBeenCalledWith(1, 2);

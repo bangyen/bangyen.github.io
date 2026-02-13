@@ -1,6 +1,6 @@
 import { useMemo, useCallback } from 'react';
 
-import { Palette, Getters } from '../../components/Board';
+import type { Palette, Getters } from '../../components/Board';
 
 import { COLORS } from '@/config/theme';
 
@@ -13,7 +13,7 @@ interface GridState {
 function borderHandler(
     row: number,
     col: number,
-    getTile: (row: number, col: number) => number
+    getTile: (row: number, col: number) => number,
 ): React.CSSProperties {
     const self = getTile(row, col);
     const up = getTile(row - 1, col);
@@ -38,7 +38,7 @@ function borderHandler(
 function fillerHandler(
     row: number,
     col: number,
-    getTile: (row: number, col: number) => number
+    getTile: (row: number, col: number) => number,
 ): boolean {
     const topLeft = getTile(row, col);
     const topRight = getTile(row, col + 1);
@@ -63,7 +63,7 @@ export function usePalette(_score: number): Palette {
 
 export function useGetters(
     getTile: (row: number, col: number) => number,
-    palette: Palette
+    palette: Palette,
 ): Getters {
     const getColor = useCallback(
         (row: number, col: number) => {
@@ -74,14 +74,14 @@ export function useGetters(
 
             return { front, back };
         },
-        [getTile, palette]
+        [getTile, palette],
     );
 
     const getBorder = useCallback(
         (row: number, col: number) => {
             return borderHandler(row, col, getTile);
         },
-        [getTile]
+        [getTile],
     );
 
     const getFiller = useCallback(
@@ -90,7 +90,7 @@ export function useGetters(
 
             return value ? palette.primary : palette.secondary;
         },
-        [getTile, palette]
+        [getTile, palette],
     );
 
     return useMemo(
@@ -98,11 +98,11 @@ export function useGetters(
             getColor,
             getBorder: getBorder as (
                 row: number,
-                col: number
+                col: number,
             ) => React.CSSProperties,
             getFiller,
         }),
-        [getColor, getBorder, getFiller]
+        [getColor, getBorder, getFiller],
     );
 }
 
@@ -120,7 +120,7 @@ export function useHandler(state: GridState, palette: Palette): Getters {
             if (r === undefined) return 0;
             return (r >> col) & 1;
         },
-        [grid, rows, cols]
+        [grid, rows, cols],
     );
 
     return useGetters(getTile, palette);
