@@ -43,7 +43,11 @@ class ErrorBoundary extends React.Component<
         });
 
         // In production, you might want to log this to an error reporting service
-        if (import.meta.env.PROD) {
+        if (
+            typeof process !== 'undefined'
+                ? process.env['NODE_ENV'] === 'production'
+                : import.meta.env.PROD
+        ) {
             // Example: logErrorToService(error, errorInfo);
         }
     }

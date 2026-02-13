@@ -99,35 +99,38 @@ export function ErrorFallback({
                         An unexpected error occurred while rendering this page.
                     </Typography>
 
-                    {import.meta.env.DEV && error && (
-                        <Box
-                            sx={{
-                                backgroundColor: COLORS.surface.elevated,
-                                border: `1px solid ${COLORS.border.subtle}`,
-                                borderRadius: SPACING.borderRadius.md,
-                                padding: 2,
-                                marginBottom: 4,
-                                textAlign: 'left',
-                                overflow: 'auto',
-                                maxHeight: '300px',
-                            }}
-                        >
-                            <Typography
+                    {(typeof process !== 'undefined'
+                        ? process.env['NODE_ENV'] === 'development'
+                        : import.meta.env.DEV) &&
+                        error && (
+                            <Box
                                 sx={{
-                                    color: COLORS.text.secondary,
-                                    fontSize: TYPOGRAPHY.fontSize.caption,
-                                    fontFamily: 'monospace',
-                                    whiteSpace: 'pre-wrap',
+                                    backgroundColor: COLORS.surface.elevated,
+                                    border: `1px solid ${COLORS.border.subtle}`,
+                                    borderRadius: SPACING.borderRadius.md,
+                                    padding: 2,
+                                    marginBottom: 4,
+                                    textAlign: 'left',
+                                    overflow: 'auto',
+                                    maxHeight: '300px',
                                 }}
                             >
-                                {error.toString()}
-                                {errorInfo?.componentStack
-                                    ?.split('\n')
-                                    .slice(0, 5)
-                                    .join('\n')}
-                            </Typography>
-                        </Box>
-                    )}
+                                <Typography
+                                    sx={{
+                                        color: COLORS.text.secondary,
+                                        fontSize: TYPOGRAPHY.fontSize.caption,
+                                        fontFamily: 'monospace',
+                                        whiteSpace: 'pre-wrap',
+                                    }}
+                                >
+                                    {error.toString()}
+                                    {errorInfo?.componentStack
+                                        ?.split('\n')
+                                        .slice(0, 5)
+                                        .join('\n')}
+                                </Typography>
+                            </Box>
+                        )}
 
                     <Box
                         sx={{
