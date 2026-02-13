@@ -1,6 +1,11 @@
 import React from 'react';
 
-import { ResearchChart } from './ResearchChart';
+const ResearchChart = React.lazy(() =>
+    import('./ResearchChart').then(module => ({
+        default: module.ResearchChart,
+    }))
+);
+
 import ResearchControls from './ResearchControls';
 import { ResearchErrorBoundary } from './ResearchErrorBoundary';
 import { ResearchHeader } from './ResearchHeader';
@@ -122,14 +127,29 @@ const ResearchDemo = <T,>({
                                 isMobile={isMobile}
                             />
 
-                            <ResearchChart
-                                currentData={currentData}
-                                currentChartConfig={currentChartConfig}
-                                loading={loading}
-                                loadingMessage={loadingMessage}
-                                chartTitle={calculatedChartTitle}
-                                isMobile={isMobile}
-                            />
+                            <React.Suspense
+                                fallback={
+                                    <Box
+                                        sx={{
+                                            height: 400,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        Loading Chart...
+                                    </Box>
+                                }
+                            >
+                                <ResearchChart
+                                    currentData={currentData}
+                                    currentChartConfig={currentChartConfig}
+                                    loading={loading}
+                                    loadingMessage={loadingMessage}
+                                    chartTitle={calculatedChartTitle}
+                                    isMobile={isMobile}
+                                />
+                            </React.Suspense>
 
                             <ResearchViewSelector
                                 viewTypes={viewTypes}

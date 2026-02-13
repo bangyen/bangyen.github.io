@@ -19,7 +19,9 @@ import {
     Button,
 } from '@/components/mui';
 import { GlassCard } from '@/components/ui/GlassCard';
-import { Latex } from '@/components/ui/Latex';
+const Latex = React.lazy(() =>
+    import('@/components/ui/Latex').then(module => ({ default: module.Latex }))
+);
 import { URLS, ROUTES } from '@/config/constants';
 import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';
 
@@ -92,9 +94,13 @@ const LightsOutResearch: React.FC = () => {
                     }}
                 >
                     The solver models the Lights Out game using Linear Algebra
-                    over the field <Latex formula="\mathbb{F}_2" /> (where 1 + 1
-                    = 0). Instead of performing Gaussian elimination on a large
-                    (mn) × (mn) matrix, this implementation uses
+                    over the field{' '}
+                    <React.Suspense fallback="data">
+                        <Latex formula="\mathbb{F}_2" />
+                    </React.Suspense>{' '}
+                    (where 1 + 1 = 0). Instead of performing Gaussian
+                    elimination on a large (mn) × (mn) matrix, this
+                    implementation uses
                     <strong> Light Chasing</strong> logic combined with{' '}
                     <strong>Fibonacci Polynomials</strong>.
                 </Typography>
@@ -160,11 +166,21 @@ const LightsOutResearch: React.FC = () => {
                                     Solving:
                                 </Box>{' '}
                                 To solve a configuration, we construct the
-                                matrix <Latex formula="A = F_{m+1}(T)" />, where{' '}
-                                <Latex formula="T" /> is the transition matrix
-                                for a single row. The solution for the first row
-                                is then found by solving a linear system
-                                involving <Latex formula="A" />.
+                                matrix{' '}
+                                <React.Suspense fallback="A">
+                                    <Latex formula="A = F_{m+1}(T)" />
+                                </React.Suspense>
+                                , where{' '}
+                                <React.Suspense fallback="T">
+                                    <Latex formula="T" />
+                                </React.Suspense>{' '}
+                                is the transition matrix for a single row. The
+                                solution for the first row is then found by
+                                solving a linear system involving{' '}
+                                <React.Suspense fallback="A">
+                                    <Latex formula="A" />
+                                </React.Suspense>
+                                .
                             </Typography>
                         </li>
                     </ol>
@@ -193,10 +209,14 @@ const LightsOutResearch: React.FC = () => {
                     >
                         For certain grid dimensions (m × n), the solver
                         transformation behaves as an Identity Matrix over the
-                        field <Latex formula="\mathbb{F}_2" />. This means that
-                        if the grid is reduced to a state where only the top row
-                        is active, the solution pattern required to clear the
-                        grid is identical to that input pattern.
+                        field{' '}
+                        <React.Suspense fallback="F2">
+                            <Latex formula="\mathbb{F}_2" />
+                        </React.Suspense>
+                        . This means that if the grid is reduced to a state
+                        where only the top row is active, the solution pattern
+                        required to clear the grid is identical to that input
+                        pattern.
                     </Typography>
                 </GlassCard>
 
@@ -218,11 +238,21 @@ const LightsOutResearch: React.FC = () => {
                         color: COLORS.text.secondary,
                     }}
                 >
-                    Let <Latex formula="A_n" /> be the adjacency matrix of the
-                    path graph <Latex formula="P_n" />. The &quot;weights&quot;
-                    correspond to the Fibonacci polynomials{' '}
-                    <Latex formula="F_k(x)" />. The condition for the calculator
-                    to act as the identity matrix is equivalent to:
+                    Let{' '}
+                    <React.Suspense fallback="An">
+                        <Latex formula="A_n" />
+                    </React.Suspense>{' '}
+                    be the adjacency matrix of the path graph{' '}
+                    <React.Suspense fallback="Pn">
+                        <Latex formula="P_n" />
+                    </React.Suspense>
+                    . The &quot;weights&quot; correspond to the Fibonacci
+                    polynomials{' '}
+                    <React.Suspense fallback="Fk(x)">
+                        <Latex formula="F_k(x)" />
+                    </React.Suspense>
+                    . The condition for the calculator to act as the identity
+                    matrix is equivalent to:
                 </Typography>
 
                 <Box
@@ -234,7 +264,12 @@ const LightsOutResearch: React.FC = () => {
                         borderRadius: SPACING.borderRadius.md,
                     }}
                 >
-                    <Latex block formula="F_{n+1}(x) \mid (F_{m+1}(x+1) + 1)" />
+                    <React.Suspense fallback="Formula...">
+                        <Latex
+                            block
+                            formula="F_{n+1}(x) \mid (F_{m+1}(x+1) + 1)"
+                        />
+                    </React.Suspense>
                     <Typography
                         variant="caption"
                         sx={{
@@ -243,7 +278,11 @@ const LightsOutResearch: React.FC = () => {
                             display: 'block',
                         }}
                     >
-                        (over the field <Latex formula="\mathbb{F}_2[x]" />)
+                        (over the field{' '}
+                        <React.Suspense fallback="F2[x]">
+                            <Latex formula="\mathbb{F}_2[x]" />
+                        </React.Suspense>
+                        )
                     </Typography>
                 </Box>
 
@@ -262,7 +301,11 @@ const LightsOutResearch: React.FC = () => {
                     sx={{ mb: 4, color: COLORS.text.secondary }}
                 >
                     Mathematically proven for all grid heights m. Patterns are
-                    expressed as <Latex formula="m \pmod z \in R_n" />.
+                    expressed as{' '}
+                    <React.Suspense fallback="m mod z in Rn">
+                        <Latex formula="m \pmod z \in R_n" />
+                    </React.Suspense>
+                    .
                 </Typography>
 
                 <TableContainer

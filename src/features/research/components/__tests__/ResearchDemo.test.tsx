@@ -167,10 +167,10 @@ it('renders GitHub and Home icons', () => {
     expect(screen.getByTestId('home-icon')).toBeInTheDocument();
 });
 
-it('renders the chart with correct data', () => {
+it('renders the chart with correct data', async () => {
     render(<ResearchDemo {...defaultProps} />);
 
-    const chart = screen.getByTestId('line-chart');
+    const chart = await screen.findByTestId('line-chart');
     expect(chart).toBeInTheDocument();
     expect(chart).toHaveAttribute(
         'data-chart-data',
@@ -178,10 +178,10 @@ it('renders the chart with correct data', () => {
     );
 });
 
-it('renders chart lines based on configuration', () => {
+it('renders chart lines based on configuration', async () => {
     render(<ResearchDemo {...defaultProps} />);
 
-    expect(screen.getByTestId('line-y')).toBeInTheDocument();
+    expect(await screen.findByTestId('line-y')).toBeInTheDocument();
     expect(screen.getByTestId('line-z')).toBeInTheDocument();
     expect(screen.getByTestId('line-y')).toHaveAttribute(
         'data-name',
@@ -341,7 +341,7 @@ it('uses default chartConfig values and fallback onViewTypeChange', () => {
     renderHook(() => React.useState('default'));
 });
 
-it('processes data using viewType dataProcessor', () => {
+it('processes data using viewType dataProcessor', async () => {
     const mockProcessor = vi.fn((data: { x: number }[]) =>
         data.map(d => ({ ...d, x: d.x * 2 }))
     );
@@ -365,13 +365,13 @@ it('processes data using viewType dataProcessor', () => {
     );
 
     expect(mockProcessor).toHaveBeenCalled();
-    const chart = screen.getByTestId('line-chart');
+    const chart = await screen.findByTestId('line-chart');
     const attr = chart.getAttribute('data-chart-data');
     const processedData = JSON.parse(attr ?? '[]') as { x: number }[];
     expect(processedData[0]?.x).toBe(2); // 1 * 2
 });
 
-it('renders correct chartTitle based on viewTypes and props', () => {
+it('renders correct chartTitle based on viewTypes and props', async () => {
     const viewTypes = [
         {
             key: 'view1',
@@ -390,13 +390,13 @@ it('renders correct chartTitle based on viewTypes and props', () => {
             currentViewType="view1"
         />
     );
-    expect(screen.getByText('Custom View Title')).toBeInTheDocument();
+    expect(await screen.findByText('Custom View Title')).toBeInTheDocument();
 
     rerender(<ResearchDemo {...defaultProps} viewTypes={[]} />);
-    expect(screen.getByText('Data Visualization')).toBeInTheDocument();
+    expect(await screen.findByText('Data Visualization')).toBeInTheDocument();
 
     rerender(<ResearchDemo {...defaultProps} chartTitle="Explicit Title" />);
-    expect(screen.getByText('Explicit Title')).toBeInTheDocument();
+    expect(await screen.findByText('Explicit Title')).toBeInTheDocument();
 });
 
 it('handles mobile view hiding Y-axes', () => {
