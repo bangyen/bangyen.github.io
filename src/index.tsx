@@ -12,6 +12,12 @@ import { ROUTES } from './config/constants';
 import { COLORS, createAppTheme } from './config/theme';
 import { ThemeProvider, useThemeContext } from './hooks/useTheme';
 
+import '@fontsource/inter/300.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/inter/500.css';
+import '@fontsource/inter/600.css';
+import '@fontsource/inter/700.css';
+
 // Lazy load pages
 const Home = lazy(() => import('./features/home/pages/Home'));
 const Error = lazy(() => import('./pages/Error'));
