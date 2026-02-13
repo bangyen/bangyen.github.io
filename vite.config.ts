@@ -14,7 +14,7 @@ export default defineConfig(() => {
         viteCompression(),
         VitePWA({
             registerType: 'autoUpdate',
-            includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
+            includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.webp'],
             manifest: {
                 name: 'Bangyen Pham - Portfolio',
                 short_name: 'Bangyen',
@@ -29,14 +29,14 @@ export default defineConfig(() => {
                         type: 'image/x-icon',
                     },
                     {
-                        src: 'logo192.png',
+                        src: 'logo192.webp',
                         sizes: '192x192',
-                        type: 'image/png',
+                        type: 'image/webp',
                     },
                     {
-                        src: 'logo512.png',
+                        src: 'logo512.webp',
                         sizes: '512x512',
-                        type: 'image/png',
+                        type: 'image/webp',
                         purpose: 'any maskable',
                     },
                 ],
