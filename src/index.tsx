@@ -1,6 +1,9 @@
 import React, { Suspense, lazy } from 'react';
 import { createRoot } from 'react-dom/client';
 import { HashRouter, Routes, Route } from 'react-router-dom';
+import { registerSW } from 'virtual:pwa-register';
+
+registerSW({ immediate: true });
 
 import ErrorBoundary from './components/layout/ErrorBoundary';
 import {
