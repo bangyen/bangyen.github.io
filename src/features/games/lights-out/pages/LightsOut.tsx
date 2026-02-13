@@ -132,7 +132,7 @@ export default function LightsOut() {
                     marginTop: mobile
                         ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
                         : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
-                    padding: mobile ? '18px' : '24px',
+                    padding: mobile ? '30px' : '36px',
                     borderRadius: '24px',
                     border: '2px solid transparent',
                 }}

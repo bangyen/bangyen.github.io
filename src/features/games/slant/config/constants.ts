@@ -1,5 +1,5 @@
-export const MOBILE_PADDING = '18px';
-export const DESKTOP_PADDING = '24px';
+export const MOBILE_PADDING = '30px';
+export const DESKTOP_PADDING = '36px';
 export const NUMBER_SIZE_RATIO = 0.4;
 
 export const LAYOUT_CONSTANTS = {

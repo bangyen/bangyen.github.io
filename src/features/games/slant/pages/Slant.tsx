@@ -60,14 +60,17 @@ export default function Slant() {
                 defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
                 minSize: GAME_LOGIC_CONSTANTS.MIN_SIZE,
                 headerOffset: GAME_CONSTANTS.layout.headerHeight,
-                paddingOffset: 120,
+                paddingOffset: {
+                    x: mobile ? 48 : 80,
+                    y: 120,
+                },
                 widthLimit: LAYOUT_CONSTANTS.WIDTH_LIMIT,
                 cellSizeReference: 4,
                 mobileRowOffset: 2,
             },
             boardConfig: {
                 paddingOffset: (isMobile: boolean) => ({
-                    x: isMobile ? 32 : 224,
+                    x: isMobile ? 48 : 80,
                     y: LAYOUT_CONSTANTS.PADDING_OFFSET,
                 }),
                 boardMaxWidth: LAYOUT_CONSTANTS.BOARD_MAX_WIDTH,
