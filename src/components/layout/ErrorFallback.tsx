@@ -99,7 +99,7 @@ export function ErrorFallback({
                         An unexpected error occurred while rendering this page.
                     </Typography>
 
-                    {process.env['NODE_ENV'] === 'development' && error && (
+                    {import.meta.env.DEV && error && (
                         <Box
                             sx={{
                                 backgroundColor: COLORS.surface.elevated,

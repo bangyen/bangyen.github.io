@@ -137,11 +137,13 @@ export function useGridSize({
 
     const { rows, cols } = useMemo(() => {
         if (desiredSize === null) return dynamicSize;
+
+        const extraRows = mobile ? Math.max(0, mobileRowOffset + 1) : 0;
         return {
-            rows: Math.min(desiredSize, dynamicSize.rows),
+            rows: Math.min(desiredSize + extraRows, dynamicSize.rows),
             cols: Math.min(desiredSize, dynamicSize.cols),
         };
-    }, [desiredSize, dynamicSize]);
+    }, [desiredSize, dynamicSize, mobile, mobileRowOffset]);
 
     useEffect(() => {
         localStorage.setItem(storageKey, String(desiredSize));

@@ -6,6 +6,7 @@ import React, {
     useRef,
 } from 'react';
 
+import { useMobile } from '../../../../hooks';
 import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
 import { GameErrorBoundary } from '../../components/GameErrorBoundary';
@@ -45,68 +46,63 @@ interface SavedSlantState extends Omit<
 }
 
 export default function Slant() {
+    const mobile = useMobile('sm');
     const [isGhostMode, setIsGhostMode] = useState(false);
 
-    const {
-        rows,
-        cols,
-        state,
-        dispatch,
-        size,
-        mobile,
-        handleNext,
-        controlsProps,
-    } = useBaseGame<SlantState, SlantAction>({
-        storageKeys: {
-            size: STORAGE_KEYS.SIZE,
-            state: STORAGE_KEYS.STATE,
-        },
-        pageTitle: PAGE_TITLES.slant,
-        gridConfig: {
-            defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
-            minSize: GAME_LOGIC_CONSTANTS.MIN_SIZE,
-            headerOffset: GAME_CONSTANTS.layout.headerHeight,
-            paddingOffset: 160,
-            widthLimit: LAYOUT_CONSTANTS.WIDTH_LIMIT,
-            cellSizeReference: 4,
-            mobileRowOffset: -2,
-        },
-        boardConfig: {
-            paddingOffset: (isMobile: boolean) => ({
-                x: isMobile ? 32 : 224,
-                y: LAYOUT_CONSTANTS.PADDING_OFFSET,
-            }),
-            boardMaxWidth: LAYOUT_CONSTANTS.BOARD_MAX_WIDTH,
-            boardSizeFactor: LAYOUT_CONSTANTS.BOARD_SIZE_FACTOR,
-            maxCellSize: LAYOUT_CONSTANTS.MAX_CELL_SIZE,
-            remBase: LAYOUT_CONSTANTS.REM_BASE,
-            rowOffset: 1,
-            colOffset: 1,
-        },
-        reducer: handleBoard,
-        getInitialState: (rows: number, cols: number) =>
-            getInitialState(rows, cols),
-        winAnimationDelay: GAME_CONSTANTS.timing.winAnimationDelay,
-        isSolved: (s: SlantState) => s.solved,
-        persistence: {
-            enabled: !isGhostMode,
-            serialize: (s: SlantState) => ({
-                ...s,
-                errorNodes: Array.from(s.errorNodes),
-                cycleCells: Array.from(s.cycleCells),
-                satisfiedNodes: Array.from(s.satisfiedNodes),
-            }),
-            deserialize: (saved: unknown) => {
-                const s = saved as SavedSlantState;
-                return {
-                    ...s,
-                    errorNodes: new Set(s.errorNodes),
-                    cycleCells: new Set(s.cycleCells),
-                    satisfiedNodes: new Set(s.satisfiedNodes),
-                } as SlantState;
+    const { rows, cols, state, dispatch, size, handleNext, controlsProps } =
+        useBaseGame<SlantState, SlantAction>({
+            storageKeys: {
+                size: STORAGE_KEYS.SIZE,
+                state: STORAGE_KEYS.STATE,
             },
-        },
-    });
+            pageTitle: PAGE_TITLES.slant,
+            gridConfig: {
+                defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
+                minSize: GAME_LOGIC_CONSTANTS.MIN_SIZE,
+                headerOffset: GAME_CONSTANTS.layout.headerHeight,
+                paddingOffset: 120,
+                widthLimit: LAYOUT_CONSTANTS.WIDTH_LIMIT,
+                cellSizeReference: 4,
+                mobileRowOffset: 2,
+            },
+            boardConfig: {
+                paddingOffset: (isMobile: boolean) => ({
+                    x: isMobile ? 32 : 224,
+                    y: LAYOUT_CONSTANTS.PADDING_OFFSET,
+                }),
+                boardMaxWidth: LAYOUT_CONSTANTS.BOARD_MAX_WIDTH,
+                boardSizeFactor: mobile
+                    ? 0.92
+                    : LAYOUT_CONSTANTS.BOARD_SIZE_FACTOR,
+                maxCellSize: LAYOUT_CONSTANTS.MAX_CELL_SIZE,
+                remBase: LAYOUT_CONSTANTS.REM_BASE,
+                rowOffset: 1,
+                colOffset: 1,
+            },
+            reducer: handleBoard,
+            getInitialState: (rows: number, cols: number) =>
+                getInitialState(rows, cols),
+            winAnimationDelay: GAME_CONSTANTS.timing.winAnimationDelay,
+            isSolved: (s: SlantState) => s.solved,
+            persistence: {
+                enabled: !isGhostMode,
+                serialize: (s: SlantState) => ({
+                    ...s,
+                    errorNodes: Array.from(s.errorNodes),
+                    cycleCells: Array.from(s.cycleCells),
+                    satisfiedNodes: Array.from(s.satisfiedNodes),
+                }),
+                deserialize: (saved: unknown) => {
+                    const s = saved as SavedSlantState;
+                    return {
+                        ...s,
+                        errorNodes: new Set(s.errorNodes),
+                        cycleCells: new Set(s.cycleCells),
+                        satisfiedNodes: new Set(s.satisfiedNodes),
+                    } as SlantState;
+                },
+            },
+        });
 
     const [ghostMoves, setGhostMoves] = useState<Map<string, CellState>>(
         new Map()
@@ -205,11 +201,15 @@ export default function Slant() {
     const boardSx = useMemo(
         () => ({
             userSelect: 'none',
-            padding: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
+            padding: isGhostMode
+                ? 0
+                : mobile
+                  ? MOBILE_PADDING
+                  : DESKTOP_PADDING,
             border: '2px solid transparent',
             borderRadius: LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
         }),
-        [mobile]
+        [mobile, isGhostMode]
     );
 
     const controls = isGhostMode ? null : (
@@ -255,7 +255,7 @@ export default function Slant() {
             <GamePageLayout
                 title={PAGE_TITLES.slant}
                 infoUrl="https://en.wikipedia.org/wiki/Gokigen_Naname"
-                paddingBottom={{ xs: '180px', md: '150px' }}
+                paddingBottom={{ xs: '120px', md: '150px' }}
                 controls={controls}
                 contentSx={contentSx}
                 showTrophy={!isGhostMode && state.solved}

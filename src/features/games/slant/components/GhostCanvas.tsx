@@ -256,9 +256,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
             <Box
                 sx={{
                     position: 'relative',
-                    padding: mobile
-                        ? `calc(${MOBILE_PADDING} + 16px)`
-                        : `calc(${DESKTOP_PADDING} + 24px)`,
+                    padding: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
                     border: `2px dashed ${SLANT_STYLES.GHOST.DASHED_BORDER}`,
                     borderRadius: LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
                 }}
@@ -284,12 +282,8 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 <Box
                     sx={{
                         position: 'absolute',
-                        top: mobile
-                            ? `calc(${MOBILE_PADDING} + 16px)`
-                            : `calc(${DESKTOP_PADDING} + 24px)`,
-                        left: mobile
-                            ? `calc(${MOBILE_PADDING} + 16px)`
-                            : `calc(${DESKTOP_PADDING} + 24px)`,
+                        top: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
+                        left: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
                         transform: `translate(-${String(numberSize / 2)}rem, -${String(numberSize / 2)}rem)`,
                         zIndex: LAYOUT.zIndex.base + 2,
                         pointerEvents: 'none',
