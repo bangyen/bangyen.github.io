@@ -157,13 +157,11 @@ export function useGridSize({
         const currentSize = Math.min(rows, cols);
         if (desiredSize === null) return;
 
-        if (currentSize < Math.min(dynamicSize.rows, dynamicSize.cols)) {
-            setDesiredSize(currentSize + 1);
-        } else if (
-            dynamicSize.rows !== dynamicSize.cols &&
-            (rows !== dynamicSize.rows || cols !== dynamicSize.cols)
+        if (
+            currentSize < Math.min(dynamicSize.rows, dynamicSize.cols) &&
+            currentSize < _maxSize
         ) {
-            setDesiredSize(null);
+            setDesiredSize(currentSize + 1);
         }
     };
 

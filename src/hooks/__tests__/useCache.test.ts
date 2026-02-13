@@ -223,7 +223,7 @@ describe('useCache Hook', () => {
                 v: number;
             };
         });
-        expect(state.v).toBe(2);
+        expect(state?.v).toBe(2);
     });
 
     test('prev at boundary (index 0)', () => {
@@ -241,7 +241,7 @@ describe('useCache Hook', () => {
             };
         });
 
-        expect(state.v).toBe(10);
+        expect(state?.v).toBe(10);
         // Repeated prev at boundary
         act(() => {
             vi.advanceTimersByTime(200);
@@ -249,7 +249,7 @@ describe('useCache Hook', () => {
                 v: number;
             };
         });
-        expect(state.v).toBe(10);
+        expect(state?.v).toBe(10);
     });
 
     test('next when getState returns same object (no-op)', () => {
@@ -296,7 +296,7 @@ describe('useCache Hook', () => {
             };
         });
 
-        expect(state.v).toBe(11);
-        expect(state.v).not.toBe(999);
+        expect(state?.v).toBe(11);
+        expect(state?.v).not.toBe(999);
     });
 });
