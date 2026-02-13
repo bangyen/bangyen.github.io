@@ -4,40 +4,63 @@ import React from 'react';
 import { MathText } from '../MathText';
 
 describe('MathText', () => {
-    it('renders normal text correctly', () => {
-        render(<MathText text="Normal text" />);
-        expect(screen.getByText('Normal text')).toBeInTheDocument();
+    test('renders plain text without superscripts', () => {
+        render(<MathText text="Simple text" />);
+        expect(screen.getByText('Simple text')).toBeInTheDocument();
     });
 
-    it('renders superscript notation correctly', () => {
-        const { container } = render(<MathText text="x^{2} + y^{3}" />);
+    test('renders text with single superscript', () => {
+        const { container } = render(<MathText text="x^{2}" />);
 
-        const superscripts = container.querySelectorAll('sup');
-        expect(superscripts).toHaveLength(2);
-        expect(superscripts[0]).toHaveTextContent('2');
-        expect(superscripts[1]).toHaveTextContent('3');
+        expect(screen.getByText('x')).toBeInTheDocument();
+        expect(screen.getByText('2')).toBeInTheDocument();
 
-        expect(screen.getByText(/x/)).toBeInTheDocument();
-        expect(screen.getByText(/\+ y/)).toBeInTheDocument();
+        const sup = container.querySelector('sup');
+        expect(sup).toBeInTheDocument();
+        expect(sup).toHaveTextContent('2');
     });
 
-    it('has correct aria-label for accessibility', () => {
-        render(<MathText text="x^{2} * y^{3}" />);
-        const element = screen.getByLabelText(
-            /x to the power of 2 times y to the power of 3/
+    test('renders text with multiple superscripts', () => {
+        const { container } = render(<MathText text="a^{b} + c^{d}" />);
+
+        expect(screen.getByText(/a/)).toBeInTheDocument();
+        expect(screen.getByText(/b/)).toBeInTheDocument();
+        expect(screen.getByText(/c/)).toBeInTheDocument();
+        expect(screen.getByText(/d/)).toBeInTheDocument();
+
+        const sups = container.querySelectorAll('sup');
+        expect(sups).toHaveLength(2);
+        expect(sups[0]).toHaveTextContent('b');
+        expect(sups[1]).toHaveTextContent('d');
+    });
+
+    test('converts notation in aria-label for accessibility', () => {
+        render(<MathText text="2^{10} * 3^{5}" />);
+
+        const wrapper = screen.getByLabelText(
+            '2 to the power of 10 times 3 to the power of 5'
         );
-        expect(element).toBeInTheDocument();
+        expect(wrapper).toBeInTheDocument();
     });
 
-    it('handles text without superscripts', () => {
-        render(<MathText text="a + b = c" />);
-        expect(screen.getByText(/a \+ b = c/)).toBeInTheDocument();
+    test('handles empty text', () => {
+        const { container } = render(<MathText text="" />);
+        expect(container.firstChild).toBeInTheDocument();
     });
 
-    it('handles multiple parts correctly', () => {
-        const { container } = render(<MathText text="2^{n} + 1" />);
-        expect(screen.getByText(/2/)).toBeInTheDocument();
-        expect(container.querySelector('sup')).toHaveTextContent('n');
-        expect(screen.getByText(/\+ 1/)).toBeInTheDocument();
+    test('handles malformed superscript notation', () => {
+        // Missing closing brace or wrong start should treated as plain text or partial parts
+        render(<MathText text="x^{2" />);
+        expect(screen.getByText('x^{2')).toBeInTheDocument();
+    });
+
+    test('applies correct styling to superscript', () => {
+        const { container } = render(<MathText text="x^{n}" />);
+        const sup = container.querySelector('sup');
+
+        expect(sup).toHaveStyle({
+            fontSize: '0.6em',
+            verticalAlign: 'super',
+        });
     });
 });

@@ -73,4 +73,16 @@ describe('SolvabilityHeader', () => {
         fireEvent.click(cancelButton);
         expect(defaultProps.onCancel).toHaveBeenCalled();
     });
+
+    it('renders documentation tooltip', () => {
+        render(
+            <TestWrapper>
+                <SolvabilityHeader {...defaultProps} />
+            </TestWrapper>
+        );
+
+        expect(
+            screen.getByLabelText('Solvability analyzer documentation')
+        ).toBeInTheDocument();
+    });
 });

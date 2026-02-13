@@ -31,6 +31,7 @@ describe('SolvabilityResults', () => {
         expect(screen.getByText('25% Solvable')).toBeInTheDocument();
         // Since KernelBasisView and ImageMappingView are not mocked, we check their content
         expect(screen.getByText('Pattern 1')).toBeInTheDocument();
+        expect(screen.getByText('0x1')).toBeInTheDocument();
     });
 
     it('renders fully solvable message when nullity is 0', () => {
@@ -51,5 +52,9 @@ describe('SolvabilityResults', () => {
             screen.getByText('fully solvable (Nullity = 0)')
         ).toBeInTheDocument();
         expect(screen.getByText('100% Solvable')).toBeInTheDocument();
+        // Should not render quiet patterns section since list is empty
+        expect(
+            screen.queryByText('Quiet Patterns (Kernel)')
+        ).not.toBeInTheDocument();
     });
 });

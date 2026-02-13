@@ -41,6 +41,20 @@ describe('ImageMappingView', () => {
         ).not.toBeInTheDocument();
     });
 
+    it('renders column headers', () => {
+        render(
+            <TestWrapper>
+                <ImageMappingView
+                    imageMapping={imageMapping}
+                    isFullSubspace={true}
+                />
+            </TestWrapper>
+        );
+
+        expect(screen.getByText('BOTTOM RESIDUAL')).toBeInTheDocument();
+        expect(screen.getByText('TOP CORRECTION')).toBeInTheDocument();
+    });
+
     it('renders Image Basis when isFullSubspace is false', () => {
         render(
             <TestWrapper>

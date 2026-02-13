@@ -4,6 +4,8 @@ import React from 'react';
 
 import { AlgebraicMetrics } from '../AlgebraicMetrics';
 
+import { COLORS } from '@/config/theme';
+
 const theme = createTheme();
 
 const TestWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -30,17 +32,17 @@ describe('AlgebraicMetrics', () => {
         );
 
         const percentText = getByText('100% Solvable');
-        // We can't easily check the exact color constant here without importing COLORS,
-        // but we can check if it rendered.
-        expect(percentText).toBeInTheDocument();
+        expect(percentText).toHaveStyle({ color: COLORS.data.green });
     });
 
     it('renders with different nullity', () => {
-        render(
+        const { getByText } = render(
             <TestWrapper>
                 <AlgebraicMetrics nullity={1} solvablePercent="50" />
             </TestWrapper>
         );
-        expect(screen.getByText('50% Solvable')).toBeInTheDocument();
+        const percentText = getByText('50% Solvable');
+        expect(percentText).toBeInTheDocument();
+        expect(percentText).toHaveStyle({ color: COLORS.text.primary });
     });
 });

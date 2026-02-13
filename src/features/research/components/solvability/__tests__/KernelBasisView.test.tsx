@@ -27,4 +27,20 @@ describe('KernelBasisView', () => {
         expect(screen.getByText('0x123')).toBeInTheDocument();
         expect(screen.getByText('0x456')).toBeInTheDocument();
     });
+
+    it('handles large number of patterns', () => {
+        const patterns = Array.from(
+            { length: 10 },
+            (_, i) => `0x${i.toString(16)}`
+        );
+        render(
+            <TestWrapper>
+                <KernelBasisView quietPatterns={patterns} />
+            </TestWrapper>
+        );
+
+        patterns.forEach(p => {
+            expect(screen.getByText(p)).toBeInTheDocument();
+        });
+    });
 });
