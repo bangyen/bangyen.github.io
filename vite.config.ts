@@ -2,10 +2,22 @@
 import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import { visualizer } from 'rollup-plugin-visualizer';
+import viteCompression from 'vite-plugin-compression';
 import os from 'os';
 
 export default defineConfig(() => {
-    const plugins = [react(), tsconfigPaths()];
+    const plugins = [
+        react(),
+        tsconfigPaths(),
+        viteCompression(),
+        visualizer({
+            filename: 'stats.html',
+            open: true,
+            gzipSize: true,
+            brotliSize: true,
+        }),
+    ];
 
     return {
         plugins,
