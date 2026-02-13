@@ -142,4 +142,37 @@ describe('ErrorBoundary', () => {
         // Reset env
         process.env['NODE_ENV'] = originalEnv;
     });
+
+    test('renders custom FallbackComponent on error', () => {
+        const ThrowError = () => {
+            throw new Error('Test error');
+        };
+        const CustomFallback = ({ error }: { error: Error | null }) => (
+            <div data-testid="custom-fallback">{error?.message}</div>
+        );
+
+        render(
+            <ErrorBoundary FallbackComponent={CustomFallback}>
+                <ThrowError />
+            </ErrorBoundary>
+        );
+
+        expect(screen.getByTestId('custom-fallback')).toBeInTheDocument();
+        expect(screen.getByText('Test error')).toBeInTheDocument();
+    });
+
+    test('renders simple fallback prop on error', () => {
+        const ThrowError = () => {
+            throw new Error('Test error');
+        };
+        const SimpleFallback = <div data-testid="simple-fallback">Error!</div>;
+
+        render(
+            <ErrorBoundary fallback={SimpleFallback}>
+                <ThrowError />
+            </ErrorBoundary>
+        );
+
+        expect(screen.getByTestId('simple-fallback')).toBeInTheDocument();
+    });
 });

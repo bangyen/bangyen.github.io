@@ -1,11 +1,12 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
-import { ThemeToggle } from '../components/ui/ThemeToggle';
-import { useThemeContext } from '../hooks/useTheme';
+import { ThemeToggle } from '../ThemeToggle';
+
+import { useThemeContext } from '@/hooks/useTheme';
 
 // Mock useThemeContext
-vi.mock('../hooks/useTheme', () => ({
+vi.mock('@/hooks/useTheme', () => ({
     useThemeContext: vi.fn(),
 }));
 
