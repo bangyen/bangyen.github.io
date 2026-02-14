@@ -1,5 +1,6 @@
 import { useReducer, useEffect, useMemo, useCallback, useRef } from 'react';
 
+import { DEFAULT_BOARD_CONFIG, DEFAULT_GRID_CONFIG } from '../config';
 import { useGamePersistence } from './useGamePersistence';
 import { useGridSize } from './useGridSize';
 import { usePageTitle } from './usePageTitle';
@@ -19,12 +20,13 @@ interface BaseGameConfig<S, A> {
     };
     /** Page title for the document */
     pageTitle: string;
-    /** Grid sizing configuration (see useGridSize) */
+    /** Grid sizing configuration (see useGridSize).
+     *  Fields with defaults from DEFAULT_GRID_CONFIG are optional. */
     gridConfig: {
         defaultSize: number | null;
         minSize?: number;
         maxSize?: number;
-        headerOffset: {
+        headerOffset?: {
             mobile: number;
             desktop: number;
         };
@@ -33,16 +35,17 @@ interface BaseGameConfig<S, A> {
         cellSizeReference: number | { mobile: number; desktop: number };
         mobileRowOffset?: number;
     };
-    /** Board rendering configuration */
+    /** Board rendering configuration.
+     *  Fields with defaults from DEFAULT_BOARD_CONFIG are optional. */
     boardConfig: {
         paddingOffset:
             | number
             | { x: number; y: number }
             | ((mobile: boolean) => number | { x: number; y: number });
-        boardMaxWidth: number;
-        boardSizeFactor: number;
+        boardMaxWidth?: number;
+        boardSizeFactor?: number;
         maxCellSize: number;
-        remBase: number;
+        remBase?: number;
         rowOffset?: number;
         colOffset?: number;
     };
@@ -117,6 +120,12 @@ export function useBaseGame<
     manualResize = false,
     onNext,
 }: BaseGameConfig<S, A>) {
+    const mergedGrid = { ...DEFAULT_GRID_CONFIG, ...gridConfig };
+    const mergedBoard = useMemo(
+        () => ({ ...DEFAULT_BOARD_CONFIG, ...boardConfig }),
+        [boardConfig],
+    );
+
     const {
         rows,
         cols,
@@ -128,7 +137,7 @@ export function useBaseGame<
         maxSize,
     } = useGridSize({
         storageKey: storageKeys.size,
-        ...gridConfig,
+        ...mergedGrid,
     });
 
     // Compute the initial state only once (first render). Subsequent size
@@ -176,17 +185,17 @@ export function useBaseGame<
     }, [rows, cols, dispatch, manualResize]);
 
     const resolvedPaddingOffset = useMemo(() => {
-        if (typeof boardConfig.paddingOffset === 'function') {
-            return boardConfig.paddingOffset(mobile);
+        if (typeof mergedBoard.paddingOffset === 'function') {
+            return mergedBoard.paddingOffset(mobile);
         }
-        return boardConfig.paddingOffset;
-    }, [boardConfig, mobile]);
+        return mergedBoard.paddingOffset;
+    }, [mergedBoard, mobile]);
 
     const size = useResponsiveBoardSize({
-        rows: rows + (boardConfig.rowOffset ?? 0),
-        cols: cols + (boardConfig.colOffset ?? 0),
-        headerOffset: gridConfig.headerOffset,
-        ...boardConfig,
+        rows: rows + (mergedBoard.rowOffset ?? 0),
+        cols: cols + (mergedBoard.colOffset ?? 0),
+        headerOffset: mergedGrid.headerOffset,
+        ...mergedBoard,
         paddingOffset: resolvedPaddingOffset,
     });
 

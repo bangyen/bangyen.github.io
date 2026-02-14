@@ -48,6 +48,26 @@ export function createStorageKeys(prefix: string) {
     return { SIZE: `${prefix}-size`, STATE: `${prefix}-state` } as const;
 }
 
+/**
+ * Sensible defaults for `boardConfig` in `useBaseGame`.
+ * Games only need to specify fields that differ from these values.
+ */
+export const DEFAULT_BOARD_CONFIG = {
+    boardMaxWidth: 1200,
+    boardSizeFactor: 0.94,
+    remBase: 16,
+};
+
+/**
+ * Sensible defaults for `gridConfig` in `useBaseGame`.
+ * Games only need to specify fields that differ from these values.
+ */
+export const DEFAULT_GRID_CONFIG = {
+    minSize: 3,
+    mobileRowOffset: 2,
+    headerOffset: GAME_CONSTANTS.layout.headerHeight,
+};
+
 export const PAGE_TITLES = {
     lightsOut: 'Lights Out | Bangyen',
     slant: 'Slant | Bangyen',
