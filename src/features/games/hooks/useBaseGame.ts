@@ -1,4 +1,4 @@
-import { useReducer, useEffect, useMemo, useCallback } from 'react';
+import { useReducer, useEffect, useMemo, useCallback, useRef } from 'react';
 
 import { useGamePersistence } from './useGamePersistence';
 import { useGridSize } from './useGridSize';
@@ -62,6 +62,10 @@ interface BaseGameConfig<S, A> {
         deserialize?: (saved: unknown) => S;
         enabled?: boolean;
     };
+    /** When true, skip the automatic resize dispatch so the consumer can handle generation asynchronously. */
+    manualResize?: boolean;
+    /** Optional override for the "next puzzle" callback used by win transition and refresh. */
+    onNext?: () => void;
 }
 
 /**
@@ -110,6 +114,8 @@ export function useBaseGame<
     winAnimationDelay,
     isSolved,
     persistence,
+    manualResize = false,
+    onNext,
 }: BaseGameConfig<S, A>) {
     const {
         rows,
@@ -125,17 +131,22 @@ export function useBaseGame<
         ...gridConfig,
     });
 
-    const initial = useMemo(
-        () => getInitialState(rows, cols),
-        [rows, cols, getInitialState],
-    );
-    const [state, dispatch] = useReducer(reducer, initial);
+    // Compute the initial state only once (first render). Subsequent size
+    // changes are handled by the resize dispatch or by the consumer when
+    // manualResize is true.
+    const initialRef = useRef<S | null>(null);
+    if (initialRef.current === null) {
+        initialRef.current = getInitialState(rows, cols);
+    }
+    const [state, dispatch] = useReducer(reducer, initialRef.current);
 
     const solved = useMemo(() => isSolved(state), [state, isSolved]);
 
-    const handleNext = useCallback(() => {
+    const defaultHandleNext = useCallback(() => {
         dispatch({ type: 'new' });
     }, [dispatch]);
+
+    const handleNext = onNext ?? defaultHandleNext;
 
     useGamePersistence<S>({
         storageKey: storageKeys.state,
@@ -154,6 +165,7 @@ export function useBaseGame<
     usePageTitle(pageTitle);
 
     useEffect(() => {
+        if (manualResize) return;
         dispatch({
             type: 'resize',
             rows,
@@ -161,7 +173,7 @@ export function useBaseGame<
             newRows: rows,
             newCols: cols,
         });
-    }, [rows, cols, dispatch]);
+    }, [rows, cols, dispatch, manualResize]);
 
     const resolvedPaddingOffset = useMemo(() => {
         if (typeof boardConfig.paddingOffset === 'function') {

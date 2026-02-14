@@ -113,6 +113,7 @@ export function createGameReducer<
                 ) {
                     const r = action.newRows ?? action.rows ?? state.rows;
                     const c = action.newCols ?? action.cols ?? state.cols;
+                    if (r === state.rows && c === state.cols) return state;
                     return config.getInitialState(r, c);
                 }
                 return state;
