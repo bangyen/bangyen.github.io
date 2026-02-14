@@ -3,8 +3,7 @@ import { getNodeIndex } from './cycleDetection';
 import type { CellState } from '../types';
 import { EMPTY, FORWARD, BACKWARD } from '../types';
 import { calculateNumbers } from './validation';
-
-import { DSU } from '@/utils/DSU';
+import { DSU } from '../../../../utils/DSU';
 
 /**
  * Checks if a puzzle can be solved using deductive logic alone.
