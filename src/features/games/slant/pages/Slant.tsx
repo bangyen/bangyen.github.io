@@ -53,33 +53,61 @@ export default function Slant() {
     // ── Async puzzle generation via Web Worker ──────────────────────
     const [generating, setGenerating] = useState(false);
     const genWorkerRef = useRef<Worker | null>(null);
+    const workerHealthy = useRef(false);
     const dispatchRef = useRef<React.Dispatch<
         SlantAction | { type: 'hydrate'; state: SlantState }
     > | null>(null);
 
-    // Stable helper: post a GENERATE message to the worker.
-    const requestGeneration = useCallback((r: number, c: number) => {
-        setGenerating(true);
-        genWorkerRef.current?.postMessage({
-            type: 'GENERATE',
-            payload: { rows: r, cols: c },
-        });
-    }, []);
-
     // Ref tracking the latest dims so handleNextAsync never goes stale.
     const dimsRef = useRef({ rows: 0, cols: 0 });
+
+    /** Generate synchronously on the main thread. */
+    const generateSync = useCallback((r: number, c: number) => {
+        dispatchRef.current?.({
+            type: 'hydrate',
+            state: getInitialState(r, c),
+        });
+        setGenerating(false);
+    }, []);
+
+    // Stable helper: generate a new puzzle, preferring the worker when healthy.
+    const requestGeneration = useCallback(
+        (r: number, c: number) => {
+            if (workerHealthy.current && genWorkerRef.current) {
+                setGenerating(true);
+                genWorkerRef.current.postMessage({
+                    type: 'GENERATE',
+                    payload: { rows: r, cols: c },
+                });
+            } else {
+                // Worker unavailable — generate on the main thread immediately.
+                setGenerating(true);
+                // Use a microtask so the skeleton renders before the sync work.
+                queueMicrotask(() => {
+                    generateSync(r, c);
+                });
+            }
+        },
+        [generateSync],
+    );
 
     const handleNextAsync = useCallback(() => {
         requestGeneration(dimsRef.current.rows, dimsRef.current.cols);
     }, [requestGeneration]);
 
-    // Boot worker on mount, wire up onmessage, tear down on unmount.
+    // Boot worker on mount, probe it with a tiny puzzle, then mark healthy.
     useEffect(() => {
+        let cancelled = false;
         const worker = createGenerationWorker();
         genWorkerRef.current = worker;
 
         worker.onmessage = (e: MessageEvent<GenerationMessage>) => {
+            if (cancelled) return;
+
             if (e.data.type === 'RESULT') {
+                // First successful response proves the worker is alive.
+                workerHealthy.current = true;
+
                 const { rows: r, cols: c, numbers, solution } = e.data.payload;
                 dispatchRef.current?.({
                     type: 'hydrate',
@@ -102,7 +130,16 @@ export default function Slant() {
             }
         };
 
+        worker.onerror = () => {
+            // Worker broken — disable it permanently so all future
+            // generations use the synchronous fallback immediately.
+            workerHealthy.current = false;
+            genWorkerRef.current = null;
+            worker.terminate();
+        };
+
         return () => {
+            cancelled = true;
             worker.terminate();
         };
     }, []);
@@ -330,6 +367,12 @@ export default function Slant() {
         [size],
     );
 
+    // True when grid dimensions have changed but the worker hasn't
+    // delivered a new puzzle yet. Without this guard the real board
+    // renders one frame with mismatched state/grid dimensions,
+    // causing cells to reference out-of-bounds indices and vanish.
+    const dimensionsMismatch = rows !== state.rows || cols !== state.cols;
+
     const boardContent = isGhostMode ? (
         <GhostCanvas
             rows={rows}
@@ -342,7 +385,7 @@ export default function Slant() {
             onClear={handleGhostClear}
             onClose={handleGhostClose}
         />
-    ) : generating ? (
+    ) : generating || dimensionsMismatch ? (
         <Box
             sx={{
                 '@keyframes pulse': {
