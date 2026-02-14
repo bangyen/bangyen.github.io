@@ -103,6 +103,16 @@ vi.mock('@/features/games/components/Board', () => ({
     },
 }));
 
+vi.mock('@/components/layout/Navigation', () => ({
+    Navigation: function MockNavigation({
+        children,
+    }: {
+        children: React.ReactNode;
+    }) {
+        return <div data-testid="controls">{children}</div>;
+    },
+}));
+
 vi.mock('@/components/ui/Controls', () => ({
     Controls: function MockControls({
         children,
@@ -120,6 +130,19 @@ vi.mock('@/components/ui/Controls', () => ({
                 )}
                 {children}
             </div>
+        );
+    },
+    RefreshButton: function MockRefreshButton({
+        onClick,
+        title = 'New Puzzle',
+    }: {
+        onClick: () => void;
+        title?: string;
+    }) {
+        return (
+            <button aria-label={title} onClick={onClick}>
+                {title}
+            </button>
         );
     },
 }));

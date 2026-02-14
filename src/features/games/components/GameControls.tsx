@@ -1,7 +1,8 @@
 import React from 'react';
 
 import { RemoveRounded, AddRounded } from '@/components/icons';
-import { Controls } from '@/components/ui/Controls';
+import { Navigation } from '@/components/layout/Navigation';
+import { RefreshButton } from '@/components/ui/Controls';
 import { TooltipButton } from '@/components/ui/TooltipButton';
 
 interface GameControlsProps {
@@ -17,6 +18,11 @@ interface GameControlsProps {
     children?: React.ReactNode;
 }
 
+/**
+ * Game-specific control bar that composes Navigation directly.
+ * Provides refresh, resize (plus/minus), and optional extra buttons
+ * without routing through the generic Controls wrapper.
+ */
 export function GameControls({
     rows,
     cols,
@@ -35,7 +41,8 @@ export function GameControls({
         Math.min(rows, cols) >= Math.min(dynamicSize.rows, dynamicSize.cols);
 
     return (
-        <Controls onRefresh={onRefresh}>
+        <Navigation>
+            <RefreshButton onClick={onRefresh} />
             <TooltipButton
                 title="Decrease Size"
                 Icon={RemoveRounded}
@@ -49,6 +56,6 @@ export function GameControls({
                 disabled={disabled || isAtMax}
             />
             {children}
-        </Controls>
+        </Navigation>
     );
 }

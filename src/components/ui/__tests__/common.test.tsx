@@ -4,16 +4,10 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Navigation } from '../../layout/Navigation';
-import {
-    TooltipButton,
-    HomeButton,
-    RandomButton,
-    Controls,
-    ArrowsButton,
-    RefreshButton,
-} from '../Controls';
+import { HomeButton, RandomButton, Controls, RefreshButton } from '../Controls';
 import { CustomGrid } from '../CustomGrid';
 import { GlassCard } from '../GlassCard';
+import { TooltipButton } from '../TooltipButton';
 
 const theme = createTheme();
 
@@ -350,100 +344,6 @@ describe('Helper Components', () => {
         });
     });
 
-    describe('ArrowsButton', () => {
-        const mockHandler = vi.fn();
-        const mockSetShow = vi.fn();
-
-        test('shows gamepad button when not expanded', () => {
-            render(
-                <ArrowsButton
-                    show={false}
-                    setShow={mockSetShow}
-                    handler={mockHandler}
-                />,
-            );
-
-            expect(
-                screen.getByLabelText('Show game controls'),
-            ).toBeInTheDocument();
-        });
-
-        test('expands to show directional controls', () => {
-            render(
-                <ArrowsButton
-                    show={true}
-                    setShow={mockSetShow}
-                    handler={mockHandler}
-                />,
-            );
-
-            expect(screen.getByLabelText('Move up')).toBeInTheDocument();
-            expect(screen.getByLabelText('Move down')).toBeInTheDocument();
-            expect(screen.getByLabelText('Move left')).toBeInTheDocument();
-            expect(screen.getByLabelText('Move right')).toBeInTheDocument();
-        });
-
-        test('calls handler when direction button clicked', () => {
-            render(
-                <ArrowsButton
-                    show={true}
-                    setShow={mockSetShow}
-                    handler={mockHandler}
-                />,
-            );
-
-            const upButton = screen.getByLabelText('Move up');
-            upButton.click();
-
-            expect(mockHandler).toHaveBeenCalledWith('up');
-        });
-
-        test('toggles visibility when gamepad button clicked', () => {
-            render(
-                <ArrowsButton
-                    show={false}
-                    setShow={mockSetShow}
-                    handler={mockHandler}
-                />,
-            );
-
-            const gamepadButton = screen.getByLabelText('Show game controls');
-            gamepadButton.click();
-
-            expect(mockSetShow).toHaveBeenCalledWith(true);
-        });
-
-        test('toggles visibility when close button clicked', () => {
-            render(
-                <ArrowsButton
-                    show={true}
-                    setShow={mockSetShow}
-                    handler={mockHandler}
-                />,
-            );
-
-            const closeButton = screen.getByLabelText('Hide controls');
-            closeButton.click();
-
-            expect(mockSetShow).toHaveBeenCalledWith(false);
-        });
-
-        test('does not render when hidden', () => {
-            render(
-                <ArrowsButton
-                    show={false}
-                    setShow={mockSetShow}
-                    handler={mockHandler}
-                    hide={true}
-                />,
-            );
-
-            expect(
-                screen.queryByLabelText('Show game controls'),
-            ).not.toBeInTheDocument();
-        });
-    });
-
     describe('CustomGrid', () => {
         test('renders grid with correct dimensions', () => {
             const cellProps = vi.fn((row: number, col: number) => ({
@@ -605,51 +505,6 @@ describe('RandomButton additional branches', () => {
             />,
         );
         expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-});
-
-describe('ArrowsButton additional branches', () => {
-    test('renders with diagonals', () => {
-        const setShow = vi.fn();
-        render(
-            <ArrowsButton
-                show={true}
-                setShow={setShow}
-                handler={() => vi.fn()}
-                diagonals={true}
-            />,
-        );
-        expect(screen.getByLabelText('Move up left')).toBeInTheDocument();
-        expect(screen.getByLabelText('Move up right')).toBeInTheDocument();
-        expect(screen.getByLabelText('Move down left')).toBeInTheDocument();
-        expect(screen.getByLabelText('Move down right')).toBeInTheDocument();
-    });
-
-    test('handles size inherit', () => {
-        const setShow = vi.fn();
-        render(
-            <ArrowsButton
-                show={true}
-                setShow={setShow}
-                handler={() => vi.fn()}
-                size="inherit"
-            />,
-        );
-        expect(screen.getByLabelText('Hide controls')).toBeInTheDocument();
-    });
-
-    test('handles diagonal size inherit', () => {
-        const setShow = vi.fn();
-        render(
-            <ArrowsButton
-                show={true}
-                setShow={setShow}
-                handler={() => vi.fn()}
-                diagonals={true}
-                size="inherit"
-            />,
-        );
-        expect(screen.getByLabelText('Hide controls')).toBeInTheDocument();
     });
 });
 
