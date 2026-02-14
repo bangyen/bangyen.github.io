@@ -30,6 +30,7 @@ interface InfoProps {
     open: boolean;
     palette: Palette;
     toggleOpen: () => void;
+    onApply: (solution: number[]) => void;
     getFrontProps: PropsFactory;
     getBackProps: PropsFactory;
 }
@@ -42,6 +43,7 @@ export default function Info(props: InfoProps): React.ReactElement {
         open,
         palette,
         toggleOpen,
+        onApply,
         getFrontProps,
         getBackProps,
     } = props;
@@ -203,6 +205,10 @@ export default function Info(props: InfoProps): React.ReactElement {
                                 inputProps={inputProps}
                                 outputProps={outputProps}
                                 onReset={handleReset}
+                                onApply={() => {
+                                    onApply(res);
+                                }}
+                                hasPattern={res.some(v => v !== 0)}
                             />
                         )}
                     </Box>

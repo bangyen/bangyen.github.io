@@ -1,4 +1,11 @@
-import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useReducer,
+    useRef,
+    useState,
+} from 'react';
 
 import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
@@ -23,7 +30,7 @@ import { PAGE_TITLES } from '@/config/constants';
 import { LAYOUT } from '@/config/theme';
 import { useMobile } from '@/hooks';
 import { useCellFactory } from '@/utils/gameUtils';
-import { createCellIndex } from '@/utils/types';
+import { createCellIndex, type CellIndex } from '@/utils/types';
 
 export default function LightsOut() {
     const mobile = useMobile('sm');
@@ -133,6 +140,26 @@ export default function LightsOut() {
         [getters, skipTransition],
     );
 
+    /** Apply the calculator's solution pattern to the top row of the board and close the modal. */
+    const handleApply = useCallback(
+        (solution: number[]) => {
+            const moves = solution
+                .map((val, col) =>
+                    val
+                        ? { row: createCellIndex(0), col: createCellIndex(col) }
+                        : null,
+                )
+                .filter(
+                    (m): m is { row: CellIndex; col: CellIndex } => m !== null,
+                );
+            if (moves.length > 0) {
+                dispatch({ type: 'multi_adjacent', moves });
+            }
+            toggleOpen();
+        },
+        [dispatch, toggleOpen],
+    );
+
     const controls = (
         <GameControls {...controlsProps}>
             <TooltipButton
@@ -176,6 +203,7 @@ export default function LightsOut() {
                     open={open}
                     palette={palette}
                     toggleOpen={toggleOpen}
+                    onApply={handleApply}
                     getFrontProps={getExampleProps}
                     getBackProps={getBackProps}
                 />
