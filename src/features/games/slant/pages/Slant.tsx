@@ -9,9 +9,8 @@ import React, {
 import { useMobile } from '../../../../hooks';
 import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
-import { GameErrorBoundary } from '../../components/GameErrorBoundary';
 import { GamePageLayout } from '../../components/GamePageLayout';
-import { BOARD_STYLES, GAME_CONSTANTS } from '../../config';
+import { GAME_CONSTANTS } from '../../config';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
 import { useGamePersistence } from '../../hooks/useGamePersistence';
@@ -33,7 +32,6 @@ import { Psychology } from '@/components/icons';
 import { Box } from '@/components/mui';
 import { TooltipButton } from '@/components/ui/TooltipButton';
 import { PAGE_TITLES } from '@/config/constants';
-import { COLORS } from '@/config/theme';
 import { useCellFactory, getPosKey } from '@/utils/gameUtils';
 import { createCellIndex } from '@/utils/types';
 
@@ -416,15 +414,8 @@ export default function Slant() {
     );
 
     const boardSx = useMemo(
-        () => ({
-            userSelect: 'none',
-            padding: isGhostMode
-                ? 0
-                : mobile
-                  ? BOARD_STYLES.PADDING.MOBILE
-                  : BOARD_STYLES.PADDING.DESKTOP,
-        }),
-        [mobile, isGhostMode],
+        () => (isGhostMode ? { padding: 0 } : undefined),
+        [isGhostMode],
     );
 
     const controls = isGhostMode ? null : (
@@ -509,30 +500,26 @@ export default function Slant() {
     );
 
     return (
-        <GameErrorBoundary>
-            <GamePageLayout
-                title={PAGE_TITLES.slant}
-                infoUrl="https://en.wikipedia.org/wiki/Gokigen_Naname"
-                paddingBottom={{ xs: '120px', md: '150px' }}
-                controls={controls}
-                contentSx={contentSx}
-                showTrophy={!isGhostMode && state.solved}
-                onReset={handleReset}
-                boardSize={size}
-                iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
-                primaryColor={COLORS.primary.main}
-                secondaryColor={COLORS.primary.main}
-                boardSx={boardSx}
-                onClick={
-                    isGhostMode
-                        ? () => {
-                              setIsGhostMode(false);
-                          }
-                        : undefined
-                }
-            >
-                <Box onClick={handleBoxClick}>{boardContent}</Box>
-            </GamePageLayout>
-        </GameErrorBoundary>
+        <GamePageLayout
+            title={PAGE_TITLES.slant}
+            infoUrl="https://en.wikipedia.org/wiki/Gokigen_Naname"
+            paddingBottom={{ xs: '120px', md: '150px' }}
+            controls={controls}
+            contentSx={contentSx}
+            showTrophy={!isGhostMode && state.solved}
+            onReset={handleReset}
+            boardSize={size}
+            iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
+            boardSx={boardSx}
+            onClick={
+                isGhostMode
+                    ? () => {
+                          setIsGhostMode(false);
+                      }
+                    : undefined
+            }
+        >
+            <Box onClick={handleBoxClick}>{boardContent}</Box>
+        </GamePageLayout>
     );
 }

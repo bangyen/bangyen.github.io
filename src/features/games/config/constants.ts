@@ -37,7 +37,16 @@ export const BOARD_STYLES = {
     BORDER_RADIUS: '24px',
     BORDER: '2px solid transparent',
     SHADOW: '0 2px 4px rgba(0,0,0,0.2)',
+    DROP_SHADOW: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
 };
+
+/**
+ * Build the standard `SIZE` / `STATE` localStorage keys for a game.
+ * Games that need extra keys can spread the result and add them.
+ */
+export function createStorageKeys(prefix: string) {
+    return { SIZE: `${prefix}-size`, STATE: `${prefix}-state` } as const;
+}
 
 export const PAGE_TITLES = {
     lightsOut: 'Lights Out | Bangyen',
