@@ -1,4 +1,4 @@
-import { BOARD_STYLES } from '../../config';
+import { BOARD_STYLES, createStorageKeys } from '../../config';
 
 export const NUMBER_SIZE_RATIO = 0.4;
 
@@ -16,10 +16,9 @@ export const LAYOUT_CONSTANTS = {
 };
 
 export const STORAGE_KEYS = {
-    SIZE: 'slant-size',
-    STATE: 'slant-state',
+    ...createStorageKeys('slant'),
     GHOST_MOVES: 'slant-ghost-moves',
-};
+} as const;
 
 export const GAME_LOGIC_CONSTANTS = {
     HINT_DENSITY: 0, // 0 means remove as many clues as possible while remaining deductively solvable

@@ -1,4 +1,4 @@
-import { BOARD_STYLES } from '../../config';
+import { BOARD_STYLES, createStorageKeys } from '../../config';
 
 export const LIGHTS_OUT_STYLES = {
     TRANSITION: {
@@ -7,7 +7,7 @@ export const LIGHTS_OUT_STYLES = {
             'background-color 200ms ease, color 200ms ease, opacity 200ms ease, border-radius 200ms ease',
     },
     SHADOWS: {
-        DROP: `drop-shadow(${BOARD_STYLES.SHADOW})`,
+        DROP: BOARD_STYLES.DROP_SHADOW,
     },
 };
 
@@ -25,7 +25,4 @@ export const LAYOUT_CONSTANTS = {
     },
 };
 
-export const STORAGE_KEYS = {
-    SIZE: 'lights-out-size',
-    STATE: 'lights-out-state',
-};
+export const STORAGE_KEYS = createStorageKeys('lights-out');

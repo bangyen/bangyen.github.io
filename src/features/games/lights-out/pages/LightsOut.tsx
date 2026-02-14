@@ -2,9 +2,8 @@ import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 
 import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
-import { GameErrorBoundary } from '../../components/GameErrorBoundary';
 import { GamePageLayout } from '../../components/GamePageLayout';
-import { BOARD_STYLES, GAME_CONSTANTS } from '../../config';
+import { GAME_CONSTANTS } from '../../config';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
 import Info from '../components/Info';
@@ -150,47 +149,42 @@ export default function LightsOut() {
     );
 
     return (
-        <GameErrorBoundary>
-            <GamePageLayout
-                title={PAGE_TITLES.lightsOut}
-                infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
-                showTrophy={solved}
-                onReset={handleNext}
-                boardSize={size}
-                iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
-                primaryColor={palette.primary}
-                secondaryColor={palette.secondary}
-                useSecondaryTrophy={allOn}
-                boardSx={{
-                    marginTop: mobile
-                        ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
-                        : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
-                    padding: mobile
-                        ? BOARD_STYLES.PADDING.MOBILE
-                        : BOARD_STYLES.PADDING.DESKTOP,
-                }}
-                controls={controls}
-            >
-                <Board
-                    size={size}
+        <GamePageLayout
+            title={PAGE_TITLES.lightsOut}
+            infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
+            showTrophy={solved}
+            onReset={handleNext}
+            boardSize={size}
+            iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
+            primaryColor={palette.primary}
+            secondaryColor={palette.secondary}
+            useSecondaryTrophy={allOn}
+            boardSx={{
+                marginTop: mobile
+                    ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
+                    : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
+            }}
+            controls={controls}
+        >
+            <Board
+                size={size}
+                rows={rows}
+                cols={cols}
+                frontProps={frontProps}
+                backProps={backProps}
+            />
+            {open && (
+                <Info
                     rows={rows}
                     cols={cols}
-                    frontProps={frontProps}
-                    backProps={backProps}
+                    size={size}
+                    open={open}
+                    palette={palette}
+                    toggleOpen={toggleOpen}
+                    getFrontProps={getExampleProps}
+                    getBackProps={getBackProps}
                 />
-                {open && (
-                    <Info
-                        rows={rows}
-                        cols={cols}
-                        size={size}
-                        open={open}
-                        palette={palette}
-                        toggleOpen={toggleOpen}
-                        getFrontProps={getExampleProps}
-                        getBackProps={getBackProps}
-                    />
-                )}
-            </GamePageLayout>
-        </GameErrorBoundary>
+            )}
+        </GamePageLayout>
     );
 }
