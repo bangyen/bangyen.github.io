@@ -198,7 +198,8 @@ export default function Slant() {
 
     const contentSx = useMemo(
         () => ({
-            padding: mobile ? '1rem' : '2rem',
+            px: mobile ? '1rem' : '2rem',
+            pt: mobile ? '1rem' : '2rem',
         }),
         [mobile],
     );
