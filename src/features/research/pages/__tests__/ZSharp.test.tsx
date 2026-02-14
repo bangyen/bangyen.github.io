@@ -146,10 +146,21 @@ describe('ZSharp Component', () => {
     };
 
     test('renders correctly and loads data', async () => {
+        const validData = JSON.stringify({
+            'SGD Baseline': {
+                train_accuracies: [80, 85],
+                train_losses: [0.5, 0.4],
+            },
+            ZSharp: {
+                train_accuracies: [82, 87],
+                train_losses: [0.45, 0.35],
+            },
+        });
+
         (globalThis.fetch as Mock).mockResolvedValue({
             ok: true,
             arrayBuffer: () =>
-                Promise.resolve(new Uint8Array([0x1f, 0x8b, 0, 0]).buffer),
+                Promise.resolve(new TextEncoder().encode(validData).buffer),
         });
 
         await renderZSharp();
@@ -162,15 +173,14 @@ describe('ZSharp Component', () => {
         });
     });
 
-    test('handles fetch failure and uses fallback data', async () => {
+    test('handles fetch failure gracefully with empty data', async () => {
         (globalThis.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
 
         await renderZSharp();
         await waitFor(() => {
-            const count = Number.parseInt(
-                screen.getByTestId('chart-data-count').textContent || '0',
+            expect(screen.getByTestId('chart-data-count')).toHaveTextContent(
+                '0',
             );
-            expect(count).toBeGreaterThan(0);
         });
     });
 

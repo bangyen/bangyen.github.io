@@ -125,22 +125,20 @@ describe('Oligopoly Component', () => {
         expect(screen.getByText('Oligopoly')).toBeInTheDocument();
 
         await waitFor(() => {
-            // Check for exactly 1 item to ensure it's NOT fallback data (which has 15 items)
             expect(screen.getByTestId('chart-data-count')).toHaveTextContent(
                 '1',
             );
         });
     });
 
-    test('handles fetch failure and uses fallback data', async () => {
+    test('handles fetch failure gracefully with empty data', async () => {
         (globalThis.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
 
         await renderOligopoly();
         await waitFor(() => {
-            const count = Number.parseInt(
-                screen.getByTestId('chart-data-count').textContent || '0',
+            expect(screen.getByTestId('chart-data-count')).toHaveTextContent(
+                '0',
             );
-            expect(count).toBeGreaterThan(0);
         });
     });
 
@@ -217,10 +215,9 @@ describe('Oligopoly Component', () => {
 
         await renderOligopoly();
         await waitFor(() => {
-            const count = Number.parseInt(
-                screen.getByTestId('chart-data-count').textContent || '0',
+            expect(screen.getByTestId('chart-data-count')).toHaveTextContent(
+                '0',
             );
-            expect(count).toBeGreaterThan(0);
         });
     });
 
@@ -232,37 +229,9 @@ describe('Oligopoly Component', () => {
 
         await renderOligopoly();
         await waitFor(() => {
-            expect(
-                screen.getByTestId('chart-data-count'),
-            ).not.toHaveTextContent('0');
-        });
-    });
-
-    test('handles missing DecompressionStream', async () => {
-        const originalDS = (
-            globalThis as unknown as { DecompressionStream: unknown }
-        ).DecompressionStream;
-        Object.defineProperty(globalThis, 'DecompressionStream', {
-            value: undefined,
-            writable: true,
-        });
-
-        (globalThis.fetch as Mock).mockResolvedValue({
-            ok: true,
-            arrayBuffer: () =>
-                Promise.resolve(new Uint8Array([0x1f, 0x8b, 0, 0]).buffer),
-        });
-
-        await renderOligopoly();
-        await waitFor(() => {
-            expect(
-                screen.getByTestId('chart-data-count'),
-            ).not.toHaveTextContent('0');
-        });
-
-        Object.defineProperty(globalThis, 'DecompressionStream', {
-            value: originalDS,
-            writable: true,
+            expect(screen.getByTestId('chart-data-count')).toHaveTextContent(
+                '0',
+            );
         });
     });
 
@@ -277,9 +246,9 @@ describe('Oligopoly Component', () => {
 
         await renderOligopoly();
         await waitFor(() => {
-            expect(
-                screen.getByTestId('chart-data-count'),
-            ).not.toHaveTextContent('0');
+            expect(screen.getByTestId('chart-data-count')).toHaveTextContent(
+                '0',
+            );
         });
     });
 

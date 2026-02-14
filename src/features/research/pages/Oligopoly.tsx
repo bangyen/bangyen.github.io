@@ -54,7 +54,7 @@ const filterMatrixData = (
     collusionEnabled: boolean,
 ): MarketDataPoint[] => {
     if (matrixData.length === 0) {
-        return generateFallbackOligopolyData();
+        return [];
     }
 
     const filtered = matrixData.filter(
@@ -77,24 +77,6 @@ const filterMatrixData = (
 
     const sorted = filtered.sort((a, b) => a.round - b.round);
     return sorted.slice(0, 15);
-};
-
-const generateFallbackOligopolyData = (): MarketDataPoint[] => {
-    const data: MarketDataPoint[] = [];
-    for (let i = 1; i <= RESEARCH_CONSTANTS.oligopoly.maxRounds; i++) {
-        const sim = RESEARCH_CONSTANTS.oligopoly.simulation;
-        data.push({
-            round: i,
-            price:
-                sim.fallbackPrice +
-                Math.sin(i * sim.priceFrequency) * sim.priceAmplitude,
-            hhi:
-                sim.fallbackHHI +
-                Math.sin(i * sim.hhiFrequency) * sim.hhiAmplitude,
-            collusion: i > sim.collusionStart && i < sim.collusionEnd,
-        });
-    }
-    return data;
 };
 
 const Oligopoly: React.FC = () => {
@@ -178,8 +160,8 @@ const Oligopoly: React.FC = () => {
         dualYAxis: true,
         rightYAxisFormatter: (value: number) => value.toFixed(2),
         rightYAxisDomain: [
-            `dataMin - ${String(RESEARCH_CONSTANTS.oligopoly.simulation.hhiFrequency)}`,
-            `dataMax + ${String(RESEARCH_CONSTANTS.oligopoly.simulation.hhiFrequency)}`,
+            `dataMin - ${String(RESEARCH_CONSTANTS.oligopoly.hhiAxisPadding)}`,
+            `dataMax + ${String(RESEARCH_CONSTANTS.oligopoly.hhiAxisPadding)}`,
         ],
         tooltipLabelFormatter: (value: number) => `Round ${value.toString()}`,
         tooltipFormatter: (value: number, name: string): [string, string] => [
