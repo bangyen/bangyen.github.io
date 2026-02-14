@@ -1,5 +1,5 @@
-import { render, fireEvent, act } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 
 import { TrophyOverlay } from '../TrophyOverlay';
 
@@ -12,31 +12,15 @@ describe('TrophyOverlay', () => {
         iconSizeRatio: 0.8,
     };
 
-    beforeEach(() => {
-        vi.clearAllMocks();
-        vi.useFakeTimers();
-    });
-
-    afterEach(() => {
-        vi.useRealTimers();
-    });
-
-    it('should be interactive after delay when shown', () => {
+    it('should be non-interactive (pointer-events: none)', () => {
         const { container } = render(<TrophyOverlay {...defaultProps} />);
-
         const overlay = container.firstChild as HTMLElement;
+        expect(overlay).toHaveStyle('pointer-events: none');
+    });
 
-        // Should not be interactive yet
-        fireEvent.click(overlay);
-        expect(onReset).not.toHaveBeenCalled();
-
-        // Wait for delay
-        act(() => {
-            vi.advanceTimersByTime(500);
-        });
-
-        fireEvent.click(overlay);
-        expect(onReset).toHaveBeenCalled();
+    it('should display Solved! label when shown', () => {
+        const { getByText } = render(<TrophyOverlay {...defaultProps} />);
+        expect(getByText('Solved!')).toBeInTheDocument();
     });
 
     it('should not be visible when show is false', () => {
@@ -58,12 +42,5 @@ describe('TrophyOverlay', () => {
         );
         const icon = container.querySelector('svg');
         expect(icon).toHaveStyle('color: rgb(0, 0, 255)');
-    });
-
-    it('should cleanup timeout on unmount', () => {
-        const { unmount } = render(<TrophyOverlay {...defaultProps} />);
-        const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout');
-        unmount();
-        expect(clearTimeoutSpy).toHaveBeenCalled();
     });
 });
