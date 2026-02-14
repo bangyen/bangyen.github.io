@@ -49,6 +49,13 @@ interface SavedSlantState extends Omit<
 /** Timeout for the initial worker health probe (ms). */
 const WORKER_PROBE_TIMEOUT_MS = 2000;
 
+/**
+ * Debounce delay before dispatching a generation request (ms).
+ * Lets rapid resize / refresh clicks settle so the worker (or main
+ * thread) only generates a single puzzle for the final dimensions.
+ */
+const GENERATION_DEBOUNCE_MS = 250;
+
 export default function Slant() {
     const mobile = useMobile('sm');
     const [isGhostMode, setIsGhostMode] = useState(false);
@@ -70,6 +77,18 @@ export default function Slant() {
     // Ref tracking the latest dims so handleNextAsync never goes stale.
     const dimsRef = useRef({ rows: 0, cols: 0 });
 
+    // Monotonically increasing counter so pending rAF callbacks from
+    // superseded sync-fallback requests are ignored.
+    const genSeqRef = useRef(0);
+    const rafRef = useRef(0);
+    // Debounce timer — cleared on every new request so only the last
+    // one in a rapid burst actually triggers generation.
+    const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    // Counts outstanding worker GENERATE requests.  The worker processes
+    // them in FIFO order, so only the final response (count reaches 0)
+    // is the one the user wants — all earlier ones are discarded.
+    const workerPendingRef = useRef(0);
+
     /** Generate synchronously on the main thread (fallback). */
     const generateSync = useCallback((r: number, c: number) => {
         dispatchRef.current?.({
@@ -80,26 +99,48 @@ export default function Slant() {
     }, []);
 
     /**
-     * Request a new puzzle. Uses the worker when it's proven healthy,
-     * otherwise falls back to synchronous generation immediately.
+     * Request a new puzzle.  The actual generation dispatch is debounced
+     * so rapid resize / refresh clicks collapse into a single request.
+     * The skeleton is shown immediately for responsiveness.
      */
     const requestGeneration = useCallback(
         (r: number, c: number) => {
+            // Show the loading skeleton right away.
             setGenerating(true);
 
-            if (workerStatus.current === 'healthy' && genWorkerRef.current) {
-                genWorkerRef.current.postMessage({
-                    type: 'GENERATE',
-                    payload: { rows: r, cols: c },
-                });
-            } else {
-                // Worker not yet proven or broken — generate on main-thread.
-                // requestAnimationFrame lets React paint the skeleton before
-                // the CPU-intensive sync work blocks the main thread.
-                requestAnimationFrame(() => {
-                    generateSync(r, c);
-                });
+            // Cancel any pending debounce / rAF from a previous call.
+            if (debounceRef.current !== null) {
+                clearTimeout(debounceRef.current);
             }
+            cancelAnimationFrame(rafRef.current);
+
+            debounceRef.current = setTimeout(() => {
+                debounceRef.current = null;
+
+                // Bump the sequence to invalidate any previous sync callback.
+                const seq = ++genSeqRef.current;
+
+                if (
+                    workerStatus.current === 'healthy' &&
+                    genWorkerRef.current
+                ) {
+                    workerPendingRef.current++;
+                    genWorkerRef.current.postMessage({
+                        type: 'GENERATE',
+                        payload: { rows: r, cols: c },
+                    });
+                } else {
+                    // Worker not yet proven or broken — generate on
+                    // main-thread.  requestAnimationFrame lets React
+                    // paint the skeleton before the CPU-intensive sync
+                    // work blocks the main thread.
+                    rafRef.current = requestAnimationFrame(() => {
+                        if (genSeqRef.current === seq) {
+                            generateSync(r, c);
+                        }
+                    });
+                }
+            }, GENERATION_DEBOUNCE_MS);
         },
         [generateSync],
     );
@@ -120,6 +161,7 @@ export default function Slant() {
                 // eslint-disable-next-line no-console
                 console.warn('[Slant] generation worker probe timed out');
                 workerStatus.current = 'broken';
+                workerPendingRef.current = 0;
                 genWorkerRef.current = null;
                 worker.terminate();
             }
@@ -135,6 +177,7 @@ export default function Slant() {
                 );
                 clearTimeout(probeTimer);
                 workerStatus.current = 'broken';
+                workerPendingRef.current = 0;
                 genWorkerRef.current = null;
                 worker.terminate();
                 return;
@@ -147,6 +190,12 @@ export default function Slant() {
                     workerStatus.current = 'healthy';
                     return;
                 }
+
+                // The worker processes messages in FIFO order.  If
+                // multiple requests were queued (rapid clicks), only the
+                // last response matters — discard all earlier ones.
+                workerPendingRef.current--;
+                if (workerPendingRef.current > 0) return;
 
                 // Real generation result — dispatch to game state.
                 const { rows: r, cols: c, numbers, solution } = e.data.payload;
@@ -176,6 +225,7 @@ export default function Slant() {
             console.warn('[Slant] generation worker script error');
             clearTimeout(probeTimer);
             workerStatus.current = 'broken';
+            workerPendingRef.current = 0;
             genWorkerRef.current = null;
             worker.terminate();
         };
@@ -189,6 +239,9 @@ export default function Slant() {
         return () => {
             cancelled = true;
             clearTimeout(probeTimer);
+            if (debounceRef.current !== null) {
+                clearTimeout(debounceRef.current);
+            }
             worker.terminate();
         };
     }, []);
