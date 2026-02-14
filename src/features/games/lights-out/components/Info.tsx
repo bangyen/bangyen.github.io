@@ -188,29 +188,38 @@ export default function Info(props: InfoProps): React.ReactElement {
                         </Box>
 
                         {/* Step Content */}
-                        {step === 0 && <InfoInstructions />}
-                        {step === 1 && (
-                            <InfoExample
-                                size={size}
-                                palette={palette}
-                                getFrontProps={getFrontProps}
-                                getBackProps={getBackProps}
-                            />
-                        )}
-                        {step === 2 && (
-                            <InfoCalculator
-                                cols={cols}
-                                size={size}
-                                isMobile={isMobile}
-                                inputProps={inputProps}
-                                outputProps={outputProps}
-                                onReset={handleReset}
-                                onApply={() => {
-                                    onApply(res);
-                                }}
-                                hasPattern={res.some(v => v !== 0)}
-                            />
-                        )}
+                        <Box
+                            sx={{
+                                flex: 1,
+                                display: 'flex',
+                                flexDirection: 'column',
+                                pr: { xs: 1.5, md: 0 },
+                            }}
+                        >
+                            {step === 0 && <InfoInstructions />}
+                            {step === 1 && (
+                                <InfoExample
+                                    size={size}
+                                    palette={palette}
+                                    getFrontProps={getFrontProps}
+                                    getBackProps={getBackProps}
+                                />
+                            )}
+                            {step === 2 && (
+                                <InfoCalculator
+                                    cols={cols}
+                                    size={size}
+                                    isMobile={isMobile}
+                                    inputProps={inputProps}
+                                    outputProps={outputProps}
+                                    onReset={handleReset}
+                                    onApply={() => {
+                                        onApply(res);
+                                    }}
+                                    hasPattern={res.some(v => v !== 0)}
+                                />
+                            )}
+                        </Box>
                     </Box>
 
                     {/* Footer (Navigation) */}
