@@ -1,10 +1,5 @@
+import { Box, Grid, useMediaQuery } from '@mui/material';
 import React from 'react';
-
-const ResearchChart = React.lazy(() =>
-    import('./ResearchChart').then(module => ({
-        default: module.ResearchChart,
-    })),
-);
 
 import ResearchControls from './ResearchControls';
 import { ResearchErrorBoundary } from './ResearchErrorBoundary';
@@ -13,8 +8,13 @@ import ResearchViewSelector from './ResearchViewSelector';
 import type { ResearchDemoProps } from '../types';
 
 import { PageLayout } from '@/components/layout/PageLayout';
-import { Box, Grid, useMediaQuery } from '@/components/mui';
 import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
+
+const ResearchChart = React.lazy(() =>
+    import('./ResearchChart').then(module => ({
+        default: module.ResearchChart,
+    })),
+);
 
 const ResearchDemo = <T,>({
     title,

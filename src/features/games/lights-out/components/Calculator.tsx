@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 
 import type { Getters, Palette } from '../../components/Board';
 import type { DragProps } from '../../hooks/useDrag';
-import { LIGHTS_OUT_STYLES } from '../config';
+import { LIGHTS_OUT_STYLES } from '../constants';
 import { useGetters } from '../hooks/boardUtils';
 
 import { CircleRounded } from '@/components/icons';

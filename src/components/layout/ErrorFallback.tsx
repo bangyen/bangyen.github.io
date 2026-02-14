@@ -1,7 +1,7 @@
+import { Grid, Typography, Box, Button } from '@mui/material';
 import React from 'react';
 
 import { Refresh } from '../icons';
-import { Grid, Typography, Box, Button } from '../mui';
 import { HomeButton } from '../ui/Controls';
 
 import {

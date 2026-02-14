@@ -1,8 +1,8 @@
+import { Box } from '@mui/material';
 import katex from 'katex';
 import React, { useEffect, useRef } from 'react';
 
 import 'katex/dist/katex.min.css';
-import { Box } from '../mui';
 
 interface LatexProps {
     formula: string;

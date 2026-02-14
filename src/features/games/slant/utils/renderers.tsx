@@ -1,11 +1,11 @@
+import { Box } from '@mui/material';
 import React from 'react';
 
 import type { DragProps } from '../../hooks/useDrag';
-import { SLANT_STYLES } from '../config';
+import { SLANT_STYLES } from '../constants';
 import type { SlantState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
 
-import { Box } from '@/components/mui';
 import { COLORS, ANIMATIONS } from '@/config/theme';
 import { getPosKey } from '@/utils/gameUtils';
 

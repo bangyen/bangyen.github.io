@@ -1,9 +1,17 @@
+import { Box, Typography, Button } from '@mui/material';
 import React from 'react';
 
+import {
+    calculatorRootSx,
+    calculatorContainerSx,
+    calculatorLabelSx,
+    calculatorSubLabelSx,
+    calculatorButtonGroupSx,
+    calculatorButtonSx,
+} from './styles';
+
 import { ContentCopyRounded, Refresh } from '@/components/icons';
-import { Box, Typography, Button } from '@/components/mui';
 import { CustomGrid } from '@/components/ui/CustomGrid';
-import { COLORS } from '@/config/theme';
 
 interface InfoCalculatorProps {
     cols: number;
@@ -43,42 +51,12 @@ export function InfoCalculator({
     const useHorizontal = !isMobile && totalWidth < 55;
 
     return (
-        <Box
-            sx={{
-                animation: 'fadeIn 0.3s ease',
-                textAlign: 'center',
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-            }}
-        >
-            <Box
-                sx={{
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: useHorizontal ? 'row' : 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: 3,
-                }}
-            >
+        <Box sx={calculatorRootSx}>
+            <Box sx={calculatorContainerSx(useHorizontal)}>
                 <Box sx={{ textAlign: 'center' }}>
-                    <Typography
-                        variant="subtitle2"
-                        sx={{
-                            mb: 1,
-                            color: COLORS.text.primary,
-                            fontWeight: 'bold',
-                        }}
-                    >
+                    <Typography variant="subtitle2" sx={calculatorLabelSx}>
                         Input{' '}
-                        <Box
-                            component="span"
-                            sx={{
-                                color: COLORS.text.secondary,
-                                fontWeight: 'normal',
-                            }}
-                        >
+                        <Box component="span" sx={calculatorSubLabelSx}>
                             (Bottom Row)
                         </Box>
                     </Typography>
@@ -92,22 +70,9 @@ export function InfoCalculator({
                 </Box>
 
                 <Box sx={{ textAlign: 'center' }}>
-                    <Typography
-                        variant="subtitle2"
-                        sx={{
-                            mb: 1,
-                            color: COLORS.text.primary,
-                            fontWeight: 'bold',
-                        }}
-                    >
+                    <Typography variant="subtitle2" sx={calculatorLabelSx}>
                         Solution{' '}
-                        <Box
-                            component="span"
-                            sx={{
-                                color: COLORS.text.secondary,
-                                fontWeight: 'normal',
-                            }}
-                        >
+                        <Box component="span" sx={calculatorSubLabelSx}>
                             (Top Row)
                         </Box>
                     </Typography>
@@ -120,25 +85,14 @@ export function InfoCalculator({
                     />
                 </Box>
 
-                <Box
-                    sx={{
-                        display: 'flex',
-                        flexDirection:
-                            useHorizontal || isMobile ? 'column' : 'row',
-                        gap: 1,
-                        alignItems: 'center',
-                    }}
-                >
+                <Box sx={calculatorButtonGroupSx(useHorizontal, isMobile)}>
                     <Button
                         variant="outlined"
                         size="small"
                         startIcon={<ContentCopyRounded />}
                         disabled={!hasPattern}
                         onClick={onApply}
-                        sx={{
-                            borderColor: COLORS.border.subtle,
-                            color: COLORS.text.secondary,
-                        }}
+                        sx={calculatorButtonSx}
                     >
                         Copy Pattern
                     </Button>
@@ -147,10 +101,7 @@ export function InfoCalculator({
                         size="small"
                         startIcon={<Refresh />}
                         onClick={onReset}
-                        sx={{
-                            borderColor: COLORS.border.subtle,
-                            color: COLORS.text.secondary,
-                        }}
+                        sx={calculatorButtonSx}
                     >
                         Clear Pattern
                     </Button>

@@ -1,7 +1,7 @@
+import { Box, Button } from '@mui/material';
 import React from 'react';
 
 import { NavigateBeforeRounded, NavigateNextRounded } from '@/components/icons';
-import { Box, Button } from '@/components/mui';
 import { COLORS } from '@/config/theme';
 
 interface InfoNavigationProps {

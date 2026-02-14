@@ -1,7 +1,7 @@
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 
 import { EmojiEventsRounded } from '@/components/icons';
-import { Box, Typography } from '@/components/mui';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, SPACING } from '@/config/theme';
 

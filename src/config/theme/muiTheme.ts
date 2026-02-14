@@ -7,11 +7,15 @@ import { createTheme } from '@mui/material/styles';
 
 import { ANIMATIONS } from './animations';
 import { COLORS, DARK_COLORS, LIGHT_COLORS } from './colors';
+import { buildCssVars } from './cssVars';
 import { SPACING } from './spacing';
 import { TYPOGRAPHY } from './typography';
 
-import { getSlantGhostCssVars } from '@/features/games/slant/config/themeVars';
-import { getResearchCssVars } from '@/features/research/config/themeVars';
+import { SLANT_GHOST_CSS_VARS } from '@/features/games/slant/themeVars';
+import { RESEARCH_CSS_VARS } from '@/features/research/config/themeVars';
+
+/** All feature-specific CSS variable definitions, aggregated in one place. */
+const FEATURE_CSS_VARS = [...RESEARCH_CSS_VARS, ...SLANT_GHOST_CSS_VARS];
 
 export function createAppTheme(mode: 'light' | 'dark' = 'dark') {
     const palette = mode === 'light' ? LIGHT_COLORS : DARK_COLORS;
@@ -87,8 +91,7 @@ export function createAppTheme(mode: 'light' | 'dark' = 'dark') {
                         '--primary-light': COLORS.primary.light,
                         '--primary-dark': COLORS.primary.dark,
                         // Feature-specific CSS variables
-                        ...getResearchCssVars(mode),
-                        ...getSlantGhostCssVars(mode),
+                        ...buildCssVars(FEATURE_CSS_VARS, mode),
                     },
                     body: {
                         transition:

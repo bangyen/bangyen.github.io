@@ -1,7 +1,7 @@
+import { Box, Typography, Button } from '@mui/material';
 import React from 'react';
 
 import { ArrowBackRounded as Back } from '@/components/icons';
-import { Box, Typography, Button } from '@/components/mui';
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
 interface ResearchHeaderProps {

@@ -1,6 +1,5 @@
+import { Container, Box } from '@mui/material';
 import React from 'react';
-
-import { Container, Box } from '../mui';
 
 import { SPACING, COMPONENT_VARIANTS, COLORS } from '@/config/theme';
 

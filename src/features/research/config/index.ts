@@ -1,4 +1,4 @@
 // Research config exports
 export * from './constants';
 export * from './constants_base';
-export { getResearchCssVars } from './themeVars';
+export { RESEARCH_CSS_VARS } from './themeVars';

@@ -1,4 +1,6 @@
+import { grey, blueGrey } from '@mui/material/colors';
 import type { Theme } from '@mui/material/styles';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
     render,
     type RenderOptions,
@@ -7,8 +9,6 @@ import {
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import { vi, type Mock } from 'vitest';
-
-import { ThemeProvider, createTheme, grey, blueGrey } from '@/components/mui';
 
 /**
  * Creates a test theme for consistent testing across all components

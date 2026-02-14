@@ -1,10 +1,10 @@
+import { Box } from '@mui/material';
 import React from 'react';
 
 import type { Getters } from '../../components/Board';
 import type { DragProps } from '../../hooks/useDrag';
-import { LIGHTS_OUT_STYLES } from '../config';
+import { LIGHTS_OUT_STYLES } from '../constants';
 
-import { Box } from '@/components/mui';
 import { getPosKey } from '@/utils/gameUtils';
 
 const ICON = (

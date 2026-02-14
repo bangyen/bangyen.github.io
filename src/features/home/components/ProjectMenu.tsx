@@ -1,9 +1,9 @@
+import { Box, Menu } from '@mui/material';
 import React, { useState } from 'react';
 
 import { ProjectDropdown } from './ProjectMenu/ProjectDropdown';
 
 import { ViewModuleRounded } from '@/components/icons';
-import { Box, Menu } from '@/components/mui';
 import { TooltipButton } from '@/components/ui/TooltipButton';
 import { COLORS, SHADOWS, ANIMATIONS, SPACING } from '@/config/theme';
 

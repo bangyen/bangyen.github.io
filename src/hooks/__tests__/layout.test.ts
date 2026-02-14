@@ -1,12 +1,11 @@
+import { useMediaQuery } from '@mui/material';
 import { renderHook, act } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
 import { getWindow, useSize, useWindow, useMobile } from '../layout';
 
-import { useMediaQuery } from '@/components/mui';
-
 // Mock useMediaQuery
-vi.mock('@/components/mui', () => ({
+vi.mock('@mui/material', () => ({
     useMediaQuery: vi.fn(),
 }));
 

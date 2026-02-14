@@ -1,6 +1,6 @@
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 
-import { Box, Typography } from '@/components/mui';
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
 export const StepTitle = ({ children }: { children: React.ReactNode }) => (

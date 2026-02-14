@@ -3,4 +3,4 @@ export { default as Home } from './pages/Home';
 
 export * from './components';
 export * from './types';
-export * from './config';
+export * from './constants';

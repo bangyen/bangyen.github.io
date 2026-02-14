@@ -1,6 +1,5 @@
+import { Tooltip, IconButton } from '@mui/material';
 import React from 'react';
-
-import { Tooltip, IconButton } from '../mui';
 
 type IconComponent = React.ElementType;
 

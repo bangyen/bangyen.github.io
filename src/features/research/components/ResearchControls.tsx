@@ -1,9 +1,3 @@
-import React from 'react';
-
-import { RESEARCH_STYLES } from '../config/constants';
-import type { Control } from '../types';
-
-import { Refresh } from '@/components/icons';
 import {
     Box,
     Button,
@@ -11,7 +5,13 @@ import {
     Typography,
     ToggleButton,
     ToggleButtonGroup,
-} from '@/components/mui';
+} from '@mui/material';
+import React from 'react';
+
+import { RESEARCH_STYLES } from '../config/constants';
+import type { Control } from '../types';
+
+import { Refresh } from '@/components/icons';
 import {
     COLORS,
     SPACING,

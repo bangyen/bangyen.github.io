@@ -19,9 +19,7 @@ vi.mock('../usePageTitle', () => ({
     usePageTitle: vi.fn(),
 }));
 vi.mock('../useResponsiveBoardSize', () => ({
-    useResponsiveBoardSize: vi
-        .fn()
-        .mockReturnValue({ width: 500, height: 500 }),
+    calculateBoardSize: vi.fn().mockReturnValue(3),
 }));
 vi.mock('../../../utils/gameUtils', () => ({
     createGameReducer: vi.fn().mockReturnValue((state: any) => state),

@@ -1,3 +1,4 @@
+import { Box } from '@mui/material';
 import React, {
     useEffect,
     useMemo,
@@ -7,29 +8,25 @@ import React, {
 } from 'react';
 
 import { useMobile } from '../../../../hooks';
-import { Board } from '../../components/Board';
-import { GameControls } from '../../components/GameControls';
 import { GamePageLayout } from '../../components/GamePageLayout';
 import { GAME_CONSTANTS } from '../../config';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
 import { useGamePersistence } from '../../hooks/useGamePersistence';
-import { GhostCanvas } from '../components/GhostCanvas';
+import { SlantBoardContent } from '../components/SlantBoardContent';
+import { SlantControls } from '../components/SlantControls';
 import {
     NUMBER_SIZE_RATIO,
     STORAGE_KEYS,
     LAYOUT_CONSTANTS,
     GAME_LOGIC_CONSTANTS,
-} from '../config';
+} from '../constants';
 import { useGenerationWorker } from '../hooks/useGenerationWorker';
 import type { SlantAction, SlantState, CellState } from '../types';
 import { EMPTY } from '../types';
 import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import { getBackProps, getFrontProps } from '../utils/renderers';
 
-import { Psychology } from '@/components/icons';
-import { Box } from '@/components/mui';
-import { TooltipButton } from '@/components/ui/TooltipButton';
 import { PAGE_TITLES } from '@/config/constants';
 import { useCellFactory, getPosKey } from '@/utils/gameUtils';
 import { createCellIndex } from '@/utils/types';
@@ -232,38 +229,19 @@ export default function Slant() {
         [isGhostMode],
     );
 
-    const controls = isGhostMode ? null : (
-        <GameControls
-            {...controlsProps}
+    const handleToggleGhostMode = useCallback(() => {
+        setIsGhostMode(prev => !prev);
+    }, []);
+
+    const controls = (
+        <SlantControls
+            isGhostMode={isGhostMode}
+            controlsProps={controlsProps}
+            generating={generating}
             onRefresh={handleNextAsync}
-            disabled={generating}
-        >
-            <TooltipButton
-                title="Open Calculator"
-                Icon={Psychology}
-                onClick={() => {
-                    setIsGhostMode(!isGhostMode);
-                }}
-                sx={{
-                    color: 'default',
-                }}
-            />
-        </GameControls>
+            onToggleGhostMode={handleToggleGhostMode}
+        />
     );
-
-    // Cell factories for the loading skeleton — subtle filled cells that
-    // pulse to indicate the board is generating.  No width/height override;
-    // the Cell component already sizes itself from the `size` prop.
-    const skeletonBack = useCallback(
-        () => ({
-            sx: {
-                backgroundColor: 'var(--border)',
-            },
-        }),
-        [],
-    );
-
-    const skeletonFront = useCallback(() => ({}), []);
 
     // True when grid dimensions have changed but the worker hasn't
     // delivered a new puzzle yet. Without this guard the real board
@@ -271,45 +249,22 @@ export default function Slant() {
     // causing cells to reference out-of-bounds indices and vanish.
     const dimensionsMismatch = rows !== state.rows || cols !== state.cols;
 
-    const boardContent = isGhostMode ? (
-        <GhostCanvas
+    const boardContent = (
+        <SlantBoardContent
+            isGhostMode={isGhostMode}
+            generating={generating}
+            dimensionsMismatch={dimensionsMismatch}
             rows={rows}
             cols={cols}
-            numbers={state.numbers}
+            state={state}
             size={size}
-            initialMoves={ghostMoves}
-            onMove={handleGhostMove}
-            onCopy={handleGhostCopy}
-            onClear={handleGhostClear}
-            onClose={handleGhostClose}
-        />
-    ) : generating || dimensionsMismatch ? (
-        <Box
-            sx={{
-                '@keyframes pulse': {
-                    '0%, 100%': { opacity: 0.4 },
-                    '50%': { opacity: 0.15 },
-                },
-                animation: 'pulse 1.4s ease-in-out infinite',
-            }}
-        >
-            <Board
-                size={size}
-                rows={rows + 1}
-                cols={cols + 1}
-                frontProps={skeletonFront}
-                backProps={skeletonBack}
-                frontLayerSx={{ pointerEvents: 'none' }}
-            />
-        </Box>
-    ) : (
-        <Board
-            size={size}
-            rows={rows + 1}
-            cols={cols + 1}
+            ghostMoves={ghostMoves}
+            onGhostMove={handleGhostMove}
+            onGhostCopy={handleGhostCopy}
+            onGhostClear={handleGhostClear}
+            onGhostClose={handleGhostClose}
             frontProps={frontProps}
             backProps={backProps}
-            frontLayerSx={{ pointerEvents: 'none' }}
         />
     );
 

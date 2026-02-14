@@ -1,9 +1,9 @@
+import { Box } from '@mui/material';
 import React from 'react';
 
 import Example from './Example';
 import type { Palette, PropsFactory } from '../../components/Board';
 
-import { Box } from '@/components/mui';
 import { useMobile } from '@/hooks';
 
 interface InfoExampleProps {

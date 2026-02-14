@@ -1,8 +1,7 @@
+import { Paper, Grid } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { ReactNode } from 'react';
 import React from 'react';
-
-import { Paper, Grid } from '../mui';
 
 import {
     SPACING,

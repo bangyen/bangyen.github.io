@@ -1,4 +1,4 @@
-import { BOARD_STYLES, createStorageKeys } from '../../config';
+import { BOARD_STYLES, createStorageKeys } from '../config';
 
 export const LIGHTS_OUT_STYLES = {
     TRANSITION: {

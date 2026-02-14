@@ -1,3 +1,4 @@
+import { ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
 import React, { Suspense, lazy } from 'react';
 import { createRoot } from 'react-dom/client';
 import { HashRouter, Routes, Route } from 'react-router-dom';
@@ -6,10 +7,6 @@ import { registerSW } from 'virtual:pwa-register';
 registerSW({ immediate: true });
 
 import ErrorBoundary from './components/layout/ErrorBoundary';
-import {
-    ThemeProvider as MuiThemeProvider,
-    CssBaseline,
-} from './components/mui';
 import './styles/animations.css';
 import { ROUTES } from './config/constants';
 import { COLORS, createAppTheme } from './config/theme';

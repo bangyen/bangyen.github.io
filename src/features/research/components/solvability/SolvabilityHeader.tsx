@@ -1,8 +1,3 @@
-import React from 'react';
-
-import { RESEARCH_STYLES } from '../../config/constants';
-
-import { HelpOutlineRounded, CloseRounded } from '@/components/icons';
 import {
     Box,
     Typography,
@@ -10,7 +5,12 @@ import {
     Button,
     Tooltip,
     IconButton,
-} from '@/components/mui';
+} from '@mui/material';
+import React from 'react';
+
+import { RESEARCH_STYLES } from '../../config/constants';
+
+import { HelpOutlineRounded, CloseRounded } from '@/components/icons';
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
 interface SolvabilityHeaderProps {

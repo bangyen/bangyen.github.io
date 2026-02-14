@@ -1,7 +1,7 @@
+import { Box } from '@mui/material';
 import React from 'react';
 
 import { GitHub, HomeRounded as Home, InfoRounded as Info } from '../icons';
-import { Box } from '../mui';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import { TooltipButton } from '../ui/TooltipButton';
 

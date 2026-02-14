@@ -49,7 +49,7 @@ vi.mock('../../utils/matrices', () => ({
 }));
 
 // Mock MUI components
-vi.mock('@/components/mui', async importOriginal => {
+vi.mock('@mui/material', async importOriginal => {
     const actual = await importOriginal<Record<string, any>>();
     return {
         ...actual,

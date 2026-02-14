@@ -1,8 +1,7 @@
+import { Box } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { ReactNode } from 'react';
 import React, { forwardRef } from 'react';
-
-import { Box } from '../mui';
 
 import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
 

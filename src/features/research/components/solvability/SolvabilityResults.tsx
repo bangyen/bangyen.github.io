@@ -1,3 +1,5 @@
+import { Box, Paper, Typography, Fade } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import React from 'react';
 
 import { AlgebraicMetrics } from './AlgebraicMetrics';
@@ -5,7 +7,6 @@ import { ImageMappingView } from './ImageMappingView';
 import { KernelBasisView } from './KernelBasisView';
 import { RESEARCH_STYLES } from '../../config/constants';
 
-import { Box, Paper, Typography, Fade, alpha } from '@/components/mui';
 import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';
 
 interface SolvabilityResultsProps {

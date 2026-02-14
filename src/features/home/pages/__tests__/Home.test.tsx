@@ -1,15 +1,14 @@
+import { grey, blueGrey } from '@mui/material/colors';
+import {
+    ThemeProvider as MuiThemeProvider,
+    createTheme,
+} from '@mui/material/styles';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import Home from '../Home';
 
-import {
-    ThemeProvider as MuiThemeProvider,
-    createTheme,
-    grey,
-    blueGrey,
-} from '@/components/mui';
 import { ThemeProvider } from '@/hooks/useTheme';
 
 // Create a test theme
