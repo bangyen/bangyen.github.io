@@ -31,6 +31,14 @@ export function getSpace(size: number): string {
     return `${(size * GRID_CONFIG.cellSize.divisor).toString()}px`;
 }
 
+/** Shared board styling constants used by all game pages. */
+export const BOARD_STYLES = {
+    PADDING: { MOBILE: '30px', DESKTOP: '36px' },
+    BORDER_RADIUS: '24px',
+    BORDER: '2px solid transparent',
+    SHADOW: '0 2px 4px rgba(0,0,0,0.2)',
+};
+
 export const PAGE_TITLES = {
     lightsOut: 'Lights Out | Bangyen',
     slant: 'Slant | Bangyen',

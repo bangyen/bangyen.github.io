@@ -4,7 +4,7 @@ import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
 import { GameErrorBoundary } from '../../components/GameErrorBoundary';
 import { GamePageLayout } from '../../components/GamePageLayout';
-import { GAME_CONSTANTS } from '../../config';
+import { BOARD_STYLES, GAME_CONSTANTS } from '../../config';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
 import Info from '../components/Info';
@@ -132,9 +132,9 @@ export default function LightsOut() {
                     marginTop: mobile
                         ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
                         : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
-                    padding: mobile ? '30px' : '36px',
-                    borderRadius: '24px',
-                    border: '2px solid transparent',
+                    padding: mobile
+                        ? BOARD_STYLES.PADDING.MOBILE
+                        : BOARD_STYLES.PADDING.DESKTOP,
                 }}
                 controls={controls}
             >
