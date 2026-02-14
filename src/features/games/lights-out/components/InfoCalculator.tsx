@@ -123,7 +123,8 @@ export function InfoCalculator({
                 <Box
                     sx={{
                         display: 'flex',
-                        flexDirection: useHorizontal ? 'column' : 'row',
+                        flexDirection:
+                            useHorizontal || isMobile ? 'column' : 'row',
                         gap: 1,
                         alignItems: 'center',
                     }}
