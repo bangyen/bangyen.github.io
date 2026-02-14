@@ -32,7 +32,7 @@ export function GameControls({
     const isAtMin = Math.min(rows, cols) <= minSize;
     const isAtMax =
         Math.min(rows, cols) >= maxSize ||
-        (rows === dynamicSize.rows && cols === dynamicSize.cols);
+        Math.min(rows, cols) >= Math.min(dynamicSize.rows, dynamicSize.cols);
 
     return (
         <Controls onRefresh={onRefresh}>
