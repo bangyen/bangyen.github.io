@@ -22,14 +22,3 @@ export const ROUTES: Routes = {
         Slant: '/slant',
     },
 };
-
-export const GLOBAL_CONFIG = {
-    timer: {
-        defaultSpeed: 200,
-        resetDelay: 0,
-    },
-    processing: {
-        doubleProcessingPrevention: true,
-        resetDelay: 0,
-    },
-};

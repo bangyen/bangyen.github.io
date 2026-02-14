@@ -32,17 +32,3 @@ export const createCellIndex = (idx: number): CellIndex => {
     if (idx < 0) throw new Error('Invalid cell index: cannot be negative');
     return idx as CellIndex;
 };
-
-/**
- * Generic discriminated union for game/process states.
- * This pattern improves type safety when handling different logical branches
- * by ensuring that properties specific to a state are only accessible when
- * that state is active.
- */
-export type GenericStatus = 'idle' | 'playing' | 'won' | 'error';
-
-export type GenericState<P = undefined, W = undefined, E = string> =
-    | { status: 'idle' }
-    | ({ status: 'playing' } & (P extends undefined ? object : P))
-    | ({ status: 'won' } & (W extends undefined ? object : W))
-    | { status: 'error'; error: E };

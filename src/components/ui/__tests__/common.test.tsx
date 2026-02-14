@@ -4,7 +4,7 @@ import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Navigation } from '../../layout/Navigation';
-import { HomeButton, RandomButton, Controls, RefreshButton } from '../Controls';
+import { HomeButton, RefreshButton } from '../Controls';
 import { CustomGrid } from '../CustomGrid';
 import { GlassCard } from '../GlassCard';
 import { TooltipButton } from '../TooltipButton';
@@ -199,151 +199,6 @@ describe('Helper Components', () => {
         });
     });
 
-    describe('RandomButton', () => {
-        test('renders with default title', () => {
-            const handleClick = vi.fn();
-
-            render(<RandomButton onClick={handleClick} />);
-
-            expect(
-                screen.getAllByLabelText('Randomize')[0],
-            ).toBeInTheDocument();
-        });
-
-        test('renders with custom title', () => {
-            const handleClick = vi.fn();
-
-            render(
-                <RandomButton onClick={handleClick} title="Custom Random" />,
-            );
-
-            expect(
-                screen.getAllByLabelText('Custom Random')[0],
-            ).toBeInTheDocument();
-        });
-
-        test('shows enabled state when enabled', () => {
-            const handleClick = vi.fn();
-
-            render(
-                <RandomButton
-                    onClick={handleClick}
-                    enabled={true}
-                    showToggleState={true}
-                />,
-            );
-
-            expect(
-                screen.getAllByLabelText('Disable Random')[0],
-            ).toBeInTheDocument();
-        });
-
-        test('shows disabled state when disabled', () => {
-            const handleClick = vi.fn();
-
-            render(
-                <RandomButton
-                    onClick={handleClick}
-                    enabled={false}
-                    showToggleState={true}
-                />,
-            );
-
-            expect(
-                screen.getAllByLabelText('Enable Random')[0],
-            ).toBeInTheDocument();
-        });
-
-        test('does not render when hidden', () => {
-            const handleClick = vi.fn();
-
-            render(<RandomButton onClick={handleClick} hide={true} />);
-
-            expect(
-                screen.queryByLabelText('Randomize'),
-            ).not.toBeInTheDocument();
-        });
-
-        test('calls onClick when clicked', () => {
-            const handleClick = vi.fn();
-
-            render(<RandomButton onClick={handleClick} />);
-
-            const buttons = screen.getAllByLabelText('Randomize');
-            buttons[1]!.click(); // Click the actual button, not the span wrapper
-
-            expect(handleClick).toHaveBeenCalledTimes(1);
-        });
-    });
-
-    describe('Controls', () => {
-        test('renders children in Navigation container', () => {
-            render(
-                <TestWrapper>
-                    <Controls>
-                        <button>Test Button</button>
-                    </Controls>
-                </TestWrapper>,
-            );
-
-            expect(screen.getByText('Test Button')).toBeInTheDocument();
-            // Controls wraps children in Navigation component
-            expect(screen.getByRole('navigation')).toBeInTheDocument();
-        });
-
-        test('includes HomeButton', () => {
-            render(
-                <TestWrapper>
-                    <Controls>
-                        <HomeButton />
-                    </Controls>
-                </TestWrapper>,
-            );
-
-            expect(
-                screen.getByLabelText('Navigate to Home page'),
-            ).toBeInTheDocument();
-        });
-
-        test('includes RandomButton when onRandom provided', () => {
-            const handleRandom = vi.fn();
-
-            render(
-                <TestWrapper>
-                    <Controls onRandom={handleRandom} />
-                </TestWrapper>,
-            );
-
-            expect(
-                screen.getAllByLabelText('Randomize')[0],
-            ).toBeInTheDocument();
-        });
-
-        test('does not include RandomButton when onRandom not provided', () => {
-            render(
-                <TestWrapper>
-                    <Controls />
-                </TestWrapper>,
-            );
-
-            expect(
-                screen.queryByLabelText('Randomize'),
-            ).not.toBeInTheDocument();
-        });
-
-        test('applies opacity when hide prop is true', () => {
-            render(
-                <TestWrapper>
-                    <Controls hide={true} />
-                </TestWrapper>,
-            );
-
-            // Navigation is still rendered but with reduced opacity
-            const nav = screen.getByRole('navigation');
-            expect(nav).toBeInTheDocument();
-        });
-    });
-
     describe('CustomGrid', () => {
         test('renders grid with correct dimensions', () => {
             const cellProps = vi.fn((row: number, col: number) => ({
@@ -479,32 +334,6 @@ describe('Helper Components', () => {
         const cell = container.querySelector('[role="gridcell"]');
         // We can't easily check style but we ensure it renders with the prop passed
         expect(cell).toBeInTheDocument();
-    });
-});
-
-describe('RandomButton additional branches', () => {
-    test('renders in enabled state with toggle', () => {
-        const onClick = vi.fn();
-        render(
-            <RandomButton
-                onClick={onClick}
-                enabled={true}
-                showToggleState={true}
-            />,
-        );
-        expect(
-            screen.getAllByLabelText('Disable Random')[0],
-        ).toBeInTheDocument();
-    });
-
-    test('renders with custom sx as array', () => {
-        render(
-            <RandomButton
-                onClick={vi.fn()}
-                sx={[{ margin: 1 }, { padding: 2 }]}
-            />,
-        );
-        expect(screen.getByRole('button')).toBeInTheDocument();
     });
 });
 

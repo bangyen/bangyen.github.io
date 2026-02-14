@@ -16,7 +16,7 @@ export interface Conflict {
     c: number;
 }
 
-export interface SolverResult {
+interface SolverResult {
     gridState: Map<string, CellInfo>;
     conflicts: Conflict[];
     cycleCells: Set<string>;
