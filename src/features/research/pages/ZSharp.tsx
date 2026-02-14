@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { ResearchDemo } from '../components';
-import { RESEARCH_CONSTANTS, PERCENTAGE } from '../config';
+import { PERCENTAGE, RESEARCH_CONSTANTS } from '../config';
 import { useResearchData } from '../hooks';
 import type { ViewType } from '../types';
 import { fetchGzippedJson } from '../utils';
@@ -65,39 +65,11 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
     return data;
 };
 
-const generateFallbackData = (): DataPoint[] => {
-    const data: DataPoint[] = [];
-    for (let i = 0; i <= RESEARCH_CONSTANTS.zsharp.maxEpochs; i++) {
-        const sgdAccuracy =
-            RESEARCH_CONSTANTS.zsharp.baseAccuracy +
-            (i / RESEARCH_CONSTANTS.zsharp.maxEpochs) *
-                (RESEARCH_CONSTANTS.zsharp.maxAccuracy -
-                    RESEARCH_CONSTANTS.zsharp.baseAccuracy);
-        const zsharpAccuracy =
-            sgdAccuracy + RESEARCH_CONSTANTS.zsharp.improvement;
-        const sgdLoss =
-            RESEARCH_CONSTANTS.zsharp.baseLoss -
-            (i / RESEARCH_CONSTANTS.zsharp.maxEpochs) *
-                (RESEARCH_CONSTANTS.zsharp.baseLoss -
-                    RESEARCH_CONSTANTS.zsharp.minLoss);
-        const zsharpLoss = sgdLoss - RESEARCH_CONSTANTS.zsharp.lossReduction;
-
-        data.push({
-            epoch: i + 1,
-            sgd: sgdAccuracy,
-            zsharp: zsharpAccuracy,
-            sgdLoss: sgdLoss,
-            zsharpLoss: zsharpLoss,
-        });
-    }
-    return data;
-};
-
 const ZSharp: React.FC = () => {
     const { data: chartData, loading } = useResearchData(
         PAGE_TITLES.zsharp,
         loadRealZSharpData,
-        generateFallbackData,
+        () => [] as DataPoint[],
     );
     const [viewType, setViewType] = useState<string>('accuracy');
 

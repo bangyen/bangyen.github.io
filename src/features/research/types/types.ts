@@ -67,16 +67,7 @@ export interface OligopolyConstants {
     defaultElasticity: number;
     defaultBasePrice: number;
     maxRounds: number;
-    simulation: {
-        fallbackPrice: number;
-        fallbackHHI: number;
-        collusionStart: number;
-        collusionEnd: number;
-        priceAmplitude: number;
-        hhiAmplitude: number;
-        priceFrequency: number;
-        hhiFrequency: number;
-    };
+    hhiAxisPadding: number;
     options: {
         firms: { value: number; label: string }[];
         elasticity: { value: number; label: string }[];
@@ -85,13 +76,6 @@ export interface OligopolyConstants {
 }
 
 export interface ZSharpDefaults {
-    baseAccuracy: number;
-    maxAccuracy: number;
-    baseLoss: number;
-    minLoss: number;
-    improvement: number;
-    lossReduction: number;
-    maxEpochs: number;
     yAxisPadding: number;
     lossPadding: number;
     gapPadding: number;

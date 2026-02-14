@@ -6,16 +6,7 @@ export const RESEARCH_CONSTANTS: ResearchConfig = {
         defaultElasticity: 2,
         defaultBasePrice: 40,
         maxRounds: 15,
-        simulation: {
-            fallbackPrice: 20,
-            fallbackHHI: 0.3,
-            collusionStart: 6,
-            collusionEnd: 10,
-            priceAmplitude: 5,
-            hhiAmplitude: 0.1,
-            priceFrequency: 0.3,
-            hhiFrequency: 0.1,
-        },
+        hhiAxisPadding: 0.1,
         options: {
             firms: [
                 { value: 2, label: '2' },
@@ -36,13 +27,6 @@ export const RESEARCH_CONSTANTS: ResearchConfig = {
         },
     },
     zsharp: {
-        baseAccuracy: 0.65,
-        maxAccuracy: 0.75,
-        baseLoss: 2,
-        minLoss: 0.8,
-        improvement: 0.05,
-        lossReduction: 0.1,
-        maxEpochs: 20,
         yAxisPadding: 0.05,
         lossPadding: 0.1,
         gapPadding: 0.005,
