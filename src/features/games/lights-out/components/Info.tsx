@@ -10,10 +10,9 @@ import { InfoNavigation } from './InfoNavigation';
 import type { Palette, PropsFactory } from '../../components/Board';
 import { useDrag } from '../../hooks/useDrag';
 
-import { CloseRounded, AnalyticsRounded } from '@/components/icons';
-import { Backdrop, Modal, Box, IconButton, Button } from '@/components/mui';
+import { CloseRounded } from '@/components/icons';
+import { Backdrop, Modal, Box, IconButton } from '@/components/mui';
 import { GlassCard } from '@/components/ui/GlassCard';
-import { ROUTES } from '@/config/constants';
 import { COLORS } from '@/config/theme';
 import { useMobile } from '@/hooks';
 
@@ -104,42 +103,6 @@ export default function Info(props: InfoProps): React.ReactElement {
         toggleOpen();
     };
 
-    const href = `#${ROUTES.pages.LightsOutResearch}`;
-    const analysisButton = isMobile ? (
-        <IconButton
-            component="a"
-            href={href}
-            size="small"
-            sx={{
-                color: COLORS.text.secondary,
-            }}
-        >
-            <AnalyticsRounded />
-        </IconButton>
-    ) : (
-        <Button
-            component="a"
-            href={href}
-            variant="outlined"
-            size="small"
-            startIcon={<AnalyticsRounded />}
-            sx={{
-                borderColor: COLORS.border.subtle,
-                color: COLORS.text.secondary,
-                fontSize: '0.75rem',
-                py: 0.75,
-                px: 1.5,
-                '&:hover': {
-                    borderColor: COLORS.primary.main,
-                    color: COLORS.primary.main,
-                    backgroundColor: COLORS.interactive.hover,
-                },
-            }}
-        >
-            Analysis
-        </Button>
-    );
-
     return (
         <Modal
             open={open}
@@ -211,24 +174,15 @@ export default function Info(props: InfoProps): React.ReactElement {
                             }}
                         >
                             <StepTitle>{INFO_TITLES[step]}</StepTitle>
-                            <Box
+                            <IconButton
+                                onClick={handleClose}
+                                size="small"
                                 sx={{
-                                    display: 'flex',
-                                    gap: 2,
-                                    alignItems: 'center',
+                                    color: COLORS.text.secondary,
                                 }}
                             >
-                                {analysisButton}
-                                <IconButton
-                                    onClick={handleClose}
-                                    size="small"
-                                    sx={{
-                                        color: COLORS.text.secondary,
-                                    }}
-                                >
-                                    <CloseRounded />
-                                </IconButton>
-                            </Box>
+                                <CloseRounded />
+                            </IconButton>
                         </Box>
 
                         {/* Step Content */}
