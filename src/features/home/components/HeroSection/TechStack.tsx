@@ -1,7 +1,7 @@
+import { Box, Typography, Fade } from '@mui/material';
 import React from 'react';
 
 import { Work, Code, Psychology, Cloud } from '@/components/icons';
-import { Box, Typography, Fade } from '@/components/mui';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { SKILLS } from '@/config/constants';
 import { COLORS, TYPOGRAPHY, SPACING, ANIMATIONS } from '@/config/theme';

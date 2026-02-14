@@ -1,4 +1,4 @@
-import type { ProjectCategory } from '../types';
+import type { ProjectCategory } from './types';
 
 import { Psychology, GamepadRounded } from '@/components/icons';
 import { ROUTES } from '@/config/constants';

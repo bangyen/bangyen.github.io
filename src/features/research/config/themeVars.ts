@@ -5,59 +5,89 @@
  * research pages.  They live here so the core MUI theme file stays
  * focused on application-wide design tokens.
  */
-export function getResearchCssVars(
-    mode: 'light' | 'dark',
-): Record<string, string> {
-    const dark = mode === 'dark';
 
-    return {
-        // Glass intensity scale
-        '--glass-very-subtle': dark
-            ? 'rgba(255, 255, 255, 0.01)'
-            : 'rgba(0, 0, 0, 0.02)',
-        '--glass-subtle': dark
-            ? 'rgba(255, 255, 255, 0.02)'
-            : 'rgba(0, 0, 0, 0.04)',
-        '--glass-transparent': dark
-            ? 'rgba(255, 255, 255, 0.03)'
-            : 'rgba(0, 0, 0, 0.06)',
-        '--glass-slight': dark
-            ? 'rgba(255, 255, 255, 0.05)'
-            : 'rgba(0, 0, 0, 0.08)',
-        '--glass-medium': dark
-            ? 'rgba(255, 255, 255, 0.1)'
-            : 'rgba(0, 0, 0, 0.12)',
-        '--glass-strong': dark
-            ? 'rgba(255, 255, 255, 0.2)'
-            : 'rgba(0, 0, 0, 0.16)',
-        '--glass-dark': dark ? 'rgba(0, 0, 0, 0.2)' : 'rgba(0, 0, 0, 0.05)',
+import type { CssVarDefinition } from '@/config/theme/cssVars';
 
-        // Borders
-        '--research-border-subtle': dark
-            ? 'rgba(255, 255, 255, 0.05)'
-            : 'rgba(0, 0, 0, 0.08)',
-        '--research-border-very-subtle': dark
-            ? 'rgba(255, 255, 255, 0.03)'
-            : 'rgba(0, 0, 0, 0.04)',
+/** Declarative research CSS variable definitions (light/dark pairs). */
+export const RESEARCH_CSS_VARS: readonly CssVarDefinition[] = [
+    // Glass intensity scale
+    {
+        name: '--glass-very-subtle',
+        light: 'rgba(0, 0, 0, 0.02)',
+        dark: 'rgba(255, 255, 255, 0.01)',
+    },
+    {
+        name: '--glass-subtle',
+        light: 'rgba(0, 0, 0, 0.04)',
+        dark: 'rgba(255, 255, 255, 0.02)',
+    },
+    {
+        name: '--glass-transparent',
+        light: 'rgba(0, 0, 0, 0.06)',
+        dark: 'rgba(255, 255, 255, 0.03)',
+    },
+    {
+        name: '--glass-slight',
+        light: 'rgba(0, 0, 0, 0.08)',
+        dark: 'rgba(255, 255, 255, 0.05)',
+    },
+    {
+        name: '--glass-medium',
+        light: 'rgba(0, 0, 0, 0.12)',
+        dark: 'rgba(255, 255, 255, 0.1)',
+    },
+    {
+        name: '--glass-strong',
+        light: 'rgba(0, 0, 0, 0.16)',
+        dark: 'rgba(255, 255, 255, 0.2)',
+    },
+    {
+        name: '--glass-dark',
+        light: 'rgba(0, 0, 0, 0.05)',
+        dark: 'rgba(0, 0, 0, 0.2)',
+    },
 
-        // Data-specific mode-aware highlights
-        '--research-cyan-bg': dark
-            ? 'rgba(0, 184, 212, 0.1)'
-            : 'rgba(0, 184, 212, 0.08)',
-        '--research-cyan-border': dark
-            ? 'rgba(0, 184, 212, 0.2)'
-            : 'rgba(0, 184, 212, 0.15)',
-        '--research-green-bg': dark
-            ? 'rgba(0, 200, 83, 0.1)'
-            : 'rgba(0, 200, 83, 0.08)',
-        '--research-green-border': dark
-            ? 'rgba(0, 200, 83, 0.2)'
-            : 'rgba(0, 200, 83, 0.15)',
-        '--research-amber-bg': dark
-            ? 'rgba(255, 193, 7, 0.1)'
-            : 'rgba(255, 193, 7, 0.08)',
-        '--research-amber-border': dark
-            ? 'rgba(255, 193, 7, 0.2)'
-            : 'rgba(255, 193, 7, 0.15)',
-    };
-}
+    // Borders
+    {
+        name: '--research-border-subtle',
+        light: 'rgba(0, 0, 0, 0.08)',
+        dark: 'rgba(255, 255, 255, 0.05)',
+    },
+    {
+        name: '--research-border-very-subtle',
+        light: 'rgba(0, 0, 0, 0.04)',
+        dark: 'rgba(255, 255, 255, 0.03)',
+    },
+
+    // Data-specific mode-aware highlights
+    {
+        name: '--research-cyan-bg',
+        light: 'rgba(0, 184, 212, 0.08)',
+        dark: 'rgba(0, 184, 212, 0.1)',
+    },
+    {
+        name: '--research-cyan-border',
+        light: 'rgba(0, 184, 212, 0.15)',
+        dark: 'rgba(0, 184, 212, 0.2)',
+    },
+    {
+        name: '--research-green-bg',
+        light: 'rgba(0, 200, 83, 0.08)',
+        dark: 'rgba(0, 200, 83, 0.1)',
+    },
+    {
+        name: '--research-green-border',
+        light: 'rgba(0, 200, 83, 0.15)',
+        dark: 'rgba(0, 200, 83, 0.2)',
+    },
+    {
+        name: '--research-amber-bg',
+        light: 'rgba(255, 193, 7, 0.08)',
+        dark: 'rgba(255, 193, 7, 0.1)',
+    },
+    {
+        name: '--research-amber-border',
+        light: 'rgba(255, 193, 7, 0.15)',
+        dark: 'rgba(255, 193, 7, 0.2)',
+    },
+];

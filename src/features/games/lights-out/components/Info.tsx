@@ -1,3 +1,4 @@
+import { Backdrop, Modal, Box, IconButton } from '@mui/material';
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { getProduct } from '../utils';
@@ -7,13 +8,21 @@ import { InfoCalculator } from './InfoCalculator';
 import { InfoExample } from './InfoExample';
 import { InfoInstructions } from './InfoInstructions';
 import { InfoNavigation } from './InfoNavigation';
+import {
+    infoBackdropSx,
+    infoCardSx,
+    infoCloseButtonSx,
+    infoContentSx,
+    infoHeaderSx,
+    infoModalSx,
+    infoOuterBoxSx,
+    infoStepContentSx,
+} from './styles';
 import type { Palette, PropsFactory } from '../../components/Board';
 import { useDrag } from '../../hooks/useDrag';
 
 import { CloseRounded } from '@/components/icons';
-import { Backdrop, Modal, Box, IconButton } from '@/components/mui';
 import { GlassCard } from '@/components/ui/GlassCard';
-import { COLORS } from '@/config/theme';
 import { useMobile } from '@/hooks';
 
 // Type assertion for GlassCard component
@@ -112,90 +121,34 @@ export default function Info(props: InfoProps): React.ReactElement {
             slots={{ backdrop: Backdrop }}
             slotProps={{
                 backdrop: {
-                    sx: {
-                        backgroundColor: theme =>
-                            theme.palette.mode === 'dark'
-                                ? 'hsla(0, 0%, 3%, 0.85)'
-                                : 'hsla(0, 0%, 98%, 0.85)',
-                        backdropFilter: 'blur(12px) saturate(180%)',
-                        transition: 'all 0.3s ease-in-out !important',
-                    },
+                    sx: infoBackdropSx,
                 },
             }}
-            sx={{
-                zIndex: 9999,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-            }}
+            sx={infoModalSx}
         >
-            <Box
-                sx={{
-                    outline: 'none',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: '100%',
-                }}
-            >
+            <Box sx={infoOuterBoxSx}>
                 <TypedGlassCard
                     onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                     }}
-                    sx={{
-                        width: '100%',
-                        maxWidth: '1000px',
-                        height: { xs: '630px', sm: '495px' },
-                        minHeight: { xs: '630px', sm: '495px' },
-                        display: 'flex',
-                        flexDirection: 'column',
-                        p: 0,
-                        overflow: 'hidden',
-                        position: 'relative',
-                        m: 2,
-                    }}
+                    sx={infoCardSx}
                 >
                     {/* Content Area */}
-                    <Box
-                        sx={{
-                            flex: 1,
-                            overflowY: step === 1 ? 'hidden' : 'auto',
-                            p: { xs: 2.5, md: 3 },
-                            display: 'flex',
-                            flexDirection: 'column',
-                        }}
-                    >
+                    <Box sx={infoContentSx(step)}>
                         {/* Header (Title + Close Button) */}
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                mb: 2,
-                                px: 2,
-                            }}
-                        >
+                        <Box sx={infoHeaderSx}>
                             <StepTitle>{INFO_TITLES[step]}</StepTitle>
                             <IconButton
                                 onClick={handleClose}
                                 size="small"
-                                sx={{
-                                    color: COLORS.text.secondary,
-                                }}
+                                sx={infoCloseButtonSx}
                             >
                                 <CloseRounded />
                             </IconButton>
                         </Box>
 
                         {/* Step Content */}
-                        <Box
-                            sx={{
-                                flex: 1,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                pr: { xs: 3, md: 0 },
-                            }}
-                        >
+                        <Box sx={infoStepContentSx}>
                             {step === 0 && <InfoInstructions />}
                             {step === 1 && (
                                 <InfoExample
@@ -230,15 +183,6 @@ export default function Info(props: InfoProps): React.ReactElement {
                         onNext={handleNext}
                     />
                 </TypedGlassCard>
-
-                <style>
-                    {`
-                    @keyframes fadeIn {
-                        from { opacity: 0; transform: translateY(10px); }
-                        to { opacity: 1; transform: translateY(0); }
-                    }
-                `}
-                </style>
             </Box>
         </Modal>
     );

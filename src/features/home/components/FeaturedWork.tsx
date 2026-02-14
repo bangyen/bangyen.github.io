@@ -1,10 +1,10 @@
+import { Box, Typography, Fade } from '@mui/material';
 import React from 'react';
 
 import { ProjectCard } from './FeaturedWork/ProjectCard';
 import { PublicationCard } from './FeaturedWork/PublicationCard';
 
 import { Section } from '@/components/layout/Layout';
-import { Box, Typography, Fade } from '@/components/mui';
 import { PUBLICATIONS, PROJECTS } from '@/config/constants';
 import { ANIMATIONS, COLORS, TYPOGRAPHY } from '@/config/theme';
 

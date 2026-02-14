@@ -1,7 +1,7 @@
+import { Grid, Typography, Box, Fade, Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import { HomeRounded } from '@/components/icons';
-import { Grid, Typography, Box, Fade, Button } from '@/components/mui';
 import { PAGE_TITLES } from '@/config/constants';
 import {
     COLORS,

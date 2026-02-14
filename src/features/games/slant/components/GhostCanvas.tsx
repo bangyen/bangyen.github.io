@@ -12,7 +12,7 @@ import { GhostControls } from './GhostControls';
 import { GhostHint } from './GhostHint';
 import { BOARD_STYLES, GAME_CONSTANTS } from '../../config';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
-import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../config';
+import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../constants';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
 import { solveGhostConstraints } from '../utils/ghostSolver';

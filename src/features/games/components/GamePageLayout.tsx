@@ -1,4 +1,5 @@
 import type { SxProps, Theme } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 
 import { GameErrorBoundary } from './GameErrorBoundary';
@@ -6,7 +7,6 @@ import { TrophyOverlay } from './TrophyOverlay';
 import { BOARD_STYLES } from '../config';
 
 import { PageLayout } from '@/components/layout/PageLayout';
-import { Box } from '@/components/mui';
 import { COLORS } from '@/config/theme';
 import { toSxArray } from '@/utils/muiUtils';
 

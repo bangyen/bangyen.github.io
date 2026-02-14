@@ -14,7 +14,11 @@ import { GAME_CONSTANTS } from '../../config';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
 import Info from '../components/Info';
-import { STORAGE_KEYS, LAYOUT_CONSTANTS, LIGHTS_OUT_STYLES } from '../config';
+import {
+    STORAGE_KEYS,
+    LAYOUT_CONSTANTS,
+    LIGHTS_OUT_STYLES,
+} from '../constants';
 import { useHandler, usePalette } from '../hooks/boardUtils';
 import type { BoardState, BoardAction } from '../types';
 import { handleBoard, isSolved, getInitialState } from '../utils/boardHandlers';

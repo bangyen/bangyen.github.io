@@ -1,3 +1,4 @@
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 import {
     LineChart,
@@ -12,7 +13,6 @@ import {
 import { CHART_DIMENSIONS, CHART_FORMATTING } from '../config';
 import type { ChartConfig } from '../types';
 
-import { Box, Typography } from '@/components/mui';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';
 

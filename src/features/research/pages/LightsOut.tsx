@@ -1,11 +1,3 @@
-import React from 'react';
-
-import { ResearchDemo } from '../components';
-import { VerificationTools } from '../components/VerificationTools';
-import { RESEARCH_CONSTANTS } from '../config';
-import { RESEARCH_STYLES } from '../config/constants';
-
-import { LaunchRounded } from '@/components/icons';
 import {
     Box,
     Typography,
@@ -17,7 +9,15 @@ import {
     TableRow,
     Paper,
     Button,
-} from '@/components/mui';
+} from '@mui/material';
+import React from 'react';
+
+import { ResearchDemo } from '../components';
+import { VerificationTools } from '../components/VerificationTools';
+import { RESEARCH_CONSTANTS } from '../config';
+import { RESEARCH_STYLES } from '../config/constants';
+
+import { LaunchRounded } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
 const Latex = React.lazy(() =>
     import('@/components/ui/Latex').then(module => ({ default: module.Latex })),

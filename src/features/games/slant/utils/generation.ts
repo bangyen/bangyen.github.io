@@ -1,4 +1,4 @@
-import { GAME_LOGIC_CONSTANTS } from '../config';
+import { GAME_LOGIC_CONSTANTS } from '../constants';
 import { getNodeIndex } from './cycleDetection';
 import type { CellState } from '../types';
 import { EMPTY, FORWARD, BACKWARD } from '../types';

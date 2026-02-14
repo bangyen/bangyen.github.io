@@ -1,10 +1,11 @@
+import { Typography, Grid, Box } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 
 import { GridWithKeyframes } from './AnimatedGrid';
 import { getOutput, useHandler as useCalculatorHandler } from './Calculator';
 import type { Palette, PropsFactory } from '../../components/Board';
 import { Board } from '../../components/Board';
-import { LIGHTS_OUT_STYLES } from '../config';
+import { LIGHTS_OUT_STYLES } from '../constants';
 import { useHandler as useBoardHandler } from '../hooks/boardUtils';
 import {
     getBoardIconFrames,
@@ -13,7 +14,6 @@ import {
 import { getStates } from '../utils/chaseHandlers';
 
 import { EmojiEventsRounded } from '@/components/icons';
-import { Typography, Grid, Box } from '@/components/mui';
 import { CustomGrid } from '@/components/ui/CustomGrid';
 import { COLORS } from '@/config/theme';
 import { useMobile } from '@/hooks';

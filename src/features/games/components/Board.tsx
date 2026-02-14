@@ -1,6 +1,6 @@
+import { Box } from '@mui/material';
 import React from 'react';
 
-import { Box } from '@/components/mui';
 import { CustomGrid } from '@/components/ui/CustomGrid';
 import { LAYOUT } from '@/config/theme';
 

@@ -1,15 +1,17 @@
-import { useMemo } from 'react';
-
-import { useWindow, useMobile } from '../../../hooks';
-
 /**
  * Configuration for responsive board size calculations.
  */
-interface ResponsiveSizeConfig {
+export interface BoardSizeConfig {
     /** Number of rows in the grid */
     rows: number;
     /** Number of columns in the grid */
     cols: number;
+    /** Current viewport width in pixels */
+    width: number;
+    /** Current viewport height in pixels */
+    height: number;
+    /** Whether the viewport is at a mobile breakpoint */
+    mobile: boolean;
     /** Header height in rem for available space calculation */
     headerOffset: {
         mobile: number;
@@ -28,73 +30,58 @@ interface ResponsiveSizeConfig {
 }
 
 /**
- * Custom hook for calculating responsive board cell size.
+ * Pure function that calculates the largest uniform cell size (in rem)
+ * that fits within the given viewport dimensions, respecting padding,
+ * header offsets, and maximum constraints.
  *
- * Calculates the largest uniform cell size that fits within the viewport
- * while respecting min/max constraints. Returns size in rem units.
+ * Extracted from the former `useResponsiveBoardSize` hook so that
+ * callers like `useBaseGame` can reuse viewport values already
+ * obtained from `useGridSize`, avoiding duplicate hook invocations.
  *
- * @param config - Board sizing configuration
+ * @param config - Board sizing configuration including viewport dimensions
  * @returns Cell size in rem units
  *
  * @example
- * ```tsx
- * const cellSize = useResponsiveBoardSize({
- *   rows: 5,
- *   cols: 5,
+ * ```ts
+ * const cellSize = calculateBoardSize({
+ *   rows: 5, cols: 5,
+ *   width: 1024, height: 768, mobile: false,
  *   headerOffset: { mobile: 56, desktop: 64 },
  *   paddingOffset: 16,
  *   boardMaxWidth: 1200,
  *   boardSizeFactor: 0.9,
  *   maxCellSize: 100,
- *   remBase: 16
+ *   remBase: 16,
  * });
- *
- * return <div style={{ fontSize: `${cellSize}rem` }}>Board</div>;
  * ```
  */
-export function useResponsiveBoardSize({
+export function calculateBoardSize({
     rows,
     cols,
+    width,
+    height,
+    mobile,
     headerOffset,
     paddingOffset,
     boardMaxWidth,
     boardSizeFactor,
     maxCellSize,
     remBase,
-}: ResponsiveSizeConfig) {
-    const { width, height } = useWindow();
-    const mobile = useMobile('sm');
+}: BoardSizeConfig): number {
+    const currentHeaderOffset = mobile
+        ? headerOffset.mobile
+        : headerOffset.desktop;
 
-    const size = useMemo(() => {
-        const currentHeaderOffset = mobile
-            ? headerOffset.mobile
-            : headerOffset.desktop;
+    const pX = typeof paddingOffset === 'number' ? 0 : paddingOffset.x;
+    const pY =
+        typeof paddingOffset === 'number' ? paddingOffset : paddingOffset.y;
 
-        const pX = typeof paddingOffset === 'number' ? 0 : paddingOffset.x;
-        const pY =
-            typeof paddingOffset === 'number' ? paddingOffset : paddingOffset.y;
+    const maxW = (Math.min(width, boardMaxWidth) - pX) * boardSizeFactor;
+    const maxH = (height - currentHeaderOffset - pY) * boardSizeFactor;
 
-        const maxW = (Math.min(width, boardMaxWidth) - pX) * boardSizeFactor;
-        const maxH = (height - currentHeaderOffset - pY) * boardSizeFactor;
+    // Note: rows/cols are the base grid dims.
+    // For Slant, we use cols+1/rows+1 for divisions.
+    const pxSize = Math.min(maxW / cols, maxH / rows, maxCellSize);
 
-        // Note: rows/cols are the base grid dims.
-        // For Slant, we use cols+1/rows+1 for divisions.
-        const pxSize = Math.min(maxW / cols, maxH / rows, maxCellSize);
-
-        return pxSize / remBase; // rem
-    }, [
-        width,
-        height,
-        mobile,
-        rows,
-        cols,
-        headerOffset,
-        paddingOffset,
-        boardMaxWidth,
-        boardSizeFactor,
-        maxCellSize,
-        remBase,
-    ]);
-
-    return size;
+    return pxSize / remBase; // rem
 }

@@ -1,10 +1,25 @@
+/**
+ * Hook dependency graph:
+ *
+ *   useWindow / useMobile  (src/hooks/layout.ts)
+ *        |
+ *   useGridSize  -->  rows, cols, mobile, width, height
+ *        |
+ *   useBaseGame  (this hook)
+ *     ├── useGridSize           - grid dimensions + responsive sizing
+ *     ├── calculateBoardSize    - cell size in rem (pure function)
+ *     ├── useGamePersistence    - localStorage save/restore
+ *     ├── useWinTransition      - auto-advance after solve
+ *     └── usePageTitle          - document.title
+ */
+
 import { useReducer, useEffect, useMemo, useCallback, useRef } from 'react';
 
 import { DEFAULT_BOARD_CONFIG, DEFAULT_GRID_CONFIG } from '../config';
 import { useGamePersistence } from './useGamePersistence';
 import { useGridSize } from './useGridSize';
 import { usePageTitle } from './usePageTitle';
-import { useResponsiveBoardSize } from './useResponsiveBoardSize';
+import { calculateBoardSize } from './useResponsiveBoardSize';
 import { useWinTransition } from './useWinTransition';
 
 import type { BaseGameState, BaseGameAction } from '@/utils/gameUtils';
@@ -133,6 +148,8 @@ export function useBaseGame<
         handlePlus,
         handleMinus,
         mobile,
+        width,
+        height,
         minSize,
         maxSize,
     } = useGridSize({
@@ -182,20 +199,31 @@ export function useBaseGame<
         });
     }, [rows, cols, dispatch, manualResize]);
 
-    const resolvedPaddingOffset = useMemo(() => {
-        if (typeof mergedBoard.paddingOffset === 'function') {
-            return mergedBoard.paddingOffset(mobile);
-        }
-        return mergedBoard.paddingOffset;
-    }, [mergedBoard, mobile]);
+    const size = useMemo(() => {
+        const resolvedPaddingOffset =
+            typeof mergedBoard.paddingOffset === 'function'
+                ? mergedBoard.paddingOffset(mobile)
+                : mergedBoard.paddingOffset;
 
-    const size = useResponsiveBoardSize({
-        rows: rows + (mergedBoard.rowOffset ?? 0),
-        cols: cols + (mergedBoard.colOffset ?? 0),
-        headerOffset: mergedGrid.headerOffset,
-        ...mergedBoard,
-        paddingOffset: resolvedPaddingOffset,
-    });
+        return calculateBoardSize({
+            rows: rows + (mergedBoard.rowOffset ?? 0),
+            cols: cols + (mergedBoard.colOffset ?? 0),
+            width,
+            height,
+            mobile,
+            headerOffset: mergedGrid.headerOffset,
+            ...mergedBoard,
+            paddingOffset: resolvedPaddingOffset,
+        });
+    }, [
+        rows,
+        cols,
+        width,
+        height,
+        mobile,
+        mergedBoard,
+        mergedGrid.headerOffset,
+    ]);
 
     return {
         rows,

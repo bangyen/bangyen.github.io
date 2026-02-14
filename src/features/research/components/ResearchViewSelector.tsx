@@ -1,9 +1,9 @@
+import { Button, Box } from '@mui/material';
 import React from 'react';
 
 import { RESEARCH_STYLES } from '../config/constants';
 import type { ViewType } from '../types';
 
-import { Button, Box } from '@/components/mui';
 import {
     COLORS,
     SPACING,

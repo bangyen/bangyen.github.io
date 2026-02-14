@@ -1,6 +1,5 @@
+import { Box } from '@mui/material';
 import React, { useMemo, memo } from 'react';
-
-import { Box } from '../mui';
 
 import { TYPOGRAPHY, COMPONENT_VARIANTS } from '@/config/theme';
 import { GRID_CONFIG, getSpace } from '@/features/games/config';

@@ -1,8 +1,8 @@
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 
 import { RESEARCH_STYLES } from '../../config/constants';
 
-import { Box, Typography } from '@/components/mui';
 import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';
 
 interface KernelBasisViewProps {

@@ -1,3 +1,4 @@
+import { Grid, Box, Typography, Fade } from '@mui/material';
 import React from 'react';
 
 import { ConnectSection } from './HeroSection/ConnectSection';
@@ -5,7 +6,6 @@ import { TechStack } from './HeroSection/TechStack';
 
 import { LocationOn, ArrowForward } from '@/components/icons';
 import { HeroContainer } from '@/components/layout/Layout';
-import { Grid, Box, Typography, Fade } from '@/components/mui';
 import { PERSONAL_INFO } from '@/config/constants';
 import {
     COLORS,

@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import React from 'react';
 
-import { SLANT_STYLES, LAYOUT_CONSTANTS } from '../config';
+import { SLANT_STYLES, LAYOUT_CONSTANTS } from '../constants';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD } from '../types';
 

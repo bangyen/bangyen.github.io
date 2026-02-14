@@ -1,7 +1,7 @@
+import { Typography, Button, Box } from '@mui/material';
 import React from 'react';
 
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
-import { Typography, Button, Box } from '@/components/mui';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, SPACING } from '@/config/theme';
 

@@ -1,11 +1,3 @@
-import React, { useState, useCallback } from 'react';
-
-import { MathText } from './MathText';
-import { useWorker } from '../../../hooks';
-import type { Pattern } from '../../games/lights-out/utils/matrices';
-import { RESEARCH_STYLES } from '../config/constants';
-
-import { HelpOutlineRounded, CloseRounded } from '@/components/icons';
 import {
     Box,
     Typography,
@@ -17,8 +9,16 @@ import {
     Tooltip,
     IconButton,
     Fade,
-    alpha,
-} from '@/components/mui';
+} from '@mui/material';
+import { alpha } from '@mui/material/styles';
+import React, { useState, useCallback } from 'react';
+
+import { MathText } from './MathText';
+import { useWorker } from '../../../hooks';
+import type { Pattern } from '../../games/lights-out/utils/matrices';
+import { RESEARCH_STYLES } from '../config/constants';
+
+import { HelpOutlineRounded, CloseRounded } from '@/components/icons';
 import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';
 
 export const PeriodicityCalculator: React.FC = () => {
