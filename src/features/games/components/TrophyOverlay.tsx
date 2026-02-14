@@ -1,50 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import { EmojiEventsRounded } from '@/components/icons';
-import { Box } from '@/components/mui';
+import { Box, Typography } from '@/components/mui';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { COLORS, SPACING } from '@/config/theme';
 
 interface TrophyOverlayProps {
+    /** Whether the win card is visible. */
     show: boolean;
+    /** Callback to advance to the next puzzle (used by auto-advance hook). */
     onReset?: () => void;
+    /** Board size in rem, used to scale the trophy icon. */
     size: number;
+    /** Ratio applied to size for the icon font-size. */
     iconSizeRatio: number;
+    /** Primary trophy color. */
     primaryColor?: string;
+    /** Secondary trophy color (used when useSecondary is true). */
     secondaryColor?: string;
+    /** Whether to use the secondary color for the trophy. */
     useSecondary?: boolean;
 }
 
+/**
+ * Win-state overlay displayed over the game board when the puzzle is solved.
+ * Shows a compact GlassCard with the trophy icon and a "Solved!" label as
+ * a brief celebratory notification. The game auto-advances via useWinTransition,
+ * so no explicit button is needed.
+ */
 export function TrophyOverlay({
     show,
-    onReset,
+    onReset: _onReset,
     size,
     iconSizeRatio,
     primaryColor,
     secondaryColor,
     useSecondary = false,
 }: TrophyOverlayProps) {
-    const [isInteractive, setIsInteractive] = useState(false);
-
-    useEffect(() => {
-        if (show) {
-            const timer = setTimeout(() => {
-                setIsInteractive(true);
-            }, 500);
-            return () => {
-                clearTimeout(timer);
-            };
-        } else {
-            setIsInteractive(false);
-        }
-    }, [show]);
+    const activeColor = useSecondary ? secondaryColor : primaryColor;
 
     return (
         <Box
-            onClick={e => {
-                if (isInteractive && onReset) {
-                    e.stopPropagation();
-                    onReset();
-                }
-            }}
             sx={{
                 position: 'absolute',
                 inset: 0,
@@ -55,20 +51,42 @@ export function TrophyOverlay({
                 transform: show ? 'scale(1)' : 'scale(0.5)',
                 visibility: show ? 'visible' : 'hidden',
                 transition: 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                cursor: isInteractive ? 'pointer' : 'default',
                 zIndex: 10,
                 backgroundColor: 'transparent',
-                pointerEvents: show ? 'auto' : 'none',
+                pointerEvents: 'none',
             }}
         >
             {size > 0 && (
-                <EmojiEventsRounded
+                <GlassCard
+                    padding={SPACING.padding.md}
                     sx={{
-                        fontSize: `${(size * iconSizeRatio).toString()}rem`,
-                        color: useSecondary ? secondaryColor : primaryColor,
-                        filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: 1.5,
+                        height: 'auto',
+                        width: 'auto',
+                        maxWidth: '80%',
                     }}
-                />
+                >
+                    <EmojiEventsRounded
+                        sx={{
+                            fontSize: `${(size * iconSizeRatio * 0.6).toString()}rem`,
+                            color: activeColor,
+                            filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))',
+                        }}
+                    />
+                    <Typography
+                        variant="h6"
+                        sx={{
+                            color: COLORS.text.primary,
+                            fontWeight: 600,
+                            letterSpacing: '0.02em',
+                        }}
+                    >
+                        Solved!
+                    </Typography>
+                </GlassCard>
             )}
         </Box>
     );
