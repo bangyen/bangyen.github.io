@@ -270,9 +270,13 @@ export default function Slant() {
                 primaryColor={COLORS.primary.main}
                 secondaryColor={COLORS.primary.main}
                 boardSx={boardSx}
-                onClick={() => {
-                    if (isGhostMode) setIsGhostMode(false);
-                }}
+                onClick={
+                    isGhostMode
+                        ? () => {
+                              setIsGhostMode(false);
+                          }
+                        : undefined
+                }
             >
                 <Box onClick={handleBoxClick}>{boardContent}</Box>
             </GamePageLayout>
