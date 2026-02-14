@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
 import type { DragProps } from '../../../hooks/useDrag';
+import * as matrices from '../../utils/matrices';
 import * as calculator from '../Calculator';
 import Info from '../Info';
 
@@ -73,6 +74,7 @@ vi.mock('@/components/icons', () => ({
     ),
     NavigateNextRounded: () => <div data-testid="navigatenextrounded-icon" />,
     CloseRounded: () => <div data-testid="closerounded-icon" />,
+    ContentCopyRounded: () => <div data-testid="contentcopyrounded-icon" />,
     Refresh: () => <div data-testid="refresh-icon" />,
     MenuBookRounded: () => <div data-testid="menubookrounded-icon" />,
 }));
@@ -86,6 +88,7 @@ vi.mock('../Calculator', () => ({
 
 describe('Lights Out Info Component', () => {
     const mockToggleOpen = vi.fn();
+    const mockOnApply = vi.fn();
     const mockPalette = { primary: 'red', secondary: 'blue' };
     const defaultProps = {
         rows: 3,
@@ -94,6 +97,7 @@ describe('Lights Out Info Component', () => {
         open: true,
         palette: mockPalette,
         toggleOpen: mockToggleOpen,
+        onApply: mockOnApply,
         getFrontProps: () => (_r: number, _c: number) => ({}),
         getBackProps: () => (_r: number, _c: number) => ({}),
     };
@@ -104,6 +108,7 @@ describe('Lights Out Info Component', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
+        (matrices.getProduct as Mock).mockReturnValue([0, 0, 0]);
         mockUseHandler.mockReturnValue({}); // simplistic mock
         // Mock getInput to return a function that returns props with onClick
         mockGetInput.mockImplementation(
@@ -290,6 +295,31 @@ describe('Lights Out Info Component', () => {
 
         // Verify it doesn't crash
         expect(screen.getByText('Input')).toBeInTheDocument();
+    });
+
+    it('calls onApply when Copy Pattern is clicked with a non-zero solution', () => {
+        // Make getProduct return a non-zero solution so the button is enabled
+        (matrices.getProduct as Mock).mockReturnValue([1, 0, 1]);
+
+        render(<Info {...defaultProps} />);
+        const nextBtn = screen.getByText('Next');
+        fireEvent.click(nextBtn); // To Example
+        fireEvent.click(nextBtn); // To Calculator
+
+        const copyBtn = screen.getByText('Copy Pattern');
+        fireEvent.click(copyBtn);
+
+        expect(mockOnApply).toHaveBeenCalledWith([1, 0, 1]);
+    });
+
+    it('disables Copy Pattern when solution is all zeros', () => {
+        render(<Info {...defaultProps} />);
+        const nextBtn = screen.getByText('Next');
+        fireEvent.click(nextBtn); // To Example
+        fireEvent.click(nextBtn); // To Calculator
+
+        const copyBtn = screen.getByText('Copy Pattern');
+        expect(copyBtn.closest('button')).toBeDisabled();
     });
 
     it('handles back navigation', () => {
