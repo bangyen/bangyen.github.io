@@ -40,7 +40,6 @@ export function GamePageLayout({
     children,
     controls,
     infoUrl,
-    _title, // Reserved for future use
     background = COLORS.surface.background,
     paddingBottom = { xs: '80px', md: '120px' },
     contentSx = {},
@@ -55,7 +54,7 @@ export function GamePageLayout({
     useSecondaryTrophy = false,
     boardSx,
     onClick,
-}: GamePageLayoutProps & { _title?: string }) {
+}: GamePageLayoutProps) {
     return (
         <GameErrorBoundary>
             <PageLayout

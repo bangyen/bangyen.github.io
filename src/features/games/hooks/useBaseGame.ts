@@ -163,8 +163,6 @@ export function useBaseGame<
         cols,
         state,
         onRestore: saved => {
-            dispatch({ type: 'restore', state: saved });
-            // Also handle 'hydrate' if that's what Slant uses
             dispatch({ type: 'hydrate', state: saved });
         },
         ...persistence,

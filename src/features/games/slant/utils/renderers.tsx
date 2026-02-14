@@ -9,6 +9,27 @@ import { Box } from '@/components/mui';
 import { COLORS, ANIMATIONS } from '@/config/theme';
 import { getPosKey } from '@/utils/gameUtils';
 
+/**
+ * Builds the sx props for a single diagonal slash line inside a Slant cell.
+ * Extracted to avoid duplicating the identical styling between
+ * forward (/) and backward (\) orientations.
+ */
+function slashLineSx(angle: string, size: number, isError: boolean) {
+    return {
+        position: 'absolute' as const,
+        width: '115%',
+        height: `${String(Math.max(2, size))}px`,
+        backgroundColor: isError ? COLORS.data.red : COLORS.text.primary,
+        borderRadius: '99px',
+        top: '50%',
+        left: '50%',
+        transform: `translate(-50%, -50%) rotate(${angle})`,
+        boxShadow: SLANT_STYLES.SHADOWS.LINE,
+        transition: ANIMATIONS.transition,
+        pointerEvents: 'none' as const,
+    };
+}
+
 export const getBackProps =
     (
         getDragProps: (pos: string) => DragProps,
@@ -63,44 +84,10 @@ export const getBackProps =
                     }}
                 >
                     {value === FORWARD && (
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                width: '115%',
-                                height: `${String(Math.max(2, size))}px`,
-                                backgroundColor: isError
-                                    ? COLORS.data.red
-                                    : COLORS.text.primary,
-                                borderRadius: '99px',
-                                top: '50%',
-                                left: '50%',
-                                transform:
-                                    'translate(-50%, -50%) rotate(-45deg)',
-                                boxShadow: SLANT_STYLES.SHADOWS.LINE,
-                                transition: ANIMATIONS.transition,
-                                pointerEvents: 'none',
-                            }}
-                        />
+                        <Box sx={slashLineSx('-45deg', size, isError)} />
                     )}
                     {value === BACKWARD && (
-                        <Box
-                            sx={{
-                                position: 'absolute',
-                                width: '115%',
-                                height: `${String(Math.max(2, size))}px`,
-                                backgroundColor: isError
-                                    ? COLORS.data.red
-                                    : COLORS.text.primary,
-                                borderRadius: '99px',
-                                top: '50%',
-                                left: '50%',
-                                transform:
-                                    'translate(-50%, -50%) rotate(45deg)',
-                                boxShadow: SLANT_STYLES.SHADOWS.LINE,
-                                transition: ANIMATIONS.transition,
-                                pointerEvents: 'none',
-                            }}
-                        />
+                        <Box sx={slashLineSx('45deg', size, isError)} />
                     )}
                 </Box>
             ),

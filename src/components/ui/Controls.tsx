@@ -1,41 +1,12 @@
 import type { SxProps, Theme } from '@mui/material/styles';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
-import {
-    Refresh,
-    HomeRounded,
-    CloseRounded,
-    GamepadRounded,
-    Code,
-    Psychology,
-    Cloud,
-    Work,
-    NorthRounded,
-    SouthRounded,
-    EastRounded,
-    WestRounded,
-    NorthWestRounded,
-    NorthEastRounded,
-    SouthEastRounded,
-    SouthWestRounded,
-} from '../icons';
-import { Navigation } from '../layout/Navigation';
-import { IconButton, Grid } from '../mui';
+import { Refresh, HomeRounded } from '../icons';
 import { TooltipButton } from './TooltipButton';
+import { Navigation } from '../layout/Navigation';
 
 import { COLORS } from '@/config/theme';
-
-export const ICON_MAP = {
-    Code: Code,
-    Psychology: Psychology,
-    Cloud: Cloud,
-    Work: Work,
-    NorthWest: NorthWestRounded,
-    NorthEast: NorthEastRounded,
-    SouthEast: SouthEastRounded,
-    SouthWest: SouthWestRounded,
-} as const;
 
 /**
  * Props for the HomeButton component.
@@ -192,8 +163,6 @@ export function RefreshButton({
  * Props for the Controls container component.
  */
 interface ControlsProps {
-    /** Logic handler for directional moves (deprecated/placeholder) */
-    handler?: (direction: string) => () => void;
     /** Randomization callback */
     onRandom?: () => void;
     /** Randomization toggle status */
@@ -215,7 +184,6 @@ interface ControlsProps {
  * @param props - Controls component props
  */
 export function Controls({
-    handler: _handler,
     onRandom,
     randomEnabled,
     onRefresh,
@@ -245,219 +213,3 @@ export function Controls({
         </Navigation>
     );
 }
-
-/**
- * Props for the ArrowsButton component.
- */
-interface ArrowsButtonProps {
-    /** Whether the directional grid is currently visible */
-    show?: boolean;
-    /** Callback to toggle visibility */
-    setShow: (show: boolean) => void;
-    /** Logic handler for directional movements */
-    handler: (direction: string) => () => void;
-    /** Size of the icons */
-    size?: 'small' | 'medium' | 'large' | 'inherit';
-    /** Whether to hide the component entirely */
-    hide?: boolean;
-    /** Whether to show diagonal move buttons (8-way instead of 4-way) */
-    diagonals?: boolean;
-}
-
-/**
- * A directional control component for games requiring d-pad style input.
- * Supports toggling between a single "Gamepad" icon and a full grid of arrows.
- * Can be configured for 4-way (WASD style) or 8-way navigation.
- *
- * @param props - ArrowsButton component props
- */
-export function ArrowsButton({
-    show = false,
-    setShow,
-    handler,
-    size = 'large',
-    hide = false,
-    diagonals = false,
-}: ArrowsButtonProps) {
-    const flip = useCallback(() => {
-        setShow(!show);
-    }, [show, setShow]);
-
-    if (hide) return null;
-
-    if (!show) {
-        return (
-            <TooltipButton
-                title="Show Game Controls"
-                Icon={GamepadRounded}
-                onClick={flip}
-                aria-label="Show game controls"
-                size={size}
-            />
-        );
-    }
-
-    if (diagonals) {
-        return (
-            <Grid
-                container
-                direction="column"
-                alignItems="center"
-                role="group"
-                aria-label="Directional controls"
-                sx={{
-                    width: 'fit-content',
-                    mx: 'auto',
-                    gap: 0.5,
-                }}
-            >
-                <Grid container gap={0.5} wrap="nowrap">
-                    <TooltipButton
-                        title="Move Up Left"
-                        Icon={ICON_MAP.NorthWest}
-                        onClick={handler('up-left')}
-                        aria-label="Move up left"
-                        size={size}
-                    />
-                    <TooltipButton
-                        title="Move Up"
-                        Icon={NorthRounded}
-                        onClick={handler('up')}
-                        aria-label="Move up"
-                        size={size}
-                    />
-                    <TooltipButton
-                        title="Move Up Right"
-                        Icon={ICON_MAP.NorthEast}
-                        onClick={handler('up-right')}
-                        aria-label="Move up right"
-                        size={size}
-                    />
-                </Grid>
-                <Grid container gap={0.5} wrap="nowrap">
-                    <TooltipButton
-                        title="Move Left"
-                        Icon={WestRounded}
-                        onClick={handler('left')}
-                        aria-label="Move left"
-                        size={size}
-                    />
-                    <IconButton
-                        size={size === 'inherit' ? 'large' : size}
-                        onClick={flip}
-                        aria-label="Hide controls"
-                        sx={{
-                            color: 'inherit',
-                            '&:hover': {
-                                backgroundColor: COLORS.interactive.hover,
-                            },
-                        }}
-                    >
-                        <CloseRounded fontSize="inherit" aria-hidden="true" />
-                    </IconButton>
-                    <TooltipButton
-                        title="Move Right"
-                        Icon={EastRounded}
-                        onClick={handler('right')}
-                        aria-label="Move right"
-                        size={size}
-                    />
-                </Grid>
-                <Grid container gap={0.5} wrap="nowrap">
-                    <TooltipButton
-                        title="Move Down Left"
-                        Icon={ICON_MAP.SouthWest}
-                        onClick={handler('down-left')}
-                        aria-label="Move down left"
-                        size={size}
-                    />
-                    <TooltipButton
-                        title="Move Down"
-                        Icon={SouthRounded}
-                        onClick={handler('down')}
-                        aria-label="Move down"
-                        size={size}
-                    />
-                    <TooltipButton
-                        title="Move Down Right"
-                        Icon={ICON_MAP.SouthEast}
-                        onClick={handler('down-right')}
-                        aria-label="Move down right"
-                        size={size}
-                    />
-                </Grid>
-            </Grid>
-        );
-    }
-
-    return (
-        <Grid
-            container
-            direction="column"
-            alignItems="center"
-            role="group"
-            aria-label="Directional controls"
-            sx={{
-                width: 'fit-content',
-                mx: 'auto',
-                gap: 0.5,
-            }}
-        >
-            <Grid>
-                <TooltipButton
-                    title="Move Up"
-                    Icon={NorthRounded}
-                    onClick={handler('up')}
-                    aria-label="Move up"
-                    size={size}
-                />
-            </Grid>
-            <Grid
-                container
-                justifyContent="center"
-                alignItems="center"
-                gap={1}
-                wrap="nowrap"
-            >
-                <TooltipButton
-                    title="Move Left"
-                    Icon={WestRounded}
-                    onClick={handler('left')}
-                    aria-label="Move left"
-                    size={size}
-                />
-                <IconButton
-                    size={size === 'inherit' ? 'large' : size}
-                    onClick={flip}
-                    aria-label="Hide controls"
-                    sx={{
-                        color: 'inherit',
-                        '&:hover': {
-                            backgroundColor: COLORS.interactive.hover,
-                        },
-                    }}
-                >
-                    <CloseRounded fontSize="inherit" aria-hidden="true" />
-                </IconButton>
-                <TooltipButton
-                    title="Move Right"
-                    Icon={EastRounded}
-                    onClick={handler('right')}
-                    aria-label="Move right"
-                    size={size}
-                />
-            </Grid>
-            <Grid>
-                <TooltipButton
-                    title="Move Down"
-                    Icon={SouthRounded}
-                    onClick={handler('down')}
-                    aria-label="Move down"
-                    size={size}
-                />
-            </Grid>
-        </Grid>
-    );
-}
-
-export { TooltipButton } from './TooltipButton';
