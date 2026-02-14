@@ -1,7 +1,6 @@
+import { getPosKey } from '../../../../utils/gameUtils';
 import type { CellState } from '../types';
 import { EMPTY, FORWARD, BACKWARD } from '../types';
-
-import { getPosKey } from '@/utils/gameUtils';
 
 export function calculateNumbers(
     grid: CellState[][],
