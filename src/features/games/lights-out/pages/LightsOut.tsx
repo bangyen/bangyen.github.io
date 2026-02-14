@@ -44,7 +44,6 @@ export default function LightsOut() {
         pageTitle: PAGE_TITLES.lightsOut,
         gridConfig: {
             defaultSize: null,
-            minSize: 3,
             maxSize: 10,
             headerOffset: {
                 mobile: LAYOUT.headerHeight.xs,
@@ -58,17 +57,13 @@ export default function LightsOut() {
                 mobile: GAME_CONSTANTS.gridSizes.mobile,
                 desktop: GAME_CONSTANTS.gridSizes.desktop,
             },
-            mobileRowOffset: 2,
         },
         boardConfig: {
             paddingOffset: {
                 x: mobile ? 40 : 120,
                 y: 100,
             },
-            boardMaxWidth: 1200,
-            boardSizeFactor: 0.94,
             maxCellSize: 80,
-            remBase: 16,
         },
         reducer: handleBoard,
         getInitialState,

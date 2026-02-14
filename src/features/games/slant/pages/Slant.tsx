@@ -255,26 +255,21 @@ export default function Slant() {
         pageTitle: PAGE_TITLES.slant,
         gridConfig: {
             defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
-            minSize: GAME_LOGIC_CONSTANTS.MIN_SIZE,
             maxSize: GAME_LOGIC_CONSTANTS.MAX_SIZE,
-            headerOffset: GAME_CONSTANTS.layout.headerHeight,
             paddingOffset: {
                 x: mobile ? 48 : 80,
                 y: 120,
             },
             widthLimit: LAYOUT_CONSTANTS.WIDTH_LIMIT,
             cellSizeReference: 4,
-            mobileRowOffset: 2,
         },
         boardConfig: {
             paddingOffset: (isMobile: boolean) => ({
                 x: isMobile ? 48 : 80,
                 y: LAYOUT_CONSTANTS.PADDING_OFFSET,
             }),
-            boardMaxWidth: LAYOUT_CONSTANTS.BOARD_MAX_WIDTH,
-            boardSizeFactor: mobile ? 0.92 : LAYOUT_CONSTANTS.BOARD_SIZE_FACTOR,
+            ...(mobile ? { boardSizeFactor: 0.92 } : {}),
             maxCellSize: LAYOUT_CONSTANTS.MAX_CELL_SIZE,
-            remBase: LAYOUT_CONSTANTS.REM_BASE,
             rowOffset: 1,
             colOffset: 1,
         },
