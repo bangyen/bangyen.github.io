@@ -193,7 +193,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                                 flex: 1,
                                 display: 'flex',
                                 flexDirection: 'column',
-                                pr: { xs: 1.5, md: 0 },
+                                pr: { xs: 3, md: 0 },
                             }}
                         >
                             {step === 0 && <InfoInstructions />}
