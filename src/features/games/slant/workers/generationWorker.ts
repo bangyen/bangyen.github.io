@@ -23,16 +23,26 @@ export type GenerationMessage =
               numbers: (number | null)[][];
               solution: CellState[][];
           };
+      }
+    | {
+          type: 'ERROR';
+          payload: { message: string };
       };
 
 globalThis.onmessage = (e: MessageEvent<GenerationMessage>) => {
     if (e.data.type === 'GENERATE') {
-        const { rows, cols } = e.data.payload;
-        const { numbers, solution } = generatePuzzle(rows, cols);
+        try {
+            const { rows, cols } = e.data.payload;
+            const { numbers, solution } = generatePuzzle(rows, cols);
 
-        self.postMessage({
-            type: 'RESULT',
-            payload: { rows, cols, numbers, solution },
-        });
+            self.postMessage({
+                type: 'RESULT',
+                payload: { rows, cols, numbers, solution },
+            });
+        } catch (error: unknown) {
+            const message =
+                error instanceof Error ? error.message : 'Unknown worker error';
+            self.postMessage({ type: 'ERROR', payload: { message } });
+        }
     }
 };

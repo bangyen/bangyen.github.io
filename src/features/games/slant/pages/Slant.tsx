@@ -46,6 +46,9 @@ interface SavedSlantState extends Omit<
     satisfiedNodes: string[];
 }
 
+/** Timeout for the initial worker health probe (ms). */
+const WORKER_PROBE_TIMEOUT_MS = 2000;
+
 export default function Slant() {
     const mobile = useMobile('sm');
     const [isGhostMode, setIsGhostMode] = useState(false);
@@ -53,7 +56,13 @@ export default function Slant() {
     // ── Async puzzle generation via Web Worker ──────────────────────
     const [generating, setGenerating] = useState(false);
     const genWorkerRef = useRef<Worker | null>(null);
-    const workerHealthy = useRef(false);
+    /**
+     * Tri-state worker health indicator:
+     * - `'probing'`: probe sent on mount, waiting for first response
+     * - `'healthy'`: probe succeeded, worker can be used
+     * - `'broken'`:  probe failed or worker errored, use sync fallback
+     */
+    const workerStatus = useRef<'probing' | 'healthy' | 'broken'>('probing');
     const dispatchRef = useRef<React.Dispatch<
         SlantAction | { type: 'hydrate'; state: SlantState }
     > | null>(null);
@@ -61,7 +70,7 @@ export default function Slant() {
     // Ref tracking the latest dims so handleNextAsync never goes stale.
     const dimsRef = useRef({ rows: 0, cols: 0 });
 
-    /** Generate synchronously on the main thread. */
+    /** Generate synchronously on the main thread (fallback). */
     const generateSync = useCallback((r: number, c: number) => {
         dispatchRef.current?.({
             type: 'hydrate',
@@ -70,18 +79,21 @@ export default function Slant() {
         setGenerating(false);
     }, []);
 
-    // Stable helper: generate a new puzzle, preferring the worker when healthy.
+    /**
+     * Request a new puzzle. Uses the worker when it's proven healthy,
+     * otherwise falls back to synchronous generation immediately.
+     */
     const requestGeneration = useCallback(
         (r: number, c: number) => {
-            if (workerHealthy.current && genWorkerRef.current) {
-                setGenerating(true);
+            setGenerating(true);
+
+            if (workerStatus.current === 'healthy' && genWorkerRef.current) {
                 genWorkerRef.current.postMessage({
                     type: 'GENERATE',
                     payload: { rows: r, cols: c },
                 });
             } else {
-                // Worker unavailable — generate on the main thread immediately.
-                setGenerating(true);
+                // Worker not yet proven or broken — generate on main-thread.
                 // Use a microtask so the skeleton renders before the sync work.
                 queueMicrotask(() => {
                     generateSync(r, c);
@@ -101,13 +113,41 @@ export default function Slant() {
         const worker = createGenerationWorker();
         genWorkerRef.current = worker;
 
+        // If the probe doesn't respond in time, mark the worker broken.
+        const probeTimer = setTimeout(() => {
+            if (!cancelled && workerStatus.current === 'probing') {
+                // eslint-disable-next-line no-console
+                console.warn('[Slant] generation worker probe timed out');
+                workerStatus.current = 'broken';
+                genWorkerRef.current = null;
+                worker.terminate();
+            }
+        }, WORKER_PROBE_TIMEOUT_MS);
+
         worker.onmessage = (e: MessageEvent<GenerationMessage>) => {
             if (cancelled) return;
 
-            if (e.data.type === 'RESULT') {
-                // First successful response proves the worker is alive.
-                workerHealthy.current = true;
+            if (e.data.type === 'ERROR') {
+                // eslint-disable-next-line no-console
+                console.warn(
+                    `[Slant] generation worker error: ${String(e.data.payload.message)}`,
+                );
+                clearTimeout(probeTimer);
+                workerStatus.current = 'broken';
+                genWorkerRef.current = null;
+                worker.terminate();
+                return;
+            }
 
+            if (e.data.type === 'RESULT') {
+                if (workerStatus.current === 'probing') {
+                    // Probe response — mark healthy, discard the dummy result.
+                    clearTimeout(probeTimer);
+                    workerStatus.current = 'healthy';
+                    return;
+                }
+
+                // Real generation result — dispatch to game state.
                 const { rows: r, cols: c, numbers, solution } = e.data.payload;
                 dispatchRef.current?.({
                     type: 'hydrate',
@@ -131,15 +171,23 @@ export default function Slant() {
         };
 
         worker.onerror = () => {
-            // Worker broken — disable it permanently so all future
-            // generations use the synchronous fallback immediately.
-            workerHealthy.current = false;
+            // eslint-disable-next-line no-console
+            console.warn('[Slant] generation worker script error');
+            clearTimeout(probeTimer);
+            workerStatus.current = 'broken';
             genWorkerRef.current = null;
             worker.terminate();
         };
 
+        // Send a tiny probe puzzle so the worker can prove it's alive.
+        worker.postMessage({
+            type: 'GENERATE',
+            payload: { rows: 3, cols: 3 },
+        });
+
         return () => {
             cancelled = true;
+            clearTimeout(probeTimer);
             worker.terminate();
         };
     }, []);
