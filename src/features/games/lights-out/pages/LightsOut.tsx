@@ -61,7 +61,7 @@ export default function LightsOut() {
         boardConfig: {
             paddingOffset: {
                 x: mobile ? 40 : 120,
-                y: 100,
+                y: mobile ? 120 : 160,
             },
             maxCellSize: 80,
         },
