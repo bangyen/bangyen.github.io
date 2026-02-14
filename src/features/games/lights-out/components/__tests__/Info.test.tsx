@@ -1,7 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
-import { useMobile } from '../../../../../hooks';
 import type { DragProps } from '../../../hooks/useDrag';
 import * as calculator from '../Calculator';
 import Info from '../Info';
@@ -76,7 +75,6 @@ vi.mock('@/components/icons', () => ({
     CloseRounded: () => <div data-testid="closerounded-icon" />,
     Refresh: () => <div data-testid="refresh-icon" />,
     MenuBookRounded: () => <div data-testid="menubookrounded-icon" />,
-    AnalyticsRounded: () => <div data-testid="analytics-icon" />,
 }));
 
 // Mock calculator helpers
@@ -230,15 +228,6 @@ describe('Lights Out Info Component', () => {
         expect(screen.getByText('Input')).toBeInTheDocument();
     });
 
-    it('renders analysis link button', () => {
-        render(<Info {...defaultProps} />);
-
-        // Should show the button variant
-        const analysisButton = screen.getByText('Analysis');
-        expect(analysisButton).toBeInTheDocument();
-        expect(analysisButton.closest('a')).toHaveAttribute('href');
-    });
-
     it('handles reset button in calculator', () => {
         render(<Info {...defaultProps} />);
         const nextBtn = screen.getByText('Next');
@@ -290,16 +279,6 @@ describe('Lights Out Info Component', () => {
         expect(screen.getByText('Chase to Bottom')).toBeInTheDocument();
     });
 
-    it('renders analysis icon on mobile', () => {
-        (useMobile as Mock).mockReturnValue(true);
-
-        render(<Info {...defaultProps} />);
-
-        // Should show the icon button variant (we mocked the icon with testid)
-        expect(screen.getByTestId('analytics-icon')).toBeInTheDocument();
-        expect(screen.queryByText('Analysis')).not.toBeInTheDocument();
-    });
-
     it('handles reset in calculator step', () => {
         render(<Info {...defaultProps} />);
         const nextBtn = screen.getByText('Next');
@@ -311,13 +290,6 @@ describe('Lights Out Info Component', () => {
 
         // Verify it doesn't crash
         expect(screen.getByText('Input')).toBeInTheDocument();
-    });
-
-    it('renders analysis button on desktop', () => {
-        (useMobile as Mock).mockReturnValue(false);
-
-        render(<Info {...defaultProps} />);
-        expect(screen.getByText('Analysis')).toBeInTheDocument();
     });
 
     it('handles back navigation', () => {
