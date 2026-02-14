@@ -1,23 +1,15 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 
 import { useMediaQuery } from '@/components/mui';
 
 /**
  * Represents dimensions of a DOM element or window.
  */
-export interface Size {
+interface Size {
     /** Width in pixels */
     width: number;
     /** Height in pixels */
     height: number;
-}
-
-/**
- * Generic ref object type for DOM elements.
- */
-export interface RefObject<T> {
-    /** Current element reference, or null if not yet mounted */
-    current: T | null;
 }
 
 /**
@@ -26,17 +18,6 @@ export interface RefObject<T> {
  */
 export function getWindow(): Size {
     const { innerWidth: width, innerHeight: height } = globalThis;
-    return { width, height };
-}
-
-/**
- * Gets the dimensions of a container element.
- * @param container - Ref object pointing to an HTML element
- * @returns Object with width and height of the container, or {0, 0} if container is null
- */
-export function getContainer(container: RefObject<HTMLElement> | null): Size {
-    if (!container?.current) return { width: 0, height: 0 };
-    const { offsetHeight: height, offsetWidth: width } = container.current;
     return { width, height };
 }
 
@@ -83,49 +64,4 @@ export function useMobile(size: string): boolean {
         };
         return muiTheme.breakpoints.down(size);
     });
-}
-
-/**
- * Hook to track container element dimensions.
- * Automatically updates on window resize and container changes.
- * @param container - Ref object pointing to the container element
- * @returns Current container size
- */
-export function useContainer(container: RefObject<HTMLElement> | null): Size {
-    const initialSize = getContainer(container);
-    const [size, setSize] = useState<Size>(initialSize);
-    const prevSizeRef = useRef<Size>(initialSize);
-
-    useEffect(() => {
-        const newSize = getContainer(container);
-        if (
-            newSize.width !== prevSizeRef.current.width ||
-            newSize.height !== prevSizeRef.current.height
-        ) {
-            prevSizeRef.current = newSize;
-            setSize(newSize);
-        }
-    }, [container]);
-
-    useEffect(() => {
-        function handleResize() {
-            const newSize = getContainer(container);
-            setSize(prevSize => {
-                if (
-                    newSize.width !== prevSize.width ||
-                    newSize.height !== prevSize.height
-                ) {
-                    return newSize;
-                }
-                return prevSize;
-            });
-        }
-
-        window.addEventListener('resize', handleResize);
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [container]);
-
-    return size;
 }

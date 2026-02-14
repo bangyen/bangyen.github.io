@@ -9,11 +9,6 @@ export {
     HomeRounded,
     CloseRounded,
     ViewModuleRounded,
-    ViewListRounded,
-    PlayArrowRounded,
-    PauseRounded,
-    FirstPageRounded,
-    LastPageRounded,
     NavigateBeforeRounded,
     NavigateNextRounded,
     ArrowBackRounded,
@@ -25,25 +20,13 @@ export { GitHub } from '@mui/icons-material';
 // Action Icons
 export {
     Refresh,
-    RefreshRounded,
     OpenInNew,
     ArrowForward,
     LaunchRounded,
 } from '@mui/icons-material';
 
 // Game Icons
-export {
-    GamepadRounded,
-    KeyboardArrowUpRounded,
-    KeyboardArrowDownRounded,
-    KeyboardArrowLeftRounded,
-    KeyboardArrowRightRounded,
-    Lens,
-    EggRounded,
-    GrassRounded,
-    StarRounded,
-    DiamondRounded,
-} from '@mui/icons-material';
+export { GamepadRounded } from '@mui/icons-material';
 
 // Content Icons
 export { Code, Psychology, Cloud, Work, LocationOn } from '@mui/icons-material';
@@ -56,28 +39,17 @@ export {
     Replay,
     InfoRounded,
     MenuBookRounded,
-    HelpRounded,
-    GridView,
-    TextFields,
-    TextFieldsRounded,
     LightModeRounded,
     DarkModeRounded,
     DevicesRounded,
     AddRounded,
     RemoveRounded,
-    ScreenRotationRounded,
     ContentCopyRounded,
     DeleteRounded,
 } from '@mui/icons-material';
 
 // Code Icons
-export {
-    CodeRounded,
-    DataArrayRounded,
-    PlusOneRounded,
-    EmojiEventsRounded,
-    HelpOutlineRounded,
-} from '@mui/icons-material';
+export { EmojiEventsRounded, HelpOutlineRounded } from '@mui/icons-material';
 
 // Dashboard & Charts Icons
 export {
@@ -87,5 +59,4 @@ export {
     TrendingUpRounded,
     AttachMoneyRounded,
     BusinessRounded,
-    SettingsRounded,
 } from '@mui/icons-material';

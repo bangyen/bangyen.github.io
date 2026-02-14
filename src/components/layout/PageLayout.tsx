@@ -7,7 +7,7 @@ import { GlobalHeader } from './GlobalHeader';
 import { COLORS } from '@/config/theme';
 import { toSxArray } from '@/utils/muiUtils';
 
-export interface PageLayoutProps {
+interface PageLayoutProps {
     children: React.ReactNode;
     showHome?: boolean;
     githubUrl?: string;

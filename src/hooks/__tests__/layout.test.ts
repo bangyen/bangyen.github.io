@@ -1,14 +1,7 @@
 import { renderHook, act } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
-import {
-    getWindow,
-    getContainer,
-    useSize,
-    useWindow,
-    useMobile,
-    useContainer,
-} from '../layout';
+import { getWindow, useSize, useWindow, useMobile } from '../layout';
 
 import { useMediaQuery } from '@/components/mui';
 
@@ -37,21 +30,6 @@ describe('Layout Hooks and Helpers', () => {
         test('returns current window dimensions', () => {
             const size = getWindow();
             expect(size).toEqual({ width: 1024, height: 768 });
-        });
-    });
-
-    describe('getContainer', () => {
-        test('returns 0 dimensions for null container', () => {
-            expect(getContainer(null)).toEqual({ width: 0, height: 0 });
-        });
-
-        test('returns dimensions from ref', () => {
-            const mockElement = {
-                offsetWidth: 500,
-                offsetHeight: 300,
-            } as HTMLElement;
-            const ref = { current: mockElement };
-            expect(getContainer(ref)).toEqual({ width: 500, height: 300 });
         });
     });
 
@@ -96,56 +74,6 @@ describe('Layout Hooks and Helpers', () => {
                 breakpoints: { down: (s: string) => `down-${s}` },
             };
             expect(queryFn(mockTheme)).toBe('down-md');
-        });
-    });
-
-    describe('useContainer', () => {
-        test('updates when container ref changes', () => {
-            const mockElement1 = {
-                offsetWidth: 100,
-                offsetHeight: 100,
-            } as HTMLElement;
-            const ref1 = { current: mockElement1 };
-
-            const { result, rerender } = renderHook(
-                ({ ref }) => useContainer(ref),
-                {
-                    initialProps: { ref: ref1 },
-                },
-            );
-
-            expect(result.current).toEqual({ width: 100, height: 100 });
-
-            const mockElement2 = {
-                offsetWidth: 200,
-                offsetHeight: 200,
-            } as HTMLElement;
-            const ref2 = { current: mockElement2 };
-
-            rerender({ ref: ref2 });
-            expect(result.current).toEqual({ width: 200, height: 200 });
-        });
-
-        test('updates on resize', () => {
-            const mockElement = {
-                offsetWidth: 100,
-                offsetHeight: 100,
-            } as HTMLElement;
-            const ref = { current: mockElement };
-
-            const { result } = renderHook(() => useContainer(ref));
-
-            act(() => {
-                Object.defineProperty(mockElement, 'offsetWidth', {
-                    value: 150,
-                });
-                Object.defineProperty(mockElement, 'offsetHeight', {
-                    value: 150,
-                });
-                globalThis.dispatchEvent(new Event('resize'));
-            });
-
-            expect(result.current).toEqual({ width: 150, height: 150 });
         });
     });
 });

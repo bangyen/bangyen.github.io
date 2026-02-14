@@ -40,12 +40,6 @@ export const RESEARCH_CONSTANTS: ResearchConfig = {
     },
 };
 
-export const RESEARCH_TITLES = {
-    zsharp: 'ZSharp - Sharpness-Aware Minimization',
-    oligopoly: 'Oligopoly - Cournot Competition',
-    lightsOut: 'Lights Out - Matrix Mechanics',
-};
-
 export const CHART_DIMENSIONS = {
     height: 300,
     dotRadius: 4,
@@ -74,9 +68,4 @@ export const CHART_FORMATTING = {
 export const PERCENTAGE = {
     multiplier: 100,
     divisor: 100,
-};
-
-export const CALCULATION = {
-    spaceDivisor: 20,
-    pixelMultiplier: 16,
 };

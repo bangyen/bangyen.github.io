@@ -29,11 +29,6 @@ vi.mock('@/components/icons', async importOriginal => {
 vi.mock('@/hooks', () => ({
     useWindow: vi.fn(() => ({ height: 800, width: 1200 })),
     useMobile: vi.fn(() => false),
-    useTimer: vi.fn(() => ({
-        create: vi.fn(),
-        clear: vi.fn(),
-    })),
-    useCache: vi.fn(() => [null, vi.fn()]),
 }));
 
 // Mock boardHandlers to control game logic
