@@ -94,8 +94,9 @@ export default function Slant() {
                 });
             } else {
                 // Worker not yet proven or broken — generate on main-thread.
-                // Use a microtask so the skeleton renders before the sync work.
-                queueMicrotask(() => {
+                // requestAnimationFrame lets React paint the skeleton before
+                // the CPU-intensive sync work blocks the main thread.
+                requestAnimationFrame(() => {
                     generateSync(r, c);
                 });
             }
@@ -392,28 +393,19 @@ export default function Slant() {
         </GameControls>
     );
 
-    // Empty cell factories for the loading skeleton.
+    // Cell factories for the loading skeleton — subtle filled cells that
+    // pulse to indicate the board is generating.  No width/height override;
+    // the Cell component already sizes itself from the `size` prop.
     const skeletonBack = useCallback(
         () => ({
             sx: {
-                width: size,
-                height: size,
-                backgroundColor: 'transparent',
+                backgroundColor: 'var(--border)',
             },
         }),
-        [size],
+        [],
     );
 
-    const skeletonFront = useCallback(
-        () => ({
-            sx: {
-                width: size,
-                height: size,
-                backgroundColor: 'transparent',
-            },
-        }),
-        [size],
-    );
+    const skeletonFront = useCallback(() => ({}), []);
 
     // True when grid dimensions have changed but the worker hasn't
     // delivered a new puzzle yet. Without this guard the real board
