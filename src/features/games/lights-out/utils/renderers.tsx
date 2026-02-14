@@ -18,9 +18,17 @@ const ICON = (
     />
 );
 
+/**
+ * Build per-cell props for the interactive front layer.
+ *
+ * When `skipTransition` is true the cells render with `transition: 'none'`
+ * so a freshly regenerated board appears instantly — avoiding border-radius
+ * and color animation artifacts caused by rapid resize / refresh clicks.
+ */
 export function getFrontProps(
     getDragProps: (pos: string) => DragProps,
     getters: Getters,
+    skipTransition?: boolean,
 ) {
     const { getColor, getBorder } = getters;
 
@@ -36,6 +44,7 @@ export function getFrontProps(
             backgroundColor: front,
             color: front,
             style,
+            ...(skipTransition ? { transition: 'none' } : {}),
             'aria-label': `Cell at row ${String(row + 1)}, column ${String(col + 1)}`,
             sx: {
                 ...dragProps.sx,
@@ -48,11 +57,19 @@ export function getFrontProps(
     };
 }
 
-export function getBackProps(getters: Getters) {
+/**
+ * Build per-cell props for the decorative back layer (gap-filler squares).
+ *
+ * @param skipTransition - When true, disables the CSS transition so a
+ *   regenerated board paints instantly without animation artifacts.
+ */
+export function getBackProps(getters: Getters, skipTransition?: boolean) {
     return (row: number, col: number) => {
         return {
             backgroundColor: getters.getFiller(row, col),
-            transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
+            transition: skipTransition
+                ? 'none'
+                : LIGHTS_OUT_STYLES.TRANSITION.FAST,
         };
     };
 }

@@ -1,4 +1,4 @@
-import React, { useMemo, useReducer } from 'react';
+import React, { useEffect, useMemo, useReducer, useRef, useState } from 'react';
 
 import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
@@ -103,8 +103,41 @@ export default function LightsOut() {
 
     const getters = useHandler(state, palette);
 
-    const frontProps = useCellFactory(getFrontProps, getDragProps, [getters]);
-    const backProps = useMemo(() => getBackProps(getters), [getters]);
+    // Suppress CSS transitions when the board is regenerated (resize or
+    // refresh) so the new state appears instantly without artifacts from
+    // border-radius and color transitions animating between old/new grids.
+    const boardKeyRef = useRef('');
+    const skipTransitionRef = useRef(false);
+    const [, setTick] = useState(0);
+
+    const boardKey = `${String(rows)},${String(cols)},${String(state.score)}`;
+    if (boardKey !== boardKeyRef.current) {
+        // Skip transitions on every regeneration except the very first render.
+        skipTransitionRef.current = boardKeyRef.current !== '';
+        boardKeyRef.current = boardKey;
+    }
+
+    useEffect(() => {
+        if (!skipTransitionRef.current) return;
+        const raf = requestAnimationFrame(() => {
+            skipTransitionRef.current = false;
+            setTick(t => t + 1);
+        });
+        return () => {
+            cancelAnimationFrame(raf);
+        };
+    }, [boardKey]);
+
+    const skipTransition = skipTransitionRef.current;
+
+    const frontProps = useCellFactory(getFrontProps, getDragProps, [
+        getters,
+        skipTransition,
+    ]);
+    const backProps = useMemo(
+        () => getBackProps(getters, skipTransition),
+        [getters, skipTransition],
+    );
 
     const controls = (
         <GameControls {...controlsProps}>
