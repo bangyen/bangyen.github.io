@@ -1,0 +1,1 @@
+export { useResearchData } from './useResearchData';

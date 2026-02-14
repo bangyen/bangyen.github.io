@@ -1,0 +1,1 @@
+export { fetchGzippedJson } from './fetchGzippedJson';

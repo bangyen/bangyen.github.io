@@ -1,9 +1,10 @@
-import pako from 'pako';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 import { ResearchDemo } from '../components';
 import { RESEARCH_CONSTANTS, PERCENTAGE } from '../config';
+import { useResearchData } from '../hooks';
 import type { ViewType } from '../types';
+import { fetchGzippedJson } from '../utils';
 
 import {
     BarChartRounded,
@@ -41,49 +42,27 @@ interface RealData {
 }
 
 const loadRealZSharpData = async (): Promise<DataPoint[]> => {
-    try {
-        const response = await fetch('/zsharp_data.json.gz');
-        if (!response.ok) {
-            throw new Error(
-                `HTTP error! status: ${response.status.toString()}`,
-            );
-        }
-        const buffer = await response.arrayBuffer();
-        const view = new Uint8Array(buffer);
+    const realData = await fetchGzippedJson<RealData>('/zsharp_data.json.gz');
 
-        // Check for GZIP magic number (0x1f 0x8b)
-        const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
+    const data: DataPoint[] = [];
+    const sgdAccuracies = realData['SGD Baseline']?.train_accuracies ?? [];
+    const zsharpAccuracies = realData.ZSharp?.train_accuracies ?? [];
+    const sgdLosses = realData['SGD Baseline']?.train_losses ?? [];
+    const zsharpLosses = realData.ZSharp?.train_losses ?? [];
 
-        const text: string = isGzipped
-            ? (pako.ungzip(view, { to: 'string' }) as unknown as string)
-            : new TextDecoder().decode(buffer);
-        const realData = JSON.parse(text) as RealData;
+    const maxEpochs = Math.max(sgdAccuracies.length, zsharpAccuracies.length);
 
-        const data: DataPoint[] = [];
-        const sgdAccuracies = realData['SGD Baseline']?.train_accuracies ?? [];
-        const zsharpAccuracies = realData.ZSharp?.train_accuracies ?? [];
-        const sgdLosses = realData['SGD Baseline']?.train_losses ?? [];
-        const zsharpLosses = realData.ZSharp?.train_losses ?? [];
-
-        const maxEpochs = Math.max(
-            sgdAccuracies.length,
-            zsharpAccuracies.length,
-        );
-
-        for (let i = 0; i < maxEpochs; i++) {
-            data.push({
-                epoch: i + 1,
-                sgd: (sgdAccuracies[i] ?? 0) / PERCENTAGE.divisor,
-                zsharp: (zsharpAccuracies[i] ?? 0) / PERCENTAGE.divisor,
-                sgdLoss: sgdLosses[i] ?? 0,
-                zsharpLoss: zsharpLosses[i] ?? 0,
-            });
-        }
-
-        return data;
-    } catch {
-        return generateFallbackData();
+    for (let i = 0; i < maxEpochs; i++) {
+        data.push({
+            epoch: i + 1,
+            sgd: (sgdAccuracies[i] ?? 0) / PERCENTAGE.divisor,
+            zsharp: (zsharpAccuracies[i] ?? 0) / PERCENTAGE.divisor,
+            sgdLoss: sgdLosses[i] ?? 0,
+            zsharpLoss: zsharpLosses[i] ?? 0,
+        });
     }
+
+    return data;
 };
 
 const generateFallbackData = (): DataPoint[] => {
@@ -115,28 +94,12 @@ const generateFallbackData = (): DataPoint[] => {
 };
 
 const ZSharp: React.FC = () => {
-    const [chartData, setChartData] = useState<DataPoint[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { data: chartData, loading } = useResearchData(
+        PAGE_TITLES.zsharp,
+        loadRealZSharpData,
+        generateFallbackData,
+    );
     const [viewType, setViewType] = useState<string>('accuracy');
-
-    useEffect(() => {
-        document.title = PAGE_TITLES.zsharp;
-
-        const loadData = async () => {
-            setLoading(true);
-            try {
-                const data = await loadRealZSharpData();
-                setChartData(data);
-            } catch {
-                // Error loading data, use fallback
-                setChartData(generateFallbackData());
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        void loadData();
-    }, []);
 
     const viewTypes: ViewType<DataPoint>[] = [
         {
