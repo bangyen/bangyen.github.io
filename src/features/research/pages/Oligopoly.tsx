@@ -1,8 +1,10 @@
-import pako from 'pako';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 
 import { ResearchDemo } from '../components';
 import { RESEARCH_CONSTANTS } from '../config';
+import { useResearchData } from '../hooks';
+import type { Control } from '../types';
+import { fetchGzippedJson } from '../utils';
 
 import {
     BusinessRounded,
@@ -31,50 +33,16 @@ interface MarketDataPoint {
     collusion?: boolean;
 }
 
-interface ControlOption {
-    value: number;
-    label: string;
-}
-
-interface Control {
-    label: string;
-    icon: React.ElementType;
-    color: string;
-    value: number;
-    onChange: (value: number) => void;
-    options: ControlOption[];
-}
-
 const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
-    try {
-        const response = await fetch('/oligopoly_data.json.gz');
-        if (!response.ok) {
-            throw new Error(
-                `HTTP error! status: ${response.status.toString()} - Failed to load Oligopoly data`,
-            );
-        }
+    const matrixData = await fetchGzippedJson<MatrixItem[]>(
+        '/oligopoly_data.json.gz',
+    );
 
-        const data = await response.arrayBuffer();
-        const view = new Uint8Array(data);
-
-        // Check for GZIP magic number (0x1f 0x8b)
-        const isGzipped = view[0] === 0x1f && view[1] === 0x8b;
-
-        const text: string = isGzipped
-            ? (pako.ungzip(view, { to: 'string' }) as unknown as string)
-            : new TextDecoder().decode(data);
-
-        const matrixData = JSON.parse(text) as MatrixItem[];
-
-        if (!Array.isArray(matrixData)) {
-            throw new TypeError('Invalid data format: expected array');
-        }
-
-        return matrixData;
-    } catch (error) {
-        console.error('Error loading oligopoly data:', error);
-        return [];
+    if (!Array.isArray(matrixData)) {
+        throw new TypeError('Invalid data format: expected array');
     }
+
+    return matrixData;
 };
 
 const filterMatrixData = (
@@ -139,61 +107,35 @@ const Oligopoly: React.FC = () => {
     const [basePrice, setBasePrice] = useState(
         RESEARCH_CONSTANTS.oligopoly.defaultBasePrice,
     );
-    const [marketData, setMarketData] = useState<MarketDataPoint[]>([]);
-    const [matrixData, setMatrixData] = useState<MatrixItem[]>([]);
-    const [loading, setLoading] = useState(true);
 
     const modelType = RESEARCH_CONSTANTS.modelTypes.cournot;
     const collusionEnabled = false;
 
-    useEffect(() => {
-        document.title = PAGE_TITLES.oligopoly;
+    const { data: matrixData, loading } = useResearchData(
+        PAGE_TITLES.oligopoly,
+        loadRealSimulationMatrix,
+        () => [] as MatrixItem[],
+    );
 
-        const loadData = async () => {
-            setLoading(true);
-            try {
-                const data = await loadRealSimulationMatrix();
-                setMatrixData(data);
-                const initialData = filterMatrixData(
-                    data,
-                    numFirms,
-                    modelType,
-                    demandElasticity,
-                    basePrice,
-                    collusionEnabled,
-                );
-                setMarketData(initialData);
-            } catch {
-                // Error loading data, use fallback
-                setMarketData(generateFallbackOligopolyData());
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        void loadData();
-    }, [numFirms, demandElasticity, basePrice, collusionEnabled, modelType]);
-
-    useEffect(() => {
-        if (matrixData.length > 0) {
-            const filteredData = filterMatrixData(
+    const marketData = useMemo(
+        () =>
+            filterMatrixData(
                 matrixData,
                 numFirms,
                 modelType,
                 demandElasticity,
                 basePrice,
                 collusionEnabled,
-            );
-            setMarketData(filteredData);
-        }
-    }, [
-        numFirms,
-        demandElasticity,
-        basePrice,
-        matrixData,
-        modelType,
-        collusionEnabled,
-    ]);
+            ),
+        [
+            matrixData,
+            numFirms,
+            modelType,
+            demandElasticity,
+            basePrice,
+            collusionEnabled,
+        ],
+    );
 
     const resetToDefaults = () => {
         setNumFirms(RESEARCH_CONSTANTS.oligopoly.defaultFirms);
