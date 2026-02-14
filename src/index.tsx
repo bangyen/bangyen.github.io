@@ -29,9 +29,6 @@ const LightsOut = lazy(
 );
 const ZSharp = lazy(() => import('./features/research/pages/ZSharp'));
 const Oligopoly = lazy(() => import('./features/research/pages/Oligopoly'));
-const LightsOutResearch = lazy(
-    () => import('./features/research/pages/LightsOut'),
-);
 const Slant = lazy(() => import('./features/games/slant/pages/Slant'));
 
 const App = (): React.ReactElement => {
@@ -70,10 +67,6 @@ const App = (): React.ReactElement => {
                     <Route
                         path={ROUTES.pages.Oligopoly}
                         element={<Oligopoly />}
-                    />
-                    <Route
-                        path={ROUTES.pages.LightsOutResearch}
-                        element={<LightsOutResearch />}
                     />
                     <Route path={ROUTES.pages.Slant} element={<Slant />} />
                     <Route path="*" element={<Error />} />
