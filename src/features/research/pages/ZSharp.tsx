@@ -3,8 +3,12 @@ import React, { useState } from 'react';
 import { ResearchDemo } from '../components';
 import { PERCENTAGE, RESEARCH_CONSTANTS } from '../config';
 import { useResearchData } from '../hooks';
-import type { ViewType } from '../types';
-import { fetchGzippedJson } from '../utils';
+import type { ChartConfig, ViewType } from '../types';
+import {
+    buildAxisDomain,
+    buildTooltipLabelFormatter,
+    fetchGzippedJson,
+} from '../utils';
 
 import {
     BarChartRounded,
@@ -73,6 +77,30 @@ const ZSharp: React.FC = () => {
     );
     const [viewType, setViewType] = useState<string>('accuracy');
 
+    const pctFormatter = (decimals: number) => (value: number) =>
+        `${(value * PERCENTAGE.multiplier).toFixed(decimals)}%`;
+
+    const pctTooltip =
+        (decimals: number) =>
+        (value: number, name: string): [string, string] => [
+            pctFormatter(decimals)(value),
+            name,
+        ];
+
+    const baseChart: Pick<
+        ChartConfig,
+        'type' | 'xAxisKey' | 'tooltipLabelFormatter'
+    > = {
+        type: 'line',
+        xAxisKey: 'epoch',
+        tooltipLabelFormatter: buildTooltipLabelFormatter('Epoch'),
+    };
+
+    const sgdZsharpLines = (sgdName: string, zsharpName: string) => [
+        { dataKey: 'sgd', name: sgdName, color: COLORS.primary.main },
+        { dataKey: 'zsharp', name: zsharpName, color: COLORS.data.green },
+    ];
+
     const viewTypes: ViewType<DataPoint>[] = [
         {
             key: 'accuracy',
@@ -81,28 +109,13 @@ const ZSharp: React.FC = () => {
             chartTitle: 'Performance Comparison',
             dataProcessor: (data: DataPoint[]) => data,
             chartConfig: {
-                type: 'line',
-                xAxisKey: 'epoch',
-                yAxisFormatter: (value: number) =>
-                    `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
-                yAxisDomain: [
-                    `dataMin - ${String(RESEARCH_CONSTANTS.zsharp.yAxisPadding)}`,
-                    `dataMax + ${String(RESEARCH_CONSTANTS.zsharp.yAxisPadding)}`,
-                ],
-                tooltipLabelFormatter: (value: number) =>
-                    `Epoch ${value.toString()}`,
-                tooltipFormatter: (value: number, name: string) => [
-                    `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
-                    name,
-                ],
-                lines: [
-                    { dataKey: 'sgd', name: 'SGD', color: COLORS.primary.main },
-                    {
-                        dataKey: 'zsharp',
-                        name: 'ZSharp',
-                        color: COLORS.data.green,
-                    },
-                ],
+                ...baseChart,
+                yAxisFormatter: pctFormatter(1),
+                yAxisDomain: buildAxisDomain(
+                    RESEARCH_CONSTANTS.zsharp.yAxisPadding,
+                ),
+                tooltipFormatter: pctTooltip(1),
+                lines: sgdZsharpLines('SGD', 'ZSharp'),
             },
         },
         {
@@ -119,31 +132,16 @@ const ZSharp: React.FC = () => {
                     }),
                 ),
             chartConfig: {
-                type: 'line',
-                xAxisKey: 'epoch',
+                ...baseChart,
                 yAxisFormatter: (value: number) => value.toFixed(3),
-                yAxisDomain: [
-                    `dataMin - ${String(RESEARCH_CONSTANTS.zsharp.lossPadding)}`,
-                    `dataMax + ${String(RESEARCH_CONSTANTS.zsharp.lossPadding)}`,
-                ],
-                tooltipLabelFormatter: (value: number) =>
-                    `Epoch ${value.toString()}`,
+                yAxisDomain: buildAxisDomain(
+                    RESEARCH_CONSTANTS.zsharp.lossPadding,
+                ),
                 tooltipFormatter: (value: number, name: string) => [
                     value.toFixed(3),
                     name,
                 ],
-                lines: [
-                    {
-                        dataKey: 'sgd',
-                        name: 'SGD Loss',
-                        color: COLORS.primary.main,
-                    },
-                    {
-                        dataKey: 'zsharp',
-                        name: 'ZSharp Loss',
-                        color: COLORS.data.green,
-                    },
-                ],
+                lines: sgdZsharpLines('SGD Loss', 'ZSharp Loss'),
             },
         },
         {
@@ -159,20 +157,12 @@ const ZSharp: React.FC = () => {
                     }),
                 ),
             chartConfig: {
-                type: 'line',
-                xAxisKey: 'epoch',
-                yAxisFormatter: (value: number) =>
-                    `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
-                yAxisDomain: [
-                    `dataMin - ${String(RESEARCH_CONSTANTS.zsharp.gapPadding)}`,
-                    `dataMax + ${String(RESEARCH_CONSTANTS.zsharp.gapPadding)}`,
-                ],
-                tooltipLabelFormatter: (value: number) =>
-                    `Epoch ${value.toString()}`,
-                tooltipFormatter: (value: number, name: string) => [
-                    `${(value * PERCENTAGE.multiplier).toFixed(2)}%`,
-                    name,
-                ],
+                ...baseChart,
+                yAxisFormatter: pctFormatter(1),
+                yAxisDomain: buildAxisDomain(
+                    RESEARCH_CONSTANTS.zsharp.gapPadding,
+                ),
+                tooltipFormatter: pctTooltip(2),
                 lines: [
                     {
                         dataKey: 'gap',
@@ -202,32 +192,13 @@ const ZSharp: React.FC = () => {
                     };
                 }),
             chartConfig: {
-                type: 'line',
-                xAxisKey: 'epoch',
-                yAxisFormatter: (value: number) =>
-                    `${(value * PERCENTAGE.multiplier).toFixed(1)}%`,
-                yAxisDomain: [
-                    `dataMin - ${String(RESEARCH_CONSTANTS.zsharp.convergencePadding)}`,
-                    `dataMax + ${String(RESEARCH_CONSTANTS.zsharp.convergencePadding)}`,
-                ],
-                tooltipLabelFormatter: (value: number) =>
-                    `Epoch ${value.toString()}`,
-                tooltipFormatter: (value: number, name: string) => [
-                    `${(value * PERCENTAGE.multiplier).toFixed(3)}%`,
-                    name,
-                ],
-                lines: [
-                    {
-                        dataKey: 'sgd',
-                        name: 'SGD Rate',
-                        color: COLORS.primary.main,
-                    },
-                    {
-                        dataKey: 'zsharp',
-                        name: 'ZSharp Rate',
-                        color: COLORS.data.green,
-                    },
-                ],
+                ...baseChart,
+                yAxisFormatter: pctFormatter(1),
+                yAxisDomain: buildAxisDomain(
+                    RESEARCH_CONSTANTS.zsharp.convergencePadding,
+                ),
+                tooltipFormatter: pctTooltip(3),
+                lines: sgdZsharpLines('SGD Rate', 'ZSharp Rate'),
             },
         },
     ];
