@@ -4,7 +4,11 @@ import { ResearchDemo } from '../components';
 import { RESEARCH_CONSTANTS } from '../config';
 import { useResearchData } from '../hooks';
 import type { Control } from '../types';
-import { fetchGzippedJson } from '../utils';
+import {
+    buildAxisDomain,
+    buildTooltipLabelFormatter,
+    fetchGzippedJson,
+} from '../utils';
 
 import {
     BusinessRounded,
@@ -156,14 +160,13 @@ const Oligopoly: React.FC = () => {
         type: 'line',
         xAxisKey: 'round',
         yAxisFormatter: (value: number) => `$${value.toFixed(2)}`,
-        yAxisDomain: ['dataMin - 5', 'dataMax + 5'],
+        yAxisDomain: buildAxisDomain(5),
         dualYAxis: true,
         rightYAxisFormatter: (value: number) => value.toFixed(2),
-        rightYAxisDomain: [
-            `dataMin - ${String(RESEARCH_CONSTANTS.oligopoly.hhiAxisPadding)}`,
-            `dataMax + ${String(RESEARCH_CONSTANTS.oligopoly.hhiAxisPadding)}`,
-        ],
-        tooltipLabelFormatter: (value: number) => `Round ${value.toString()}`,
+        rightYAxisDomain: buildAxisDomain(
+            RESEARCH_CONSTANTS.oligopoly.hhiAxisPadding,
+        ),
+        tooltipLabelFormatter: buildTooltipLabelFormatter('Round'),
         tooltipFormatter: (value: number, name: string): [string, string] => [
             name === 'Market Price' ? `$${value.toFixed(2)}` : value.toFixed(2),
             name,
