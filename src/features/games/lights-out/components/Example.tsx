@@ -16,6 +16,7 @@ import { EmojiEventsRounded } from '@/components/icons';
 import { Typography, Grid, Box } from '@/components/mui';
 import { CustomGrid } from '@/components/ui/CustomGrid';
 import { COLORS } from '@/config/theme';
+import { useMobile } from '@/hooks';
 
 /**
  * Creates icon handler for board cells
@@ -225,6 +226,8 @@ export default function Example({
         };
     };
 
+    const mobile = useMobile('sm');
+
     return (
         <GridWithKeyframes
             boardStates={boardStates}
@@ -237,17 +240,18 @@ export default function Example({
                 <Grid
                     container
                     size={12}
-                    wrap="nowrap"
+                    wrap={mobile ? 'wrap' : 'nowrap'}
                     sx={{
                         justifyContent: 'center',
                         alignItems: 'center',
                         flex: 1,
                         height: '100%',
                         overflow: 'hidden',
+                        flexDirection: mobile ? 'column' : 'row',
                     }}
                 >
                     <Grid
-                        size={6}
+                        size={mobile ? 12 : 6}
                         sx={{
                             display: 'flex',
                             justifyContent: 'center',
@@ -312,8 +316,8 @@ export default function Example({
                     </Grid>
                     <Grid
                         container
-                        size={6}
-                        spacing={2}
+                        size={mobile ? 12 : 6}
+                        spacing={mobile ? 1 : 2}
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
@@ -321,7 +325,12 @@ export default function Example({
                             justifyContent: 'center',
                         }}
                     >
-                        <Box sx={{ mb: 2, textAlign: 'center' }}>
+                        <Box
+                            sx={{
+                                mb: mobile ? 0 : 2,
+                                textAlign: 'center',
+                            }}
+                        >
                             <Typography
                                 variant="subtitle2"
                                 sx={{ mb: 1, color: COLORS.text.secondary }}
