@@ -408,8 +408,11 @@ export default function Slant() {
         [mobile],
     );
 
+    // Use a responsive override to fully clear GamePageLayout's responsive
+    // base padding ({ xs: '30px', sm: '36px' }) when in ghost mode.
+    // A plain `padding: 0` does not override the `sm` media query.
     const boardSx = useMemo(
-        () => (isGhostMode ? { padding: 0 } : undefined),
+        () => (isGhostMode ? { padding: { xs: 0, sm: 0 } } : undefined),
         [isGhostMode],
     );
 

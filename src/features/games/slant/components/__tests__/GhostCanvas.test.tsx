@@ -31,10 +31,12 @@ vi.mock('../../utils/workerUtils', () => ({
 class MockWorker {
     url: string;
     onmessage: (msg: unknown) => void;
+    onerror: ((ev: unknown) => void) | null;
 
     constructor(stringUrl: string) {
         this.url = stringUrl;
         this.onmessage = () => {};
+        this.onerror = null;
     }
 
     postMessage(msg: SolverMessage) {
