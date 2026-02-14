@@ -1,11 +1,10 @@
-export const MOBILE_PADDING = '30px';
-export const DESKTOP_PADDING = '36px';
+import { BOARD_STYLES } from '../../config';
+
 export const NUMBER_SIZE_RATIO = 0.4;
 
 export const LAYOUT_CONSTANTS = {
     LINE_WIDTH: '130%',
     LINE_THICKNESS: '6px',
-    CALCULATOR_BORDER_RADIUS: '24px',
     PADDING_OFFSET: 100,
     WIDTH_LIMIT: 1000,
     BOARD_MAX_WIDTH: 1200,
@@ -35,7 +34,7 @@ export const SLANT_STYLES = {
         WHITE: '#fff',
     },
     SHADOWS: {
-        LINE: '0 2px 4px rgba(0,0,0,0.2)',
+        LINE: BOARD_STYLES.SHADOW,
         HINT: '0 4px 8px rgba(0,0,0,0.1)',
     },
     GHOST: {

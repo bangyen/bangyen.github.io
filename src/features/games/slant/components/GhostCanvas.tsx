@@ -4,15 +4,9 @@ import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { GhostCell } from './GhostCell';
 import { GhostControls } from './GhostControls';
 import { GhostHint } from './GhostHint';
-import { GAME_CONSTANTS } from '../../config';
+import { BOARD_STYLES, GAME_CONSTANTS } from '../../config';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
-import {
-    MOBILE_PADDING,
-    DESKTOP_PADDING,
-    NUMBER_SIZE_RATIO,
-    SLANT_STYLES,
-    LAYOUT_CONSTANTS,
-} from '../config';
+import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../config';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
 import { createWorker } from '../utils/workerUtils';
@@ -257,9 +251,11 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
             <Box
                 sx={{
                     position: 'relative',
-                    padding: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
+                    padding: mobile
+                        ? BOARD_STYLES.PADDING.MOBILE
+                        : BOARD_STYLES.PADDING.DESKTOP,
                     border: `2px dashed ${SLANT_STYLES.GHOST.DASHED_BORDER}`,
-                    borderRadius: LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
+                    borderRadius: BOARD_STYLES.BORDER_RADIUS,
                 }}
             >
                 {/* Main Grid */}
@@ -283,8 +279,12 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
                 <Box
                     sx={{
                         position: 'absolute',
-                        top: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
-                        left: mobile ? MOBILE_PADDING : DESKTOP_PADDING,
+                        top: mobile
+                            ? BOARD_STYLES.PADDING.MOBILE
+                            : BOARD_STYLES.PADDING.DESKTOP,
+                        left: mobile
+                            ? BOARD_STYLES.PADDING.MOBILE
+                            : BOARD_STYLES.PADDING.DESKTOP,
                         transform: `translate(-${String(numberSize / 2)}rem, -${String(numberSize / 2)}rem)`,
                         zIndex: LAYOUT.zIndex.base + 2,
                         pointerEvents: 'none',

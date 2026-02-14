@@ -11,7 +11,7 @@ import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
 import { GameErrorBoundary } from '../../components/GameErrorBoundary';
 import { GamePageLayout } from '../../components/GamePageLayout';
-import { GAME_CONSTANTS } from '../../config';
+import { BOARD_STYLES, GAME_CONSTANTS } from '../../config';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
 import { useGamePersistence } from '../../hooks/useGamePersistence';
@@ -21,8 +21,6 @@ import {
     STORAGE_KEYS,
     LAYOUT_CONSTANTS,
     GAME_LOGIC_CONSTANTS,
-    MOBILE_PADDING,
-    DESKTOP_PADDING,
 } from '../config';
 import type { SlantAction, SlantState, CellState } from '../types';
 import { EMPTY } from '../types';
@@ -284,10 +282,8 @@ export default function Slant() {
             padding: isGhostMode
                 ? 0
                 : mobile
-                  ? MOBILE_PADDING
-                  : DESKTOP_PADDING,
-            border: '2px solid transparent',
-            borderRadius: LAYOUT_CONSTANTS.CALCULATOR_BORDER_RADIUS,
+                  ? BOARD_STYLES.PADDING.MOBILE
+                  : BOARD_STYLES.PADDING.DESKTOP,
         }),
         [mobile, isGhostMode],
     );

@@ -2,6 +2,7 @@ import type { SxProps, Theme } from '@mui/material';
 import React from 'react';
 
 import { TrophyOverlay } from './TrophyOverlay';
+import { BOARD_STYLES } from '../config';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Box } from '@/components/mui';
@@ -88,6 +89,8 @@ export function GamePageLayout({
                             {
                                 position: 'relative',
                                 width: 'fit-content',
+                                borderRadius: BOARD_STYLES.BORDER_RADIUS,
+                                border: BOARD_STYLES.BORDER,
                             },
                             ...toSxArray(boardSx),
                         ] as SxProps<Theme>

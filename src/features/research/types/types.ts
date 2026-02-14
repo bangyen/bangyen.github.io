@@ -33,6 +33,16 @@ export interface ControlOption {
     label: string;
 }
 
+export interface ControlConfig {
+    key: string;
+    label: string;
+    icon?: React.ElementType;
+    color?: string;
+    hoverColor?: string;
+    defaultValue: number;
+    options: ControlOption[];
+}
+
 export interface Control {
     label: string;
     icon?: React.ElementType;
