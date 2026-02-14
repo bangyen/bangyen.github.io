@@ -16,6 +16,11 @@ vi.mock('../Calculator', () => ({
     getInput: vi.fn(() => () => ({})),
 }));
 
+// Mock hooks (useMobile requires a ThemeProvider; stub it out)
+vi.mock('@/hooks', () => ({
+    useMobile: vi.fn(() => false),
+}));
+
 // Mock icons
 vi.mock('@/components/icons', () => ({
     EmojiEventsRounded: () => <div data-testid="emoji-events-rounded" />,
