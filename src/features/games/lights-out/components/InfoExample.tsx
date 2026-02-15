@@ -4,6 +4,8 @@ import React from 'react';
 import Example from './Example';
 import type { Palette, PropsFactory } from '../../components/Board';
 
+import { useMobile } from '@/hooks';
+
 interface InfoExampleProps {
     palette: Palette;
     getFrontProps: PropsFactory;
@@ -19,9 +21,11 @@ export function InfoExample({
     getFrontProps,
     getBackProps,
 }: InfoExampleProps) {
+    const mobile = useMobile('sm');
     // The example is always 3×3, so the cell size is independent of the main
-    // game board.  Use fixed values that fit comfortably inside the modal.
-    const exampleSize = 4; // rem
+    // game board.  Use smaller cells on mobile so the vertical layout fits
+    // comfortably inside the fixed-height modal.
+    const exampleSize = mobile ? 3 : 4; // rem
 
     return (
         <Box
