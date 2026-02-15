@@ -104,6 +104,23 @@ export const LAYOUT: ThemeLayout = {
     },
 };
 
+/**
+ * Cell-level sizing constants used by CustomGrid.
+ * Defined here (rather than in features/games) so that shared UI
+ * components never depend on feature-level code.
+ */
+export const GRID_CONFIG = {
+    cellSize: {
+        divisor: 4,
+        fontSizeMultiplier: 0.375,
+    },
+};
+
+/** Calculates the gap spacing (in px) between grid cells based on cell size. */
+export function getSpace(size: number): string {
+    return `${(size * GRID_CONFIG.cellSize.divisor).toString()}px`;
+}
+
 export const SHADOWS: Shadows = {
     sm: '0 1px 4px rgba(0,0,0,0.2)',
     md: '0 4px 12px rgba(0,0,0,0.2)',

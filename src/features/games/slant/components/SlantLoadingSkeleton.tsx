@@ -46,6 +46,8 @@ export function SlantLoadingSkeleton({
                 size={size}
                 rows={rows + 1}
                 cols={cols + 1}
+                cellRows={rows}
+                cellCols={cols}
                 overlayProps={skeletonFront}
                 cellProps={skeletonBack}
                 overlayLayerSx={{ pointerEvents: 'none' }}

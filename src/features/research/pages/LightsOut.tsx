@@ -14,7 +14,15 @@ import React from 'react';
 
 import { ResearchDemo } from '../components';
 import { VerificationTools } from '../components/VerificationTools';
-import { RESEARCH_CONSTANTS } from '../config';
+import {
+    RESEARCH_CONSTANTS,
+    researchHeadingSx,
+    researchBodySx,
+    researchLabelSx,
+    researchLinkButtonSx,
+    researchTableHeadCellSx,
+    researchTableBodyCellSx,
+} from '../config';
 import { RESEARCH_STYLES } from '../config/constants';
 
 import { LaunchRounded } from '@/components/icons';
@@ -23,7 +31,7 @@ const Latex = React.lazy(() =>
     import('@/components/ui/Latex').then(module => ({ default: module.Latex })),
 );
 import { URLS, ROUTES } from '@/config/constants';
-import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';
+import { COLORS, SPACING } from '@/config/theme';
 
 interface PeriodicityData {
     n: number;
@@ -75,24 +83,10 @@ const LightsOutResearch: React.FC = () => {
             backUrl={ROUTES.pages.LightsOut}
         >
             <Box sx={{ mt: 6, textAlign: 'left' }}>
-                <Typography
-                    variant="h4"
-                    sx={{
-                        mb: 3,
-                        fontWeight: TYPOGRAPHY.fontWeight.bold,
-                        color: COLORS.text.primary,
-                    }}
-                >
+                <Typography variant="h4" sx={researchHeadingSx}>
                     Algorithm Overview
                 </Typography>
-                <Typography
-                    variant="body1"
-                    sx={{
-                        mb: 3,
-                        lineHeight: 1.8,
-                        color: COLORS.text.secondary,
-                    }}
-                >
+                <Typography variant="body1" sx={{ ...researchBodySx, mb: 3 }}>
                     The solver models the Lights Out game using Linear Algebra
                     over the field{' '}
                     <React.Suspense fallback="data">
@@ -108,18 +102,8 @@ const LightsOutResearch: React.FC = () => {
                 <Box sx={{ mb: 6 }}>
                     <ol style={{ paddingLeft: '1.5rem', margin: 0 }}>
                         <li style={{ marginBottom: '1.5rem' }}>
-                            <Typography
-                                variant="body1"
-                                sx={{ color: COLORS.text.secondary }}
-                            >
-                                <Box
-                                    component="span"
-                                    sx={{
-                                        color: COLORS.text.primary,
-                                        fontWeight:
-                                            TYPOGRAPHY.fontWeight.semibold,
-                                    }}
-                                >
+                            <Typography variant="body1" sx={researchBodySx}>
+                                <Box component="span" sx={researchLabelSx}>
                                     Light Chasing:
                                 </Box>{' '}
                                 By efficiently chasing lights from the top row
@@ -129,18 +113,8 @@ const LightsOutResearch: React.FC = () => {
                             </Typography>
                         </li>
                         <li style={{ marginBottom: '1.5rem' }}>
-                            <Typography
-                                variant="body1"
-                                sx={{ color: COLORS.text.secondary }}
-                            >
-                                <Box
-                                    component="span"
-                                    sx={{
-                                        color: COLORS.text.primary,
-                                        fontWeight:
-                                            TYPOGRAPHY.fontWeight.semibold,
-                                    }}
-                                >
+                            <Typography variant="body1" sx={researchBodySx}>
+                                <Box component="span" sx={researchLabelSx}>
                                     Row Transfer Matrix:
                                 </Box>{' '}
                                 The effect of the first row on the configuration
@@ -151,18 +125,8 @@ const LightsOutResearch: React.FC = () => {
                             </Typography>
                         </li>
                         <li style={{ marginBottom: '1.5rem' }}>
-                            <Typography
-                                variant="body1"
-                                sx={{ color: COLORS.text.secondary }}
-                            >
-                                <Box
-                                    component="span"
-                                    sx={{
-                                        color: COLORS.text.primary,
-                                        fontWeight:
-                                            TYPOGRAPHY.fontWeight.semibold,
-                                    }}
-                                >
+                            <Typography variant="body1" sx={researchBodySx}>
+                                <Box component="span" sx={researchLabelSx}>
                                     Solving:
                                 </Box>{' '}
                                 To solve a configuration, we construct the
@@ -195,18 +159,11 @@ const LightsOutResearch: React.FC = () => {
                 >
                     <Typography
                         variant="h4"
-                        sx={{
-                            mb: 2,
-                            fontWeight: TYPOGRAPHY.fontWeight.bold,
-                            color: COLORS.text.primary,
-                        }}
+                        sx={{ ...researchHeadingSx, mb: 2 }}
                     >
                         Identity Matrix Property
                     </Typography>
-                    <Typography
-                        variant="body1"
-                        sx={{ lineHeight: 1.8, color: COLORS.text.secondary }}
-                    >
+                    <Typography variant="body1" sx={researchBodySx}>
                         For certain grid dimensions (m × n), the solver
                         transformation behaves as an Identity Matrix over the
                         field{' '}
@@ -220,24 +177,10 @@ const LightsOutResearch: React.FC = () => {
                     </Typography>
                 </GlassCard>
 
-                <Typography
-                    variant="h4"
-                    sx={{
-                        mb: 3,
-                        fontWeight: TYPOGRAPHY.fontWeight.bold,
-                        color: COLORS.text.primary,
-                    }}
-                >
+                <Typography variant="h4" sx={researchHeadingSx}>
                     Mathematical Derivation
                 </Typography>
-                <Typography
-                    variant="body1"
-                    sx={{
-                        mb: 4,
-                        lineHeight: 1.8,
-                        color: COLORS.text.secondary,
-                    }}
-                >
+                <Typography variant="body1" sx={{ ...researchBodySx, mb: 4 }}>
                     Let{' '}
                     <React.Suspense fallback="An">
                         <Latex formula="A_n" />
@@ -286,20 +229,10 @@ const LightsOutResearch: React.FC = () => {
                     </Typography>
                 </Box>
 
-                <Typography
-                    variant="h4"
-                    sx={{
-                        mb: 3,
-                        fontWeight: TYPOGRAPHY.fontWeight.bold,
-                        color: COLORS.text.primary,
-                    }}
-                >
+                <Typography variant="h4" sx={researchHeadingSx}>
                     Proven Periodicity Patterns
                 </Typography>
-                <Typography
-                    variant="body1"
-                    sx={{ mb: 4, color: COLORS.text.secondary }}
-                >
+                <Typography variant="body1" sx={{ ...researchBodySx, mb: 4 }}>
                     Mathematically proven for all grid heights m. Patterns are
                     expressed as{' '}
                     <React.Suspense fallback="m mod z in Rn">
@@ -320,28 +253,13 @@ const LightsOutResearch: React.FC = () => {
                     <Table>
                         <TableHead>
                             <TableRow>
-                                <TableCell
-                                    sx={{
-                                        color: COLORS.text.primary,
-                                        fontWeight: 'bold',
-                                    }}
-                                >
+                                <TableCell sx={researchTableHeadCellSx}>
                                     Columns (n)
                                 </TableCell>
-                                <TableCell
-                                    sx={{
-                                        color: COLORS.text.primary,
-                                        fontWeight: 'bold',
-                                    }}
-                                >
+                                <TableCell sx={researchTableHeadCellSx}>
                                     Period (z)
                                 </TableCell>
-                                <TableCell
-                                    sx={{
-                                        color: COLORS.text.primary,
-                                        fontWeight: 'bold',
-                                    }}
-                                >
+                                <TableCell sx={researchTableHeadCellSx}>
                                     Remainder Set (R)
                                 </TableCell>
                             </TableRow>
@@ -360,19 +278,15 @@ const LightsOutResearch: React.FC = () => {
                                 { n: 10, z: 62, r: '{0, 60}' },
                             ].map(row => (
                                 <TableRow key={row.n}>
-                                    <TableCell
-                                        sx={{ color: COLORS.text.secondary }}
-                                    >
+                                    <TableCell sx={researchTableBodyCellSx}>
                                         {row.n}
                                     </TableCell>
-                                    <TableCell
-                                        sx={{ color: COLORS.text.secondary }}
-                                    >
+                                    <TableCell sx={researchTableBodyCellSx}>
                                         {row.z}
                                     </TableCell>
                                     <TableCell
                                         sx={{
-                                            color: COLORS.text.secondary,
+                                            ...researchTableBodyCellSx,
                                             fontFamily: 'monospace',
                                         }}
                                     >
@@ -387,14 +301,7 @@ const LightsOutResearch: React.FC = () => {
                 <VerificationTools />
 
                 <Box sx={{ mb: 10 }}>
-                    <Typography
-                        variant="h4"
-                        sx={{
-                            mb: 3,
-                            fontWeight: TYPOGRAPHY.fontWeight.bold,
-                            color: COLORS.text.primary,
-                        }}
-                    >
+                    <Typography variant="h4" sx={researchHeadingSx}>
                         References
                     </Typography>
                     <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2 }}>
@@ -404,14 +311,7 @@ const LightsOutResearch: React.FC = () => {
                             target="_blank"
                             variant="outlined"
                             endIcon={<LaunchRounded />}
-                            sx={{
-                                borderColor: COLORS.border.subtle,
-                                color: COLORS.text.primary,
-                                '&:hover': {
-                                    borderColor: COLORS.primary.main,
-                                    backgroundColor: COLORS.interactive.hover,
-                                },
-                            }}
+                            sx={researchLinkButtonSx}
                         >
                             Stack Exchange Discussion
                         </Button>
@@ -421,14 +321,7 @@ const LightsOutResearch: React.FC = () => {
                             target="_blank"
                             variant="outlined"
                             endIcon={<LaunchRounded />}
-                            sx={{
-                                borderColor: COLORS.border.subtle,
-                                color: COLORS.text.primary,
-                                '&:hover': {
-                                    borderColor: COLORS.primary.main,
-                                    backgroundColor: COLORS.interactive.hover,
-                                },
-                            }}
+                            sx={researchLinkButtonSx}
                         >
                             Wikipedia: Fibonacci Polynomials
                         </Button>
@@ -438,14 +331,7 @@ const LightsOutResearch: React.FC = () => {
                             target="_blank"
                             variant="outlined"
                             endIcon={<LaunchRounded />}
-                            sx={{
-                                borderColor: COLORS.border.subtle,
-                                color: COLORS.text.primary,
-                                '&:hover': {
-                                    borderColor: COLORS.primary.main,
-                                    backgroundColor: COLORS.interactive.hover,
-                                },
-                            }}
+                            sx={researchLinkButtonSx}
                         >
                             Bit Twiddling Hacks
                         </Button>

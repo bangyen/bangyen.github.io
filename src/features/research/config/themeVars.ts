@@ -1,11 +1,12 @@
 /**
- * Research-specific CSS custom properties.
+ * Research-specific CSS custom properties and reusable sx constants.
  *
  * These are glass / border / accent variables consumed exclusively by
  * research pages.  They live here so the core MUI theme file stays
  * focused on application-wide design tokens.
  */
 
+import { COLORS, TYPOGRAPHY } from '@/config/theme';
 import type { CssVarDefinition } from '@/config/theme/cssVars';
 
 /** Declarative research CSS variable definitions (light/dark pairs). */
@@ -91,3 +92,49 @@ export const RESEARCH_CSS_VARS: readonly CssVarDefinition[] = [
         dark: 'rgba(255, 193, 7, 0.2)',
     },
 ];
+
+// ---------------------------------------------------------------------------
+// Reusable sx constants for research page content sections.
+// Centralises the Typography / Button styling that was previously
+// repeated inline across every research page.
+// ---------------------------------------------------------------------------
+
+/** Section heading (`<Typography variant="h4">`). */
+export const researchHeadingSx = {
+    mb: 3,
+    fontWeight: TYPOGRAPHY.fontWeight.bold,
+    color: COLORS.text.primary,
+} as const;
+
+/** Body paragraph (`<Typography variant="body1">`). */
+export const researchBodySx = {
+    lineHeight: 1.8,
+    color: COLORS.text.secondary,
+} as const;
+
+/** Inline bold label (`<Box component="span">`). */
+export const researchLabelSx = {
+    color: COLORS.text.primary,
+    fontWeight: TYPOGRAPHY.fontWeight.semibold,
+} as const;
+
+/** Outlined link button (`<Button variant="outlined">`). */
+export const researchLinkButtonSx = {
+    borderColor: COLORS.border.subtle,
+    color: COLORS.text.primary,
+    '&:hover': {
+        borderColor: COLORS.primary.main,
+        backgroundColor: COLORS.interactive.hover,
+    },
+} as const;
+
+/** Table header cell. */
+export const researchTableHeadCellSx = {
+    color: COLORS.text.primary,
+    fontWeight: 'bold',
+} as const;
+
+/** Table body cell. */
+export const researchTableBodyCellSx = {
+    color: COLORS.text.secondary,
+} as const;

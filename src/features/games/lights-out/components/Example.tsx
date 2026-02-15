@@ -269,6 +269,8 @@ export default function Example({
                                 size={width}
                                 rows={dims}
                                 cols={dims}
+                                cellRows={dims - 1}
+                                cellCols={dims - 1}
                                 overlayProps={frontProps}
                                 cellProps={backProps}
                             />

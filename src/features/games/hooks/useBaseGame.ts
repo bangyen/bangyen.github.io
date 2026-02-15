@@ -35,7 +35,7 @@ import type { BaseGameState, BaseGameAction } from '@/utils/gameUtils';
  * Combines grid sizing, board rendering, and game logic into a single level
  * with sensible defaults so each game only specifies what differs.
  */
-interface BaseGameConfig<S, A> {
+export interface BaseGameConfig<S, A> {
     /** Storage key prefix — auto-generates `{prefix}-size` and `{prefix}-state` keys. */
     storageKey: string;
     /** Page title for the document */

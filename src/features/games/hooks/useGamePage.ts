@@ -8,6 +8,7 @@
 import type React from 'react';
 import { useCallback, useRef } from 'react';
 
+import type { BaseGameConfig } from './useBaseGame';
 import { useBaseGame } from './useBaseGame';
 import { useGameInteraction } from './useGameInteraction';
 
@@ -48,41 +49,9 @@ interface InteractionConfig<A> {
 interface UseGamePageConfig<
     S extends BaseGameState,
     A extends { type: string },
-> {
+> extends BaseGameConfig<S, A> {
     /** Configuration for cell interaction / drag handling. */
     interaction: InteractionConfig<A>;
-    // All useBaseGame config fields (flattened here for proper generic inference)
-    storageKey: string;
-    pageTitle: string;
-    defaultSize?: number | null;
-    minSize?: number;
-    maxSize?: number;
-    headerOffset?: { mobile: number; desktop: number };
-    gridPadding?: number | { x: number; y: number };
-    widthLimit?: number;
-    cellSizeReference?: number | { mobile: number; desktop: number };
-    mobileRowOffset?: number;
-    boardPadding?:
-        | number
-        | { x: number; y: number }
-        | ((mobile: boolean) => number | { x: number; y: number });
-    boardMaxWidth?: number;
-    boardSizeFactor?: number;
-    maxCellSize?: number;
-    remBase?: number;
-    rowOffset?: number;
-    colOffset?: number;
-    reducer: (state: S, action: A | BaseGameAction<S>) => S;
-    getInitialState: (rows: number, cols: number) => S;
-    isSolved: (state: S) => boolean;
-    winAnimationDelay?: number;
-    persistence?: {
-        serialize?: (state: S) => unknown;
-        deserialize?: (saved: unknown) => S;
-        enabled?: boolean;
-    };
-    manualResize?: boolean;
-    onNext?: () => void;
 }
 
 /**
