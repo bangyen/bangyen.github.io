@@ -11,22 +11,6 @@ import { FeatureErrorFallback } from '@/components/layout/FeatureErrorFallback';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
 
-/** Stable fallback component for the research error boundary. */
-const ResearchErrorFallback = ({
-    error,
-    resetErrorBoundary,
-}: {
-    error: Error | null;
-    resetErrorBoundary: () => void;
-}) => (
-    <FeatureErrorFallback
-        error={error}
-        resetErrorBoundary={resetErrorBoundary}
-        title="Research Tool Error"
-        resetLabel="Reset Component"
-    />
-);
-
 const ResearchChart = React.lazy(() =>
     import('./ResearchChart').then(module => ({
         default: module.ResearchChart,
@@ -93,7 +77,13 @@ const ResearchDemo = <T,>({
             : 'Data Visualization');
 
     return (
-        <ErrorBoundary FallbackComponent={ResearchErrorFallback}>
+        <ErrorBoundary
+            FallbackComponent={FeatureErrorFallback}
+            fallbackProps={{
+                title: 'Research Tool Error',
+                resetLabel: 'Reset Component',
+            }}
+        >
             <PageLayout githubUrl={githubUrl}>
                 <Grid
                     container={true}
