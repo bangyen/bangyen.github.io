@@ -109,5 +109,3 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
         </Box>
     );
 };
-
-export default GlobalHeader;

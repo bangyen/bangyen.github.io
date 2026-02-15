@@ -10,7 +10,7 @@ import {
     COMPONENT_VARIANTS,
 } from '@/config/theme';
 
-export default function Error(): React.ReactElement {
+export function Error(): React.ReactElement {
     document.title = PAGE_TITLES.error;
     return (
         <Grid

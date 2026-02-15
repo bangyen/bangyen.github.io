@@ -11,7 +11,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { vi, type Mock } from 'vitest';
 
 import type { ResearchDemoProps, Control } from '../../types';
-import Oligopoly from '../Oligopoly';
+import { Oligopoly } from '../Oligopoly';
 
 // Mocks
 vi.mock('pako', () => ({
@@ -21,8 +21,7 @@ vi.mock('pako', () => ({
     ungzip: vi.fn(),
 }));
 vi.mock('../../components/ResearchDemo', () => ({
-    __esModule: true,
-    default: ({
+    ResearchDemo: ({
         title,
         chartData = [],
         chartConfig,

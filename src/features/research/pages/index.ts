@@ -1,4 +1,4 @@
 // Research pages exports
-export { default as LightsOut } from './LightsOut';
-export { default as ZSharp } from './ZSharp';
-export { default as Oligopoly } from './Oligopoly';
+export { LightsOutResearch as LightsOut } from './LightsOut';
+export { ZSharp } from './ZSharp';
+export { Oligopoly } from './Oligopoly';

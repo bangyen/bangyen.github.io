@@ -149,10 +149,12 @@ export function HeroContainer({
 }
 
 /**
- * PageLayout component provides consistent page layout with background,
- * full height, and proper positioning for improved maintainability.
+ * Thin full-height wrapper that applies a consistent background and
+ * box-model to a page's root element.  Unlike the main `PageLayout`
+ * in `PageLayout.tsx` (which also renders `GlobalHeader`), this is
+ * a pure styling shell with no chrome.
  */
-export function PageLayout({ children, ...props }: PageLayoutProps) {
+export function PageWrapper({ children, ...props }: PageLayoutProps) {
     return (
         <Box
             sx={{

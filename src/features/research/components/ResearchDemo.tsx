@@ -1,9 +1,9 @@
 import { Box, Grid, useMediaQuery } from '@mui/material';
 import React from 'react';
 
-import ResearchControls from './ResearchControls';
+import { ResearchControls } from './ResearchControls';
 import { ResearchHeader } from './ResearchHeader';
-import ResearchViewSelector from './ResearchViewSelector';
+import { ResearchViewSelector } from './ResearchViewSelector';
 import type { ResearchDemoProps } from '../types';
 
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
@@ -17,7 +17,7 @@ const ResearchChart = React.lazy(() =>
     })),
 );
 
-const ResearchDemo = <T,>({
+export const ResearchDemo = <T,>({
     title,
     subtitle,
     githubUrl,
@@ -178,5 +178,3 @@ const ResearchDemo = <T,>({
         </ErrorBoundary>
     );
 };
-
-export default ResearchDemo;

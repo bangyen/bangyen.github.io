@@ -4,12 +4,11 @@ import { vi, type Mock } from 'vitest';
 import type { DragProps } from '../../../hooks/useDrag';
 import * as matrices from '../../utils/matrices';
 import * as calculator from '../Calculator';
-import Info from '../Info';
+import { Info } from '../Info';
 
 // Mock dependencies
 vi.mock('../Example', () => ({
-    __esModule: true,
-    default: function MockExample() {
+    Example: function MockExample() {
         return <div data-testid="example-component" />;
     },
 }));

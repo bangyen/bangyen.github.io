@@ -51,7 +51,7 @@ const periodicityData: PeriodicityData[] = [
     { n: 10, z: 62 },
 ];
 
-const LightsOutResearch: React.FC = () => {
+export const LightsOutResearch: React.FC = () => {
     const chartConfig = {
         type: 'line',
         xAxisKey: 'n',
@@ -341,5 +341,3 @@ const LightsOutResearch: React.FC = () => {
         </ResearchDemo>
     );
 };
-
-export default LightsOutResearch;

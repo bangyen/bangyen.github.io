@@ -10,7 +10,7 @@ import React, {
 import { GhostCell } from './GhostCell';
 import { GhostControls } from './GhostControls';
 import { GhostHint } from './GhostHint';
-import { BOARD_STYLES, GAME_CONSTANTS } from '../../config';
+import { BOARD_STYLES, GAME_CONSTANTS } from '../../config/constants';
 import { useDrag } from '../../hooks/useDrag';
 import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../constants';
 import type { CellState } from '../types';

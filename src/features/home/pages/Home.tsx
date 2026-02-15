@@ -7,7 +7,7 @@ import { HeroSection } from '../components/HeroSection';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { PAGE_TITLES } from '@/config/constants';
 
-export default function Home(): React.ReactElement {
+export function Home(): React.ReactElement {
     useEffect(() => {
         document.title = PAGE_TITLES.home;
     }, []);

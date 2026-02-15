@@ -9,7 +9,16 @@ import {
 } from '@mui/material';
 import React, { useState } from 'react';
 
-import { infoContentSx } from './infoStyles';
+import {
+    infoBackdropSx,
+    infoModalSx,
+    infoOuterBoxSx,
+    infoCardSx,
+    infoHeaderSx,
+    infoCloseButtonSx,
+    infoStepContentSx,
+    infoContentSx,
+} from './infoStyles';
 
 import {
     CloseRounded,
@@ -18,74 +27,6 @@ import {
 } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
-
-// ---------------------------------------------------------------------------
-// Style constants (previously in infoStyles.ts)
-// ---------------------------------------------------------------------------
-
-/** Backdrop blur + tinted overlay for the Info modal. */
-const infoBackdropSx: SxProps<Theme> = {
-    backgroundColor: (theme: Theme) =>
-        theme.palette.mode === 'dark'
-            ? 'hsla(0, 0%, 3%, 0.85)'
-            : 'hsla(0, 0%, 98%, 0.85)',
-    backdropFilter: 'blur(12px) saturate(180%)',
-    transition: 'all 0.3s ease-in-out !important',
-};
-
-/** Root Modal positioning. */
-const infoModalSx: SxProps<Theme> = {
-    zIndex: 9999,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-};
-
-/** Outer wrapper that centres the GlassCard within the modal. */
-const infoOuterBoxSx: SxProps<Theme> = {
-    outline: 'none',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-};
-
-/** GlassCard container for the entire Info modal content. */
-const infoCardSx: Record<string, unknown> = {
-    width: '100%',
-    maxWidth: '1000px',
-    height: { xs: '630px', sm: '495px' },
-    minHeight: { xs: '630px', sm: '495px' },
-    display: 'flex',
-    flexDirection: 'column',
-    p: 0,
-    overflow: 'hidden',
-    position: 'relative',
-    m: 2,
-};
-
-/** Header row (title + close button). */
-const infoHeaderSx: SxProps<Theme> = {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    mb: 2,
-    px: 2,
-};
-
-/** Close button colour. */
-const infoCloseButtonSx: SxProps<Theme> = {
-    color: COLORS.text.secondary,
-};
-
-/** Step-content wrapper. Accepts an optional step index so the scrollbar-
- *  compensating right padding only applies to steps that actually scroll. */
-const infoStepContentSx = (step?: number): SxProps<Theme> => ({
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    pr: step === 0 ? { xs: 3, md: 0 } : 0,
-});
 
 // ---------------------------------------------------------------------------
 // Internal helpers

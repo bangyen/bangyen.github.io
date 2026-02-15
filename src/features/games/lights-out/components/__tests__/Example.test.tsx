@@ -2,7 +2,7 @@ import { render, screen, act } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
 import * as chaseHandlers from '../../utils/chaseHandlers';
-import Example from '../Example';
+import { Example } from '../Example';
 
 // Mock chaseHandlers
 vi.mock('../../utils/chaseHandlers', () => ({

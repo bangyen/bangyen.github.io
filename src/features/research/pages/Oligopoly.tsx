@@ -83,7 +83,7 @@ const filterMatrixData = (
     return sorted.slice(0, 15);
 };
 
-const Oligopoly: React.FC = () => {
+export const Oligopoly: React.FC = () => {
     const [numFirms, setNumFirms] = useState(
         RESEARCH_CONSTANTS.oligopoly.defaultFirms,
     );
@@ -203,5 +203,3 @@ const Oligopoly: React.FC = () => {
         />
     );
 };
-
-export default Oligopoly;

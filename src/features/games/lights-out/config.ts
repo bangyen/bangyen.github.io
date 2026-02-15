@@ -1,4 +1,4 @@
-import { BOARD_STYLES, createStorageKeys } from '../config';
+import { BOARD_STYLES, createStorageKeys } from '../config/constants';
 
 import { PAGE_TITLES } from '@/config/constants';
 import { LAYOUT } from '@/config/theme';
@@ -25,7 +25,7 @@ export const LAYOUT_CONSTANTS = {
 export const STORAGE_KEYS = createStorageKeys('lights-out');
 
 /**
- * Returns the flat `useBaseGame` configuration for Lights Out.
+ * Returns the `useBaseGame` configuration for Lights Out.
  * Accepts `mobile` so responsive padding offsets are resolved here
  * instead of cluttering the page component.
  */
@@ -33,19 +33,23 @@ export function getLightsOutGameConfig(mobile: boolean) {
     return {
         storageKey: 'lights-out',
         pageTitle: PAGE_TITLES.lightsOut,
-        maxSize: 10,
-        headerOffset: {
-            mobile: LAYOUT.headerHeight.xs,
-            desktop: LAYOUT.headerHeight.md,
+        grid: {
+            maxSize: 10,
+            headerOffset: {
+                mobile: LAYOUT.headerHeight.xs,
+                desktop: LAYOUT.headerHeight.md,
+            },
+            gridPadding: {
+                x: mobile ? 60 : 80,
+                y: 60,
+            },
         },
-        gridPadding: {
-            x: mobile ? 60 : 80,
-            y: 60,
+        board: {
+            boardPadding: {
+                x: mobile ? 40 : 120,
+                y: mobile ? 120 : 160,
+            },
+            maxCellSize: 80,
         },
-        boardPadding: {
-            x: mobile ? 40 : 120,
-            y: mobile ? 120 : 160,
-        },
-        maxCellSize: 80,
     };
 }

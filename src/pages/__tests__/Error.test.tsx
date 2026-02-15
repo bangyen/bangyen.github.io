@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
-import Error from '../Error';
+import { Error } from '../Error';
 
 describe('Error Page', () => {
     test('renders 404 and error message', () => {

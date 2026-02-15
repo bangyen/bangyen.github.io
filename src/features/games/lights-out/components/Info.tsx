@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { getProduct } from '../utils';
 import { getInput, getOutput, useHandler } from './Calculator';
-import Example from './Example';
+import { Example } from './Example';
 import { InfoCalculator } from './InfoCalculator';
 import { GameInfo } from '../../components/GameInfo';
 import { useDrag } from '../../hooks/useDrag';
@@ -48,7 +48,7 @@ interface InfoProps {
  * Step 0: rule explanations, Step 1: example, Step 2: calculator.
  * Calculator state is hoisted here so it persists when switching steps.
  */
-export default function Info(props: InfoProps): React.ReactElement {
+export function Info(props: InfoProps): React.ReactElement {
     const {
         rows,
         cols,

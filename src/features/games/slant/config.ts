@@ -52,7 +52,7 @@ export const slantInfoContentSx = (step: number): SxProps<Theme> =>
 // ---------------------------------------------------------------------------
 
 /**
- * Returns the flat `useBaseGame` configuration for Slant.
+ * Returns the `useBaseGame` configuration for Slant.
  * Accepts `mobile` so responsive padding offsets and the optional
  * board-size factor are resolved here instead of in the page component.
  *
@@ -64,22 +64,25 @@ export function getSlantGameConfig(mobile: boolean) {
     return {
         storageKey: 'slant',
         pageTitle: PAGE_TITLES.slant,
-        defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
-        maxSize: GAME_LOGIC_CONSTANTS.MAX_SIZE,
-        gridPadding: {
-            x: mobile ? 48 : 80,
-            y: 120,
+        grid: {
+            defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
+            maxSize: GAME_LOGIC_CONSTANTS.MAX_SIZE,
+            gridPadding: {
+                x: mobile ? 48 : 80,
+                y: 120,
+            },
+            widthLimit: LAYOUT_CONSTANTS.WIDTH_LIMIT,
+            cellSizeReference: 4,
         },
-        widthLimit: LAYOUT_CONSTANTS.WIDTH_LIMIT,
-        cellSizeReference: 4,
-        boardPadding: (isMobile: boolean) => ({
-            x: isMobile ? 48 : 80,
-            y: LAYOUT_CONSTANTS.PADDING_OFFSET,
-        }),
-        ...(mobile ? { boardSizeFactor: 0.92 } : {}),
-        maxCellSize: LAYOUT_CONSTANTS.MAX_CELL_SIZE,
-        rowOffset: 1,
-        colOffset: 1,
-        manualResize: true,
+        board: {
+            boardPadding: (isMobile: boolean) => ({
+                x: isMobile ? 48 : 80,
+                y: LAYOUT_CONSTANTS.PADDING_OFFSET,
+            }),
+            ...(mobile ? { boardSizeFactor: 0.92 } : {}),
+            maxCellSize: LAYOUT_CONSTANTS.MAX_CELL_SIZE,
+            rowOffset: 1,
+            colOffset: 1,
+        },
     };
 }

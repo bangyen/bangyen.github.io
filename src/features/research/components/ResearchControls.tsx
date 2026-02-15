@@ -26,7 +26,7 @@ interface ResearchControlsProps {
     resetLabel?: string;
 }
 
-const ResearchControls: React.FC<ResearchControlsProps> = ({
+export const ResearchControls: React.FC<ResearchControlsProps> = ({
     controls,
     onReset,
     resetLabel = 'Reset',
@@ -224,5 +224,3 @@ const ResearchControls: React.FC<ResearchControlsProps> = ({
         </Box>
     );
 };
-
-export default ResearchControls;

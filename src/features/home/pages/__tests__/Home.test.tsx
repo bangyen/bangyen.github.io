@@ -7,7 +7,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
-import Home from '../Home';
+import { Home } from '../Home';
 
 import { ThemeProvider } from '@/hooks/useTheme';
 

@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
-import ErrorBoundary from '../ErrorBoundary';
+import { ErrorBoundary } from '../ErrorBoundary';
 
 // Mock ErrorFallback to simplify Boundary testing
 vi.mock('../ErrorFallback', () => ({
