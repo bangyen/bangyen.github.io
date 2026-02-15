@@ -64,7 +64,7 @@ export default defineConfig(() => {
         }),
         visualizer({
             filename: 'stats.html',
-            open: true,
+            open: !!process.env['ANALYZE'],
             gzipSize: true,
             brotliSize: true,
         }),
