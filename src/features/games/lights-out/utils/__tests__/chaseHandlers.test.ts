@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { vi, type Mock } from 'vitest';
 
 import * as boardHandlers from '../boardHandlers';

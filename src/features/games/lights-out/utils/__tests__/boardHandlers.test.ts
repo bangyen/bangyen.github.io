@@ -1,3 +1,4 @@
+// @vitest-environment node
 vi.mock('lights-out-wasm', () => ({
     __esModule: true,
     default: vi.fn().mockResolvedValue(undefined),

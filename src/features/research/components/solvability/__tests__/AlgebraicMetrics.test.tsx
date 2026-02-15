@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { render, screen } from '@testing-library/react';
 import React from 'react';
