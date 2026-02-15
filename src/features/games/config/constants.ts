@@ -71,8 +71,3 @@ export const DEFAULT_GRID_CONFIG = {
         desktop: GAME_CONSTANTS.gridSizes.desktop,
     } as number | { mobile: number; desktop: number },
 };
-
-export const PAGE_TITLES = {
-    lightsOut: 'Lights Out | Bangyen',
-    slant: 'Slant | Bangyen',
-};

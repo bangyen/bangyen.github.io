@@ -1,5 +1,5 @@
 /**
- * Composition hook that wires `useBaseGame` and `useGameInteraction`
+ * Composition hook that wires `useBaseGame` and `useDrag` (grid mode)
  * together, eliminating the repeated plumbing in every game page.
  *
  * Each game provides a `createAction` factory that maps cell coordinates
@@ -10,7 +10,7 @@ import { useCallback, useRef } from 'react';
 
 import type { BaseGameConfig } from './useBaseGame';
 import { useBaseGame } from './useBaseGame';
-import { useGameInteraction } from './useGameInteraction';
+import { useDrag } from './useDrag';
 
 import type { BaseGameState, BaseGameAction } from '@/utils/gameUtils';
 
@@ -55,8 +55,8 @@ interface UseGamePageConfig<
 }
 
 /**
- * Combines `useBaseGame` (state management) and `useGameInteraction`
- * (cell interactions) into a single hook, returning everything a game
+ * Combines `useBaseGame` (state management) and `useDrag` (grid-mode
+ * cell interactions) into a single hook, returning everything a game
  * page needs to render its board and controls.
  *
  * @template S - Game state type extending BaseGameState
@@ -113,7 +113,7 @@ export function useGamePage<
 
     const defaultCheckEnabled = useCallback(() => !solved, [solved]);
 
-    const { getDragProps } = useGameInteraction({
+    const { getDragProps } = useDrag({
         onToggle,
         checkEnabled: interaction.checkEnabled ?? defaultCheckEnabled,
         touchTimeout: interaction.touchTimeout,

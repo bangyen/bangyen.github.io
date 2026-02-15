@@ -9,8 +9,7 @@
  *     ├── useGridSize           - grid dimensions + responsive sizing
  *     ├── calculateBoardSize    - cell size in rem (pure function)
  *     ├── useGamePersistence    - localStorage save/restore
- *     ├── useWinTransition      - auto-advance after solve
- *     └── usePageTitle          - document.title
+ *     └── useWinTransition      - auto-advance after solve
  */
 
 import { useReducer, useEffect, useMemo, useCallback, useRef } from 'react';
@@ -21,10 +20,9 @@ import {
     GAME_CONSTANTS,
     createStorageKeys,
 } from '../config';
+import { calculateBoardSize } from './boardSizeUtils';
 import { useGamePersistence } from './useGamePersistence';
 import { useGridSize } from './useGridSize';
-import { usePageTitle } from './usePageTitle';
-import { calculateBoardSize } from './useResponsiveBoardSize';
 import { useWinTransition } from './useWinTransition';
 
 import type { BaseGameState, BaseGameAction } from '@/utils/gameUtils';
@@ -250,7 +248,10 @@ export function useBaseGame<
     });
 
     useWinTransition(solved, handleNext, winAnimationDelay);
-    usePageTitle(pageTitle);
+
+    useEffect(() => {
+        document.title = pageTitle;
+    }, [pageTitle]);
 
     useEffect(() => {
         if (manualResize) return;

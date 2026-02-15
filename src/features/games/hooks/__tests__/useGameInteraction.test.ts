@@ -1,9 +1,9 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { useGameInteraction } from '../useGameInteraction';
+import { useDrag } from '../useDrag';
 
-describe('useGameInteraction', () => {
+describe('useDrag grid mode (onToggle)', () => {
     const onToggle = vi.fn();
     const defaultOptions = {
         onToggle,
@@ -16,7 +16,7 @@ describe('useGameInteraction', () => {
     });
 
     it('should call onToggle with parsed coordinates on initial click', () => {
-        const { result } = renderHook(() => useGameInteraction(defaultOptions));
+        const { result } = renderHook(() => useDrag(defaultOptions));
         const props = result.current.getDragProps('1,2');
 
         act(() => {
@@ -31,7 +31,7 @@ describe('useGameInteraction', () => {
 
     it('should handle dragging value', () => {
         onToggle.mockReturnValueOnce('drag-val');
-        const { result } = renderHook(() => useGameInteraction(defaultOptions));
+        const { result } = renderHook(() => useDrag(defaultOptions));
 
         // Initial click
         act(() => {
@@ -53,7 +53,7 @@ describe('useGameInteraction', () => {
 
     it('should not call onToggle if disabled', () => {
         const { result } = renderHook(() =>
-            useGameInteraction({
+            useDrag({
                 ...defaultOptions,
                 checkEnabled: () => false,
             }),
@@ -70,7 +70,7 @@ describe('useGameInteraction', () => {
     });
 
     it('should ignore invalid pos strings', () => {
-        const { result } = renderHook(() => useGameInteraction(defaultOptions));
+        const { result } = renderHook(() => useDrag(defaultOptions));
 
         act(() => {
             result.current.getDragProps('invalid').onMouseDown({

@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 
 /**
  * Props to apply to draggable DOM elements.
@@ -22,15 +22,9 @@ export interface DragProps {
 }
 
 /**
- * Configuration options for the useDrag hook.
+ * Shared options for both raw and grid drag modes.
  */
-interface UseDragOptions {
-    /** Callback when a cell is interacted with (mouse/touch/keyboard) */
-    onAction: (
-        pos: string,
-        isRightClick: boolean,
-        isInitialClick: boolean,
-    ) => void;
+interface UseDragOptionsBase {
     /** Optional check to enable/disable drag interactions */
     checkEnabled?: () => boolean;
     /** Timeout in ms to debounce touch from mouse (default: 500) */
@@ -44,7 +38,48 @@ interface UseDragOptions {
 }
 
 /**
+ * Raw drag mode: receives position strings directly.
+ * Used when the caller doesn't need row/col parsing (e.g. single-axis inputs).
+ */
+interface UseDragRawOptions extends UseDragOptionsBase {
+    /** Callback when a cell is interacted with (mouse/touch/keyboard) */
+    onAction: (
+        pos: string,
+        isRightClick: boolean,
+        isInitialClick: boolean,
+    ) => void;
+    onToggle?: undefined;
+}
+
+/**
+ * Grid drag mode: parses "row,col" position strings into numbers and
+ * persists a dragging value across cells during a single drag operation.
+ * Replaces the former `useGameInteraction` wrapper.
+ *
+ * @template T - Type of value persisted during drag
+ */
+interface UseDragGridOptions<T> extends UseDragOptionsBase {
+    onAction?: undefined;
+    /** Callback when a grid cell is toggled (row, col, rightClick, draggingValue, isInitialClick) */
+    onToggle: (
+        row: number,
+        col: number,
+        isRightClick: boolean,
+        draggingValue?: T,
+        isInitialClick?: boolean,
+    ) => T | undefined;
+}
+
+type UseDragOptions<T = void> = UseDragRawOptions | UseDragGridOptions<T>;
+
+/**
  * Custom hook for managing drag interactions across mouse, touch, and keyboard.
+ *
+ * Supports two modes:
+ * - **Raw mode** (`onAction`): receives position strings directly.
+ * - **Grid mode** (`onToggle`): parses "row,col" strings into numbers and
+ *   persists a dragging value across cells during a single drag operation,
+ *   replacing the former `useGameInteraction` hook.
  *
  * Handles:
  * - Left/right-click dragging with continuous action on hover
@@ -57,29 +92,68 @@ interface UseDragOptions {
  *
  * @example
  * ```tsx
- * const { isDragging, getDragProps } = useDrag({
- *   onAction: (pos, isRight, initial) => {
- *     console.log(`Cell ${pos}: right=${isRight}, initial=${initial}`);
- *   },
+ * // Raw mode
+ * const { getDragProps } = useDrag({
+ *   onAction: (pos, isRight, initial) => { ... },
  *   checkEnabled: () => !isGameOver,
- *   touchTimeout: 500
  * });
  *
- * return (
- *   <div {...getDragProps('0,0')}>
- *     Cell Content
- *   </div>
- * );
+ * // Grid mode
+ * const { getDragProps } = useDrag({
+ *   onToggle: (row, col, isRight, draggingValue, isInitial) => {
+ *     dispatch({ type: 'toggle', row, col });
+ *     return newValue; // persisted across drag
+ *   },
+ *   checkEnabled: () => !solved,
+ *   touchTimeout: 500,
+ * });
  * ```
  */
-export function useDrag({
-    onAction,
+export function useDrag<T = void>({
     checkEnabled = () => true,
     touchTimeout = 500,
     posAttribute = 'data-pos',
     preventDefault = true,
     transition = 'all 0.2s',
-}: UseDragOptions) {
+    ...callbacks
+}: UseDragOptions<T>) {
+    // Grid-mode: wrap onToggle into an onAction with coordinate parsing
+    // and dragging-value persistence.
+    const draggingValue = useRef<T | undefined>(undefined);
+    const onToggleRef = useRef(callbacks.onToggle);
+    onToggleRef.current = callbacks.onToggle;
+
+    const isGridMode = callbacks.onToggle !== undefined;
+    const rawOnAction = callbacks.onAction;
+
+    const onAction = useMemo(() => {
+        if (!isGridMode && rawOnAction) return rawOnAction;
+
+        return (
+            pos: string,
+            isRightClick: boolean,
+            isInitialClick: boolean,
+        ) => {
+            if (!checkEnabled()) return;
+            const toggle = onToggleRef.current;
+            if (!toggle) return;
+
+            const [r, c] = pos.split(',').map(Number);
+            if (r === undefined || c === undefined) return;
+
+            if (isInitialClick) {
+                draggingValue.current = toggle(
+                    r,
+                    c,
+                    isRightClick,
+                    undefined,
+                    true,
+                );
+            } else {
+                toggle(r, c, isRightClick, draggingValue.current, false);
+            }
+        };
+    }, [isGridMode, rawOnAction, checkEnabled]);
     const [isDragging, setIsDragging] = useState<number | null>(null);
     const draggedItems = useRef(new Set<string>());
     const lastTouchTime = useRef(0);
