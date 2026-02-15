@@ -3,5 +3,4 @@ export { Board } from './Board';
 export { GameControls } from './GameControls';
 export { GameInfo } from './GameInfo';
 export { GamePageLayout } from './GamePageLayout';
-export { InfoModal } from './InfoModal';
 export { TrophyOverlay } from './TrophyOverlay';

@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest';
 
-import { calculateBoardSize } from '../useResponsiveBoardSize';
+import { calculateBoardSize } from '../boardSizeUtils';
 
 describe('calculateBoardSize', () => {
     const defaultConfig = {

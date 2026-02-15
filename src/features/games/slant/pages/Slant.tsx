@@ -13,7 +13,7 @@ import { GameInfo } from '../../components/GameInfo';
 import { GamePageLayout } from '../../components/GamePageLayout';
 import { GAME_CONSTANTS } from '../../config';
 import { useBaseGame } from '../../hooks/useBaseGame';
-import { useGameInteraction } from '../../hooks/useGameInteraction';
+import { useDrag } from '../../hooks/useDrag';
 import Example from '../components/Example';
 import { SlantBoardContent } from '../components/SlantBoardContent';
 import {
@@ -40,7 +40,7 @@ import { COLORS } from '@/config/theme';
 import { useCellFactory } from '@/utils/gameUtils';
 import { createCellIndex } from '@/utils/types';
 
-// Note: Slant intentionally uses useBaseGame + useGameInteraction directly
+// Note: Slant intentionally uses useBaseGame + useDrag (grid mode) directly
 // (rather than the composed useGamePage) because its worker-based generation
 // and ghost-mode features require access to dispatch/state refs before the
 // interaction hook runs.
@@ -188,7 +188,7 @@ export default function Slant() {
         }
     }, [state.solved, isGhostMode, rows, cols, prefetch]);
 
-    const { getDragProps } = useGameInteraction({
+    const { getDragProps } = useDrag({
         onToggle: (r: number, c: number, isRightClick: boolean) => {
             dispatch({
                 type: 'toggle',
@@ -262,10 +262,12 @@ export default function Slant() {
             paddingBottom={{ xs: '120px', md: '150px' }}
             controls={controls}
             contentSx={contentSx}
-            showTrophy={!isGhostMode && state.solved}
-            onReset={handleNextAsync}
-            boardSize={size}
-            iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
+            trophyProps={{
+                show: !isGhostMode && state.solved,
+                onReset: handleNextAsync,
+                boardSize: size,
+                iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
+            }}
             boardSx={boardSx}
             onClick={isGhostMode ? handleGhostClose : undefined}
         >

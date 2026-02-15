@@ -11,6 +11,27 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { COLORS } from '@/config/theme';
 import { toSxArray } from '@/utils/muiUtils';
 
+/**
+ * Grouped configuration forwarded to TrophyOverlay, so callers don't
+ * need to pass seven individual props on GamePageLayout.
+ */
+export interface TrophyConfig {
+    /** Whether the win overlay is visible. */
+    show?: boolean;
+    /** Callback to advance to the next puzzle. */
+    onReset?: () => void;
+    /** Board size in rem — used to scale the trophy icon. */
+    boardSize?: number;
+    /** Ratio applied to boardSize for the icon font-size. */
+    iconSizeRatio?: number;
+    /** Primary trophy color. */
+    primaryColor?: string;
+    /** Secondary trophy color (used when useSecondary is true). */
+    secondaryColor?: string;
+    /** Whether to use the secondary color for the trophy. */
+    useSecondary?: boolean;
+}
+
 interface GamePageLayoutProps {
     children: React.ReactNode;
     controls: React.ReactNode;
@@ -19,15 +40,8 @@ interface GamePageLayoutProps {
     background?: string;
     paddingBottom?: string | object;
     contentSx?: SxProps<Theme>;
-
-    // Board helper props from GameBoard
-    showTrophy?: boolean;
-    onReset?: () => void;
-    boardSize?: number;
-    iconSizeRatio?: number;
-    primaryColor?: string;
-    secondaryColor?: string;
-    useSecondaryTrophy?: boolean;
+    /** Grouped trophy overlay configuration. */
+    trophyProps?: TrophyConfig;
     boardSx?: SxProps<Theme>;
     onClick?: (e: React.MouseEvent) => void;
 }
@@ -44,18 +58,20 @@ export function GamePageLayout({
     background = COLORS.surface.background,
     paddingBottom = { xs: '80px', md: '120px' },
     contentSx = {},
-
-    // GameBoard defaults
-    showTrophy = false,
-    onReset,
-    boardSize = 0,
-    iconSizeRatio = 1,
-    primaryColor = COLORS.primary.main,
-    secondaryColor = COLORS.primary.main,
-    useSecondaryTrophy = false,
+    trophyProps = {},
     boardSx,
     onClick,
 }: GamePageLayoutProps) {
+    const {
+        show: showTrophy = false,
+        onReset,
+        boardSize = 0,
+        iconSizeRatio = 1,
+        primaryColor = COLORS.primary.main,
+        secondaryColor = COLORS.primary.main,
+        useSecondary = false,
+    } = trophyProps;
+
     return (
         <ErrorBoundary
             FallbackComponent={FeatureErrorFallback}
@@ -119,7 +135,7 @@ export function GamePageLayout({
                             iconSizeRatio={iconSizeRatio}
                             primaryColor={primaryColor}
                             secondaryColor={secondaryColor}
-                            useSecondary={useSecondaryTrophy}
+                            useSecondary={useSecondary}
                         />
                     </Box>
                 </Box>

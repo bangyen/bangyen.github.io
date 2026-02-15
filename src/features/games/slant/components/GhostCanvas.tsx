@@ -11,7 +11,7 @@ import { GhostCell } from './GhostCell';
 import { GhostControls } from './GhostControls';
 import { GhostHint } from './GhostHint';
 import { BOARD_STYLES, GAME_CONSTANTS } from '../../config';
-import { useGameInteraction } from '../../hooks/useGameInteraction';
+import { useDrag } from '../../hooks/useDrag';
 import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../constants';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
@@ -63,7 +63,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
     // User inputs: just strict assignments
     const userMoves = initialMoves;
 
-    const { getDragProps } = useGameInteraction<CellState | undefined>({
+    const { getDragProps } = useDrag<CellState | undefined>({
         onToggle: (
             r: number,
             c: number,

@@ -1,10 +1,121 @@
 import type { SxProps, Theme } from '@mui/material';
-import { Box, Typography } from '@mui/material';
-import React from 'react';
+import {
+    Backdrop,
+    Modal,
+    Box,
+    Button,
+    IconButton,
+    Typography,
+} from '@mui/material';
+import React, { useState } from 'react';
 
-import { InfoModal } from './InfoModal';
+import { infoContentSx } from './infoStyles';
 
+import {
+    CloseRounded,
+    NavigateBeforeRounded,
+    NavigateNextRounded,
+} from '@/components/icons';
+import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
+
+// ---------------------------------------------------------------------------
+// Style constants (previously in infoStyles.ts)
+// ---------------------------------------------------------------------------
+
+/** Backdrop blur + tinted overlay for the Info modal. */
+const infoBackdropSx: SxProps<Theme> = {
+    backgroundColor: (theme: Theme) =>
+        theme.palette.mode === 'dark'
+            ? 'hsla(0, 0%, 3%, 0.85)'
+            : 'hsla(0, 0%, 98%, 0.85)',
+    backdropFilter: 'blur(12px) saturate(180%)',
+    transition: 'all 0.3s ease-in-out !important',
+};
+
+/** Root Modal positioning. */
+const infoModalSx: SxProps<Theme> = {
+    zIndex: 9999,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+};
+
+/** Outer wrapper that centres the GlassCard within the modal. */
+const infoOuterBoxSx: SxProps<Theme> = {
+    outline: 'none',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+};
+
+/** GlassCard container for the entire Info modal content. */
+const infoCardSx: Record<string, unknown> = {
+    width: '100%',
+    maxWidth: '1000px',
+    height: { xs: '630px', sm: '495px' },
+    minHeight: { xs: '630px', sm: '495px' },
+    display: 'flex',
+    flexDirection: 'column',
+    p: 0,
+    overflow: 'hidden',
+    position: 'relative',
+    m: 2,
+};
+
+/** Header row (title + close button). */
+const infoHeaderSx: SxProps<Theme> = {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    mb: 2,
+    px: 2,
+};
+
+/** Close button colour. */
+const infoCloseButtonSx: SxProps<Theme> = {
+    color: COLORS.text.secondary,
+};
+
+/** Step-content wrapper. Accepts an optional step index so the scrollbar-
+ *  compensating right padding only applies to steps that actually scroll. */
+const infoStepContentSx = (step?: number): SxProps<Theme> => ({
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    pr: step === 0 ? { xs: 3, md: 0 } : 0,
+});
+
+// ---------------------------------------------------------------------------
+// Internal helpers
+// ---------------------------------------------------------------------------
+
+/** Renders the title for the current step inside the modal header. */
+const StepTitle = ({ children }: { children: React.ReactNode }) => (
+    <Typography
+        variant="h5"
+        sx={{
+            color: COLORS.text.primary,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            textAlign: 'left',
+            fontSize: TYPOGRAPHY.fontSize.h2,
+        }}
+    >
+        {children}
+    </Typography>
+);
+
+// Type assertion for GlassCard component
+const TypedGlassCard = GlassCard as React.ComponentType<{
+    children?: React.ReactNode;
+    sx?: Record<string, unknown>;
+    onClick?: (event: React.MouseEvent) => void;
+}>;
+
+// ---------------------------------------------------------------------------
+// GameInfo component
+// ---------------------------------------------------------------------------
 
 /** Data for a single instruction row shown on the first step. */
 export interface InstructionItemData {
@@ -85,9 +196,11 @@ function InstructionItem({
 }
 
 /**
- * Unified "How to Play" modal for all games.  Accepts instructions as
- * declarative data and the example animation as a ReactNode so individual
- * games don't need separate InfoInstructions / InfoExample components.
+ * Unified "How to Play" modal for all games. Owns the step navigation
+ * state and renders the common chrome (backdrop, card, header, close
+ * button, navigation footer). Accepts instructions as declarative data
+ * and the example animation as a ReactNode so individual games don't
+ * need separate InfoInstructions / InfoExample components.
  *
  * Step layout:
  *   0 — Instructions (rendered from `instructions` data)
@@ -105,6 +218,23 @@ export function GameInfo({
     cardSx,
     contentSxOverride,
 }: GameInfoProps) {
+    const [step, setStep] = useState(0);
+    const totalSteps = titles.length;
+
+    const handleNext = () => {
+        if (step < totalSteps - 1) setStep(step + 1);
+        else toggleOpen();
+    };
+
+    const handleBack = () => {
+        if (step > 0) setStep(step - 1);
+    };
+
+    const handleClose = () => {
+        toggleOpen();
+    };
+
+    // Build step content
     const instructionsStep = (
         <Box
             sx={{
@@ -158,14 +288,105 @@ export function GameInfo({
         </Box>
     );
 
+    const steps = [instructionsStep, exampleStep, ...extraSteps];
+    const contentSx = contentSxOverride
+        ? contentSxOverride(step)
+        : infoContentSx(step);
+
     return (
-        <InfoModal
+        <Modal
             open={open}
-            toggleOpen={toggleOpen}
-            titles={titles}
-            cardSx={cardSx}
-            contentSxOverride={contentSxOverride}
-            steps={[instructionsStep, exampleStep, ...extraSteps]}
-        />
+            onClose={handleClose}
+            slots={{ backdrop: Backdrop }}
+            slotProps={{
+                backdrop: {
+                    sx: infoBackdropSx,
+                },
+            }}
+            sx={infoModalSx}
+        >
+            <Box sx={infoOuterBoxSx}>
+                <TypedGlassCard
+                    onClick={(e: React.MouseEvent) => {
+                        e.stopPropagation();
+                    }}
+                    sx={{ ...infoCardSx, ...cardSx }}
+                >
+                    {/* Content Area */}
+                    <Box sx={contentSx}>
+                        {/* Header (Title + Close Button) */}
+                        <Box sx={infoHeaderSx}>
+                            <StepTitle>{titles[step]}</StepTitle>
+                            <IconButton
+                                onClick={handleClose}
+                                size="small"
+                                sx={infoCloseButtonSx}
+                            >
+                                <CloseRounded />
+                            </IconButton>
+                        </Box>
+
+                        {/* Step Content */}
+                        <Box sx={infoStepContentSx(step)}>{steps[step]}</Box>
+                    </Box>
+
+                    {/* Footer (Navigation) */}
+                    <Box
+                        sx={{
+                            p: 2.5,
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Button
+                            onClick={handleBack}
+                            disabled={step === 0}
+                            startIcon={<NavigateBeforeRounded />}
+                            sx={{
+                                visibility: step === 0 ? 'hidden' : 'visible',
+                                color: COLORS.text.primary,
+                            }}
+                        >
+                            Back
+                        </Button>
+
+                        {/* Dots Indicator */}
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            {Array.from({ length: totalSteps }, (_, i) => (
+                                <Box
+                                    key={i}
+                                    sx={{
+                                        width: 8,
+                                        height: 8,
+                                        borderRadius: '50%',
+                                        backgroundColor:
+                                            step === i
+                                                ? COLORS.primary.main
+                                                : COLORS.interactive.disabled,
+                                        transition: 'background-color 0.3s',
+                                    }}
+                                />
+                            ))}
+                        </Box>
+
+                        <Button
+                            onClick={handleNext}
+                            disabled={step === totalSteps - 1}
+                            endIcon={<NavigateNextRounded />}
+                            sx={{
+                                visibility:
+                                    step === totalSteps - 1
+                                        ? 'hidden'
+                                        : 'visible',
+                                color: COLORS.text.primary,
+                            }}
+                        >
+                            Next
+                        </Button>
+                    </Box>
+                </TypedGlassCard>
+            </Box>
+        </Modal>
     );
 }

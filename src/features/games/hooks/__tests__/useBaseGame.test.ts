@@ -15,10 +15,7 @@ vi.mock('../useGamePersistence', () => ({
 vi.mock('../useWinTransition', () => ({
     useWinTransition: vi.fn(),
 }));
-vi.mock('../usePageTitle', () => ({
-    usePageTitle: vi.fn(),
-}));
-vi.mock('../useResponsiveBoardSize', () => ({
+vi.mock('../boardSizeUtils', () => ({
     calculateBoardSize: vi.fn().mockReturnValue(3),
 }));
 vi.mock('../../../utils/gameUtils', () => ({

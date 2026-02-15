@@ -113,9 +113,9 @@ vi.mock('@/config/theme', () => ({
     SPACING: { borderRadius: { full: 999, sm: 4 } },
 }));
 
-// Mock useGameInteraction
-vi.mock('../../../hooks/useGameInteraction', () => ({
-    useGameInteraction: ({
+// Mock useDrag (grid mode)
+vi.mock('../../../hooks/useDrag', () => ({
+    useDrag: ({
         onToggle,
     }: {
         onToggle: (
