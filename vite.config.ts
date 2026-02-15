@@ -142,18 +142,21 @@ export default defineConfig(() => {
             port: 3000,
         },
         test: {
-            pool: 'threads', // Use threads for better performance
+            pool: 'threads',
             globals: true,
-            environment: 'jsdom',
+            environment: 'happy-dom',
             setupFiles: './src/setupTests.ts',
             include: ['src/**/*.test.{js,jsx,ts,tsx}'],
             exclude: ['node_modules'],
-            // Optimization: Disable CSS parsing for logic tests
             css: false,
             fileParallelism: true,
             isolate: true,
-            // Use 100% of cores in CI (usually 2), but cap locally to 80% for peak performance
             maxWorkers: process.env['CI'] ? '100%' : '80%',
+            poolOptions: {
+                threads: {
+                    useAtomics: true,
+                },
+            },
             sequence: {
                 hooks: 'list',
             },
