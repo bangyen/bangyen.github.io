@@ -152,7 +152,6 @@ export default function Info(props: InfoProps): React.ReactElement {
                             {step === 0 && <InfoInstructions />}
                             {step === 1 && (
                                 <InfoExample
-                                    size={size}
                                     palette={palette}
                                     getFrontProps={getFrontProps}
                                     getBackProps={getBackProps}

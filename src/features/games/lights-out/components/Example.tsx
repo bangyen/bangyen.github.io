@@ -49,10 +49,10 @@ function iconHandler(
                         zIndex: 2,
                         '&::after': {
                             content: '""',
-                            fontSize: { xs: '0.8rem', sm: '1.2rem' },
+                            fontSize: '1.2rem',
                             fontWeight: 'bold',
                             filter: LIGHTS_OUT_STYLES.SHADOWS.DROP,
-                            paddingTop: { xs: '0.08rem', sm: '0.15rem' },
+                            paddingTop: '0.15rem',
                             animation: `${name} ${String(length * 2)}s linear infinite`,
                         },
                     }}
@@ -95,10 +95,10 @@ function inputIconHandler(
                         zIndex: 2,
                         '&::after': {
                             content: '""',
-                            fontSize: { xs: '0.8rem', sm: '1.2rem' },
+                            fontSize: '1.2rem',
                             fontWeight: 'bold',
                             filter: LIGHTS_OUT_STYLES.SHADOWS.DROP,
-                            paddingTop: { xs: '0.08rem', sm: '0.15rem' },
+                            paddingTop: '0.15rem',
                             animation: `${name} ${String(length * 2)}s linear infinite`,
                         },
                     }}
