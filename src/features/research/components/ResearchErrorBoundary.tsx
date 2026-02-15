@@ -17,7 +17,7 @@ export const ResearchErrorBoundary: React.FC<{ children: React.ReactNode }> = ({
                         justifyContent: 'center',
                         alignItems: 'center',
                         p: 4,
-                        minHeight: '300px',
+                        minHeight: '100vh',
                     }}
                 >
                     <GlassCard
