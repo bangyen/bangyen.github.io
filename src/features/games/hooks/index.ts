@@ -6,4 +6,5 @@ export * from './useGamePersistence';
 export * from './useGridSize';
 export * from './usePageTitle';
 export * from './useResponsiveBoardSize';
+export * from './useSkipTransition';
 export * from './useWinTransition';

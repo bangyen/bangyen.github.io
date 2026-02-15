@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { RemoveRounded, AddRounded } from '@/components/icons';
+import { RemoveRounded, AddRounded, MenuBookRounded } from '@/components/icons';
 import { Navigation } from '@/components/layout/Navigation';
 import { RefreshButton } from '@/components/ui/Controls';
 import { TooltipButton } from '@/components/ui/TooltipButton';
@@ -15,13 +15,18 @@ interface GameControlsProps {
     handleMinus: () => void;
     onRefresh: () => void;
     disabled?: boolean;
+    /** When provided, renders a built-in "How to Play" tutorial button. */
+    onOpenInfo?: () => void;
+    /** When true the entire control bar is hidden (e.g. during ghost mode). */
+    hidden?: boolean;
     children?: React.ReactNode;
 }
 
 /**
  * Game-specific control bar that composes Navigation directly.
- * Provides refresh, resize (plus/minus), and optional extra buttons
- * without routing through the generic Controls wrapper.
+ * Provides refresh, resize (plus/minus), an optional "How to Play"
+ * button, and an optional slot for extra buttons -- without routing
+ * through the generic Controls wrapper.
  */
 export function GameControls({
     rows,
@@ -33,8 +38,12 @@ export function GameControls({
     handleMinus,
     onRefresh,
     disabled = false,
+    onOpenInfo,
+    hidden = false,
     children,
 }: GameControlsProps) {
+    if (hidden) return null;
+
     const isAtMin = Math.min(rows, cols) <= minSize;
     const isAtMax =
         Math.min(rows, cols) >= maxSize ||
@@ -55,6 +64,13 @@ export function GameControls({
                 onClick={handlePlus}
                 disabled={disabled || isAtMax}
             />
+            {onOpenInfo && (
+                <TooltipButton
+                    title="How to Play"
+                    Icon={MenuBookRounded}
+                    onClick={onOpenInfo}
+                />
+            )}
             {children}
         </Navigation>
     );

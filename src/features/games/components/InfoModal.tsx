@@ -40,10 +40,16 @@ interface InfoModalProps {
      */
     contentSxOverride?: (step: number) => SxProps<Theme>;
     /**
-     * Render-prop that receives the current step index and returns the
-     * game-specific content for that step.
+     * Declarative step content — each element is rendered when its index
+     * matches the current step.  Preferred over the `children` render-prop
+     * when steps don't need dynamic access to the step index.
      */
-    children: (step: number) => React.ReactNode;
+    steps?: React.ReactNode[];
+    /**
+     * Render-prop that receives the current step index and returns the
+     * game-specific content for that step.  Ignored when `steps` is provided.
+     */
+    children?: (step: number) => React.ReactNode;
 }
 
 /**
@@ -58,6 +64,7 @@ export function InfoModal({
     titles,
     cardSx,
     contentSxOverride,
+    steps,
     children,
 }: InfoModalProps): React.ReactElement {
     const [step, setStep] = useState(0);
@@ -114,7 +121,9 @@ export function InfoModal({
                         </Box>
 
                         {/* Step Content */}
-                        <Box sx={infoStepContentSx(step)}>{children(step)}</Box>
+                        <Box sx={infoStepContentSx(step)}>
+                            {steps ? steps[step] : children?.(step)}
+                        </Box>
                     </Box>
 
                     {/* Footer (Navigation) */}
