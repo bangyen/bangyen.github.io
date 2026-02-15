@@ -1,8 +1,14 @@
 import type { SxProps, Theme } from '@mui/material';
-import { Backdrop, Modal, Box, IconButton, Typography } from '@mui/material';
+import {
+    Backdrop,
+    Modal,
+    Box,
+    Button,
+    IconButton,
+    Typography,
+} from '@mui/material';
 import React, { useState } from 'react';
 
-import { InfoNavigation } from './InfoNavigation';
 import {
     infoBackdropSx,
     infoCardSx,
@@ -14,7 +20,11 @@ import {
     infoStepContentSx,
 } from './infoStyles';
 
-import { CloseRounded } from '@/components/icons';
+import {
+    CloseRounded,
+    NavigateBeforeRounded,
+    NavigateNextRounded,
+} from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
@@ -142,12 +152,60 @@ export function InfoModal({
                     </Box>
 
                     {/* Footer (Navigation) */}
-                    <InfoNavigation
-                        step={step}
-                        totalSteps={totalSteps}
-                        onBack={handleBack}
-                        onNext={handleNext}
-                    />
+                    <Box
+                        sx={{
+                            p: 2.5,
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Button
+                            onClick={handleBack}
+                            disabled={step === 0}
+                            startIcon={<NavigateBeforeRounded />}
+                            sx={{
+                                visibility: step === 0 ? 'hidden' : 'visible',
+                                color: COLORS.text.primary,
+                            }}
+                        >
+                            Back
+                        </Button>
+
+                        {/* Dots Indicator */}
+                        <Box sx={{ display: 'flex', gap: 1 }}>
+                            {Array.from({ length: totalSteps }, (_, i) => (
+                                <Box
+                                    key={i}
+                                    sx={{
+                                        width: 8,
+                                        height: 8,
+                                        borderRadius: '50%',
+                                        backgroundColor:
+                                            step === i
+                                                ? COLORS.primary.main
+                                                : COLORS.interactive.disabled,
+                                        transition: 'background-color 0.3s',
+                                    }}
+                                />
+                            ))}
+                        </Box>
+
+                        <Button
+                            onClick={handleNext}
+                            disabled={step === totalSteps - 1}
+                            endIcon={<NavigateNextRounded />}
+                            sx={{
+                                visibility:
+                                    step === totalSteps - 1
+                                        ? 'hidden'
+                                        : 'visible',
+                                color: COLORS.text.primary,
+                            }}
+                        >
+                            Next
+                        </Button>
+                    </Box>
                 </TypedGlassCard>
             </Box>
         </Modal>
