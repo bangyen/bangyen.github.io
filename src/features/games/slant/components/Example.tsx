@@ -14,7 +14,8 @@ import {
 import { getSatisfiedNodes } from '../utils/validation';
 
 import { EmojiEventsRounded } from '@/components/icons';
-import { COLORS, ANIMATIONS } from '@/config/theme';
+import { GlassCard } from '@/components/ui/GlassCard';
+import { COLORS, ANIMATIONS, SPACING } from '@/config/theme';
 import { getPosKey } from '@/utils/gameUtils';
 
 /** Interval between animation frames (ms). */
@@ -247,14 +248,29 @@ export default function Example({ size }: ExampleProps): React.ReactElement {
                             'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
                         pointerEvents: 'none',
                         zIndex: 10,
+                        backgroundColor: 'transparent',
                     }}
                 >
-                    <EmojiEventsRounded
+                    <GlassCard
+                        padding={SPACING.padding.md}
                         sx={{
-                            fontSize: { xs: '2.5rem', sm: '4rem' },
-                            color: COLORS.primary.main,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            gap: 1,
+                            height: 'auto',
+                            width: 'auto',
+                            maxWidth: '80%',
                         }}
-                    />
+                    >
+                        <EmojiEventsRounded
+                            sx={{
+                                fontSize: { xs: '2rem', sm: '3rem' },
+                                color: COLORS.primary.main,
+                                filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))',
+                            }}
+                        />
+                    </GlassCard>
                 </Box>
             </Box>
         </Box>
