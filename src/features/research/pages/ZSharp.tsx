@@ -71,7 +71,6 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
 
 export const ZSharp: React.FC = () => {
     const { data: chartData, loading } = useResearchData(
-        PAGE_TITLES.zsharp,
         loadRealZSharpData,
         () => [] as DataPoint[],
     );
@@ -206,6 +205,7 @@ export const ZSharp: React.FC = () => {
     return (
         <ResearchDemo
             title="ZSharp"
+            pageTitle={PAGE_TITLES.zsharp}
             subtitle="Neural Network Optimization Research"
             githubUrl={URLS.zsharpRepo}
             chartData={chartData}

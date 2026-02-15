@@ -2,7 +2,7 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
-import { Section, BackgroundBox, HeroContainer, PageWrapper } from '../Layout';
+import { Section, HeroContainer } from '../Layout';
 
 describe('Layout Components', () => {
     describe('Section', () => {
@@ -38,23 +38,6 @@ describe('Layout Components', () => {
         });
     });
 
-    describe('BackgroundBox', () => {
-        test('renders children with absolute positioning', () => {
-            render(
-                <BackgroundBox data-testid="bg-box">BG Content</BackgroundBox>,
-            );
-            expect(screen.getByText('BG Content')).toBeInTheDocument();
-            const box = screen.getByTestId('bg-box');
-            expect(box).toHaveStyle({ position: 'absolute', zIndex: -1 });
-        });
-
-        test('applies specific styles', () => {
-            render(<BackgroundBox data-testid="bg-box">Content</BackgroundBox>);
-            const box = screen.getByTestId('bg-box');
-            expect(box).toHaveStyle({ position: 'absolute', zIndex: -1 });
-        });
-    });
-
     describe('HeroContainer', () => {
         test('renders children with flex centering', () => {
             render(
@@ -66,27 +49,6 @@ describe('Layout Components', () => {
             // HeroContainer uses COMPONENT_VARIANTS.flexCenter for centering
             const container = screen.getByTestId('hero-container');
             expect(container).toBeInTheDocument();
-        });
-    });
-
-    describe('PageWrapper', () => {
-        test('renders children with full-height layout', () => {
-            render(
-                <PageWrapper data-testid="page-layout">
-                    Page Content
-                </PageWrapper>,
-            );
-            expect(screen.getByText('Page Content')).toBeInTheDocument();
-            const layout = screen.getByTestId('page-layout');
-            expect(layout).toHaveStyle({ minHeight: '100vh', width: '100%' });
-        });
-
-        test('has correct default styles', () => {
-            render(
-                <PageWrapper data-testid="page-layout">Content</PageWrapper>,
-            );
-            const layout = screen.getByTestId('page-layout');
-            expect(layout).toHaveStyle({ minHeight: '100vh', width: '100%' });
         });
     });
 });

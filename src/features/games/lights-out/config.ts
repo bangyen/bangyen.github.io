@@ -1,6 +1,5 @@
 import { BOARD_STYLES, createStorageKeys } from '../config/constants';
 
-import { PAGE_TITLES } from '@/config/constants';
 import { LAYOUT } from '@/config/theme';
 
 export const LIGHTS_OUT_STYLES = {
@@ -32,7 +31,6 @@ export const STORAGE_KEYS = createStorageKeys('lights-out');
 export function getLightsOutGameConfig(mobile: boolean) {
     return {
         storageKey: 'lights-out',
-        pageTitle: PAGE_TITLES.lightsOut,
         grid: {
             maxSize: 10,
             headerOffset: {

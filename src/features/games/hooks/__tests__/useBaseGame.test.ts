@@ -26,7 +26,6 @@ vi.mock('../../../utils/gameUtils', () => ({
 describe('useBaseGame', () => {
     const defaultProps: any = {
         storageKey: 'test-game',
-        pageTitle: 'Test Game',
         grid: {
             headerOffset: { mobile: 50, desktop: 100 },
         },

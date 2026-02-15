@@ -3,9 +3,9 @@ import React from 'react';
 
 import { ConnectSection } from './HeroSection/ConnectSection';
 import { TechStack } from './HeroSection/TechStack';
+import { HeroContainer } from './Layout';
 
 import { LocationOn, ArrowForward } from '@/components/icons';
-import { HeroContainer } from '@/components/layout/Layout';
 import { PERSONAL_INFO } from '@/config/constants';
 import {
     COLORS,

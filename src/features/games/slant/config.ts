@@ -8,7 +8,6 @@ import {
     TagRounded,
     NotInterestedRounded,
 } from '@/components/icons';
-import { PAGE_TITLES } from '@/config/constants';
 import { toSxArray } from '@/utils/muiUtils';
 
 // ---------------------------------------------------------------------------
@@ -35,7 +34,7 @@ export const SLANT_INSTRUCTIONS = [
     },
 ];
 
-export const SLANT_INFO_CARD_SX = {
+export const SLANT_INFO_CARD_SX: SxProps<Theme> = {
     height: { xs: '660px', sm: '525px' },
     minHeight: { xs: '660px', sm: '525px' },
 };
@@ -63,7 +62,6 @@ export const slantInfoContentSx = (step: number): SxProps<Theme> =>
 export function getSlantGameConfig(mobile: boolean) {
     return {
         storageKey: 'slant',
-        pageTitle: PAGE_TITLES.slant,
         grid: {
             defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
             maxSize: GAME_LOGIC_CONSTANTS.MAX_SIZE,

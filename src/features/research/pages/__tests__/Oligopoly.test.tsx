@@ -23,12 +23,14 @@ vi.mock('pako', () => ({
 vi.mock('../../components/ResearchDemo', () => ({
     ResearchDemo: ({
         title,
+        pageTitle,
         chartData = [],
         chartConfig,
         controls = [],
         onReset,
         loading,
     }: ResearchDemoProps<unknown>) => {
+        if (pageTitle) document.title = pageTitle;
         if (chartConfig) {
             chartConfig.yAxisFormatter(0);
             chartConfig.rightYAxisFormatter?.(0);

@@ -113,8 +113,6 @@ export interface BaseGameConfig<S, A> {
     /** Storage key prefix — auto-generates `{prefix}-size` and
      *  `{prefix}-state` keys. */
     storageKey: string;
-    /** Page title for the document. */
-    pageTitle: string;
     /** Grid sizing configuration (all fields optional with defaults). */
     grid?: GridConfig;
     /** Board rendering configuration (all fields optional with defaults). */
@@ -142,7 +140,6 @@ export interface BaseGameConfig<S, A> {
  * ```tsx
  * const { rows, cols, state, dispatch, solved } = useBaseGame({
  *   storageKey: 'lights-out',
- *   pageTitle: 'Lights Out',
  *   grid: { maxSize: 10, headerOffset: { mobile: 64, desktop: 80 } },
  *   board: { boardPadding: { x: 40, y: 120 }, maxCellSize: 80 },
  *   logic: {
@@ -158,7 +155,6 @@ export function useBaseGame<
     A extends { type: string },
 >({
     storageKey: storageKeyPrefix,
-    pageTitle,
     grid = {},
     board = {},
     logic,
@@ -282,10 +278,6 @@ export function useBaseGame<
     });
 
     useWinTransition(solved, handleNext, winAnimationDelay);
-
-    useEffect(() => {
-        document.title = pageTitle;
-    }, [pageTitle]);
 
     useEffect(() => {
         if (manualResize) return;

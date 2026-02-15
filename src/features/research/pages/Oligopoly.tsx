@@ -98,7 +98,6 @@ export const Oligopoly: React.FC = () => {
     const collusionEnabled = false;
 
     const { data: matrixData, loading } = useResearchData(
-        PAGE_TITLES.oligopoly,
         loadRealSimulationMatrix,
         () => [] as MatrixItem[],
     );
@@ -190,6 +189,7 @@ export const Oligopoly: React.FC = () => {
     return (
         <ResearchDemo
             title="Oligopoly"
+            pageTitle={PAGE_TITLES.oligopoly}
             subtitle="Agent-Based Economic Competition Analysis"
             githubUrl={URLS.oligopolyRepo}
             chartData={marketData}
