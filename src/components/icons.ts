@@ -26,7 +26,12 @@ export {
 } from '@mui/icons-material';
 
 // Game Icons
-export { GamepadRounded } from '@mui/icons-material';
+export {
+    GamepadRounded,
+    TextureRounded,
+    TagRounded,
+    NotInterestedRounded,
+} from '@mui/icons-material';
 
 // Content Icons
 export { Code, Psychology, Cloud, Work, LocationOn } from '@mui/icons-material';
