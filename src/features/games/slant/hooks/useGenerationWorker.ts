@@ -26,6 +26,13 @@ interface UseGenerationWorkerConfig {
     dispatchRef: React.RefObject<SlantDispatch | null>;
     /** Ref to the latest grid dimensions, kept in sync by the caller. */
     dimsRef: React.RefObject<{ rows: number; cols: number }>;
+    /**
+     * Called when a worker result arrives for dimensions that no longer
+     * match the current grid (e.g. the user changed size while a prefetch
+     * was in-flight).  Allows the consumer to cache the result so it is
+     * available instantly when the user returns to that size.
+     */
+    onStaleResult?: (state: SlantState, rows: number, cols: number) => void;
 }
 
 /** Build a fresh hydrate state from raw worker output. */
@@ -70,6 +77,7 @@ export function useGenerationWorker({
     getInitialState,
     dispatchRef,
     dimsRef,
+    onStaleResult,
 }: UseGenerationWorkerConfig) {
     const [generating, setGenerating] = useState(false);
 
@@ -94,6 +102,11 @@ export function useGenerationWorker({
     // is the one the user wants — all earlier ones are discarded.
     const workerPendingRef = useRef(0);
 
+    // Keep the stale-result callback in a ref so the worker onmessage
+    // closure always sees the latest version without re-running the effect.
+    const onStaleResultRef = useRef(onStaleResult);
+    onStaleResultRef.current = onStaleResult;
+
     // --- Prefetch buffering ---
     // When a puzzle is solved we immediately start generating the next
     // one so the work overlaps with the win animation.  The result is
@@ -109,8 +122,18 @@ export function useGenerationWorker({
      */
     const flushOnArrivalRef = useRef(false);
 
-    /** Reset all prefetch bookkeeping. */
+    /**
+     * Reset all prefetch bookkeeping.  If a completed result is sitting
+     * in the buffer (i.e. the worker already finished but the animation
+     * hasn't ended yet), hand it to `onStaleResult` so the consumer can
+     * persist it for later — otherwise the result is silently lost when
+     * the user switches to a different size.
+     */
     const clearPrefetch = useCallback(() => {
+        if (prefetchBufferRef.current) {
+            const s = prefetchBufferRef.current;
+            onStaleResultRef.current?.(s, s.rows, s.cols);
+        }
         prefetchActiveRef.current = false;
         prefetchBufferRef.current = null;
         flushOnArrivalRef.current = false;
@@ -231,9 +254,14 @@ export function useGenerationWorker({
     const handleNextAsync = useCallback(() => {
         // If a prefetched result is already buffered, flush it instantly.
         if (prefetchBufferRef.current) {
+            const buffered = prefetchBufferRef.current;
+            // Null the buffer *before* clearPrefetch so it isn't
+            // redundantly persisted via onStaleResult — it's being
+            // used here, not discarded.
+            prefetchBufferRef.current = null;
             dispatchRef.current?.({
                 type: 'hydrate',
-                state: prefetchBufferRef.current,
+                state: buffered,
             });
             clearPrefetch();
             setGenerating(false);
@@ -294,21 +322,31 @@ export function useGenerationWorker({
                     return;
                 }
 
-                // The worker processes messages in FIFO order.  If
-                // multiple requests were queued (rapid clicks), only the
-                // last response matters — discard all earlier ones.
                 workerPendingRef.current--;
-                if (workerPendingRef.current > 0) return;
 
                 const { rows: r, cols: c, numbers, solution } = e.data.payload;
 
-                // Discard stale responses whose dimensions no longer match
-                // (e.g. a size change restored saved state and canceled generation).
+                // If the response is for a different size than currently
+                // displayed, hand it to the consumer for background caching
+                // instead of dispatching to game state.  This check runs
+                // before the pending-count discard so prefetch results
+                // that arrive alongside a newer request are still saved.
                 const dims = dimsRef.current;
                 if (r !== dims.rows || c !== dims.cols) {
-                    setGenerating(false);
+                    onStaleResultRef.current?.(
+                        buildHydrateState(r, c, numbers, solution),
+                        r,
+                        c,
+                    );
+                    if (workerPendingRef.current <= 0) {
+                        setGenerating(false);
+                    }
                     return;
                 }
+
+                // Multiple requests for the same dimensions may be queued
+                // (rapid clicks).  Only the last response matters.
+                if (workerPendingRef.current > 0) return;
 
                 const newState = buildHydrateState(r, c, numbers, solution);
 
