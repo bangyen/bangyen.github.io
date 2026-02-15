@@ -1,6 +1,6 @@
 import type { SxProps, Theme } from '@mui/material';
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { GlobalHeader } from './GlobalHeader';
 
@@ -9,6 +9,9 @@ import { toSxArray } from '@/utils/muiUtils';
 
 interface PageLayoutProps {
     children: React.ReactNode;
+    /** When provided, sets document.title so every page manages its title
+     *  through the layout rather than ad-hoc useEffect calls. */
+    title?: string;
     showHome?: boolean;
     githubUrl?: string;
     infoUrl?: string;
@@ -21,10 +24,12 @@ interface PageLayoutProps {
 
 /**
  * Base layout component for all pages in the application.
- * Provides the global header and a main content area.
+ * Provides the global header, a main content area, and optional
+ * document.title management so pages don't need standalone effects.
  */
 export function PageLayout({
     children,
+    title,
     showHome = true,
     githubUrl,
     infoUrl,
@@ -34,6 +39,9 @@ export function PageLayout({
     headerTransparent = true,
     onClick,
 }: PageLayoutProps) {
+    useEffect(() => {
+        if (title) document.title = title;
+    }, [title]);
     return (
         <Box
             onClick={onClick}

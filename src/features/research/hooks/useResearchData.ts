@@ -3,13 +3,14 @@ import { useState, useEffect, useRef } from 'react';
 /**
  * Manages the load-data-or-fallback lifecycle common to every research page.
  *
- * Each research demo sets `document.title`, shows a loading spinner while
- * fetching experiment data, and falls back to synthetic data on failure.
- * This hook encapsulates that shared pattern so page components only
- * declare *what* to load, not *how*.
+ * Shows a loading spinner while fetching experiment data and falls back to
+ * synthetic data on failure.  This hook encapsulates that shared pattern so
+ * page components only declare *what* to load, not *how*.
+ *
+ * Document title is now managed by PageLayout's `title` prop instead of
+ * being set here.
  */
 export function useResearchData<T>(
-    pageTitle: string,
     loader: () => Promise<T>,
     fallback: () => T,
 ): { data: T; loading: boolean } {
@@ -23,8 +24,6 @@ export function useResearchData<T>(
     fallbackRef.current = fallback;
 
     useEffect(() => {
-        document.title = pageTitle;
-
         const loadData = async () => {
             setLoading(true);
 
@@ -39,7 +38,7 @@ export function useResearchData<T>(
         };
 
         void loadData();
-    }, [pageTitle]);
+    }, []);
 
     return { data, loading };
 }

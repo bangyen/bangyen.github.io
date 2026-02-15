@@ -47,13 +47,6 @@ const StepTitle = ({ children }: { children: React.ReactNode }) => (
     </Typography>
 );
 
-// Type assertion for GlassCard component
-const TypedGlassCard = GlassCard as React.ComponentType<{
-    children?: React.ReactNode;
-    sx?: Record<string, unknown>;
-    onClick?: (event: React.MouseEvent) => void;
-}>;
-
 // ---------------------------------------------------------------------------
 // GameInfo component
 // ---------------------------------------------------------------------------
@@ -81,7 +74,7 @@ interface GameInfoProps {
     /** Additional steps rendered after the example (e.g. a calculator). */
     extraSteps?: React.ReactNode[];
     /** Optional sx overrides merged onto the GlassCard container. */
-    cardSx?: Record<string, unknown>;
+    cardSx?: SxProps<Theme>;
     /** Optional per-step override for the scrollable content area sx. */
     contentSxOverride?: (step: number) => SxProps<Theme>;
 }
@@ -247,11 +240,14 @@ export function GameInfo({
             sx={infoModalSx}
         >
             <Box sx={infoOuterBoxSx}>
-                <TypedGlassCard
+                <GlassCard
                     onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
                     }}
-                    sx={{ ...infoCardSx, ...cardSx }}
+                    sx={{
+                        ...(infoCardSx as Record<string, unknown>),
+                        ...(cardSx as Record<string, unknown>),
+                    }}
                 >
                     {/* Content Area */}
                     <Box sx={contentSx}>
@@ -326,7 +322,7 @@ export function GameInfo({
                             Next
                         </Button>
                     </Box>
-                </TypedGlassCard>
+                </GlassCard>
             </Box>
         </Modal>
     );

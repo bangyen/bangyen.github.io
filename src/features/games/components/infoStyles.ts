@@ -37,7 +37,7 @@ export const infoOuterBoxSx: SxProps<Theme> = {
 };
 
 /** GlassCard container for the entire Info modal content. */
-export const infoCardSx: Record<string, unknown> = {
+export const infoCardSx: SxProps<Theme> = {
     width: '100%',
     maxWidth: '1000px',
     height: { xs: '630px', sm: '495px' },

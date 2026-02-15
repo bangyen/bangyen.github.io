@@ -6,17 +6,17 @@ import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, SPACING } from '@/config/theme';
 
 export interface TrophyOverlayProps {
-    /** Whether the win card is visible. */
-    show: boolean;
+    /** Whether the win card is visible (default false). */
+    show?: boolean;
     /** Callback to advance to the next puzzle (used by auto-advance hook). */
     onReset?: () => void;
-    /** Board size in rem, used to scale the trophy icon. */
-    size: number;
-    /** Ratio applied to size for the icon font-size. */
-    iconSizeRatio: number;
-    /** Primary trophy color. */
+    /** Board size in rem, used to scale the trophy icon (default 0). */
+    size?: number;
+    /** Ratio applied to size for the icon font-size (default 1). */
+    iconSizeRatio?: number;
+    /** Primary trophy color (default COLORS.primary.main). */
     primaryColor?: string;
-    /** Secondary trophy color (used when useSecondary is true). */
+    /** Secondary trophy color (used when useSecondary is true, default COLORS.primary.main). */
     secondaryColor?: string;
     /** Whether to use the secondary color for the trophy. */
     useSecondary?: boolean;
@@ -31,12 +31,12 @@ export interface TrophyOverlayProps {
  * so no explicit button is needed.
  */
 export function TrophyOverlay({
-    show,
+    show = false,
     onReset: _onReset,
-    size,
-    iconSizeRatio,
-    primaryColor,
-    secondaryColor,
+    size = 0,
+    iconSizeRatio = 1,
+    primaryColor = COLORS.primary.main,
+    secondaryColor = COLORS.primary.main,
     useSecondary = false,
     showLabel = true,
 }: TrophyOverlayProps) {

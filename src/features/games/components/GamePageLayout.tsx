@@ -20,7 +20,7 @@ interface GamePageLayoutProps {
     paddingBottom?: string | object;
     contentSx?: SxProps<Theme>;
     /** Props forwarded directly to the TrophyOverlay component. */
-    trophyProps?: Partial<TrophyOverlayProps>;
+    trophyProps?: TrophyOverlayProps;
     boardSx?: SxProps<Theme>;
     onClick?: (e: React.MouseEvent) => void;
 }
@@ -34,6 +34,7 @@ export function GamePageLayout({
     children,
     controls,
     infoUrl,
+    title,
     background = COLORS.surface.background,
     paddingBottom = { xs: '80px', md: '120px' },
     contentSx = {},
@@ -41,23 +42,13 @@ export function GamePageLayout({
     boardSx,
     onClick,
 }: GamePageLayoutProps) {
-    const {
-        show = false,
-        onReset,
-        size = 0,
-        iconSizeRatio = 1,
-        primaryColor = COLORS.primary.main,
-        secondaryColor = COLORS.primary.main,
-        useSecondary,
-        showLabel,
-    } = trophyProps;
-
     return (
         <ErrorBoundary
             FallbackComponent={FeatureErrorFallback}
             fallbackProps={{ title: 'Game Error', resetLabel: 'Reset Game' }}
         >
             <PageLayout
+                title={title}
                 infoUrl={infoUrl}
                 background={background}
                 containerSx={{
@@ -108,16 +99,7 @@ export function GamePageLayout({
                         }
                     >
                         {children}
-                        <TrophyOverlay
-                            show={show}
-                            onReset={onReset}
-                            size={size}
-                            iconSizeRatio={iconSizeRatio}
-                            primaryColor={primaryColor}
-                            secondaryColor={secondaryColor}
-                            useSecondary={useSecondary}
-                            showLabel={showLabel}
-                        />
+                        <TrophyOverlay {...trophyProps} />
                     </Box>
                 </Box>
                 {controls}

@@ -19,6 +19,7 @@ const ResearchChart = React.lazy(() =>
 
 export const ResearchDemo = <T,>({
     title,
+    pageTitle,
     subtitle,
     githubUrl,
     chartData = [],
@@ -84,7 +85,7 @@ export const ResearchDemo = <T,>({
                 resetLabel: 'Reset Component',
             }}
         >
-            <PageLayout githubUrl={githubUrl}>
+            <PageLayout title={pageTitle ?? title} githubUrl={githubUrl}>
                 <Grid
                     container={true}
                     flex={1}

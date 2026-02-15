@@ -1,4 +1,5 @@
 import { Grid, Typography, Box, Fade, Button } from '@mui/material';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { HomeRounded } from '@/components/icons';
@@ -11,7 +12,10 @@ import {
 } from '@/config/theme';
 
 export function Error(): React.ReactElement {
-    document.title = PAGE_TITLES.error;
+    useEffect(() => {
+        document.title = PAGE_TITLES.error;
+    }, []);
+
     return (
         <Grid
             container

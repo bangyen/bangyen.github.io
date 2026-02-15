@@ -55,6 +55,8 @@ export interface Control {
 
 export interface ResearchDemoProps<T> {
     title: string;
+    /** Document title set via PageLayout. Falls back to `title` if omitted. */
+    pageTitle?: string;
     subtitle: string;
     githubUrl: string;
     chartData?: T[];
