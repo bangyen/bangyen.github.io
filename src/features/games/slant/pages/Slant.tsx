@@ -53,12 +53,17 @@ export default function Slant() {
     > | null>(null);
     const dimsRef = useRef({ rows: 0, cols: 0 });
 
-    const { generating, requestGeneration, handleNextAsync, prefetch } =
-        useGenerationWorker({
-            getInitialState,
-            dispatchRef,
-            dimsRef,
-        });
+    const {
+        generating,
+        requestGeneration,
+        handleNextAsync,
+        prefetch,
+        cancelGeneration,
+    } = useGenerationWorker({
+        getInitialState,
+        dispatchRef,
+        dimsRef,
+    });
 
     const { rows, cols, state, dispatch, size, controlsProps } = useBaseGame<
         SlantState,
@@ -120,14 +125,35 @@ export default function Slant() {
     dispatchRef.current = dispatch;
     dimsRef.current = { rows, cols };
 
-    // Request a new puzzle from the worker whenever grid dimensions change.
+    // Request a new puzzle from the worker whenever grid dimensions change,
+    // unless there is already an unsolved puzzle saved for the new size.
     const prevDimsRef = useRef<string>(`${String(rows)},${String(cols)}`);
     useEffect(() => {
         const key = `${String(rows)},${String(cols)}`;
         if (key === prevDimsRef.current) return;
         prevDimsRef.current = key;
+
+        // When persistence is active, check if there is a saved unsolved
+        // puzzle for the new dimensions.  If so, cancel any in-flight
+        // generation and let useGamePersistence restore the cached state.
+        if (!isGhostMode) {
+            const persistKey = `${STORAGE_KEYS.STATE}-${String(rows)}x${String(cols)}`;
+            const saved = localStorage.getItem(persistKey);
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved) as { solved?: boolean };
+                    if (!parsed.solved) {
+                        cancelGeneration();
+                        return;
+                    }
+                } catch {
+                    // Invalid JSON — fall through to regeneration
+                }
+            }
+        }
+
         requestGeneration(rows, cols);
-    }, [rows, cols, requestGeneration]);
+    }, [rows, cols, requestGeneration, cancelGeneration, isGhostMode]);
 
     // Prefetch the next puzzle as soon as the current one is solved so
     // generation overlaps with the win animation instead of waiting.
