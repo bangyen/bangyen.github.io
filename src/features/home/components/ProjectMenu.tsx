@@ -30,7 +30,7 @@ export function MenuButton(): React.ReactElement {
     };
 
     return (
-        <Box>
+        <Box sx={{ display: 'inline-flex', alignItems: 'center' }}>
             <TooltipButton
                 title="Projects Menu"
                 id="projects-menu-button"
