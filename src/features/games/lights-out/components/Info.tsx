@@ -2,15 +2,34 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 import { getProduct } from '../utils';
 import { getInput, getOutput, useHandler } from './Calculator';
-import { INFO_TITLES } from './Content';
+import Example from './Example';
 import { InfoCalculator } from './InfoCalculator';
-import { InfoExample } from './InfoExample';
-import { InfoInstructions } from './InfoInstructions';
 import type { Palette, PropsFactory } from '../../components/Board';
-import { InfoModal } from '../../components/InfoModal';
+import { GameInfo } from '../../components/GameInfo';
 import { useDrag } from '../../hooks/useDrag';
 
+import { KeyboardArrowDown, Calculate, Replay } from '@/components/icons';
 import { useMobile } from '@/hooks';
+
+const INFO_TITLES = ['Chasing Lights', 'How It Works', 'Calculator'];
+
+const INSTRUCTIONS = [
+    {
+        Icon: KeyboardArrowDown,
+        title: 'Chase to Bottom',
+        text: 'Turn off rows from top to bottom by clicking lights in each row to push them down.',
+    },
+    {
+        Icon: Calculate,
+        title: 'Use Calulator',
+        text: 'Enter the remaining lights pattern from the bottom row into the calculator on the last page.',
+    },
+    {
+        Icon: Replay,
+        title: 'Chase Again',
+        text: 'Apply the solution pattern to the top row, then chase them down again to solve the puzzle.',
+    },
+];
 
 interface InfoProps {
     rows: number;
@@ -42,6 +61,7 @@ export default function Info(props: InfoProps): React.ReactElement {
         getBackProps,
     } = props;
     const isMobile = useMobile('md');
+    const isMobileSm = useMobile('sm');
 
     // Calculator State (hoisted to persist across steps)
     const [calcRow, setCalcRow] = useState<number[]>(new Array(cols).fill(0));
@@ -82,19 +102,26 @@ export default function Info(props: InfoProps): React.ReactElement {
         setCalcRow(new Array(cols).fill(0));
     };
 
+    // The example is always 3×3; use smaller cells on mobile.
+    const exampleSize = isMobileSm ? 3 : 4;
+
     return (
-        <InfoModal
+        <GameInfo
             open={open}
             toggleOpen={toggleOpen}
             titles={INFO_TITLES}
-            steps={[
-                <InfoInstructions key="instructions" />,
-                <InfoExample
-                    key="example"
+            instructions={INSTRUCTIONS}
+            exampleContent={
+                <Example
+                    dims={3}
+                    size={exampleSize}
+                    start={[1, 3, 8]}
                     palette={palette}
                     getFrontProps={getFrontProps}
                     getBackProps={getBackProps}
-                />,
+                />
+            }
+            extraSteps={[
                 <InfoCalculator
                     key="calculator"
                     cols={cols}

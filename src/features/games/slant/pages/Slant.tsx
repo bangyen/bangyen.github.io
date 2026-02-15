@@ -1,5 +1,5 @@
 import type { SxProps, Theme } from '@mui/material';
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import React, {
     useEffect,
     useMemo,
@@ -10,14 +10,13 @@ import React, {
 
 import { useMobile } from '../../../../hooks';
 import { GameControls } from '../../components/GameControls';
+import { GameInfo } from '../../components/GameInfo';
 import { GamePageLayout } from '../../components/GamePageLayout';
-import { InfoModal } from '../../components/InfoModal';
 import { infoContentSx } from '../../components/infoStyles';
 import { GAME_CONSTANTS } from '../../config';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
-import { InfoExample } from '../components/InfoExample';
-import { InfoInstructions } from '../components/InfoInstructions';
+import Example from '../components/Example';
 import { SlantBoardContent } from '../components/SlantBoardContent';
 import {
     NUMBER_SIZE_RATIO,
@@ -31,12 +30,37 @@ import type { SlantAction, SlantState } from '../types';
 import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import { getBackProps, getFrontProps } from '../utils/renderers';
 
+import {
+    TextureRounded,
+    TagRounded,
+    NotInterestedRounded,
+    Psychology,
+} from '@/components/icons';
 import { PAGE_TITLES } from '@/config/constants';
+import { COLORS } from '@/config/theme';
 import { useCellFactory } from '@/utils/gameUtils';
 import { toSxArray } from '@/utils/muiUtils';
 import { createCellIndex } from '@/utils/types';
 
 const SLANT_INFO_TITLES = ['Slant Rules', 'Example'];
+
+const SLANT_INSTRUCTIONS = [
+    {
+        Icon: TextureRounded,
+        title: 'Fill with Slashes',
+        text: String.raw`Place a forward (/) or backward (\) slash in every cell of the grid.`,
+    },
+    {
+        Icon: TagRounded,
+        title: 'Match the Numbers',
+        text: 'Each number at a corner tells how many slashes touch that point.',
+    },
+    {
+        Icon: NotInterestedRounded,
+        title: 'No Loops',
+        text: 'Slashes must never form a closed loop — every path stays open.',
+    },
+];
 
 const SLANT_INFO_CARD_SX = {
     height: { xs: '660px', sm: '525px' },
@@ -276,19 +300,37 @@ export default function Slant() {
         >
             <Box onClick={handleBoxClick}>{boardContent}</Box>
             {infoOpen && (
-                <InfoModal
+                <GameInfo
                     open={infoOpen}
                     toggleOpen={toggleInfo}
                     titles={SLANT_INFO_TITLES}
+                    instructions={SLANT_INSTRUCTIONS}
+                    instructionsFooter={
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                px: 2,
+                                ml: { xs: 5, sm: 4 },
+                                pt: { xs: 0, sm: 3 },
+                                mt: { xs: -2, sm: 0 },
+                            }}
+                        >
+                            <Button
+                                variant="outlined"
+                                startIcon={<Psychology />}
+                                onClick={handleOpenCalculator}
+                                sx={{
+                                    borderColor: COLORS.border.subtle,
+                                    color: COLORS.text.secondary,
+                                }}
+                            >
+                                Open Calculator
+                            </Button>
+                        </Box>
+                    }
+                    exampleContent={<Example size={5} />}
                     cardSx={SLANT_INFO_CARD_SX}
                     contentSxOverride={slantInfoContentSx}
-                    steps={[
-                        <InfoInstructions
-                            key="instructions"
-                            onOpenCalculator={handleOpenCalculator}
-                        />,
-                        <InfoExample key="example" />,
-                    ]}
                 />
             )}
         </GamePageLayout>
