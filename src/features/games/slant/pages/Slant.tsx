@@ -232,9 +232,10 @@ export default function Slant() {
         [isGhostMode],
     );
 
-    const handleToggleGhostMode = useCallback(() => {
-        setIsGhostMode(prev => !prev);
-    }, []);
+    const handleOpenCalculator = useCallback(() => {
+        toggleInfo();
+        setIsGhostMode(true);
+    }, [toggleInfo]);
 
     const controls = (
         <SlantControls
@@ -242,7 +243,6 @@ export default function Slant() {
             controlsProps={controlsProps}
             generating={generating}
             onRefresh={handleNextAsync}
-            onToggleGhostMode={handleToggleGhostMode}
             onOpenInfo={toggleInfo}
         />
     );
@@ -294,7 +294,12 @@ export default function Slant() {
         >
             <Box onClick={handleBoxClick}>{boardContent}</Box>
             {infoOpen && (
-                <Info open={infoOpen} size={size} toggleOpen={toggleInfo} />
+                <Info
+                    open={infoOpen}
+                    size={size}
+                    toggleOpen={toggleInfo}
+                    onOpenCalculator={handleOpenCalculator}
+                />
             )}
         </GamePageLayout>
     );
