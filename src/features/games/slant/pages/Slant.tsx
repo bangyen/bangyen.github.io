@@ -53,6 +53,24 @@ export default function Slant() {
     > | null>(null);
     const dimsRef = useRef({ rows: 0, cols: 0 });
 
+    // Save a worker result that arrived for a size the user already left.
+    // Lets the background generation persist so the puzzle is ready when
+    // the user switches back instead of regenerating from scratch.
+    const handleStaleResult = useCallback(
+        (staleState: SlantState, r: number, c: number) => {
+            if (isGhostMode) return;
+            const persistKey = `${STORAGE_KEYS.STATE}-${String(r)}x${String(c)}`;
+            const serialized = {
+                ...staleState,
+                errorNodes: [...staleState.errorNodes],
+                cycleCells: [...staleState.cycleCells],
+                satisfiedNodes: [...staleState.satisfiedNodes],
+            };
+            localStorage.setItem(persistKey, JSON.stringify(serialized));
+        },
+        [isGhostMode],
+    );
+
     const {
         generating,
         requestGeneration,
@@ -63,6 +81,7 @@ export default function Slant() {
         getInitialState,
         dispatchRef,
         dimsRef,
+        onStaleResult: handleStaleResult,
     });
 
     const { rows, cols, state, dispatch, size, controlsProps } = useBaseGame<
