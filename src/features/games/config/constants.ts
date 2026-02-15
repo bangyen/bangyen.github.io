@@ -20,16 +20,10 @@ export const GAME_CONSTANTS = {
     },
 };
 
-export const GRID_CONFIG = {
-    cellSize: {
-        divisor: 4,
-        fontSizeMultiplier: 0.375,
-    },
-};
-
-export function getSpace(size: number): string {
-    return `${(size * GRID_CONFIG.cellSize.divisor).toString()}px`;
-}
+// Re-export from shared config so existing feature-level imports keep working.
+// Uses a relative path (not @/ alias) because this module is transitively
+// imported by web-worker entry points whose Rollup build lacks the alias.
+export { GRID_CONFIG, getSpace } from '../../../config/theme/spacing';
 
 /** Shared board styling constants used by all game pages. */
 export const BOARD_STYLES = {

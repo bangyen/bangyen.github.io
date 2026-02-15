@@ -28,6 +28,8 @@ describe('Board Component', () => {
                 size={20}
                 rows={2}
                 cols={2}
+                cellRows={1}
+                cellCols={1}
             />,
         );
 
@@ -37,7 +39,7 @@ describe('Board Component', () => {
         expect(screen.getByTestId('front-1-0')).toBeInTheDocument();
         expect(screen.getByTestId('front-1-1')).toBeInTheDocument();
 
-        // Check cell grid items (rows-1 x cols-1, so 1x1)
+        // Check cell grid items (cellRows x cellCols = 1x1)
         expect(screen.getByTestId('back-0-0')).toBeInTheDocument();
     });
 

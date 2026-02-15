@@ -1,8 +1,12 @@
 import { Box } from '@mui/material';
 import React, { useMemo, memo } from 'react';
 
-import { TYPOGRAPHY, COMPONENT_VARIANTS } from '@/config/theme';
-import { GRID_CONFIG, getSpace } from '@/features/games/config';
+import {
+    TYPOGRAPHY,
+    COMPONENT_VARIANTS,
+    GRID_CONFIG,
+    getSpace,
+} from '@/config/theme';
 
 interface CellProps {
     size: number;

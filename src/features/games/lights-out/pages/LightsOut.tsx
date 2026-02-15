@@ -125,6 +125,8 @@ export default function LightsOut() {
                 size={size}
                 rows={rows}
                 cols={cols}
+                cellRows={rows - 1}
+                cellCols={cols - 1}
                 overlayProps={frontProps}
                 cellProps={backProps}
             />

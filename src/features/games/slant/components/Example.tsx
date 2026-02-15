@@ -2,6 +2,7 @@ import { Box } from '@mui/material';
 import React, { useState, useEffect, useMemo } from 'react';
 
 import { Board } from '../../components/Board';
+import { TrophyOverlay } from '../../components/TrophyOverlay';
 import { SLANT_STYLES, NUMBER_SIZE_RATIO } from '../constants';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
@@ -13,9 +14,7 @@ import {
 } from '../utils/exampleData';
 import { getSatisfiedNodes } from '../utils/validation';
 
-import { EmojiEventsRounded } from '@/components/icons';
-import { GlassCard } from '@/components/ui/GlassCard';
-import { COLORS, ANIMATIONS, SPACING } from '@/config/theme';
+import { COLORS, ANIMATIONS } from '@/config/theme';
 import { getPosKey } from '@/utils/gameUtils';
 
 /** Interval between animation frames (ms). */
@@ -229,49 +228,19 @@ export default function Example({ size }: ExampleProps): React.ReactElement {
                     size={size}
                     rows={EXAMPLE_DIMS + 1}
                     cols={EXAMPLE_DIMS + 1}
+                    cellRows={EXAMPLE_DIMS}
+                    cellCols={EXAMPLE_DIMS}
                     overlayProps={frontProps}
                     cellProps={backProps}
                     overlayLayerSx={{ pointerEvents: 'none' }}
                 />
-                {/* Trophy overlay when solved */}
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        inset: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        opacity: isSolved ? 1 : 0,
-                        transform: isSolved ? 'scale(1)' : 'scale(0.5)',
-                        visibility: isSolved ? 'visible' : 'hidden',
-                        transition:
-                            'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-                        pointerEvents: 'none',
-                        zIndex: 10,
-                        backgroundColor: 'transparent',
-                    }}
-                >
-                    <GlassCard
-                        padding={SPACING.padding.md}
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            gap: 1,
-                            height: 'auto',
-                            width: 'auto',
-                            maxWidth: '80%',
-                        }}
-                    >
-                        <EmojiEventsRounded
-                            sx={{
-                                fontSize: { xs: '2rem', sm: '3rem' },
-                                color: COLORS.primary.main,
-                                filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))',
-                            }}
-                        />
-                    </GlassCard>
-                </Box>
+                <TrophyOverlay
+                    show={isSolved}
+                    size={size}
+                    iconSizeRatio={1}
+                    primaryColor={COLORS.primary.main}
+                    showLabel={false}
+                />
             </Box>
         </Box>
     );

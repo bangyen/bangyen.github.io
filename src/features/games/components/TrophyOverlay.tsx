@@ -20,6 +20,8 @@ interface TrophyOverlayProps {
     secondaryColor?: string;
     /** Whether to use the secondary color for the trophy. */
     useSecondary?: boolean;
+    /** Whether to show the "Solved!" label beneath the icon (default true). */
+    showLabel?: boolean;
 }
 
 /**
@@ -36,6 +38,7 @@ export function TrophyOverlay({
     primaryColor,
     secondaryColor,
     useSecondary = false,
+    showLabel = true,
 }: TrophyOverlayProps) {
     const activeColor = useSecondary ? secondaryColor : primaryColor;
 
@@ -76,16 +79,18 @@ export function TrophyOverlay({
                             filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))',
                         }}
                     />
-                    <Typography
-                        variant="h6"
-                        sx={{
-                            color: COLORS.text.primary,
-                            fontWeight: 600,
-                            letterSpacing: '0.02em',
-                        }}
-                    >
-                        Solved!
-                    </Typography>
+                    {showLabel && (
+                        <Typography
+                            variant="h6"
+                            sx={{
+                                color: COLORS.text.primary,
+                                fontWeight: 600,
+                                letterSpacing: '0.02em',
+                            }}
+                        >
+                            Solved!
+                        </Typography>
+                    )}
                 </GlassCard>
             )}
         </Box>

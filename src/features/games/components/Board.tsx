@@ -10,12 +10,25 @@ export interface BoardProps {
     /** Cell factory for the bottom layer (base). */
     cellProps: (row: number, col: number) => Record<string, unknown>;
     size: number;
+    /** Rows for the overlay (top) layer. */
     rows: number;
+    /** Cols for the overlay (top) layer. */
     cols: number;
+    /** Rows for the cell (bottom) layer. Defaults to `rows` (same as overlay). */
+    cellRows?: number;
+    /** Cols for the cell (bottom) layer. Defaults to `cols` (same as overlay). */
+    cellCols?: number;
     overlayLayerSx?: object;
     cellLayerSx?: object;
 }
 
+/**
+ * Two-layer stacked grid used by all game boards.
+ *
+ * Both layers default to the same dimensions (`rows` x `cols`).
+ * Pass `cellRows` / `cellCols` when the bottom layer should be a
+ * different size (e.g. a dual grid where vertices and faces differ).
+ */
 export function Board(props: BoardProps): React.ReactElement {
     const {
         overlayProps,
@@ -23,6 +36,8 @@ export function Board(props: BoardProps): React.ReactElement {
         size,
         rows,
         cols,
+        cellRows = rows,
+        cellCols = cols,
         overlayLayerSx,
         cellLayerSx,
     } = props;
@@ -52,8 +67,8 @@ export function Board(props: BoardProps): React.ReactElement {
                 <CustomGrid
                     space={0}
                     size={size}
-                    rows={rows - 1}
-                    cols={cols - 1}
+                    rows={cellRows}
+                    cols={cellCols}
                     cellProps={cellProps}
                     {...(isCellDecorative
                         ? { role: 'presentation', 'aria-hidden': true }
