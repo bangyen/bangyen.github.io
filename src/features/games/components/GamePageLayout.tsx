@@ -2,13 +2,30 @@ import type { SxProps, Theme } from '@mui/material';
 import { Box } from '@mui/material';
 import React from 'react';
 
-import { GameErrorBoundary } from './GameErrorBoundary';
 import { TrophyOverlay } from './TrophyOverlay';
 import { BOARD_STYLES } from '../config';
 
+import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
+import { FeatureErrorFallback } from '@/components/layout/FeatureErrorFallback';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { COLORS } from '@/config/theme';
 import { toSxArray } from '@/utils/muiUtils';
+
+/** Stable fallback component for the game error boundary. */
+const GameErrorFallback = ({
+    error,
+    resetErrorBoundary,
+}: {
+    error: Error | null;
+    resetErrorBoundary: () => void;
+}) => (
+    <FeatureErrorFallback
+        error={error}
+        resetErrorBoundary={resetErrorBoundary}
+        title="Game Error"
+        resetLabel="Reset Game"
+    />
+);
 
 interface GamePageLayoutProps {
     children: React.ReactNode;
@@ -56,7 +73,7 @@ export function GamePageLayout({
     onClick,
 }: GamePageLayoutProps) {
     return (
-        <GameErrorBoundary>
+        <ErrorBoundary FallbackComponent={GameErrorFallback}>
             <PageLayout
                 infoUrl={infoUrl}
                 background={background}
@@ -121,6 +138,6 @@ export function GamePageLayout({
                 </Box>
                 {controls}
             </PageLayout>
-        </GameErrorBoundary>
+        </ErrorBoundary>
     );
 }

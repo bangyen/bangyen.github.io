@@ -1,8 +1,7 @@
 import type { SxProps, Theme } from '@mui/material';
-import { Backdrop, Modal, Box, IconButton } from '@mui/material';
+import { Backdrop, Modal, Box, IconButton, Typography } from '@mui/material';
 import React, { useState } from 'react';
 
-import { StepTitle } from './InfoContent';
 import { InfoNavigation } from './InfoNavigation';
 import {
     infoBackdropSx,
@@ -17,6 +16,22 @@ import {
 
 import { CloseRounded } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
+import { COLORS, TYPOGRAPHY } from '@/config/theme';
+
+/** Renders the title for the current step inside the modal header. */
+const StepTitle = ({ children }: { children: React.ReactNode }) => (
+    <Typography
+        variant="h5"
+        sx={{
+            color: COLORS.text.primary,
+            fontWeight: TYPOGRAPHY.fontWeight.bold,
+            textAlign: 'left',
+            fontSize: TYPOGRAPHY.fontSize.h2,
+        }}
+    >
+        {children}
+    </Typography>
+);
 
 // Type assertion for GlassCard component
 const TypedGlassCard = GlassCard as React.ComponentType<{

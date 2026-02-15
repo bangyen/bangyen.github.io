@@ -2,13 +2,30 @@ import { Box, Grid, useMediaQuery } from '@mui/material';
 import React from 'react';
 
 import ResearchControls from './ResearchControls';
-import { ResearchErrorBoundary } from './ResearchErrorBoundary';
 import { ResearchHeader } from './ResearchHeader';
 import ResearchViewSelector from './ResearchViewSelector';
 import type { ResearchDemoProps } from '../types';
 
+import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
+import { FeatureErrorFallback } from '@/components/layout/FeatureErrorFallback';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
+
+/** Stable fallback component for the research error boundary. */
+const ResearchErrorFallback = ({
+    error,
+    resetErrorBoundary,
+}: {
+    error: Error | null;
+    resetErrorBoundary: () => void;
+}) => (
+    <FeatureErrorFallback
+        error={error}
+        resetErrorBoundary={resetErrorBoundary}
+        title="Research Tool Error"
+        resetLabel="Reset Component"
+    />
+);
 
 const ResearchChart = React.lazy(() =>
     import('./ResearchChart').then(module => ({
@@ -76,7 +93,7 @@ const ResearchDemo = <T,>({
             : 'Data Visualization');
 
     return (
-        <ResearchErrorBoundary>
+        <ErrorBoundary FallbackComponent={ResearchErrorFallback}>
             <PageLayout githubUrl={githubUrl}>
                 <Grid
                     container={true}
@@ -168,7 +185,7 @@ const ResearchDemo = <T,>({
                     </Grid>
                 </Grid>
             </PageLayout>
-        </ResearchErrorBoundary>
+        </ErrorBoundary>
     );
 };
 
