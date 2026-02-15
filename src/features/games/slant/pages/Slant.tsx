@@ -53,7 +53,7 @@ export default function Slant() {
     > | null>(null);
     const dimsRef = useRef({ rows: 0, cols: 0 });
 
-    const { generating, requestGeneration, handleNextAsync } =
+    const { generating, requestGeneration, handleNextAsync, prefetch } =
         useGenerationWorker({
             getInitialState,
             dispatchRef,
@@ -128,6 +128,14 @@ export default function Slant() {
         prevDimsRef.current = key;
         requestGeneration(rows, cols);
     }, [rows, cols, requestGeneration]);
+
+    // Prefetch the next puzzle as soon as the current one is solved so
+    // generation overlaps with the win animation instead of waiting.
+    useEffect(() => {
+        if (state.solved && !isGhostMode) {
+            prefetch(rows, cols);
+        }
+    }, [state.solved, isGhostMode, rows, cols, prefetch]);
 
     const [ghostMoves, setGhostMoves] = useState<Map<string, CellState>>(
         new Map(),
