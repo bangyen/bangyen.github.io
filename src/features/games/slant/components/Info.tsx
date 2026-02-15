@@ -47,7 +47,6 @@ interface InfoProps {
  */
 export default function Info({
     open,
-    size,
     toggleOpen,
     onOpenCalculator,
 }: InfoProps): React.ReactElement {
@@ -113,13 +112,13 @@ export default function Info({
                         </Box>
 
                         {/* Step Content */}
-                        <Box sx={infoStepContentSx}>
+                        <Box sx={infoStepContentSx(step)}>
                             {step === 0 && (
                                 <InfoInstructions
                                     onOpenCalculator={onOpenCalculator}
                                 />
                             )}
-                            {step === 1 && <InfoExample size={size} />}
+                            {step === 1 && <InfoExample />}
                         </Box>
                     </Box>
 

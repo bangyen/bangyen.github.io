@@ -148,7 +148,7 @@ export default function Info(props: InfoProps): React.ReactElement {
                         </Box>
 
                         {/* Step Content */}
-                        <Box sx={infoStepContentSx}>
+                        <Box sx={infoStepContentSx(step)}>
                             {step === 0 && <InfoInstructions />}
                             {step === 1 && (
                                 <InfoExample
