@@ -11,22 +11,6 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { COLORS } from '@/config/theme';
 import { toSxArray } from '@/utils/muiUtils';
 
-/** Stable fallback component for the game error boundary. */
-const GameErrorFallback = ({
-    error,
-    resetErrorBoundary,
-}: {
-    error: Error | null;
-    resetErrorBoundary: () => void;
-}) => (
-    <FeatureErrorFallback
-        error={error}
-        resetErrorBoundary={resetErrorBoundary}
-        title="Game Error"
-        resetLabel="Reset Game"
-    />
-);
-
 interface GamePageLayoutProps {
     children: React.ReactNode;
     controls: React.ReactNode;
@@ -73,7 +57,10 @@ export function GamePageLayout({
     onClick,
 }: GamePageLayoutProps) {
     return (
-        <ErrorBoundary FallbackComponent={GameErrorFallback}>
+        <ErrorBoundary
+            FallbackComponent={FeatureErrorFallback}
+            fallbackProps={{ title: 'Game Error', resetLabel: 'Reset Game' }}
+        >
             <PageLayout
                 infoUrl={infoUrl}
                 background={background}

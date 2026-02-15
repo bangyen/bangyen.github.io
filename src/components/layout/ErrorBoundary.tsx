@@ -14,7 +14,10 @@ interface ErrorBoundaryProps {
     FallbackComponent?: React.ComponentType<{
         error: Error | null;
         resetErrorBoundary: () => void;
+        [key: string]: unknown;
     }>;
+    /** Extra props forwarded to FallbackComponent alongside error and resetErrorBoundary. */
+    fallbackProps?: Record<string, unknown>;
 }
 
 /**
@@ -62,7 +65,8 @@ class ErrorBoundary extends React.Component<
 
     override render() {
         const { hasError, error, errorInfo } = this.state;
-        const { children, fallback, FallbackComponent } = this.props;
+        const { children, fallback, FallbackComponent, fallbackProps } =
+            this.props;
 
         if (hasError) {
             if (FallbackComponent) {
@@ -70,6 +74,7 @@ class ErrorBoundary extends React.Component<
                     <FallbackComponent
                         error={error}
                         resetErrorBoundary={this.handleReset}
+                        {...fallbackProps}
                     />
                 );
             }
