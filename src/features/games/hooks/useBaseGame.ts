@@ -15,7 +15,12 @@
 
 import { useReducer, useEffect, useMemo, useCallback, useRef } from 'react';
 
-import { DEFAULT_BOARD_CONFIG, DEFAULT_GRID_CONFIG } from '../config';
+import {
+    DEFAULT_BOARD_CONFIG,
+    DEFAULT_GRID_CONFIG,
+    GAME_CONSTANTS,
+    createStorageKeys,
+} from '../config';
 import { useGamePersistence } from './useGamePersistence';
 import { useGridSize } from './useGridSize';
 import { usePageTitle } from './usePageTitle';
@@ -25,55 +30,64 @@ import { useWinTransition } from './useWinTransition';
 import type { BaseGameState, BaseGameAction } from '@/utils/gameUtils';
 
 /**
- * Configuration for initializing a game with full state management.
+ * Flat configuration for initializing a game with full state management.
+ *
+ * Combines grid sizing, board rendering, and game logic into a single level
+ * with sensible defaults so each game only specifies what differs.
  */
 interface BaseGameConfig<S, A> {
-    /** Storage keys for grid size and game state */
-    storageKeys: {
-        size: string;
-        state: string;
-    };
+    /** Storage key prefix — auto-generates `{prefix}-size` and `{prefix}-state` keys. */
+    storageKey: string;
     /** Page title for the document */
     pageTitle: string;
-    /** Grid sizing configuration (see useGridSize).
-     *  Fields with defaults from DEFAULT_GRID_CONFIG are optional. */
-    gridConfig: {
-        defaultSize: number | null;
-        minSize?: number;
-        maxSize?: number;
-        headerOffset?: {
-            mobile: number;
-            desktop: number;
-        };
-        paddingOffset: number | { x: number; y: number };
-        widthLimit?: number;
-        cellSizeReference: number | { mobile: number; desktop: number };
-        mobileRowOffset?: number;
-    };
-    /** Board rendering configuration.
-     *  Fields with defaults from DEFAULT_BOARD_CONFIG are optional. */
-    boardConfig: {
-        paddingOffset:
-            | number
-            | { x: number; y: number }
-            | ((mobile: boolean) => number | { x: number; y: number });
-        boardMaxWidth?: number;
-        boardSizeFactor?: number;
-        maxCellSize: number;
-        remBase?: number;
-        rowOffset?: number;
-        colOffset?: number;
-    };
+
+    // --- Grid sizing (previously nested in gridConfig) ---
+    /** Default grid size if no saved preference (null = auto-calculated). */
+    defaultSize?: number | null;
+    /** Minimum allowed grid size (default: 3). */
+    minSize?: number;
+    /** Maximum allowed grid size (default: 10). */
+    maxSize?: number;
+    /** Header height offsets for available-space calculation.
+     *  Defaults to GAME_CONSTANTS.layout.headerHeight. */
+    headerOffset?: { mobile: number; desktop: number };
+    /** Extra padding subtracted from the available viewport for grid sizing. */
+    gridPadding?: number | { x: number; y: number };
+    /** Maximum viewport width to consider (default: 1300px). */
+    widthLimit?: number;
+    /** Reference cell size in rem for calculating grid dimensions. */
+    cellSizeReference?: number | { mobile: number; desktop: number };
+    /** Extra rows to add on mobile devices (default: 2). */
+    mobileRowOffset?: number;
+
+    // --- Board rendering (previously nested in boardConfig) ---
+    /** Padding subtracted from available space when computing cell size. */
+    boardPadding?:
+        | number
+        | { x: number; y: number }
+        | ((mobile: boolean) => number | { x: number; y: number });
+    /** Maximum board width in pixels (default: 1200). */
+    boardMaxWidth?: number;
+    /** Factor to reduce available space (0-1, default: 0.94). */
+    boardSizeFactor?: number;
+    /** Maximum cell size in pixels. */
+    maxCellSize?: number;
+    /** Rem base value (default: 16). */
+    remBase?: number;
+    /** Extra row offset for board size calculation (e.g. +1 for Slant numbers). */
+    rowOffset?: number;
+    /** Extra col offset for board size calculation. */
+    colOffset?: number;
+
+    // --- Game logic ---
     /** State reducer function */
     reducer: (state: S, action: A | BaseGameAction<S>) => S;
     /** Function to create initial state for given grid dimensions */
     getInitialState: (rows: number, cols: number) => S;
-    /** Optional callback when game is reset */
-    onReset?: () => void;
-    /** Delay before advancing after win (ms) */
-    winAnimationDelay: number;
     /** Function to check if current state is solved */
     isSolved: (state: S) => boolean;
+    /** Delay before advancing after win (ms, default: 2000). */
+    winAnimationDelay?: number;
     /** Custom serialization/deserialization for persistence */
     persistence?: {
         serialize?: (state: S) => unknown;
@@ -123,22 +137,72 @@ export function useBaseGame<
     S extends BaseGameState,
     A extends { type: string },
 >({
-    storageKeys,
+    storageKey: storageKeyPrefix,
     pageTitle,
-    gridConfig,
-    boardConfig,
+    // Grid sizing fields (with defaults)
+    defaultSize = null,
+    minSize: minSizeOpt,
+    maxSize: maxSizeOpt,
+    headerOffset: headerOffsetOpt,
+    gridPadding,
+    widthLimit,
+    cellSizeReference,
+    mobileRowOffset,
+    // Board rendering fields (with defaults)
+    boardPadding,
+    boardMaxWidth,
+    boardSizeFactor,
+    maxCellSize,
+    remBase,
+    rowOffset,
+    colOffset,
+    // Game logic
     reducer,
     getInitialState,
-    winAnimationDelay,
     isSolved,
+    winAnimationDelay = GAME_CONSTANTS.timing.winAnimationDelay,
     persistence,
     manualResize = false,
     onNext,
 }: BaseGameConfig<S, A>) {
-    const mergedGrid = { ...DEFAULT_GRID_CONFIG, ...gridConfig };
+    const keys = createStorageKeys(storageKeyPrefix);
+
+    // Build the grid config by merging caller overrides with defaults.
+    const gridConfig = {
+        ...DEFAULT_GRID_CONFIG,
+        defaultSize,
+        minSize: minSizeOpt ?? DEFAULT_GRID_CONFIG.minSize,
+        maxSize: maxSizeOpt ?? DEFAULT_GRID_CONFIG.maxSize,
+        headerOffset: headerOffsetOpt ?? DEFAULT_GRID_CONFIG.headerOffset,
+        paddingOffset: gridPadding ?? DEFAULT_GRID_CONFIG.paddingOffset,
+        widthLimit: widthLimit ?? DEFAULT_GRID_CONFIG.widthLimit,
+        cellSizeReference:
+            cellSizeReference ?? DEFAULT_GRID_CONFIG.cellSizeReference,
+        mobileRowOffset: mobileRowOffset ?? DEFAULT_GRID_CONFIG.mobileRowOffset,
+    };
+
+    // Build the board config by merging caller overrides with defaults.
     const mergedBoard = useMemo(
-        () => ({ ...DEFAULT_BOARD_CONFIG, ...boardConfig }),
-        [boardConfig],
+        () => ({
+            ...DEFAULT_BOARD_CONFIG,
+            paddingOffset: boardPadding ?? DEFAULT_BOARD_CONFIG.paddingOffset,
+            boardMaxWidth: boardMaxWidth ?? DEFAULT_BOARD_CONFIG.boardMaxWidth,
+            boardSizeFactor:
+                boardSizeFactor ?? DEFAULT_BOARD_CONFIG.boardSizeFactor,
+            maxCellSize: maxCellSize ?? DEFAULT_BOARD_CONFIG.maxCellSize,
+            remBase: remBase ?? DEFAULT_BOARD_CONFIG.remBase,
+            rowOffset,
+            colOffset,
+        }),
+        [
+            boardPadding,
+            boardMaxWidth,
+            boardSizeFactor,
+            maxCellSize,
+            remBase,
+            rowOffset,
+            colOffset,
+        ],
     );
 
     const {
@@ -153,8 +217,8 @@ export function useBaseGame<
         minSize,
         maxSize,
     } = useGridSize({
-        storageKey: storageKeys.size,
-        ...mergedGrid,
+        storageKey: keys.SIZE,
+        ...gridConfig,
     });
 
     // Compute the initial state only once (first render). Subsequent size
@@ -175,7 +239,7 @@ export function useBaseGame<
     const handleNext = onNext ?? defaultHandleNext;
 
     useGamePersistence<S>({
-        storageKey: storageKeys.state,
+        storageKey: keys.STATE,
         rows,
         cols,
         state,
@@ -211,7 +275,7 @@ export function useBaseGame<
             width,
             height,
             mobile,
-            headerOffset: mergedGrid.headerOffset,
+            headerOffset: gridConfig.headerOffset,
             ...mergedBoard,
             paddingOffset: resolvedPaddingOffset,
         });
@@ -222,7 +286,7 @@ export function useBaseGame<
         height,
         mobile,
         mergedBoard,
-        mergedGrid.headerOffset,
+        gridConfig.headerOffset,
     ]);
 
     return {

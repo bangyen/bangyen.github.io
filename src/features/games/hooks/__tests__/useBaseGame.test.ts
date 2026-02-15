@@ -28,19 +28,13 @@ vi.mock('../../../utils/gameUtils', () => ({
 
 describe('useBaseGame', () => {
     const defaultProps: any = {
-        gridConfig: {
-            storageKey: 'grid-key',
-            headerOffset: { mobile: 50, desktop: 100 },
-        },
-        storageKeys: { state: 'state-key' },
-        initialState: { some: 'state' },
+        storageKey: 'test-game',
+        pageTitle: 'Test Game',
+        headerOffset: { mobile: 50, desktop: 100 },
+        boardPadding: 20,
         getInitialState: vi.fn().mockReturnValue({ some: 'initial-state' }),
         reducer: vi.fn(state => state),
         isSolved: vi.fn().mockReturnValue(false),
-        boardConfig: {
-            paddingOffset: 20,
-        },
-        pageTitle: 'Test Game',
     };
 
     beforeEach(() => {
@@ -76,15 +70,12 @@ describe('useBaseGame', () => {
         // Since we are mocking the reducer to return whatever, we expect dispatch to have been called.
     });
 
-    it('should use function for paddingOffset if provided', () => {
+    it('should use function for boardPadding if provided', () => {
         const paddingOffsetFn = vi.fn().mockReturnValue(30);
         renderHook(() =>
             useBaseGame({
                 ...defaultProps,
-                boardConfig: {
-                    ...defaultProps.boardConfig,
-                    paddingOffset: paddingOffsetFn,
-                },
+                boardPadding: paddingOffsetFn,
             }),
         );
 

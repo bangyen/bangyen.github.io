@@ -4,9 +4,9 @@ import { getProduct } from '../utils';
 import { getInput, getOutput, useHandler } from './Calculator';
 import Example from './Example';
 import { InfoCalculator } from './InfoCalculator';
-import type { Palette, PropsFactory } from '../../components/Board';
 import { GameInfo } from '../../components/GameInfo';
 import { useDrag } from '../../hooks/useDrag';
+import type { Palette, PropsFactory } from '../types';
 
 import { KeyboardArrowDown, Calculate, Replay } from '@/components/icons';
 import { useMobile } from '@/hooks';

@@ -4,15 +4,14 @@ import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
 import { GamePageLayout } from '../../components/GamePageLayout';
 import { GAME_CONSTANTS } from '../../config';
-import { useBaseGame } from '../../hooks/useBaseGame';
-import { useGameInteraction } from '../../hooks/useGameInteraction';
+import { useGamePage } from '../../hooks/useGamePage';
 import { useSkipTransition } from '../../hooks/useSkipTransition';
 import Info from '../components/Info';
 import {
     LAYOUT_CONSTANTS,
     LIGHTS_OUT_STYLES,
     getLightsOutGameConfig,
-} from '../constants';
+} from '../config';
 import { useHandler, usePalette } from '../hooks/boardUtils';
 import type { BoardState, BoardAction } from '../types';
 import { handleBoard, isSolved, getInitialState } from '../utils/boardHandlers';
@@ -37,30 +36,27 @@ export default function LightsOut() {
         size,
         solved,
         handleNext,
+        getDragProps,
         controlsProps,
-    } = useBaseGame<BoardState, BoardAction>({
+    } = useGamePage<BoardState, BoardAction>({
         ...getLightsOutGameConfig(mobile),
         reducer: handleBoard,
         getInitialState,
         isSolved: (s: BoardState) => s.initialized && isSolved(s.grid),
+        interaction: {
+            createAction: (r: number, c: number) => ({
+                type: 'adjacent' as const,
+                row: createCellIndex(r),
+                col: createCellIndex(c),
+            }),
+            touchTimeout: GAME_CONSTANTS.timing.interactionDelay,
+            transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
+        },
     });
 
     const [open, toggleOpen] = useReducer((open: boolean) => !open, false);
 
     const palette = usePalette(state.score);
-
-    const { getDragProps } = useGameInteraction({
-        onToggle: (r: number, c: number) => {
-            dispatch({
-                type: 'adjacent',
-                row: createCellIndex(r),
-                col: createCellIndex(c),
-            });
-        },
-        checkEnabled: () => !solved,
-        touchTimeout: GAME_CONSTANTS.timing.interactionDelay,
-        transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
-    });
 
     const allOn = useMemo(
         () =>
@@ -129,8 +125,8 @@ export default function LightsOut() {
                 size={size}
                 rows={rows}
                 cols={cols}
-                frontProps={frontProps}
-                backProps={backProps}
+                overlayProps={frontProps}
+                cellProps={backProps}
             />
             {open && (
                 <Info

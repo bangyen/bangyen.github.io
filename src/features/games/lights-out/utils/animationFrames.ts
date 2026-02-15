@@ -1,5 +1,5 @@
 import { flipAdj } from './boardHandlers';
-import type { Palette } from '../../components/Board';
+import type { Palette } from '../types';
 
 export interface AnimationFrame {
     opacity: number;

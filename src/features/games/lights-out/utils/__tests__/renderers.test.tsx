@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 
-import type { Getters } from '../../../components/Board';
+import type { Getters } from '../../types';
 import { getFrontProps, getBackProps, getExampleProps } from '../renderers';
 
 describe('renderers', () => {

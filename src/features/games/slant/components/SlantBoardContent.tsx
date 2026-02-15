@@ -30,10 +30,10 @@ interface SlantBoardContentProps {
     onGhostClear: () => void;
     /** Close ghost mode. */
     onGhostClose: () => void;
-    /** Cell factory for the back (cell) layer. */
-    backProps: (row: number, col: number) => Record<string, unknown>;
-    /** Cell factory for the front (number overlay) layer. */
-    frontProps: (row: number, col: number) => Record<string, unknown>;
+    /** Cell factory for the bottom (interactive slash cell) layer. */
+    cellProps: (row: number, col: number) => Record<string, unknown>;
+    /** Cell factory for the top (number overlay) layer. */
+    overlayProps: (row: number, col: number) => Record<string, unknown>;
 }
 
 /**
@@ -53,8 +53,8 @@ export function SlantBoardContent({
     onGhostCopy,
     onGhostClear,
     onGhostClose,
-    backProps,
-    frontProps,
+    cellProps,
+    overlayProps,
 }: SlantBoardContentProps): React.ReactElement {
     if (isGhostMode) {
         return (
@@ -81,9 +81,9 @@ export function SlantBoardContent({
             size={size}
             rows={rows + 1}
             cols={cols + 1}
-            frontProps={frontProps}
-            backProps={backProps}
-            frontLayerSx={{ pointerEvents: 'none' }}
+            overlayProps={overlayProps}
+            cellProps={cellProps}
+            overlayLayerSx={{ pointerEvents: 'none' }}
         />
     );
 }

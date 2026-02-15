@@ -76,9 +76,9 @@ vi.mock('@/features/games/lights-out/hooks/boardUtils', () => ({
 // Mock sub-components
 vi.mock('@/features/games/components/Board', () => ({
     Board: function MockBoard({
-        frontProps,
+        overlayProps,
     }: {
-        frontProps: (
+        overlayProps: (
             r: number,
             c: number,
         ) => { onMouseDown: (e: React.MouseEvent) => void };
@@ -88,7 +88,7 @@ vi.mock('@/features/games/components/Board', () => ({
                 <button
                     data-testid="cell-0-0"
                     onMouseDown={e => {
-                        frontProps(0, 0).onMouseDown(e);
+                        overlayProps(0, 0).onMouseDown(e);
                     }}
                 >
                     Cell 0,0
