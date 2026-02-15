@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import React from 'react';
 
-import { InstructionItem } from './Content';
+import { InstructionItem } from '../../components/InfoContent';
 
 import { KeyboardArrowDown, Calculate, Replay } from '@/components/icons';
 
