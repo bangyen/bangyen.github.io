@@ -120,7 +120,7 @@ export function Slant() {
                             </Button>
                         </Box>
                     }
-                    exampleContent={<Example size={5} />}
+                    exampleContent={<Example size={4} />}
                     cardSx={SLANT_INFO_CARD_SX}
                     contentSxOverride={slantInfoContentSx}
                 />
