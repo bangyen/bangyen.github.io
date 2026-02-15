@@ -1,4 +1,3 @@
-import type { SxProps, Theme } from '@mui/material';
 import { Box, Button } from '@mui/material';
 import React, {
     useEffect,
@@ -12,67 +11,39 @@ import { useMobile } from '../../../../hooks';
 import { GameControls } from '../../components/GameControls';
 import { GameInfo } from '../../components/GameInfo';
 import { GamePageLayout } from '../../components/GamePageLayout';
-import { infoContentSx } from '../../components/infoStyles';
 import { GAME_CONSTANTS } from '../../config';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
 import Example from '../components/Example';
 import { SlantBoardContent } from '../components/SlantBoardContent';
 import {
+    getSlantGameConfig,
+    SLANT_INFO_TITLES,
+    SLANT_INSTRUCTIONS,
+    SLANT_INFO_CARD_SX,
+    slantInfoContentSx,
+} from '../config';
+import {
     NUMBER_SIZE_RATIO,
     STORAGE_KEYS,
     LAYOUT_CONSTANTS,
 } from '../constants';
-import { getSlantGameConfig } from '../gameConfig';
 import { useGenerationWorker } from '../hooks/useGenerationWorker';
 import { useGhostMode } from '../hooks/useGhostMode';
 import type { SlantAction, SlantState } from '../types';
 import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import { getBackProps, getFrontProps } from '../utils/renderers';
 
-import {
-    TextureRounded,
-    TagRounded,
-    NotInterestedRounded,
-    Psychology,
-} from '@/components/icons';
+import { Psychology } from '@/components/icons';
 import { PAGE_TITLES } from '@/config/constants';
 import { COLORS } from '@/config/theme';
 import { useCellFactory } from '@/utils/gameUtils';
-import { toSxArray } from '@/utils/muiUtils';
 import { createCellIndex } from '@/utils/types';
 
-const SLANT_INFO_TITLES = ['Slant Rules', 'Example'];
-
-const SLANT_INSTRUCTIONS = [
-    {
-        Icon: TextureRounded,
-        title: 'Fill with Slashes',
-        text: String.raw`Place a forward (/) or backward (\) slash in every cell of the grid.`,
-    },
-    {
-        Icon: TagRounded,
-        title: 'Match the Numbers',
-        text: 'Each number at a corner tells how many slashes touch that point.',
-    },
-    {
-        Icon: NotInterestedRounded,
-        title: 'No Loops',
-        text: 'Slashes must never form a closed loop — every path stays open.',
-    },
-];
-
-const SLANT_INFO_CARD_SX = {
-    height: { xs: '660px', sm: '525px' },
-    minHeight: { xs: '660px', sm: '525px' },
-};
-
-/** Content-area sx with overflow hidden for the animated example. */
-const slantInfoContentSx = (step: number): SxProps<Theme> =>
-    [
-        ...toSxArray(infoContentSx(step)),
-        { overflowY: 'hidden' },
-    ] as SxProps<Theme>;
+// Note: Slant intentionally uses useBaseGame + useGameInteraction directly
+// (rather than the composed useGamePage) because its worker-based generation
+// and ghost-mode features require access to dispatch/state refs before the
+// interaction hook runs.
 
 interface SavedSlantState extends Omit<
     SlantState,
@@ -279,8 +250,8 @@ export default function Slant() {
             onGhostCopy={handleGhostCopy}
             onGhostClear={handleGhostClear}
             onGhostClose={handleGhostClose}
-            frontProps={frontProps}
-            backProps={backProps}
+            overlayProps={frontProps}
+            cellProps={backProps}
         />
     );
 

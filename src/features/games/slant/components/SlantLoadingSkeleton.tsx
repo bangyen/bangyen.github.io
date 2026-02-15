@@ -46,9 +46,9 @@ export function SlantLoadingSkeleton({
                 size={size}
                 rows={rows + 1}
                 cols={cols + 1}
-                frontProps={skeletonFront}
-                backProps={skeletonBack}
-                frontLayerSx={{ pointerEvents: 'none' }}
+                overlayProps={skeletonFront}
+                cellProps={skeletonBack}
+                overlayLayerSx={{ pointerEvents: 'none' }}
             />
         </Box>
     );

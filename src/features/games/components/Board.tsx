@@ -5,55 +5,36 @@ import { CustomGrid } from '@/components/ui/CustomGrid';
 import { LAYOUT } from '@/config/theme';
 
 export interface BoardProps {
-    frontProps: (row: number, col: number) => Record<string, unknown>;
-    backProps: (row: number, col: number) => Record<string, unknown>;
+    /** Cell factory for the top layer (higher z-index). */
+    overlayProps: (row: number, col: number) => Record<string, unknown>;
+    /** Cell factory for the bottom layer (base). */
+    cellProps: (row: number, col: number) => Record<string, unknown>;
     size: number;
     rows: number;
     cols: number;
-    frontLayerSx?: object;
-    backLayerSx?: object;
+    overlayLayerSx?: object;
+    cellLayerSx?: object;
 }
-
-export interface Palette {
-    primary: string;
-    secondary: string;
-}
-
-export interface Getters {
-    getColor: (row: number, col: number) => { front: string; back: string };
-    getBorder: (row: number, col: number) => React.CSSProperties;
-    getFiller: (row: number, col: number) => string;
-}
-
-export interface CellProps {
-    children?: React.ReactNode;
-    sx?: object;
-    [key: string]: unknown;
-}
-
-export type PropsFactory = (
-    getters: Getters,
-) => (row: number, col: number) => CellProps;
 
 export function Board(props: BoardProps): React.ReactElement {
     const {
-        frontProps,
-        backProps,
+        overlayProps,
+        cellProps,
         size,
         rows,
         cols,
-        frontLayerSx,
-        backLayerSx,
+        overlayLayerSx,
+        cellLayerSx,
     } = props;
 
-    const isFrontDecorative =
-        frontLayerSx &&
-        'pointerEvents' in frontLayerSx &&
-        frontLayerSx.pointerEvents === 'none';
-    const isBackDecorative =
-        backLayerSx &&
-        'pointerEvents' in backLayerSx &&
-        backLayerSx.pointerEvents === 'none';
+    const isOverlayDecorative =
+        overlayLayerSx &&
+        'pointerEvents' in overlayLayerSx &&
+        overlayLayerSx.pointerEvents === 'none';
+    const isCellDecorative =
+        cellLayerSx &&
+        'pointerEvents' in cellLayerSx &&
+        cellLayerSx.pointerEvents === 'none';
 
     return (
         <Box
@@ -65,7 +46,7 @@ export function Board(props: BoardProps): React.ReactElement {
             <Box
                 sx={{
                     gridArea: '1/1',
-                    ...backLayerSx,
+                    ...cellLayerSx,
                 }}
             >
                 <CustomGrid
@@ -73,8 +54,8 @@ export function Board(props: BoardProps): React.ReactElement {
                     size={size}
                     rows={rows - 1}
                     cols={cols - 1}
-                    cellProps={backProps}
-                    {...(isBackDecorative
+                    cellProps={cellProps}
+                    {...(isCellDecorative
                         ? { role: 'presentation', 'aria-hidden': true }
                         : {})}
                 />
@@ -83,7 +64,7 @@ export function Board(props: BoardProps): React.ReactElement {
                 sx={{
                     gridArea: '1/1',
                     zIndex: LAYOUT.zIndex.base + 1,
-                    ...frontLayerSx,
+                    ...overlayLayerSx,
                 }}
             >
                 <CustomGrid
@@ -91,8 +72,8 @@ export function Board(props: BoardProps): React.ReactElement {
                     size={size}
                     rows={rows}
                     cols={cols}
-                    cellProps={frontProps}
-                    {...(isFrontDecorative
+                    cellProps={overlayProps}
+                    {...(isOverlayDecorative
                         ? { role: 'presentation', 'aria-hidden': true }
                         : {})}
                 />

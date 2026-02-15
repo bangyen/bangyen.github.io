@@ -1,6 +1,6 @@
 import { useMemo, useCallback } from 'react';
 
-import type { Palette, Getters } from '../../components/Board';
+import type { Palette, Getters } from '../types';
 
 import { COLORS } from '@/config/theme';
 

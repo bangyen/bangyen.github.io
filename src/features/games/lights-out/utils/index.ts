@@ -2,6 +2,6 @@
 export * from './animationFrames';
 export * from './boardHandlers';
 export * from './chaseHandlers';
-export * from '../constants';
+export * from '../config';
 export * from './precomputedTables';
 export * from './matrices';

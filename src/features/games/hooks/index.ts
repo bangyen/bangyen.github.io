@@ -2,6 +2,7 @@
 export * from './useBaseGame';
 export * from './useDrag';
 export * from './useGameInteraction';
+export * from './useGamePage';
 export * from './useGamePersistence';
 export * from './useGridSize';
 export * from './usePageTitle';

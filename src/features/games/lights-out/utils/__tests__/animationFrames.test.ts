@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import type { Palette } from '../../../components/Board';
+import type { Palette } from '../../types';
 import { getBoardIconFrames, getInputIconFrames } from '../animationFrames';
 
 describe('animationFrames', () => {

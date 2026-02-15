@@ -11,41 +11,41 @@ import { Board } from '../Board';
 import { COLORS } from '@/config/theme';
 
 describe('Board Component', () => {
-    const mockFrontProps = vi.fn((r: number, c: number) => ({
+    const mockOverlayProps = vi.fn((r: number, c: number) => ({
         'data-testid': `front-${String(r)}-${String(c)}`,
         children: 'Front',
     }));
-    const mockBackProps = vi.fn((r: number, c: number) => ({
+    const mockCellProps = vi.fn((r: number, c: number) => ({
         'data-testid': `back-${String(r)}-${String(c)}`,
         children: 'Back',
     }));
 
-    test('renders front and back grids correctly', () => {
+    test('renders overlay and cell grids correctly', () => {
         render(
             <Board
-                frontProps={mockFrontProps}
-                backProps={mockBackProps}
+                overlayProps={mockOverlayProps}
+                cellProps={mockCellProps}
                 size={20}
                 rows={2}
                 cols={2}
             />,
         );
 
-        // Check front grid items (2x2)
+        // Check overlay grid items (2x2)
         expect(screen.getByTestId('front-0-0')).toBeInTheDocument();
         expect(screen.getByTestId('front-0-1')).toBeInTheDocument();
         expect(screen.getByTestId('front-1-0')).toBeInTheDocument();
         expect(screen.getByTestId('front-1-1')).toBeInTheDocument();
 
-        // Check back grid items (rows-1 x cols-1, so 1x1)
+        // Check cell grid items (rows-1 x cols-1, so 1x1)
         expect(screen.getByTestId('back-0-0')).toBeInTheDocument();
     });
 
     test('renders with correct layout styles', () => {
         const { container } = render(
             <Board
-                frontProps={mockFrontProps}
-                backProps={mockBackProps}
+                overlayProps={mockOverlayProps}
+                cellProps={mockCellProps}
                 size={20}
                 rows={2}
                 cols={2}
@@ -60,19 +60,19 @@ describe('Board Component', () => {
     test('handles decorative layers with pointerEvents none', () => {
         render(
             <Board
-                frontProps={mockFrontProps}
-                backProps={mockBackProps}
+                overlayProps={mockOverlayProps}
+                cellProps={mockCellProps}
                 size={20}
                 rows={2}
                 cols={2}
-                frontLayerSx={{ pointerEvents: 'none' }}
-                backLayerSx={{ pointerEvents: 'none' }}
+                overlayLayerSx={{ pointerEvents: 'none' }}
+                cellLayerSx={{ pointerEvents: 'none' }}
             />,
         );
 
         // This triggers the branches:
-        // isFrontDecorative = true
-        // isBackDecorative = true
+        // isOverlayDecorative = true
+        // isCellDecorative = true
         // which adds role="presentation" and aria-hidden="true" to CustomGrid
 
         // CustomGrid internally renders div/Box. We can check for attributes if we can find them.

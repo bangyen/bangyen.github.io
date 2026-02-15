@@ -49,23 +49,33 @@ export function createStorageKeys(prefix: string) {
 }
 
 /**
- * Sensible defaults for `boardConfig` in `useBaseGame`.
+ * Sensible defaults for board rendering in `useBaseGame`.
  * Games only need to specify fields that differ from these values.
  */
 export const DEFAULT_BOARD_CONFIG = {
+    paddingOffset: 0 as number | { x: number; y: number },
     boardMaxWidth: 1200,
     boardSizeFactor: 0.94,
+    maxCellSize: 80,
     remBase: 16,
 };
 
 /**
- * Sensible defaults for `gridConfig` in `useBaseGame`.
+ * Sensible defaults for grid sizing in `useBaseGame`.
  * Games only need to specify fields that differ from these values.
  */
 export const DEFAULT_GRID_CONFIG = {
+    defaultSize: null as number | null,
     minSize: 3,
+    maxSize: 10,
     mobileRowOffset: 2,
     headerOffset: GAME_CONSTANTS.layout.headerHeight,
+    paddingOffset: 0 as number | { x: number; y: number },
+    widthLimit: 1300,
+    cellSizeReference: {
+        mobile: GAME_CONSTANTS.gridSizes.mobile,
+        desktop: GAME_CONSTANTS.gridSizes.desktop,
+    } as number | { mobile: number; desktop: number },
 };
 
 export const PAGE_TITLES = {

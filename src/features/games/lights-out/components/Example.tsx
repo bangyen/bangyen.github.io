@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 
 import { GridWithKeyframes } from './AnimatedGrid';
 import { getOutput, useHandler as useCalculatorHandler } from './Calculator';
-import type { Palette, PropsFactory } from '../../components/Board';
 import { Board } from '../../components/Board';
-import { LIGHTS_OUT_STYLES } from '../constants';
+import { LIGHTS_OUT_STYLES } from '../config';
 import { useHandler as useBoardHandler } from '../hooks/boardUtils';
+import type { Palette, PropsFactory } from '../types';
 import {
     getBoardIconFrames,
     getInputIconFrames,
@@ -269,8 +269,8 @@ export default function Example({
                                 size={width}
                                 rows={dims}
                                 cols={dims}
-                                frontProps={frontProps}
-                                backProps={backProps}
+                                overlayProps={frontProps}
+                                cellProps={backProps}
                             />
                             <Box
                                 sx={{

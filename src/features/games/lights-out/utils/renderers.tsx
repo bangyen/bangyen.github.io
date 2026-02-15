@@ -1,9 +1,9 @@
 import { Box } from '@mui/material';
 import React from 'react';
 
-import type { Getters } from '../../components/Board';
 import type { DragProps } from '../../hooks/useDrag';
-import { LIGHTS_OUT_STYLES } from '../constants';
+import { LIGHTS_OUT_STYLES } from '../config';
+import type { Getters } from '../types';
 
 import { getPosKey } from '@/utils/gameUtils';
 

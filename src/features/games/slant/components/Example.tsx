@@ -229,9 +229,9 @@ export default function Example({ size }: ExampleProps): React.ReactElement {
                     size={size}
                     rows={EXAMPLE_DIMS + 1}
                     cols={EXAMPLE_DIMS + 1}
-                    frontProps={frontProps}
-                    backProps={backProps}
-                    frontLayerSx={{ pointerEvents: 'none' }}
+                    overlayProps={frontProps}
+                    cellProps={backProps}
+                    overlayLayerSx={{ pointerEvents: 'none' }}
                 />
                 {/* Trophy overlay when solved */}
                 <Box
