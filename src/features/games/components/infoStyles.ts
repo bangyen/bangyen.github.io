@@ -72,10 +72,11 @@ export const infoCloseButtonSx: SxProps<Theme> = {
     color: COLORS.text.secondary,
 };
 
-/** Step-content wrapper. */
-export const infoStepContentSx: SxProps<Theme> = {
+/** Step-content wrapper. Accepts an optional step index so the scrollbar-
+ *  compensating right padding only applies to steps that actually scroll. */
+export const infoStepContentSx = (step?: number): SxProps<Theme> => ({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    pr: { xs: 3, md: 0 },
-};
+    pr: step === 0 ? { xs: 3, md: 0 } : 0,
+});
