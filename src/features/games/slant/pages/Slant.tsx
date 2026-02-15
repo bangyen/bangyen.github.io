@@ -4,6 +4,7 @@ import React, {
     useMemo,
     useState,
     useCallback,
+    useReducer,
     useRef,
 } from 'react';
 
@@ -13,6 +14,7 @@ import { GAME_CONSTANTS } from '../../config';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
 import { useGamePersistence } from '../../hooks/useGamePersistence';
+import Info from '../components/Info';
 import { SlantBoardContent } from '../components/SlantBoardContent';
 import { SlantControls } from '../components/SlantControls';
 import {
@@ -43,6 +45,7 @@ interface SavedSlantState extends Omit<
 export default function Slant() {
     const mobile = useMobile('sm');
     const [isGhostMode, setIsGhostMode] = useState(false);
+    const [infoOpen, toggleInfo] = useReducer((v: boolean) => !v, false);
 
     // Refs kept in sync with useBaseGame output, shared with the worker hook.
     const dispatchRef = useRef<React.Dispatch<
@@ -240,6 +243,7 @@ export default function Slant() {
             generating={generating}
             onRefresh={handleNextAsync}
             onToggleGhostMode={handleToggleGhostMode}
+            onOpenInfo={toggleInfo}
         />
     );
 
@@ -289,6 +293,9 @@ export default function Slant() {
             }
         >
             <Box onClick={handleBoxClick}>{boardContent}</Box>
+            {infoOpen && (
+                <Info open={infoOpen} size={size} toggleOpen={toggleInfo} />
+            )}
         </GamePageLayout>
     );
 }

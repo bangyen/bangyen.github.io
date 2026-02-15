@@ -2,7 +2,7 @@ import React from 'react';
 
 import { GameControls } from '../../components/GameControls';
 
-import { Psychology } from '@/components/icons';
+import { Psychology, MenuBookRounded } from '@/components/icons';
 import { TooltipButton } from '@/components/ui/TooltipButton';
 
 interface SlantControlsProps {
@@ -16,6 +16,8 @@ interface SlantControlsProps {
     onRefresh: () => void;
     /** Toggle the ghost-mode calculator overlay. */
     onToggleGhostMode: () => void;
+    /** Open the "How to Play" tutorial modal. */
+    onOpenInfo: () => void;
 }
 
 /**
@@ -28,6 +30,7 @@ export function SlantControls({
     generating,
     onRefresh,
     onToggleGhostMode,
+    onOpenInfo,
 }: SlantControlsProps): React.ReactElement | null {
     if (isGhostMode) return null;
 
@@ -37,6 +40,11 @@ export function SlantControls({
             onRefresh={onRefresh}
             disabled={generating}
         >
+            <TooltipButton
+                title="How to Play"
+                Icon={MenuBookRounded}
+                onClick={onOpenInfo}
+            />
             <TooltipButton
                 title="Open Calculator"
                 Icon={Psychology}
