@@ -1,11 +1,4 @@
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useReducer,
-    useRef,
-    useState,
-} from 'react';
+import React, { useCallback, useMemo, useReducer } from 'react';
 
 import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
@@ -13,11 +6,12 @@ import { GamePageLayout } from '../../components/GamePageLayout';
 import { GAME_CONSTANTS } from '../../config';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
+import { useSkipTransition } from '../../hooks/useSkipTransition';
 import Info from '../components/Info';
 import {
-    STORAGE_KEYS,
     LAYOUT_CONSTANTS,
     LIGHTS_OUT_STYLES,
+    getLightsOutGameConfig,
 } from '../constants';
 import { useHandler, usePalette } from '../hooks/boardUtils';
 import type { BoardState, BoardAction } from '../types';
@@ -28,10 +22,7 @@ import {
     getExampleProps,
 } from '../utils/renderers';
 
-import { MenuBookRounded } from '@/components/icons';
-import { TooltipButton } from '@/components/ui/TooltipButton';
 import { PAGE_TITLES } from '@/config/constants';
-import { LAYOUT } from '@/config/theme';
 import { useMobile } from '@/hooks';
 import { useCellFactory } from '@/utils/gameUtils';
 import { createCellIndex, type CellIndex } from '@/utils/types';
@@ -48,37 +39,9 @@ export default function LightsOut() {
         handleNext,
         controlsProps,
     } = useBaseGame<BoardState, BoardAction>({
-        storageKeys: {
-            size: STORAGE_KEYS.SIZE,
-            state: STORAGE_KEYS.STATE,
-        },
-        pageTitle: PAGE_TITLES.lightsOut,
-        gridConfig: {
-            defaultSize: null,
-            maxSize: 10,
-            headerOffset: {
-                mobile: LAYOUT.headerHeight.xs,
-                desktop: LAYOUT.headerHeight.md,
-            },
-            paddingOffset: {
-                x: mobile ? 60 : 80,
-                y: 60,
-            },
-            cellSizeReference: {
-                mobile: GAME_CONSTANTS.gridSizes.mobile,
-                desktop: GAME_CONSTANTS.gridSizes.desktop,
-            },
-        },
-        boardConfig: {
-            paddingOffset: {
-                x: mobile ? 40 : 120,
-                y: mobile ? 120 : 160,
-            },
-            maxCellSize: 80,
-        },
+        ...getLightsOutGameConfig(mobile),
         reducer: handleBoard,
         getInitialState,
-        winAnimationDelay: GAME_CONSTANTS.timing.winAnimationDelay,
         isSolved: (s: BoardState) => s.initialized && isSolved(s.grid),
     });
 
@@ -108,32 +71,8 @@ export default function LightsOut() {
 
     const getters = useHandler(state, palette);
 
-    // Suppress CSS transitions when the board is regenerated (resize or
-    // refresh) so the new state appears instantly without artifacts from
-    // border-radius and color transitions animating between old/new grids.
-    const boardKeyRef = useRef('');
-    const skipTransitionRef = useRef(false);
-    const [, setTick] = useState(0);
-
     const boardKey = `${String(rows)},${String(cols)},${String(state.score)}`;
-    if (boardKey !== boardKeyRef.current) {
-        // Skip transitions on every regeneration except the very first render.
-        skipTransitionRef.current = boardKeyRef.current !== '';
-        boardKeyRef.current = boardKey;
-    }
-
-    useEffect(() => {
-        if (!skipTransitionRef.current) return;
-        const raf = requestAnimationFrame(() => {
-            skipTransitionRef.current = false;
-            setTick(t => t + 1);
-        });
-        return () => {
-            cancelAnimationFrame(raf);
-        };
-    }, [boardKey]);
-
-    const skipTransition = skipTransitionRef.current;
+    const skipTransition = useSkipTransition(boardKey);
 
     const frontProps = useCellFactory(getFrontProps, getDragProps, [
         getters,
@@ -165,13 +104,7 @@ export default function LightsOut() {
     );
 
     const controls = (
-        <GameControls {...controlsProps}>
-            <TooltipButton
-                title="How to Play"
-                Icon={MenuBookRounded}
-                onClick={toggleOpen}
-            />
-        </GameControls>
+        <GameControls {...controlsProps} onOpenInfo={toggleOpen} />
     );
 
     return (

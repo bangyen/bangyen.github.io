@@ -1,37 +1,54 @@
+import type { SxProps, Theme } from '@mui/material';
 import { Box } from '@mui/material';
 import React, {
     useEffect,
     useMemo,
-    useState,
     useCallback,
     useReducer,
     useRef,
 } from 'react';
 
 import { useMobile } from '../../../../hooks';
+import { GameControls } from '../../components/GameControls';
 import { GamePageLayout } from '../../components/GamePageLayout';
+import { InfoModal } from '../../components/InfoModal';
+import { infoContentSx } from '../../components/infoStyles';
 import { GAME_CONSTANTS } from '../../config';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useGameInteraction } from '../../hooks/useGameInteraction';
-import { useGamePersistence } from '../../hooks/useGamePersistence';
-import Info from '../components/Info';
+import { InfoExample } from '../components/InfoExample';
+import { InfoInstructions } from '../components/InfoInstructions';
 import { SlantBoardContent } from '../components/SlantBoardContent';
-import { SlantControls } from '../components/SlantControls';
 import {
     NUMBER_SIZE_RATIO,
     STORAGE_KEYS,
     LAYOUT_CONSTANTS,
-    GAME_LOGIC_CONSTANTS,
 } from '../constants';
+import { getSlantGameConfig } from '../gameConfig';
 import { useGenerationWorker } from '../hooks/useGenerationWorker';
-import type { SlantAction, SlantState, CellState } from '../types';
-import { EMPTY } from '../types';
+import { useGhostMode } from '../hooks/useGhostMode';
+import type { SlantAction, SlantState } from '../types';
 import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import { getBackProps, getFrontProps } from '../utils/renderers';
 
 import { PAGE_TITLES } from '@/config/constants';
-import { useCellFactory, getPosKey } from '@/utils/gameUtils';
+import { useCellFactory } from '@/utils/gameUtils';
+import { toSxArray } from '@/utils/muiUtils';
 import { createCellIndex } from '@/utils/types';
+
+const SLANT_INFO_TITLES = ['Slant Rules', 'Example'];
+
+const SLANT_INFO_CARD_SX = {
+    height: { xs: '660px', sm: '525px' },
+    minHeight: { xs: '660px', sm: '525px' },
+};
+
+/** Content-area sx with overflow hidden for the animated example. */
+const slantInfoContentSx = (step: number): SxProps<Theme> =>
+    [
+        ...toSxArray(infoContentSx(step)),
+        { overflowY: 'hidden' },
+    ] as SxProps<Theme>;
 
 interface SavedSlantState extends Omit<
     SlantState,
@@ -44,7 +61,7 @@ interface SavedSlantState extends Omit<
 
 export default function Slant() {
     const mobile = useMobile('sm');
-    const [isGhostMode, setIsGhostMode] = useState(false);
+    const [isGhostMode, setIsGhostMode] = React.useState(false);
     const [infoOpen, toggleInfo] = useReducer((v: boolean) => !v, false);
 
     // Refs kept in sync with useBaseGame output, shared with the worker hook.
@@ -88,37 +105,11 @@ export default function Slant() {
         SlantState,
         SlantAction
     >({
-        storageKeys: {
-            size: STORAGE_KEYS.SIZE,
-            state: STORAGE_KEYS.STATE,
-        },
-        pageTitle: PAGE_TITLES.slant,
-        gridConfig: {
-            defaultSize: GAME_LOGIC_CONSTANTS.DEFAULT_SIZE,
-            maxSize: GAME_LOGIC_CONSTANTS.MAX_SIZE,
-            paddingOffset: {
-                x: mobile ? 48 : 80,
-                y: 120,
-            },
-            widthLimit: LAYOUT_CONSTANTS.WIDTH_LIMIT,
-            cellSizeReference: 4,
-        },
-        boardConfig: {
-            paddingOffset: (isMobile: boolean) => ({
-                x: isMobile ? 48 : 80,
-                y: LAYOUT_CONSTANTS.PADDING_OFFSET,
-            }),
-            ...(mobile ? { boardSizeFactor: 0.92 } : {}),
-            maxCellSize: LAYOUT_CONSTANTS.MAX_CELL_SIZE,
-            rowOffset: 1,
-            colOffset: 1,
-        },
+        ...getSlantGameConfig(mobile),
         reducer: handleBoard,
         getInitialState: (rows: number, cols: number) =>
             getInitialState(rows, cols),
-        manualResize: true,
         onNext: handleNextAsync,
-        winAnimationDelay: GAME_CONSTANTS.timing.winAnimationDelay,
         isSolved: (s: SlantState) => s.solved,
         persistence: {
             enabled: !isGhostMode,
@@ -143,6 +134,26 @@ export default function Slant() {
     // Keep refs in sync with latest values from useBaseGame.
     dispatchRef.current = dispatch;
     dimsRef.current = { rows, cols };
+
+    // Ghost mode state and handlers.
+    const {
+        ghostMoves,
+        boardSx,
+        handleGhostMove,
+        handleGhostCopy,
+        handleGhostClear,
+        handleGhostClose,
+        handleBoxClick,
+        handleOpenCalculator,
+    } = useGhostMode({
+        isGhostMode,
+        setIsGhostMode,
+        state,
+        rows,
+        cols,
+        storageKey: STORAGE_KEYS.GHOST_MOVES,
+        toggleInfo,
+    });
 
     // Request a new puzzle from the worker whenever grid dimensions change,
     // unless there is already an unsolved puzzle saved for the new size.
@@ -182,36 +193,6 @@ export default function Slant() {
         }
     }, [state.solved, isGhostMode, rows, cols, prefetch]);
 
-    const [ghostMoves, setGhostMoves] = useState<Map<string, CellState>>(
-        new Map(),
-    );
-
-    // Persistence for ghost moves
-    useGamePersistence<Map<string, CellState>>({
-        storageKey: STORAGE_KEYS.GHOST_MOVES,
-        rows,
-        cols,
-        state: ghostMoves,
-        onRestore: (saved: Map<string, CellState>) => {
-            setGhostMoves(saved);
-        },
-        serialize: (m: Map<string, CellState>) => [...m.entries()],
-        deserialize: (saved: unknown) =>
-            new Map(saved as [string, CellState][]),
-    });
-
-    // Reset ghost moves when puzzle changes
-    const lastPuzzleRef = useRef<string>('');
-    useEffect(() => {
-        const puzzleId = JSON.stringify(state.numbers);
-        if (lastPuzzleRef.current && lastPuzzleRef.current !== puzzleId) {
-            setGhostMoves(new Map());
-        }
-        lastPuzzleRef.current = puzzleId;
-    }, [state.numbers, state.rows, state.cols]);
-
-    const handleReset = handleNextAsync;
-
     const { getDragProps } = useGameInteraction({
         onToggle: (r: number, c: number, isRightClick: boolean) => {
             dispatch({
@@ -236,39 +217,6 @@ export default function Slant() {
         [state, numberSize],
     );
 
-    const handleGhostMove = useCallback((pos: string, val?: CellState) => {
-        setGhostMoves(prev => {
-            const next = new Map(prev);
-            if (val === undefined) next.delete(pos);
-            else next.set(pos, val);
-            return next;
-        });
-    }, []);
-
-    const handleGhostCopy = useCallback(() => {
-        const newMoves = new Map<string, CellState>();
-        state.grid.forEach((row: CellState[], r: number) => {
-            row.forEach((cell: CellState, c: number) => {
-                if (cell !== EMPTY) {
-                    newMoves.set(getPosKey(r, c), cell);
-                }
-            });
-        });
-        setGhostMoves(newMoves);
-    }, [state.grid]);
-
-    const handleGhostClear = useCallback(() => {
-        setGhostMoves(new Map());
-    }, []);
-
-    const handleGhostClose = useCallback(() => {
-        setIsGhostMode(false);
-    }, []);
-
-    const handleBoxClick = useCallback((e: React.MouseEvent) => {
-        e.stopPropagation();
-    }, []);
-
     const contentSx = useMemo(
         () => ({
             px: mobile ? '1rem' : '2rem',
@@ -277,26 +225,13 @@ export default function Slant() {
         [mobile],
     );
 
-    // Use a responsive override to fully clear GamePageLayout's responsive
-    // base padding ({ xs: '30px', sm: '36px' }) when in ghost mode.
-    // A plain `padding: 0` does not override the `sm` media query.
-    const boardSx = useMemo(
-        () => (isGhostMode ? { padding: { xs: 0, sm: 0 } } : undefined),
-        [isGhostMode],
-    );
-
-    const handleOpenCalculator = useCallback(() => {
-        toggleInfo();
-        setIsGhostMode(true);
-    }, [toggleInfo]);
-
     const controls = (
-        <SlantControls
-            isGhostMode={isGhostMode}
-            controlsProps={controlsProps}
-            generating={generating}
+        <GameControls
+            {...controlsProps}
             onRefresh={handleNextAsync}
+            disabled={generating}
             onOpenInfo={toggleInfo}
+            hidden={isGhostMode}
         />
     );
 
@@ -333,25 +268,27 @@ export default function Slant() {
             controls={controls}
             contentSx={contentSx}
             showTrophy={!isGhostMode && state.solved}
-            onReset={handleReset}
+            onReset={handleNextAsync}
             boardSize={size}
             iconSizeRatio={LAYOUT_CONSTANTS.ICON_SIZE_RATIO}
             boardSx={boardSx}
-            onClick={
-                isGhostMode
-                    ? () => {
-                          setIsGhostMode(false);
-                      }
-                    : undefined
-            }
+            onClick={isGhostMode ? handleGhostClose : undefined}
         >
             <Box onClick={handleBoxClick}>{boardContent}</Box>
             {infoOpen && (
-                <Info
+                <InfoModal
                     open={infoOpen}
-                    size={size}
                     toggleOpen={toggleInfo}
-                    onOpenCalculator={handleOpenCalculator}
+                    titles={SLANT_INFO_TITLES}
+                    cardSx={SLANT_INFO_CARD_SX}
+                    contentSxOverride={slantInfoContentSx}
+                    steps={[
+                        <InfoInstructions
+                            key="instructions"
+                            onOpenCalculator={handleOpenCalculator}
+                        />,
+                        <InfoExample key="example" />,
+                    ]}
                 />
             )}
         </GamePageLayout>

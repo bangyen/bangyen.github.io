@@ -83,33 +83,32 @@ export default function Info(props: InfoProps): React.ReactElement {
     };
 
     return (
-        <InfoModal open={open} toggleOpen={toggleOpen} titles={INFO_TITLES}>
-            {(step: number) => (
-                <>
-                    {step === 0 && <InfoInstructions />}
-                    {step === 1 && (
-                        <InfoExample
-                            palette={palette}
-                            getFrontProps={getFrontProps}
-                            getBackProps={getBackProps}
-                        />
-                    )}
-                    {step === 2 && (
-                        <InfoCalculator
-                            cols={cols}
-                            size={size}
-                            isMobile={isMobile}
-                            inputProps={inputProps}
-                            outputProps={outputProps}
-                            onReset={handleReset}
-                            onApply={() => {
-                                onApply(res);
-                            }}
-                            hasPattern={res.some(v => v !== 0)}
-                        />
-                    )}
-                </>
-            )}
-        </InfoModal>
+        <InfoModal
+            open={open}
+            toggleOpen={toggleOpen}
+            titles={INFO_TITLES}
+            steps={[
+                <InfoInstructions key="instructions" />,
+                <InfoExample
+                    key="example"
+                    palette={palette}
+                    getFrontProps={getFrontProps}
+                    getBackProps={getBackProps}
+                />,
+                <InfoCalculator
+                    key="calculator"
+                    cols={cols}
+                    size={size}
+                    isMobile={isMobile}
+                    inputProps={inputProps}
+                    outputProps={outputProps}
+                    onReset={handleReset}
+                    onApply={() => {
+                        onApply(res);
+                    }}
+                    hasPattern={res.some(v => v !== 0)}
+                />,
+            ]}
+        />
     );
 }
