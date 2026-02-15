@@ -1,36 +1,16 @@
-import { Backdrop, Modal, Box, IconButton } from '@mui/material';
 import React, { useState, useEffect, useCallback } from 'react';
 
 import { getProduct } from '../utils';
 import { getInput, getOutput, useHandler } from './Calculator';
-import { StepTitle, INFO_TITLES } from './Content';
+import { INFO_TITLES } from './Content';
 import { InfoCalculator } from './InfoCalculator';
 import { InfoExample } from './InfoExample';
 import { InfoInstructions } from './InfoInstructions';
-import { InfoNavigation } from './InfoNavigation';
-import {
-    infoBackdropSx,
-    infoCardSx,
-    infoCloseButtonSx,
-    infoContentSx,
-    infoHeaderSx,
-    infoModalSx,
-    infoOuterBoxSx,
-    infoStepContentSx,
-} from './styles';
 import type { Palette, PropsFactory } from '../../components/Board';
+import { InfoModal } from '../../components/InfoModal';
 import { useDrag } from '../../hooks/useDrag';
 
-import { CloseRounded } from '@/components/icons';
-import { GlassCard } from '@/components/ui/GlassCard';
 import { useMobile } from '@/hooks';
-
-// Type assertion for GlassCard component
-const TypedGlassCard = GlassCard as React.ComponentType<{
-    children?: React.ReactNode;
-    sx?: Record<string, unknown>;
-    onClick?: (event: React.MouseEvent) => void;
-}>;
 
 interface InfoProps {
     rows: number;
@@ -44,6 +24,11 @@ interface InfoProps {
     getBackProps: PropsFactory;
 }
 
+/**
+ * Three-step "How to Play" modal for Lights Out.
+ * Step 0: rule explanations, Step 1: example, Step 2: calculator.
+ * Calculator state is hoisted here so it persists when switching steps.
+ */
 export default function Info(props: InfoProps): React.ReactElement {
     const {
         rows,
@@ -57,10 +42,6 @@ export default function Info(props: InfoProps): React.ReactElement {
         getBackProps,
     } = props;
     const isMobile = useMobile('md');
-
-    // 0: Instructions, 1: Example, 2: Calculator
-    const [step, setStep] = useState(0);
-    const TOTAL_STEPS = 3;
 
     // Calculator State (hoisted to persist across steps)
     const [calcRow, setCalcRow] = useState<number[]>(new Array(cols).fill(0));
@@ -87,7 +68,7 @@ export default function Info(props: InfoProps): React.ReactElement {
 
     const { getDragProps } = useDrag({
         onAction: toggleTile,
-        checkEnabled: () => step === 2,
+        checkEnabled: () => true,
         posAttribute: 'data-col',
     });
 
@@ -101,88 +82,34 @@ export default function Info(props: InfoProps): React.ReactElement {
         setCalcRow(new Array(cols).fill(0));
     };
 
-    const handleNext = () => {
-        if (step < TOTAL_STEPS - 1) setStep(step + 1);
-        else toggleOpen();
-    };
-
-    const handleBack = () => {
-        if (step > 0) setStep(step - 1);
-    };
-
-    const handleClose = () => {
-        toggleOpen();
-    };
-
     return (
-        <Modal
-            open={open}
-            onClose={handleClose}
-            slots={{ backdrop: Backdrop }}
-            slotProps={{
-                backdrop: {
-                    sx: infoBackdropSx,
-                },
-            }}
-            sx={infoModalSx}
-        >
-            <Box sx={infoOuterBoxSx}>
-                <TypedGlassCard
-                    onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation();
-                    }}
-                    sx={infoCardSx}
-                >
-                    {/* Content Area */}
-                    <Box sx={infoContentSx(step)}>
-                        {/* Header (Title + Close Button) */}
-                        <Box sx={infoHeaderSx}>
-                            <StepTitle>{INFO_TITLES[step]}</StepTitle>
-                            <IconButton
-                                onClick={handleClose}
-                                size="small"
-                                sx={infoCloseButtonSx}
-                            >
-                                <CloseRounded />
-                            </IconButton>
-                        </Box>
-
-                        {/* Step Content */}
-                        <Box sx={infoStepContentSx(step)}>
-                            {step === 0 && <InfoInstructions />}
-                            {step === 1 && (
-                                <InfoExample
-                                    palette={palette}
-                                    getFrontProps={getFrontProps}
-                                    getBackProps={getBackProps}
-                                />
-                            )}
-                            {step === 2 && (
-                                <InfoCalculator
-                                    cols={cols}
-                                    size={size}
-                                    isMobile={isMobile}
-                                    inputProps={inputProps}
-                                    outputProps={outputProps}
-                                    onReset={handleReset}
-                                    onApply={() => {
-                                        onApply(res);
-                                    }}
-                                    hasPattern={res.some(v => v !== 0)}
-                                />
-                            )}
-                        </Box>
-                    </Box>
-
-                    {/* Footer (Navigation) */}
-                    <InfoNavigation
-                        step={step}
-                        totalSteps={TOTAL_STEPS}
-                        onBack={handleBack}
-                        onNext={handleNext}
-                    />
-                </TypedGlassCard>
-            </Box>
-        </Modal>
+        <InfoModal open={open} toggleOpen={toggleOpen} titles={INFO_TITLES}>
+            {(step: number) => (
+                <>
+                    {step === 0 && <InfoInstructions />}
+                    {step === 1 && (
+                        <InfoExample
+                            palette={palette}
+                            getFrontProps={getFrontProps}
+                            getBackProps={getBackProps}
+                        />
+                    )}
+                    {step === 2 && (
+                        <InfoCalculator
+                            cols={cols}
+                            size={size}
+                            isMobile={isMobile}
+                            inputProps={inputProps}
+                            outputProps={outputProps}
+                            onReset={handleReset}
+                            onApply={() => {
+                                onApply(res);
+                            }}
+                            hasPattern={res.some(v => v !== 0)}
+                        />
+                    )}
+                </>
+            )}
+        </InfoModal>
     );
 }

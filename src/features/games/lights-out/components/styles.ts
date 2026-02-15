@@ -1,27 +1,11 @@
 /**
- * Re-exports shared Info modal styles and defines Lights Out-specific
- * calculator styles, keeping component JSX focused on structure and logic.
+ * Lights Out-specific calculator styles, keeping component JSX focused
+ * on structure and logic.
  */
 
 import type { SxProps, Theme } from '@mui/material';
 
 import { COLORS } from '@/config/theme';
-
-// Re-export shared Info modal styles so existing imports keep working.
-export {
-    infoBackdropSx,
-    infoCardSx,
-    infoCloseButtonSx,
-    infoContentSx,
-    infoHeaderSx,
-    infoModalSx,
-    infoOuterBoxSx,
-    infoStepContentSx,
-} from '../../components/infoStyles';
-
-// ---------------------------------------------------------------------------
-// InfoCalculator
-// ---------------------------------------------------------------------------
 
 /** Root wrapper of the calculator step. */
 export const calculatorRootSx: SxProps<Theme> = {
