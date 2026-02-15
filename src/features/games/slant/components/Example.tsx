@@ -157,7 +157,7 @@ interface ExampleProps {
  * Animated 3×3 Slant demo that cycles through a step-by-step solve.
  * Each frame adds one slash; numbers transition from pending to satisfied.
  */
-export default function Example({ size }: ExampleProps): React.ReactElement {
+export function Example({ size }: ExampleProps): React.ReactElement {
     const frames = useMemo(() => getExampleFrames(), []);
 
     const [frameIdx, setFrameIdx] = useState(0);

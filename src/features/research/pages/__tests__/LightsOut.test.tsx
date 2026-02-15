@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { vi } from 'vitest';
 
-import LightsOutResearch from '../LightsOut';
+import { LightsOutResearch } from '../LightsOut';
 
 // Mock dependencies
 vi.mock('@/components/ui/Latex', () => ({

@@ -3,10 +3,11 @@ import React, { useCallback, useMemo, useReducer } from 'react';
 import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
 import { GamePageLayout } from '../../components/GamePageLayout';
-import { GAME_CONSTANTS } from '../../config';
-import { useGamePage } from '../../hooks/useGamePage';
+import { GAME_CONSTANTS } from '../../config/constants';
+import { useBaseGame } from '../../hooks/useBaseGame';
+import { useDrag } from '../../hooks/useDrag';
 import { useSkipTransition } from '../../hooks/useSkipTransition';
-import Info from '../components/Info';
+import { Info } from '../components/Info';
 import {
     LAYOUT_CONSTANTS,
     LIGHTS_OUT_STYLES,
@@ -26,7 +27,7 @@ import { useMobile } from '@/hooks';
 import { useCellFactory } from '@/utils/gameUtils';
 import { createCellIndex, type CellIndex } from '@/utils/types';
 
-export default function LightsOut() {
+export function LightsOut() {
     const mobile = useMobile('sm');
     const {
         rows,
@@ -36,22 +37,27 @@ export default function LightsOut() {
         size,
         solved,
         handleNext,
-        getDragProps,
         controlsProps,
-    } = useGamePage<BoardState, BoardAction>({
+    } = useBaseGame<BoardState, BoardAction>({
         ...getLightsOutGameConfig(mobile),
-        reducer: handleBoard,
-        getInitialState,
-        isSolved: (s: BoardState) => s.initialized && isSolved(s.grid),
-        interaction: {
-            createAction: (r: number, c: number) => ({
+        logic: {
+            reducer: handleBoard,
+            getInitialState,
+            isSolved: (s: BoardState) => s.initialized && isSolved(s.grid),
+        },
+    });
+
+    const { getDragProps } = useDrag({
+        onToggle: (r: number, c: number) => {
+            dispatch({
                 type: 'adjacent' as const,
                 row: createCellIndex(r),
                 col: createCellIndex(c),
-            }),
-            touchTimeout: GAME_CONSTANTS.timing.interactionDelay,
-            transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
+            });
         },
+        checkEnabled: () => !solved,
+        touchTimeout: GAME_CONSTANTS.timing.interactionDelay,
+        transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
     });
 
     const [open, toggleOpen] = useReducer((open: boolean) => !open, false);
@@ -110,7 +116,7 @@ export default function LightsOut() {
             trophyProps={{
                 show: solved,
                 onReset: handleNext,
-                boardSize: size,
+                size,
                 iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
                 primaryColor: palette.primary,
                 secondaryColor: palette.secondary,

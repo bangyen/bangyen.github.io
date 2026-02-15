@@ -1,5 +1,5 @@
 // Lights Out feature exports
-export { default as LightsOut } from './pages/LightsOut';
+export { LightsOut } from './pages/LightsOut';
 
 export * from './utils';
 export * from './types';

@@ -5,7 +5,7 @@ import { EmojiEventsRounded } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, SPACING } from '@/config/theme';
 
-interface TrophyOverlayProps {
+export interface TrophyOverlayProps {
     /** Whether the win card is visible. */
     show: boolean;
     /** Callback to advance to the next puzzle (used by auto-advance hook). */

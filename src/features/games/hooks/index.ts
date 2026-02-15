@@ -1,7 +1,6 @@
 // Games hooks exports
 export * from './useBaseGame';
 export * from './useDrag';
-export * from './useGamePage';
 export * from './useGamePersistence';
 export * from './useGridSize';
 export * from './boardSizeUtils';

@@ -11,12 +11,11 @@ import { BrowserRouter } from 'react-router-dom';
 import { vi, type Mock } from 'vitest';
 
 import type { ResearchDemoProps, ViewType } from '../../types';
-import ZSharp from '../ZSharp';
+import { ZSharp } from '../ZSharp';
 
 // Mocks
 vi.mock('../../components/ResearchDemo', () => ({
-    __esModule: true,
-    default: ({
+    ResearchDemo: ({
         title,
         chartData,
         viewTypes,

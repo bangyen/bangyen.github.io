@@ -119,7 +119,7 @@ interface ExampleProps {
     getBackProps: PropsFactory;
 }
 
-export default function Example({
+export function Example({
     start = [],
     dims = 3,
     size,

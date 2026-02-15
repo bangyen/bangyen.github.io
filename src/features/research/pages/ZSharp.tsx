@@ -69,7 +69,7 @@ const loadRealZSharpData = async (): Promise<DataPoint[]> => {
     return data;
 };
 
-const ZSharp: React.FC = () => {
+export const ZSharp: React.FC = () => {
     const { data: chartData, loading } = useResearchData(
         PAGE_TITLES.zsharp,
         loadRealZSharpData,
@@ -217,5 +217,3 @@ const ZSharp: React.FC = () => {
         />
     );
 };
-
-export default ZSharp;

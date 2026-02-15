@@ -2,7 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { vi, type Mock } from 'vitest';
 
-import LightsOut from '../LightsOut';
+import { LightsOut } from '../LightsOut';
 
 import { PAGE_TITLES } from '@/config/constants';
 import type {
@@ -159,7 +159,7 @@ vi.mock('@/components/ui/TooltipButton', () => ({
 }));
 
 vi.mock('@/features/games/lights-out/components/Info', () => ({
-    default: function MockInfo() {
+    Info: function MockInfo() {
         return <div data-testid="info-modal">Info</div>;
     },
 }));

@@ -2,7 +2,7 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
-import { Section, BackgroundBox, HeroContainer, PageLayout } from '../Layout';
+import { Section, BackgroundBox, HeroContainer, PageWrapper } from '../Layout';
 
 describe('Layout Components', () => {
     describe('Section', () => {
@@ -69,10 +69,12 @@ describe('Layout Components', () => {
         });
     });
 
-    describe('PageLayout', () => {
+    describe('PageWrapper', () => {
         test('renders children with full-height layout', () => {
             render(
-                <PageLayout data-testid="page-layout">Page Content</PageLayout>,
+                <PageWrapper data-testid="page-layout">
+                    Page Content
+                </PageWrapper>,
             );
             expect(screen.getByText('Page Content')).toBeInTheDocument();
             const layout = screen.getByTestId('page-layout');
@@ -80,7 +82,9 @@ describe('Layout Components', () => {
         });
 
         test('has correct default styles', () => {
-            render(<PageLayout data-testid="page-layout">Content</PageLayout>);
+            render(
+                <PageWrapper data-testid="page-layout">Content</PageWrapper>,
+            );
             const layout = screen.getByTestId('page-layout');
             expect(layout).toHaveStyle({ minHeight: '100vh', width: '100%' });
         });

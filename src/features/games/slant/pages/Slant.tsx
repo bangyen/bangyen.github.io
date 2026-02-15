@@ -11,10 +11,10 @@ import { useMobile } from '../../../../hooks';
 import { GameControls } from '../../components/GameControls';
 import { GameInfo } from '../../components/GameInfo';
 import { GamePageLayout } from '../../components/GamePageLayout';
-import { GAME_CONSTANTS } from '../../config';
+import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useDrag } from '../../hooks/useDrag';
-import Example from '../components/Example';
+import { Example } from '../components/Example';
 import { SlantBoardContent } from '../components/SlantBoardContent';
 import {
     getSlantGameConfig,
@@ -54,7 +54,7 @@ interface SavedSlantState extends Omit<
     satisfiedNodes: string[];
 }
 
-export default function Slant() {
+export function Slant() {
     const mobile = useMobile('sm');
     const [isGhostMode, setIsGhostMode] = React.useState(false);
     const [infoOpen, toggleInfo] = useReducer((v: boolean) => !v, false);
@@ -101,27 +101,30 @@ export default function Slant() {
         SlantAction
     >({
         ...getSlantGameConfig(mobile),
-        reducer: handleBoard,
-        getInitialState: (rows: number, cols: number) =>
-            getInitialState(rows, cols),
-        onNext: handleNextAsync,
-        isSolved: (s: SlantState) => s.solved,
-        persistence: {
-            enabled: !isGhostMode,
-            serialize: (s: SlantState) => ({
-                ...s,
-                errorNodes: [...s.errorNodes],
-                cycleCells: [...s.cycleCells],
-                satisfiedNodes: [...s.satisfiedNodes],
-            }),
-            deserialize: (saved: unknown) => {
-                const s = saved as SavedSlantState;
-                return {
+        logic: {
+            reducer: handleBoard,
+            getInitialState: (rows: number, cols: number) =>
+                getInitialState(rows, cols),
+            onNext: handleNextAsync,
+            isSolved: (s: SlantState) => s.solved,
+            manualResize: true,
+            persistence: {
+                enabled: !isGhostMode,
+                serialize: (s: SlantState) => ({
                     ...s,
-                    errorNodes: new Set(s.errorNodes),
-                    cycleCells: new Set(s.cycleCells),
-                    satisfiedNodes: new Set(s.satisfiedNodes),
-                } as SlantState;
+                    errorNodes: [...s.errorNodes],
+                    cycleCells: [...s.cycleCells],
+                    satisfiedNodes: [...s.satisfiedNodes],
+                }),
+                deserialize: (saved: unknown) => {
+                    const s = saved as SavedSlantState;
+                    return {
+                        ...s,
+                        errorNodes: new Set(s.errorNodes),
+                        cycleCells: new Set(s.cycleCells),
+                        satisfiedNodes: new Set(s.satisfiedNodes),
+                    } as SlantState;
+                },
             },
         },
     });
@@ -265,7 +268,7 @@ export default function Slant() {
             trophyProps={{
                 show: !isGhostMode && state.solved,
                 onReset: handleNextAsync,
-                boardSize: size,
+                size,
                 iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
             }}
             boardSx={boardSx}

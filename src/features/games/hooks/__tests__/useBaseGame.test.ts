@@ -27,11 +27,17 @@ describe('useBaseGame', () => {
     const defaultProps: any = {
         storageKey: 'test-game',
         pageTitle: 'Test Game',
-        headerOffset: { mobile: 50, desktop: 100 },
-        boardPadding: 20,
-        getInitialState: vi.fn().mockReturnValue({ some: 'initial-state' }),
-        reducer: vi.fn(state => state),
-        isSolved: vi.fn().mockReturnValue(false),
+        grid: {
+            headerOffset: { mobile: 50, desktop: 100 },
+        },
+        board: {
+            boardPadding: 20,
+        },
+        logic: {
+            getInitialState: vi.fn().mockReturnValue({ some: 'initial-state' }),
+            reducer: vi.fn(state => state),
+            isSolved: vi.fn().mockReturnValue(false),
+        },
     };
 
     beforeEach(() => {
@@ -72,7 +78,10 @@ describe('useBaseGame', () => {
         renderHook(() =>
             useBaseGame({
                 ...defaultProps,
-                boardPadding: paddingOffsetFn,
+                board: {
+                    ...defaultProps.board,
+                    boardPadding: paddingOffsetFn,
+                },
             }),
         );
 

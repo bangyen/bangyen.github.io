@@ -18,7 +18,7 @@ interface ResearchViewSelectorProps<T> {
     onViewTypeChange: (value: string) => void;
 }
 
-const ResearchViewSelector = <T,>({
+export const ResearchViewSelector = <T,>({
     viewTypes,
     currentViewType,
     onViewTypeChange,
@@ -100,5 +100,3 @@ const ResearchViewSelector = <T,>({
         </Box>
     );
 };
-
-export default ResearchViewSelector;

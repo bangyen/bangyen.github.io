@@ -6,7 +6,7 @@ import { registerSW } from 'virtual:pwa-register';
 
 registerSW({ immediate: true });
 
-import ErrorBoundary from './components/layout/ErrorBoundary';
+import { ErrorBoundary } from './components/layout/ErrorBoundary';
 import './styles/animations.css';
 import { ROUTES } from './config/constants';
 import { COLORS, createAppTheme } from './config/theme';
@@ -19,14 +19,32 @@ import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
 
 // Lazy load pages
-const Home = lazy(() => import('./features/home/pages/Home'));
-const Error = lazy(() => import('./pages/Error'));
-const LightsOut = lazy(
-    () => import('./features/games/lights-out/pages/LightsOut'),
+const Home = lazy(() =>
+    import('./features/home/pages/Home').then(m => ({ default: m.Home })),
 );
-const ZSharp = lazy(() => import('./features/research/pages/ZSharp'));
-const Oligopoly = lazy(() => import('./features/research/pages/Oligopoly'));
-const Slant = lazy(() => import('./features/games/slant/pages/Slant'));
+const Error = lazy(() =>
+    import('./pages/Error').then(m => ({ default: m.Error })),
+);
+const LightsOut = lazy(() =>
+    import('./features/games/lights-out/pages/LightsOut').then(m => ({
+        default: m.LightsOut,
+    })),
+);
+const ZSharp = lazy(() =>
+    import('./features/research/pages/ZSharp').then(m => ({
+        default: m.ZSharp,
+    })),
+);
+const Oligopoly = lazy(() =>
+    import('./features/research/pages/Oligopoly').then(m => ({
+        default: m.Oligopoly,
+    })),
+);
+const Slant = lazy(() =>
+    import('./features/games/slant/pages/Slant').then(m => ({
+        default: m.Slant,
+    })),
+);
 
 const App = (): React.ReactElement => {
     const { resolvedMode } = useThemeContext();
