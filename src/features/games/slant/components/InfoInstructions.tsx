@@ -61,7 +61,7 @@ export function InfoInstructions({ onOpenCalculator }: InfoInstructionsProps) {
                     px: 2,
                     ml: { xs: 5, sm: 4 },
                     pt: { xs: 0, sm: 3 },
-                    mt: { xs: -8, sm: 0 },
+                    mt: { xs: -2, sm: 0 },
                 }}
             >
                 <Button
