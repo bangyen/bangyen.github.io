@@ -5,37 +5,81 @@ import { EMPTY, FORWARD, BACKWARD } from '../types';
 import { calculateNumbers } from './validation';
 import { DSU } from '../../../../utils/DSU';
 
+type SolveResult = 'solved' | 'stuck' | 'contradiction';
+
 /**
- * Checks if a puzzle can be solved using deductive logic alone.
- * Optimized to use local DSU checks for cycles avoiding O(N^2) behavior.
+ * Verifies that the completed grid satisfies all clue constraints.
+ * Ensures the solution matches every visible number hint.
  */
-/**
- * Checks if a Slant puzzle can be solved using deductive logic alone.
- *
- * Logic involves:
- * 1. Node counts (checking if all remaining slashes around a node are forced).
- * 2. Cycle prevention (checking if a move would create a loop in the network).
- *
- * Optimized to use local DSU (Disjoint Set Union) for O(1) cycle detection.
- *
- * @param maskedNumbers - Clue numbers at node intersections
- * @param rows - Grid rows
- * @param cols - Grid columns
- * @returns True if the puzzle has a unique solution reached by logic.
- */
-export function checkDeductiveSolvability(
+function verifyGrid(
+    grid: CellState[][],
     maskedNumbers: (number | null)[][],
     rows: number,
     cols: number,
 ): boolean {
-    const grid: CellState[][] = Array.from(
-        { length: rows },
-        () => new Array(cols).fill(EMPTY) as CellState[],
-    );
-    const dsu = new DSU((rows + 1) * (cols + 1));
+    const currentNumbers = calculateNumbers(grid, rows, cols);
+    for (let r = 0; r <= rows; r++) {
+        for (let c = 0; c <= cols; c++) {
+            const target = maskedNumbers[r]?.[c];
+            if (
+                target !== null &&
+                target !== undefined &&
+                currentNumbers[r]?.[c] !== target
+            )
+                return false;
+        }
+    }
+    return true;
+}
+
+/**
+ * Places a cell value into the grid and updates the DSU.
+ * Returns false if the placement creates a cycle (contradiction).
+ */
+function placeCell(
+    grid: CellState[][],
+    dsu: DSU,
+    r: number,
+    c: number,
+    val: CellState,
+    cols: number,
+): boolean {
+    const row = grid[r];
+    if (!row) return false;
+    row[c] = val;
+    const u =
+        val === FORWARD
+            ? getNodeIndex(r, c + 1, cols)
+            : getNodeIndex(r, c, cols);
+    const v =
+        val === FORWARD
+            ? getNodeIndex(r + 1, c, cols)
+            : getNodeIndex(r + 1, c + 1, cols);
+    if (dsu.connected(u, v)) return false;
+    dsu.union(u, v);
+    return true;
+}
+
+/**
+ * Applies basic deduction rules until no more progress can be made.
+ *
+ * Rules applied (in order of cost):
+ * 1. Node constraints — forces cells when a node's slash count is fully determined.
+ * 2. Cycle prevention — forces cells when one orientation would create a loop.
+ * 3. Cross-node elimination — eliminates a cell orientation that would violate
+ *    any of its four adjacent corner-node constraints.
+ *
+ * Mutates grid and dsu in place.
+ */
+function applyBasicDeductions(
+    grid: CellState[][],
+    maskedNumbers: (number | null)[][],
+    rows: number,
+    cols: number,
+    dsu: DSU,
+): SolveResult {
     let changed = true;
 
-    // We loop until no more deductions can be made
     while (changed) {
         changed = false;
 
@@ -67,25 +111,19 @@ export function checkDeductiveSolvability(
                     }
                 }
 
+                // Contradiction: already exceeded target or can't reach it
+                if (confirmedIn > target) return 'contradiction';
+                if (confirmedIn + unknown.length < target)
+                    return 'contradiction';
+
                 if (confirmedIn === target && unknown.length > 0) {
                     // All unknown must be "the other one"
                     for (const { gr, gc, pt } of unknown) {
-                        const row = grid[gr];
-                        if (row?.[gc] === EMPTY) {
+                        if (grid[gr]?.[gc] === EMPTY) {
                             const val = pt === FORWARD ? BACKWARD : FORWARD;
-                            row[gc] = val;
+                            if (!placeCell(grid, dsu, gr, gc, val, cols))
+                                return 'contradiction';
                             changed = true;
-                            // Update DSU
-                            const u =
-                                val === FORWARD
-                                    ? getNodeIndex(gr, gc + 1, cols)
-                                    : getNodeIndex(gr, gc, cols);
-                            const v =
-                                val === FORWARD
-                                    ? getNodeIndex(gr + 1, gc, cols)
-                                    : getNodeIndex(gr + 1, gc + 1, cols);
-                            if (dsu.connected(u, v)) return false; // Cycle created by forced move
-                            dsu.union(u, v);
                         }
                     }
                 } else if (
@@ -94,21 +132,10 @@ export function checkDeductiveSolvability(
                 ) {
                     // All unknown must be "in"
                     for (const { gr, gc, pt } of unknown) {
-                        const row = grid[gr];
-                        if (row?.[gc] === EMPTY) {
-                            row[gc] = pt;
+                        if (grid[gr]?.[gc] === EMPTY) {
+                            if (!placeCell(grid, dsu, gr, gc, pt, cols))
+                                return 'contradiction';
                             changed = true;
-                            // Update DSU
-                            const u =
-                                pt === FORWARD
-                                    ? getNodeIndex(gr, gc + 1, cols)
-                                    : getNodeIndex(gr, gc, cols);
-                            const v =
-                                pt === FORWARD
-                                    ? getNodeIndex(gr + 1, gc, cols)
-                                    : getNodeIndex(gr + 1, gc + 1, cols);
-                            if (dsu.connected(u, v)) return false; // Cycle created by forced move
-                            dsu.union(u, v);
                         }
                     }
                 }
@@ -123,54 +150,141 @@ export function checkDeductiveSolvability(
                 const rowArr = grid[r];
                 if (rowArr?.[c] !== EMPTY) continue;
 
-                // Check FORWARD option: connects (r, c+1) and (r+1, c)
                 const uF = getNodeIndex(r, c + 1, cols);
                 const vF = getNodeIndex(r + 1, c, cols);
                 const isCycleForward = dsu.connected(uF, vF);
 
-                // Check BACKWARD option: connects (r, c) and (r+1, c+1)
                 const uB = getNodeIndex(r, c, cols);
                 const vB = getNodeIndex(r + 1, c + 1, cols);
                 const isCycleBackward = dsu.connected(uB, vB);
 
                 if (isCycleForward && isCycleBackward) {
-                    return false; // Impossible state
+                    return 'contradiction';
                 }
 
                 if (isCycleForward) {
-                    // Must be BACKWARD
                     rowArr[c] = BACKWARD;
                     changed = true;
                     dsu.union(uB, vB);
                 } else if (isCycleBackward) {
-                    // Must be FORWARD
                     rowArr[c] = FORWARD;
                     changed = true;
                     dsu.union(uF, vF);
                 }
             }
         }
-    }
 
-    // Check if fully solved
-    const isFull = grid.every(row => row.every(cell => cell !== EMPTY));
-    if (!isFull) return false;
+        if (changed) continue;
 
-    // Verify constraints one last time (parity/counts)
-    const currentNumbers = calculateNumbers(grid, rows, cols);
-    for (let r = 0; r <= rows; r++) {
-        for (let c = 0; c <= cols; c++) {
-            const target = maskedNumbers[r]?.[c];
-            if (
-                target !== null &&
-                target !== undefined &&
-                currentNumbers[r]?.[c] !== target
-            )
-                return false;
+        // Rule 3: Cross-node cell elimination
+        // For each empty cell, check if either orientation would violate
+        // any of its four adjacent corner-node constraints.
+        for (let r = 0; r < rows; r++) {
+            for (let c = 0; c < cols; c++) {
+                const rowArr = grid[r];
+                if (rowArr?.[c] !== EMPTY) continue;
+
+                let forwardBad = false;
+                let backwardBad = false;
+
+                // FORWARD (/) touches nodes (r, c+1) and (r+1, c)
+                // BACKWARD (\) touches nodes (r, c) and (r+1, c+1)
+                const corners: {
+                    nr: number;
+                    nc: number;
+                    touchedBy: CellState;
+                }[] = [
+                    { nr: r, nc: c, touchedBy: BACKWARD },
+                    { nr: r, nc: c + 1, touchedBy: FORWARD },
+                    { nr: r + 1, nc: c, touchedBy: FORWARD },
+                    { nr: r + 1, nc: c + 1, touchedBy: BACKWARD },
+                ];
+
+                for (const { nr, nc, touchedBy } of corners) {
+                    const target = maskedNumbers[nr]?.[nc];
+                    if (target === null || target === undefined) continue;
+
+                    // Recompute counts for this corner node
+                    const adjacent = [
+                        { gr: nr - 1, gc: nc - 1, pt: BACKWARD },
+                        { gr: nr - 1, gc: nc, pt: FORWARD },
+                        { gr: nr, gc: nc - 1, pt: FORWARD },
+                        { gr: nr, gc: nc, pt: BACKWARD },
+                    ].filter(
+                        ({ gr, gc }) =>
+                            gr >= 0 && gr < rows && gc >= 0 && gc < cols,
+                    );
+
+                    let confirmedIn = 0;
+                    let unknownCount = 0;
+                    for (const cell of adjacent) {
+                        const current = grid[cell.gr]?.[cell.gc];
+                        if (current === EMPTY) unknownCount++;
+                        else if (current === cell.pt) confirmedIn++;
+                    }
+
+                    if (touchedBy === FORWARD) {
+                        // FORWARD touches this node: confirmedIn would become +1
+                        if (confirmedIn + 1 > target) forwardBad = true;
+                        // BACKWARD doesn't touch: remaining unknowns shrink by 1
+                        if (confirmedIn + (unknownCount - 1) < target)
+                            backwardBad = true;
+                    } else {
+                        // BACKWARD touches this node
+                        if (confirmedIn + 1 > target) backwardBad = true;
+                        // FORWARD doesn't touch: remaining unknowns shrink by 1
+                        if (confirmedIn + (unknownCount - 1) < target)
+                            forwardBad = true;
+                    }
+                }
+
+                if (forwardBad && backwardBad) return 'contradiction';
+                if (forwardBad) {
+                    if (!placeCell(grid, dsu, r, c, BACKWARD, cols))
+                        return 'contradiction';
+                    changed = true;
+                } else if (backwardBad) {
+                    if (!placeCell(grid, dsu, r, c, FORWARD, cols))
+                        return 'contradiction';
+                    changed = true;
+                }
+            }
         }
     }
 
-    return true;
+    const isFull = grid.every(row => row.every(cell => cell !== EMPTY));
+    return isFull ? 'solved' : 'stuck';
+}
+
+/**
+ * Checks if a Slant puzzle can be solved using deductive logic alone.
+ *
+ * Applies three levels of deduction (each more powerful than the last):
+ * 1. Node constraints — forces cells when a node's slash count is determined.
+ * 2. Cycle prevention — forces cells when one option would create a loop.
+ * 3. Cross-node elimination — eliminates options violating adjacent node bounds.
+ *
+ * @param maskedNumbers - Clue numbers at node intersections
+ * @param rows - Grid rows
+ * @param cols - Grid columns
+ * @returns True if the puzzle has a unique solution reached by logic.
+ */
+export function checkDeductiveSolvability(
+    maskedNumbers: (number | null)[][],
+    rows: number,
+    cols: number,
+): boolean {
+    const grid: CellState[][] = Array.from(
+        { length: rows },
+        () => new Array(cols).fill(EMPTY) as CellState[],
+    );
+    const dsu = new DSU((rows + 1) * (cols + 1));
+
+    const result = applyBasicDeductions(grid, maskedNumbers, rows, cols, dsu);
+    if (result === 'contradiction') return false;
+    if (result !== 'solved') return false;
+
+    return verifyGrid(grid, maskedNumbers, rows, cols);
 }
 
 /**
