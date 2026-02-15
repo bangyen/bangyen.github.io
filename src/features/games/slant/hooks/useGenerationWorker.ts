@@ -212,6 +212,17 @@ export function useGenerationWorker({
         [getInitialState],
     );
 
+    /** Cancel any pending generation (debounce, sync fallback, or prefetch). */
+    const cancelGeneration = useCallback(() => {
+        if (debounceRef.current !== null) {
+            clearTimeout(debounceRef.current);
+            debounceRef.current = null;
+        }
+        cancelAnimationFrame(rafRef.current);
+        clearPrefetch();
+        setGenerating(false);
+    }, [clearPrefetch]);
+
     /**
      * Request generation using the latest dimensions from the ref.
      * If a prefetched result is available it is applied instantly
@@ -290,6 +301,15 @@ export function useGenerationWorker({
                 if (workerPendingRef.current > 0) return;
 
                 const { rows: r, cols: c, numbers, solution } = e.data.payload;
+
+                // Discard stale responses whose dimensions no longer match
+                // (e.g. a size change restored saved state and canceled generation).
+                const dims = dimsRef.current;
+                if (r !== dims.rows || c !== dims.cols) {
+                    setGenerating(false);
+                    return;
+                }
+
                 const newState = buildHydrateState(r, c, numbers, solution);
 
                 // If this result was prefetched, buffer it instead of
@@ -345,7 +365,13 @@ export function useGenerationWorker({
             }
             worker.terminate();
         };
-    }, [dispatchRef]);
+    }, [dispatchRef, dimsRef]);
 
-    return { generating, requestGeneration, handleNextAsync, prefetch };
+    return {
+        generating,
+        requestGeneration,
+        handleNextAsync,
+        prefetch,
+        cancelGeneration,
+    };
 }
