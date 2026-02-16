@@ -26,11 +26,18 @@ interface ResearchControlsProps {
     resetLabel?: string;
 }
 
-export const ResearchControls: React.FC<ResearchControlsProps> = ({
+/**
+ * Renders parameter toggle buttons and an optional reset button.
+ *
+ * Memoised because the control configs are typically stable between
+ * renders and the component should not re-render when unrelated
+ * parent state (e.g. chart data) changes.
+ */
+export const ResearchControls = React.memo(function ResearchControls({
     controls,
     onReset,
     resetLabel = 'Reset',
-}) => {
+}: ResearchControlsProps) {
     if (controls.length === 0) return null;
 
     return (
@@ -223,4 +230,4 @@ export const ResearchControls: React.FC<ResearchControlsProps> = ({
             </Grid>
         </Box>
     );
-};
+});

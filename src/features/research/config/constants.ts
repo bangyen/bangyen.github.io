@@ -1,3 +1,25 @@
+import type { ChartConfig } from '../types';
+
+/**
+ * Sensible chart defaults used by `ResearchDemo` when the caller does
+ * not provide an explicit `chartConfig` prop.  Extracted here so the
+ * object is created once at module scope instead of on every render,
+ * and can be reused by other research components that need the same
+ * baseline configuration.
+ */
+export const DEFAULT_CHART_CONFIG: ChartConfig = {
+    type: 'line',
+    lines: [],
+    xAxisKey: 'x',
+    yAxisFormatter: (value: number) => value.toFixed(2),
+    yAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
+    dualYAxis: false,
+    rightYAxisFormatter: (value: number) => value.toFixed(2),
+    rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
+    tooltipLabelFormatter: (value: unknown) => `Round ${String(value)}`,
+    tooltipFormatter: (value: number, name: string) => [value.toFixed(2), name],
+};
+
 export const RESEARCH_STYLES = {
     // Glass/Transparency effects for scientific UI
     GLASS: {

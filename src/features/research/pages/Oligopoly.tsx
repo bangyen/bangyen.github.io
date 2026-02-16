@@ -156,7 +156,7 @@ export const Oligopoly: React.FC = () => {
     ];
 
     const chartConfig = {
-        type: 'line',
+        type: 'line' as const,
         xAxisKey: 'round',
         yAxisFormatter: (value: number) => `$${value.toFixed(2)}`,
         yAxisDomain: buildAxisDomain(5),

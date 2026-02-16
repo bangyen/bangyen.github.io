@@ -4,16 +4,17 @@ import React from 'react';
 import { RESEARCH_STYLES } from '../config/constants';
 
 import { GlassCard } from '@/components/ui/GlassCard';
+import { LazySuspense } from '@/components/ui/LazySuspense';
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
-const PeriodicityCalculator = React.lazy(() =>
-    import('./PeriodicityCalculator').then(m => ({
-        default: m.PeriodicityCalculator,
-    })),
+import { lazyNamed } from '@/utils/lazyNamed';
+
+const PeriodicityCalculator = lazyNamed(
+    () => import('./PeriodicityCalculator'),
+    'PeriodicityCalculator',
 );
-const SolvabilityAnalyzer = React.lazy(() =>
-    import('./SolvabilityAnalyzer').then(m => ({
-        default: m.SolvabilityAnalyzer,
-    })),
+const SolvabilityAnalyzer = lazyNamed(
+    () => import('./SolvabilityAnalyzer'),
+    'SolvabilityAnalyzer',
 );
 
 export const VerificationTools: React.FC = () => {
@@ -29,16 +30,7 @@ export const VerificationTools: React.FC = () => {
             >
                 Verification Tools
             </Typography>
-            <React.Suspense
-                fallback={
-                    <Typography
-                        variant="body2"
-                        sx={{ textAlign: 'center', opacity: 0.6 }}
-                    >
-                        Loading tools...
-                    </Typography>
-                }
-            >
+            <LazySuspense message="Loading tools..." height="auto">
                 <Grid
                     container={true}
                     spacing={4}
@@ -71,7 +63,7 @@ export const VerificationTools: React.FC = () => {
                         </GlassCard>
                     </Grid>
                 </Grid>
-            </React.Suspense>
+            </LazySuspense>
         </Box>
     );
 };

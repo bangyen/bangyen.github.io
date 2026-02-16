@@ -34,7 +34,7 @@ const periodicityData: PeriodicityData[] = [
 
 export const LightsOutResearch: React.FC = () => {
     const chartConfig = {
-        type: 'line',
+        type: 'line' as const,
         xAxisKey: 'n',
         yAxisFormatter: (value: number) => value.toString(),
         yAxisDomain: ['0', String(RESEARCH_CONSTANTS.lightsOut.yAxisMax)],

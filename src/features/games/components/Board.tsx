@@ -28,8 +28,14 @@ export interface BoardProps {
  * Both layers default to the same dimensions (`rows` x `cols`).
  * Pass `cellRows` / `cellCols` when the bottom layer should be a
  * different size (e.g. a dual grid where vertices and faces differ).
+ *
+ * Memoised so that parent re-renders caused by game-state dispatch
+ * (e.g. cell toggles) skip a full NxN grid reconciliation when the
+ * board's own props have not changed.
  */
-export function Board(props: BoardProps): React.ReactElement {
+export const Board = React.memo(function Board(
+    props: BoardProps,
+): React.ReactElement {
     const {
         overlayProps,
         cellProps,
@@ -95,4 +101,4 @@ export function Board(props: BoardProps): React.ReactElement {
             </Box>
         </Box>
     );
-}
+});

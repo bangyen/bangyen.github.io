@@ -4,11 +4,12 @@ import React from 'react';
 import { ResearchControls } from './ResearchControls';
 import { ResearchHeader } from './ResearchHeader';
 import { ResearchViewSelector } from './ResearchViewSelector';
+import { DEFAULT_CHART_CONFIG } from '../config/constants';
 import { useCurrentView } from '../hooks/useCurrentView';
 import type { ResearchDemoProps } from '../types';
 
 import { PageLayout } from '@/components/layout/PageLayout';
-import { LoadingFallback } from '@/components/ui/LoadingFallback';
+import { LazySuspense } from '@/components/ui/LazySuspense';
 import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
 import { useMobile } from '@/hooks';
 import { lazyNamed } from '@/utils/lazyNamed';
@@ -24,21 +25,7 @@ export const ResearchDemo = <T,>({
     subtitle,
     githubUrl,
     chartData = [],
-    chartConfig = {
-        type: 'line',
-        lines: [],
-        xAxisKey: 'x',
-        yAxisFormatter: (value: number) => value.toFixed(2),
-        yAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
-        dualYAxis: false,
-        rightYAxisFormatter: (value: number) => value.toFixed(2),
-        rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
-        tooltipLabelFormatter: (value: unknown) => `Round ${String(value)}`,
-        tooltipFormatter: (value: number, name: string) => [
-            value.toFixed(2),
-            name,
-        ],
-    },
+    chartConfig = DEFAULT_CHART_CONFIG,
     viewTypes = [],
     currentViewType = 'default',
     onViewTypeChange = () => {},
@@ -116,14 +103,7 @@ export const ResearchDemo = <T,>({
                             isMobile={isMobile}
                         />
 
-                        <React.Suspense
-                            fallback={
-                                <LoadingFallback
-                                    message="Loading Chart..."
-                                    height={400}
-                                />
-                            }
-                        >
+                        <LazySuspense message="Loading Chart..." height={400}>
                             <ResearchChart
                                 currentData={currentData}
                                 currentChartConfig={currentChartConfig}
@@ -132,7 +112,7 @@ export const ResearchDemo = <T,>({
                                 chartTitle={calculatedChartTitle}
                                 isMobile={isMobile}
                             />
-                        </React.Suspense>
+                        </LazySuspense>
 
                         <ResearchViewSelector
                             viewTypes={viewTypes}

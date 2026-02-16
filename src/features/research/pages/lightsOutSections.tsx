@@ -25,10 +25,11 @@ import { RESEARCH_STYLES } from '../config/constants';
 
 import { LaunchRounded } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
-const Latex = React.lazy(() =>
-    import('@/components/ui/Latex').then(module => ({ default: module.Latex })),
-);
+import { LazySuspense } from '@/components/ui/LazySuspense';
 import { COLORS, SPACING } from '@/config/theme';
+import { lazyNamed } from '@/utils/lazyNamed';
+
+const Latex = lazyNamed(() => import('@/components/ui/Latex'), 'Latex');
 
 // ---------------------------------------------------------------------------
 // AlgorithmOverview
@@ -45,9 +46,9 @@ export function AlgorithmOverview(): React.ReactElement {
             <Typography variant="body1" sx={{ ...researchBodySx, mb: 3 }}>
                 The solver models the Lights Out game using Linear Algebra over
                 the field{' '}
-                <React.Suspense fallback="data">
+                <LazySuspense inline inlineFallback="data">
                     <Latex formula="\mathbb{F}_2" />
-                </React.Suspense>{' '}
+                </LazySuspense>{' '}
                 (where 1 + 1 = 0). Instead of performing Gaussian elimination on
                 a large (mn) × (mn) matrix, this implementation uses
                 <strong> Light Chasing</strong> logic combined with{' '}
@@ -85,19 +86,19 @@ export function AlgorithmOverview(): React.ReactElement {
                                 Solving:
                             </Box>{' '}
                             To solve a configuration, we construct the matrix{' '}
-                            <React.Suspense fallback="A">
+                            <LazySuspense inline inlineFallback="A">
                                 <Latex formula="A = F_{m+1}(T)" />
-                            </React.Suspense>
+                            </LazySuspense>
                             , where{' '}
-                            <React.Suspense fallback="T">
+                            <LazySuspense inline inlineFallback="T">
                                 <Latex formula="T" />
-                            </React.Suspense>{' '}
+                            </LazySuspense>{' '}
                             is the transition matrix for a single row. The
                             solution for the first row is then found by solving
                             a linear system involving{' '}
-                            <React.Suspense fallback="A">
+                            <LazySuspense inline inlineFallback="A">
                                 <Latex formula="A" />
-                            </React.Suspense>
+                            </LazySuspense>
                             .
                         </Typography>
                     </li>
@@ -128,9 +129,9 @@ export function IdentityMatrixCard(): React.ReactElement {
             <Typography variant="body1" sx={researchBodySx}>
                 For certain grid dimensions (m × n), the solver transformation
                 behaves as an Identity Matrix over the field{' '}
-                <React.Suspense fallback="F2">
+                <LazySuspense inline inlineFallback="F2">
                     <Latex formula="\mathbb{F}_2" />
-                </React.Suspense>
+                </LazySuspense>
                 . This means that if the grid is reduced to a state where only
                 the top row is active, the solution pattern required to clear
                 the grid is identical to that input pattern.
@@ -153,18 +154,18 @@ export function MathDerivation(): React.ReactElement {
             </Typography>
             <Typography variant="body1" sx={{ ...researchBodySx, mb: 4 }}>
                 Let{' '}
-                <React.Suspense fallback="An">
+                <LazySuspense inline inlineFallback="An">
                     <Latex formula="A_n" />
-                </React.Suspense>{' '}
+                </LazySuspense>{' '}
                 be the adjacency matrix of the path graph{' '}
-                <React.Suspense fallback="Pn">
+                <LazySuspense inline inlineFallback="Pn">
                     <Latex formula="P_n" />
-                </React.Suspense>
+                </LazySuspense>
                 . The &quot;weights&quot; correspond to the Fibonacci
                 polynomials{' '}
-                <React.Suspense fallback="Fk(x)">
+                <LazySuspense inline inlineFallback="Fk(x)">
                     <Latex formula="F_k(x)" />
-                </React.Suspense>
+                </LazySuspense>
                 . The condition for the calculator to act as the identity matrix
                 is equivalent to:
             </Typography>
@@ -178,9 +179,9 @@ export function MathDerivation(): React.ReactElement {
                     borderRadius: SPACING.borderRadius.md,
                 }}
             >
-                <React.Suspense fallback="Formula...">
+                <LazySuspense inline inlineFallback="Formula...">
                     <Latex block formula="F_{n+1}(x) \mid (F_{m+1}(x+1) + 1)" />
-                </React.Suspense>
+                </LazySuspense>
                 <Typography
                     variant="caption"
                     sx={{
@@ -190,9 +191,9 @@ export function MathDerivation(): React.ReactElement {
                     }}
                 >
                     (over the field{' '}
-                    <React.Suspense fallback="F2[x]">
+                    <LazySuspense inline inlineFallback="F2[x]">
                         <Latex formula="\mathbb{F}_2[x]" />
-                    </React.Suspense>
+                    </LazySuspense>
                     )
                 </Typography>
             </Box>
@@ -228,9 +229,9 @@ export function PeriodicityTable(): React.ReactElement {
             <Typography variant="body1" sx={{ ...researchBodySx, mb: 4 }}>
                 Mathematically proven for all grid heights m. Patterns are
                 expressed as{' '}
-                <React.Suspense fallback="m mod z in Rn">
+                <LazySuspense inline inlineFallback="m mod z in Rn">
                     <Latex formula="m \pmod z \in R_n" />
-                </React.Suspense>
+                </LazySuspense>
                 .
             </Typography>
 
