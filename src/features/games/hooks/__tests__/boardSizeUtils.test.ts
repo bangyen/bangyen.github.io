@@ -11,14 +11,14 @@ describe('calculateBoardSize', () => {
         height: 1000,
         mobile: false,
         headerOffset: { mobile: 50, desktop: 100 },
-        paddingOffset: 20 as number | { x: number; y: number },
+        boardPadding: 20 as number | { x: number; y: number },
         boardMaxWidth: 1200,
         boardSizeFactor: 0.9,
         maxCellSize: 100,
         remBase: 16,
     };
 
-    it('should calculate cell size with numeric paddingOffset', () => {
+    it('should calculate cell size with numeric boardPadding', () => {
         const result = calculateBoardSize(defaultConfig);
 
         // pX = 0, pY = 20
@@ -29,10 +29,10 @@ describe('calculateBoardSize', () => {
         expect(result).toBe(6.25);
     });
 
-    it('should calculate cell size with object paddingOffset', () => {
+    it('should calculate cell size with object boardPadding', () => {
         const result = calculateBoardSize({
             ...defaultConfig,
-            paddingOffset: { x: 50, y: 100 },
+            boardPadding: { x: 50, y: 100 },
         });
 
         // pX = 50, pY = 100
@@ -49,7 +49,7 @@ describe('calculateBoardSize', () => {
             width: 400,
             height: 600,
             mobile: true,
-            paddingOffset: 0,
+            boardPadding: 0,
         });
 
         // pX=0, pY=0

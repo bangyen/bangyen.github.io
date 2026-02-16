@@ -18,7 +18,7 @@ export interface BoardSizeConfig {
         desktop: number;
     };
     /** Padding to subtract from available space */
-    paddingOffset: number | { x: number; y: number };
+    boardPadding: number | { x: number; y: number };
     /** Maximum board width in pixels */
     boardMaxWidth: number;
     /** Factor to reduce available space (0-1) */
@@ -47,7 +47,7 @@ export interface BoardSizeConfig {
  *   rows: 5, cols: 5,
  *   width: 1024, height: 768, mobile: false,
  *   headerOffset: { mobile: 56, desktop: 64 },
- *   paddingOffset: 16,
+ *   boardPadding: 16,
  *   boardMaxWidth: 1200,
  *   boardSizeFactor: 0.9,
  *   maxCellSize: 100,
@@ -62,7 +62,7 @@ export function calculateBoardSize({
     height,
     mobile,
     headerOffset,
-    paddingOffset,
+    boardPadding,
     boardMaxWidth,
     boardSizeFactor,
     maxCellSize,
@@ -72,9 +72,8 @@ export function calculateBoardSize({
         ? headerOffset.mobile
         : headerOffset.desktop;
 
-    const pX = typeof paddingOffset === 'number' ? 0 : paddingOffset.x;
-    const pY =
-        typeof paddingOffset === 'number' ? paddingOffset : paddingOffset.y;
+    const pX = typeof boardPadding === 'number' ? 0 : boardPadding.x;
+    const pY = typeof boardPadding === 'number' ? boardPadding : boardPadding.y;
 
     const maxW = (Math.min(width, boardMaxWidth) - pX) * boardSizeFactor;
     const maxH = (height - currentHeaderOffset - pY) * boardSizeFactor;

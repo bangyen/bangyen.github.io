@@ -1,24 +1,45 @@
 import { Box } from '@mui/material';
 
+import { iconSx } from './renderers.styles';
 import type { DragProps } from '../../hooks/useDrag';
 import { LIGHTS_OUT_STYLES } from '../config';
 import type { Getters } from '../types';
 
 import { getPosKey } from '@/utils/gameUtils';
 
-const ICON = (
-    <Box
-        sx={{
-            width: '45%',
-            height: '45%',
-            borderRadius: '50%',
-            backgroundColor: 'currentColor',
-        }}
-    />
-);
+const ICON = <Box sx={iconSx} />;
 
 /**
- * Build per-cell props for the interactive front layer.
+ * Visual-only cell factory for the front layer.
+ *
+ * Returns appearance props (color, border, icon, aria-label) without any
+ * drag interaction, so the same factory can drive both the interactive
+ * board (via `getFrontProps`) and non-interactive contexts like the
+ * info-modal example animation.
+ */
+export function getCellVisualProps(getters: Getters, skipTransition?: boolean) {
+    const { getColor, getBorder } = getters;
+
+    return (row: number, col: number) => {
+        const style = getBorder(row, col);
+        const { front, isLit } = getColor(row, col);
+
+        return {
+            children: ICON,
+            backgroundColor: front,
+            color: front,
+            style,
+            ...(skipTransition ? { transition: 'none' } : {}),
+            'aria-label': `Light at row ${String(row + 1)}, column ${String(col + 1)}, currently ${isLit ? 'lit' : 'unlit'}`,
+        };
+    };
+}
+
+/**
+ * Drag-enhanced cell factory for the interactive front layer.
+ *
+ * Merges drag interaction props on top of the visual props from
+ * `getCellVisualProps`, adding hover behavior and pointer event handlers.
  *
  * When `skipTransition` is true the cells render with `transition: 'none'`
  * so a freshly regenerated board appears instantly — avoiding border-radius
@@ -29,22 +50,18 @@ export function getFrontProps(
     getters: Getters,
     skipTransition?: boolean,
 ) {
-    const { getColor, getBorder } = getters;
+    const visualFactory = getCellVisualProps(getters, skipTransition);
+    const { getColor } = getters;
 
     return (row: number, col: number) => {
-        const style = getBorder(row, col);
-        const { front, back, isLit } = getColor(row, col);
+        const visual = visualFactory(row, col);
+        const { back } = getColor(row, col);
         const pos = getPosKey(row, col);
         const dragProps = getDragProps(pos);
 
         return {
             ...dragProps,
-            children: ICON,
-            backgroundColor: front,
-            color: front,
-            style,
-            ...(skipTransition ? { transition: 'none' } : {}),
-            'aria-label': `Light at row ${String(row + 1)}, column ${String(col + 1)}, currently ${isLit ? 'lit' : 'unlit'}`,
+            ...visual,
             sx: {
                 ...dragProps.sx,
                 '&:hover': {
@@ -69,33 +86,6 @@ export function getBackProps(getters: Getters, skipTransition?: boolean) {
             transition: skipTransition
                 ? 'none'
                 : LIGHTS_OUT_STYLES.TRANSITION.FAST,
-        };
-    };
-}
-
-export function getExampleProps(getters: Getters) {
-    const frontProps = getFrontProps(
-        (pos: string) => ({
-            onMouseDown: () => {},
-            onMouseEnter: () => {},
-            onTouchStart: () => {},
-            onKeyDown: () => {},
-            'data-pos': pos,
-            role: 'presentation',
-            tabIndex: -1,
-            sx: { touchAction: 'none' as const, transition: 'none' },
-        }),
-        getters,
-    );
-
-    return (row: number, col: number) => {
-        const props = frontProps(row, col);
-        return {
-            ...props,
-            onMouseDown: undefined,
-            onMouseEnter: undefined,
-            onTouchStart: undefined,
-            sx: {},
         };
     };
 }

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
 
 import type { Getters } from '../../types';
-import { getFrontProps, getBackProps, getExampleProps } from '../renderers';
+import { getFrontProps, getBackProps, getCellVisualProps } from '../renderers';
 
 describe('renderers', () => {
     const mockGetters: Getters = {
@@ -41,15 +41,19 @@ describe('renderers', () => {
         });
     });
 
-    describe('getExampleProps', () => {
-        it('should return props for example cell without drag handlers', () => {
-            const factory = getExampleProps(mockGetters);
-            const props = factory(0, 0);
+    describe('getCellVisualProps', () => {
+        it('should return visual-only props without drag handlers', () => {
+            const factory = getCellVisualProps(mockGetters);
+            const props = factory(0, 0) as Record<string, unknown>;
 
-            expect(props.backgroundColor).toBe('red');
-            expect(props.onMouseDown).toBeUndefined();
-            expect(props.onMouseEnter).toBeUndefined();
-            expect(props.onTouchStart).toBeUndefined();
+            expect(props['backgroundColor']).toBe('red');
+            expect(props['color']).toBe('red');
+            expect(props['aria-label']).toBe(
+                'Light at row 1, column 1, currently unlit',
+            );
+            expect(props['onMouseDown']).toBeUndefined();
+            expect(props['onMouseEnter']).toBeUndefined();
+            expect(props['onTouchStart']).toBeUndefined();
         });
     });
 });

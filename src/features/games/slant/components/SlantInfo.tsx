@@ -11,11 +11,10 @@ import {
 
 import { Psychology } from '@/components/icons';
 import { LazyGameInfo } from '@/features/games/components/GameInfo/LazyGameInfo';
+import type { BaseInfoProps } from '@/features/games/types';
 import { useMobile } from '@/hooks';
 
-interface SlantInfoProps {
-    open: boolean;
-    toggleOpen: () => void;
+interface SlantInfoProps extends BaseInfoProps {
     handleOpenCalculator: () => void;
 }
 

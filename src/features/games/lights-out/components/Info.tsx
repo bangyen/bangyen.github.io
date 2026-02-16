@@ -7,13 +7,8 @@ import { useCalculator } from '../hooks/useCalculator';
 import type { Palette, PropsFactory } from '../types';
 
 import { LazyGameInfo } from '@/features/games/components/GameInfo/LazyGameInfo';
+import type { BaseInfoProps } from '@/features/games/types';
 import { useMobile } from '@/hooks';
-
-/** Modal open/close state. */
-interface InfoModalProps {
-    open: boolean;
-    toggleOpen: () => void;
-}
 
 /** Board dimensions and visual cell size. */
 interface InfoBoardProps {
@@ -29,9 +24,7 @@ interface InfoRenderingProps {
     getBackProps: PropsFactory;
 }
 
-export interface InfoProps {
-    /** Modal open/close state. */
-    modal: InfoModalProps;
+export interface InfoProps extends BaseInfoProps {
     /** Board dimensions and visual cell size. */
     board: InfoBoardProps;
     /** Rendering factories for the example animation. */
@@ -47,12 +40,12 @@ export interface InfoProps {
  * when switching steps.
  */
 export function Info({
-    modal,
+    open,
+    toggleOpen,
     board,
     rendering,
     onApply,
 }: InfoProps): React.ReactElement | null {
-    const { open, toggleOpen } = modal;
     const { rows, cols, size } = board;
     const { palette, getFrontProps, getBackProps } = rendering;
 

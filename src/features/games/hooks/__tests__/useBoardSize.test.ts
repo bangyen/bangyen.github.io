@@ -19,7 +19,7 @@ describe('useBoardSize', () => {
         mobile: false,
         headerOffset: { mobile: 56, desktop: 64 },
         boardConfig: {
-            paddingOffset: 16,
+            boardPadding: 16,
             boardMaxWidth: 1200,
             boardSizeFactor: 0.9,
             maxCellSize: 100,
@@ -32,13 +32,13 @@ describe('useBoardSize', () => {
         expect(result.current).toBe(4.5);
     });
 
-    it('resolves function-based paddingOffset', () => {
+    it('resolves function-based boardPadding', () => {
         const paddingFn = vi.fn().mockReturnValue({ x: 10, y: 20 });
         const params = {
             ...baseParams,
             boardConfig: {
                 ...baseParams.boardConfig,
-                paddingOffset: paddingFn,
+                boardPadding: paddingFn,
             },
         };
 

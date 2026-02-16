@@ -30,19 +30,21 @@ export interface BaseControlsProps {
  * Using a shared generic enforces that every game page component
  * receives the same structural contract and makes it straightforward
  * to add new games in the future.
+ *
+ * `trophyProps` is fixed to `TrophyOverlayProps` because every game
+ * uses the same overlay component.
  */
 export interface GamePageProps<
-    B = Record<string, unknown>,
-    C = Record<string, unknown>,
-    L = Record<string, unknown>,
-    I = Record<string, unknown>,
-    T = TrophyOverlayProps,
+    TBoard = Record<string, unknown>,
+    TControls = Record<string, unknown>,
+    TLayout = Record<string, unknown>,
+    TInfo = Record<string, unknown>,
 > {
-    boardProps: B;
-    controlsProps: C;
-    layoutProps: L;
-    infoProps: I;
-    trophyProps: T;
+    boardProps: TBoard;
+    controlsProps: TControls;
+    layoutProps: TLayout;
+    infoProps: TInfo;
+    trophyProps: TrophyOverlayProps;
 }
 
 // ---------------------------------------------------------------------------
@@ -140,7 +142,7 @@ export interface BaseGameConfig<S, A> {
  * defaults.  Used by `useBoardSize` to compute cell dimensions.
  */
 export interface MergedBoardConfig {
-    paddingOffset:
+    boardPadding:
         | number
         | { x: number; y: number }
         | ((mobile: boolean) => number | { x: number; y: number });

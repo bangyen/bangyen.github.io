@@ -38,6 +38,23 @@ export const createCellIndex = (idx: number): CellIndex => {
 };
 
 // ---------------------------------------------------------------------------
+// Game info modal base interface
+// ---------------------------------------------------------------------------
+
+/**
+ * Base props shared by every game's info modal component.
+ *
+ * Standardises the open/close contract so new games have a clear
+ * interface to follow, and prop-shaping hooks can rely on a common shape.
+ */
+export interface BaseInfoProps {
+    /** Whether the info modal is open. */
+    open: boolean;
+    /** Toggle the modal open/close state. */
+    toggleOpen: () => void;
+}
+
+// ---------------------------------------------------------------------------
 // Game configuration interfaces
 // ---------------------------------------------------------------------------
 
