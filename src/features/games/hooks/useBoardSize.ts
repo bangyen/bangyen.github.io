@@ -35,10 +35,10 @@ export function useBoardSize({
     boardConfig,
 }: UseBoardSizeParams): number {
     return useMemo(() => {
-        const resolvedPaddingOffset =
-            typeof boardConfig.paddingOffset === 'function'
-                ? boardConfig.paddingOffset(mobile)
-                : boardConfig.paddingOffset;
+        const resolvedBoardPadding =
+            typeof boardConfig.boardPadding === 'function'
+                ? boardConfig.boardPadding(mobile)
+                : boardConfig.boardPadding;
 
         return calculateBoardSize({
             rows: rows + (boardConfig.rowOffset ?? 0),
@@ -48,7 +48,7 @@ export function useBoardSize({
             mobile,
             headerOffset,
             ...boardConfig,
-            paddingOffset: resolvedPaddingOffset,
+            boardPadding: resolvedBoardPadding,
         });
     }, [rows, cols, width, height, mobile, headerOffset, boardConfig]);
 }

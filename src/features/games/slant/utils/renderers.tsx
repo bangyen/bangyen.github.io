@@ -1,45 +1,31 @@
 import { Box } from '@mui/material';
 
+import {
+    getSlashLineSx,
+    backCellVisualSx,
+    slashContainerSx,
+    frontOverlaySx,
+    INTERACTIVE_BACK_CELL_SX,
+    getNumberBubbleSx,
+} from './renderers.styles';
 import type { DragProps } from '../../hooks/useDrag';
-import { SLANT_STYLES } from '../config/constants';
 import type { SlantState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
 
-import { COLORS, ANIMATIONS } from '@/config/theme';
 import { getPosKey } from '@/utils/gameUtils';
 
 /**
- * Builds the sx props for a single diagonal slash line inside a Slant cell.
- * Extracted to avoid duplicating the identical styling between
- * forward (/) and backward (\) orientations.
+ * Visual-only cell factory for the back (slash) layer.
+ *
+ * Returns appearance props (aria-label, children, border) without drag
+ * interaction, so the same factory can drive both the interactive board
+ * (via `getBackProps`) and non-interactive contexts.
  */
-function slashLineSx(angle: string, size: number, isError: boolean) {
-    return {
-        position: 'absolute' as const,
-        width: '115%',
-        height: `${String(Math.max(2, size))}px`,
-        backgroundColor: isError ? COLORS.data.red : COLORS.text.primary,
-        borderRadius: '99px',
-        top: '50%',
-        left: '50%',
-        transform: `translate(-50%, -50%) rotate(${angle})`,
-        boxShadow: SLANT_STYLES.SHADOWS.LINE,
-        transition: ANIMATIONS.transition,
-        pointerEvents: 'none' as const,
-    };
-}
-
-export const getBackProps =
-    (
-        getDragProps: (pos: string) => DragProps,
-        state: SlantState,
-        size: number,
-    ) =>
-    (r: number, c: number) => {
+export function getBackVisualProps(state: SlantState, size: number) {
+    return (r: number, c: number) => {
         const value = state.grid[r]?.[c];
         const pos = getPosKey(r, c);
         const isError = state.cycleCells.has(pos);
-        const dragProps = getDragProps(pos);
 
         const clues = [
             { v: state.numbers[r]?.[c], p: getPosKey(r, c) },
@@ -57,7 +43,6 @@ export const getBackProps =
         });
 
         return {
-            ...dragProps,
             'aria-label': `Cell ${String(r + 1)}, ${String(c + 1)}. Clues: ${clues.join(', ')}. ${
                 value === EMPTY
                     ? 'Empty'
@@ -65,34 +50,57 @@ export const getBackProps =
                       ? 'Forward Slash'
                       : 'Backward Slash'
             }${isError ? ', Loop Error' : ''}`,
-            sx: {
-                ...dragProps.sx,
-                cursor: 'pointer',
-                border: `1px solid ${COLORS.border.subtle}`,
-                position: 'relative',
-                '&:hover': {
-                    backgroundColor: COLORS.interactive.hover,
-                },
-            },
+            sx: backCellVisualSx,
             children: (
-                <Box
-                    sx={{
-                        width: '100%',
-                        height: '100%',
-                        position: 'relative',
-                    }}
-                >
+                <Box sx={slashContainerSx}>
                     {value === FORWARD && (
-                        <Box sx={slashLineSx('-45deg', size, isError)} />
+                        <Box sx={getSlashLineSx('-45deg', size, isError)} />
                     )}
                     {value === BACKWARD && (
-                        <Box sx={slashLineSx('45deg', size, isError)} />
+                        <Box sx={getSlashLineSx('45deg', size, isError)} />
                     )}
                 </Box>
             ),
         };
     };
+}
 
+/**
+ * Drag-enhanced cell factory for the interactive back (slash) layer.
+ *
+ * Merges drag interaction props on top of the visual props from
+ * `getBackVisualProps`, adding cursor and hover behavior.
+ */
+export const getBackProps = (
+    getDragProps: (pos: string) => DragProps,
+    state: SlantState,
+    size: number,
+) => {
+    const visualFactory = getBackVisualProps(state, size);
+
+    return (r: number, c: number) => {
+        const visual = visualFactory(r, c);
+        const pos = getPosKey(r, c);
+        const dragProps = getDragProps(pos);
+
+        return {
+            ...dragProps,
+            ...visual,
+            sx: {
+                ...dragProps.sx,
+                ...(visual.sx as Record<string, unknown>),
+                ...INTERACTIVE_BACK_CELL_SX,
+            },
+        };
+    };
+};
+
+/**
+ * Visual-only cell factory for the front (number hint) layer.
+ *
+ * Returns appearance props for the number overlay. Uses
+ * `pointerEvents: 'none'` so clicks pass through to the back layer.
+ */
 export const getFrontProps =
     (state: SlantState, numberSize: number) => (r: number, c: number) => {
         const value = state.numbers[r]?.[c];
@@ -101,50 +109,15 @@ export const getFrontProps =
         const isSatisfied = state.satisfiedNodes.has(pos);
 
         return {
-            sx: {
-                // Make the container transparent to clicks so they reach the back layer
-                pointerEvents: 'none',
-            },
+            sx: frontOverlaySx,
             children: (
                 <Box
-                    sx={{
-                        borderRadius: '50%',
-                        backgroundColor: hasError
-                            ? COLORS.data.red
-                            : COLORS.surface.background,
-                        border:
-                            value == null
-                                ? 'none'
-                                : `2px solid ${
-                                      hasError
-                                          ? COLORS.data.red
-                                          : isSatisfied
-                                            ? 'transparent'
-                                            : COLORS.border.subtle
-                                  }`,
-                        fontSize: `${String(numberSize * 0.5)}rem`,
-                        fontWeight: '800',
-                        color: hasError
-                            ? SLANT_STYLES.COLORS.WHITE
-                            : isSatisfied
-                              ? COLORS.interactive.disabledText
-                              : COLORS.text.primary,
-                        boxShadow:
-                            isSatisfied && !hasError
-                                ? 'none'
-                                : SLANT_STYLES.SHADOWS.HINT,
-                        zIndex: 5,
-                        opacity: value == null ? 0 : 1,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                        userSelect: 'none',
-                        WebkitUserSelect: 'none',
-                        transform: hasError ? 'scale(1.1)' : 'scale(1)',
-                        width: `${String(numberSize)}rem`,
-                        height: `${String(numberSize)}rem`,
-                    }}
+                    sx={getNumberBubbleSx({
+                        numberSize,
+                        hasError,
+                        isSatisfied,
+                        isVisible: value != null,
+                    })}
                 >
                     {value ?? ''}
                 </Box>

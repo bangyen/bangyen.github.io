@@ -14,7 +14,7 @@ import type { DragProps } from '../../hooks/useDrag';
 import type { InfoProps } from '../components/Info';
 import { LAYOUT_CONSTANTS } from '../config';
 import type { Getters, Palette } from '../types';
-import { getBackProps, getExampleProps } from '../utils/renderers';
+import { getBackProps, getCellVisualProps } from '../utils/renderers';
 
 import type { CellFactory } from '@/utils/gameUtils';
 import { useCellFactory } from '@/utils/gameUtils';
@@ -115,11 +115,12 @@ export function useLightsOutProps({
             },
         },
         infoProps: {
-            modal: { open, toggleOpen },
+            open,
+            toggleOpen,
             board: { rows, cols, size },
             rendering: {
                 palette,
-                getFrontProps: getExampleProps,
+                getFrontProps: getCellVisualProps,
                 getBackProps,
             },
             onApply: handleApply,

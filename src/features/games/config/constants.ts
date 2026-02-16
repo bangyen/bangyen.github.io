@@ -71,7 +71,7 @@ export function createStorageKeys(prefix: string) {
  * Games only need to specify fields that differ from these values.
  */
 export const DEFAULT_BOARD_CONFIG = {
-    paddingOffset: 0 as number | { x: number; y: number },
+    boardPadding: 0 as number | { x: number; y: number },
     boardMaxWidth: 1200,
     boardSizeFactor: 0.94,
     maxCellSize: 80,
@@ -88,7 +88,7 @@ export const DEFAULT_GRID_CONFIG = {
     maxSize: 10,
     mobileRowOffset: 2,
     headerOffset: GAME_CONSTANTS.layout.headerHeight,
-    paddingOffset: 0 as number | { x: number; y: number },
+    gridPadding: 0 as number | { x: number; y: number },
     widthLimit: 1300,
     cellSizeReference: {
         mobile: GAME_CONSTANTS.gridSizes.mobile,

@@ -90,7 +90,8 @@ describe('Lights Out Info Component', () => {
     const mockOnApply = vi.fn();
     const mockPalette = { primary: 'red', secondary: 'blue' };
     const defaultProps = {
-        modal: { open: true, toggleOpen: mockToggleOpen },
+        open: true,
+        toggleOpen: mockToggleOpen,
         board: { rows: 3, cols: 3, size: 100 },
         rendering: {
             palette: mockPalette,

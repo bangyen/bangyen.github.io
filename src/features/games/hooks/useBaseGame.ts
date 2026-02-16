@@ -81,27 +81,25 @@ export function useBaseGame<
     } = logic;
 
     // Build the grid config by merging caller overrides with defaults.
-    // Field name mapping: caller's `gridPadding` → internal `paddingOffset`.
     const gridMerged = mergeDefaults(DEFAULT_GRID_CONFIG, {
         defaultSize: grid.defaultSize,
         minSize: grid.minSize,
         maxSize: grid.maxSize,
         headerOffset: grid.headerOffset,
-        paddingOffset: grid.gridPadding,
+        gridPadding: grid.gridPadding,
         widthLimit: grid.widthLimit,
         cellSizeReference: grid.cellSizeReference,
         mobileRowOffset: grid.mobileRowOffset,
     });
 
     // Build the board config by merging caller overrides with defaults.
-    // Field name mapping: caller's `boardPadding` → internal `paddingOffset`.
     // `rowOffset` / `colOffset` are not in the defaults, so they're appended.
     const mergedBoard = useMemo(
         () => ({
             ...mergeDefaults<
                 Omit<MergedBoardConfig, 'rowOffset' | 'colOffset'>
             >(DEFAULT_BOARD_CONFIG, {
-                paddingOffset: board.boardPadding,
+                boardPadding: board.boardPadding,
                 boardMaxWidth: board.boardMaxWidth,
                 boardSizeFactor: board.boardSizeFactor,
                 maxCellSize: board.maxCellSize,
