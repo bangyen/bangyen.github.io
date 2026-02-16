@@ -17,6 +17,7 @@ import { useSlantGame } from '../hooks/useSlantGame';
 import { Psychology } from '@/components/icons';
 import { PAGE_TITLES } from '@/config/constants';
 import { COLORS } from '@/config/theme';
+import { useMobile } from '@/hooks';
 
 export function Slant() {
     const {
@@ -74,6 +75,8 @@ export function Slant() {
         />
     );
 
+    const isMobile = useMobile('sm');
+
     return (
         <GamePageLayout
             title={PAGE_TITLES.slant}
@@ -120,7 +123,7 @@ export function Slant() {
                             </Button>
                         </Box>
                     }
-                    exampleContent={<Example size={4} />}
+                    exampleContent={<Example size={isMobile ? 4 : 5} />}
                     cardSx={SLANT_INFO_CARD_SX}
                     contentSxOverride={slantInfoContentSx}
                 />
