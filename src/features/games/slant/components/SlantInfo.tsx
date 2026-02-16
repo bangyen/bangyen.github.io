@@ -1,7 +1,7 @@
 import { Box, Button } from '@mui/material';
 
 import { Example } from './Example';
-import { calculatorFooterSx, calculatorButtonSx } from './SlantInfo.styles';
+import { analysisFooterSx, analysisButtonSx } from './SlantInfo.styles';
 import {
     SLANT_INFO_TITLES,
     SLANT_INSTRUCTIONS,
@@ -15,18 +15,18 @@ import type { BaseInfoProps } from '@/features/games/types';
 import { useMobile } from '@/hooks';
 
 interface SlantInfoProps extends BaseInfoProps {
-    handleOpenCalculator: () => void;
+    handleOpenAnalysis: () => void;
 }
 
 /**
  * Game-specific information modal for Slant.
  * Wraps the generic GameInfo component with Slant's instructions,
- * example animation, and calculator toggle.
+ * example animation, and analysis toggle.
  */
 export function SlantInfo({
     open,
     toggleOpen,
-    handleOpenCalculator,
+    handleOpenAnalysis,
 }: SlantInfoProps) {
     const isMobile = useMobile('sm');
 
@@ -37,14 +37,14 @@ export function SlantInfo({
             titles={SLANT_INFO_TITLES}
             instructions={SLANT_INSTRUCTIONS}
             instructionsFooter={
-                <Box sx={calculatorFooterSx}>
+                <Box sx={analysisFooterSx}>
                     <Button
                         variant="outlined"
                         startIcon={<Psychology />}
-                        onClick={handleOpenCalculator}
-                        sx={calculatorButtonSx}
+                        onClick={handleOpenAnalysis}
+                        sx={analysisButtonSx}
                     >
-                        Open Calculator
+                        Open Analysis
                     </Button>
                 </Box>
             }

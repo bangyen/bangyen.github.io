@@ -7,15 +7,15 @@ import { FORWARD, BACKWARD } from '../types';
 
 import { ANIMATIONS, SPACING } from '@/config/theme';
 
-export interface GhostCellProps {
+export interface AnalysisCellProps {
     value: CellState;
     color: string;
 }
 
-export const GhostCell = React.memo(function GhostCell({
+export const AnalysisCell = React.memo(function AnalysisCell({
     value,
     color,
-}: GhostCellProps) {
+}: AnalysisCellProps) {
     return (
         <Box
             sx={{

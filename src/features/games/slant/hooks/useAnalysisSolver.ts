@@ -1,43 +1,43 @@
 import { useEffect, useState, useRef } from 'react';
 
 import type { CellState } from '../types';
-import type { CellInfo, Conflict } from '../utils/ghostSolver';
-import { solveGhostConstraints } from '../utils/ghostSolver';
+import type { CellInfo, Conflict } from '../utils/analysisSolver';
+import { solveAnalysisConstraints } from '../utils/analysisSolver';
 import { createWorker } from '../utils/workerUtils';
 import type { SolverMessage } from '../workers/solverWorker';
 
 /** Timeout for the initial worker health probe (ms). */
 const WORKER_PROBE_TIMEOUT_MS = 2000;
 
-interface UseGhostSolverConfig {
+interface UseAnalysisSolverConfig {
     rows: number;
     cols: number;
     numbers: (number | null)[][];
     userMoves: Map<string, CellState>;
 }
 
-interface UseGhostSolverResult {
+interface UseAnalysisSolverResult {
     gridState: Map<string, CellInfo>;
     conflicts: Conflict[];
     cycleCells: Set<string>;
 }
 
 /**
- * Manages a Web Worker for ghost-mode constraint solving with an
+ * Manages a Web Worker for analysis-mode constraint solving with an
  * automatic main-thread fallback.
  *
  * On mount the hook boots a solver worker, probes it with a tiny
  * puzzle to confirm it is alive, and then uses it for all subsequent
  * solve requests.  If the worker fails or times out the hook
  * transparently falls back to synchronous main-thread solving via
- * `solveGhostConstraints`.
+ * `solveAnalysisConstraints`.
  */
-export function useGhostSolver({
+export function useAnalysisSolver({
     rows,
     cols,
     numbers,
     userMoves,
-}: UseGhostSolverConfig): UseGhostSolverResult {
+}: UseAnalysisSolverConfig): UseAnalysisSolverResult {
     const [gridState, setGridState] = useState<Map<string, CellInfo>>(
         new Map(),
     );
@@ -126,7 +126,7 @@ export function useGhostSolver({
                 payload: { rows, cols, numbers, userMoves },
             });
         } else if (workerReady === 'broken') {
-            const result = solveGhostConstraints(
+            const result = solveAnalysisConstraints(
                 rows,
                 cols,
                 numbers,

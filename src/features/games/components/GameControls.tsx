@@ -11,7 +11,7 @@ export interface GameControlsProps extends BaseControlsProps {
     disabled?: boolean;
     /** When provided, renders a built-in "How to Play" tutorial button. */
     onOpenInfo?: () => void;
-    /** When true the entire control bar is hidden (e.g. during ghost mode). */
+    /** When true the entire control bar is hidden (e.g. during analysis mode). */
     hidden?: boolean;
     children?: React.ReactNode;
 }

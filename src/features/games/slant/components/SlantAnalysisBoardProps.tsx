@@ -1,15 +1,15 @@
 /**
- * Pure prop-factory functions for SlantGhostBoard grid cells and number hints.
- * Extracted so `SlantGhostBoard` focuses on layout and hook orchestration
+ * Pure prop-factory functions for SlantAnalysisBoard grid cells and number hints.
+ * Extracted so `SlantAnalysisBoard` focuses on layout and hook orchestration
  * while this module owns the per-cell rendering logic.
  */
 
-import { GhostCell } from './GhostCell';
-import { GhostHint } from './GhostHint';
+import { AnalysisCell } from './AnalysisCell';
+import { AnalysisHint } from './AnalysisHint';
 import type { DragProps } from '../../hooks/useDrag';
 import { SLANT_STYLES } from '../config/constants';
 import { EMPTY } from '../types';
-import type { CellInfo } from '../utils/ghostSolver';
+import type { CellInfo } from '../utils/analysisSolver';
 
 import { COLORS } from '@/config/theme';
 import { getPosKey } from '@/utils/gameUtils';
@@ -28,7 +28,7 @@ interface BuildCellPropsArgs {
 }
 
 /**
- * Builds the prop object for a single ghost-board cell.
+ * Builds the prop object for a single analysis-board cell.
  * Determines the cell's visual colour based on conflict / cycle / source
  * status and merges in drag-interaction props.
  */
@@ -67,14 +67,14 @@ export function buildCellProps({
         sx: {
             ...dragProps.sx,
             cursor: 'pointer',
-            border: `1px solid ${SLANT_STYLES.GHOST.BORDER}`,
+            border: `1px solid ${SLANT_STYLES.ANALYSIS.BORDER}`,
             position: 'relative',
-            backgroundColor: SLANT_STYLES.GHOST.BG_SUBTLE,
+            backgroundColor: SLANT_STYLES.ANALYSIS.BG_SUBTLE,
             '&:hover': {
-                backgroundColor: SLANT_STYLES.GHOST.BG_HOVER,
+                backgroundColor: SLANT_STYLES.ANALYSIS.BG_HOVER,
             },
         },
-        children: <GhostCell value={value} color={color} />,
+        children: <AnalysisCell value={value} color={color} />,
     };
 }
 
@@ -108,7 +108,7 @@ export function buildNumberProps({
         'data-pos': getPosKey(r, c),
         'data-type': 'hint',
         children: (
-            <GhostHint
+            <AnalysisHint
                 value={value ?? null}
                 hasConflict={hasConflict}
                 numberSize={numberSize}
@@ -118,14 +118,14 @@ export function buildNumberProps({
             borderRadius: '50%',
             backgroundColor: hasConflict
                 ? COLORS.data.red
-                : SLANT_STYLES.GHOST.HINT_BG,
+                : SLANT_STYLES.ANALYSIS.HINT_BG,
             border:
                 value == null
                     ? 'none'
                     : `2px solid ${
                           hasConflict
                               ? COLORS.data.red
-                              : SLANT_STYLES.GHOST.HINT_BORDER
+                              : SLANT_STYLES.ANALYSIS.HINT_BORDER
                       }`,
             zIndex: 5,
             opacity: value == null ? 0 : 1,

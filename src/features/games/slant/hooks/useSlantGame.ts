@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback, useRef } from 'react';
 
+import { useAnalysisMode } from './useAnalysisMode';
 import { useDimensionRegeneration } from './useDimensionRegeneration';
-import { useGhostMode } from './useGhostMode';
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useDrag } from '../../hooks/useDrag';
@@ -23,7 +23,7 @@ import { useDisclosure, useMobile } from '@/hooks';
 
 /**
  * Orchestrates all Slant-specific game logic: worker-based puzzle
- * generation, ghost mode, drag interaction, cell prop factories,
+ * generation, analysis mode, drag interaction, cell prop factories,
  * and dimension-change detection.
  *
  * Extracted from Slant.tsx so the page component is pure JSX
@@ -31,7 +31,7 @@ import { useDisclosure, useMobile } from '@/hooks';
  */
 export function useSlantGame() {
     const mobile = useMobile('sm');
-    const [isGhostMode, setIsGhostMode] = React.useState(false);
+    const [isAnalysisMode, setIsAnalysisMode] = React.useState(false);
     const { isOpen: infoOpen, toggle: toggleInfo } = useDisclosure();
 
     // Refs kept in sync with useBaseGame output, shared with the worker hook.
@@ -42,10 +42,10 @@ export function useSlantGame() {
 
     const handleStaleResult = useCallback(
         (staleState: SlantState, r: number, c: number) => {
-            if (isGhostMode) return;
+            if (isAnalysisMode) return;
             persistSlantState(staleState, r, c);
         },
-        [isGhostMode],
+        [isAnalysisMode],
     );
 
     const {
@@ -74,7 +74,7 @@ export function useSlantGame() {
             isSolved: (s: SlantState) => s.solved,
             manualResize: true,
             persistence: {
-                enabled: !isGhostMode,
+                enabled: !isAnalysisMode,
                 serialize: serializeSlantState,
                 deserialize: (saved: unknown) => {
                     if (!isSavedSlantState(saved)) {
@@ -92,30 +92,30 @@ export function useSlantGame() {
     dispatchRef.current = dispatch;
     dimsRef.current = { rows, cols };
 
-    // Ghost mode state and handlers.
+    // Analysis mode state and handlers.
     const {
-        ghostMoves,
+        analysisMoves,
         boardSx,
-        handleGhostMove,
-        handleGhostCopy,
-        handleGhostClear,
-        handleGhostClose,
+        handleAnalysisMove,
+        handleAnalysisCopy,
+        handleAnalysisClear,
+        handleAnalysisClose,
         handleBoxClick,
-        handleOpenCalculator,
-    } = useGhostMode({
-        isGhostMode,
-        setIsGhostMode,
+        handleOpenAnalysis,
+    } = useAnalysisMode({
+        isAnalysisMode,
+        setIsAnalysisMode,
         state,
         rows,
         cols,
-        storageKey: STORAGE_KEYS.GHOST_MOVES,
+        storageKey: STORAGE_KEYS.ANALYSIS_MOVES,
         toggleInfo,
     });
 
     useDimensionRegeneration({
         rows,
         cols,
-        isGhostMode,
+        isAnalysisMode,
         requestGeneration,
         cancelGeneration,
     });
@@ -123,10 +123,10 @@ export function useSlantGame() {
     // Prefetch the next puzzle as soon as the current one is solved so
     // generation overlaps with the win animation instead of waiting.
     useEffect(() => {
-        if (state.solved && !isGhostMode) {
+        if (state.solved && !isAnalysisMode) {
             prefetch(rows, cols);
         }
-    }, [state.solved, isGhostMode, rows, cols, prefetch]);
+    }, [state.solved, isAnalysisMode, rows, cols, prefetch]);
 
     const { getDragProps } = useDrag({
         onToggle: (r: number, c: number, isRightClick: boolean) => {
@@ -148,18 +148,18 @@ export function useSlantGame() {
             cols,
             size,
             mobile,
-            isGhostMode,
+            isAnalysisMode,
             generating,
             handleNextAsync,
         },
-        ghost: {
-            ghostMoves,
-            handleGhostMove,
-            handleGhostCopy,
-            handleGhostClear,
-            handleGhostClose,
+        analysis: {
+            analysisMoves,
+            handleAnalysisMove,
+            handleAnalysisCopy,
+            handleAnalysisClear,
+            handleAnalysisClose,
             handleBoxClick,
-            handleOpenCalculator,
+            handleOpenAnalysis,
             boardSx,
         },
         info: { infoOpen, toggleInfo },

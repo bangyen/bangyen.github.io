@@ -3,7 +3,7 @@
  *
  * Each entry maps a CSS variable name to its light- and dark-mode values,
  * keeping the definitions data-driven so that feature-specific vars
- * (research, slant ghost, etc.) follow a single pattern.
+ * (research, slant analysis, etc.) follow a single pattern.
  */
 export interface CssVarDefinition {
     /** CSS custom property name including the leading `--`. */

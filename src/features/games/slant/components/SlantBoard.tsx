@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SlantGhostBoard } from './SlantGhostBoard';
+import { SlantAnalysisBoard } from './SlantAnalysisBoard';
 import { SlantLoadingSkeleton } from './SlantLoadingSkeleton';
 import { Board } from '../../components/Board';
 import type { CellState, SlantState } from '../types';
@@ -11,8 +11,8 @@ import { ErrorState } from '@/components/ui/ErrorState';
 import { GAME_TEXT } from '@/features/games/config/constants';
 
 export interface SlantBoardProps {
-    /** Whether ghost-mode overlay is active. */
-    isGhostMode: boolean;
+    /** Whether analysis-mode overlay is active. */
+    isAnalysisMode: boolean;
     /** Whether the worker is currently generating a new puzzle. */
     generating: boolean;
     /** True when grid dimensions have changed but state hasn't caught up. */
@@ -25,16 +25,16 @@ export interface SlantBoardProps {
     state: SlantState;
     /** Cell size in rem units. */
     size: number;
-    /** Saved ghost-mode moves. */
-    ghostMoves: Map<string, CellState>;
-    /** Callback when a ghost move is placed or removed. */
-    onGhostMove: (pos: string, val?: CellState) => void;
-    /** Copy current board into ghost layer. */
-    onGhostCopy: () => void;
-    /** Clear all ghost moves. */
-    onGhostClear: () => void;
-    /** Close ghost mode. */
-    onGhostClose: () => void;
+    /** Saved analysis-mode moves. */
+    analysisMoves: Map<string, CellState>;
+    /** Callback when an analysis move is placed or removed. */
+    onAnalysisMove: (pos: string, val?: CellState) => void;
+    /** Copy current board into analysis layer. */
+    onAnalysisCopy: () => void;
+    /** Clear all analysis moves. */
+    onAnalysisClear: () => void;
+    /** Close analysis mode. */
+    onAnalysisClose: () => void;
     /** Cell factory for the bottom (interactive slash cell) layer. */
     cellProps: (row: number, col: number) => Record<string, unknown>;
     /** Cell factory for the top (number overlay) layer. */
@@ -43,41 +43,41 @@ export interface SlantBoardProps {
 
 /**
  * Renders the correct Slant board variant based on the current mode:
- * ghost-mode overlay, loading skeleton, or the normal interactive board.
+ * analysis-mode overlay, loading skeleton, or the normal interactive board.
  */
 export function SlantBoard({
-    isGhostMode,
+    isAnalysisMode,
     generating,
     dimensionsMismatch,
     rows,
     cols,
     state,
     size,
-    ghostMoves,
-    onGhostMove,
-    onGhostCopy,
-    onGhostClear,
-    onGhostClose,
+    analysisMoves,
+    onAnalysisMove,
+    onAnalysisCopy,
+    onAnalysisClear,
+    onAnalysisClose,
     cellProps,
     overlayProps,
 }: SlantBoardProps): React.ReactElement {
-    if (isGhostMode) {
+    if (isAnalysisMode) {
         return (
             <ErrorBoundary
                 fallback={
-                    <ErrorState message="Ghost mode encountered an error. Close and reopen to continue." />
+                    <ErrorState message="Analysis mode encountered an error. Close and reopen to continue." />
                 }
             >
-                <SlantGhostBoard
+                <SlantAnalysisBoard
                     rows={rows}
                     cols={cols}
                     numbers={state.numbers}
                     size={size}
-                    initialMoves={ghostMoves}
-                    onMove={onGhostMove}
-                    onCopy={onGhostCopy}
-                    onClear={onGhostClear}
-                    onClose={onGhostClose}
+                    initialMoves={analysisMoves}
+                    onMove={onAnalysisMove}
+                    onCopy={onAnalysisCopy}
+                    onClear={onAnalysisClear}
+                    onClose={onAnalysisClose}
                 />
             </ErrorBoundary>
         );

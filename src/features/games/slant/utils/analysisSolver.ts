@@ -24,12 +24,12 @@ interface SolverResult {
 }
 
 /**
- * Runs constraint propagation and cycle detection for the ghost-mode
- * calculator. This is the same logic used by the solver Web Worker,
+ * Runs constraint propagation and cycle detection for the analysis-mode
+ * board. This is the same logic used by the solver Web Worker,
  * extracted so it can also run on the main thread as a fallback when
  * the worker is unavailable.
  */
-export function solveGhostConstraints(
+export function solveAnalysisConstraints(
     rows: number,
     cols: number,
     numbers: (number | null)[][],

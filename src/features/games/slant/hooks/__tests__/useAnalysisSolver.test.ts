@@ -2,9 +2,9 @@ import { renderHook, act } from '@testing-library/react';
 
 import type { CellState } from '../../types';
 import { FORWARD } from '../../types';
-import type { CellInfo, Conflict } from '../../utils/ghostSolver';
+import type { CellInfo, Conflict } from '../../utils/analysisSolver';
 import type { SolverMessage } from '../../workers/solverWorker';
-import { useGhostSolver } from '../useGhostSolver';
+import { useAnalysisSolver } from '../useAnalysisSolver';
 
 // Mock slant-wasm before any module that transitively imports it.
 vi.mock('slant-wasm', () => ({
@@ -55,15 +55,15 @@ vi.mock('../../utils/workerUtils', () => ({
     },
 }));
 
-const solveGhostConstraintsMock = vi.fn().mockReturnValue({
+const solveAnalysisConstraintsMock = vi.fn().mockReturnValue({
     gridState: new Map<string, CellInfo>(),
     conflicts: [] as Conflict[],
     cycleCells: new Set<string>(),
 });
 
-vi.mock('../../utils/ghostSolver', () => ({
-    solveGhostConstraints: (...args: unknown[]) =>
-        solveGhostConstraintsMock(...args),
+vi.mock('../../utils/analysisSolver', () => ({
+    solveAnalysisConstraints: (...args: unknown[]) =>
+        solveAnalysisConstraintsMock(...args),
 }));
 
 const emptyNumbers: (number | null)[][] = [
@@ -72,15 +72,15 @@ const emptyNumbers: (number | null)[][] = [
     [null, null, null],
 ];
 
-describe('useGhostSolver', () => {
+describe('useAnalysisSolver', () => {
     beforeEach(() => {
         latestWorkerInstance = null;
-        solveGhostConstraintsMock.mockClear();
+        solveAnalysisConstraintsMock.mockClear();
     });
 
     it('boots a worker and probes it on mount', () => {
         renderHook(() =>
-            useGhostSolver({
+            useAnalysisSolver({
                 rows: 2,
                 cols: 2,
                 numbers: emptyNumbers,
@@ -98,7 +98,7 @@ describe('useGhostSolver', () => {
     it('dispatches a real solve after probe succeeds', () => {
         const userMoves = new Map<string, CellState>([['0,0', FORWARD]]);
         const { result } = renderHook(() =>
-            useGhostSolver({
+            useAnalysisSolver({
                 rows: 2,
                 cols: 2,
                 numbers: emptyNumbers,
@@ -143,7 +143,7 @@ describe('useGhostSolver', () => {
         vi.useFakeTimers();
 
         renderHook(() =>
-            useGhostSolver({
+            useAnalysisSolver({
                 rows: 2,
                 cols: 2,
                 numbers: emptyNumbers,
@@ -156,8 +156,8 @@ describe('useGhostSolver', () => {
             vi.advanceTimersByTime(2100);
         });
 
-        // The fallback should invoke solveGhostConstraints on the main thread.
-        expect(solveGhostConstraintsMock).toHaveBeenCalled();
+        // The fallback should invoke solveAnalysisConstraints on the main thread.
+        expect(solveAnalysisConstraintsMock).toHaveBeenCalled();
         expect(latestWorkerInstance!.terminated).toBe(true);
 
         vi.useRealTimers();
@@ -165,7 +165,7 @@ describe('useGhostSolver', () => {
 
     it('falls back when worker fires onerror', () => {
         renderHook(() =>
-            useGhostSolver({
+            useAnalysisSolver({
                 rows: 2,
                 cols: 2,
                 numbers: emptyNumbers,
@@ -177,13 +177,13 @@ describe('useGhostSolver', () => {
             latestWorkerInstance!.simulateError();
         });
 
-        expect(solveGhostConstraintsMock).toHaveBeenCalled();
+        expect(solveAnalysisConstraintsMock).toHaveBeenCalled();
         expect(latestWorkerInstance!.terminated).toBe(true);
     });
 
     it('terminates the worker on unmount', () => {
         const { unmount } = renderHook(() =>
-            useGhostSolver({
+            useAnalysisSolver({
                 rows: 2,
                 cols: 2,
                 numbers: emptyNumbers,

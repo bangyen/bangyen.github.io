@@ -3,9 +3,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { useBaseGame } from '../../../hooks/useBaseGame';
 import { useDrag } from '../../../hooks/useDrag';
+import { useAnalysisMode } from '../useAnalysisMode';
 import { useDimensionRegeneration } from '../useDimensionRegeneration';
 import { useGenerationWorker } from '../useGenerationWorker';
-import { useGhostMode } from '../useGhostMode';
 import { useSlantGame } from '../useSlantGame';
 import { useSlantProps } from '../useSlantProps';
 
@@ -13,7 +13,7 @@ vi.mock('../../../hooks/useBaseGame');
 vi.mock('../../../hooks/useDrag');
 vi.mock('../useSlantProps');
 vi.mock('../useGenerationWorker');
-vi.mock('../useGhostMode');
+vi.mock('../useAnalysisMode');
 vi.mock('../useDimensionRegeneration');
 vi.mock('@/hooks', () => ({
     useDisclosure: vi.fn().mockReturnValue({
@@ -69,15 +69,15 @@ describe('useSlantGame', () => {
             cancelGeneration: vi.fn(),
         });
 
-        vi.mocked(useGhostMode).mockReturnValue({
-            ghostMoves: new Map(),
+        vi.mocked(useAnalysisMode).mockReturnValue({
+            analysisMoves: new Map(),
             boardSx: undefined,
-            handleGhostMove: vi.fn(),
-            handleGhostCopy: vi.fn(),
-            handleGhostClear: vi.fn(),
-            handleGhostClose: vi.fn(),
+            handleAnalysisMove: vi.fn(),
+            handleAnalysisCopy: vi.fn(),
+            handleAnalysisClear: vi.fn(),
+            handleAnalysisClose: vi.fn(),
             handleBoxClick: vi.fn(),
-            handleOpenCalculator: vi.fn(),
+            handleOpenAnalysis: vi.fn(),
         });
 
         vi.mocked(useDrag).mockReturnValue({
@@ -116,14 +116,14 @@ describe('useSlantGame', () => {
         expect(config.logic.manualResize).toBe(true);
     });
 
-    it('passes ghost-mode handlers to useSlantProps', () => {
+    it('passes analysis-mode handlers to useSlantProps', () => {
         renderHook(() => useSlantGame());
 
         expect(useSlantProps).toHaveBeenCalledTimes(1);
         const params = vi.mocked(useSlantProps).mock.calls[0]![0];
-        expect(params.ghost).toHaveProperty('ghostMoves');
-        expect(params.ghost).toHaveProperty('handleGhostMove');
-        expect(params.ghost).toHaveProperty('handleGhostCopy');
+        expect(params.analysis).toHaveProperty('analysisMoves');
+        expect(params.analysis).toHaveProperty('handleAnalysisMove');
+        expect(params.analysis).toHaveProperty('handleAnalysisCopy');
     });
 
     it('wires up dimension regeneration', () => {
@@ -133,7 +133,7 @@ describe('useSlantGame', () => {
             expect.objectContaining({
                 rows: 5,
                 cols: 5,
-                isGhostMode: false,
+                isAnalysisMode: false,
             }),
         );
     });

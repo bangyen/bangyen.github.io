@@ -8,17 +8,17 @@ import {
 import { TooltipButton } from '@/components/ui/TooltipButton';
 import { COLORS, LAYOUT } from '@/config/theme';
 
-export interface GhostControlsProps {
+export interface AnalysisControlsProps {
     onCopy?: () => void;
     onClear?: () => void;
     onClose?: () => void;
 }
 
-export function GhostControls({
+export function AnalysisControls({
     onCopy,
     onClear,
     onClose,
-}: GhostControlsProps) {
+}: AnalysisControlsProps) {
     return (
         <Box
             sx={{
@@ -47,7 +47,7 @@ export function GhostControls({
                 }}
             />
             <TooltipButton
-                title="Clear Calculator"
+                title="Clear Analysis"
                 Icon={DeleteRounded}
                 onClick={onClear}
                 sx={{
@@ -59,7 +59,7 @@ export function GhostControls({
                 }}
             />
             <TooltipButton
-                title="Close Calculator"
+                title="Close Analysis"
                 Icon={CloseRounded}
                 onClick={onClose}
                 sx={{
