@@ -9,7 +9,7 @@ import {
 import { TooltipButton } from '@/components/ui/TooltipButton';
 import { COLORS, LAYOUT } from '@/config/theme';
 
-interface GhostControlsProps {
+export interface GhostControlsProps {
     onCopy?: () => void;
     onClear?: () => void;
     onClose?: () => void;

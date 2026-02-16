@@ -8,7 +8,7 @@ import { Section } from './Layout';
 import { PUBLICATIONS, PROJECTS } from '@/config/constants';
 import { ANIMATIONS, COLORS, TYPOGRAPHY } from '@/config/theme';
 
-interface AnimatedCardProps {
+export interface AnimatedCardProps {
     index: number;
     baseTimeout: number;
     children: React.ReactNode;

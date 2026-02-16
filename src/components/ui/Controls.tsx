@@ -7,7 +7,7 @@ import { TooltipButton } from './TooltipButton';
 /**
  * Props for the HomeButton component.
  */
-interface HomeButtonProps {
+export interface HomeButtonProps {
     /** Whether to hide the button entirely */
     hide?: boolean;
     /** Additional props passed to TooltipButton */
@@ -40,7 +40,7 @@ export function HomeButton({ hide = false, ...rest }: HomeButtonProps) {
 /**
  * Props for the RefreshButton component.
  */
-interface RefreshButtonProps {
+export interface RefreshButtonProps {
     /** Click handler */
     onClick: () => void;
     /** Tooltip and label text */

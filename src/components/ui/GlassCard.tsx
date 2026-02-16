@@ -8,7 +8,7 @@ import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
 /**
  * Props for GlassCard component.
  */
-interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
     /** Content to render inside the card */
     children: ReactNode;
     /** Padding around content (default: SPACING.padding.md) */

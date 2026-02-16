@@ -17,7 +17,7 @@ export interface Project {
     description: string;
 }
 
-interface ProjectCardProps {
+export interface ProjectCardProps {
     project: Project;
 }
 

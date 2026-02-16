@@ -9,7 +9,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { COLORS } from '@/config/theme';
 import { toSxArray } from '@/utils/muiUtils';
 
-interface GamePageLayoutProps {
+export interface GamePageLayoutProps {
     children: React.ReactNode;
     controls: React.ReactNode;
     infoUrl?: string;

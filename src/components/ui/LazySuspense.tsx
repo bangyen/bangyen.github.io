@@ -5,7 +5,7 @@ import { LoadingFallback } from './LoadingFallback';
 
 import { COLORS } from '@/config/theme';
 
-interface LazySuspenseProps {
+export interface LazySuspenseProps {
     children: React.ReactNode;
     /** Height passed to `LoadingFallback` when rendering a block fallback. */
     height?: string | number;

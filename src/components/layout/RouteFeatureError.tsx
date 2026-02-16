@@ -3,7 +3,7 @@ import { useRouteError, useNavigate } from 'react-router-dom';
 
 import { FeatureErrorFallback } from './FeatureErrorFallback';
 
-interface RouteFeatureErrorProps {
+export interface RouteFeatureErrorProps {
     /** Heading shown in the error fallback, e.g. "Game Error". */
     title?: string;
     /** Label for the reset button, e.g. "Reset Game". */

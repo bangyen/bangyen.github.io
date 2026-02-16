@@ -148,7 +148,7 @@ function makeFrontProps(
 // Example component
 // ---------------------------------------------------------------------------
 
-interface ExampleProps {
+export interface ExampleProps {
     /** Cell size in rem units. */
     size: number;
 }

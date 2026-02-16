@@ -6,7 +6,7 @@ import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
 /**
  * Props for Section component.
  */
-interface SectionProps {
+export interface SectionProps {
     /** Content to render inside the section */
     children: React.ReactNode;
     /** Optional ID for anchor links */
@@ -26,7 +26,7 @@ interface SectionProps {
 /**
  * Props for HeroContainer component.
  */
-interface HeroContainerProps {
+export interface HeroContainerProps {
     /** Hero content to display */
     children: React.ReactNode;
     /** Bottom padding (default: '4rem') */

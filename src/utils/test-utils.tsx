@@ -29,7 +29,7 @@ export const createTestTheme = (): Theme =>
         },
     });
 
-interface TestWrapperProps {
+export interface TestWrapperProps {
     children: React.ReactNode;
     theme?: Theme;
 }

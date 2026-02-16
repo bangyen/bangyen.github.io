@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 
 import 'katex/dist/katex.min.css';
 
-interface LatexProps {
+export interface LatexProps {
     formula: string;
     block?: boolean;
     sx?: object;

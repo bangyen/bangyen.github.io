@@ -4,7 +4,7 @@ import { Outlet } from 'react-router-dom';
 import { ErrorBoundary } from './ErrorBoundary';
 import { FeatureErrorFallback } from './FeatureErrorFallback';
 
-interface FeatureErrorLayoutProps {
+export interface FeatureErrorLayoutProps {
     /** Heading shown in the error fallback, e.g. "Game Error". */
     title?: string;
     /** Label for the reset button, e.g. "Reset Game". */

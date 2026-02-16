@@ -5,7 +5,7 @@ import { SlantLoadingSkeleton } from './SlantLoadingSkeleton';
 import { Board } from '../../components/Board';
 import type { CellState, SlantState } from '../types';
 
-interface SlantBoardContentProps {
+export interface SlantBoardContentProps {
     /** Whether ghost-mode overlay is active. */
     isGhostMode: boolean;
     /** Whether the worker is currently generating a new puzzle. */

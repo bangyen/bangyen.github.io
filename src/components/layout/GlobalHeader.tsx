@@ -9,7 +9,7 @@ import { URLS } from '@/config/constants';
 import { COLORS, LAYOUT } from '@/config/theme';
 import { MenuButton } from '@/features/home/components';
 
-interface GlobalHeaderProps {
+export interface GlobalHeaderProps {
     showHome?: boolean;
     githubUrl?: string;
     infoUrl?: string;

@@ -4,7 +4,7 @@ import React from 'react';
 import { ArrowBackRounded as Back } from '@/components/icons';
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
-interface ResearchHeaderProps {
+export interface ResearchHeaderProps {
     title: string;
     subtitle: string;
     backUrl?: string;

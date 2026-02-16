@@ -5,7 +5,7 @@ import { Navigation } from '@/components/layout/Navigation';
 import { RefreshButton } from '@/components/ui/Controls';
 import { TooltipButton } from '@/components/ui/TooltipButton';
 
-interface GameControlsProps {
+export interface GameControlsProps {
     rows: number;
     cols: number;
     dynamicSize: { rows: number; cols: number };

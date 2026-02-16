@@ -31,7 +31,7 @@ const INSTRUCTIONS = [
     },
 ];
 
-interface InfoProps {
+export interface InfoProps {
     rows: number;
     cols: number;
     size: number;

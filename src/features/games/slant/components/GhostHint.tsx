@@ -3,7 +3,7 @@ import React from 'react';
 
 import { SLANT_STYLES } from '../constants';
 
-interface GhostHintProps {
+export interface GhostHintProps {
     value: number | null;
     hasConflict: boolean;
     numberSize: number;

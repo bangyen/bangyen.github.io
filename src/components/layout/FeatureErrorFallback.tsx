@@ -4,7 +4,7 @@ import React from 'react';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, SPACING } from '@/config/theme';
 
-interface FeatureErrorFallbackProps {
+export interface FeatureErrorFallbackProps {
     error: Error | null;
     resetErrorBoundary: () => void;
     /** Heading shown above the error message, e.g. "Game Error". */

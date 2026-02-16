@@ -13,7 +13,7 @@ import {
 import { ContentCopyRounded, Refresh } from '@/components/icons';
 import { CustomGrid } from '@/components/ui/CustomGrid';
 
-interface InfoCalculatorProps {
+export interface InfoCalculatorProps {
     cols: number;
     size: number;
     isMobile: boolean;
