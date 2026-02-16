@@ -1,4 +1,49 @@
+import type { TrophyOverlayProps } from '../components/TrophyOverlay';
+
 import type { BaseGameAction } from '@/utils/gameUtils';
+
+// ---------------------------------------------------------------------------
+// Shared return-shape types
+// ---------------------------------------------------------------------------
+
+/**
+ * The control-bar props that `useBaseGame` returns.
+ *
+ * Extracted here so every game's prop-shaping hook can reference it
+ * instead of re-declaring the same structural type.
+ */
+export interface BaseControlsProps {
+    rows: number;
+    cols: number;
+    dynamicSize: { rows: number; cols: number };
+    minSize: number;
+    maxSize: number;
+    handlePlus: () => void;
+    handleMinus: () => void;
+    onRefresh: () => void;
+}
+
+/**
+ * Canonical shape returned by every game's prop-shaping hook
+ * (e.g. `useLightsOutProps`, `useSlantProps`).
+ *
+ * Using a shared generic enforces that every game page component
+ * receives the same structural contract and makes it straightforward
+ * to add new games in the future.
+ */
+export interface GamePageProps<
+    B = Record<string, unknown>,
+    C = Record<string, unknown>,
+    L = Record<string, unknown>,
+    I = Record<string, unknown>,
+    T = TrophyOverlayProps,
+> {
+    boardProps: B;
+    controlsProps: C;
+    layoutProps: L;
+    infoProps: I;
+    trophyProps: T;
+}
 
 // ---------------------------------------------------------------------------
 // Config sub-interfaces for useBaseGame

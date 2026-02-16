@@ -7,6 +7,7 @@
 
 import { useMemo } from 'react';
 
+import type { BaseControlsProps, GamePageProps } from '../../hooks/types';
 import type { DragProps } from '../../hooks/useDrag';
 import { LAYOUT_CONSTANTS, NUMBER_SIZE_RATIO } from '../config/constants';
 import type { CellState, SlantState } from '../types';
@@ -42,16 +43,7 @@ export interface UseSlantPropsParams {
     infoOpen: boolean;
     toggleInfo: () => void;
     /** Base game controls props from useBaseGame. */
-    controlsProps: {
-        rows: number;
-        cols: number;
-        dynamicSize: { rows: number; cols: number };
-        minSize: number;
-        maxSize: number;
-        handlePlus: () => void;
-        handleMinus: () => void;
-        onRefresh: () => void;
-    };
+    controlsProps: BaseControlsProps;
     /** Drag interaction factory. */
     getDragProps: (pos: string) => DragProps;
     /** Whether the device is mobile. */
@@ -63,7 +55,9 @@ export interface UseSlantPropsParams {
 /**
  * Builds the five prop bundles (`boardProps`, `controlsProps`,
  * `layoutProps`, `infoProps`, `trophyProps`) from raw orchestration
- * state, using memoised cell factories and computed flags.
+ * state, using memoised cell factories and computed flags.  Returns a
+ * `GamePageProps`-conformant object so every game page receives a
+ * structurally consistent contract.
  */
 export function useSlantProps({
     state,
@@ -147,5 +141,5 @@ export function useSlantProps({
             size,
             iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
         },
-    };
+    } satisfies GamePageProps;
 }

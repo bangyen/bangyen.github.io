@@ -1,4 +1,4 @@
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, Typography } from '@mui/material';
 import React from 'react';
 
 import { ResearchControls } from './ResearchControls';
@@ -9,13 +9,13 @@ import {
 } from './ResearchDemo.styles';
 import { ResearchHeader } from './ResearchHeader';
 import { ResearchViewSelector } from './ResearchViewSelector';
-import { DEFAULT_CHART_CONFIG } from '../config/constants';
 import { useCurrentView } from '../hooks/useCurrentView';
+import { useResearchDemoDefaults } from '../hooks/useResearchDemoDefaults';
 import type { ResearchDemoProps } from '../types';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { LazySuspense } from '@/components/ui/LazySuspense';
-import { useMobile } from '@/hooks';
+import { MobileProvider } from '@/hooks';
 import { lazyNamed } from '@/utils/lazyNamed';
 
 const ResearchChart = lazyNamed(
@@ -23,32 +23,34 @@ const ResearchChart = lazyNamed(
     'ResearchChart',
 );
 
+const chartErrorFallback = (
+    <Typography color="error" sx={{ p: 3, textAlign: 'center' }}>
+        Failed to load chart. Please refresh the page.
+    </Typography>
+);
+
 export const ResearchDemo = <T,>({
     title,
     pageTitle,
     subtitle,
     githubUrl,
-    chart = {},
-    view = {},
-    controls = [],
-    onReset,
-    resetLabel = 'Reset',
     children,
     backUrl,
+    ...rest
 }: ResearchDemoProps<T>) => {
     const {
-        data: chartData = [],
-        config: chartConfig = DEFAULT_CHART_CONFIG,
-        title: chartTitle = null,
-        loading = false,
-        loadingMessage = 'Loading data...',
-    } = chart;
-
-    const {
-        types: viewTypes = [],
-        current: currentViewType = 'default',
-        onChange: onViewTypeChange = () => {},
-    } = view;
+        chartData,
+        chartConfig,
+        chartTitle,
+        loading,
+        loadingMessage,
+        viewTypes,
+        currentViewType,
+        onViewTypeChange,
+        controls,
+        onReset,
+        resetLabel,
+    } = useResearchDemoDefaults(rest);
 
     const {
         data: currentData,
@@ -62,52 +64,54 @@ export const ResearchDemo = <T,>({
         chartTitle ?? null,
     );
 
-    const isMobile = useMobile('sm');
-
     return (
         <PageLayout title={pageTitle ?? title} githubUrl={githubUrl}>
-            <Grid
-                container={true}
-                flex={1}
-                flexDirection="column"
-                sx={demoContainerSx}
-            >
-                <Grid size={{ xs: 12 }} flex={1} sx={demoContentGridSx}>
-                    <Box sx={demoContentBoxSx}>
-                        <ResearchHeader
-                            title={title}
-                            subtitle={subtitle}
-                            backUrl={backUrl}
-                            isMobile={isMobile}
-                        />
-
-                        <LazySuspense message="Loading Chart..." height={400}>
-                            <ResearchChart
-                                currentData={currentData}
-                                currentChartConfig={currentChartConfig}
-                                loading={loading}
-                                loadingMessage={loadingMessage}
-                                chartTitle={calculatedChartTitle}
-                                isMobile={isMobile}
+            <MobileProvider>
+                <Grid
+                    container={true}
+                    flex={1}
+                    flexDirection="column"
+                    sx={demoContainerSx}
+                >
+                    <Grid size={{ xs: 12 }} flex={1} sx={demoContentGridSx}>
+                        <Box sx={demoContentBoxSx}>
+                            <ResearchHeader
+                                title={title}
+                                subtitle={subtitle}
+                                backUrl={backUrl}
                             />
-                        </LazySuspense>
 
-                        <ResearchViewSelector
-                            viewTypes={viewTypes}
-                            currentViewType={currentViewType}
-                            onViewTypeChange={onViewTypeChange}
-                        />
+                            <LazySuspense
+                                message="Loading Chart..."
+                                height={400}
+                                errorFallback={chartErrorFallback}
+                            >
+                                <ResearchChart
+                                    currentData={currentData}
+                                    currentChartConfig={currentChartConfig}
+                                    loading={loading}
+                                    loadingMessage={loadingMessage}
+                                    chartTitle={calculatedChartTitle}
+                                />
+                            </LazySuspense>
 
-                        <ResearchControls
-                            controls={controls}
-                            onReset={onReset}
-                            resetLabel={resetLabel}
-                        />
+                            <ResearchViewSelector
+                                viewTypes={viewTypes}
+                                currentViewType={currentViewType}
+                                onViewTypeChange={onViewTypeChange}
+                            />
 
-                        {children}
-                    </Box>
+                            <ResearchControls
+                                controls={controls}
+                                onReset={onReset}
+                                resetLabel={resetLabel}
+                            />
+
+                            {children}
+                        </Box>
+                    </Grid>
                 </Grid>
-            </Grid>
+            </MobileProvider>
         </PageLayout>
     );
 };

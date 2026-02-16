@@ -74,6 +74,7 @@ export default defineConfig(() => {
         plugins,
         worker: {
             format: 'es',
+            plugins: () => [tsconfigPaths()],
         },
         build: {
             outDir: 'build', // Maintain 'build' for gh-pages compatibility

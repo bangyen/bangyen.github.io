@@ -7,6 +7,7 @@
 
 import { useMemo } from 'react';
 
+import type { BaseControlsProps, GamePageProps } from '../../hooks/types';
 import type { DragProps } from '../../hooks/useDrag';
 import { LAYOUT_CONSTANTS } from '../config';
 import type { Getters } from '../types';
@@ -32,16 +33,7 @@ export interface UseLightsOutPropsParams {
     /** Trigger the next puzzle generation. */
     handleNext: () => void;
     /** Base game controls props from useBaseGame. */
-    controlsProps: {
-        rows: number;
-        cols: number;
-        dynamicSize: { rows: number; cols: number };
-        minSize: number;
-        maxSize: number;
-        handlePlus: () => void;
-        handleMinus: () => void;
-        onRefresh: () => void;
-    };
+    controlsProps: BaseControlsProps;
     /** Info dialog open state. */
     open: boolean;
     /** Toggle info dialog. */
@@ -71,7 +63,8 @@ export interface UseLightsOutPropsParams {
 /**
  * Builds the five prop bundles (`boardProps`, `controlsProps`,
  * `layoutProps`, `infoProps`, `trophyProps`) from raw orchestration
- * state.
+ * state.  Returns a `GamePageProps`-conformant object so every game
+ * page receives a structurally consistent contract.
  */
 export function useLightsOutProps({
     rows,
@@ -141,5 +134,5 @@ export function useLightsOutProps({
             secondaryColor: palette.secondary,
             useSecondary: allOn,
         },
-    };
+    } satisfies GamePageProps;
 }
