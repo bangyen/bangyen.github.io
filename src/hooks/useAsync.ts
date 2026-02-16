@@ -1,4 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
+
+import { useStableCallback } from './useStableCallback';
 
 /**
  * Return type for `useAsync`, providing the resolved data, a loading
@@ -19,8 +21,8 @@ export interface UseAsyncResult<T> {
  * that mirrors `useWorker` and can be reused across any feature
  * that loads data asynchronously.
  *
- * The `loader` and `fallback` functions are captured by ref so that
- * callers can pass inline closures without triggering re-fetches.
+ * Uses `useStableCallback` so that callers can pass inline closures
+ * without triggering re-fetches.
  *
  * @template T - Type of the resolved data
  * @param loader - Async function that returns the data
@@ -44,10 +46,8 @@ export function useAsync<T>(
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    const loaderRef = useRef(loader);
-    const fallbackRef = useRef(fallback);
-    loaderRef.current = loader;
-    fallbackRef.current = fallback;
+    const stableLoader = useStableCallback(loader);
+    const stableFallback = useStableCallback(fallback);
 
     useEffect(() => {
         const loadData = async () => {
@@ -55,7 +55,7 @@ export function useAsync<T>(
             setError(null);
 
             try {
-                const result = await loaderRef.current();
+                const result = await stableLoader();
                 setData(() => result);
             } catch (error_: unknown) {
                 const message =
@@ -63,14 +63,14 @@ export function useAsync<T>(
                         ? error_.message
                         : 'An unknown error occurred';
                 setError(message);
-                setData(() => fallbackRef.current());
+                setData(() => stableFallback());
             } finally {
                 setLoading(false);
             }
         };
 
         void loadData();
-    }, []);
+    }, [stableLoader, stableFallback]);
 
     return { data, loading, error };
 }

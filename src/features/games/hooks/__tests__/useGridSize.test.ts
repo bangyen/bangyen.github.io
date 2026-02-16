@@ -5,10 +5,14 @@ import { useWindow } from '../../../../hooks';
 import { useGridSize } from '../useGridSize';
 
 // Mock the base hooks
-vi.mock('../../../../hooks', () => ({
-    useWindow: vi.fn().mockReturnValue({ width: 1000, height: 1000 }),
-    useMobile: vi.fn().mockReturnValue(false),
-}));
+vi.mock('../../../../hooks', async importOriginal => {
+    const actual = await importOriginal<Record<string, unknown>>();
+    return {
+        ...actual,
+        useWindow: vi.fn().mockReturnValue({ width: 1000, height: 1000 }),
+        useMobile: vi.fn().mockReturnValue(false),
+    };
+});
 
 describe('useGridSize', () => {
     const defaultGridConfig = {

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- route config, not a component file */
 import React from 'react';
 import type { ComponentType, ReactElement } from 'react';
 
@@ -7,7 +8,7 @@ import { FeatureErrorLayout } from '@/components/layout/FeatureErrorLayout';
 import { lightsOutRoute } from '@/features/games/lights-out/route';
 import { slantRoute } from '@/features/games/slant/route';
 import { homeRoute } from '@/features/home/route';
-import { researchRoutes } from '@/features/research/routes';
+import { researchRoutes } from '@/features/research/route';
 import { lazyNamed } from '@/utils/lazyNamed';
 
 /**
@@ -39,17 +40,18 @@ export const appRoutes: RouteEntry[] = [
         component: lazyNamed(() => import('@/pages/Error'), 'Error'),
     },
     {
-        element: React.createElement(FeatureErrorLayout, {
-            title: 'Game Error',
-            resetLabel: 'Reset Game',
-        }),
+        element: (
+            <FeatureErrorLayout title="Game Error" resetLabel="Reset Game" />
+        ),
         children: [lightsOutRoute, slantRoute],
     },
     {
-        element: React.createElement(FeatureErrorLayout, {
-            title: 'Research Tool Error',
-            resetLabel: 'Reset Component',
-        }),
+        element: (
+            <FeatureErrorLayout
+                title="Research Tool Error"
+                resetLabel="Reset Component"
+            />
+        ),
         children: researchRoutes,
     },
 ];

@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+import { useLocalStorage } from './useLocalStorage';
+
 /**
  * Theme mode setting - can be explicitly set or follow system preference.
  * - 'light': Force light theme
@@ -27,13 +29,20 @@ interface ThemeContextType {
     toggleTheme: () => void;
 }
 
+const THEME_SERIALIZE = (v: ThemeMode): string => v;
+
+const THEME_DESERIALIZE = (raw: string): ThemeMode | undefined => {
+    if (raw === 'light' || raw === 'dark' || raw === 'system') return raw;
+    return undefined;
+};
+
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 /**
  * Provides theme context to the application.
  *
  * Features:
- * - Persists theme preference to localStorage
+ * - Persists theme preference to localStorage via `useLocalStorage`
  * - Supports system preference detection via `prefers-color-scheme`
  * - Updates `data-theme` attribute on document root for CSS styling
  * - Automatically responds to system theme changes when mode is 'system'
@@ -48,18 +57,19 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
  * ```
  */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-    // 1. Initialize state from localStorage or default to 'system'
-    const [mode, setMode] = useState<ThemeMode>(() => {
-        const saved = localStorage.getItem('theme-mode');
-        if (saved === 'light' || saved === 'dark' || saved === 'system') {
-            return saved as ThemeMode;
-        }
-        return 'system';
+    const [mode, setMode] = useLocalStorage<ThemeMode>('theme-mode', 'system', {
+        serialize: THEME_SERIALIZE,
+        deserialize: THEME_DESERIALIZE,
     });
 
-    const [resolvedMode, setResolvedMode] = useState<ResolvedThemeMode>('dark');
+    const [resolvedMode, setResolvedMode] = useState<ResolvedThemeMode>(() => {
+        if (mode !== 'system') return mode;
+        return globalThis.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
+    });
 
-    // 2. Effect to determine resolvedMode based on mode and system preference
+    // Effect to determine resolvedMode based on mode and system preference
     useEffect(() => {
         const handleSystemChange = (
             e: MediaQueryListEvent | MediaQueryList,
@@ -85,11 +95,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
         };
     }, [mode]);
 
-    // 3. Effect to persist mode and update data-theme attribute
-    useEffect(() => {
-        localStorage.setItem('theme-mode', mode);
-    }, [mode]);
-
+    // Update data-theme attribute when resolved theme changes
     useEffect(() => {
         document.documentElement.dataset['theme'] = resolvedMode;
     }, [resolvedMode]);
