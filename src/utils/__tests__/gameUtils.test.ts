@@ -1,7 +1,12 @@
 import { renderHook } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
-import { getPosKey, createGameReducer, useCellFactory } from '../gameUtils';
+import {
+    getPosKey,
+    createGameReducer,
+    useCellFactory,
+    type BaseGameAction,
+} from '../gameUtils';
 
 describe('gameUtils', () => {
     describe('getPosKey', () => {
@@ -67,7 +72,9 @@ describe('gameUtils', () => {
 
         it('should return current state for unknown actions', () => {
             const state = getInitialState(5, 5);
-            const next = reducer(state, { type: 'unknown' } as any);
+            const next = reducer(state, { type: 'unknown' } as unknown as {
+                type: 'custom';
+            });
             expect(next).toBe(state);
         });
     });
@@ -79,11 +86,11 @@ describe('gameUtils', () => {
                 .fn()
                 .mockReturnValue((r: number, c: number) => ({ r, c }));
 
-            const d1 = [1];
             const { result, rerender } = renderHook(
-                ({ deps }) => useCellFactory(factory, getDragProps, deps),
+                ({ deps }) =>
+                    useCellFactory(factory, getDragProps, deps as unknown[]),
                 {
-                    initialProps: { deps: d1 as any[] },
+                    initialProps: { deps: [1] },
                 },
             );
 
@@ -91,13 +98,14 @@ describe('gameUtils', () => {
             // May be called twice if React 18 Strict Mode is active in test env
             const initialCalls = factory.mock.calls.length;
 
-            // Rerender with same deps instance
-            rerender({ deps: d1 });
+            // Rerender with a NEW array containing the same value -- the
+            // spread-based dep list should still treat this as stable.
+            rerender({ deps: [1] });
             expect(factory).toHaveBeenCalledTimes(initialCalls);
 
-            // Rerender with different deps
+            // Rerender with different deps value
             rerender({ deps: [2] });
-            expect(factory).toHaveBeenCalledTimes(2);
+            expect(factory.mock.calls.length).toBeGreaterThan(initialCalls);
         });
     });
 
@@ -110,11 +118,21 @@ describe('gameUtils', () => {
             const reducer = createGameReducer({ getInitialState });
             const state = { rows: 5, cols: 5 };
 
-            expect(reducer(state, { type: 'resize', rows: 3 } as any)).toEqual({
+            expect(
+                reducer(state, { type: 'resize', rows: 3 } as BaseGameAction<{
+                    rows: number;
+                    cols: number;
+                }>),
+            ).toEqual({
                 rows: 3,
                 cols: 5,
             });
-            expect(reducer(state, { type: 'resize', cols: 3 } as any)).toEqual({
+            expect(
+                reducer(state, { type: 'resize', cols: 3 } as BaseGameAction<{
+                    rows: number;
+                    cols: number;
+                }>),
+            ).toEqual({
                 rows: 5,
                 cols: 3,
             });
@@ -125,7 +143,12 @@ describe('gameUtils', () => {
                 getInitialState: (r, c) => ({ rows: r, cols: c }),
             });
             const state = { rows: 5, cols: 5 };
-            expect(reducer(state, { type: 'resize' } as any)).toBe(state);
+            expect(
+                reducer(state, { type: 'resize' } as BaseGameAction<{
+                    rows: number;
+                    cols: number;
+                }>),
+            ).toBe(state);
         });
 
         it('should return state for restore/hydrate without state prop', () => {
@@ -133,7 +156,15 @@ describe('gameUtils', () => {
                 getInitialState: (r, c) => ({ rows: r, cols: c }),
             });
             const state = { rows: 5, cols: 5 };
-            expect(reducer(state, { type: 'restore' } as any)).toBe(state);
+            // Intentionally pass restore without state to test defensive handling
+            expect(
+                reducer(state, {
+                    type: 'restore',
+                } as unknown as BaseGameAction<{
+                    rows: number;
+                    cols: number;
+                }>),
+            ).toBe(state);
         });
 
         it('should work without customHandler', () => {

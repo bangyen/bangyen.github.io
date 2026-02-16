@@ -1,7 +1,17 @@
 import { renderHook, act } from '@testing-library/react';
+import type React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { useDrag } from '../useDrag';
+
+/** Creates a mock touchmove event with the given clientX/Y. */
+function createTouchMoveEvent(clientX: number, clientY: number): Event {
+    const event = new CustomEvent('touchmove');
+    Object.defineProperty(event, 'touches', {
+        value: [{ clientX, clientY }],
+    });
+    return event;
+}
 
 describe('useDrag', () => {
     const onAction = vi.fn();
@@ -24,7 +34,7 @@ describe('useDrag', () => {
                 preventDefault: vi.fn(),
                 clientX: 0,
                 clientY: 0,
-            } as any);
+            } as unknown as React.MouseEvent);
         });
 
         expect(result.current.isDragging).toBe(true);
@@ -47,7 +57,7 @@ describe('useDrag', () => {
             props.onMouseDown({
                 button: 2,
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as React.MouseEvent);
         });
 
         expect(result.current.isDragging).toBe(true);
@@ -63,7 +73,7 @@ describe('useDrag', () => {
             props.onMouseDown({
                 button: 0,
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as React.MouseEvent);
         });
 
         expect(result.current.isDragging).toBe(true);
@@ -83,7 +93,7 @@ describe('useDrag', () => {
             props.onTouchStart({
                 preventDefault: vi.fn(),
                 cancelable: true,
-            } as any);
+            } as unknown as React.TouchEvent);
         });
 
         expect(result.current.isDragging).toBe(true);
@@ -98,7 +108,7 @@ describe('useDrag', () => {
             props.onKeyDown({
                 key: 'Enter',
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as React.KeyboardEvent);
         });
 
         expect(onAction).toHaveBeenCalledWith('0,0', false, true);
@@ -107,7 +117,7 @@ describe('useDrag', () => {
             props.onKeyDown({
                 key: ' ',
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as React.KeyboardEvent);
         });
 
         expect(onAction).toHaveBeenCalledTimes(2);
@@ -123,7 +133,7 @@ describe('useDrag', () => {
         const props = result.current.getDragProps('0,0');
 
         act(() => {
-            props.onMouseDown({ button: 0 } as any);
+            props.onMouseDown({ button: 0 } as unknown as React.MouseEvent);
         });
 
         expect(result.current.isDragging).toBe(false);
@@ -139,7 +149,7 @@ describe('useDrag', () => {
             props.onTouchStart({
                 preventDefault: vi.fn(),
                 cancelable: true,
-            } as any);
+            } as unknown as React.TouchEvent);
         });
 
         // Mock document.elementFromPoint
@@ -151,9 +161,7 @@ describe('useDrag', () => {
         document.elementFromPoint = vi.fn().mockReturnValue(mockElement);
 
         act(() => {
-            const touchMoveEvent = new CustomEvent('touchmove') as any;
-            touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
-            globalThis.dispatchEvent(touchMoveEvent);
+            globalThis.dispatchEvent(createTouchMoveEvent(10, 10));
         });
 
         expect(onAction).toHaveBeenCalledWith('0,1', false, false);
@@ -167,15 +175,13 @@ describe('useDrag', () => {
             props.onTouchStart({
                 preventDefault: vi.fn(),
                 cancelable: true,
-            } as any);
+            } as unknown as React.TouchEvent);
         });
 
         document.elementFromPoint = vi.fn().mockReturnValue(null);
 
         act(() => {
-            const touchMoveEvent = new CustomEvent('touchmove') as any;
-            touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
-            globalThis.dispatchEvent(touchMoveEvent);
+            globalThis.dispatchEvent(createTouchMoveEvent(10, 10));
         });
 
         expect(onAction).toHaveBeenCalledTimes(1); // Only initial touch start
@@ -189,7 +195,7 @@ describe('useDrag', () => {
             props.onTouchStart({
                 preventDefault: vi.fn(),
                 cancelable: true,
-            } as any);
+            } as unknown as React.TouchEvent);
         });
 
         const mockElement = {
@@ -198,9 +204,7 @@ describe('useDrag', () => {
         document.elementFromPoint = vi.fn().mockReturnValue(mockElement);
 
         act(() => {
-            const touchMoveEvent = new CustomEvent('touchmove') as any;
-            touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
-            globalThis.dispatchEvent(touchMoveEvent);
+            globalThis.dispatchEvent(createTouchMoveEvent(10, 10));
         });
 
         expect(onAction).toHaveBeenCalledTimes(1); // Only initial touch start
@@ -214,7 +218,7 @@ describe('useDrag', () => {
             props.onTouchStart({
                 preventDefault: vi.fn(),
                 cancelable: true,
-            } as any);
+            } as unknown as React.TouchEvent);
         });
 
         const mockElement = {
@@ -225,9 +229,7 @@ describe('useDrag', () => {
         document.elementFromPoint = vi.fn().mockReturnValue(mockElement);
 
         act(() => {
-            const touchMoveEvent = new CustomEvent('touchmove') as any;
-            touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
-            globalThis.dispatchEvent(touchMoveEvent);
+            globalThis.dispatchEvent(createTouchMoveEvent(10, 10));
         });
 
         expect(onAction).toHaveBeenCalledTimes(1); // Only initial touch start
@@ -242,7 +244,7 @@ describe('useDrag', () => {
             props.onMouseDown({
                 button: 0,
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as React.MouseEvent);
         });
 
         expect(onAction).toHaveBeenCalledTimes(1);
@@ -264,7 +266,7 @@ describe('useDrag', () => {
             props.onMouseDown({
                 button: 1,
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as React.MouseEvent);
         });
 
         expect(result.current.isDragging).toBe(false);
@@ -282,7 +284,7 @@ describe('useDrag', () => {
             props.onTouchStart({
                 preventDefault: vi.fn(),
                 cancelable: true,
-            } as any);
+            } as unknown as React.TouchEvent);
         });
 
         // Immediately try mouse down (within 500ms) - should be blocked
@@ -292,7 +294,7 @@ describe('useDrag', () => {
             const e = {
                 button: 0,
                 preventDefault: mockMouseDown,
-            } as any;
+            } as unknown as React.MouseEvent;
             props.onMouseDown(e);
         });
 
@@ -315,7 +317,7 @@ describe('useDrag', () => {
                 props.onTouchStart({
                     preventDefault: vi.fn(),
                     cancelable: true,
-                } as any);
+                } as unknown as React.TouchEvent);
             });
 
             // Wait past timeout
@@ -328,7 +330,7 @@ describe('useDrag', () => {
                 props.onMouseDown({
                     button: 0,
                     preventDefault: vi.fn(),
-                } as any);
+                } as unknown as React.MouseEvent);
             });
 
             expect(result.current.isDragging).toBe(true);
@@ -348,7 +350,7 @@ describe('useDrag', () => {
             props.onMouseDown({
                 button: 0,
                 preventDefault: mockPreventDefault,
-            } as any);
+            } as unknown as React.MouseEvent);
         });
 
         expect(mockPreventDefault).not.toHaveBeenCalled();
@@ -364,7 +366,7 @@ describe('useDrag', () => {
         act(() => {
             props.onContextMenu?.({
                 preventDefault: mockPreventDefault,
-            } as any);
+            } as unknown as React.MouseEvent);
         });
 
         expect(mockPreventDefault).not.toHaveBeenCalled();
@@ -393,7 +395,7 @@ describe('useDrag', () => {
             props.onMouseDown({
                 button: 0,
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as React.MouseEvent);
         });
 
         expect(result.current.isDragging).toBe(false);
@@ -414,7 +416,7 @@ describe('useDrag', () => {
             props.onMouseDown({
                 button: 0,
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as React.MouseEvent);
         });
 
         expect(result.current.isDragging).toBe(true);
@@ -440,7 +442,7 @@ describe('useDrag', () => {
             props.onMouseDown({
                 button: 0,
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as React.MouseEvent);
         });
 
         expect(result.current.isDragging).toBe(true);
@@ -456,7 +458,7 @@ describe('useDrag', () => {
         act(() => {
             props.onContextMenu?.({
                 preventDefault: mockPreventDefault,
-            } as any);
+            } as unknown as React.MouseEvent);
         });
 
         expect(mockPreventDefault).toHaveBeenCalled();
@@ -470,7 +472,7 @@ describe('useDrag', () => {
             props.onKeyDown({
                 key: 'Shift',
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as React.KeyboardEvent);
         });
 
         expect(onAction).not.toHaveBeenCalled();
@@ -486,7 +488,7 @@ describe('useDrag', () => {
             props.onMouseDown({
                 button: 2,
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as React.MouseEvent);
         });
 
         // Mock document.elementFromPoint
@@ -498,9 +500,7 @@ describe('useDrag', () => {
         document.elementFromPoint = vi.fn().mockReturnValue(mockElement);
 
         act(() => {
-            const touchMoveEvent = new CustomEvent('touchmove') as any;
-            touchMoveEvent.touches = [{ clientX: 10, clientY: 10 }];
-            globalThis.dispatchEvent(touchMoveEvent);
+            globalThis.dispatchEvent(createTouchMoveEvent(10, 10));
         });
 
         expect(onAction).toHaveBeenCalledWith('0,1', true, false);

@@ -29,7 +29,7 @@ describe('useGridSize', () => {
     });
 
     it('should calculate dynamic size based on window dimensions', () => {
-        (useWindow as any).mockReturnValue({ width: 400, height: 400 });
+        vi.mocked(useWindow).mockReturnValue({ width: 400, height: 400 });
         const { result } = renderHook(() => useGridSize(defaultGridConfig));
 
         // 400 - 100 (header) - 0 (padding) = 300
@@ -50,7 +50,7 @@ describe('useGridSize', () => {
 
     it('should handle handlePlus and handleMinus', () => {
         localStorage.setItem('test-key', '5');
-        (useWindow as any).mockReturnValue({ width: 1000, height: 1000 });
+        vi.mocked(useWindow).mockReturnValue({ width: 1000, height: 1000 });
         const { result } = renderHook(() => useGridSize(defaultGridConfig));
 
         // Dynamic size will be large, so 5 is less than dynamic size
@@ -69,7 +69,7 @@ describe('useGridSize', () => {
         localStorage.setItem('test-key', '5');
         // Set window so dynamic size is 5x5
         // 5 = (H - 100) / 32 - 1 => 6 = (H - 100) / 32 => 192 = H - 100 => H = 292
-        (useWindow as any).mockReturnValue({ width: 292, height: 292 });
+        vi.mocked(useWindow).mockReturnValue({ width: 292, height: 292 });
         const { result } = renderHook(() => useGridSize(defaultGridConfig));
 
         expect(result.current.rows).toBe(5);
@@ -93,7 +93,7 @@ describe('useGridSize', () => {
         );
 
         // Very small window
-        (useWindow as any).mockReturnValue({ width: 10, height: 10 });
+        vi.mocked(useWindow).mockReturnValue({ width: 10, height: 10 });
         // Trigger rerender if needed or just re-calculate dynamicSize
 
         // Dynamic size will be below minSize

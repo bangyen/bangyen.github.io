@@ -1,10 +1,8 @@
-import React from 'react';
-
 /**
  * Renders text with superscript notation for mathematical expressions
  * Converts ^{text} to superscript format
  */
-export const MathText: React.FC<{ text: string }> = ({ text }) => {
+export function MathText({ text }: { text: string }) {
     const parts = text.split(/(\^{[^}]+})/g);
     return (
         <span
@@ -35,4 +33,4 @@ export const MathText: React.FC<{ text: string }> = ({ text }) => {
             </span>
         </span>
     );
-};
+}

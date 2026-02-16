@@ -16,7 +16,7 @@ export const DEFAULT_CHART_CONFIG: ChartConfig = {
     dualYAxis: false,
     rightYAxisFormatter: (value: number) => value.toFixed(2),
     rightYAxisDomain: ['dataMin - 0.05', 'dataMax + 0.05'],
-    tooltipLabelFormatter: (value: unknown) => `Round ${String(value)}`,
+    tooltipLabelFormatter: (value: number) => `Round ${String(value)}`,
     tooltipFormatter: (value: number, name: string) => [value.toFixed(2), name],
 };
 

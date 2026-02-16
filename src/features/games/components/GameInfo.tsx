@@ -20,7 +20,7 @@ import {
     infoContentSx,
     infoFooterSx,
     STEP_DOT_SIZE,
-} from './infoStyles';
+} from './GameInfo.styles';
 
 import {
     CloseRounded,
@@ -29,6 +29,7 @@ import {
 } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
+import { spreadSx } from '@/utils/muiUtils';
 
 // ---------------------------------------------------------------------------
 // Internal helpers
@@ -310,8 +311,8 @@ export function GameInfo({
                         e.stopPropagation();
                     }}
                     sx={{
-                        ...(infoCardSx as Record<string, unknown>),
-                        ...(cardSx as Record<string, unknown>),
+                        ...spreadSx(infoCardSx),
+                        ...spreadSx(cardSx),
                     }}
                 >
                     {/* Content Area */}

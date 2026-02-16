@@ -4,6 +4,7 @@ import React from 'react';
 
 import { CustomGrid } from '@/components/ui/CustomGrid';
 import { LAYOUT } from '@/config/theme';
+import { spreadSx } from '@/utils/muiUtils';
 
 export interface BoardProps {
     /** Cell factory for the top layer (higher z-index). */
@@ -21,6 +22,10 @@ export interface BoardProps {
     cellCols?: number;
     overlayLayerSx?: SxProps<Theme>;
     cellLayerSx?: SxProps<Theme>;
+    /** When true, marks the overlay layer as decorative (aria-hidden). */
+    overlayDecorative?: boolean;
+    /** When true, marks the cell layer as decorative (aria-hidden). */
+    cellDecorative?: boolean;
 }
 
 /**
@@ -47,20 +52,9 @@ export const Board = React.memo(function Board(
         cellCols = cols,
         overlayLayerSx,
         cellLayerSx,
+        overlayDecorative = false,
+        cellDecorative = false,
     } = props;
-
-    const isOverlayDecorative =
-        overlayLayerSx != null &&
-        typeof overlayLayerSx === 'object' &&
-        !Array.isArray(overlayLayerSx) &&
-        'pointerEvents' in overlayLayerSx &&
-        (overlayLayerSx as Record<string, unknown>)['pointerEvents'] === 'none';
-    const isCellDecorative =
-        cellLayerSx != null &&
-        typeof cellLayerSx === 'object' &&
-        !Array.isArray(cellLayerSx) &&
-        'pointerEvents' in cellLayerSx &&
-        (cellLayerSx as Record<string, unknown>)['pointerEvents'] === 'none';
 
     return (
         <Box
@@ -72,7 +66,7 @@ export const Board = React.memo(function Board(
             <Box
                 sx={{
                     gridArea: '1/1',
-                    ...(cellLayerSx as Record<string, unknown> | undefined),
+                    ...spreadSx(cellLayerSx),
                 }}
             >
                 <CustomGrid
@@ -81,7 +75,7 @@ export const Board = React.memo(function Board(
                     rows={cellRows}
                     cols={cellCols}
                     cellProps={cellProps}
-                    {...(isCellDecorative
+                    {...(cellDecorative
                         ? { role: 'presentation', 'aria-hidden': true }
                         : {})}
                 />
@@ -90,7 +84,7 @@ export const Board = React.memo(function Board(
                 sx={{
                     gridArea: '1/1',
                     zIndex: LAYOUT.zIndex.base + 1,
-                    ...(overlayLayerSx as Record<string, unknown> | undefined),
+                    ...spreadSx(overlayLayerSx),
                 }}
             >
                 <CustomGrid
@@ -99,7 +93,7 @@ export const Board = React.memo(function Board(
                     rows={rows}
                     cols={cols}
                     cellProps={overlayProps}
-                    {...(isOverlayDecorative
+                    {...(overlayDecorative
                         ? { role: 'presentation', 'aria-hidden': true }
                         : {})}
                 />

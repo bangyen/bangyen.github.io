@@ -86,6 +86,7 @@ export function SlantBoardContent({
             overlayProps={overlayProps}
             cellProps={cellProps}
             overlayLayerSx={{ pointerEvents: 'none' }}
+            overlayDecorative
         />
     );
 }

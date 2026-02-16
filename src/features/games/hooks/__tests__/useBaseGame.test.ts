@@ -19,12 +19,12 @@ vi.mock('../useBoardSize', () => ({
     useBoardSize: vi.fn().mockReturnValue(3),
 }));
 vi.mock('../../../utils/gameUtils', () => ({
-    createGameReducer: vi.fn().mockReturnValue((state: any) => state),
+    createGameReducer: vi.fn().mockReturnValue((state: unknown) => state),
     getPosKey: vi.fn(),
 }));
 
 describe('useBaseGame', () => {
-    const defaultProps: any = {
+    const defaultProps = {
         storageKey: 'test-game',
         grid: {
             headerOffset: { mobile: 50, desktop: 100 },
@@ -33,18 +33,29 @@ describe('useBaseGame', () => {
             boardPadding: 20,
         },
         logic: {
-            getInitialState: vi.fn().mockReturnValue({ some: 'initial-state' }),
-            reducer: vi.fn(state => state),
+            getInitialState: vi
+                .fn()
+                .mockReturnValue({ rows: 5, cols: 5, some: 'initial-state' }),
+            reducer: vi.fn((state: unknown) => state),
             isSolved: vi.fn().mockReturnValue(false),
         },
     };
 
     beforeEach(() => {
         vi.clearAllMocks();
-        (useGridSize as any).mockReturnValue({
+        vi.mocked(useGridSize).mockReturnValue({
             rows: 5,
             cols: 5,
+            dynamicSize: { rows: 10, cols: 10 },
+            handlePlus: vi.fn(),
+            handleMinus: vi.fn(),
+            desiredSize: null,
+            setDesiredSize: vi.fn(),
             mobile: false,
+            width: 1024,
+            height: 768,
+            minSize: 3,
+            maxSize: 10,
         });
     });
 
@@ -56,10 +67,12 @@ describe('useBaseGame', () => {
     });
 
     it('should handle onRestore from persistence', () => {
-        let onRestoreCallback: any;
-        (useGamePersistence as any).mockImplementation((options: any) => {
+        let onRestoreCallback: (savedState: unknown) => void;
+        vi.mocked(useGamePersistence).mockImplementation(((options: {
+            onRestore: (savedState: unknown) => void;
+        }) => {
             onRestoreCallback = options.onRestore;
-        });
+        }) as typeof useGamePersistence);
 
         renderHook(() => useBaseGame(defaultProps));
 

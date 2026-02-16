@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
+import type React from 'react';
 import { describe, it, expect } from 'vitest';
 
 // Test the GameControls logic without rendering (since it requires Navigation context)
@@ -131,7 +132,7 @@ describe('GameControls Logic', () => {
     });
 
     it('handles rendering without children', () => {
-        const children: any = undefined;
+        const children: React.ReactNode = undefined;
         expect(children).toBeUndefined();
     });
 });

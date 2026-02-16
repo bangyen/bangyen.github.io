@@ -406,11 +406,11 @@ describe('boardHandlers', () => {
                 initialized: false,
             };
 
-            const action: BoardAction = {
+            const action = {
                 type: 'resize',
                 rows: 7,
                 cols: 8,
-            } as any;
+            } as BoardAction;
             const newState = handleBoard(state, action);
             expect(newState.rows).toBe(7);
             expect(newState.cols).toBe(8);
@@ -426,7 +426,7 @@ describe('boardHandlers', () => {
                 cols: createGridSize(3),
                 initialized: false,
             };
-            const action = { type: 'unknown' } as any;
+            const action = { type: 'unknown' } as unknown as BoardAction;
             const newState = handleBoard(state, action);
             expect(newState).toBe(state);
         });

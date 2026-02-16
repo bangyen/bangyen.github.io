@@ -14,7 +14,7 @@
 
 import { useReducer, useEffect, useMemo, useCallback, useRef } from 'react';
 
-import type { BaseGameConfig } from './types';
+import type { BaseGameConfig, MergedBoardConfig } from './types';
 import { useBoardSize } from './useBoardSize';
 import { useGamePersistence } from './useGamePersistence';
 import { useGridSize } from './useGridSize';
@@ -27,6 +27,7 @@ import {
 } from '../config/constants';
 
 import type { BaseGameState } from '@/utils/gameUtils';
+import { mergeDefaults } from '@/utils/objectUtils';
 
 /**
  * Custom hook that orchestrates all game state management.
@@ -68,29 +69,6 @@ export function useBaseGame<
 }: BaseGameConfig<S, A>) {
     const keys = createStorageKeys(storageKeyPrefix);
 
-    // Destructure grid config with defaults.
-    const {
-        defaultSize = null,
-        minSize: minSizeOpt,
-        maxSize: maxSizeOpt,
-        headerOffset: headerOffsetOpt,
-        gridPadding,
-        widthLimit,
-        cellSizeReference,
-        mobileRowOffset,
-    } = grid;
-
-    // Destructure board config with defaults.
-    const {
-        boardPadding,
-        boardMaxWidth,
-        boardSizeFactor,
-        maxCellSize,
-        remBase,
-        rowOffset,
-        colOffset,
-    } = board;
-
     // Destructure logic config.
     const {
         reducer,
@@ -103,40 +81,43 @@ export function useBaseGame<
     } = logic;
 
     // Build the grid config by merging caller overrides with defaults.
-    const gridMerged = {
-        ...DEFAULT_GRID_CONFIG,
-        defaultSize,
-        minSize: minSizeOpt ?? DEFAULT_GRID_CONFIG.minSize,
-        maxSize: maxSizeOpt ?? DEFAULT_GRID_CONFIG.maxSize,
-        headerOffset: headerOffsetOpt ?? DEFAULT_GRID_CONFIG.headerOffset,
-        paddingOffset: gridPadding ?? DEFAULT_GRID_CONFIG.paddingOffset,
-        widthLimit: widthLimit ?? DEFAULT_GRID_CONFIG.widthLimit,
-        cellSizeReference:
-            cellSizeReference ?? DEFAULT_GRID_CONFIG.cellSizeReference,
-        mobileRowOffset: mobileRowOffset ?? DEFAULT_GRID_CONFIG.mobileRowOffset,
-    };
+    // Field name mapping: caller's `gridPadding` → internal `paddingOffset`.
+    const gridMerged = mergeDefaults(DEFAULT_GRID_CONFIG, {
+        defaultSize: grid.defaultSize,
+        minSize: grid.minSize,
+        maxSize: grid.maxSize,
+        headerOffset: grid.headerOffset,
+        paddingOffset: grid.gridPadding,
+        widthLimit: grid.widthLimit,
+        cellSizeReference: grid.cellSizeReference,
+        mobileRowOffset: grid.mobileRowOffset,
+    });
 
     // Build the board config by merging caller overrides with defaults.
+    // Field name mapping: caller's `boardPadding` → internal `paddingOffset`.
+    // `rowOffset` / `colOffset` are not in the defaults, so they're appended.
     const mergedBoard = useMemo(
         () => ({
-            ...DEFAULT_BOARD_CONFIG,
-            paddingOffset: boardPadding ?? DEFAULT_BOARD_CONFIG.paddingOffset,
-            boardMaxWidth: boardMaxWidth ?? DEFAULT_BOARD_CONFIG.boardMaxWidth,
-            boardSizeFactor:
-                boardSizeFactor ?? DEFAULT_BOARD_CONFIG.boardSizeFactor,
-            maxCellSize: maxCellSize ?? DEFAULT_BOARD_CONFIG.maxCellSize,
-            remBase: remBase ?? DEFAULT_BOARD_CONFIG.remBase,
-            rowOffset,
-            colOffset,
+            ...mergeDefaults<
+                Omit<MergedBoardConfig, 'rowOffset' | 'colOffset'>
+            >(DEFAULT_BOARD_CONFIG, {
+                paddingOffset: board.boardPadding,
+                boardMaxWidth: board.boardMaxWidth,
+                boardSizeFactor: board.boardSizeFactor,
+                maxCellSize: board.maxCellSize,
+                remBase: board.remBase,
+            }),
+            rowOffset: board.rowOffset,
+            colOffset: board.colOffset,
         }),
         [
-            boardPadding,
-            boardMaxWidth,
-            boardSizeFactor,
-            maxCellSize,
-            remBase,
-            rowOffset,
-            colOffset,
+            board.boardPadding,
+            board.boardMaxWidth,
+            board.boardSizeFactor,
+            board.maxCellSize,
+            board.remBase,
+            board.rowOffset,
+            board.colOffset,
         ],
     );
 

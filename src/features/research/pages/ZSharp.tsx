@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 
 import { ResearchDemo } from '../components';
@@ -7,7 +7,7 @@ import { zsharpViewTypes } from './zsharpConfig';
 
 import { URLS, PAGE_TITLES } from '@/config/constants';
 
-export const ZSharp: React.FC = () => {
+export function ZSharp() {
     const chartData = useLoaderData<DataPoint[]>();
     const [viewType, setViewType] = useState<string>('accuracy');
 
@@ -25,4 +25,4 @@ export const ZSharp: React.FC = () => {
             }}
         />
     );
-};
+}

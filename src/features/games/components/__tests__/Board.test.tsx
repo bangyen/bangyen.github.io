@@ -59,26 +59,21 @@ describe('Board Component', () => {
         expect(outerBox).toHaveStyle('place-items: center');
     });
 
-    test('handles decorative layers with pointerEvents none', () => {
-        render(
+    test('handles decorative layers via explicit boolean props', () => {
+        const { container } = render(
             <Board
                 overlayProps={mockOverlayProps}
                 cellProps={mockCellProps}
                 size={20}
                 rows={2}
                 cols={2}
-                overlayLayerSx={{ pointerEvents: 'none' }}
-                cellLayerSx={{ pointerEvents: 'none' }}
+                overlayDecorative
+                cellDecorative
             />,
         );
 
-        // This triggers the branches:
-        // isOverlayDecorative = true
-        // isCellDecorative = true
-        // which adds role="presentation" and aria-hidden="true" to CustomGrid
-
-        // CustomGrid internally renders div/Box. We can check for attributes if we can find them.
-        // But the main point is to hit the branch.
+        const decorative = container.querySelectorAll('[aria-hidden="true"]');
+        expect(decorative).toHaveLength(2);
     });
 });
 

@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React, { useMemo, useCallback } from 'react';
+import { useMemo, useCallback } from 'react';
 
 import { buildCellProps, buildNumberProps } from './ghostCanvasProps';
 import { GhostControls } from './GhostControls';
@@ -27,7 +27,7 @@ export interface GhostBoardProps {
     onClose?: () => void;
 }
 
-export const GhostCanvas: React.FC<GhostBoardProps> = ({
+export function GhostCanvas({
     rows,
     cols,
     numbers,
@@ -37,7 +37,7 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
     onCopy,
     onClear,
     onClose,
-}) => {
+}: GhostBoardProps) {
     const mobile = useMobile('sm');
     // User inputs: just strict assignments
     const userMoves = initialMoves;
@@ -200,4 +200,4 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
             />
         </Box>
     );
-};
+}

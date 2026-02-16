@@ -1,4 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
+import type { MouseEvent } from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { useDrag } from '../useDrag';
@@ -23,7 +24,7 @@ describe('useDrag grid mode (onToggle)', () => {
             props.onMouseDown({
                 button: 0,
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as MouseEvent);
         });
 
         expect(onToggle).toHaveBeenCalledWith(1, 2, false, undefined, true);
@@ -38,7 +39,7 @@ describe('useDrag grid mode (onToggle)', () => {
             result.current.getDragProps('1,2').onMouseDown({
                 button: 0,
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as MouseEvent);
         });
 
         expect(onToggle).toHaveBeenCalledWith(1, 2, false, undefined, true);
@@ -63,7 +64,7 @@ describe('useDrag grid mode (onToggle)', () => {
             result.current.getDragProps('1,2').onMouseDown({
                 button: 0,
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as MouseEvent);
         });
 
         expect(onToggle).not.toHaveBeenCalled();
@@ -76,7 +77,7 @@ describe('useDrag grid mode (onToggle)', () => {
             result.current.getDragProps('invalid').onMouseDown({
                 button: 0,
                 preventDefault: vi.fn(),
-            } as any);
+            } as unknown as MouseEvent);
         });
 
         expect(onToggle).not.toHaveBeenCalled();

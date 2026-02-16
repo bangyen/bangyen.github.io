@@ -151,7 +151,7 @@ describe('Lights Out Chase Handlers', () => {
 
         it('handles grid with undefined rows gracefully', () => {
             const grid = boardHandlers.getGrid(3, 3);
-            grid[1] = undefined as any;
+            grid[1] = undefined as unknown as number;
 
             const states = chaseLights([grid], 3);
             expect(states).toBeDefined();

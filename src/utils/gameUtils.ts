@@ -201,6 +201,7 @@ export function useCellFactory<T extends unknown[], P, R>(
 ): CellFactory<R> {
     return useMemo(
         () => factory(getDragProps, ...dependencies),
-        [factory, getDragProps, dependencies],
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- dependencies are intentionally spread into the dep array
+        [factory, getDragProps, ...dependencies],
     );
 }

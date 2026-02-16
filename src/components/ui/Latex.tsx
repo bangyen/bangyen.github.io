@@ -1,9 +1,11 @@
 import type { SxProps, Theme } from '@mui/material';
 import { Box } from '@mui/material';
 import katex from 'katex';
-import React, { useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 
 import 'katex/dist/katex.min.css';
+
+import { spreadSx } from '@/utils/muiUtils';
 
 export interface LatexProps {
     formula: string;
@@ -11,7 +13,7 @@ export interface LatexProps {
     sx?: SxProps<Theme>;
 }
 
-export const Latex: React.FC<LatexProps> = ({ formula, block = false, sx }) => {
+export function Latex({ formula, block = false, sx }: LatexProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -30,8 +32,8 @@ export const Latex: React.FC<LatexProps> = ({ formula, block = false, sx }) => {
             sx={{
                 display: block ? 'block' : 'inline-block',
                 my: block ? 2 : 0,
-                ...(sx as Record<string, unknown> | undefined),
+                ...spreadSx(sx),
             }}
         />
     );
-};
+}

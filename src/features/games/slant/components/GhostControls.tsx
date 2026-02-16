@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import React from 'react';
 
 import {
     CloseRounded,
@@ -15,11 +14,11 @@ export interface GhostControlsProps {
     onClose?: () => void;
 }
 
-export const GhostControls: React.FC<GhostControlsProps> = ({
+export function GhostControls({
     onCopy,
     onClear,
     onClose,
-}) => {
+}: GhostControlsProps) {
     return (
         <Box
             sx={{
@@ -73,4 +72,4 @@ export const GhostControls: React.FC<GhostControlsProps> = ({
             />
         </Box>
     );
-};
+}
