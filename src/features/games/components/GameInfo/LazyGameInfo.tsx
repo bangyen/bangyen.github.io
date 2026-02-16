@@ -1,7 +1,12 @@
-import { Backdrop, Typography } from '@mui/material';
+import { Backdrop, Box, Modal, Typography } from '@mui/material';
 import React, { Suspense } from 'react';
 
-import { infoBackdropSx, infoModalSx } from './GameInfo.styles';
+import {
+    infoBackdropSx,
+    infoModalSx,
+    infoOuterBoxSx,
+    infoCardSx,
+} from './GameInfo.styles';
 
 import type { GameInfoProps } from './index';
 
@@ -12,48 +17,72 @@ import { GAME_TEXT } from '@/features/games/config/constants';
 import { lazyNamed } from '@/utils/lazyNamed';
 import { spreadSx } from '@/utils/muiUtils';
 
-const GameInfoLazy = lazyNamed(() => import('./index'), 'GameInfo');
+const GameInfoContentLazy = lazyNamed(
+    () => import('./index'),
+    'GameInfoContent',
+);
+
+/** Shared DOM id linking the Modal's `aria-labelledby` to the step title. */
+const TITLE_ID = 'game-info-title';
 
 /**
- * Full-screen overlay fallback shown while the GameInfo chunk loads.
- *
- * Uses the same backdrop styling as the loaded modal so the user sees
- * a consistent overlay instead of an inline block that shifts the
- * game board layout.
+ * Lightweight placeholder rendered inside the modal while the
+ * `GameInfoContent` chunk loads.  Matches the card dimensions so
+ * the modal does not resize when the real content appears.
  */
-function ModalLoadingFallback() {
+function LoadingContent() {
     return (
-        <Backdrop
-            open
-            sx={{ ...spreadSx(infoBackdropSx), ...spreadSx(infoModalSx) }}
+        <Box
+            sx={{
+                ...spreadSx(infoCardSx),
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
         >
             <Typography sx={{ color: COLORS.text.primary }}>
                 {GAME_TEXT.info.loading}
             </Typography>
-        </Backdrop>
+        </Box>
     );
 }
 
 /**
- * Lazy-loading wrapper around `GameInfo` that centralises the
- * open-guard, suspense boundary, and error fallback every game's
- * info modal needs.  Individual game Info components can focus
- * exclusively on building game-specific content and props.
+ * Lazy-loading wrapper that renders the Modal shell eagerly and
+ * lazy-loads only the inner `GameInfoContent`.
  *
- * The loading fallback renders as a fixed-position overlay (matching
- * the loaded modal) so it never occupies inline space and cannot
- * shift the game board.
+ * Because the Modal (and its backdrop) mount synchronously, there is
+ * a single backdrop transition regardless of chunk-load time.  The
+ * `Suspense` boundary sits inside the Modal, swapping from a
+ * lightweight loading placeholder to the full content without
+ * tearing down or re-animating the overlay.
  */
 export function LazyGameInfo(props: GameInfoProps): React.ReactElement | null {
     if (!props.open) return null;
 
+    const { open: _open, ...contentProps } = props;
+
     return (
-        <ErrorBoundary
-            fallback={<ErrorState message={GAME_TEXT.info.loadError} />}
+        <Modal
+            open
+            onClose={props.toggleOpen}
+            aria-labelledby={TITLE_ID}
+            slots={{ backdrop: Backdrop }}
+            slotProps={{ backdrop: { sx: infoBackdropSx } }}
+            sx={infoModalSx}
         >
-            <Suspense fallback={<ModalLoadingFallback />}>
-                <GameInfoLazy {...props} />
-            </Suspense>
-        </ErrorBoundary>
+            <Box sx={infoOuterBoxSx} role="document">
+                <ErrorBoundary
+                    fallback={<ErrorState message={GAME_TEXT.info.loadError} />}
+                >
+                    <Suspense fallback={<LoadingContent />}>
+                        <GameInfoContentLazy
+                            {...contentProps}
+                            titleId={TITLE_ID}
+                        />
+                    </Suspense>
+                </ErrorBoundary>
+            </Box>
+        </Modal>
     );
 }

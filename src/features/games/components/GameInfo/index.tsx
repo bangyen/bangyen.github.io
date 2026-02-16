@@ -82,21 +82,30 @@ export interface GameInfoProps {
     contentSxOverride?: (step: number) => SxProps<Theme>;
 }
 
+/** Props for the inner content rendered inside an already-open Modal. */
+export interface GameInfoContentProps extends Omit<GameInfoProps, 'open'> {
+    /** DOM id applied to the step title for `aria-labelledby` on the modal. */
+    titleId: string;
+}
+
+// ---------------------------------------------------------------------------
+// GameInfoContent — inner card rendered inside a Modal shell
+// ---------------------------------------------------------------------------
+
 /**
- * Unified "How to Play" modal for all games. Delegates step-navigation
- * state to `useSteppedModal` and renders the common chrome (backdrop,
- * card, header, close button, navigation footer). Accepts instructions
- * as declarative data and the example animation as a ReactNode so
- * individual games don't need separate InfoInstructions / InfoExample
- * components.
+ * Inner content for the "How to Play" modal, rendering the GlassCard
+ * with step navigation, header, and content.
+ *
+ * Separated from the Modal wrapper so `LazyGameInfo` can render the
+ * Modal eagerly (single backdrop transition) while lazy-loading only
+ * this content via Suspense.
  *
  * Step layout:
  *   0 — Instructions (rendered from `instructions` data)
  *   1 — Example      (renders `exampleContent`)
  *   2…— Extra steps  (renders each element from `extraSteps`)
  */
-export function GameInfo({
-    open,
+export function GameInfoContent({
     toggleOpen,
     titles,
     instructions,
@@ -105,7 +114,8 @@ export function GameInfo({
     extraSteps = [],
     cardSx,
     contentSxOverride,
-}: GameInfoProps) {
+    titleId,
+}: GameInfoContentProps) {
     const totalSteps = titles.length;
     const { step, handleNext, handleBack } = useSteppedModal(
         totalSteps,
@@ -125,6 +135,59 @@ export function GameInfo({
         ? contentSxOverride(step)
         : infoContentSx(step);
 
+    return (
+        <GlassCard
+            onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+            }}
+            sx={{
+                ...spreadSx(infoCardSx),
+                ...spreadSx(cardSx),
+            }}
+        >
+            {/* Content Area */}
+            <Box sx={contentSx}>
+                {/* Header (Title + Close Button) */}
+                <Box sx={infoHeaderSx}>
+                    <StepTitle id={titleId}>{titles[step]}</StepTitle>
+                    <IconButton
+                        onClick={toggleOpen}
+                        size="small"
+                        aria-label="Close"
+                        sx={infoCloseButtonSx}
+                    >
+                        <CloseRounded />
+                    </IconButton>
+                </Box>
+
+                {/* Step Content */}
+                <Box sx={infoStepContentSx(step)}>{steps[step]}</Box>
+            </Box>
+
+            {/* Footer (Navigation) */}
+            <StepNavigation
+                step={step}
+                totalSteps={totalSteps}
+                onBack={handleBack}
+                onNext={handleNext}
+            />
+        </GlassCard>
+    );
+}
+
+// ---------------------------------------------------------------------------
+// GameInfo — full modal (kept for backward compatibility / direct use)
+// ---------------------------------------------------------------------------
+
+/**
+ * Unified "How to Play" modal for all games.  Wraps `GameInfoContent`
+ * in a MUI Modal with the standard backdrop.
+ *
+ * Prefer using `LazyGameInfo` from the barrel — it renders the Modal
+ * eagerly and lazy-loads only the content, avoiding layout shift and
+ * backdrop flicker.
+ */
+export function GameInfo({ open, toggleOpen, ...contentProps }: GameInfoProps) {
     const titleId = 'game-info-title';
 
     return (
@@ -141,42 +204,11 @@ export function GameInfo({
             sx={infoModalSx}
         >
             <Box sx={infoOuterBoxSx} role="document">
-                <GlassCard
-                    onClick={(e: React.MouseEvent) => {
-                        e.stopPropagation();
-                    }}
-                    sx={{
-                        ...spreadSx(infoCardSx),
-                        ...spreadSx(cardSx),
-                    }}
-                >
-                    {/* Content Area */}
-                    <Box sx={contentSx}>
-                        {/* Header (Title + Close Button) */}
-                        <Box sx={infoHeaderSx}>
-                            <StepTitle id={titleId}>{titles[step]}</StepTitle>
-                            <IconButton
-                                onClick={toggleOpen}
-                                size="small"
-                                aria-label="Close"
-                                sx={infoCloseButtonSx}
-                            >
-                                <CloseRounded />
-                            </IconButton>
-                        </Box>
-
-                        {/* Step Content */}
-                        <Box sx={infoStepContentSx(step)}>{steps[step]}</Box>
-                    </Box>
-
-                    {/* Footer (Navigation) */}
-                    <StepNavigation
-                        step={step}
-                        totalSteps={totalSteps}
-                        onBack={handleBack}
-                        onNext={handleNext}
-                    />
-                </GlassCard>
+                <GameInfoContent
+                    {...contentProps}
+                    toggleOpen={toggleOpen}
+                    titleId={titleId}
+                />
             </Box>
         </Modal>
     );
