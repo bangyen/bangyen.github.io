@@ -2,6 +2,8 @@ import React from 'react';
 
 import { ErrorFallback } from './ErrorFallback';
 
+import { logError } from '@/utils/errorReporting';
+
 interface ErrorBoundaryState {
     hasError: boolean;
     error: Error | null;
@@ -38,21 +40,8 @@ class ErrorBoundary extends React.Component<
     }
 
     override componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-        // Log error details for debugging
-        globalThis.console.error('Error caught by boundary:', error, errorInfo);
-        this.setState({
-            error,
-            errorInfo,
-        });
-
-        // In production, you might want to log this to an error reporting service
-        if (
-            typeof process === 'undefined'
-                ? import.meta.env.PROD
-                : process.env['NODE_ENV'] === 'production'
-        ) {
-            // Example: logErrorToService(error, errorInfo);
-        }
+        logError(error, { component: 'ErrorBoundary', errorInfo });
+        this.setState({ error, errorInfo });
     }
 
     handleReload = (): void => {

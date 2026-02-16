@@ -17,7 +17,7 @@ export function LightsOut() {
             title={PAGE_TITLES.lightsOut}
             infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
             trophyProps={trophyProps}
-            boardSx={layoutProps.boardSx}
+            layout={{ boardSx: layoutProps.boardSx }}
             controls={<GameControls {...controlsProps} />}
         >
             <Board {...boardProps} />

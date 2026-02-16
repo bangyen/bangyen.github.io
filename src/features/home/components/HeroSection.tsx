@@ -21,6 +21,7 @@ import { HeroContainer } from './Layout';
 import { LocationOn, ArrowForward } from '@/components/icons';
 import { PERSONAL_INFO } from '@/config/constants';
 import { ANIMATIONS } from '@/config/theme';
+import { scrollToElement } from '@/utils/domUtils';
 
 export function HeroSection(): React.ReactElement {
     return (
@@ -50,17 +51,7 @@ export function HeroSection(): React.ReactElement {
                         <Box sx={heroCtaRowSx}>
                             <Box
                                 onClick={() => {
-                                    const element =
-                                        document.querySelector(
-                                            '#featured-work',
-                                        );
-                                    if (element) {
-                                        element.scrollIntoView({
-                                            behavior: 'smooth',
-                                            block: 'start',
-                                            inline: 'nearest',
-                                        });
-                                    }
+                                    scrollToElement('#featured-work');
                                 }}
                                 sx={heroCtaButtonSx}
                             >

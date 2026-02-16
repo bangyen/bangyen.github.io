@@ -1,1 +1,1 @@
-export * from '../../../../utils/math/gf2';
+export * from '@/utils/math/gf2';

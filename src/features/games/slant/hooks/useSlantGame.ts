@@ -1,25 +1,15 @@
-import React, {
-    useEffect,
-    useMemo,
-    useCallback,
-    useReducer,
-    useRef,
-} from 'react';
+import React, { useEffect, useCallback, useReducer, useRef } from 'react';
 
 import { useDimensionRegeneration } from './useDimensionRegeneration';
-import { useGenerationWorker } from './useGenerationWorker';
 import { useGhostMode } from './useGhostMode';
-import { useMobile } from '../../../../hooks';
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useDrag } from '../../hooks/useDrag';
 import { getSlantGameConfig } from '../config';
-import {
-    NUMBER_SIZE_RATIO,
-    STORAGE_KEYS,
-    LAYOUT_CONSTANTS,
-} from '../config/constants';
+import { STORAGE_KEYS } from '../config/constants';
 import type { SlantAction, SlantState } from '../types';
+import { useGenerationWorker } from './useGenerationWorker';
+import { useSlantProps } from './useSlantProps';
 import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import {
     serializeSlantState,
@@ -27,10 +17,9 @@ import {
     deserializeSlantState,
     persistSlantState,
 } from '../utils/persistence';
-import { getBackProps, getFrontProps } from '../utils/renderers';
 
 import { createCellIndex } from '@/features/games/types';
-import { useCellFactory } from '@/utils/gameUtils';
+import { useMobile } from '@/hooks';
 
 /**
  * Orchestrates all Slant-specific game logic: worker-based puzzle
@@ -150,65 +139,26 @@ export function useSlantGame() {
         touchTimeout: GAME_CONSTANTS.timing.touchHoldDelay,
     });
 
-    const numberSize = size * NUMBER_SIZE_RATIO;
-
-    const backProps = useCellFactory(getBackProps, getDragProps, [state, size]);
-
-    const frontProps = useMemo(
-        () => getFrontProps(state, numberSize),
-        [state, numberSize],
-    );
-
-    const contentSx = useMemo(
-        () => ({
-            px: mobile ? '1rem' : '2rem',
-            pt: mobile ? '1rem' : '2rem',
-        }),
-        [mobile],
-    );
-
-    const dimensionsMismatch = rows !== state.rows || cols !== state.cols;
-
-    return {
-        boardProps: {
-            isGhostMode,
-            generating,
-            dimensionsMismatch,
-            rows,
-            cols,
-            state,
-            size,
-            ghostMoves,
-            onGhostMove: handleGhostMove,
-            onGhostCopy: handleGhostCopy,
-            onGhostClear: handleGhostClear,
-            onGhostClose: handleGhostClose,
-            cellProps: backProps,
-            overlayProps: frontProps,
-        },
-        controlsProps: {
-            ...controlsProps,
-            onRefresh: handleNextAsync,
-            disabled: generating,
-            onOpenInfo: toggleInfo,
-            hidden: isGhostMode,
-        },
-        layoutProps: {
-            boardSx,
-            contentSx,
-            iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
-        },
-        infoProps: {
-            open: infoOpen,
-            toggleOpen: toggleInfo,
-            handleOpenCalculator,
-            handleBoxClick,
-        },
-        trophyProps: {
-            show: !isGhostMode && state.solved,
-            onReset: handleNextAsync,
-            size,
-            iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
-        },
-    };
+    return useSlantProps({
+        state,
+        rows,
+        cols,
+        size,
+        isGhostMode,
+        generating,
+        handleNextAsync,
+        ghostMoves,
+        handleGhostMove,
+        handleGhostCopy,
+        handleGhostClear,
+        handleGhostClose,
+        handleBoxClick,
+        handleOpenCalculator,
+        infoOpen,
+        toggleInfo,
+        controlsProps,
+        getDragProps,
+        mobile,
+        boardSx,
+    });
 }

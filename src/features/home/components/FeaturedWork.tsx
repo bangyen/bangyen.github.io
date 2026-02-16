@@ -3,10 +3,11 @@ import React from 'react';
 
 import { ProjectCard } from './FeaturedWork/ProjectCard';
 import { PublicationCard } from './FeaturedWork/PublicationCard';
+import { sectionTitleSx, cardGridSx } from './FeaturedWork.styles';
 import { Section } from './Layout';
 
 import { PUBLICATIONS, PROJECTS } from '@/config/constants';
-import { ANIMATIONS, COLORS, TYPOGRAPHY } from '@/config/theme';
+import { ANIMATIONS } from '@/config/theme';
 
 export interface AnimatedCardProps {
     index: number;
@@ -31,28 +32,9 @@ export function FeaturedWork(): React.ReactElement {
         <Section id="featured-work">
             <Fade in timeout={ANIMATIONS.durations.long + 400}>
                 <Box>
-                    <Typography
-                        sx={{
-                            color: COLORS.text.primary,
-                            fontSize: TYPOGRAPHY.fontSize.h2,
-                            fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                            textAlign: 'center',
-                            marginBottom: 6,
-                        }}
-                    >
-                        Featured Work
-                    </Typography>
+                    <Typography sx={sectionTitleSx}>Featured Work</Typography>
 
-                    <Box
-                        sx={{
-                            display: 'grid',
-                            gridTemplateColumns: {
-                                xs: '1fr',
-                                md: 'repeat(2, 1fr)',
-                            },
-                            gap: 4,
-                        }}
-                    >
+                    <Box sx={cardGridSx}>
                         {PUBLICATIONS.map((publication, index) => (
                             <AnimatedCard
                                 key={publication.title}

@@ -1,7 +1,8 @@
-import { getPosKey } from '../../../../utils/gameUtils';
 import type { CellState } from '../types';
 import { EMPTY, BACKWARD, FORWARD } from '../types';
 import { findCycles } from './cycleDetection';
+
+import { getPosKey } from '@/utils/gameUtils';
 
 export type CellSource = 'user' | 'propagated';
 

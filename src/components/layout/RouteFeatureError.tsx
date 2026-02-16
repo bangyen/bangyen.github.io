@@ -3,6 +3,8 @@ import { useRouteError, useNavigate } from 'react-router-dom';
 
 import { FeatureErrorFallback } from './FeatureErrorFallback';
 
+import { logError } from '@/utils/errorReporting';
+
 export interface RouteFeatureErrorProps {
     /** Heading shown in the error fallback, e.g. "Game Error". */
     title?: string;
@@ -27,6 +29,8 @@ export function RouteFeatureError({
         routeError instanceof Error
             ? routeError
             : new Error(String(routeError));
+
+    logError(error, { component: 'RouteFeatureError' });
 
     const handleReset = useCallback(() => {
         void navigate(0);
