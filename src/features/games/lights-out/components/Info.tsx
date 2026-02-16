@@ -37,7 +37,7 @@ const INSTRUCTIONS = [
     },
 ];
 
-export interface InfoProps {
+interface InfoProps {
     rows: number;
     cols: number;
     size: number;
@@ -115,7 +115,10 @@ export function Info(props: InfoProps): React.ReactElement | null {
     if (!open) return null;
 
     return (
-        <LazySuspense message="Loading info...">
+        <LazySuspense
+            message="Loading info..."
+            errorFallback={<span>Failed to load info panel.</span>}
+        >
             <GameInfo
                 open={open}
                 toggleOpen={toggleOpen}

@@ -2,6 +2,7 @@ import { Typography } from '@mui/material';
 import React, { Suspense } from 'react';
 
 import { LoadingFallback } from './LoadingFallback';
+import { ErrorBoundary } from '../layout/ErrorBoundary';
 
 import { COLORS } from '@/config/theme';
 
@@ -22,6 +23,13 @@ export interface LazySuspenseProps {
      * Defaults to an empty string so the surrounding text reflows minimally.
      */
     inlineFallback?: string;
+    /**
+     * Optional fallback UI rendered when the lazy-loaded chunk fails to
+     * load (e.g. network error).  When provided, an `ErrorBoundary` is
+     * wrapped around the `Suspense` so errors are caught locally instead
+     * of propagating up to the nearest route-level boundary.
+     */
+    errorFallback?: React.ReactNode;
 }
 
 /**
@@ -36,6 +44,10 @@ export interface LazySuspenseProps {
  * - **Inline** (`inline={true}`): renders a plain `<span>` with
  *   `inlineFallback` text — suited for lazy-loaded fragments inside
  *   paragraphs (e.g. LaTeX symbols).
+ *
+ * When `errorFallback` is provided an `ErrorBoundary` is wrapped around
+ * the `Suspense` so chunk-load failures are caught locally rather than
+ * tearing down the entire page.
  */
 export function LazySuspense({
     children,
@@ -43,30 +55,35 @@ export function LazySuspense({
     message = 'Loading...',
     inline = false,
     inlineFallback = '',
+    errorFallback,
 }: LazySuspenseProps): React.ReactElement {
-    if (inline) {
-        return (
-            <Suspense
-                fallback={
-                    <Typography
-                        component="span"
-                        variant="inherit"
-                        sx={{ color: COLORS.text.secondary, opacity: 0.6 }}
-                    >
-                        {inlineFallback}
-                    </Typography>
-                }
-            >
-                {children}
-            </Suspense>
-        );
-    }
-
-    return (
+    const suspense = inline ? (
+        <Suspense
+            fallback={
+                <Typography
+                    component="span"
+                    variant="inherit"
+                    sx={{ color: COLORS.text.secondary, opacity: 0.6 }}
+                >
+                    {inlineFallback}
+                </Typography>
+            }
+        >
+            {children}
+        </Suspense>
+    ) : (
         <Suspense
             fallback={<LoadingFallback message={message} height={height} />}
         >
             {children}
         </Suspense>
     );
+
+    if (errorFallback) {
+        return (
+            <ErrorBoundary fallback={errorFallback}>{suspense}</ErrorBoundary>
+        );
+    }
+
+    return suspense;
 }

@@ -7,6 +7,7 @@ import { Board } from '../../components/Board';
 import { LIGHTS_OUT_STYLES } from '../config';
 import { useHandler as useBoardHandler } from '../hooks/boardUtils';
 import type { Palette, PropsFactory } from '../types';
+import type { KeyframeMap } from '../utils/animationFrames';
 import {
     getBoardIconFrames,
     getInputIconFrames,
@@ -18,21 +19,30 @@ import { CustomGrid } from '@/components/ui/CustomGrid';
 import { COLORS } from '@/config/theme';
 import { useMobile } from '@/hooks';
 
-/**
- * Creates icon handler for board cells
- * Returns a function that generates icon props for each cell
- */
-function iconHandler(
-    states: number[][],
-    dims: number,
-    id: string,
-    palette: Palette,
-) {
-    return (row: number, col: number): Record<string, unknown> => {
-        const frames = getBoardIconFrames(states, row, col, dims, palette);
-        const length = states.length;
+// ---------------------------------------------------------------------------
+// Shared icon-animation helpers
+// ---------------------------------------------------------------------------
 
-        const name = `${id}-board-icon-${String(row)}-${String(col)}`;
+/** Shape returned by `createIconHandler` for each cell. */
+interface AnimatedIconResult {
+    icon: React.ReactNode;
+    keyframes: KeyframeMap;
+    keyframeName: string;
+}
+
+/**
+ * Builds the shared animated-icon `<Box>` used by both the board and
+ * input icon handlers.  The only difference between the two is which
+ * keyframe generator produces the frames, so we parameterise that.
+ */
+function createIconHandler(
+    getFrames: (row: number, col: number) => KeyframeMap,
+    prefix: string,
+    totalFrames: number,
+) {
+    return (row: number, col: number): AnimatedIconResult => {
+        const frames = getFrames(row, col);
+        const name = `${prefix}-${String(row)}-${String(col)}`;
 
         return {
             icon: (
@@ -53,7 +63,7 @@ function iconHandler(
                             fontWeight: 'bold',
                             filter: LIGHTS_OUT_STYLES.SHADOWS.DROP,
                             paddingTop: '0.15rem',
-                            animation: `${name} ${String(length * 2)}s linear infinite`,
+                            animation: `${name} ${String(totalFrames * 2)}s linear infinite`,
                         },
                     }}
                 />
@@ -65,52 +75,41 @@ function iconHandler(
 }
 
 /**
- * Creates icon handler for input row cells
- * Returns a function that generates icon props for each input cell
+ * Merges a base cell-prop factory with an animated-icon factory, layering
+ * the icon on top of the existing children and adding `position: relative`.
+ *
+ * Both the board and input cells need the same merge logic, so this
+ * eliminates the duplicated inline merge blocks.
  */
-function inputIconHandler(
-    states: number[][],
-    dims: number,
-    id: string,
-    palette: Palette,
+function mergeWithIcons(
+    baseFactory: (row: number, col: number) => Record<string, unknown>,
+    iconFactory: (row: number, col: number) => AnimatedIconResult,
 ) {
-    return (row: number, col: number): Record<string, unknown> => {
-        const frames = getInputIconFrames(states, col, palette);
-        const length = states.length;
-
-        const name = `${id}-input-icon-${String(row)}-${String(col)}`;
+    return (row: number, col: number) => {
+        const baseProps = baseFactory(row, col);
+        const { icon } = iconFactory(row, col);
 
         return {
-            icon: (
-                <Box
-                    sx={{
-                        width: '100%',
-                        height: '100%',
-                        position: 'absolute',
-                        inset: 0,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        pointerEvents: 'none',
-                        zIndex: 2,
-                        '&::after': {
-                            content: '""',
-                            fontSize: '1.2rem',
-                            fontWeight: 'bold',
-                            filter: LIGHTS_OUT_STYLES.SHADOWS.DROP,
-                            paddingTop: '0.15rem',
-                            animation: `${name} ${String(length * 2)}s linear infinite`,
-                        },
-                    }}
-                />
+            ...baseProps,
+            children: (
+                <>
+                    {baseProps['children'] as React.ReactNode}
+                    {icon}
+                </>
             ),
-            keyframes: frames,
-            keyframeName: name,
+            sx: {
+                ...(baseProps['sx'] as Record<string, unknown>),
+                position: 'relative',
+            },
         };
     };
 }
 
-export interface ExampleProps {
+// ---------------------------------------------------------------------------
+// Example component
+// ---------------------------------------------------------------------------
+
+interface ExampleProps {
     palette: Palette;
     size: number;
     dims?: number;
@@ -156,31 +155,19 @@ export function Example({
     const baseFrontProps = getFrontProps(boardGetters);
     const backProps = getBackProps(boardGetters);
 
-    // Icon animation handler
-    const getBoardIcon = iconHandler(boardStates, dims, 'example', palette);
+    // Unified icon handlers — one for the board grid, one for the input row.
+    const boardIconHandler = createIconHandler(
+        (row, col) => getBoardIconFrames(boardStates, row, col, dims, palette),
+        'example-board-icon',
+        boardStates.length,
+    );
+    const inputIconHandler = createIconHandler(
+        (_row, col) => getInputIconFrames(inputStates, col, palette),
+        'example-input-icon',
+        inputStates.length,
+    );
 
-    // Merge props to add icons
-    const frontProps = (row: number, col: number) => {
-        const baseProps = baseFrontProps(row, col);
-        const iconProps = getBoardIcon(row, col) as {
-            icon: React.ReactNode;
-            keyframeName: string;
-            keyframes: Record<string, unknown>;
-        };
-        return {
-            ...baseProps,
-            children: (
-                <>
-                    {baseProps.children}
-                    {iconProps.icon}
-                </>
-            ),
-            sx: {
-                ...baseProps.sx,
-                position: 'relative',
-            },
-        };
-    };
+    const frontProps = mergeWithIcons(baseFrontProps, boardIconHandler);
 
     const inputGetters = useCalculatorHandler(
         inputStates[remainder] ?? [],
@@ -195,36 +182,7 @@ export function Example({
     const baseInputProps = getOutput(inputGetters);
     const outputProps = getOutput(outputGetters);
 
-    // Icon animation handler for input row
-    const getInputIcon = inputIconHandler(
-        inputStates,
-        dims,
-        'example',
-        palette,
-    );
-
-    // Merge props to add icons to input
-    const inputProps = (row: number, col: number) => {
-        const baseProps = baseInputProps(row, col);
-        const iconProps = getInputIcon(row, col) as {
-            icon: React.ReactNode;
-            keyframeName: string;
-            keyframes: Record<string, unknown>;
-        };
-        return {
-            ...baseProps,
-            children: (
-                <>
-                    {baseProps.children}
-                    {iconProps.icon}
-                </>
-            ),
-            sx: {
-                ...baseProps.sx,
-                position: 'relative',
-            },
-        };
-    };
+    const inputProps = mergeWithIcons(baseInputProps, inputIconHandler);
 
     const mobile = useMobile('sm');
 

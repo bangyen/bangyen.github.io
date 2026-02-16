@@ -1,13 +1,6 @@
 import type { SxProps, Theme } from '@mui/material';
-import {
-    Backdrop,
-    Modal,
-    Box,
-    Button,
-    IconButton,
-    Typography,
-} from '@mui/material';
-import React, { useState } from 'react';
+import { Backdrop, Modal, Box, IconButton, Typography } from '@mui/material';
+import React from 'react';
 
 import {
     infoBackdropSx,
@@ -18,18 +11,19 @@ import {
     infoCloseButtonSx,
     infoStepContentSx,
     infoContentSx,
-    infoFooterSx,
-    STEP_DOT_SIZE,
 } from './GameInfo.styles';
+import type { InstructionItemData } from './InstructionItem';
+import { InstructionItem } from './InstructionItem';
+import { StepNavigation } from './StepNavigation';
+import { useSteppedModal } from './useSteppedModal';
 
-import {
-    CloseRounded,
-    NavigateBeforeRounded,
-    NavigateNextRounded,
-} from '@/components/icons';
+import { CloseRounded } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
 import { spreadSx } from '@/utils/muiUtils';
+
+// Re-export so consumers can import from the barrel.
+export type { InstructionItemData } from './InstructionItem';
 
 // ---------------------------------------------------------------------------
 // Internal helpers
@@ -50,79 +44,9 @@ const StepTitle = ({ children }: { children: React.ReactNode }) => (
     </Typography>
 );
 
-/**
- * Back / dot-indicator / Next footer used by `GameInfo`.
- * Extracted so the main component focuses on content orchestration.
- */
-function StepNavigation({
-    step,
-    totalSteps,
-    onBack,
-    onNext,
-}: {
-    step: number;
-    totalSteps: number;
-    onBack: () => void;
-    onNext: () => void;
-}) {
-    return (
-        <Box sx={infoFooterSx}>
-            <Button
-                onClick={onBack}
-                disabled={step === 0}
-                startIcon={<NavigateBeforeRounded />}
-                sx={{
-                    visibility: step === 0 ? 'hidden' : 'visible',
-                    color: COLORS.text.primary,
-                }}
-            >
-                Back
-            </Button>
-
-            {/* Dots Indicator */}
-            <Box sx={{ display: 'flex', gap: 1 }}>
-                {Array.from({ length: totalSteps }, (_, i) => (
-                    <Box
-                        key={i}
-                        sx={{
-                            width: STEP_DOT_SIZE,
-                            height: STEP_DOT_SIZE,
-                            borderRadius: '50%',
-                            backgroundColor:
-                                step === i
-                                    ? COLORS.primary.main
-                                    : COLORS.interactive.disabled,
-                            transition: 'background-color 0.3s',
-                        }}
-                    />
-                ))}
-            </Box>
-
-            <Button
-                onClick={onNext}
-                disabled={step === totalSteps - 1}
-                endIcon={<NavigateNextRounded />}
-                sx={{
-                    visibility: step === totalSteps - 1 ? 'hidden' : 'visible',
-                    color: COLORS.text.primary,
-                }}
-            >
-                Next
-            </Button>
-        </Box>
-    );
-}
-
 // ---------------------------------------------------------------------------
 // GameInfo component
 // ---------------------------------------------------------------------------
-
-/** Data for a single instruction row shown on the first step. */
-export interface InstructionItemData {
-    Icon: React.ElementType;
-    title: string;
-    text: string;
-}
 
 export interface GameInfoProps {
     /** Whether the modal is open. */
@@ -146,61 +70,12 @@ export interface GameInfoProps {
 }
 
 /**
- * Renders a single instruction row: an icon, bold title, and description.
- * Used internally to build the instructions step from declarative data.
- */
-function InstructionItem({
-    Icon,
-    title,
-    text,
-}: {
-    Icon: React.ElementType;
-    title: string;
-    text: string;
-}) {
-    return (
-        <Box sx={{ px: 2 }}>
-            <Typography
-                variant="h6"
-                sx={{
-                    color: COLORS.text.primary,
-                    fontWeight: TYPOGRAPHY.fontWeight.semibold,
-                    display: 'flex',
-                    alignItems: 'center',
-                    mb: 1.5,
-                    fontSize: TYPOGRAPHY.fontSize.subheading,
-                }}
-            >
-                <Icon
-                    sx={{
-                        mr: 2,
-                        color: COLORS.primary.main,
-                        fontSize: '1.75rem',
-                    }}
-                />
-                {title}
-            </Typography>
-            <Typography
-                variant="body1"
-                sx={{
-                    color: COLORS.text.secondary,
-                    lineHeight: 1.6,
-                    fontSize: TYPOGRAPHY.fontSize.body,
-                    ml: 6,
-                }}
-            >
-                {text}
-            </Typography>
-        </Box>
-    );
-}
-
-/**
- * Unified "How to Play" modal for all games. Owns the step navigation
- * state and renders the common chrome (backdrop, card, header, close
- * button, navigation footer). Accepts instructions as declarative data
- * and the example animation as a ReactNode so individual games don't
- * need separate InfoInstructions / InfoExample components.
+ * Unified "How to Play" modal for all games. Delegates step-navigation
+ * state to `useSteppedModal` and renders the common chrome (backdrop,
+ * card, header, close button, navigation footer). Accepts instructions
+ * as declarative data and the example animation as a ReactNode so
+ * individual games don't need separate InfoInstructions / InfoExample
+ * components.
  *
  * Step layout:
  *   0 — Instructions (rendered from `instructions` data)
@@ -218,21 +93,11 @@ export function GameInfo({
     cardSx,
     contentSxOverride,
 }: GameInfoProps) {
-    const [step, setStep] = useState(0);
     const totalSteps = titles.length;
-
-    const handleNext = () => {
-        if (step < totalSteps - 1) setStep(step + 1);
-        else toggleOpen();
-    };
-
-    const handleBack = () => {
-        if (step > 0) setStep(step - 1);
-    };
-
-    const handleClose = () => {
-        toggleOpen();
-    };
+    const { step, handleNext, handleBack } = useSteppedModal(
+        totalSteps,
+        toggleOpen,
+    );
 
     // Build step content
     const instructionsStep = (
@@ -296,7 +161,7 @@ export function GameInfo({
     return (
         <Modal
             open={open}
-            onClose={handleClose}
+            onClose={toggleOpen}
             slots={{ backdrop: Backdrop }}
             slotProps={{
                 backdrop: {
@@ -321,7 +186,7 @@ export function GameInfo({
                         <Box sx={infoHeaderSx}>
                             <StepTitle>{titles[step]}</StepTitle>
                             <IconButton
-                                onClick={handleClose}
+                                onClick={toggleOpen}
                                 size="small"
                                 sx={infoCloseButtonSx}
                             >
