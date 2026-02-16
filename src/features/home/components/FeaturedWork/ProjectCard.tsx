@@ -1,16 +1,13 @@
 import React from 'react';
 
 import { BaseCard } from './BaseCard';
+import { HOME_TEXT } from '../../constants';
 
 import { GitHub } from '@/components/icons';
+import type { Project } from '@/config/constants/types';
 import { COLORS } from '@/config/theme';
 
-export interface Project {
-    title: string;
-    technology: string;
-    url: string;
-    description: string;
-}
+export type { Project } from '@/config/constants/types';
 
 export interface ProjectCardProps {
     project: Project;
@@ -24,7 +21,7 @@ export function ProjectCard({ project }: ProjectCardProps): React.ReactElement {
     return (
         <BaseCard
             url={project.url}
-            category="Engineering"
+            category={HOME_TEXT.featuredWork.categories.engineering}
             CategoryIcon={GitHub}
             title={project.title}
             badge={project.technology}

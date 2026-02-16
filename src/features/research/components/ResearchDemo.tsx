@@ -1,5 +1,4 @@
 import { Box, Grid } from '@mui/material';
-import React from 'react';
 
 import { ResearchControls } from './ResearchControls';
 import {

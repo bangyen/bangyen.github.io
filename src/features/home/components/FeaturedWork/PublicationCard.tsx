@@ -1,16 +1,13 @@
 import React from 'react';
 
 import { BaseCard } from './BaseCard';
+import { HOME_TEXT } from '../../constants';
 
 import { OpenInNew } from '@/components/icons';
+import type { Publication } from '@/config/constants/types';
 import { COLORS } from '@/config/theme';
 
-export interface Publication {
-    title: string;
-    conference: string;
-    url: string;
-    description: string;
-}
+export type { Publication } from '@/config/constants/types';
 
 export interface PublicationCardProps {
     publication: Publication;
@@ -26,7 +23,7 @@ export function PublicationCard({
     return (
         <BaseCard
             url={publication.url}
-            category="Research"
+            category={HOME_TEXT.featuredWork.categories.research}
             CategoryIcon={OpenInNew}
             title={publication.title}
             badge={publication.conference}

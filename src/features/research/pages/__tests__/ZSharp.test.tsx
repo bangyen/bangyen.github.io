@@ -1,5 +1,4 @@
 import { screen, fireEvent, act, waitFor } from '@testing-library/react';
-import React from 'react';
 import { vi } from 'vitest';
 
 import type { ResearchDemoProps, ViewType } from '../../types';

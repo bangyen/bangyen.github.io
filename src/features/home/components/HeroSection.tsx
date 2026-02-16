@@ -17,6 +17,7 @@ import {
     heroRightColumnSx,
 } from './HeroSection.styles';
 import { HeroContainer } from './Layout';
+import { HOME_TEXT } from '../constants';
 
 import { LocationOn, ArrowForward } from '@/components/icons';
 import { PERSONAL_INFO } from '@/config/constants';
@@ -30,7 +31,7 @@ export function HeroSection(): React.ReactElement {
                 <Grid size={{ xs: 12, md: 6 }}>
                     <Box>
                         <Typography sx={heroGreetingSx}>
-                            Hello, I&apos;m
+                            {HOME_TEXT.hero.greeting}
                         </Typography>
 
                         <Typography sx={heroNameSx}>
@@ -65,7 +66,7 @@ export function HeroSection(): React.ReactElement {
                                 sx={heroCtaButtonSx}
                             >
                                 <Typography sx={heroCtaTextSx}>
-                                    View Work
+                                    {HOME_TEXT.hero.ctaLabel}
                                 </Typography>
                                 <ArrowForward sx={heroCtaArrowSx} />
                             </Box>

@@ -21,9 +21,12 @@ vi.mock('@/hooks', () => ({
     useMobile: vi.fn(() => false),
 }));
 
-// Mock icons
+// Mock icons (includes icons used by config.ts for INSTRUCTIONS)
 vi.mock('@/components/icons', () => ({
     EmojiEventsRounded: () => <div data-testid="emoji-events-rounded" />,
+    KeyboardArrowDown: () => <div data-testid="icon-arrow-down" />,
+    Calculate: () => <div data-testid="icon-calculate" />,
+    Replay: () => <div data-testid="icon-replay" />,
 }));
 
 // Mock CustomGrid to avoid complex rendering and animations

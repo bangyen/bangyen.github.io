@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import React from 'react';
 
 import { GameControls } from '../../components/GameControls';
 import { GamePageLayout } from '../../components/GamePageLayout';

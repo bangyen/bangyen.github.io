@@ -1,5 +1,6 @@
 import { BOARD_STYLES, createStorageKeys } from '../config/constants';
 
+import { KeyboardArrowDown, Calculate, Replay } from '@/components/icons';
 import { LAYOUT } from '@/config/theme';
 
 export const LIGHTS_OUT_STYLES = {
@@ -22,6 +23,36 @@ export const LAYOUT_CONSTANTS = {
 };
 
 export const STORAGE_KEYS = createStorageKeys('lights-out');
+
+// ---------------------------------------------------------------------------
+// Info modal content (previously inline in Info.tsx)
+// ---------------------------------------------------------------------------
+
+export const INFO_TITLES = ['Chasing Lights', 'How It Works', 'Calculator'];
+
+export const INSTRUCTIONS = [
+    {
+        Icon: KeyboardArrowDown,
+        title: 'Chase to Bottom',
+        text: 'Turn off rows from top to bottom by clicking lights in each row to push them down.',
+    },
+    {
+        Icon: Calculate,
+        title: 'Use Calulator',
+        text: 'Enter the remaining lights pattern from the bottom row into the calculator on the last page.',
+    },
+    {
+        Icon: Replay,
+        title: 'Chase Again',
+        text: 'Apply the solution pattern to the top row, then chase them down again to solve the puzzle.',
+    },
+];
+
+/** Example grid size constants for the info modal. */
+export const EXAMPLE_SIZE = {
+    MOBILE: 3,
+    DESKTOP: 4,
+} as const;
 
 /**
  * Returns the `useBaseGame` configuration for Lights Out.

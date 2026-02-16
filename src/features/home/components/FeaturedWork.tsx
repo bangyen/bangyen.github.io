@@ -5,6 +5,7 @@ import { ProjectCard } from './FeaturedWork/ProjectCard';
 import { PublicationCard } from './FeaturedWork/PublicationCard';
 import { sectionTitleSx, cardGridSx } from './FeaturedWork.styles';
 import { Section } from './Layout';
+import { HOME_TEXT } from '../constants';
 
 import { PUBLICATIONS, PROJECTS } from '@/config/constants';
 import { ANIMATIONS } from '@/config/theme';
@@ -32,7 +33,9 @@ export function FeaturedWork(): React.ReactElement {
         <Section id="featured-work">
             <Fade in timeout={ANIMATIONS.durations.long + 400}>
                 <Box>
-                    <Typography sx={sectionTitleSx}>Featured Work</Typography>
+                    <Typography sx={sectionTitleSx}>
+                        {HOME_TEXT.featuredWork.sectionTitle}
+                    </Typography>
 
                     <Box sx={cardGridSx}>
                         {PUBLICATIONS.map((publication, index) => (

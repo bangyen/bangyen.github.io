@@ -1,5 +1,4 @@
 import { Box, Button } from '@mui/material';
-import React from 'react';
 
 import { Example } from './Example';
 import {
@@ -13,6 +12,7 @@ import { Psychology } from '@/components/icons';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { LazySuspense } from '@/components/ui/LazySuspense';
 import { COLORS } from '@/config/theme';
+import { GAME_TEXT } from '@/features/games/config/constants';
 import { useMobile } from '@/hooks';
 import { lazyNamed } from '@/utils/lazyNamed';
 
@@ -43,8 +43,8 @@ export function SlantInfo({
 
     return (
         <LazySuspense
-            message="Loading info..."
-            errorFallback={<ErrorState message="Failed to load info panel." />}
+            message={GAME_TEXT.info.loading}
+            errorFallback={<ErrorState message={GAME_TEXT.info.loadError} />}
         >
             <GameInfo
                 open={open}

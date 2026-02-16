@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import React from 'react';
 
 import type { DragProps } from '../../hooks/useDrag';
 import { SLANT_STYLES } from '../config/constants';
