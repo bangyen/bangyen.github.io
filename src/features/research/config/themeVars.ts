@@ -6,8 +6,9 @@
  * focused on application-wide design tokens.
  */
 
-import { COLORS, TYPOGRAPHY } from '@/config/theme';
+import { COLORS } from '@/config/theme/colors';
 import type { CssVarDefinition } from '@/config/theme/cssVars';
+import { TYPOGRAPHY } from '@/config/theme/typography';
 
 /** Declarative research CSS variable definitions (light/dark pairs). */
 export const RESEARCH_CSS_VARS: readonly CssVarDefinition[] = [
