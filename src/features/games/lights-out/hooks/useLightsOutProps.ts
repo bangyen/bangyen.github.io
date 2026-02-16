@@ -10,16 +10,11 @@ import { useMemo } from 'react';
 import type { BaseControlsProps, GamePageProps } from '../../hooks/types';
 import type { DragProps } from '../../hooks/useDrag';
 import { LAYOUT_CONSTANTS } from '../config';
-import type { Getters } from '../types';
+import type { Getters, Palette } from '../types';
 import { getBackProps, getExampleProps } from '../utils/renderers';
 
 import type { CellFactory } from '@/utils/gameUtils';
 import { useCellFactory } from '@/utils/gameUtils';
-
-export interface Palette {
-    primary: string;
-    secondary: string;
-}
 
 export interface UseLightsOutPropsParams {
     /** Grid row count. */

@@ -24,7 +24,15 @@ export const router = createHashRouter(
             errorElement: <RouteRootError />,
             element: <Outlet />,
             children: [
-                homeRoute,
+                {
+                    errorElement: (
+                        <RouteFeatureError
+                            title="Home Error"
+                            resetLabel="Reset Page"
+                        />
+                    ),
+                    children: [homeRoute],
+                },
                 {
                     path: ROUTES.pages.Error,
                     lazy: async () => {

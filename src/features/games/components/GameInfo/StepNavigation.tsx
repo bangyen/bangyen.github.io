@@ -23,11 +23,12 @@ export function StepNavigation({
     onNext,
 }: StepNavigationProps) {
     return (
-        <Box sx={infoFooterSx}>
+        <Box sx={infoFooterSx} role="navigation" aria-label="Step navigation">
             <Button
                 onClick={onBack}
                 disabled={step === 0}
                 startIcon={<NavigateBeforeRounded />}
+                aria-label="Previous step"
                 sx={{
                     visibility: step === 0 ? 'hidden' : 'visible',
                     color: COLORS.text.primary,
@@ -37,10 +38,15 @@ export function StepNavigation({
             </Button>
 
             {/* Dots Indicator */}
-            <Box sx={{ display: 'flex', gap: 1 }}>
+            <Box
+                sx={{ display: 'flex', gap: 1 }}
+                role="group"
+                aria-label={`Step ${String(step + 1)} of ${String(totalSteps)}`}
+            >
                 {Array.from({ length: totalSteps }, (_, i) => (
                     <Box
                         key={i}
+                        aria-hidden="true"
                         sx={{
                             width: STEP_DOT_SIZE,
                             height: STEP_DOT_SIZE,
@@ -59,6 +65,7 @@ export function StepNavigation({
                 onClick={onNext}
                 disabled={step === totalSteps - 1}
                 endIcon={<NavigateNextRounded />}
+                aria-label="Next step"
                 sx={{
                     visibility: step === totalSteps - 1 ? 'hidden' : 'visible',
                     color: COLORS.text.primary,

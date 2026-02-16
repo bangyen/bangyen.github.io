@@ -50,9 +50,18 @@ export function HeroSection(): React.ReactElement {
 
                         <Box sx={heroCtaRowSx}>
                             <Box
+                                role="button"
+                                tabIndex={0}
                                 onClick={() => {
                                     scrollToElement('#featured-work');
                                 }}
+                                onKeyDown={(e: React.KeyboardEvent) => {
+                                    if (e.key === 'Enter' || e.key === ' ') {
+                                        e.preventDefault();
+                                        scrollToElement('#featured-work');
+                                    }
+                                }}
+                                aria-label="View featured work"
                                 sx={heroCtaButtonSx}
                             >
                                 <Typography sx={heroCtaTextSx}>

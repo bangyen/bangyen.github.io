@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import React from 'react';
+import React, { useCallback } from 'react';
 import {
     LineChart,
     Line,
@@ -36,6 +36,81 @@ export interface ResearchChartProps<T> {
     chartTitle: string | null;
 }
 
+// ---------------------------------------------------------------------------
+// Sub-components
+// ---------------------------------------------------------------------------
+
+interface ChartYAxisProps {
+    config: ChartConfig;
+    hide: boolean;
+}
+
+/**
+ * Renders the left (and optional right) Y-axes so the main chart
+ * component stays focused on top-level layout.
+ */
+function ChartYAxes({ config, hide }: ChartYAxisProps) {
+    return (
+        <>
+            <YAxis
+                yAxisId="left"
+                hide={hide}
+                stroke={COLORS.text.secondary}
+                tick={axisTickStyle}
+                axisLine={false}
+                tickLine={false}
+                tickFormatter={config.yAxisFormatter}
+                domain={config.yAxisDomain}
+            />
+            {config.dualYAxis && (
+                <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    hide={hide}
+                    stroke={COLORS.text.secondary}
+                    tick={axisTickStyle}
+                    axisLine={false}
+                    tickLine={false}
+                    tickFormatter={config.rightYAxisFormatter}
+                    domain={config.rightYAxisDomain}
+                />
+            )}
+        </>
+    );
+}
+
+interface ChartLinesProps {
+    lines: ChartConfig['lines'];
+}
+
+/** Renders all data lines from the chart configuration. */
+function ChartLines({ lines }: ChartLinesProps) {
+    return (
+        <>
+            {lines.map(line => (
+                <Line
+                    key={line.dataKey}
+                    yAxisId={line.yAxisId ?? 'left'}
+                    type="monotone"
+                    dataKey={line.dataKey}
+                    stroke={line.color}
+                    strokeWidth={CHART_DIMENSIONS.strokeWidth}
+                    name={line.name}
+                    dot={{
+                        fill: line.color,
+                        strokeWidth: CHART_FORMATTING.lines.defaultStrokeWidth,
+                        r: CHART_DIMENSIONS.dotRadius,
+                    }}
+                />
+            ))}
+        </>
+    );
+}
+
+// ---------------------------------------------------------------------------
+// Main component
+// ---------------------------------------------------------------------------
+
 /**
  * Renders the Recharts line chart inside a glass card.
  *
@@ -52,6 +127,24 @@ function ResearchChartInner<T>({
     chartTitle,
 }: ResearchChartProps<T>) {
     const { sm: isMobile } = useMobileContext();
+
+    const tooltipFormatter = useCallback(
+        (value: number | undefined, name: string | undefined) => {
+            if (value === undefined) {
+                throw new Error(
+                    `ResearchChart tooltip: value is undefined for "${String(name)}"`,
+                );
+            }
+            if (name === undefined) {
+                throw new Error(
+                    `ResearchChart tooltip: name is undefined for value ${String(value)}`,
+                );
+            }
+            return currentChartConfig.tooltipFormatter(value, name);
+        },
+        [currentChartConfig],
+    );
+
     return (
         <GlassCard sx={chartCardSx}>
             <Typography variant="subtitle1" sx={chartTitleSx}>
@@ -85,33 +178,10 @@ function ResearchChartInner<T>({
                                 axisLine={xAxisLineStyle}
                                 tickLine={false}
                             />
-                            <YAxis
-                                yAxisId="left"
+                            <ChartYAxes
+                                config={currentChartConfig}
                                 hide={isMobile}
-                                stroke={COLORS.text.secondary}
-                                tick={axisTickStyle}
-                                axisLine={false}
-                                tickLine={false}
-                                tickFormatter={
-                                    currentChartConfig.yAxisFormatter
-                                }
-                                domain={currentChartConfig.yAxisDomain}
                             />
-                            {currentChartConfig.dualYAxis && (
-                                <YAxis
-                                    yAxisId="right"
-                                    orientation="right"
-                                    hide={isMobile}
-                                    stroke={COLORS.text.secondary}
-                                    tick={axisTickStyle}
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tickFormatter={
-                                        currentChartConfig.rightYAxisFormatter
-                                    }
-                                    domain={currentChartConfig.rightYAxisDomain}
-                                />
-                            )}
                             <RechartsTooltip
                                 contentStyle={tooltipContentStyle}
                                 itemStyle={tooltipItemStyle}
@@ -121,49 +191,9 @@ function ResearchChartInner<T>({
                                         label: unknown,
                                     ) => string
                                 }
-                                formatter={(
-                                    value: number | undefined,
-                                    name: string | undefined,
-                                ) => {
-                                    if (value === undefined) {
-                                        throw new Error('Value is undefined');
-                                    }
-                                    if (name === undefined) {
-                                        throw new Error('Name is undefined');
-                                    }
-                                    return currentChartConfig.tooltipFormatter(
-                                        value,
-                                        name,
-                                    );
-                                }}
+                                formatter={tooltipFormatter}
                             />
-                            {currentChartConfig.lines.map(
-                                (line: {
-                                    dataKey: string;
-                                    color: string;
-                                    name: string;
-                                    yAxisId?: string;
-                                }) => (
-                                    <Line
-                                        key={line.dataKey}
-                                        yAxisId={line.yAxisId ?? 'left'}
-                                        type="monotone"
-                                        dataKey={line.dataKey}
-                                        stroke={line.color}
-                                        strokeWidth={
-                                            CHART_DIMENSIONS.strokeWidth
-                                        }
-                                        name={line.name}
-                                        dot={{
-                                            fill: line.color,
-                                            strokeWidth:
-                                                CHART_FORMATTING.lines
-                                                    .defaultStrokeWidth,
-                                            r: CHART_DIMENSIONS.dotRadius,
-                                        }}
-                                    />
-                                ),
-                            )}
+                            <ChartLines lines={currentChartConfig.lines} />
                         </LineChart>
                     </ResponsiveContainer>
                 )}

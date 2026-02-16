@@ -78,7 +78,9 @@ export function useSlantGame() {
                 serialize: serializeSlantState,
                 deserialize: (saved: unknown) => {
                     if (!isSavedSlantState(saved)) {
-                        throw new Error('Corrupt Slant state');
+                        throw new Error(
+                            `Corrupt Slant state in localStorage: expected a valid SavedSlantState object but received ${JSON.stringify(saved).slice(0, 100)}`,
+                        );
                     }
                     return deserializeSlantState(saved);
                 },

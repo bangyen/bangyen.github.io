@@ -39,7 +39,9 @@ export function useLightsOutGame() {
             persistence: {
                 deserialize: (saved: unknown) => {
                     if (!isBoardState(saved)) {
-                        throw new Error('Corrupt Lights Out state');
+                        throw new Error(
+                            `Corrupt Lights Out state in localStorage: expected a valid BoardState object but received ${JSON.stringify(saved).slice(0, 100)}`,
+                        );
                     }
                     return saved;
                 },

@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import React from 'react';
 
 import { ResearchControls } from './ResearchControls';
@@ -14,6 +14,7 @@ import { useResearchDemoDefaults } from '../hooks/useResearchDemoDefaults';
 import type { ResearchDemoProps } from '../types';
 
 import { PageLayout } from '@/components/layout/PageLayout';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { LazySuspense } from '@/components/ui/LazySuspense';
 import { MobileProvider } from '@/hooks';
 import { lazyNamed } from '@/utils/lazyNamed';
@@ -24,9 +25,7 @@ const ResearchChart = lazyNamed(
 );
 
 const chartErrorFallback = (
-    <Typography color="error" sx={{ p: 3, textAlign: 'center' }}>
-        Failed to load chart. Please refresh the page.
-    </Typography>
+    <ErrorState message="Failed to load chart. Please refresh the page." />
 );
 
 export const ResearchDemo = <T,>({

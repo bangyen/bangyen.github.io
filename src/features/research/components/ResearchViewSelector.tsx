@@ -42,6 +42,8 @@ const ResearchViewSelectorInner = <T,>({
                             onClick={() => {
                                 onViewTypeChange(viewType.key);
                             }}
+                            aria-label={`View ${viewType.label}`}
+                            aria-pressed={isActive}
                             sx={getButtonSx(isActive)}
                         >
                             {viewType.label}
