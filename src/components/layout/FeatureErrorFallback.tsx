@@ -39,7 +39,10 @@ export function FeatureErrorFallback({
                 sx={{
                     p: 4,
                     maxWidth: '500px',
+                    width: '100%',
                     textAlign: 'center',
+                    boxSizing: 'border-box',
+                    overflow: 'hidden',
                 }}
             >
                 <Typography
@@ -58,6 +61,8 @@ export function FeatureErrorFallback({
                         color: COLORS.text.secondary,
                         fontFamily: 'monospace',
                         fontSize: '0.9rem',
+                        overflowWrap: 'anywhere',
+                        wordBreak: 'break-word',
                     }}
                 >
                     {error?.message ?? 'An unexpected error occurred.'}
