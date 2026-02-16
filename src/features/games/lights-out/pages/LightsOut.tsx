@@ -21,7 +21,7 @@ export function LightsOut() {
             controls={<GameControls {...controlsProps} />}
         >
             <Board {...boardProps} />
-            {infoProps.open && <Info {...infoProps} />}
+            <Info {...infoProps} />
         </GamePageLayout>
     );
 }

@@ -235,8 +235,8 @@ export function useSlantGame() {
             iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
         },
         infoProps: {
-            infoOpen,
-            toggleInfo,
+            open: infoOpen,
+            toggleOpen: toggleInfo,
             handleOpenCalculator,
             handleBoxClick,
         },
