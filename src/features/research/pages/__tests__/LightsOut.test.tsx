@@ -40,6 +40,14 @@ vi.mock('@/hooks/useTheme', () => ({
     }),
 }));
 
+vi.mock('@/hooks', async importOriginal => {
+    const original = await importOriginal<Record<string, unknown>>();
+    return {
+        ...original,
+        useMobile: () => false,
+    };
+});
+
 describe('LightsOutResearch', () => {
     it('renders the research page content', async () => {
         render(<LightsOutResearch />);

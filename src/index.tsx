@@ -1,5 +1,5 @@
 import { ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense } from 'react';
 import { createRoot } from 'react-dom/client';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { registerSW } from 'virtual:pwa-register';
@@ -7,9 +7,10 @@ import { registerSW } from 'virtual:pwa-register';
 registerSW({ immediate: true });
 
 import { ErrorBoundary } from './components/layout/ErrorBoundary';
+import { LoadingFallback } from './components/ui/LoadingFallback';
 import './styles/animations.css';
-import { ROUTES } from './config/constants';
-import { COLORS, createAppTheme } from './config/theme';
+import { appRoutes, NotFoundPage } from './config/routes';
+import { createAppTheme } from './config/theme';
 import { ThemeProvider, useThemeContext } from './hooks/useTheme';
 
 import '@fontsource/inter/300.css';
@@ -17,34 +18,6 @@ import '@fontsource/inter/400.css';
 import '@fontsource/inter/500.css';
 import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
-
-// Lazy load pages
-const Home = lazy(() =>
-    import('./features/home/pages/Home').then(m => ({ default: m.Home })),
-);
-const Error = lazy(() =>
-    import('./pages/Error').then(m => ({ default: m.Error })),
-);
-const LightsOut = lazy(() =>
-    import('./features/games/lights-out/pages/LightsOut').then(m => ({
-        default: m.LightsOut,
-    })),
-);
-const ZSharp = lazy(() =>
-    import('./features/research/pages/ZSharp').then(m => ({
-        default: m.ZSharp,
-    })),
-);
-const Oligopoly = lazy(() =>
-    import('./features/research/pages/Oligopoly').then(m => ({
-        default: m.Oligopoly,
-    })),
-);
-const Slant = lazy(() =>
-    import('./features/games/slant/pages/Slant').then(m => ({
-        default: m.Slant,
-    })),
-);
 
 const App = (): React.ReactElement => {
     const { resolvedMode } = useThemeContext();
@@ -56,35 +29,12 @@ const App = (): React.ReactElement => {
     return (
         <MuiThemeProvider theme={theme}>
             <CssBaseline />
-            <Suspense
-                fallback={
-                    <div
-                        style={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            height: '100vh',
-                            color: COLORS.text.primary,
-                        }}
-                    >
-                        Loading...
-                    </div>
-                }
-            >
+            <Suspense fallback={<LoadingFallback />}>
                 <Routes>
-                    <Route path={ROUTES.pages.Home} element={<Home />} />
-                    <Route path={ROUTES.pages.Error} element={<Error />} />
-                    <Route
-                        path={ROUTES.pages.LightsOut}
-                        element={<LightsOut />}
-                    />
-                    <Route path={ROUTES.pages.ZSharp} element={<ZSharp />} />
-                    <Route
-                        path={ROUTES.pages.Oligopoly}
-                        element={<Oligopoly />}
-                    />
-                    <Route path={ROUTES.pages.Slant} element={<Slant />} />
-                    <Route path="*" element={<Error />} />
+                    {appRoutes.map(({ path, component: Page }) => (
+                        <Route key={path} path={path} element={<Page />} />
+                    ))}
+                    <Route path="*" element={<NotFoundPage />} />
                 </Routes>
             </Suspense>
         </MuiThemeProvider>
