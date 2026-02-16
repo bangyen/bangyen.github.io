@@ -2,16 +2,18 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { Refresh, HomeRounded } from '../icons';
+import type { TooltipButtonProps } from './TooltipButton';
 import { TooltipButton } from './TooltipButton';
 
 /**
  * Props for the HomeButton component.
  */
-export interface HomeButtonProps {
+export interface HomeButtonProps extends Omit<
+    TooltipButtonProps,
+    'Icon' | 'title'
+> {
     /** Whether to hide the button entirely */
     hide?: boolean;
-    /** Additional props passed to TooltipButton */
-    [key: string]: unknown;
 }
 
 /**
@@ -40,15 +42,16 @@ export function HomeButton({ hide = false, ...rest }: HomeButtonProps) {
 /**
  * Props for the RefreshButton component.
  */
-export interface RefreshButtonProps {
+export interface RefreshButtonProps extends Omit<
+    TooltipButtonProps,
+    'Icon' | 'title' | 'onClick'
+> {
     /** Click handler */
     onClick: () => void;
     /** Tooltip and label text */
     title?: string;
     /** Whether to hide the button */
     hide?: boolean;
-    /** Additional props passed to TooltipButton */
-    [key: string]: unknown;
 }
 
 /**

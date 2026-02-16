@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import React from 'react';
 
-import { SLANT_STYLES } from '../constants';
+import { SLANT_STYLES } from '../config/constants';
 
 export interface GhostHintProps {
     value: number | null;

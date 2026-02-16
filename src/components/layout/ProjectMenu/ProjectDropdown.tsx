@@ -2,7 +2,7 @@ import { Box, MenuItem, Typography } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { PROJECT_CATEGORIES } from '../../constants';
+import { PROJECT_CATEGORIES } from './constants';
 
 import { COLORS, SPACING, TYPOGRAPHY, ANIMATIONS } from '@/config/theme';
 

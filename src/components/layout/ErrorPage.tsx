@@ -11,7 +11,13 @@ import {
     COMPONENT_VARIANTS,
 } from '@/config/theme';
 
-export function Error(): React.ReactElement {
+/**
+ * Full-page 404 error component shown when a route is not found.
+ *
+ * Lives in the layout layer because it is a router-level concern,
+ * rendered via the route table rather than belonging to any feature.
+ */
+export function ErrorPage(): React.ReactElement {
     useEffect(() => {
         document.title = PAGE_TITLES.error;
     }, []);

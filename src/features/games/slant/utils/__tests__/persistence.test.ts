@@ -9,7 +9,7 @@ import {
     hasSavedUnsolvedPuzzle,
 } from '../persistence';
 
-import { createGridSize } from '@/utils/types';
+import { createGridSize } from '@/features/games/types';
 
 function makeMockState(overrides: Partial<SlantState> = {}): SlantState {
     return {

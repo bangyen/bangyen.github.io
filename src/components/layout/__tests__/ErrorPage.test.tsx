@@ -2,13 +2,13 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
 
-import { Error } from '../Error';
+import { ErrorPage } from '../ErrorPage';
 
 describe('Error Page', () => {
     test('renders 404 and error message', () => {
         render(
             <BrowserRouter>
-                <Error />
+                <ErrorPage />
             </BrowserRouter>,
         );
 
@@ -22,7 +22,7 @@ describe('Error Page', () => {
     test('sets document title', () => {
         render(
             <BrowserRouter>
-                <Error />
+                <ErrorPage />
             </BrowserRouter>,
         );
         expect(document.title).toBe('Page Not Found | Bangyen');
@@ -31,7 +31,7 @@ describe('Error Page', () => {
     test('contains link to home', () => {
         render(
             <BrowserRouter>
-                <Error />
+                <ErrorPage />
             </BrowserRouter>,
         );
         const homeLink = screen.getByRole('link', { name: /Back to Home/i });

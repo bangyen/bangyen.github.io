@@ -19,9 +19,9 @@ import {
     getExampleProps,
 } from '../utils/renderers';
 
+import { createCellIndex, type CellIndex } from '@/features/games/types';
 import { useMobile } from '@/hooks';
 import { useCellFactory } from '@/utils/gameUtils';
-import { createCellIndex, type CellIndex } from '@/utils/types';
 
 /**
  * Orchestrates Lights Out game logic: grid state, drag interactions,

@@ -1,5 +1,5 @@
-import { GAME_LOGIC_CONSTANTS } from '../constants';
 import { getNodeIndex } from './cycleDetection';
+import { GAME_LOGIC_CONSTANTS } from '../config/constants';
 import type { CellState } from '../types';
 import { EMPTY, FORWARD, BACKWARD } from '../types';
 import { calculateNumbers } from './validation';

@@ -2,12 +2,12 @@ import { Box } from '@mui/material';
 import React from 'react';
 
 import { GitHub, HomeRounded as Home, InfoRounded as Info } from '../icons';
+import { MenuButton } from './ProjectMenu';
 import { ThemeToggle } from '../ui/ThemeToggle';
 import { TooltipButton } from '../ui/TooltipButton';
 
 import { URLS } from '@/config/constants';
 import { COLORS, LAYOUT } from '@/config/theme';
-import { MenuButton } from '@/features/home/components';
 
 export interface GlobalHeaderProps {
     showHome?: boolean;

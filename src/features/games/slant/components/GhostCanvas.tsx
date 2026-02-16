@@ -6,7 +6,7 @@ import { GhostControls } from './GhostControls';
 import { GhostHint } from './GhostHint';
 import { BOARD_STYLES, GAME_CONSTANTS } from '../../config/constants';
 import { useDrag } from '../../hooks/useDrag';
-import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../constants';
+import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../config/constants';
 import { useGhostSolver } from '../hooks/useGhostSolver';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';

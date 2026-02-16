@@ -1,4 +1,4 @@
-import { STORAGE_KEYS } from '../constants';
+import { STORAGE_KEYS } from '../config/constants';
 import type { SlantState } from '../types';
 
 /**
