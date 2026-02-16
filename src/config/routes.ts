@@ -1,64 +1,56 @@
-import type { ComponentType } from 'react';
-import type React from 'react';
+import React from 'react';
+import type { ComponentType, ReactElement } from 'react';
 
 import { ROUTES } from './constants';
 
+import { FeatureErrorLayout } from '@/components/layout/FeatureErrorLayout';
+import { lightsOutRoute } from '@/features/games/lights-out/route';
+import { slantRoute } from '@/features/games/slant/route';
+import { homeRoute } from '@/features/home/route';
+import { researchRoutes } from '@/features/research/routes';
 import { lazyNamed } from '@/utils/lazyNamed';
 
 /**
  * A single entry in the application route table.
+ *
+ * Supports both leaf routes (path + component) and layout routes
+ * (element + children) for nested error-boundary groups.
  */
 export interface RouteEntry {
-    /** URL path matched by React Router. */
-    path: string;
+    /** URL path matched by React Router (leaf routes only). */
+    path?: string;
     /** Lazy-loaded page component rendered at this path. */
-    component: React.LazyExoticComponent<ComponentType>;
+    component?: React.LazyExoticComponent<ComponentType>;
+    /** Static element rendered for layout routes (e.g. FeatureErrorLayout). */
+    element?: ReactElement;
+    /** Nested child routes rendered inside the layout's <Outlet>. */
+    children?: RouteEntry[];
 }
 
 /**
- * Centralised route table that pairs every URL path with its lazy-loaded
- * page component.  Adding a new page is a single-line change here rather
- * than edits in two separate files.
+ * Centralised route table that aggregates per-feature route entries
+ * and groups them under shared layout routes (e.g. error boundaries).
+ * Adding a new page is a single-file change inside its feature folder.
  */
 export const appRoutes: RouteEntry[] = [
-    {
-        path: ROUTES.pages.Home,
-        component: lazyNamed(
-            () => import('@/features/home/pages/Home'),
-            'Home',
-        ),
-    },
+    homeRoute,
     {
         path: ROUTES.pages.Error,
         component: lazyNamed(() => import('@/pages/Error'), 'Error'),
     },
     {
-        path: ROUTES.pages.LightsOut,
-        component: lazyNamed(
-            () => import('@/features/games/lights-out/pages/LightsOut'),
-            'LightsOut',
-        ),
+        element: React.createElement(FeatureErrorLayout, {
+            title: 'Game Error',
+            resetLabel: 'Reset Game',
+        }),
+        children: [lightsOutRoute, slantRoute],
     },
     {
-        path: ROUTES.pages.ZSharp,
-        component: lazyNamed(
-            () => import('@/features/research/pages/ZSharp'),
-            'ZSharp',
-        ),
-    },
-    {
-        path: ROUTES.pages.Oligopoly,
-        component: lazyNamed(
-            () => import('@/features/research/pages/Oligopoly'),
-            'Oligopoly',
-        ),
-    },
-    {
-        path: ROUTES.pages.Slant,
-        component: lazyNamed(
-            () => import('@/features/games/slant/pages/Slant'),
-            'Slant',
-        ),
+        element: React.createElement(FeatureErrorLayout, {
+            title: 'Research Tool Error',
+            resetLabel: 'Reset Component',
+        }),
+        children: researchRoutes,
     },
 ];
 

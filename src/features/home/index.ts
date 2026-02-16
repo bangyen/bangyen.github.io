@@ -1,6 +1,2 @@
-// Home feature exports
+// Home feature public API -- only the page component is consumed externally.
 export { Home } from './pages/Home';
-
-export * from './components';
-export * from './types';
-export * from './constants';
