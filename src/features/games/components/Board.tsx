@@ -2,8 +2,13 @@ import type { SxProps, Theme } from '@mui/material';
 import { Box } from '@mui/material';
 import React from 'react';
 
+import {
+    boardContainerSx,
+    cellLayerBaseSx,
+    overlayLayerBaseSx,
+} from './Board.styles';
+
 import { CustomGrid } from '@/components/ui/CustomGrid';
-import { LAYOUT } from '@/config/theme';
 import { spreadSx } from '@/utils/muiUtils';
 
 export interface BoardProps {
@@ -57,15 +62,10 @@ export const Board = React.memo(function Board(
     } = props;
 
     return (
-        <Box
-            sx={{
-                display: 'grid',
-                placeItems: 'center',
-            }}
-        >
+        <Box sx={boardContainerSx}>
             <Box
                 sx={{
-                    gridArea: '1/1',
+                    ...spreadSx(cellLayerBaseSx),
                     ...spreadSx(cellLayerSx),
                 }}
             >
@@ -82,8 +82,7 @@ export const Board = React.memo(function Board(
             </Box>
             <Box
                 sx={{
-                    gridArea: '1/1',
-                    zIndex: LAYOUT.zIndex.base + 1,
+                    ...spreadSx(overlayLayerBaseSx),
                     ...spreadSx(overlayLayerSx),
                 }}
             >

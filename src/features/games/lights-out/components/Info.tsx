@@ -6,16 +6,8 @@ import { INFO_TITLES, INSTRUCTIONS, EXAMPLE_SIZE } from '../config';
 import { useCalculator } from '../hooks/useCalculator';
 import type { Palette, PropsFactory } from '../types';
 
-import { ErrorState } from '@/components/ui/ErrorState';
-import { LazySuspense } from '@/components/ui/LazySuspense';
-import { GAME_TEXT } from '@/features/games/config/constants';
+import { LazyGameInfo } from '@/features/games/components/GameInfo/LazyGameInfo';
 import { useMobile } from '@/hooks';
-import { lazyNamed } from '@/utils/lazyNamed';
-
-const GameInfo = lazyNamed(
-    () => import('../../components/GameInfo'),
-    'GameInfo',
-);
 
 /** Modal open/close state. */
 interface InfoModalProps {
@@ -72,44 +64,37 @@ export function Info({
 
     const exampleSize = isMobileSm ? EXAMPLE_SIZE.MOBILE : EXAMPLE_SIZE.DESKTOP;
 
-    if (!open) return null;
-
     return (
-        <LazySuspense
-            message={GAME_TEXT.info.loading}
-            errorFallback={<ErrorState message={GAME_TEXT.info.loadError} />}
-        >
-            <GameInfo
-                open={open}
-                toggleOpen={toggleOpen}
-                titles={INFO_TITLES}
-                instructions={INSTRUCTIONS}
-                exampleContent={
-                    <Example
-                        dims={3}
-                        size={exampleSize}
-                        start={[1, 3, 8]}
-                        palette={palette}
-                        getFrontProps={getFrontProps}
-                        getBackProps={getBackProps}
-                    />
-                }
-                extraSteps={[
-                    <InfoCalculator
-                        key="calculator"
-                        cols={cols}
-                        size={size}
-                        isMobile={isMobile}
-                        inputProps={inputProps}
-                        outputProps={outputProps}
-                        onReset={handleReset}
-                        onApply={() => {
-                            onApply(res);
-                        }}
-                        hasPattern={hasPattern}
-                    />,
-                ]}
-            />
-        </LazySuspense>
+        <LazyGameInfo
+            open={open}
+            toggleOpen={toggleOpen}
+            titles={INFO_TITLES}
+            instructions={INSTRUCTIONS}
+            exampleContent={
+                <Example
+                    dims={3}
+                    size={exampleSize}
+                    start={[1, 3, 8]}
+                    palette={palette}
+                    getFrontProps={getFrontProps}
+                    getBackProps={getBackProps}
+                />
+            }
+            extraSteps={[
+                <InfoCalculator
+                    key="calculator"
+                    cols={cols}
+                    size={size}
+                    isMobile={isMobile}
+                    inputProps={inputProps}
+                    outputProps={outputProps}
+                    onReset={handleReset}
+                    onApply={() => {
+                        onApply(res);
+                    }}
+                    hasPattern={hasPattern}
+                />,
+            ]}
+        />
     );
 }

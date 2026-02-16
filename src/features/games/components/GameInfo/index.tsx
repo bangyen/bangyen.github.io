@@ -29,7 +29,13 @@ export type { InstructionItemData } from './InstructionItem';
 // Internal helpers
 // ---------------------------------------------------------------------------
 
-/** Renders the title for the current step inside the modal header. */
+/**
+ * Renders the title for the current step inside the modal header.
+ *
+ * Extracted as a small component so the GameInfo layout stays
+ * declarative and the title typography can be updated in one place
+ * without touching the modal structure.
+ */
 const StepTitle = ({
     children,
     id,

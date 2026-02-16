@@ -1,6 +1,7 @@
 import { Box, Button } from '@mui/material';
 
 import { Example } from './Example';
+import { calculatorFooterSx, calculatorButtonSx } from './SlantInfo.styles';
 import {
     SLANT_INFO_TITLES,
     SLANT_INSTRUCTIONS,
@@ -9,17 +10,8 @@ import {
 } from '../config';
 
 import { Psychology } from '@/components/icons';
-import { ErrorState } from '@/components/ui/ErrorState';
-import { LazySuspense } from '@/components/ui/LazySuspense';
-import { COLORS } from '@/config/theme';
-import { GAME_TEXT } from '@/features/games/config/constants';
+import { LazyGameInfo } from '@/features/games/components/GameInfo/LazyGameInfo';
 import { useMobile } from '@/hooks';
-import { lazyNamed } from '@/utils/lazyNamed';
-
-const GameInfo = lazyNamed(
-    () => import('../../components/GameInfo'),
-    'GameInfo',
-);
 
 interface SlantInfoProps {
     open: boolean;
@@ -39,45 +31,27 @@ export function SlantInfo({
 }: SlantInfoProps) {
     const isMobile = useMobile('sm');
 
-    if (!open) return null;
-
     return (
-        <LazySuspense
-            message={GAME_TEXT.info.loading}
-            errorFallback={<ErrorState message={GAME_TEXT.info.loadError} />}
-        >
-            <GameInfo
-                open={open}
-                toggleOpen={toggleOpen}
-                titles={SLANT_INFO_TITLES}
-                instructions={SLANT_INSTRUCTIONS}
-                instructionsFooter={
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            px: 2,
-                            ml: { xs: 5, sm: 4 },
-                            pt: { xs: 0, sm: 3 },
-                            mt: { xs: -2, sm: 0 },
-                        }}
+        <LazyGameInfo
+            open={open}
+            toggleOpen={toggleOpen}
+            titles={SLANT_INFO_TITLES}
+            instructions={SLANT_INSTRUCTIONS}
+            instructionsFooter={
+                <Box sx={calculatorFooterSx}>
+                    <Button
+                        variant="outlined"
+                        startIcon={<Psychology />}
+                        onClick={handleOpenCalculator}
+                        sx={calculatorButtonSx}
                     >
-                        <Button
-                            variant="outlined"
-                            startIcon={<Psychology />}
-                            onClick={handleOpenCalculator}
-                            sx={{
-                                borderColor: COLORS.border.subtle,
-                                color: COLORS.text.secondary,
-                            }}
-                        >
-                            Open Calculator
-                        </Button>
-                    </Box>
-                }
-                exampleContent={<Example size={isMobile ? 4 : 5} />}
-                cardSx={SLANT_INFO_CARD_SX}
-                contentSxOverride={slantInfoContentSx}
-            />
-        </LazySuspense>
+                        Open Calculator
+                    </Button>
+                </Box>
+            }
+            exampleContent={<Example size={isMobile ? 4 : 5} />}
+            cardSx={SLANT_INFO_CARD_SX}
+            contentSxOverride={slantInfoContentSx}
+        />
     );
 }
