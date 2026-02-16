@@ -1,10 +1,14 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+
+import { useStableCallback } from '@/hooks';
 
 /**
  * Custom hook for handling win state transitions with animation delay.
  *
  * Automatically triggers a callback after a configurable delay when the
- * puzzle is solved. Uses a ref to avoid dependency issues with mutable callbacks.
+ * puzzle is solved. Uses `useStableCallback` so the effect only re-runs
+ * when `isSolved` or `delay` change, not when the caller passes a new
+ * closure.
  *
  * @param isSolved - Whether the puzzle is currently solved
  * @param onComplete - Callback to execute after the delay
@@ -24,17 +28,16 @@ export function useWinTransition(
     onComplete: () => void,
     delay = 2000,
 ) {
-    const onCompleteRef = useRef(onComplete);
-    onCompleteRef.current = onComplete;
+    const stableOnComplete = useStableCallback(onComplete);
 
     useEffect(() => {
         if (isSolved) {
             const timeout = setTimeout(() => {
-                onCompleteRef.current();
+                stableOnComplete();
             }, delay);
             return () => {
                 clearTimeout(timeout);
             };
         }
-    }, [isSolved, delay]);
+    }, [isSolved, delay, stableOnComplete]);
 }

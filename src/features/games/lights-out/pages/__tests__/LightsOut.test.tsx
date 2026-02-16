@@ -26,10 +26,14 @@ vi.mock('@/components/icons', async importOriginal => {
 });
 
 // Mock hooks
-vi.mock('@/hooks', () => ({
-    useWindow: vi.fn(() => ({ height: 800, width: 1200 })),
-    useMobile: vi.fn(() => false),
-}));
+vi.mock('@/hooks', async importOriginal => {
+    const actual = await importOriginal<Record<string, unknown>>();
+    return {
+        ...actual,
+        useWindow: vi.fn(() => ({ height: 800, width: 1200 })),
+        useMobile: vi.fn(() => false),
+    };
+});
 
 // Mock boardHandlers to control game logic
 vi.mock('@/features/games/lights-out/utils/boardHandlers', () => ({

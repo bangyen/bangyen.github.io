@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useMemo } from 'react';
 
-import { useWindow, useMobile } from '../../../hooks';
+import { useLocalStorage, useWindow, useMobile } from '@/hooks';
 
 /**
  * Convert pixel dimensions to grid rows/cols based on cell size
@@ -91,11 +91,18 @@ export function useGridSize({
     const { height, width } = useWindow();
     const mobile = useMobile('sm');
 
-    const [desiredSize, setDesiredSize] = useState<number | null>(() => {
-        const saved = localStorage.getItem(storageKey);
-        if (saved === 'null') return null;
-        return saved ? Number.parseInt(saved, 10) : defaultSize;
-    });
+    const [desiredSize, setDesiredSize] = useLocalStorage<number | null>(
+        storageKey,
+        defaultSize,
+        {
+            serialize: String,
+            deserialize: raw => {
+                if (raw === 'null') return null;
+                const n = Number.parseInt(raw, 10);
+                return Number.isNaN(n) ? undefined : n;
+            },
+        },
+    );
 
     const dynamicSize = useMemo(() => {
         const currentHeaderOffset = mobile
@@ -148,10 +155,6 @@ export function useGridSize({
             cols: Math.min(desiredSize, dynamicSize.cols),
         };
     }, [desiredSize, dynamicSize, mobile, mobileRowOffset]);
-
-    useEffect(() => {
-        localStorage.setItem(storageKey, String(desiredSize));
-    }, [desiredSize, storageKey]);
 
     const handlePlus = () => {
         const currentSize = Math.min(rows, cols);
