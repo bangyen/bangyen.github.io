@@ -1,20 +1,23 @@
-import { Box, Grid, useMediaQuery } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 import React from 'react';
 
 import { ResearchControls } from './ResearchControls';
 import { ResearchHeader } from './ResearchHeader';
 import { ResearchViewSelector } from './ResearchViewSelector';
+import { useCurrentView } from '../hooks/useCurrentView';
 import type { ResearchDemoProps } from '../types';
 
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
 import { FeatureErrorFallback } from '@/components/layout/FeatureErrorFallback';
 import { PageLayout } from '@/components/layout/PageLayout';
+import { LoadingFallback } from '@/components/ui/LoadingFallback';
 import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
+import { useMobile } from '@/hooks';
+import { lazyNamed } from '@/utils/lazyNamed';
 
-const ResearchChart = React.lazy(() =>
-    import('./ResearchChart').then(module => ({
-        default: module.ResearchChart,
-    })),
+const ResearchChart = lazyNamed(
+    () => import('./ResearchChart'),
+    'ResearchChart',
 );
 
 export const ResearchDemo = <T,>({
@@ -50,32 +53,19 @@ export const ResearchDemo = <T,>({
     children,
     backUrl,
 }: ResearchDemoProps<T>) => {
-    const getCurrentChartData = () => {
-        if (chartData.length === 0) return [];
+    const {
+        data: currentData,
+        chartConfig: currentChartConfig,
+        title: calculatedChartTitle,
+    } = useCurrentView(
+        viewTypes,
+        currentViewType,
+        chartData,
+        chartConfig,
+        chartTitle ?? null,
+    );
 
-        if (viewTypes.length === 0) return chartData;
-
-        const currentView = viewTypes.find(
-            view => view.key === currentViewType,
-        );
-        if (!currentView?.dataProcessor) return chartData;
-
-        return currentView.dataProcessor(chartData);
-    };
-
-    const currentData = getCurrentChartData();
-    const currentChartConfig =
-        viewTypes.find(view => view.key === currentViewType)?.chartConfig ??
-        chartConfig;
-
-    const isMobile = useMediaQuery('(max-width:600px)');
-
-    const calculatedChartTitle =
-        chartTitle ??
-        (viewTypes.length > 0
-            ? (viewTypes.find(view => view.key === currentViewType)
-                  ?.chartTitle ?? 'Data Visualization')
-            : 'Data Visualization');
+    const isMobile = useMobile('sm');
 
     return (
         <ErrorBoundary
@@ -137,16 +127,10 @@ export const ResearchDemo = <T,>({
 
                             <React.Suspense
                                 fallback={
-                                    <Box
-                                        sx={{
-                                            height: 400,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                        }}
-                                    >
-                                        Loading Chart...
-                                    </Box>
+                                    <LoadingFallback
+                                        message="Loading Chart..."
+                                        height={400}
+                                    />
                                 }
                             >
                                 <ResearchChart
