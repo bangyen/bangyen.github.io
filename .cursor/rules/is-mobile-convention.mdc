@@ -1,5 +1,5 @@
 ---
-description: Convention for using useMobile() vs isMobile prop in React components
+description: Convention for using useMobile() vs MobileProvider/useMobileContext in React components
 globs: src/**/*.tsx,src/**/*.ts
 alwaysApply: false
 ---
@@ -15,19 +15,23 @@ doesn't otherwise need.
 
 Examples: `Info`, `SlantInfo`, `GhostCanvas`, `Example`.
 
-## When to accept `isMobile` as a prop
+## When to use `MobileProvider` + `useMobileContext()`
 
-**Coordinating parents** that call `useMobile()` once and distribute
-the value to several children should pass it as a prop.  This avoids
-redundant `useMediaQuery` subscriptions and keeps all children in sync
-within the same render frame.
+**Coordinating parents** whose children need the same breakpoint flags
+should wrap their subtree with `<MobileProvider>` and let children read
+from context via `useMobileContext()`.  This avoids redundant
+`useMediaQuery` subscriptions, keeps siblings in sync within the same
+render frame, and eliminates prop-threading.
 
-Examples: `ResearchDemo` passes `isMobile` to both `ResearchHeader` and
-`ResearchChart`.
+The context exposes `{ sm, md }` flags (both `boolean`).
+
+Examples: `ResearchDemo` wraps its content in `<MobileProvider>`;
+`ResearchHeader` and `ResearchChart` consume via `useMobileContext()`.
 
 ## Rule of thumb
 
 - One consumer in the subtree -> call `useMobile()` internally.
-- Two or more siblings need the value -> parent calls it and passes down.
-- Never mix: if a parent passes `isMobile`, the child must NOT also call
-  `useMobile()`.
+- Two or more siblings need the value -> wrap with `<MobileProvider>`,
+  children read via `useMobileContext()`.
+- Never mix: if a `MobileProvider` is present, children must NOT also
+  call `useMobile()` for the same breakpoint.

@@ -26,6 +26,7 @@ import type { ChartConfig } from '../types';
 
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS } from '@/config/theme';
+import { useMobileContext } from '@/hooks';
 
 export interface ResearchChartProps<T> {
     currentData: T[];
@@ -33,7 +34,6 @@ export interface ResearchChartProps<T> {
     loading: boolean;
     loadingMessage: string;
     chartTitle: string | null;
-    isMobile: boolean;
 }
 
 /**
@@ -41,6 +41,8 @@ export interface ResearchChartProps<T> {
  *
  * Memoised because Recharts renders are expensive and the chart only
  * needs to update when data, config, or loading state actually change.
+ * Reads mobile state from `MobileProvider` context rather than
+ * accepting it as a prop.
  */
 function ResearchChartInner<T>({
     currentData,
@@ -48,8 +50,8 @@ function ResearchChartInner<T>({
     loading,
     loadingMessage,
     chartTitle,
-    isMobile,
 }: ResearchChartProps<T>) {
+    const { sm: isMobile } = useMobileContext();
     return (
         <GlassCard sx={chartCardSx}>
             <Typography variant="subtitle1" sx={chartTitleSx}>

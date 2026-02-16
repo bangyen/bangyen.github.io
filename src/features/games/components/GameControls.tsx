@@ -1,19 +1,13 @@
 import React from 'react';
 
+import type { BaseControlsProps } from '../hooks/types';
+
 import { RemoveRounded, AddRounded, MenuBookRounded } from '@/components/icons';
 import { Navigation } from '@/components/layout/Navigation';
 import { RefreshButton } from '@/components/ui/Controls';
 import { TooltipButton } from '@/components/ui/TooltipButton';
 
-export interface GameControlsProps {
-    rows: number;
-    cols: number;
-    dynamicSize: { rows: number; cols: number };
-    minSize: number;
-    maxSize: number;
-    handlePlus: () => void;
-    handleMinus: () => void;
-    onRefresh: () => void;
+export interface GameControlsProps extends BaseControlsProps {
     disabled?: boolean;
     /** When provided, renders a built-in "How to Play" tutorial button. */
     onOpenInfo?: () => void;

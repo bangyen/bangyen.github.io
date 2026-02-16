@@ -1,11 +1,12 @@
 import type { SxProps, Theme } from '@mui/material';
 import { Box } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import { GlobalHeader } from './GlobalHeader';
+import { getContainerSx, getMainSx } from './PageLayout.styles';
 
 import { COLORS } from '@/config/theme';
-import { toSxArray } from '@/utils/muiUtils';
+import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export interface PageLayoutProps {
     children: React.ReactNode;
@@ -39,48 +40,17 @@ export function PageLayout({
     headerTransparent = true,
     onClick,
 }: PageLayoutProps) {
-    useEffect(() => {
-        if (title) document.title = title;
-    }, [title]);
+    useDocumentTitle(title);
+
     return (
-        <Box
-            onClick={onClick}
-            sx={
-                [
-                    {
-                        minHeight: '100vh',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        background,
-                        position: 'relative',
-                        overflow: 'hidden',
-                    },
-                    ...toSxArray(containerSx),
-                ] as SxProps<Theme>
-            }
-        >
+        <Box onClick={onClick} sx={getContainerSx(background, containerSx)}>
             <GlobalHeader
                 showHome={showHome}
                 githubUrl={githubUrl}
                 infoUrl={infoUrl}
                 transparent={headerTransparent}
             />
-            <Box
-                component="main"
-                sx={
-                    [
-                        {
-                            flex: 1,
-                            minHeight: 0,
-                            display: 'flex',
-                            flexDirection: 'column',
-                            width: '100%',
-                            position: 'relative',
-                        },
-                        ...toSxArray(sx),
-                    ] as SxProps<Theme>
-                }
-            >
+            <Box component="main" sx={getMainSx(sx)}>
                 {children}
             </Box>
         </Box>

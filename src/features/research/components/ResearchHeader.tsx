@@ -10,26 +10,27 @@ import {
 } from './ResearchHeader.styles';
 
 import { ArrowBackRounded as Back } from '@/components/icons';
+import { useMobileContext } from '@/hooks';
 
 export interface ResearchHeaderProps {
     title: string;
     subtitle: string;
     backUrl?: string;
-    isMobile: boolean;
 }
 
 /**
  * Memoised header for research pages. Prevents re-renders caused by
  * chart data updates in the parent `ResearchDemo`, since its own
- * props (`title`, `subtitle`, `backUrl`, `isMobile`) are stable
- * between those updates.
+ * props (`title`, `subtitle`, `backUrl`) are stable between those
+ * updates.  Reads mobile state from `MobileProvider` context rather
+ * than accepting it as a prop.
  */
 export const ResearchHeader = React.memo(function ResearchHeader({
     title,
     subtitle,
     backUrl,
-    isMobile,
 }: ResearchHeaderProps) {
+    const { sm: isMobile } = useMobileContext();
     const backButton = (margin: number) => (
         <Button
             component="a"
