@@ -20,7 +20,7 @@ const GameInfo = lazyNamed(
     'GameInfo',
 );
 
-export interface SlantInfoProps {
+interface SlantInfoProps {
     open: boolean;
     toggleOpen: () => void;
     handleOpenCalculator: () => void;
@@ -41,7 +41,10 @@ export function SlantInfo({
     if (!open) return null;
 
     return (
-        <LazySuspense message="Loading info...">
+        <LazySuspense
+            message="Loading info..."
+            errorFallback={<span>Failed to load info panel.</span>}
+        >
             <GameInfo
                 open={open}
                 toggleOpen={toggleOpen}

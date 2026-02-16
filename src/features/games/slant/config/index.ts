@@ -1,7 +1,7 @@
 import type { SxProps, Theme } from '@mui/material';
 
 import { LAYOUT_CONSTANTS, GAME_LOGIC_CONSTANTS } from './constants';
-import { infoContentSx } from '../../components/GameInfo.styles';
+import { infoContentSx } from '../../components/GameInfo/GameInfo.styles';
 
 import {
     TextureRounded,
