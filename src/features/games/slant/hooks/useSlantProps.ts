@@ -5,15 +5,38 @@
  * hook focuses on shaping output for the UI.
  */
 
+import type { SxProps, Theme } from '@mui/material';
 import { useMemo } from 'react';
 
+import { getSlantContentSx } from './useSlantProps.styles';
+import type { GameControlsProps } from '../../components/GameControls';
 import type { BaseControlsProps, GamePageProps } from '../../hooks/types';
 import type { DragProps } from '../../hooks/useDrag';
+import type { SlantBoardContentProps } from '../components/SlantBoardContent';
 import { LAYOUT_CONSTANTS, NUMBER_SIZE_RATIO } from '../config/constants';
 import type { CellState, SlantState } from '../types';
 import { getBackProps, getFrontProps } from '../utils/renderers';
 
 import { useCellFactory } from '@/utils/gameUtils';
+
+// ---------------------------------------------------------------------------
+// Concrete return-shape types for compile-time safety
+// ---------------------------------------------------------------------------
+
+/** Layout overrides returned by useSlantProps. */
+interface SlantLayoutReturn {
+    boardSx?: Record<string, unknown>;
+    contentSx: SxProps<Theme>;
+    iconSizeRatio: number;
+}
+
+/** Info-dialog return shape (superset of SlantInfoProps for page use). */
+interface SlantInfoReturn {
+    open: boolean;
+    toggleOpen: () => void;
+    handleOpenCalculator: () => void;
+    handleBoxClick: (e: React.MouseEvent) => void;
+}
 
 /** Core game dimensions, state, and generation flags. */
 export interface SlantGameParams {
@@ -95,13 +118,7 @@ export function useSlantProps({
         [state, numberSize],
     );
 
-    const contentSx = useMemo(
-        () => ({
-            px: mobile ? '1rem' : '2rem',
-            pt: mobile ? '1rem' : '2rem',
-        }),
-        [mobile],
-    );
+    const contentSx = useMemo(() => getSlantContentSx(mobile), [mobile]);
 
     const dimensionsMismatch = rows !== state.rows || cols !== state.cols;
 
@@ -146,5 +163,10 @@ export function useSlantProps({
             size,
             iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
         },
-    } satisfies GamePageProps;
+    } satisfies GamePageProps<
+        SlantBoardContentProps,
+        GameControlsProps,
+        SlantLayoutReturn,
+        SlantInfoReturn
+    >;
 }

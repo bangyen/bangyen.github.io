@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { useMemo, useCallback } from 'react';
 
-import { buildCellProps, buildNumberProps } from './ghostCanvasProps';
+import { buildCellProps, buildNumberProps } from './GhostCanvasProps';
 import { GhostControls } from './GhostControls';
 import { BOARD_STYLES, GAME_CONSTANTS } from '../../config/constants';
 import { useDrag } from '../../hooks/useDrag';

@@ -27,6 +27,14 @@ const chartErrorFallback = (
     <ErrorState message="Failed to load chart. Please refresh the page." />
 );
 
+/**
+ * Generic research demo page shell that provides a consistent layout
+ * (header, chart, view selector, controls) for every research tool.
+ *
+ * Exists so individual research pages (Oligopoly, ZSharp, etc.) only
+ * need to supply data-specific configuration while the common chrome
+ * and responsive behaviour is handled once.
+ */
 export const ResearchDemo = <T,>({
     title,
     pageTitle,
