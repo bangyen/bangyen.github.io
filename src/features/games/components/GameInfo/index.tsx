@@ -13,7 +13,7 @@ import {
     infoContentSx,
 } from './GameInfo.styles';
 import type { InstructionItemData } from './InstructionItem';
-import { InstructionItem } from './InstructionItem';
+import { InstructionsStep, ExampleStep } from './StepContent';
 import { StepNavigation } from './StepNavigation';
 import { useSteppedModal } from './useSteppedModal';
 
@@ -30,8 +30,15 @@ export type { InstructionItemData } from './InstructionItem';
 // ---------------------------------------------------------------------------
 
 /** Renders the title for the current step inside the modal header. */
-const StepTitle = ({ children }: { children: React.ReactNode }) => (
+const StepTitle = ({
+    children,
+    id,
+}: {
+    children: React.ReactNode;
+    id?: string;
+}) => (
     <Typography
+        id={id}
         variant="h5"
         sx={{
             color: COLORS.text.primary,
@@ -99,69 +106,26 @@ export function GameInfo({
         toggleOpen,
     );
 
-    // Build step content
-    const instructionsStep = (
-        <Box
-            sx={{
-                animation: 'fadeIn 0.3s ease',
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-            }}
-        >
-            <Box
-                sx={{
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    gap: 4,
-                }}
-            >
-                {instructions.map(({ Icon, title, text }) => (
-                    <InstructionItem
-                        key={title}
-                        Icon={Icon}
-                        title={title}
-                        text={text}
-                    />
-                ))}
-            </Box>
-            {instructionsFooter}
-        </Box>
-    );
-
-    const exampleStep = (
-        <Box
-            sx={{
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                animation: 'fadeIn 0.3s ease',
-            }}
-        >
-            <Box
-                sx={{
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                }}
-            >
-                {exampleContent}
-            </Box>
-        </Box>
-    );
-
-    const steps = [instructionsStep, exampleStep, ...extraSteps];
+    const steps = [
+        <InstructionsStep
+            key="instructions"
+            instructions={instructions}
+            footer={instructionsFooter}
+        />,
+        <ExampleStep key="example">{exampleContent}</ExampleStep>,
+        ...extraSteps,
+    ];
     const contentSx = contentSxOverride
         ? contentSxOverride(step)
         : infoContentSx(step);
+
+    const titleId = 'game-info-title';
 
     return (
         <Modal
             open={open}
             onClose={toggleOpen}
+            aria-labelledby={titleId}
             slots={{ backdrop: Backdrop }}
             slotProps={{
                 backdrop: {
@@ -170,7 +134,7 @@ export function GameInfo({
             }}
             sx={infoModalSx}
         >
-            <Box sx={infoOuterBoxSx}>
+            <Box sx={infoOuterBoxSx} role="document">
                 <GlassCard
                     onClick={(e: React.MouseEvent) => {
                         e.stopPropagation();
@@ -184,10 +148,11 @@ export function GameInfo({
                     <Box sx={contentSx}>
                         {/* Header (Title + Close Button) */}
                         <Box sx={infoHeaderSx}>
-                            <StepTitle>{titles[step]}</StepTitle>
+                            <StepTitle id={titleId}>{titles[step]}</StepTitle>
                             <IconButton
                                 onClick={toggleOpen}
                                 size="small"
+                                aria-label="Close"
                                 sx={infoCloseButtonSx}
                             >
                                 <CloseRounded />

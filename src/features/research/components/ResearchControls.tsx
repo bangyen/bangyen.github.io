@@ -77,12 +77,14 @@ export const ResearchControls = React.memo(function ResearchControls({
                                     }
                                 }}
                                 size="small"
+                                aria-label={control.label}
                                 sx={getToggleButtonGroupStyles(control)}
                             >
                                 {control.options.map(option => (
                                     <ToggleButton
                                         key={option.value}
                                         value={option.value}
+                                        aria-label={`${control.label}: ${option.label}`}
                                     >
                                         {option.label}
                                     </ToggleButton>

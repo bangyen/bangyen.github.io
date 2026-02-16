@@ -10,6 +10,7 @@ import {
 } from '../config';
 
 import { Psychology } from '@/components/icons';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { LazySuspense } from '@/components/ui/LazySuspense';
 import { COLORS } from '@/config/theme';
 import { useMobile } from '@/hooks';
@@ -43,7 +44,7 @@ export function SlantInfo({
     return (
         <LazySuspense
             message="Loading info..."
-            errorFallback={<span>Failed to load info panel.</span>}
+            errorFallback={<ErrorState message="Failed to load info panel." />}
         >
             <GameInfo
                 open={open}

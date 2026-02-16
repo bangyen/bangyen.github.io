@@ -100,6 +100,10 @@ export const heroCtaButtonSx: SxProps<Theme> = {
         transform: 'scale(1.02) translateY(-1px)',
         boxShadow: SHADOWS.text,
     },
+    '&:focus-visible': {
+        outline: `2px solid ${COLORS.primary.main}`,
+        outlineOffset: '2px',
+    },
 };
 
 /** Text inside the CTA pill. */

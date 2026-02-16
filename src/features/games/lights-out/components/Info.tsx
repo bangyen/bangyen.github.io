@@ -8,6 +8,7 @@ import { useDrag } from '../../hooks/useDrag';
 import type { Palette, PropsFactory } from '../types';
 
 import { KeyboardArrowDown, Calculate, Replay } from '@/components/icons';
+import { ErrorState } from '@/components/ui/ErrorState';
 import { LazySuspense } from '@/components/ui/LazySuspense';
 import { useMobile } from '@/hooks';
 import { lazyNamed } from '@/utils/lazyNamed';
@@ -117,7 +118,7 @@ export function Info(props: InfoProps): React.ReactElement | null {
     return (
         <LazySuspense
             message="Loading info..."
-            errorFallback={<span>Failed to load info panel.</span>}
+            errorFallback={<ErrorState message="Failed to load info panel." />}
         >
             <GameInfo
                 open={open}

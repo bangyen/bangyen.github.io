@@ -5,6 +5,8 @@ import React from 'react';
 import { getContentSx, getBoardSx } from './GamePageLayout.styles';
 import { TrophyOverlay, type TrophyOverlayProps } from './TrophyOverlay';
 
+import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
+import { FeatureErrorFallback } from '@/components/layout/FeatureErrorFallback';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { COLORS } from '@/config/theme';
 
@@ -69,12 +71,20 @@ export function GamePageLayout({
             }}
             onClick={onClick}
         >
-            <Box sx={getContentSx(paddingBottom, contentSx)}>
-                <Box sx={getBoardSx(boardSx)}>
-                    {children}
-                    <TrophyOverlay {...trophyProps} />
+            <ErrorBoundary
+                FallbackComponent={FeatureErrorFallback}
+                fallbackProps={{
+                    title: 'Board Error',
+                    resetLabel: 'Reset Board',
+                }}
+            >
+                <Box sx={getContentSx(paddingBottom, contentSx)}>
+                    <Box sx={getBoardSx(boardSx)}>
+                        {children}
+                        <TrophyOverlay {...trophyProps} />
+                    </Box>
                 </Box>
-            </Box>
+            </ErrorBoundary>
             {controls}
         </PageLayout>
     );
