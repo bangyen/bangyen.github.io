@@ -29,6 +29,7 @@ bun-debug.log*
 # IDE and editor configs
 .idea/
 .vscode/
+.cursor/
 *.swp
 *.swo
 *~
