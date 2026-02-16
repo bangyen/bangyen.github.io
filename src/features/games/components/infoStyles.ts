@@ -81,3 +81,14 @@ export const infoContentSx = (step: number): SxProps<Theme> => ({
     display: 'flex',
     flexDirection: 'column',
 });
+
+/** Diameter (px) of each step-indicator dot in the navigation footer. */
+export const STEP_DOT_SIZE = 8;
+
+/** Footer row containing back/next buttons and the dot indicator. */
+export const infoFooterSx: SxProps<Theme> = {
+    p: 2.5,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+};

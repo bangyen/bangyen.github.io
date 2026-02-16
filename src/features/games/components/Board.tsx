@@ -1,3 +1,4 @@
+import type { SxProps, Theme } from '@mui/material';
 import { Box } from '@mui/material';
 import React from 'react';
 
@@ -18,8 +19,8 @@ export interface BoardProps {
     cellRows?: number;
     /** Cols for the cell (bottom) layer. Defaults to `cols` (same as overlay). */
     cellCols?: number;
-    overlayLayerSx?: object;
-    cellLayerSx?: object;
+    overlayLayerSx?: SxProps<Theme>;
+    cellLayerSx?: SxProps<Theme>;
 }
 
 /**
@@ -49,13 +50,17 @@ export const Board = React.memo(function Board(
     } = props;
 
     const isOverlayDecorative =
-        overlayLayerSx &&
+        overlayLayerSx != null &&
+        typeof overlayLayerSx === 'object' &&
+        !Array.isArray(overlayLayerSx) &&
         'pointerEvents' in overlayLayerSx &&
-        overlayLayerSx.pointerEvents === 'none';
+        (overlayLayerSx as Record<string, unknown>)['pointerEvents'] === 'none';
     const isCellDecorative =
-        cellLayerSx &&
+        cellLayerSx != null &&
+        typeof cellLayerSx === 'object' &&
+        !Array.isArray(cellLayerSx) &&
         'pointerEvents' in cellLayerSx &&
-        cellLayerSx.pointerEvents === 'none';
+        (cellLayerSx as Record<string, unknown>)['pointerEvents'] === 'none';
 
     return (
         <Box
@@ -67,7 +72,7 @@ export const Board = React.memo(function Board(
             <Box
                 sx={{
                     gridArea: '1/1',
-                    ...cellLayerSx,
+                    ...(cellLayerSx as Record<string, unknown> | undefined),
                 }}
             >
                 <CustomGrid
@@ -85,7 +90,7 @@ export const Board = React.memo(function Board(
                 sx={{
                     gridArea: '1/1',
                     zIndex: LAYOUT.zIndex.base + 1,
-                    ...overlayLayerSx,
+                    ...(overlayLayerSx as Record<string, unknown> | undefined),
                 }}
             >
                 <CustomGrid

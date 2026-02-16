@@ -4,12 +4,18 @@ import { getProduct } from '../utils';
 import { getInput, getOutput, useHandler } from './Calculator';
 import { Example } from './Example';
 import { InfoCalculator } from './InfoCalculator';
-import { GameInfo } from '../../components/GameInfo';
 import { useDrag } from '../../hooks/useDrag';
 import type { Palette, PropsFactory } from '../types';
 
 import { KeyboardArrowDown, Calculate, Replay } from '@/components/icons';
+import { LazySuspense } from '@/components/ui/LazySuspense';
 import { useMobile } from '@/hooks';
+import { lazyNamed } from '@/utils/lazyNamed';
+
+const GameInfo = lazyNamed(
+    () => import('../../components/GameInfo'),
+    'GameInfo',
+);
 
 const INFO_TITLES = ['Chasing Lights', 'How It Works', 'Calculator'];
 
@@ -109,36 +115,38 @@ export function Info(props: InfoProps): React.ReactElement | null {
     if (!open) return null;
 
     return (
-        <GameInfo
-            open={open}
-            toggleOpen={toggleOpen}
-            titles={INFO_TITLES}
-            instructions={INSTRUCTIONS}
-            exampleContent={
-                <Example
-                    dims={3}
-                    size={exampleSize}
-                    start={[1, 3, 8]}
-                    palette={palette}
-                    getFrontProps={getFrontProps}
-                    getBackProps={getBackProps}
-                />
-            }
-            extraSteps={[
-                <InfoCalculator
-                    key="calculator"
-                    cols={cols}
-                    size={size}
-                    isMobile={isMobile}
-                    inputProps={inputProps}
-                    outputProps={outputProps}
-                    onReset={handleReset}
-                    onApply={() => {
-                        onApply(res);
-                    }}
-                    hasPattern={res.some(v => v !== 0)}
-                />,
-            ]}
-        />
+        <LazySuspense message="Loading info...">
+            <GameInfo
+                open={open}
+                toggleOpen={toggleOpen}
+                titles={INFO_TITLES}
+                instructions={INSTRUCTIONS}
+                exampleContent={
+                    <Example
+                        dims={3}
+                        size={exampleSize}
+                        start={[1, 3, 8]}
+                        palette={palette}
+                        getFrontProps={getFrontProps}
+                        getBackProps={getBackProps}
+                    />
+                }
+                extraSteps={[
+                    <InfoCalculator
+                        key="calculator"
+                        cols={cols}
+                        size={size}
+                        isMobile={isMobile}
+                        inputProps={inputProps}
+                        outputProps={outputProps}
+                        onReset={handleReset}
+                        onApply={() => {
+                            onApply(res);
+                        }}
+                        hasPattern={res.some(v => v !== 0)}
+                    />,
+                ]}
+            />
+        </LazySuspense>
     );
 }

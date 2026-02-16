@@ -17,10 +17,12 @@ export const ZSharp: React.FC = () => {
             pageTitle={PAGE_TITLES.zsharp}
             subtitle="Neural Network Optimization Research"
             githubUrl={URLS.zsharpRepo}
-            chartData={chartData}
-            viewTypes={zsharpViewTypes}
-            currentViewType={viewType}
-            onViewTypeChange={setViewType}
+            chart={{ data: chartData }}
+            view={{
+                types: zsharpViewTypes,
+                current: viewType,
+                onChange: setViewType,
+            }}
         />
     );
 };

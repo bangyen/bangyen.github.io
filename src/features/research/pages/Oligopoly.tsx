@@ -69,9 +69,11 @@ export const Oligopoly: React.FC = () => {
             pageTitle={PAGE_TITLES.oligopoly}
             subtitle="Agent-Based Economic Competition Analysis"
             githubUrl={URLS.oligopolyRepo}
-            chartData={marketData}
-            chartConfig={oligopolyChartConfig}
-            chartTitle="Market Dynamics"
+            chart={{
+                data: marketData,
+                config: oligopolyChartConfig,
+                title: 'Market Dynamics',
+            }}
             controls={controls}
             onReset={resetToDefaults}
             resetLabel="Reset"

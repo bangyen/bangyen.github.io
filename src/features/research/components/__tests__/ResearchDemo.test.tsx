@@ -131,25 +131,29 @@ const mockChartData = [
     { x: 3, y: 12, z: 6 },
 ];
 
+const mockChartConfig = {
+    type: 'line' as const,
+    xAxisKey: 'x',
+    yAxisFormatter: (value: number) => `${value.toString()}% `,
+    yAxisDomain: ['dataMin - 1', 'dataMax + 1'],
+    tooltipLabelFormatter: (value: number) => `Round ${value.toString()} `,
+    tooltipFormatter: (value: number, name: string): [string, string] => [
+        String(value),
+        name,
+    ],
+    lines: [
+        { dataKey: 'y', name: 'Metric Y', color: '#4C78FF' },
+        { dataKey: 'z', name: 'Metric Z', color: '#2E7D32' },
+    ],
+};
+
 const defaultProps = {
     title: 'Test Demo',
     subtitle: 'Test Subtitle',
     githubUrl: URLS.zsharpRepo,
-    chartData: mockChartData,
-    chartConfig: {
-        type: 'line' as const,
-        xAxisKey: 'x',
-        yAxisFormatter: (value: number) => `${value.toString()}% `,
-        yAxisDomain: ['dataMin - 1', 'dataMax + 1'],
-        tooltipLabelFormatter: (value: number) => `Round ${value.toString()} `,
-        tooltipFormatter: (value: number, name: string): [string, string] => [
-            String(value),
-            name,
-        ],
-        lines: [
-            { dataKey: 'y', name: 'Metric Y', color: '#4C78FF' },
-            { dataKey: 'z', name: 'Metric Z', color: '#2E7D32' },
-        ],
+    chart: {
+        data: mockChartData,
+        config: mockChartConfig,
     },
 };
 
@@ -197,8 +201,11 @@ it('shows loading state when loading is true', () => {
     render(
         <ResearchDemo
             {...defaultProps}
-            loading={true}
-            loadingMessage="Loading test data..."
+            chart={{
+                ...defaultProps.chart,
+                loading: true,
+                loadingMessage: 'Loading test data...',
+            }}
         />,
     );
 
@@ -213,7 +220,7 @@ it('renders view type buttons when viewTypes are provided', () => {
             icon: () => <div>Icon1</div>,
             chartTitle: 'View 1 Chart',
             dataProcessor: (data: unknown[]) => data,
-            chartConfig: defaultProps.chartConfig,
+            chartConfig: mockChartConfig,
         },
         {
             key: 'view2',
@@ -221,17 +228,19 @@ it('renders view type buttons when viewTypes are provided', () => {
             icon: () => <div>Icon2</div>,
             chartTitle: 'View 2 Chart',
             dataProcessor: (data: unknown[]) => data,
-            chartConfig: defaultProps.chartConfig,
+            chartConfig: mockChartConfig,
         },
     ];
 
     render(
         <ResearchDemo
             {...defaultProps}
-            viewTypes={viewTypes}
-            currentViewType="view1"
-            onViewTypeChange={() => {
-                /* empty */
+            view={{
+                types: viewTypes,
+                current: 'view1',
+                onChange: () => {
+                    /* empty */
+                },
             }}
         />,
     );
@@ -297,7 +306,7 @@ it('renders reset button when onReset is provided', () => {
 
 it('renders dual Y-axes when dualYAxis is enabled', () => {
     const dualAxisConfig = {
-        ...defaultProps.chartConfig,
+        ...mockChartConfig,
         dualYAxis: true,
         rightYAxisFormatter: (value: number) => `${value.toString()}% `,
         rightYAxisDomain: ['dataMin - 1', 'dataMax + 1'],
@@ -321,7 +330,12 @@ it('renders dual Y-axes when dualYAxis is enabled', () => {
         ],
     };
 
-    render(<ResearchDemo {...defaultProps} chartConfig={dualAxisConfig} />);
+    render(
+        <ResearchDemo
+            {...defaultProps}
+            chart={{ ...defaultProps.chart, config: dualAxisConfig }}
+        />,
+    );
 
     // Should render both left and right Y-axes
     const yAxes = screen.getAllByTestId('y-axis');
@@ -352,15 +366,14 @@ it('processes data using viewType dataProcessor', async () => {
             icon: () => null,
             chartTitle: 'View 1 Title',
             dataProcessor: mockProcessor,
-            chartConfig: defaultProps.chartConfig,
+            chartConfig: mockChartConfig,
         },
     ];
 
     render(
         <ResearchDemo
             {...defaultProps}
-            viewTypes={viewTypes}
-            currentViewType="view1"
+            view={{ types: viewTypes, current: 'view1' }}
         />,
     );
 
@@ -379,23 +392,27 @@ it('renders correct chartTitle based on viewTypes and props', async () => {
             icon: () => null,
             chartTitle: 'Custom View Title',
             dataProcessor: (data: unknown[]) => data,
-            chartConfig: defaultProps.chartConfig,
+            chartConfig: mockChartConfig,
         },
     ];
 
     const { rerender } = render(
         <ResearchDemo
             {...defaultProps}
-            viewTypes={viewTypes}
-            currentViewType="view1"
+            view={{ types: viewTypes, current: 'view1' }}
         />,
     );
     expect(await screen.findByText('Custom View Title')).toBeInTheDocument();
 
-    rerender(<ResearchDemo {...defaultProps} viewTypes={[]} />);
+    rerender(<ResearchDemo {...defaultProps} view={{ types: [] }} />);
     expect(await screen.findByText('Data Visualization')).toBeInTheDocument();
 
-    rerender(<ResearchDemo {...defaultProps} chartTitle="Explicit Title" />);
+    rerender(
+        <ResearchDemo
+            {...defaultProps}
+            chart={{ ...defaultProps.chart, title: 'Explicit Title' }}
+        />,
+    );
     expect(await screen.findByText('Explicit Title')).toBeInTheDocument();
 });
 
@@ -410,7 +427,7 @@ it('handles mobile view hiding Y-axes', () => {
 
 it('uses default rightYAxisFormatter and onViewTypeChange', () => {
     const dualAxisConfig = {
-        ...defaultProps.chartConfig,
+        ...mockChartConfig,
         dualYAxis: true,
         rightYAxisFormatter: undefined as unknown as (val: number) => string, // Trigger default
     };
@@ -418,8 +435,8 @@ it('uses default rightYAxisFormatter and onViewTypeChange', () => {
     render(
         <ResearchDemo
             {...defaultProps}
-            chartConfig={dualAxisConfig}
-            onViewTypeChange={undefined} // Trigger default
+            chart={{ ...defaultProps.chart, config: dualAxisConfig }}
+            view={{ onChange: undefined }}
         />,
     );
 

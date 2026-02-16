@@ -1,18 +1,17 @@
 import { Box } from '@mui/material';
 import React, { useMemo, useCallback } from 'react';
 
-import { GhostCell } from './GhostCell';
+import { buildCellProps, buildNumberProps } from './ghostCanvasProps';
 import { GhostControls } from './GhostControls';
-import { GhostHint } from './GhostHint';
 import { BOARD_STYLES, GAME_CONSTANTS } from '../../config/constants';
 import { useDrag } from '../../hooks/useDrag';
 import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../config/constants';
 import { useGhostSolver } from '../hooks/useGhostSolver';
 import type { CellState } from '../types';
-import { FORWARD, BACKWARD, EMPTY } from '../types';
+import { FORWARD, BACKWARD } from '../types';
 
 import { CustomGrid } from '@/components/ui/CustomGrid';
-import { COLORS, LAYOUT } from '@/config/theme';
+import { LAYOUT } from '@/config/theme';
 import { useMobile } from '@/hooks';
 import { getPosKey } from '@/utils/gameUtils';
 
@@ -115,83 +114,27 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
     );
 
     const getCellProps = useCallback(
-        (r: number, c: number) => {
-            const pos = getPosKey(r, c);
-            const info = gridState.get(pos);
-            const value = info?.state ?? EMPTY;
-            const source = info?.source;
-            const isConflict = conflictSet.has(pos);
-            const isCycle = cycleCells.has(pos);
-            const dragProps = getDragProps(pos);
-
-            let color = COLORS.text.primary;
-
-            if (isConflict) {
-                color = COLORS.data.red;
-            } else if (isCycle) {
-                // Differentiate user vs propagated loops
-                color = source === 'user' ? COLORS.data.red : '#ff9800'; // Solid Orange for visibility
-            } else if (source === 'user') {
-                color = COLORS.primary.main;
-            } else if (source === 'propagated') {
-                color = COLORS.data.green;
-            }
-
-            return {
-                ...dragProps,
-                'data-pos': pos,
-                'data-type': 'cell',
-                sx: {
-                    ...dragProps.sx,
-                    cursor: 'pointer',
-                    border: `1px solid ${SLANT_STYLES.GHOST.BORDER}`,
-                    position: 'relative',
-                    backgroundColor: SLANT_STYLES.GHOST.BG_SUBTLE,
-                    '&:hover': {
-                        backgroundColor: SLANT_STYLES.GHOST.BG_HOVER,
-                    },
-                },
-                children: <GhostCell value={value} color={color} />,
-            };
-        },
+        (r: number, c: number) =>
+            buildCellProps({
+                r,
+                c,
+                gridState,
+                conflictSet,
+                cycleCells,
+                getDragProps,
+            }),
         [gridState, conflictSet, cycleCells, getDragProps],
     );
 
     const getNumberProps = useCallback(
-        (r: number, c: number) => {
-            const value = numbers[r]?.[c];
-            const hasConflict = nodeConflictSet.has(getPosKey(r, c));
-
-            return {
-                'data-pos': getPosKey(r, c),
-                'data-type': 'hint',
-                children: (
-                    <GhostHint
-                        value={value ?? null}
-                        hasConflict={hasConflict}
-                        numberSize={numberSize}
-                    />
-                ),
-                sx: {
-                    borderRadius: '50%',
-                    backgroundColor: hasConflict
-                        ? COLORS.data.red
-                        : SLANT_STYLES.GHOST.HINT_BG,
-                    border:
-                        value == null
-                            ? 'none'
-                            : `2px solid ${
-                                  hasConflict
-                                      ? COLORS.data.red
-                                      : SLANT_STYLES.GHOST.HINT_BORDER
-                              }`,
-                    zIndex: 5,
-                    opacity: value == null ? 0 : 1,
-                    position: 'relative',
-                    pointerEvents: 'none',
-                },
-            };
-        },
+        (r: number, c: number) =>
+            buildNumberProps({
+                r,
+                c,
+                numbers,
+                nodeConflictSet,
+                numberSize,
+            }),
         [numbers, nodeConflictSet, numberSize],
     );
 

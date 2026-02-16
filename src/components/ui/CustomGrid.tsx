@@ -1,3 +1,4 @@
+import type { SxProps, Theme } from '@mui/material';
 import { Box } from '@mui/material';
 import React, { useMemo, memo } from 'react';
 
@@ -8,7 +9,8 @@ import {
     getSpace,
 } from '@/config/theme';
 
-export interface CellProps {
+/** Known styling props extracted by `Cell`; additional DOM attributes are forwarded. */
+interface CellKnownProps {
     size: number;
     children?: React.ReactNode;
     backgroundColor?: string;
@@ -17,9 +19,11 @@ export interface CellProps {
     border?: string;
     opacity?: number;
     transition?: string | boolean;
-    sx?: object;
-    [key: string]: unknown;
+    sx?: SxProps<Theme>;
 }
+
+/** Full prop type for a single grid cell, including passthrough DOM attributes. */
+export type CellProps = CellKnownProps & Record<string, unknown>;
 
 const Cell = memo(function Cell({ size, children, ...rest }: CellProps) {
     const remSize = `${size.toString()}rem`;
@@ -68,7 +72,7 @@ const Cell = memo(function Cell({ size, children, ...rest }: CellProps) {
                 border,
                 opacity,
                 transition,
-                ...sx,
+                ...(sx as Record<string, unknown> | undefined),
             }}
         >
             {children}
@@ -116,15 +120,18 @@ const Row = memo(function Row({
     );
 });
 
-export interface CustomGridProps {
+/** Known props for the grid container; additional DOM attributes are forwarded to the root `Box`. */
+interface CustomGridKnownProps {
     size: number;
     rows: number;
     cols: number;
     cellProps: (row: number, col: number) => CellOptions;
     space?: number;
-    sx?: object;
-    [key: string]: unknown;
+    sx?: SxProps<Theme>;
 }
+
+/** Full prop type for `CustomGrid`, including passthrough DOM attributes. */
+export type CustomGridProps = CustomGridKnownProps & Record<string, unknown>;
 
 export const CustomGrid = memo(function CustomGrid({
     size,
@@ -148,7 +155,7 @@ export const CustomGrid = memo(function CustomGrid({
                 flexDirection: 'column',
                 alignItems: 'center',
                 gap: rem,
-                ...sx,
+                ...(sx as Record<string, unknown> | undefined),
             }}
             {...rest}
         >

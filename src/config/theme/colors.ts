@@ -39,6 +39,7 @@ interface InteractiveColors {
 interface DataColors {
     green: string;
     amber: string;
+    orange: string;
     red: string;
 }
 
@@ -116,6 +117,7 @@ export const COLORS: Colors = {
     data: {
         green: 'hsl(141, 64%, 49%)',
         amber: 'hsl(34, 95%, 58%)',
+        orange: 'hsl(36, 100%, 50%)',
         red: 'hsl(0, 78%, 62%)',
     },
 };
