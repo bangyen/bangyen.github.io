@@ -1,4 +1,4 @@
-import type { TrophyOverlayProps } from '../components/TrophyOverlay';
+import type { GameFeatureState } from '../types/gameState';
 
 import type { BaseGameAction } from '@/utils/gameUtils';
 
@@ -34,18 +34,12 @@ export interface BaseControlsProps {
  * `trophyProps` is fixed to `TrophyOverlayProps` because every game
  * uses the same overlay component.
  */
-export interface GamePageProps<
+export type GamePageProps<
     TBoard = Record<string, unknown>,
     TControls = Record<string, unknown>,
     TLayout = Record<string, unknown>,
     TInfo = Record<string, unknown>,
-> {
-    boardProps: TBoard;
-    controlsProps: TControls;
-    layoutProps: TLayout;
-    infoProps: TInfo;
-    trophyProps: TrophyOverlayProps;
-}
+> = GameFeatureState<TBoard, TControls, TLayout, TInfo>;
 
 // ---------------------------------------------------------------------------
 // Config sub-interfaces for useBaseGame

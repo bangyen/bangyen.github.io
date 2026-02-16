@@ -11,7 +11,7 @@ import type { BoardProps } from '../../components/Board';
 import type { GameControlsProps } from '../../components/GameControls';
 import type { BaseControlsProps, GamePageProps } from '../../hooks/types';
 import type { DragProps } from '../../hooks/useDrag';
-import type { InfoProps } from '../components/Info';
+import type { LightsOutInfoProps as InfoProps } from '../components/LightsOutInfo';
 import { LAYOUT_CONSTANTS } from '../config';
 import type { Getters, Palette } from '../types';
 import { getBackProps, getCellVisualProps } from '../utils/renderers';

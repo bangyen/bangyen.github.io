@@ -4,7 +4,7 @@ import { vi, type Mock } from 'vitest';
 import type { DragProps } from '../../../hooks/useDrag';
 import * as matrices from '../../utils/matrices';
 import * as calculator from '../Calculator';
-import { Info } from '../Info';
+import { LightsOutInfo as Info } from '../LightsOutInfo';
 
 // Mock dependencies
 vi.mock('../Example', () => ({
