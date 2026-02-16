@@ -178,7 +178,6 @@ export default tseslint.config(
         files: [
             '**/Oligopoly.tsx',
             '**/ZSharp.tsx',
-            '**/VerificationTools.tsx',
             'src/features/research/components/*.tsx',
             'src/features/games/components/GameErrorBoundary.tsx',
         ],

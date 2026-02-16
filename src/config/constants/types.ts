@@ -100,7 +100,6 @@ export interface Routes {
         Oligopoly: string;
         ZSharp: string;
         LightsOut: string;
-        LightsOutResearch: string;
         Slant: string;
     };
 }
@@ -178,6 +177,5 @@ export interface PageTitles {
     zsharp: string;
     oligopoly: string;
     error: string;
-    lightsOutResearch: string;
     slant: string;
 }

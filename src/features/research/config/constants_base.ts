@@ -32,9 +32,6 @@ export const RESEARCH_CONSTANTS: ResearchConfig = {
         gapPadding: 0.005,
         convergencePadding: 0.005,
     },
-    lightsOut: {
-        yAxisMax: 70,
-    },
     modelTypes: {
         cournot: 'cournot',
     },
