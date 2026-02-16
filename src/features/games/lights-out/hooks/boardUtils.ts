@@ -72,7 +72,7 @@ export function useGetters(
             const front = value ? palette.primary : palette.secondary;
             const back = value ? palette.secondary : palette.primary;
 
-            return { front, back };
+            return { front, back, isLit: value > 0 };
         },
         [getTile, palette],
     );

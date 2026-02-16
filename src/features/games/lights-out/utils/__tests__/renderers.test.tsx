@@ -5,7 +5,9 @@ import { getFrontProps, getBackProps, getExampleProps } from '../renderers';
 
 describe('renderers', () => {
     const mockGetters: Getters = {
-        getColor: vi.fn().mockReturnValue({ front: 'red', back: 'blue' }),
+        getColor: vi
+            .fn()
+            .mockReturnValue({ front: 'red', back: 'blue', isLit: false }),
         getBorder: vi.fn().mockReturnValue({ border: '1px solid black' }),
         getFiller: vi.fn().mockReturnValue('black'),
     };
@@ -22,7 +24,9 @@ describe('renderers', () => {
             expect(props['backgroundColor']).toBe('red');
             expect(props['color']).toBe('red');
             expect(props['style']).toEqual({ border: '1px solid black' });
-            expect(props['aria-label']).toBe('Cell at row 1, column 1');
+            expect(props['aria-label']).toBe(
+                'Light at row 1, column 1, currently unlit',
+            );
             expect(getDragProps).toHaveBeenCalledWith('0,0');
         });
     });

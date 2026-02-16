@@ -14,7 +14,10 @@ export interface Palette {
  * calculator rows.
  */
 export interface Getters {
-    getColor: (row: number, col: number) => { front: string; back: string };
+    getColor: (
+        row: number,
+        col: number,
+    ) => { front: string; back: string; isLit: boolean };
     getBorder: (row: number, col: number) => React.CSSProperties;
     getFiller: (row: number, col: number) => string;
 }

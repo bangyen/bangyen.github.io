@@ -1,11 +1,9 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 
-import { INFO_TITLES, INSTRUCTIONS, EXAMPLE_SIZE } from '../config';
-import { getProduct } from '../utils';
-import { getInput, getOutput, useHandler } from './Calculator';
 import { Example } from './Example';
 import { InfoCalculator } from './InfoCalculator';
-import { useDrag } from '../../hooks/useDrag';
+import { INFO_TITLES, INSTRUCTIONS, EXAMPLE_SIZE } from '../config';
+import { useCalculator } from '../hooks/useCalculator';
 import type { Palette, PropsFactory } from '../types';
 
 import { ErrorState } from '@/components/ui/ErrorState';
@@ -19,79 +17,59 @@ const GameInfo = lazyNamed(
     'GameInfo',
 );
 
-interface InfoProps {
+/** Modal open/close state. */
+interface InfoModalProps {
+    open: boolean;
+    toggleOpen: () => void;
+}
+
+/** Board dimensions and visual cell size. */
+interface InfoBoardProps {
     rows: number;
     cols: number;
     size: number;
-    open: boolean;
+}
+
+/** Rendering factories for the example animation. */
+interface InfoRenderingProps {
     palette: Palette;
-    toggleOpen: () => void;
-    onApply: (solution: number[]) => void;
     getFrontProps: PropsFactory;
     getBackProps: PropsFactory;
+}
+
+export interface InfoProps {
+    /** Modal open/close state. */
+    modal: InfoModalProps;
+    /** Board dimensions and visual cell size. */
+    board: InfoBoardProps;
+    /** Rendering factories for the example animation. */
+    rendering: InfoRenderingProps;
+    /** Applies the calculator solution to the game board. */
+    onApply: (solution: number[]) => void;
 }
 
 /**
  * Three-step "How to Play" modal for Lights Out.
  * Step 0: rule explanations, Step 1: example, Step 2: calculator.
- * Calculator state is hoisted here so it persists when switching steps.
+ * Calculator state is managed by `useCalculator` so it persists
+ * when switching steps.
  */
-export function Info(props: InfoProps): React.ReactElement | null {
-    const {
-        rows,
-        cols,
-        size,
-        open,
-        palette,
-        toggleOpen,
-        onApply,
-        getFrontProps,
-        getBackProps,
-    } = props;
+export function Info({
+    modal,
+    board,
+    rendering,
+    onApply,
+}: InfoProps): React.ReactElement | null {
+    const { open, toggleOpen } = modal;
+    const { rows, cols, size } = board;
+    const { palette, getFrontProps, getBackProps } = rendering;
 
     const isMobile = useMobile('md');
     const isMobileSm = useMobile('sm');
 
-    // Calculator State (hoisted to persist across steps)
-    const [calcRow, setCalcRow] = useState<number[]>(new Array(cols).fill(0));
+    const { inputProps, outputProps, handleReset, res, hasPattern } =
+        useCalculator({ rows, cols, palette });
 
-    useEffect(() => {
-        setCalcRow(new Array(cols).fill(0));
-    }, [cols, palette]); // Reset only on config change
-
-    const toggleTile = useCallback(
-        (colAttr: string) => {
-            const col = Number.parseInt(colAttr, 10);
-            setCalcRow(prev => {
-                const next = [...prev];
-                if (next[col] !== undefined) {
-                    next[col] ^= 1;
-                }
-                return next;
-            });
-        },
-        [setCalcRow],
-    );
-
-    const res = getProduct(calcRow, rows, cols);
-
-    const { getDragProps } = useDrag({
-        onAction: toggleTile,
-        checkEnabled: () => true,
-        posAttribute: 'data-col',
-    });
-
-    const inputGetters = useHandler(calcRow, cols, palette);
-    const outputGetters = useHandler(res, cols, palette);
-    const inputProps = getInput(inputGetters, getDragProps);
-    const outputProps = getOutput(outputGetters);
-
-    // Reset functionality
-    const handleReset = () => {
-        setCalcRow(new Array(cols).fill(0));
-    };
-
-    // The example is always 3×3; use smaller cells on mobile.
     const exampleSize = isMobileSm ? EXAMPLE_SIZE.MOBILE : EXAMPLE_SIZE.DESKTOP;
 
     if (!open) return null;
@@ -128,7 +106,7 @@ export function Info(props: InfoProps): React.ReactElement | null {
                         onApply={() => {
                             onApply(res);
                         }}
-                        hasPattern={res.some(v => v !== 0)}
+                        hasPattern={hasPattern}
                     />,
                 ]}
             />

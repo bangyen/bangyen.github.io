@@ -103,15 +103,14 @@ export function useLightsOutProps({
             },
         },
         infoProps: {
-            rows,
-            cols,
-            size,
-            open,
-            palette,
-            toggleOpen,
+            modal: { open, toggleOpen },
+            board: { rows, cols, size },
+            rendering: {
+                palette,
+                getFrontProps: getExampleProps,
+                getBackProps,
+            },
             onApply: handleApply,
-            getFrontProps: getExampleProps,
-            getBackProps,
         },
         trophyProps: {
             show: solved,

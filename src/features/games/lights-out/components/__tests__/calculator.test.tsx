@@ -15,6 +15,7 @@ vi.mock('../../hooks/boardUtils', () => ({
             getColor: (_r: number, _c: number) => ({
                 front: palette.primary,
                 back: palette.secondary,
+                isLit: false,
             }),
             getBorder: (_r: number, _c: number) => ({
                 border: '1px solid black',
@@ -26,7 +27,7 @@ vi.mock('../../hooks/boardUtils', () => ({
 describe('Lights Out Calculator UI Helpers', () => {
     const mockPalette = { primary: 'red', secondary: 'blue' };
     const mockGetters = {
-        getColor: vi.fn(() => ({ front: 'red', back: 'blue' })),
+        getColor: vi.fn(() => ({ front: 'red', back: 'blue', isLit: false })),
         getBorder: vi.fn(() => ({ border: '1px solid' })),
         getFiller: vi.fn(() => 'red'),
     };

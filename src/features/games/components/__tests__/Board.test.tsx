@@ -101,12 +101,14 @@ describe('useGetters', () => {
         expect(result.current.getColor(0, 0)).toEqual({
             front: 'blue',
             back: 'red',
+            isLit: true,
         });
 
         // Tile with value 0
         expect(result.current.getColor(0, 1)).toEqual({
             front: 'red',
             back: 'blue',
+            isLit: false,
         });
     });
 
