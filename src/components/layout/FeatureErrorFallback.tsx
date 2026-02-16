@@ -1,8 +1,14 @@
 import { Typography, Button, Box } from '@mui/material';
-import React from 'react';
+
+import {
+    errorContainerSx,
+    errorCardSx,
+    errorTitleSx,
+    errorMessageSx,
+    errorButtonSx,
+} from './FeatureErrorFallback.styles';
 
 import { GlassCard } from '@/components/ui/GlassCard';
-import { COLORS, SPACING } from '@/config/theme';
 
 export interface FeatureErrorFallbackProps {
     error: Error | null;
@@ -26,54 +32,18 @@ export function FeatureErrorFallback({
     resetLabel = 'Reset',
 }: FeatureErrorFallbackProps) {
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                p: 4,
-                minHeight: '100vh',
-            }}
-        >
-            <GlassCard
-                sx={{
-                    p: 4,
-                    maxWidth: '500px',
-                    width: '100%',
-                    textAlign: 'center',
-                    boxSizing: 'border-box',
-                    overflow: 'hidden',
-                }}
-            >
-                <Typography
-                    variant="h5"
-                    sx={{
-                        mb: 2,
-                        color: COLORS.text.primary,
-                        fontWeight: 'bold',
-                    }}
-                >
+        <Box sx={errorContainerSx}>
+            <GlassCard sx={errorCardSx}>
+                <Typography variant="h5" sx={errorTitleSx}>
                     {title}
                 </Typography>
-                <Typography
-                    sx={{
-                        mb: 3,
-                        color: COLORS.text.secondary,
-                        fontFamily: 'monospace',
-                        fontSize: '0.9rem',
-                        overflowWrap: 'anywhere',
-                        wordBreak: 'break-word',
-                    }}
-                >
+                <Typography sx={errorMessageSx}>
                     {error?.message ?? 'An unexpected error occurred.'}
                 </Typography>
                 <Button
                     variant="contained"
                     onClick={resetErrorBoundary}
-                    sx={{
-                        borderRadius: SPACING.borderRadius.md,
-                        textTransform: 'none',
-                    }}
+                    sx={errorButtonSx}
                 >
                     {resetLabel}
                 </Button>

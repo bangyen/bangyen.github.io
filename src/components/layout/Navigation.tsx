@@ -1,15 +1,10 @@
 import { Paper, Grid } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material/styles';
 import type { ReactNode } from 'react';
-import React from 'react';
 
-import {
-    SPACING,
-    SHADOWS,
-    COMPONENT_VARIANTS,
-    LAYOUT,
-    ANIMATIONS,
-} from '@/config/theme';
+import { navigationPaperSx, navigationGridSx } from './Navigation.styles';
+
+import { toSxArray } from '@/utils/muiUtils';
 
 export interface NavigationProps {
     children: ReactNode;
@@ -17,7 +12,11 @@ export interface NavigationProps {
     opacity?: number;
 }
 
-export function Navigation({ children, ...rest }: NavigationProps) {
+/**
+ * Fixed bottom-center navigation bar for game controls.
+ * Renders a glassmorphic Paper with horizontally aligned items.
+ */
+export function Navigation({ children, sx, opacity }: NavigationProps) {
     return (
         <Paper
             elevation={0}
@@ -27,28 +26,15 @@ export function Navigation({ children, ...rest }: NavigationProps) {
             onClick={e => {
                 e.stopPropagation();
             }}
-            sx={{
-                transform: 'translateX(-50%)',
-                position: 'absolute',
-                bottom: SPACING.padding.xl,
-                left: '50%',
-                zIndex: LAYOUT.zIndex.navigation,
-                ...ANIMATIONS.presets.glass,
-                borderRadius: SPACING.borderRadius.lg,
-                boxShadow: SHADOWS.lg,
-                padding: `${SPACING.padding.sm} ${SPACING.padding.lg}`,
-                ...rest,
-            }}
+            sx={
+                [
+                    ...toSxArray(navigationPaperSx),
+                    { opacity },
+                    ...toSxArray(sx),
+                ] as SxProps<Theme>
+            }
         >
-            <Grid
-                container
-                spacing={2}
-                sx={{
-                    ...COMPONENT_VARIANTS.flexCenter,
-                    flexWrap: 'nowrap',
-                    minWidth: 0,
-                }}
-            >
+            <Grid container spacing={2} sx={navigationGridSx}>
                 {children}
             </Grid>
         </Paper>

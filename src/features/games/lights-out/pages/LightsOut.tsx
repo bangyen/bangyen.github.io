@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
 import { GamePageLayout } from '../../components/GamePageLayout';

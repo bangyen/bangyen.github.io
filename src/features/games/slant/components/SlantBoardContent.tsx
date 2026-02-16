@@ -5,6 +5,11 @@ import { SlantLoadingSkeleton } from './SlantLoadingSkeleton';
 import { Board } from '../../components/Board';
 import type { CellState, SlantState } from '../types';
 
+import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
+import { FeatureErrorFallback } from '@/components/layout/FeatureErrorFallback';
+import { ErrorState } from '@/components/ui/ErrorState';
+import { GAME_TEXT } from '@/features/games/config/constants';
+
 export interface SlantBoardContentProps {
     /** Whether ghost-mode overlay is active. */
     isGhostMode: boolean;
@@ -58,17 +63,23 @@ export function SlantBoardContent({
 }: SlantBoardContentProps): React.ReactElement {
     if (isGhostMode) {
         return (
-            <GhostCanvas
-                rows={rows}
-                cols={cols}
-                numbers={state.numbers}
-                size={size}
-                initialMoves={ghostMoves}
-                onMove={onGhostMove}
-                onCopy={onGhostCopy}
-                onClear={onGhostClear}
-                onClose={onGhostClose}
-            />
+            <ErrorBoundary
+                fallback={
+                    <ErrorState message="Ghost mode encountered an error. Close and reopen to continue." />
+                }
+            >
+                <GhostCanvas
+                    rows={rows}
+                    cols={cols}
+                    numbers={state.numbers}
+                    size={size}
+                    initialMoves={ghostMoves}
+                    onMove={onGhostMove}
+                    onCopy={onGhostCopy}
+                    onClear={onGhostClear}
+                    onClose={onGhostClose}
+                />
+            </ErrorBoundary>
         );
     }
 
@@ -77,16 +88,24 @@ export function SlantBoardContent({
     }
 
     return (
-        <Board
-            size={size}
-            rows={rows + 1}
-            cols={cols + 1}
-            cellRows={rows}
-            cellCols={cols}
-            overlayProps={overlayProps}
-            cellProps={cellProps}
-            overlayLayerSx={{ pointerEvents: 'none' }}
-            overlayDecorative
-        />
+        <ErrorBoundary
+            FallbackComponent={FeatureErrorFallback}
+            fallbackProps={{
+                title: GAME_TEXT.errors.boardTitle,
+                resetLabel: GAME_TEXT.errors.boardReset,
+            }}
+        >
+            <Board
+                size={size}
+                rows={rows + 1}
+                cols={cols + 1}
+                cellRows={rows}
+                cellCols={cols}
+                overlayProps={overlayProps}
+                cellProps={cellProps}
+                overlayLayerSx={{ pointerEvents: 'none' }}
+                overlayDecorative
+            />
+        </ErrorBoundary>
     );
 }

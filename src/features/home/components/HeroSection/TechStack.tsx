@@ -1,6 +1,8 @@
 import { Box, Typography, Fade } from '@mui/material';
 import React from 'react';
 
+import { HOME_TEXT } from '../../constants';
+
 import { Work, Code, Psychology, Cloud } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { SKILLS } from '@/config/constants';
@@ -24,7 +26,7 @@ export function TechStack(): React.ReactElement {
                     marginBottom: 3,
                 }}
             >
-                Tech Stack
+                {HOME_TEXT.techStack.sectionTitle}
             </Typography>
 
             <Box

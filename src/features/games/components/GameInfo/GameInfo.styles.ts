@@ -7,7 +7,7 @@
 
 import type { SxProps, Theme } from '@mui/material';
 
-import { COLORS } from '@/config/theme';
+import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
 /** Backdrop blur + tinted overlay for the Info modal. */
 export const infoBackdropSx: SxProps<Theme> = {
@@ -91,4 +91,62 @@ export const infoFooterSx: SxProps<Theme> = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+};
+
+// ---------------------------------------------------------------------------
+// InstructionItem styles
+// ---------------------------------------------------------------------------
+
+/** Title row with icon and text. */
+export const instructionTitleSx: SxProps<Theme> = {
+    color: COLORS.text.primary,
+    fontWeight: TYPOGRAPHY.fontWeight.semibold,
+    display: 'flex',
+    alignItems: 'center',
+    mb: 1.5,
+    fontSize: TYPOGRAPHY.fontSize.subheading,
+};
+
+/** Icon preceding the instruction title. */
+export const instructionIconSx: SxProps<Theme> = {
+    mr: 2,
+    color: COLORS.primary.main,
+    fontSize: '1.75rem',
+};
+
+/** Body text for an instruction. */
+export const instructionTextSx: SxProps<Theme> = {
+    color: COLORS.text.secondary,
+    lineHeight: 1.6,
+    fontSize: TYPOGRAPHY.fontSize.body,
+    ml: 6,
+};
+
+// ---------------------------------------------------------------------------
+// StepContent styles
+// ---------------------------------------------------------------------------
+
+/** Outer wrapper for a step with fade-in animation. */
+export const stepFadeInSx: SxProps<Theme> = {
+    animation: 'fadeIn 0.3s ease',
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+};
+
+/** Centered content area within a step. */
+export const stepCenteredContentSx: SxProps<Theme> = {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+};
+
+/** Instructions list with spacing. */
+export const stepInstructionsListSx: SxProps<Theme> = {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    gap: 4,
 };

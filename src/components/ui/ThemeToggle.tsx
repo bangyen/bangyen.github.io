@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { LightModeRounded, DarkModeRounded, DevicesRounded } from '../icons';
 import { TooltipButton } from './TooltipButton';
 

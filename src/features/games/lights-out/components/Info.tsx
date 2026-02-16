@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
+import { INFO_TITLES, INSTRUCTIONS, EXAMPLE_SIZE } from '../config';
 import { getProduct } from '../utils';
 import { getInput, getOutput, useHandler } from './Calculator';
 import { Example } from './Example';
@@ -7,9 +8,9 @@ import { InfoCalculator } from './InfoCalculator';
 import { useDrag } from '../../hooks/useDrag';
 import type { Palette, PropsFactory } from '../types';
 
-import { KeyboardArrowDown, Calculate, Replay } from '@/components/icons';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { LazySuspense } from '@/components/ui/LazySuspense';
+import { GAME_TEXT } from '@/features/games/config/constants';
 import { useMobile } from '@/hooks';
 import { lazyNamed } from '@/utils/lazyNamed';
 
@@ -17,26 +18,6 @@ const GameInfo = lazyNamed(
     () => import('../../components/GameInfo'),
     'GameInfo',
 );
-
-const INFO_TITLES = ['Chasing Lights', 'How It Works', 'Calculator'];
-
-const INSTRUCTIONS = [
-    {
-        Icon: KeyboardArrowDown,
-        title: 'Chase to Bottom',
-        text: 'Turn off rows from top to bottom by clicking lights in each row to push them down.',
-    },
-    {
-        Icon: Calculate,
-        title: 'Use Calulator',
-        text: 'Enter the remaining lights pattern from the bottom row into the calculator on the last page.',
-    },
-    {
-        Icon: Replay,
-        title: 'Chase Again',
-        text: 'Apply the solution pattern to the top row, then chase them down again to solve the puzzle.',
-    },
-];
 
 interface InfoProps {
     rows: number;
@@ -111,14 +92,14 @@ export function Info(props: InfoProps): React.ReactElement | null {
     };
 
     // The example is always 3×3; use smaller cells on mobile.
-    const exampleSize = isMobileSm ? 3 : 4;
+    const exampleSize = isMobileSm ? EXAMPLE_SIZE.MOBILE : EXAMPLE_SIZE.DESKTOP;
 
     if (!open) return null;
 
     return (
         <LazySuspense
-            message="Loading info..."
-            errorFallback={<ErrorState message="Failed to load info panel." />}
+            message={GAME_TEXT.info.loading}
+            errorFallback={<ErrorState message={GAME_TEXT.info.loadError} />}
         >
             <GameInfo
                 open={open}

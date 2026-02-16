@@ -1,6 +1,8 @@
 import { Box, Typography, Button } from '@mui/material';
 import React from 'react';
 
+import { HOME_TEXT } from '../../constants';
+
 import { GitHub, ArrowForward } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { URLS, PERSONAL_INFO } from '@/config/constants';
@@ -17,7 +19,7 @@ export function ConnectSection(): React.ReactElement {
                     marginBottom: 3,
                 }}
             >
-                Let&apos;s Connect
+                {HOME_TEXT.connect.heading}
             </Typography>
 
             <Typography
@@ -28,8 +30,7 @@ export function ConnectSection(): React.ReactElement {
                     marginBottom: 4,
                 }}
             >
-                Open to opportunities in backend development, ML engineering,
-                and research collaboration.
+                {HOME_TEXT.connect.description}
             </Typography>
 
             <Box
@@ -50,7 +51,7 @@ export function ConnectSection(): React.ReactElement {
                         textDecoration: 'none',
                     }}
                 >
-                    View GitHub
+                    {HOME_TEXT.connect.githubButton}
                 </Button>
 
                 <Button
@@ -67,7 +68,7 @@ export function ConnectSection(): React.ReactElement {
                         },
                     }}
                 >
-                    Available for Projects
+                    {HOME_TEXT.connect.projectsButton}
                 </Button>
             </Box>
         </GlassCard>

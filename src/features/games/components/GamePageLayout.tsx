@@ -1,9 +1,10 @@
 import type { SxProps, Theme } from '@mui/material';
 import { Box } from '@mui/material';
-import React from 'react';
+import type { MouseEvent, ReactNode } from 'react';
 
 import { getContentSx, getBoardSx } from './GamePageLayout.styles';
 import { TrophyOverlay, type TrophyOverlayProps } from './TrophyOverlay';
+import { DEFAULT_CONTENT_PADDING, GAME_TEXT } from '../config/constants';
 
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
 import { FeatureErrorFallback } from '@/components/layout/FeatureErrorFallback';
@@ -21,8 +22,8 @@ export interface GameLayoutConfig {
 }
 
 export interface GamePageLayoutProps {
-    children: React.ReactNode;
-    controls: React.ReactNode;
+    children: ReactNode;
+    controls: ReactNode;
     infoUrl?: string;
     title?: string;
     background?: string;
@@ -30,7 +31,7 @@ export interface GamePageLayoutProps {
     trophyProps?: TrophyOverlayProps;
     /** Grouped layout style overrides (padding, content and board sx). */
     layout?: GameLayoutConfig;
-    onClick?: (e: React.MouseEvent) => void;
+    onClick?: (e: MouseEvent) => void;
 }
 
 /**
@@ -50,7 +51,7 @@ export function GamePageLayout({
     onClick,
 }: GamePageLayoutProps) {
     const {
-        paddingBottom = { xs: '80px', md: '120px' },
+        paddingBottom = DEFAULT_CONTENT_PADDING,
         contentSx = {},
         boardSx,
     } = layout;
@@ -74,8 +75,8 @@ export function GamePageLayout({
             <ErrorBoundary
                 FallbackComponent={FeatureErrorFallback}
                 fallbackProps={{
-                    title: 'Board Error',
-                    resetLabel: 'Reset Board',
+                    title: GAME_TEXT.errors.boardTitle,
+                    resetLabel: GAME_TEXT.errors.boardReset,
                 }}
             >
                 <Box sx={getContentSx(paddingBottom, contentSx)}>

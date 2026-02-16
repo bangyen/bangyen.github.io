@@ -4,8 +4,6 @@
  * while this module owns the per-cell rendering logic.
  */
 
-import React from 'react';
-
 import { GhostCell } from './GhostCell';
 import { GhostHint } from './GhostHint';
 import type { DragProps } from '../../hooks/useDrag';

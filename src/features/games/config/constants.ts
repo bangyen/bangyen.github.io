@@ -25,6 +25,30 @@ export const GAME_CONSTANTS = {
 // imported by web-worker entry points whose Rollup build lacks the alias.
 export { GRID_CONFIG, getSpace } from '../../../config/theme/spacing';
 
+/**
+ * Shared user-facing text used across game features.
+ * Centralises copy to avoid duplication and make updates easier.
+ */
+export const GAME_TEXT = {
+    info: {
+        loading: 'Loading info...',
+        loadError: 'Failed to load info panel.',
+    },
+    trophy: {
+        solvedLabel: 'Solved!',
+    },
+    errors: {
+        boardTitle: 'Board Error',
+        boardReset: 'Reset Board',
+    },
+} as const;
+
+/** Default bottom padding for the game content area. */
+export const DEFAULT_CONTENT_PADDING = {
+    xs: '80px',
+    md: '120px',
+} as const;
+
 /** Shared board styling constants used by all game pages. */
 export const BOARD_STYLES = {
     PADDING: { MOBILE: '30px', DESKTOP: '36px' },

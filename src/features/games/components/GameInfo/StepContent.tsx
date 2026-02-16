@@ -1,6 +1,11 @@
 import { Box } from '@mui/material';
 import React from 'react';
 
+import {
+    stepFadeInSx,
+    stepCenteredContentSx,
+    stepInstructionsListSx,
+} from './GameInfo.styles';
 import type { InstructionItemData } from './InstructionItem';
 import { InstructionItem } from './InstructionItem';
 
@@ -22,23 +27,8 @@ export function InstructionsStep({
     footer,
 }: InstructionsStepProps): React.ReactElement {
     return (
-        <Box
-            sx={{
-                animation: 'fadeIn 0.3s ease',
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-            }}
-        >
-            <Box
-                sx={{
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    gap: 4,
-                }}
-            >
+        <Box sx={stepFadeInSx}>
+            <Box sx={stepInstructionsListSx}>
                 {instructions.map(({ Icon, title, text }) => (
                     <InstructionItem
                         key={title}
@@ -65,24 +55,8 @@ export function ExampleStep({
     children,
 }: ExampleStepProps): React.ReactElement {
     return (
-        <Box
-            sx={{
-                flex: 1,
-                display: 'flex',
-                flexDirection: 'column',
-                animation: 'fadeIn 0.3s ease',
-            }}
-        >
-            <Box
-                sx={{
-                    flex: 1,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                }}
-            >
-                {children}
-            </Box>
+        <Box sx={stepFadeInSx}>
+            <Box sx={stepCenteredContentSx}>{children}</Box>
         </Box>
     );
 }
