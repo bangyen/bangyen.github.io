@@ -30,9 +30,11 @@ export interface BaseGameState {
  * Standard actions handled by the base game reducer.
  *
  * - `resize`: Change grid dimensions
- * - `new`/`next`: Generate new puzzle with current dimensions
- * - `reset`: Reset to initial state
- * - `restore`/`hydrate`: Load saved state
+ * - `new`: Generate new puzzle with current dimensions
+ * - `hydrate`: Load saved state
+ *
+ * Legacy aliases (`next`, `reset`, `restore`) are kept for backward
+ * compatibility but new code should prefer the canonical names.
  */
 export type BaseGameAction<S> =
     | {
@@ -42,8 +44,10 @@ export type BaseGameAction<S> =
           newRows?: number;
           newCols?: number;
       }
-    | { type: 'new' | 'next' | 'reset' }
-    | { type: 'restore' | 'hydrate'; state: S };
+    | { type: 'new' }
+    | { type: 'hydrate'; state: S }
+    | { type: 'next' | 'reset' }
+    | { type: 'restore'; state: S };
 
 /**
  * Creates a standardized game reducer with common handlers.
@@ -59,7 +63,10 @@ export type BaseGameAction<S> =
  *
  * @param config - Configuration object
  * @param config.getInitialState - Function to generate initial state for given dimensions
- * @param config.customHandler - Optional handler for game-specific actions
+ * @param config.customHandler - Optional handler for game-specific actions.
+ *   Return the new state to handle the action, or `null` to fall through
+ *   to the base reducer.  This explicit protocol avoids the fragile
+ *   referential-identity check used previously.
  * @returns Reducer function compatible with useReducer
  *
  * @example
@@ -84,7 +91,7 @@ export type BaseGameAction<S> =
  *     if (action.type === 'move') {
  *       return { ...state, moves: state.moves + 1 };
  *     }
- *     return state;
+ *     return null; // fall through to base reducer
  *   },
  * });
  * ```
@@ -94,18 +101,16 @@ export function createGameReducer<
     A extends { type: string },
 >(config: {
     getInitialState: (rows: number, cols: number) => S;
-    customHandler?: (state: S, action: A | BaseGameAction<S>) => S;
+    customHandler?: (state: S, action: A | BaseGameAction<S>) => S | null;
 }) {
     return (state: S, action: A | BaseGameAction<S>): S => {
         if (config.customHandler) {
-            // First try custom handler
             const next = config.customHandler(state, action);
-            if (next !== state) return next;
+            if (next !== null) return next;
         }
 
         switch (action.type) {
             case 'resize': {
-                // Type guard for BaseGameAction 'resize'
                 if (
                     'newRows' in action ||
                     'rows' in action ||
@@ -118,19 +123,21 @@ export function createGameReducer<
                 }
                 return state;
             }
+            // Canonical action for generating a new puzzle.
+            // Legacy aliases: 'next', 'reset'.
             case 'new':
-            case 'next': {
+            case 'next':
+            case 'reset': {
                 return config.getInitialState(state.rows, state.cols);
             }
-            case 'restore':
-            case 'hydrate': {
+            // Canonical action for restoring persisted state.
+            // Legacy alias: 'restore'.
+            case 'hydrate':
+            case 'restore': {
                 if ('state' in action) {
                     return action.state;
                 }
                 return state;
-            }
-            case 'reset': {
-                return config.getInitialState(state.rows, state.cols);
             }
             default: {
                 return state;

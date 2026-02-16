@@ -29,10 +29,11 @@ export interface ResearchDemoDefaults<T> {
  * Merges optional `chart` and `view` prop groups from `ResearchDemo`
  * with sensible defaults.
  *
- * Extracted from the component body so `ResearchDemo` stays purely
- * compositional and this logic is independently testable.
+ * This is a pure function (no hooks) extracted from the component body
+ * so `ResearchDemo` stays purely compositional and this logic is
+ * independently testable.
  */
-export function useResearchDemoDefaults<T>({
+export function resolveResearchDemoDefaults<T>({
     chart = {},
     view = {},
     controls = [],

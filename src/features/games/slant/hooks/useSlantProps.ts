@@ -15,41 +15,43 @@ import { getBackProps, getFrontProps } from '../utils/renderers';
 
 import { useCellFactory } from '@/utils/gameUtils';
 
-export interface UseSlantPropsParams {
-    /** Current Slant game state. */
+/** Core game dimensions, state, and generation flags. */
+export interface SlantGameParams {
     state: SlantState;
-    /** Grid row count. */
     rows: number;
-    /** Grid column count. */
     cols: number;
-    /** Cell size in rem units. */
     size: number;
-    /** Whether ghost-mode overlay is active. */
+    mobile: boolean;
     isGhostMode: boolean;
-    /** Whether the worker is generating a new puzzle. */
     generating: boolean;
-    /** Trigger the next puzzle generation. */
     handleNextAsync: () => void;
-    /** Ghost-mode move map. */
+}
+
+/** Ghost-mode move map, handlers, and UI callbacks. */
+export interface SlantGhostParams {
     ghostMoves: Map<string, CellState>;
-    /** Ghost-mode handlers. */
     handleGhostMove: (pos: string, val?: CellState) => void;
     handleGhostCopy: () => void;
     handleGhostClear: () => void;
     handleGhostClose: () => void;
     handleBoxClick: (e: React.MouseEvent) => void;
     handleOpenCalculator: () => void;
-    /** Info dialog state. */
-    infoOpen: boolean;
-    toggleInfo: () => void;
-    /** Base game controls props from useBaseGame. */
-    controlsProps: BaseControlsProps;
-    /** Drag interaction factory. */
-    getDragProps: (pos: string) => DragProps;
-    /** Whether the device is mobile. */
-    mobile: boolean;
     /** Board wrapper styles from ghost mode. */
     boardSx?: Record<string, unknown>;
+}
+
+/** Info-dialog state and callbacks. */
+export interface SlantInfoParams {
+    infoOpen: boolean;
+    toggleInfo: () => void;
+}
+
+export interface UseSlantPropsParams {
+    game: SlantGameParams;
+    ghost: SlantGhostParams;
+    info: SlantInfoParams;
+    controls: BaseControlsProps;
+    getDragProps: (pos: string) => DragProps;
 }
 
 /**
@@ -60,26 +62,29 @@ export interface UseSlantPropsParams {
  * structurally consistent contract.
  */
 export function useSlantProps({
-    state,
-    rows,
-    cols,
-    size,
-    isGhostMode,
-    generating,
-    handleNextAsync,
-    ghostMoves,
-    handleGhostMove,
-    handleGhostCopy,
-    handleGhostClear,
-    handleGhostClose,
-    handleBoxClick,
-    handleOpenCalculator,
-    infoOpen,
-    toggleInfo,
-    controlsProps,
+    game: {
+        state,
+        rows,
+        cols,
+        size,
+        mobile,
+        isGhostMode,
+        generating,
+        handleNextAsync,
+    },
+    ghost: {
+        ghostMoves,
+        handleGhostMove,
+        handleGhostCopy,
+        handleGhostClear,
+        handleGhostClose,
+        handleBoxClick,
+        handleOpenCalculator,
+        boardSx,
+    },
+    info: { infoOpen, toggleInfo },
+    controls: controlsProps,
     getDragProps,
-    mobile,
-    boardSx,
 }: UseSlantPropsParams) {
     const numberSize = size * NUMBER_SIZE_RATIO;
 

@@ -8,8 +8,7 @@ import type { SxProps, Theme } from '@mui/material';
 
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
-/** Back-to-simulation button — base styles shared by both margin variants. */
-export const getBackButtonSx = (marginBottom: number): SxProps<Theme> => ({
+const backButtonBase: SxProps<Theme> = {
     color: COLORS.text.secondary,
     padding: 0,
     minWidth: 0,
@@ -17,11 +16,22 @@ export const getBackButtonSx = (marginBottom: number): SxProps<Theme> => ({
         backgroundColor: 'transparent',
         color: COLORS.primary.main,
     },
-    marginBottom,
     alignSelf: { xs: 'center', sm: 'flex-end' },
     textTransform: 'none',
     fontSize: '0.8rem',
-});
+};
+
+/** Back button with no bottom margin (used in mobile back-button mode). */
+export const backButtonFlushSx: SxProps<Theme> = {
+    ...backButtonBase,
+    marginBottom: 0,
+};
+
+/** Back button pulled up slightly (used alongside the title row). */
+export const backButtonPulledSx: SxProps<Theme> = {
+    ...backButtonBase,
+    marginBottom: -2,
+};
 
 /** Subtitle typography shown when not in mobile back-button mode. */
 export const subtitleSx: SxProps<Theme> = {
