@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BaseCard } from './BaseCard';
-import { HOME_TEXT } from '../../constants';
+import { HOME_TEXT } from '../../config/constants';
 
 import { OpenInNew } from '@/components/icons';
 import type { Publication } from '@/config/constants/types';

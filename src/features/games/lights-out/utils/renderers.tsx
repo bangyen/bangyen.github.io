@@ -33,7 +33,7 @@ export function getFrontProps(
 
     return (row: number, col: number) => {
         const style = getBorder(row, col);
-        const { front, back } = getColor(row, col);
+        const { front, back, isLit } = getColor(row, col);
         const pos = getPosKey(row, col);
         const dragProps = getDragProps(pos);
 
@@ -44,7 +44,7 @@ export function getFrontProps(
             color: front,
             style,
             ...(skipTransition ? { transition: 'none' } : {}),
-            'aria-label': `Cell at row ${String(row + 1)}, column ${String(col + 1)}`,
+            'aria-label': `Light at row ${String(row + 1)}, column ${String(col + 1)}, currently ${isLit ? 'lit' : 'unlit'}`,
             sx: {
                 ...dragProps.sx,
                 '&:hover': {

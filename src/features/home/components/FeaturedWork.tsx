@@ -5,7 +5,7 @@ import { ProjectCard } from './FeaturedWork/ProjectCard';
 import { PublicationCard } from './FeaturedWork/PublicationCard';
 import { sectionTitleSx, cardGridSx } from './FeaturedWork.styles';
 import { Section } from './Layout';
-import { HOME_TEXT } from '../constants';
+import { HOME_TEXT } from '../config/constants';
 
 import { PUBLICATIONS, PROJECTS } from '@/config/constants';
 import { ANIMATIONS } from '@/config/theme';

@@ -90,15 +90,14 @@ describe('Lights Out Info Component', () => {
     const mockOnApply = vi.fn();
     const mockPalette = { primary: 'red', secondary: 'blue' };
     const defaultProps = {
-        rows: 3,
-        cols: 3,
-        size: 100,
-        open: true,
-        palette: mockPalette,
-        toggleOpen: mockToggleOpen,
+        modal: { open: true, toggleOpen: mockToggleOpen },
+        board: { rows: 3, cols: 3, size: 100 },
+        rendering: {
+            palette: mockPalette,
+            getFrontProps: () => (_r: number, _c: number) => ({}),
+            getBackProps: () => (_r: number, _c: number) => ({}),
+        },
         onApply: mockOnApply,
-        getFrontProps: () => (_r: number, _c: number) => ({}),
-        getBackProps: () => (_r: number, _c: number) => ({}),
     };
 
     const mockGetInput = calculator.getInput as Mock;
@@ -235,7 +234,12 @@ describe('Lights Out Info Component', () => {
         expect(screen.getByText('Input')).toBeInTheDocument();
 
         // Simulate cols change (should trigger reset)
-        rerender(<Info {...defaultProps} cols={4} />);
+        rerender(
+            <Info
+                {...defaultProps}
+                board={{ ...defaultProps.board, cols: 4 }}
+            />,
+        );
 
         // Component should still render calculator
         expect(screen.getByText('Input')).toBeInTheDocument();
@@ -286,7 +290,12 @@ describe('Lights Out Info Component', () => {
         const { rerender } = await renderInfo();
 
         const newPalette = { primary: 'green', secondary: 'yellow' };
-        rerender(<Info {...defaultProps} palette={newPalette} />);
+        rerender(
+            <Info
+                {...defaultProps}
+                rendering={{ ...defaultProps.rendering, palette: newPalette }}
+            />,
+        );
 
         // Component should still render properly
         expect(screen.getByText('Chase to Bottom')).toBeInTheDocument();

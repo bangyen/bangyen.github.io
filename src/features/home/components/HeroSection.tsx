@@ -17,7 +17,7 @@ import {
     heroRightColumnSx,
 } from './HeroSection.styles';
 import { HeroContainer } from './Layout';
-import { HOME_TEXT } from '../constants';
+import { HOME_TEXT } from '../config/constants';
 
 import { LocationOn, ArrowForward } from '@/components/icons';
 import { PERSONAL_INFO } from '@/config/constants';

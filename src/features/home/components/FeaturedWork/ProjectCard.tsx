@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { BaseCard } from './BaseCard';
-import { HOME_TEXT } from '../../constants';
+import { HOME_TEXT } from '../../config/constants';
 
 import { GitHub } from '@/components/icons';
 import type { Project } from '@/config/constants/types';

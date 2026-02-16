@@ -1,3 +1,4 @@
+import type { SxProps, Theme } from '@mui/material';
 import { Box, Typography, Button } from '@mui/material';
 import React from 'react';
 
@@ -19,6 +20,30 @@ export interface ResearchHeaderProps {
     backUrl?: string;
 }
 
+interface BackButtonProps {
+    backUrl: string;
+    sx: SxProps<Theme>;
+}
+
+/**
+ * Small presentational component for the "Back to Simulation" link.
+ * Extracted from `ResearchHeader` so the inline closure is replaced
+ * by a declarative component with an explicit props contract.
+ */
+function BackButton({ backUrl, sx }: BackButtonProps) {
+    return (
+        <Button
+            component="a"
+            href={`#${backUrl}`}
+            startIcon={<Back />}
+            size="small"
+            sx={sx}
+        >
+            Back to Simulation
+        </Button>
+    );
+}
+
 /**
  * Memoised header for research pages. Prevents re-renders caused by
  * chart data updates in the parent `ResearchDemo`, since its own
@@ -32,21 +57,10 @@ export const ResearchHeader = React.memo(function ResearchHeader({
     backUrl,
 }: ResearchHeaderProps) {
     const { sm: isMobile } = useMobileContext();
-    const backButton = (sx: typeof backButtonFlushSx) => (
-        <Button
-            component="a"
-            href={`#${backUrl ?? ''}`}
-            startIcon={<Back />}
-            size="small"
-            sx={sx}
-        >
-            Back to Simulation
-        </Button>
-    );
 
     const subtitleComponent =
         backUrl && isMobile ? (
-            backButton(backButtonFlushSx)
+            <BackButton backUrl={backUrl} sx={backButtonFlushSx} />
         ) : (
             <Typography variant="h5" sx={subtitleSx}>
                 {subtitle}
@@ -55,7 +69,9 @@ export const ResearchHeader = React.memo(function ResearchHeader({
 
     return (
         <Box sx={headerContainerSx}>
-            {backUrl && !isMobile && backButton(backButtonPulledSx)}
+            {backUrl && !isMobile && (
+                <BackButton backUrl={backUrl} sx={backButtonPulledSx} />
+            )}
 
             <Box sx={headerRowSx}>
                 <Typography variant="h1" sx={headerTitleSx}>

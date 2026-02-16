@@ -1,7 +1,7 @@
 import { Box, Typography, Button } from '@mui/material';
 import React from 'react';
 
-import { HOME_TEXT } from '../../constants';
+import { HOME_TEXT } from '../../config/constants';
 
 import { GitHub, ArrowForward } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';

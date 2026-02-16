@@ -1,4 +1,5 @@
 import { Box, Typography, Button } from '@mui/material';
+import React from 'react';
 
 import {
     calculatorRootSx,
@@ -27,8 +28,12 @@ export interface InfoCalculatorProps {
  * Calculator step inside the Info modal, letting users toggle a bottom-row
  * pattern and see the resulting top-row solution.  Cell size is capped so
  * the rows stay proportional inside the fixed-height modal.
+ *
+ * Memoised so that the parent `Info` component can re-render (e.g. on
+ * step navigation) without forcing a full calculator reconciliation when
+ * the calculator-specific props have not changed.
  */
-export function InfoCalculator({
+export const InfoCalculator = React.memo(function InfoCalculator({
     cols,
     size,
     isMobile,
@@ -108,4 +113,4 @@ export function InfoCalculator({
             </Box>
         </Box>
     );
-}
+});
