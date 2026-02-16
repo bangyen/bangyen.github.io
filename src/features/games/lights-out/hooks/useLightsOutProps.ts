@@ -16,43 +16,47 @@ import { getBackProps, getExampleProps } from '../utils/renderers';
 import type { CellFactory } from '@/utils/gameUtils';
 import { useCellFactory } from '@/utils/gameUtils';
 
-export interface UseLightsOutPropsParams {
-    /** Grid row count. */
+/** Core game dimensions and state flags. */
+export interface LightsOutGameParams {
     rows: number;
-    /** Grid column count. */
     cols: number;
-    /** Cell size in rem units. */
     size: number;
-    /** Whether the board is solved. */
     solved: boolean;
-    /** Trigger the next puzzle generation. */
-    handleNext: () => void;
-    /** Base game controls props from useBaseGame. */
-    controlsProps: BaseControlsProps;
-    /** Info dialog open state. */
-    open: boolean;
-    /** Toggle info dialog. */
-    toggleOpen: () => void;
-    /** Apply a calculator solution to the board. */
-    handleApply: (solution: number[]) => void;
-    /** Colour palette based on score. */
-    palette: Palette;
-    /** Whether every cell is lit. */
-    allOn: boolean;
-    /** Cell colour/state getters. */
-    getters: Getters;
-    /** Whether to skip CSS transitions (e.g. after resize). */
-    skipTransition: boolean;
-    /** Drag interaction factory. */
-    getDragProps: (pos: string) => DragProps;
-    /** Whether the device is mobile. */
     mobile: boolean;
-    /** Front (interactive) cell prop factory passed to useCellFactory. */
+    handleNext: () => void;
+}
+
+/** Info-dialog state and callbacks. */
+export interface LightsOutInfoParams {
+    open: boolean;
+    toggleOpen: () => void;
+    handleApply: (solution: number[]) => void;
+}
+
+/** Visual rendering state for the board cells. */
+export interface LightsOutRenderingParams {
+    palette: Palette;
+    allOn: boolean;
+    getters: Getters;
+    skipTransition: boolean;
+}
+
+/** Drag interaction and cell factory dependencies. */
+export interface LightsOutDragParams {
+    getDragProps: (pos: string) => DragProps;
     frontPropsFactory: (
         getDragProps: (pos: string) => DragProps,
         getters: Getters,
         skipTransition?: boolean,
     ) => CellFactory;
+}
+
+export interface UseLightsOutPropsParams {
+    game: LightsOutGameParams;
+    controls: BaseControlsProps;
+    info: LightsOutInfoParams;
+    rendering: LightsOutRenderingParams;
+    drag: LightsOutDragParams;
 }
 
 /**
@@ -62,22 +66,11 @@ export interface UseLightsOutPropsParams {
  * page receives a structurally consistent contract.
  */
 export function useLightsOutProps({
-    rows,
-    cols,
-    size,
-    solved,
-    handleNext,
-    controlsProps,
-    open,
-    toggleOpen,
-    handleApply,
-    palette,
-    allOn,
-    getters,
-    skipTransition,
-    getDragProps,
-    mobile,
-    frontPropsFactory,
+    game: { rows, cols, size, solved, mobile, handleNext },
+    controls: controlsProps,
+    info: { open, toggleOpen, handleApply },
+    rendering: { palette, allOn, getters, skipTransition },
+    drag: { getDragProps, frontPropsFactory },
 }: UseLightsOutPropsParams) {
     const frontProps = useCellFactory(frontPropsFactory, getDragProps, [
         getters,

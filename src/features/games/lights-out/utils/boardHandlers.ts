@@ -231,6 +231,6 @@ export const handleBoard = createGameReducer<BoardState, BoardAction>({
                 };
             }
         }
-        return state;
+        return null;
     },
 });

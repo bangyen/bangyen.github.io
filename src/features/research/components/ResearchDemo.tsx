@@ -9,7 +9,7 @@ import {
 import { ResearchHeader } from './ResearchHeader';
 import { ResearchViewSelector } from './ResearchViewSelector';
 import { useCurrentView } from '../hooks/useCurrentView';
-import { useResearchDemoDefaults } from '../hooks/useResearchDemoDefaults';
+import { resolveResearchDemoDefaults } from '../hooks/useResearchDemoDefaults';
 import type { ResearchDemoProps } from '../types';
 
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -48,7 +48,7 @@ export const ResearchDemo = <T,>({
         controls,
         onReset,
         resetLabel,
-    } = useResearchDemoDefaults(rest);
+    } = resolveResearchDemoDefaults(rest);
 
     const {
         data: currentData,

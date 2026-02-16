@@ -35,7 +35,7 @@ describe('gameUtils', () => {
                 if (action.type === 'custom') {
                     return { ...state, board: [[1]] };
                 }
-                return state;
+                return null;
             },
         });
 

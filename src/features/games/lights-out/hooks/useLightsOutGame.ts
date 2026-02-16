@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useReducer } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
@@ -13,7 +13,7 @@ import { isBoardState } from '../utils/persistence';
 import { getFrontProps } from '../utils/renderers';
 
 import { createCellIndex, type CellIndex } from '@/features/games/types';
-import { useMobile } from '@/hooks';
+import { useDisclosure, useMobile } from '@/hooks';
 
 /**
  * Orchestrates Lights Out game logic: grid state, drag interactions,
@@ -62,7 +62,7 @@ export function useLightsOutGame() {
         transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
     });
 
-    const [open, toggleOpen] = useReducer((open: boolean) => !open, false);
+    const { isOpen: open, toggle: toggleOpen } = useDisclosure();
 
     const palette = usePalette(state.score);
 
@@ -98,21 +98,10 @@ export function useLightsOutGame() {
     );
 
     return useLightsOutProps({
-        rows,
-        cols,
-        size,
-        solved,
-        handleNext,
-        controlsProps,
-        open,
-        toggleOpen,
-        handleApply,
-        palette,
-        allOn,
-        getters,
-        skipTransition,
-        getDragProps,
-        mobile,
-        frontPropsFactory: getFrontProps,
+        game: { rows, cols, size, solved, mobile, handleNext },
+        controls: controlsProps,
+        info: { open, toggleOpen, handleApply },
+        rendering: { palette, allOn, getters, skipTransition },
+        drag: { getDragProps, frontPropsFactory: getFrontProps },
     });
 }

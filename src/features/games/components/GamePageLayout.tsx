@@ -1,5 +1,6 @@
 import type { SxProps, Theme } from '@mui/material';
 import { Box } from '@mui/material';
+import { useMemo } from 'react';
 import type { MouseEvent, ReactNode } from 'react';
 
 import { getContentSx, getBoardSx } from './GamePageLayout.styles';
@@ -56,6 +57,12 @@ export function GamePageLayout({
         boardSx,
     } = layout;
 
+    const mergedContentSx = useMemo(
+        () => getContentSx(paddingBottom, contentSx),
+        [paddingBottom, contentSx],
+    );
+    const mergedBoardSx = useMemo(() => getBoardSx(boardSx), [boardSx]);
+
     return (
         <PageLayout
             title={title}
@@ -79,8 +86,8 @@ export function GamePageLayout({
                     resetLabel: GAME_TEXT.errors.boardReset,
                 }}
             >
-                <Box sx={getContentSx(paddingBottom, contentSx)}>
-                    <Box sx={getBoardSx(boardSx)}>
+                <Box sx={mergedContentSx}>
+                    <Box sx={mergedBoardSx}>
                         {children}
                         <TrophyOverlay {...trophyProps} />
                     </Box>

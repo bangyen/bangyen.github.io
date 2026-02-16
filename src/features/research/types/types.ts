@@ -71,12 +71,19 @@ export interface ResearchDemoViewProps<T> {
     onChange?: (value: string) => void;
 }
 
-export interface ResearchDemoProps<T> {
+/** Page chrome props: title bar, navigation, and layout concerns. */
+export interface ResearchPageChromeProps {
     title: string;
     /** Document title set via PageLayout. Falls back to `title` if omitted. */
     pageTitle?: string;
     subtitle: string;
     githubUrl: string;
+    children?: React.ReactNode;
+    backUrl?: string;
+}
+
+/** Data and control props: chart state, view selector, and parameter controls. */
+export interface ResearchDataProps<T> {
     /** Chart data, configuration, and loading state. */
     chart?: ResearchDemoChartProps<T>;
     /** View-type selector configuration. */
@@ -84,9 +91,14 @@ export interface ResearchDemoProps<T> {
     controls?: Control[];
     onReset?: () => void;
     resetLabel?: string;
-    children?: React.ReactNode;
-    backUrl?: string;
 }
+
+/**
+ * Combined props for the `ResearchDemo` component, composed from
+ * page-chrome concerns and data/control concerns.
+ */
+export type ResearchDemoProps<T> = ResearchPageChromeProps &
+    ResearchDataProps<T>;
 
 export interface OligopolyConstants {
     defaultFirms: number;

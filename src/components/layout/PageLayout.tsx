@@ -1,6 +1,6 @@
 import type { SxProps, Theme } from '@mui/material';
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 import { GlobalHeader } from './GlobalHeader';
 import { getContainerSx, getMainSx } from './PageLayout.styles';
@@ -42,15 +42,21 @@ export function PageLayout({
 }: PageLayoutProps) {
     useDocumentTitle(title);
 
+    const mergedContainerSx = useMemo(
+        () => getContainerSx(background, containerSx),
+        [background, containerSx],
+    );
+    const mergedMainSx = useMemo(() => getMainSx(sx), [sx]);
+
     return (
-        <Box onClick={onClick} sx={getContainerSx(background, containerSx)}>
+        <Box onClick={onClick} sx={mergedContainerSx}>
             <GlobalHeader
                 showHome={showHome}
                 githubUrl={githubUrl}
                 infoUrl={infoUrl}
                 transparent={headerTransparent}
             />
-            <Box component="main" sx={getMainSx(sx)}>
+            <Box component="main" sx={mergedMainSx}>
                 {children}
             </Box>
         </Box>

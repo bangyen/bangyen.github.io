@@ -2,7 +2,8 @@ import { Box, Typography, Button } from '@mui/material';
 import React from 'react';
 
 import {
-    getBackButtonSx,
+    backButtonFlushSx,
+    backButtonPulledSx,
     subtitleSx,
     headerContainerSx,
     headerRowSx,
@@ -31,13 +32,13 @@ export const ResearchHeader = React.memo(function ResearchHeader({
     backUrl,
 }: ResearchHeaderProps) {
     const { sm: isMobile } = useMobileContext();
-    const backButton = (margin: number) => (
+    const backButton = (sx: typeof backButtonFlushSx) => (
         <Button
             component="a"
             href={`#${backUrl ?? ''}`}
             startIcon={<Back />}
             size="small"
-            sx={getBackButtonSx(margin)}
+            sx={sx}
         >
             Back to Simulation
         </Button>
@@ -45,7 +46,7 @@ export const ResearchHeader = React.memo(function ResearchHeader({
 
     const subtitleComponent =
         backUrl && isMobile ? (
-            backButton(0)
+            backButton(backButtonFlushSx)
         ) : (
             <Typography variant="h5" sx={subtitleSx}>
                 {subtitle}
@@ -54,7 +55,7 @@ export const ResearchHeader = React.memo(function ResearchHeader({
 
     return (
         <Box sx={headerContainerSx}>
-            {backUrl && !isMobile && backButton(-2)}
+            {backUrl && !isMobile && backButton(backButtonPulledSx)}
 
             <Box sx={headerRowSx}>
                 <Typography variant="h1" sx={headerTitleSx}>

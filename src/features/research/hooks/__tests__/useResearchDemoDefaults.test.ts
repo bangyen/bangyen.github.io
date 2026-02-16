@@ -1,23 +1,22 @@
-import { renderHook } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 
 import { DEFAULT_CHART_CONFIG } from '../../config/constants';
-import { useResearchDemoDefaults } from '../useResearchDemoDefaults';
+import { resolveResearchDemoDefaults } from '../useResearchDemoDefaults';
 
-describe('useResearchDemoDefaults', () => {
+describe('resolveResearchDemoDefaults', () => {
     it('returns sensible defaults when no props are provided', () => {
-        const { result } = renderHook(() => useResearchDemoDefaults({}));
+        const result = resolveResearchDemoDefaults({});
 
-        expect(result.current.chartData).toEqual([]);
-        expect(result.current.chartConfig).toEqual(DEFAULT_CHART_CONFIG);
-        expect(result.current.chartTitle).toBeNull();
-        expect(result.current.loading).toBe(false);
-        expect(result.current.loadingMessage).toBe('Loading data...');
-        expect(result.current.viewTypes).toEqual([]);
-        expect(result.current.currentViewType).toBe('default');
-        expect(result.current.controls).toEqual([]);
-        expect(result.current.onReset).toBeUndefined();
-        expect(result.current.resetLabel).toBe('Reset');
+        expect(result.chartData).toEqual([]);
+        expect(result.chartConfig).toEqual(DEFAULT_CHART_CONFIG);
+        expect(result.chartTitle).toBeNull();
+        expect(result.loading).toBe(false);
+        expect(result.loadingMessage).toBe('Loading data...');
+        expect(result.viewTypes).toEqual([]);
+        expect(result.currentViewType).toBe('default');
+        expect(result.controls).toEqual([]);
+        expect(result.onReset).toBeUndefined();
+        expect(result.resetLabel).toBe('Reset');
     });
 
     it('passes through chart props when provided', () => {
@@ -27,23 +26,21 @@ describe('useResearchDemoDefaults', () => {
         };
         const data = [{ x: 1, y: 2 }];
 
-        const { result } = renderHook(() =>
-            useResearchDemoDefaults({
-                chart: {
-                    data,
-                    config: customConfig,
-                    title: 'Custom Title',
-                    loading: true,
-                    loadingMessage: 'Computing...',
-                },
-            }),
-        );
+        const result = resolveResearchDemoDefaults({
+            chart: {
+                data,
+                config: customConfig,
+                title: 'Custom Title',
+                loading: true,
+                loadingMessage: 'Computing...',
+            },
+        });
 
-        expect(result.current.chartData).toEqual(data);
-        expect(result.current.chartConfig).toEqual(customConfig);
-        expect(result.current.chartTitle).toBe('Custom Title');
-        expect(result.current.loading).toBe(true);
-        expect(result.current.loadingMessage).toBe('Computing...');
+        expect(result.chartData).toEqual(data);
+        expect(result.chartConfig).toEqual(customConfig);
+        expect(result.chartTitle).toBe('Custom Title');
+        expect(result.loading).toBe(true);
+        expect(result.loadingMessage).toBe('Computing...');
     });
 
     it('passes through view props when provided', () => {
@@ -59,19 +56,17 @@ describe('useResearchDemoDefaults', () => {
         ];
         const onChange = () => {};
 
-        const { result } = renderHook(() =>
-            useResearchDemoDefaults({
-                view: {
-                    types: viewTypes,
-                    current: 'custom',
-                    onChange,
-                },
-            }),
-        );
+        const result = resolveResearchDemoDefaults({
+            view: {
+                types: viewTypes,
+                current: 'custom',
+                onChange,
+            },
+        });
 
-        expect(result.current.viewTypes).toEqual(viewTypes);
-        expect(result.current.currentViewType).toBe('custom');
-        expect(result.current.onViewTypeChange).toBe(onChange);
+        expect(result.viewTypes).toEqual(viewTypes);
+        expect(result.currentViewType).toBe('custom');
+        expect(result.onViewTypeChange).toBe(onChange);
     });
 
     it('passes through controls, onReset, and resetLabel', () => {
@@ -85,16 +80,14 @@ describe('useResearchDemoDefaults', () => {
         ];
         const onReset = () => {};
 
-        const { result } = renderHook(() =>
-            useResearchDemoDefaults({
-                controls,
-                onReset,
-                resetLabel: 'Start Over',
-            }),
-        );
+        const result = resolveResearchDemoDefaults({
+            controls,
+            onReset,
+            resetLabel: 'Start Over',
+        });
 
-        expect(result.current.controls).toEqual(controls);
-        expect(result.current.onReset).toBe(onReset);
-        expect(result.current.resetLabel).toBe('Start Over');
+        expect(result.controls).toEqual(controls);
+        expect(result.onReset).toBe(onReset);
+        expect(result.resetLabel).toBe('Start Over');
     });
 });

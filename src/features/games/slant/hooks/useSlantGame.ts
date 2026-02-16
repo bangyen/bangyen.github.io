@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useReducer, useRef } from 'react';
+import React, { useEffect, useCallback, useRef } from 'react';
 
 import { useDimensionRegeneration } from './useDimensionRegeneration';
 import { useGhostMode } from './useGhostMode';
@@ -19,7 +19,7 @@ import {
 } from '../utils/persistence';
 
 import { createCellIndex } from '@/features/games/types';
-import { useMobile } from '@/hooks';
+import { useDisclosure, useMobile } from '@/hooks';
 
 /**
  * Orchestrates all Slant-specific game logic: worker-based puzzle
@@ -32,7 +32,7 @@ import { useMobile } from '@/hooks';
 export function useSlantGame() {
     const mobile = useMobile('sm');
     const [isGhostMode, setIsGhostMode] = React.useState(false);
-    const [infoOpen, toggleInfo] = useReducer((v: boolean) => !v, false);
+    const { isOpen: infoOpen, toggle: toggleInfo } = useDisclosure();
 
     // Refs kept in sync with useBaseGame output, shared with the worker hook.
     const dispatchRef = useRef<React.Dispatch<
@@ -142,25 +142,28 @@ export function useSlantGame() {
     });
 
     return useSlantProps({
-        state,
-        rows,
-        cols,
-        size,
-        isGhostMode,
-        generating,
-        handleNextAsync,
-        ghostMoves,
-        handleGhostMove,
-        handleGhostCopy,
-        handleGhostClear,
-        handleGhostClose,
-        handleBoxClick,
-        handleOpenCalculator,
-        infoOpen,
-        toggleInfo,
-        controlsProps,
+        game: {
+            state,
+            rows,
+            cols,
+            size,
+            mobile,
+            isGhostMode,
+            generating,
+            handleNextAsync,
+        },
+        ghost: {
+            ghostMoves,
+            handleGhostMove,
+            handleGhostCopy,
+            handleGhostClear,
+            handleGhostClose,
+            handleBoxClick,
+            handleOpenCalculator,
+            boardSx,
+        },
+        info: { infoOpen, toggleInfo },
+        controls: controlsProps,
         getDragProps,
-        mobile,
-        boardSx,
     });
 }
