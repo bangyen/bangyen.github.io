@@ -8,7 +8,7 @@ import {
     calculatorSubLabelSx,
     calculatorButtonGroupSx,
     calculatorButtonSx,
-} from './styles';
+} from './LightsOutInfo.styles';
 
 import { ContentCopyRounded, Refresh } from '@/components/icons';
 import { CustomGrid } from '@/components/ui/CustomGrid';

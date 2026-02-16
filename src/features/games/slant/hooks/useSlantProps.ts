@@ -12,7 +12,7 @@ import { getSlantContentSx } from './useSlantProps.styles';
 import type { GameControlsProps } from '../../components/GameControls';
 import type { BaseControlsProps, GamePageProps } from '../../hooks/types';
 import type { DragProps } from '../../hooks/useDrag';
-import type { SlantBoardContentProps } from '../components/SlantBoardContent';
+import type { SlantBoardProps } from '../components/SlantBoard';
 import { LAYOUT_CONSTANTS, NUMBER_SIZE_RATIO } from '../config/constants';
 import type { CellState, SlantState } from '../types';
 import { getBackProps, getFrontProps } from '../utils/renderers';
@@ -164,7 +164,7 @@ export function useSlantProps({
             iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
         },
     } satisfies GamePageProps<
-        SlantBoardContentProps,
+        SlantBoardProps,
         GameControlsProps,
         SlantLayoutReturn,
         SlantInfoReturn

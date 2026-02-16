@@ -8,7 +8,7 @@ import type {
     Conflict,
     CellInfo,
 } from '../../workers/solverWorker';
-import { GhostCanvas } from '../GhostCanvas';
+import { SlantGhostBoard } from '../SlantGhostBoard';
 
 // Mock slant-wasm before boardHandlers imports it (uses import.meta.url incompatible with Jest)
 vi.mock('slant-wasm', () => ({
@@ -225,13 +225,13 @@ const DEFAULT_PROPS = {
     onMove: vi.fn(),
 };
 
-describe('GhostCanvas', () => {
+describe('SlantGhostBoard', () => {
     beforeEach(() => {
         vi.clearAllMocks();
     });
 
     it('renders the grid correctly', () => {
-        render(<GhostCanvas {...DEFAULT_PROPS} />);
+        render(<SlantGhostBoard {...DEFAULT_PROPS} />);
         const cells = document.querySelectorAll('[data-type="cell"][data-pos]');
         expect(cells.length).toBe(9); // 3x3
         const hints = document.querySelectorAll('[data-type="hint"][data-pos]');
@@ -241,7 +241,7 @@ describe('GhostCanvas', () => {
     it('handles click interactions', () => {
         const onMove = vi.fn();
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} onMove={onMove} />,
+            <SlantGhostBoard {...DEFAULT_PROPS} onMove={onMove} />,
         );
 
         const cell = container.querySelector('[data-pos="0,0"]');
@@ -255,7 +255,7 @@ describe('GhostCanvas', () => {
     it('handles drag interactions (paint mode)', () => {
         const onMove = vi.fn();
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} onMove={onMove} />,
+            <SlantGhostBoard {...DEFAULT_PROPS} onMove={onMove} />,
         );
 
         const cell1 = container.querySelector('[data-pos="0,0"]');
@@ -287,7 +287,7 @@ describe('GhostCanvas', () => {
         initialMoves.set('0,0', FORWARD);
 
         const { container } = render(
-            <GhostCanvas
+            <SlantGhostBoard
                 {...DEFAULT_PROPS}
                 numbers={numbers}
                 initialMoves={initialMoves}
@@ -328,7 +328,7 @@ describe('GhostCanvas', () => {
         initialMoves.set('0,1', BACKWARD);
 
         const { container } = render(
-            <GhostCanvas
+            <SlantGhostBoard
                 {...DEFAULT_PROPS}
                 numbers={numbers}
                 initialMoves={initialMoves}
@@ -357,7 +357,7 @@ describe('GhostCanvas', () => {
         initialMoves.set('0,0', FORWARD);
 
         const { container } = render(
-            <GhostCanvas
+            <SlantGhostBoard
                 {...DEFAULT_PROPS}
                 initialMoves={initialMoves}
                 onMove={onMove}
@@ -374,7 +374,7 @@ describe('GhostCanvas', () => {
         const onClose = vi.fn();
 
         const { container } = render(
-            <GhostCanvas
+            <SlantGhostBoard
                 {...DEFAULT_PROPS}
                 onCopy={onCopy}
                 onClear={onClear}
@@ -394,7 +394,7 @@ describe('GhostCanvas', () => {
         initialMoves.set('0,0', FORWARD);
 
         const { rerender } = render(
-            <GhostCanvas
+            <SlantGhostBoard
                 {...DEFAULT_PROPS}
                 initialMoves={initialMoves}
                 onMove={onMove}
@@ -407,7 +407,7 @@ describe('GhostCanvas', () => {
         updatedMoves.set('0,1', BACKWARD);
 
         rerender(
-            <GhostCanvas
+            <SlantGhostBoard
                 {...DEFAULT_PROPS}
                 initialMoves={updatedMoves}
                 onMove={onMove}
@@ -428,7 +428,7 @@ describe('GhostCanvas', () => {
             .map(() => new Array(4).fill(null));
 
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} numbers={numbers} />,
+            <SlantGhostBoard {...DEFAULT_PROPS} numbers={numbers} />,
         );
 
         await waitFor(() => {
@@ -438,7 +438,7 @@ describe('GhostCanvas', () => {
     });
 
     it('handles both desktop and mobile padding variants', () => {
-        const { container } = render(<GhostCanvas {...DEFAULT_PROPS} />);
+        const { container } = render(<SlantGhostBoard {...DEFAULT_PROPS} />);
 
         // Component should render with grid
         expect(
@@ -454,7 +454,7 @@ describe('GhostCanvas', () => {
         const onMove = vi.fn();
 
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} onMove={onMove} />,
+            <SlantGhostBoard {...DEFAULT_PROPS} onMove={onMove} />,
         );
 
         const cell = container.querySelector('[data-pos="0,0"]');
@@ -481,7 +481,7 @@ describe('GhostCanvas', () => {
         initialMoves.set('0,0', FORWARD);
 
         const { container } = render(
-            <GhostCanvas
+            <SlantGhostBoard
                 {...DEFAULT_PROPS}
                 numbers={numbers}
                 initialMoves={initialMoves}
@@ -499,7 +499,7 @@ describe('GhostCanvas', () => {
         initialMoves.set('0,0', FORWARD);
 
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} initialMoves={initialMoves} />,
+            <SlantGhostBoard {...DEFAULT_PROPS} initialMoves={initialMoves} />,
         );
 
         const cell = container.querySelector('[data-pos="0,0"]');
@@ -520,7 +520,7 @@ describe('GhostCanvas', () => {
         initialMoves.set('0,0', FORWARD);
 
         const { container } = render(
-            <GhostCanvas
+            <SlantGhostBoard
                 {...DEFAULT_PROPS}
                 numbers={numbers}
                 initialMoves={initialMoves}
@@ -544,7 +544,7 @@ describe('GhostCanvas', () => {
         }
 
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} numbers={numbers} />,
+            <SlantGhostBoard {...DEFAULT_PROPS} numbers={numbers} />,
         );
 
         const hints = container.querySelectorAll('[data-type="hint"]');
@@ -558,7 +558,7 @@ describe('GhostCanvas', () => {
             .map(() => new Array(4).fill(null));
 
         const { container } = render(
-            <GhostCanvas {...DEFAULT_PROPS} numbers={numbers} />,
+            <SlantGhostBoard {...DEFAULT_PROPS} numbers={numbers} />,
         );
 
         const hints = container.querySelectorAll('[data-type="hint"]');

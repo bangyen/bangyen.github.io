@@ -162,8 +162,8 @@ vi.mock('@/components/ui/TooltipButton', () => ({
     },
 }));
 
-vi.mock('@/features/games/lights-out/components/Info', () => ({
-    Info: function MockInfo() {
+vi.mock('@/features/games/lights-out/components/LightsOutInfo', () => ({
+    LightsOutInfo: function MockInfo() {
         return <div data-testid="info-modal">Info</div>;
     },
 }));

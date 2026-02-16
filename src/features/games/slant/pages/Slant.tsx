@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 
 import { GameControls } from '../../components/GameControls';
 import { GamePageLayout } from '../../components/GamePageLayout';
-import { SlantBoardContent } from '../components/SlantBoardContent';
+import { SlantBoard } from '../components/SlantBoard';
 import { SlantInfo } from '../components/SlantInfo';
 import { useSlantGame } from '../hooks/useSlantGame';
 
@@ -28,7 +28,7 @@ export function Slant() {
             }
         >
             <Box onClick={infoProps.handleBoxClick}>
-                <SlantBoardContent {...boardProps} />
+                <SlantBoard {...boardProps} />
             </Box>
             <SlantInfo {...infoProps} />
         </GamePageLayout>

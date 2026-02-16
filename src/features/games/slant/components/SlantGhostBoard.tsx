@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import { useMemo, useCallback } from 'react';
 
-import { buildCellProps, buildNumberProps } from './GhostCanvasProps';
 import { GhostControls } from './GhostControls';
+import { buildCellProps, buildNumberProps } from './SlantGhostBoardProps';
 import { BOARD_STYLES, GAME_CONSTANTS } from '../../config/constants';
 import { useDrag } from '../../hooks/useDrag';
 import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../config/constants';
@@ -15,7 +15,7 @@ import { LAYOUT } from '@/config/theme';
 import { useMobile } from '@/hooks';
 import { getPosKey } from '@/utils/gameUtils';
 
-export interface GhostBoardProps {
+export interface SlantGhostBoardProps {
     rows: number;
     cols: number;
     numbers: (number | null)[][];
@@ -27,7 +27,7 @@ export interface GhostBoardProps {
     onClose?: () => void;
 }
 
-export function GhostCanvas({
+export function SlantGhostBoard({
     rows,
     cols,
     numbers,
@@ -37,7 +37,7 @@ export function GhostCanvas({
     onCopy,
     onClear,
     onClose,
-}: GhostBoardProps) {
+}: SlantGhostBoardProps) {
     const mobile = useMobile('sm');
     // User inputs: just strict assignments
     const userMoves = initialMoves;

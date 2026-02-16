@@ -1,6 +1,6 @@
 /**
- * Pure prop-factory functions for GhostCanvas grid cells and number hints.
- * Extracted so `GhostCanvas` focuses on layout and hook orchestration
+ * Pure prop-factory functions for SlantGhostBoard grid cells and number hints.
+ * Extracted so `SlantGhostBoard` focuses on layout and hook orchestration
  * while this module owns the per-cell rendering logic.
  */
 

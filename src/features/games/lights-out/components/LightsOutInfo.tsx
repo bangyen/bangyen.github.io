@@ -24,7 +24,7 @@ interface InfoRenderingProps {
     getBackProps: PropsFactory;
 }
 
-export interface InfoProps extends BaseInfoProps {
+export interface LightsOutInfoProps extends BaseInfoProps {
     /** Board dimensions and visual cell size. */
     board: InfoBoardProps;
     /** Rendering factories for the example animation. */
@@ -39,13 +39,13 @@ export interface InfoProps extends BaseInfoProps {
  * Calculator state is managed by `useCalculator` so it persists
  * when switching steps.
  */
-export function Info({
+export function LightsOutInfo({
     open,
     toggleOpen,
     board,
     rendering,
     onApply,
-}: InfoProps): React.ReactElement | null {
+}: LightsOutInfoProps): React.ReactElement | null {
     const { rows, cols, size } = board;
     const { palette, getFrontProps, getBackProps } = rendering;
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { GhostCanvas } from './GhostCanvas';
+import { SlantGhostBoard } from './SlantGhostBoard';
 import { SlantLoadingSkeleton } from './SlantLoadingSkeleton';
 import { Board } from '../../components/Board';
 import type { CellState, SlantState } from '../types';
@@ -10,7 +10,7 @@ import { FeatureErrorFallback } from '@/components/layout/FeatureErrorFallback';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { GAME_TEXT } from '@/features/games/config/constants';
 
-export interface SlantBoardContentProps {
+export interface SlantBoardProps {
     /** Whether ghost-mode overlay is active. */
     isGhostMode: boolean;
     /** Whether the worker is currently generating a new puzzle. */
@@ -45,7 +45,7 @@ export interface SlantBoardContentProps {
  * Renders the correct Slant board variant based on the current mode:
  * ghost-mode overlay, loading skeleton, or the normal interactive board.
  */
-export function SlantBoardContent({
+export function SlantBoard({
     isGhostMode,
     generating,
     dimensionsMismatch,
@@ -60,7 +60,7 @@ export function SlantBoardContent({
     onGhostClose,
     cellProps,
     overlayProps,
-}: SlantBoardContentProps): React.ReactElement {
+}: SlantBoardProps): React.ReactElement {
     if (isGhostMode) {
         return (
             <ErrorBoundary
@@ -68,7 +68,7 @@ export function SlantBoardContent({
                     <ErrorState message="Ghost mode encountered an error. Close and reopen to continue." />
                 }
             >
-                <GhostCanvas
+                <SlantGhostBoard
                     rows={rows}
                     cols={cols}
                     numbers={state.numbers}

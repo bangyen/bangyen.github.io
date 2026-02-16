@@ -1,7 +1,7 @@
 import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
 import { GamePageLayout } from '../../components/GamePageLayout';
-import { Info } from '../components/Info';
+import { LightsOutInfo as Info } from '../components/LightsOutInfo';
 import { useLightsOutGame } from '../hooks/useLightsOutGame';
 
 import { PAGE_TITLES } from '@/config/constants';
