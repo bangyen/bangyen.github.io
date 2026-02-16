@@ -65,7 +65,7 @@ describe('ErrorBoundary', () => {
             </ErrorBoundary>,
         );
         expect(console.error).toHaveBeenCalledWith(
-            expect.stringContaining('Error caught by boundary:'),
+            '[ErrorBoundary]',
             expect.any(Error),
             expect.any(Object),
         );

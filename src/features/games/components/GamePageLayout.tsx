@@ -2,12 +2,21 @@ import type { SxProps, Theme } from '@mui/material';
 import { Box } from '@mui/material';
 import React from 'react';
 
+import { getContentSx, getBoardSx } from './GamePageLayout.styles';
 import { TrophyOverlay, type TrophyOverlayProps } from './TrophyOverlay';
-import { BOARD_STYLES } from '../config/constants';
 
 import { PageLayout } from '@/components/layout/PageLayout';
 import { COLORS } from '@/config/theme';
-import { toSxArray } from '@/utils/muiUtils';
+
+/** Grouped layout-related style overrides for the game page chrome. */
+export interface GameLayoutConfig {
+    /** Bottom padding for the content area. */
+    paddingBottom?: string | object;
+    /** Additional styles merged into the content wrapper. */
+    contentSx?: SxProps<Theme>;
+    /** Additional styles merged into the board wrapper. */
+    boardSx?: SxProps<Theme>;
+}
 
 export interface GamePageLayoutProps {
     children: React.ReactNode;
@@ -15,11 +24,10 @@ export interface GamePageLayoutProps {
     infoUrl?: string;
     title?: string;
     background?: string;
-    paddingBottom?: string | object;
-    contentSx?: SxProps<Theme>;
     /** Props forwarded directly to the TrophyOverlay component. */
     trophyProps?: TrophyOverlayProps;
-    boardSx?: SxProps<Theme>;
+    /** Grouped layout style overrides (padding, content and board sx). */
+    layout?: GameLayoutConfig;
     onClick?: (e: React.MouseEvent) => void;
 }
 
@@ -35,12 +43,16 @@ export function GamePageLayout({
     infoUrl,
     title,
     background = COLORS.surface.background,
-    paddingBottom = { xs: '80px', md: '120px' },
-    contentSx = {},
     trophyProps = {},
-    boardSx,
+    layout = {},
     onClick,
 }: GamePageLayoutProps) {
+    const {
+        paddingBottom = { xs: '80px', md: '120px' },
+        contentSx = {},
+        boardSx,
+    } = layout;
+
     return (
         <PageLayout
             title={title}
@@ -57,42 +69,8 @@ export function GamePageLayout({
             }}
             onClick={onClick}
         >
-            <Box
-                sx={
-                    [
-                        {
-                            flex: 1,
-                            position: 'relative',
-                            width: '100%',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            overflow: 'hidden',
-                            pb: paddingBottom,
-                        },
-                        ...toSxArray(contentSx),
-                    ] as SxProps<Theme>
-                }
-            >
-                <Box
-                    sx={
-                        [
-                            {
-                                position: 'relative',
-                                width: 'fit-content',
-                                userSelect: 'none',
-                                padding: {
-                                    xs: BOARD_STYLES.PADDING.MOBILE,
-                                    sm: BOARD_STYLES.PADDING.DESKTOP,
-                                },
-                                borderRadius: BOARD_STYLES.BORDER_RADIUS,
-                                border: BOARD_STYLES.BORDER,
-                            },
-                            ...toSxArray(boardSx),
-                        ] as SxProps<Theme>
-                    }
-                >
+            <Box sx={getContentSx(paddingBottom, contentSx)}>
+                <Box sx={getBoardSx(boardSx)}>
                     {children}
                     <TrophyOverlay {...trophyProps} />
                 </Box>

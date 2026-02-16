@@ -1,11 +1,12 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-import { useWindow } from '../../../../hooks';
 import { useGridSize } from '../useGridSize';
 
+import { useWindow } from '@/hooks';
+
 // Mock the base hooks
-vi.mock('../../../../hooks', async importOriginal => {
+vi.mock('@/hooks', async importOriginal => {
     const actual = await importOriginal<Record<string, unknown>>();
     return {
         ...actual,

@@ -4,24 +4,16 @@ import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useDrag } from '../../hooks/useDrag';
 import { useSkipTransition } from '../../hooks/useSkipTransition';
-import {
-    LAYOUT_CONSTANTS,
-    LIGHTS_OUT_STYLES,
-    getLightsOutGameConfig,
-} from '../config';
+import { LIGHTS_OUT_STYLES, getLightsOutGameConfig } from '../config';
 import { useHandler, usePalette } from '../hooks/boardUtils';
+import { useLightsOutProps } from '../hooks/useLightsOutProps';
 import type { BoardState, BoardAction } from '../types';
 import { handleBoard, isSolved, getInitialState } from '../utils/boardHandlers';
 import { isBoardState } from '../utils/persistence';
-import {
-    getFrontProps,
-    getBackProps,
-    getExampleProps,
-} from '../utils/renderers';
+import { getFrontProps } from '../utils/renderers';
 
 import { createCellIndex, type CellIndex } from '@/features/games/types';
 import { useMobile } from '@/hooks';
-import { useCellFactory } from '@/utils/gameUtils';
 
 /**
  * Orchestrates Lights Out game logic: grid state, drag interactions,
@@ -84,15 +76,6 @@ export function useLightsOutGame() {
     const boardKey = `${String(rows)},${String(cols)},${String(state.score)}`;
     const skipTransition = useSkipTransition(boardKey);
 
-    const frontProps = useCellFactory(getFrontProps, getDragProps, [
-        getters,
-        skipTransition,
-    ]);
-    const backProps = useMemo(
-        () => getBackProps(getters, skipTransition),
-        [getters, skipTransition],
-    );
-
     const handleApply = useCallback(
         (solution: number[]) => {
             const moves = solution
@@ -112,46 +95,22 @@ export function useLightsOutGame() {
         [dispatch, toggleOpen],
     );
 
-    return {
-        boardProps: {
-            size,
-            rows,
-            cols,
-            cellRows: rows - 1,
-            cellCols: cols - 1,
-            overlayProps: frontProps,
-            cellProps: backProps,
-        },
-        controlsProps: {
-            ...controlsProps,
-            onOpenInfo: toggleOpen,
-        },
-        layoutProps: {
-            boardSx: {
-                marginTop: mobile
-                    ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
-                    : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
-            },
-        },
-        infoProps: {
-            rows,
-            cols,
-            size,
-            open,
-            palette,
-            toggleOpen,
-            onApply: handleApply,
-            getFrontProps: getExampleProps,
-            getBackProps,
-        },
-        trophyProps: {
-            show: solved,
-            onReset: handleNext,
-            size,
-            iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
-            primaryColor: palette.primary,
-            secondaryColor: palette.secondary,
-            useSecondary: allOn,
-        },
-    };
+    return useLightsOutProps({
+        rows,
+        cols,
+        size,
+        solved,
+        handleNext,
+        controlsProps,
+        open,
+        toggleOpen,
+        handleApply,
+        palette,
+        allOn,
+        getters,
+        skipTransition,
+        getDragProps,
+        mobile,
+        frontPropsFactory: getFrontProps,
+    });
 }

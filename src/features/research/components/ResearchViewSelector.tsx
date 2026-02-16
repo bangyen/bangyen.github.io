@@ -1,16 +1,12 @@
 import { Button, Box } from '@mui/material';
 import React from 'react';
 
-import { RESEARCH_STYLES } from '../config/constants';
-import type { ViewType } from '../types';
-
 import {
-    COLORS,
-    SPACING,
-    TYPOGRAPHY,
-    SHADOWS,
-    ANIMATIONS,
-} from '@/config/theme';
+    selectorContainerSx,
+    getGridSx,
+    getButtonSx,
+} from './ResearchViewSelector.styles';
+import type { ViewType } from '../types';
 
 export interface ResearchViewSelectorProps<T> {
     viewTypes: ViewType<T>[];
@@ -18,7 +14,13 @@ export interface ResearchViewSelectorProps<T> {
     onViewTypeChange: (value: string) => void;
 }
 
-export const ResearchViewSelector = <T,>({
+/**
+ * Memoised view-type toggle bar for research pages. Prevents
+ * unnecessary re-renders when only chart data changes in the
+ * parent `ResearchDemo`, since `viewTypes`, `currentViewType`,
+ * and `onViewTypeChange` are typically stable between those updates.
+ */
+const ResearchViewSelectorInner = <T,>({
     viewTypes,
     currentViewType,
     onViewTypeChange,
@@ -26,27 +28,11 @@ export const ResearchViewSelector = <T,>({
     if (viewTypes.length <= 1) return null;
 
     return (
-        <Box
-            sx={{
-                marginBottom: 3,
-                width: '100%',
-                boxSizing: 'border-box',
-            }}
-        >
-            <Box
-                sx={{
-                    display: 'grid',
-                    gridTemplateColumns: {
-                        xs: 'repeat(2, minmax(0, 1fr))',
-                        md: `repeat(${Math.min(viewTypes.length, 4).toString()}, 1fr)`,
-                    },
-                    gap: 1.5,
-                    width: '100%',
-                    margin: 0,
-                }}
-            >
+        <Box sx={selectorContainerSx}>
+            <Box sx={getGridSx(viewTypes.length)}>
                 {viewTypes.map(viewType => {
                     const IconComponent = viewType.icon;
+                    const isActive = currentViewType === viewType.key;
                     return (
                         <Button
                             key={viewType.key}
@@ -56,41 +42,7 @@ export const ResearchViewSelector = <T,>({
                             onClick={() => {
                                 onViewTypeChange(viewType.key);
                             }}
-                            sx={{
-                                width: '100%',
-                                color:
-                                    currentViewType === viewType.key
-                                        ? 'inherit' // MUI Button will handle the color inheritance
-                                        : COLORS.text.secondary,
-                                backgroundColor:
-                                    currentViewType === viewType.key
-                                        ? COLORS.primary.main
-                                        : COLORS.surface.elevated,
-                                '&.MuiButton-root': {
-                                    color:
-                                        currentViewType === viewType.key
-                                            ? COLORS.text.primary
-                                            : COLORS.text.secondary,
-                                },
-                                borderColor: COLORS.border.subtle,
-                                borderWidth: '1px',
-                                borderStyle: 'solid',
-                                borderRadius: SPACING.borderRadius.lg,
-                                minHeight: RESEARCH_STYLES.LAYOUT.BUTTON_HEIGHT,
-                                padding:
-                                    RESEARCH_STYLES.LAYOUT.INNER_PADDING_SM,
-                                fontSize: RESEARCH_STYLES.LAYOUT.FONT_SIZE_SM,
-                                fontWeight: TYPOGRAPHY.fontWeight.medium,
-                                transition: ANIMATIONS.transitions.standard,
-                                '&:hover': {
-                                    backgroundColor:
-                                        currentViewType === viewType.key
-                                            ? COLORS.primary.dark
-                                            : COLORS.interactive.hover,
-                                    transform: 'translateY(-1px)',
-                                    boxShadow: SHADOWS.sm,
-                                },
-                            }}
+                            sx={getButtonSx(isActive)}
                         >
                             {viewType.label}
                         </Button>
@@ -100,3 +52,7 @@ export const ResearchViewSelector = <T,>({
         </Box>
     );
 };
+
+export const ResearchViewSelector = React.memo(
+    ResearchViewSelectorInner,
+) as typeof ResearchViewSelectorInner;

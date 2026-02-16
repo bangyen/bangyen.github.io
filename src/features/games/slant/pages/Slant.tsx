@@ -17,11 +17,13 @@ export function Slant() {
         <GamePageLayout
             title={PAGE_TITLES.slant}
             infoUrl="https://en.wikipedia.org/wiki/Gokigen_Naname"
-            paddingBottom={{ xs: '120px', md: '150px' }}
             controls={<GameControls {...controlsProps} />}
-            contentSx={layoutProps.contentSx}
             trophyProps={trophyProps}
-            boardSx={layoutProps.boardSx}
+            layout={{
+                paddingBottom: { xs: '120px', md: '150px' },
+                contentSx: layoutProps.contentSx,
+                boardSx: layoutProps.boardSx,
+            }}
             onClick={
                 boardProps.isGhostMode ? boardProps.onGhostClose : undefined
             }
