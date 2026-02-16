@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 
 import { Board } from '../../components/Board';
 import { TrophyOverlay } from '../../components/TrophyOverlay';
-import { SLANT_STYLES, NUMBER_SIZE_RATIO } from '../constants';
+import { SLANT_STYLES, NUMBER_SIZE_RATIO } from '../config/constants';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
 import {

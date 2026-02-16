@@ -1,4 +1,4 @@
-import { BOARD_STYLES, createStorageKeys } from '../config/constants';
+import { BOARD_STYLES, createStorageKeys } from '../../config/constants';
 
 export const NUMBER_SIZE_RATIO = 0.4;
 

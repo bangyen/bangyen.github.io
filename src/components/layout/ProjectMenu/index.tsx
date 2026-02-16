@@ -1,7 +1,7 @@
 import { Box, Menu } from '@mui/material';
 import React, { useState } from 'react';
 
-import { ProjectDropdown } from './ProjectMenu/ProjectDropdown';
+import { ProjectDropdown } from './ProjectDropdown';
 
 import { ViewModuleRounded } from '@/components/icons';
 import { TooltipButton } from '@/components/ui/TooltipButton';
@@ -19,6 +19,12 @@ function closeHandler(setAnchor: (anchor: null) => void) {
     };
 }
 
+/**
+ * App-wide navigation menu button shown in the global header.
+ *
+ * Renders a dropdown listing all project categories (research, games)
+ * so users can navigate between features from any page.
+ */
 export function MenuButton(): React.ReactElement {
     const [anchor, setAnchor] = useState<HTMLElement | null>(null);
     const handleClick = clickHandler(setAnchor);
@@ -36,7 +42,7 @@ export function MenuButton(): React.ReactElement {
                 id="projects-menu-button"
                 Icon={ViewModuleRounded}
                 aria-controls={define('projects-menu')}
-                aria-expanded={define('true')}
+                aria-expanded={open || undefined}
                 aria-haspopup="true"
                 sx={{
                     '&:hover': {

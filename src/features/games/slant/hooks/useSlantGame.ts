@@ -6,6 +6,9 @@ import React, {
     useRef,
 } from 'react';
 
+import { useDimensionRegeneration } from './useDimensionRegeneration';
+import { useGenerationWorker } from './useGenerationWorker';
+import { useGhostMode } from './useGhostMode';
 import { useMobile } from '../../../../hooks';
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
@@ -15,10 +18,7 @@ import {
     NUMBER_SIZE_RATIO,
     STORAGE_KEYS,
     LAYOUT_CONSTANTS,
-} from '../constants';
-import { useDimensionRegeneration } from './useDimensionRegeneration';
-import { useGenerationWorker } from './useGenerationWorker';
-import { useGhostMode } from './useGhostMode';
+} from '../config/constants';
 import type { SlantAction, SlantState } from '../types';
 import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import {
@@ -29,8 +29,8 @@ import {
 } from '../utils/persistence';
 import { getBackProps, getFrontProps } from '../utils/renderers';
 
+import { createCellIndex } from '@/features/games/types';
 import { useCellFactory } from '@/utils/gameUtils';
-import { createCellIndex } from '@/utils/types';
 
 /**
  * Orchestrates all Slant-specific game logic: worker-based puzzle

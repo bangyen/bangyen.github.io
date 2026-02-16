@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import React from 'react';
 
 import type { DragProps } from '../../hooks/useDrag';
-import { SLANT_STYLES } from '../constants';
+import { SLANT_STYLES } from '../config/constants';
 import type { SlantState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
 

@@ -28,8 +28,9 @@ export const router = createHashRouter(
                 {
                     path: ROUTES.pages.Error,
                     lazy: async () => {
-                        const { Error } = await import('@/pages/Error');
-                        return { Component: Error };
+                        const { ErrorPage } =
+                            await import('@/components/layout/ErrorPage');
+                        return { Component: ErrorPage };
                     },
                 },
                 {
@@ -53,8 +54,9 @@ export const router = createHashRouter(
                 {
                     path: '*',
                     lazy: async () => {
-                        const { Error } = await import('@/pages/Error');
-                        return { Component: Error };
+                        const { ErrorPage } =
+                            await import('@/components/layout/ErrorPage');
+                        return { Component: ErrorPage };
                     },
                 },
             ],

@@ -1,7 +1,7 @@
 import type { SxProps, Theme } from '@mui/material';
 
 import { LAYOUT_CONSTANTS, GAME_LOGIC_CONSTANTS } from './constants';
-import { infoContentSx } from '../components/infoStyles';
+import { infoContentSx } from '../../components/infoStyles';
 
 import {
     TextureRounded,
@@ -9,6 +9,12 @@ import {
     NotInterestedRounded,
 } from '@/components/icons';
 import { toSxArray } from '@/utils/muiUtils';
+
+// ---------------------------------------------------------------------------
+// Re-export constants for convenient single-import access
+// ---------------------------------------------------------------------------
+
+export * from './constants';
 
 // ---------------------------------------------------------------------------
 // Info modal content (previously inline in Slant.tsx)

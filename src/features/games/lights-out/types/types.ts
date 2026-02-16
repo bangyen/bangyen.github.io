@@ -1,4 +1,4 @@
-import type { GridSize, CellIndex } from '@/utils/types';
+import type { GridSize, CellIndex } from '@/features/games/types';
 
 export interface BoardState {
     grid: number[];
