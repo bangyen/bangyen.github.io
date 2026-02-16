@@ -16,23 +16,21 @@ import {
     STORAGE_KEYS,
     LAYOUT_CONSTANTS,
 } from '../constants';
+import { useDimensionRegeneration } from './useDimensionRegeneration';
 import { useGenerationWorker } from './useGenerationWorker';
 import { useGhostMode } from './useGhostMode';
 import type { SlantAction, SlantState } from '../types';
 import { getInitialState, handleBoard } from '../utils/boardHandlers';
+import {
+    serializeSlantState,
+    isSavedSlantState,
+    deserializeSlantState,
+    persistSlantState,
+} from '../utils/persistence';
 import { getBackProps, getFrontProps } from '../utils/renderers';
 
 import { useCellFactory } from '@/utils/gameUtils';
 import { createCellIndex } from '@/utils/types';
-
-interface SavedSlantState extends Omit<
-    SlantState,
-    'errorNodes' | 'cycleCells' | 'satisfiedNodes'
-> {
-    errorNodes: string[];
-    cycleCells: string[];
-    satisfiedNodes: string[];
-}
 
 /**
  * Orchestrates all Slant-specific game logic: worker-based puzzle
@@ -56,14 +54,7 @@ export function useSlantGame() {
     const handleStaleResult = useCallback(
         (staleState: SlantState, r: number, c: number) => {
             if (isGhostMode) return;
-            const persistKey = `${STORAGE_KEYS.STATE}-${String(r)}x${String(c)}`;
-            const serialized = {
-                ...staleState,
-                errorNodes: [...staleState.errorNodes],
-                cycleCells: [...staleState.cycleCells],
-                satisfiedNodes: [...staleState.satisfiedNodes],
-            };
-            localStorage.setItem(persistKey, JSON.stringify(serialized));
+            persistSlantState(staleState, r, c);
         },
         [isGhostMode],
     );
@@ -95,20 +86,12 @@ export function useSlantGame() {
             manualResize: true,
             persistence: {
                 enabled: !isGhostMode,
-                serialize: (s: SlantState) => ({
-                    ...s,
-                    errorNodes: [...s.errorNodes],
-                    cycleCells: [...s.cycleCells],
-                    satisfiedNodes: [...s.satisfiedNodes],
-                }),
+                serialize: serializeSlantState,
                 deserialize: (saved: unknown) => {
-                    const s = saved as SavedSlantState;
-                    return {
-                        ...s,
-                        errorNodes: new Set(s.errorNodes),
-                        cycleCells: new Set(s.cycleCells),
-                        satisfiedNodes: new Set(s.satisfiedNodes),
-                    } as SlantState;
+                    if (!isSavedSlantState(saved)) {
+                        throw new Error('Corrupt Slant state');
+                    }
+                    return deserializeSlantState(saved);
                 },
             },
         },
@@ -138,32 +121,13 @@ export function useSlantGame() {
         toggleInfo,
     });
 
-    // Request a new puzzle from the worker whenever grid dimensions change,
-    // unless there is already an unsolved puzzle saved for the new size.
-    const prevDimsRef = useRef<string>(`${String(rows)},${String(cols)}`);
-    useEffect(() => {
-        const key = `${String(rows)},${String(cols)}`;
-        if (key === prevDimsRef.current) return;
-        prevDimsRef.current = key;
-
-        if (!isGhostMode) {
-            const persistKey = `${STORAGE_KEYS.STATE}-${String(rows)}x${String(cols)}`;
-            const saved = localStorage.getItem(persistKey);
-            if (saved) {
-                try {
-                    const parsed = JSON.parse(saved) as { solved?: boolean };
-                    if (!parsed.solved) {
-                        cancelGeneration();
-                        return;
-                    }
-                } catch {
-                    // Invalid JSON — fall through to regeneration
-                }
-            }
-        }
-
-        requestGeneration(rows, cols);
-    }, [rows, cols, requestGeneration, cancelGeneration, isGhostMode]);
+    useDimensionRegeneration({
+        rows,
+        cols,
+        isGhostMode,
+        requestGeneration,
+        cancelGeneration,
+    });
 
     // Prefetch the next puzzle as soon as the current one is solved so
     // generation overlaps with the win animation instead of waiting.

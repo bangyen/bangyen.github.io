@@ -1,89 +1,20 @@
 import React, { useState, useMemo } from 'react';
+import { useLoaderData } from 'react-router-dom';
 
 import { ResearchDemo } from '../components';
 import { RESEARCH_CONSTANTS } from '../config';
-import { useResearchData } from '../hooks';
-import type { Control } from '../types';
+import type { MatrixItem } from './oligopolyConfig';
 import {
-    buildAxisDomain,
-    buildTooltipLabelFormatter,
-    fetchGzippedJson,
-} from '../utils';
+    filterMatrixData,
+    oligopolyChartConfig,
+    buildOligopolyControls,
+} from './oligopolyConfig';
 
-import {
-    BusinessRounded,
-    TrendingUpRounded,
-    AttachMoneyRounded,
-} from '@/components/icons';
 import { URLS, PAGE_TITLES } from '@/config/constants';
-import { COLORS } from '@/config/theme';
-
-interface MatrixItem {
-    round: number;
-    price: number;
-    hhi: number;
-    collusion?: boolean;
-    num_firms?: number;
-    model_type?: string;
-    demand_elasticity?: number;
-    base_price?: number;
-    collusion_enabled?: boolean;
-}
-
-interface MarketDataPoint {
-    round: number;
-    price: number;
-    hhi: number;
-    collusion?: boolean;
-}
-
-const loadRealSimulationMatrix = async (): Promise<MatrixItem[]> => {
-    const matrixData = await fetchGzippedJson<MatrixItem[]>(
-        '/oligopoly_data.json.gz',
-    );
-
-    if (!Array.isArray(matrixData)) {
-        throw new TypeError('Invalid data format: expected array');
-    }
-
-    return matrixData;
-};
-
-const filterMatrixData = (
-    matrixData: MatrixItem[],
-    numFirms: number,
-    modelType: string,
-    demandElasticity: number,
-    basePrice: number,
-    collusionEnabled: boolean,
-): MarketDataPoint[] => {
-    if (matrixData.length === 0) {
-        return [];
-    }
-
-    const filtered = matrixData.filter(
-        item =>
-            item.num_firms === numFirms &&
-            item.model_type === modelType &&
-            item.demand_elasticity === demandElasticity &&
-            item.base_price === basePrice &&
-            item.collusion_enabled === collusionEnabled,
-    );
-
-    if (filtered.length === 0) {
-        const closest = matrixData.filter(
-            item =>
-                item.num_firms === numFirms && item.model_type === modelType,
-        );
-        const sorted = closest.sort((a, b) => a.round - b.round);
-        return sorted.slice(0, RESEARCH_CONSTANTS.oligopoly.maxRounds);
-    }
-
-    const sorted = filtered.sort((a, b) => a.round - b.round);
-    return sorted.slice(0, 15);
-};
 
 export const Oligopoly: React.FC = () => {
+    const matrixData = useLoaderData<MatrixItem[]>();
+
     const [numFirms, setNumFirms] = useState(
         RESEARCH_CONSTANTS.oligopoly.defaultFirms,
     );
@@ -96,11 +27,6 @@ export const Oligopoly: React.FC = () => {
 
     const modelType = RESEARCH_CONSTANTS.modelTypes.cournot;
     const collusionEnabled = false;
-
-    const { data: matrixData, loading } = useResearchData(
-        loadRealSimulationMatrix,
-        () => [] as MatrixItem[],
-    );
 
     const marketData = useMemo(
         () =>
@@ -128,63 +54,14 @@ export const Oligopoly: React.FC = () => {
         setBasePrice(RESEARCH_CONSTANTS.oligopoly.defaultBasePrice);
     };
 
-    const controls: Control[] = [
-        {
-            label: 'Number of Firms',
-            icon: BusinessRounded,
-            color: COLORS.primary.main,
-            value: numFirms,
-            onChange: setNumFirms,
-            options: RESEARCH_CONSTANTS.oligopoly.options.firms,
-        },
-        {
-            label: 'Demand Elasticity',
-            icon: TrendingUpRounded,
-            color: COLORS.data.green,
-            value: demandElasticity,
-            onChange: setDemandElasticity,
-            options: RESEARCH_CONSTANTS.oligopoly.options.elasticity,
-        },
-        {
-            label: 'Base Price',
-            icon: AttachMoneyRounded,
-            color: COLORS.data.amber,
-            value: basePrice,
-            onChange: setBasePrice,
-            options: RESEARCH_CONSTANTS.oligopoly.options.price,
-        },
-    ];
-
-    const chartConfig = {
-        type: 'line' as const,
-        xAxisKey: 'round',
-        yAxisFormatter: (value: number) => `$${value.toFixed(2)}`,
-        yAxisDomain: buildAxisDomain(5),
-        dualYAxis: true,
-        rightYAxisFormatter: (value: number) => value.toFixed(2),
-        rightYAxisDomain: buildAxisDomain(
-            RESEARCH_CONSTANTS.oligopoly.hhiAxisPadding,
-        ),
-        tooltipLabelFormatter: buildTooltipLabelFormatter('Round'),
-        tooltipFormatter: (value: number, name: string): [string, string] => [
-            name === 'Market Price' ? `$${value.toFixed(2)}` : value.toFixed(2),
-            name,
-        ],
-        lines: [
-            {
-                dataKey: 'price',
-                name: 'Market Price',
-                color: COLORS.primary.main,
-                yAxisId: 'left',
-            },
-            {
-                dataKey: 'hhi',
-                name: 'HHI Concentration',
-                color: COLORS.data.amber,
-                yAxisId: 'right',
-            },
-        ],
-    };
+    const controls = useMemo(
+        () =>
+            buildOligopolyControls(
+                { numFirms, demandElasticity, basePrice },
+                { setNumFirms, setDemandElasticity, setBasePrice },
+            ),
+        [numFirms, demandElasticity, basePrice],
+    );
 
     return (
         <ResearchDemo
@@ -193,11 +70,9 @@ export const Oligopoly: React.FC = () => {
             subtitle="Agent-Based Economic Competition Analysis"
             githubUrl={URLS.oligopolyRepo}
             chartData={marketData}
-            chartConfig={chartConfig}
+            chartConfig={oligopolyChartConfig}
             chartTitle="Market Dynamics"
             controls={controls}
-            loading={loading}
-            loadingMessage="Loading Cournot simulation data..."
             onReset={resetToDefaults}
             resetLabel="Reset"
         />
