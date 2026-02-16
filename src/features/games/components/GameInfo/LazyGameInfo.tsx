@@ -26,11 +26,11 @@ const GameInfoContentLazy = lazyNamed(
 const TITLE_ID = 'game-info-title';
 
 /**
- * Lightweight placeholder rendered inside the modal while the
- * `GameInfoContent` chunk loads.  Matches the card dimensions so
- * the modal does not resize when the real content appears.
+ * Card-shaped container used for both the loading and error placeholders
+ * inside the modal.  Matches the `infoCardSx` dimensions so the modal
+ * never resizes when swapping between states.
  */
-function LoadingContent() {
+function ModalPlaceholder({ children }: { children: React.ReactNode }) {
     return (
         <Box
             sx={{
@@ -40,10 +40,34 @@ function LoadingContent() {
                 alignItems: 'center',
             }}
         >
+            {children}
+        </Box>
+    );
+}
+
+/**
+ * Lightweight loading text rendered inside the modal while the
+ * `GameInfoContent` chunk loads.
+ */
+function LoadingContent() {
+    return (
+        <ModalPlaceholder>
             <Typography sx={{ color: COLORS.text.primary }}>
                 {GAME_TEXT.info.loading}
             </Typography>
-        </Box>
+        </ModalPlaceholder>
+    );
+}
+
+/**
+ * Error fallback rendered inside the modal when the `GameInfoContent`
+ * chunk fails to load (e.g. network error).
+ */
+function ErrorContent() {
+    return (
+        <ModalPlaceholder>
+            <ErrorState message={GAME_TEXT.info.loadError} height="auto" />
+        </ModalPlaceholder>
     );
 }
 
@@ -72,9 +96,7 @@ export function LazyGameInfo(props: GameInfoProps): React.ReactElement | null {
             sx={infoModalSx}
         >
             <Box sx={infoOuterBoxSx} role="document">
-                <ErrorBoundary
-                    fallback={<ErrorState message={GAME_TEXT.info.loadError} />}
-                >
+                <ErrorBoundary fallback={<ErrorContent />}>
                     <Suspense fallback={<LoadingContent />}>
                         <GameInfoContentLazy
                             {...contentProps}
