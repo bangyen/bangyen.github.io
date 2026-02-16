@@ -106,6 +106,15 @@ export function useWorker<TInput, TOutput>(
     const [error, setError] = useState<string | null>(null);
     const workerRef = useRef<Worker | null>(null);
 
+    // Keep option callbacks in refs so `run` has a stable identity
+    // regardless of whether callers pass inline object literals.
+    const onSuccessRef = useRef(options.onSuccess);
+    const onErrorRef = useRef(options.onError);
+    const onMessageRef = useRef(options.onMessage);
+    onSuccessRef.current = options.onSuccess;
+    onErrorRef.current = options.onError;
+    onMessageRef.current = options.onMessage;
+
     const terminate = useCallback(() => {
         if (workerRef.current) {
             workerRef.current.terminate();
@@ -126,21 +135,21 @@ export function useWorker<TInput, TOutput>(
                 worker.onmessage = (e: MessageEvent) => {
                     const helpers = { setResult, setError, setLoading };
 
-                    if (options.onMessage) {
-                        options.onMessage(e, helpers);
+                    if (onMessageRef.current) {
+                        onMessageRef.current(e, helpers);
                         return;
                     }
 
                     const data = e.data as WorkerResponse<TOutput>;
                     if (data.success && data.result !== undefined) {
                         setResult(data.result);
-                        options.onSuccess?.(data.result);
+                        onSuccessRef.current?.(data.result);
                         setLoading(false);
                     } else {
                         const errMsg =
                             data.error ?? 'An unknown error occurred.';
                         setError(errMsg);
-                        options.onError?.(errMsg);
+                        onErrorRef.current?.(errMsg);
                         setLoading(false);
                     }
                 };
@@ -151,7 +160,7 @@ export function useWorker<TInput, TOutput>(
                     const errMsg =
                         'An error occurred in the background worker.';
                     setError(errMsg);
-                    options.onError?.(errMsg);
+                    onErrorRef.current?.(errMsg);
                     setLoading(false);
                 };
 
@@ -161,11 +170,11 @@ export function useWorker<TInput, TOutput>(
                 console.error('Failed to start worker:', error_);
                 const errMsg = 'Failed to start calculation worker.';
                 setError(errMsg);
-                options.onError?.(errMsg);
+                onErrorRef.current?.(errMsg);
                 setLoading(false);
             }
         },
-        [createWorker, options, terminate],
+        [createWorker, terminate],
     );
 
     useEffect(() => {

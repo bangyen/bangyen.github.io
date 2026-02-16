@@ -27,8 +27,12 @@ interface GameControlsProps {
  * Provides refresh, resize (plus/minus), an optional "How to Play"
  * button, and an optional slot for extra buttons -- without routing
  * through the generic Controls wrapper.
+ *
+ * Memoised because the parent re-renders on every game-state
+ * dispatch yet the control props (`controlsProps` from `useBaseGame`)
+ * are stable between size changes.
  */
-export function GameControls({
+export const GameControls = React.memo(function GameControls({
     rows,
     cols,
     dynamicSize,
@@ -74,4 +78,4 @@ export function GameControls({
             {children}
         </Navigation>
     );
-}
+});

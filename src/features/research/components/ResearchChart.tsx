@@ -25,7 +25,13 @@ interface ResearchChartProps<T> {
     isMobile: boolean;
 }
 
-export function ResearchChart<T>({
+/**
+ * Renders the Recharts line chart inside a glass card.
+ *
+ * Memoised because Recharts renders are expensive and the chart only
+ * needs to update when data, config, or loading state actually change.
+ */
+function ResearchChartInner<T>({
     currentData,
     currentChartConfig,
     loading,
@@ -205,3 +211,7 @@ export function ResearchChart<T>({
         </GlassCard>
     );
 }
+
+export const ResearchChart = React.memo(
+    ResearchChartInner,
+) as typeof ResearchChartInner;

@@ -1,7 +1,10 @@
 import type React from 'react';
 
+/** Supported chart types rendered by `ResearchChart`. */
+export type ChartType = 'line' | 'bar';
+
 export interface ChartConfig {
-    type: string;
+    type: ChartType;
     lines: {
         dataKey: string;
         name: string;
