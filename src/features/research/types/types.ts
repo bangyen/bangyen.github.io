@@ -103,7 +103,4 @@ export interface ResearchConfig {
     modelTypes: {
         cournot: string;
     };
-    lightsOut: {
-        yAxisMax: number;
-    };
 }

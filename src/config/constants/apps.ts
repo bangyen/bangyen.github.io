@@ -7,7 +7,6 @@ export const PAGE_TITLES: PageTitles = {
     zsharp: 'ZSharp - Sharpness-Aware Minimization',
     oligopoly: 'Oligopoly - Cournot Competition',
     error: 'Page Not Found | Bangyen',
-    lightsOutResearch: 'Lights Out Mechanics | Bangyen',
     slant: 'Slant | Bangyen',
 };
 
@@ -18,7 +17,6 @@ export const ROUTES: Routes = {
         Oligopoly: '/oligopoly',
         ZSharp: '/zsharp',
         LightsOut: '/lights-out',
-        LightsOutResearch: '/research/lights-out',
         Slant: '/slant',
     },
 };
