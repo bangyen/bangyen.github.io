@@ -1,11 +1,5 @@
 import { Box } from '@mui/material';
-import React, {
-    useEffect,
-    useState,
-    useMemo,
-    useCallback,
-    useRef,
-} from 'react';
+import React, { useMemo, useCallback } from 'react';
 
 import { GhostCell } from './GhostCell';
 import { GhostControls } from './GhostControls';
@@ -13,18 +7,16 @@ import { GhostHint } from './GhostHint';
 import { BOARD_STYLES, GAME_CONSTANTS } from '../../config/constants';
 import { useDrag } from '../../hooks/useDrag';
 import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../constants';
+import { useGhostSolver } from '../hooks/useGhostSolver';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
-import { solveGhostConstraints } from '../utils/ghostSolver';
-import { createWorker } from '../utils/workerUtils';
-import type { SolverMessage } from '../workers/solverWorker';
 
 import { CustomGrid } from '@/components/ui/CustomGrid';
 import { COLORS, LAYOUT } from '@/config/theme';
 import { useMobile } from '@/hooks';
 import { getPosKey } from '@/utils/gameUtils';
 
-interface GhostBoardProps {
+export interface GhostBoardProps {
     rows: number;
     cols: number;
     numbers: (number | null)[][];
@@ -34,18 +26,6 @@ interface GhostBoardProps {
     onCopy?: () => void;
     onClear?: () => void;
     onClose?: () => void;
-}
-
-type CellSource = 'user' | 'propagated';
-interface CellInfo {
-    state: CellState;
-    source: CellSource;
-}
-
-interface Conflict {
-    type: 'cell' | 'node';
-    r: number;
-    c: number;
 }
 
 export const GhostCanvas: React.FC<GhostBoardProps> = ({
@@ -103,102 +83,12 @@ export const GhostCanvas: React.FC<GhostBoardProps> = ({
         checkEnabled: () => true,
     });
 
-    // Computed state
-    const [gridState, setGridState] = useState<Map<string, CellInfo>>(
-        new Map(),
-    );
-    const [conflicts, setConflicts] = useState<Conflict[]>([]);
-    const [cycleCells, setCycleCells] = useState<Set<string>>(new Set());
-
-    // Web Worker with main-thread fallback.
-    // workerReady is state (not a ref) so that the solve effect re-runs
-    // once the probe succeeds or the worker is marked broken.
-    const workerRef = useRef<Worker | null>(null);
-    const [workerReady, setWorkerReady] = useState<
-        'probing' | 'healthy' | 'broken'
-    >('probing');
-
-    useEffect(() => {
-        let cancelled = false;
-        const worker = createWorker();
-        workerRef.current = worker;
-
-        const probeTimer = setTimeout(() => {
-            if (!cancelled) {
-                setWorkerReady('broken');
-                workerRef.current = null;
-                worker.terminate();
-            }
-        }, 2000);
-
-        worker.onmessage = (e: MessageEvent) => {
-            if (cancelled) return;
-            const data = e.data as SolverMessage;
-            if (data.type === 'RESULT') {
-                setWorkerReady(prev => {
-                    if (prev === 'probing') {
-                        clearTimeout(probeTimer);
-                        return 'healthy'; // Probe succeeded; discard result
-                    }
-                    // Real result — update grid state
-                    const { gridState, conflicts, cycleCells } = data.payload;
-                    setGridState(gridState);
-                    setConflicts(conflicts);
-                    setCycleCells(cycleCells);
-                    return prev;
-                });
-            }
-        };
-
-        worker.onerror = () => {
-            clearTimeout(probeTimer);
-            setWorkerReady('broken');
-            workerRef.current = null;
-            worker.terminate();
-        };
-
-        // Send a tiny probe so the worker can prove it's alive.
-        worker.postMessage({
-            type: 'SOLVE',
-            payload: {
-                rows: 2,
-                cols: 2,
-                numbers: [
-                    [null, null, null],
-                    [null, null, null],
-                    [null, null, null],
-                ],
-                userMoves: new Map(),
-            },
-        });
-
-        return () => {
-            cancelled = true;
-            clearTimeout(probeTimer);
-            worker.terminate();
-        };
-    }, []);
-
-    // Engine: Send data to worker (or solve on main thread) when inputs change.
-    // Depends on workerReady so the first real solve runs after the probe.
-    useEffect(() => {
-        if (workerReady === 'healthy' && workerRef.current) {
-            workerRef.current.postMessage({
-                type: 'SOLVE',
-                payload: { rows, cols, numbers, userMoves },
-            });
-        } else if (workerReady === 'broken') {
-            const result = solveGhostConstraints(
-                rows,
-                cols,
-                numbers,
-                userMoves,
-            );
-            setGridState(result.gridState);
-            setConflicts(result.conflicts);
-            setCycleCells(result.cycleCells);
-        }
-    }, [userMoves, numbers, rows, cols, workerReady]);
+    const { gridState, conflicts, cycleCells } = useGhostSolver({
+        rows,
+        cols,
+        numbers,
+        userMoves,
+    });
 
     // View Helpers
 

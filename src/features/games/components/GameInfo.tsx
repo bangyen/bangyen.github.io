@@ -58,7 +58,7 @@ export interface InstructionItemData {
     text: string;
 }
 
-interface GameInfoProps {
+export interface GameInfoProps {
     /** Whether the modal is open. */
     open: boolean;
     /** Toggle the modal open/closed. */

@@ -110,7 +110,7 @@ function inputIconHandler(
     };
 }
 
-interface ExampleProps {
+export interface ExampleProps {
     palette: Palette;
     size: number;
     dims?: number;

@@ -12,7 +12,7 @@ import {
     ANIMATIONS,
 } from '@/config/theme';
 
-interface ResearchViewSelectorProps<T> {
+export interface ResearchViewSelectorProps<T> {
     viewTypes: ViewType<T>[];
     currentViewType: string;
     onViewTypeChange: (value: string) => void;

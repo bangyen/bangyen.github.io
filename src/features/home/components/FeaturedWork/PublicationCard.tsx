@@ -17,7 +17,7 @@ export interface Publication {
     description: string;
 }
 
-interface PublicationCardProps {
+export interface PublicationCardProps {
     publication: Publication;
 }
 

@@ -7,7 +7,7 @@ import { FORWARD, BACKWARD } from '../types';
 
 import { ANIMATIONS, SPACING } from '@/config/theme';
 
-interface GhostCellProps {
+export interface GhostCellProps {
     value: CellState;
     color: string;
 }

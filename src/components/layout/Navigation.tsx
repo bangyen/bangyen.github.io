@@ -11,7 +11,7 @@ import {
     ANIMATIONS,
 } from '@/config/theme';
 
-interface NavigationProps {
+export interface NavigationProps {
     children: ReactNode;
     sx?: SxProps<Theme>;
     opacity?: number;

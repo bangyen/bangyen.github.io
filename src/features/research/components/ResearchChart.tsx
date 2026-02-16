@@ -16,7 +16,7 @@ import type { ChartConfig } from '../types';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';
 
-interface ResearchChartProps<T> {
+export interface ResearchChartProps<T> {
     currentData: T[];
     currentChartConfig: ChartConfig;
     loading: boolean;

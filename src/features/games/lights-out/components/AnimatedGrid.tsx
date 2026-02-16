@@ -6,7 +6,7 @@ import {
     getInputIconFrames,
 } from '../utils/animationFrames';
 
-interface GridWithKeyframesProps {
+export interface GridWithKeyframesProps {
     boardStates: number[][];
     inputStates: number[][];
     dims: number;

@@ -14,7 +14,7 @@ import { Psychology } from '@/components/icons';
 import { COLORS } from '@/config/theme';
 import { useMobile } from '@/hooks';
 
-interface SlantInfoProps {
+export interface SlantInfoProps {
     open: boolean;
     toggleOpen: () => void;
     handleOpenCalculator: () => void;

@@ -8,7 +8,7 @@ import {
     getSpace,
 } from '@/config/theme';
 
-interface CellProps {
+export interface CellProps {
     size: number;
     children?: React.ReactNode;
     backgroundColor?: string;
@@ -81,7 +81,7 @@ interface CellOptions {
     [key: string]: unknown;
 }
 
-interface RowProps {
+export interface RowProps {
     cols: number;
     size: number;
     index: number;
@@ -116,7 +116,7 @@ const Row = memo(function Row({
     );
 });
 
-interface CustomGridProps {
+export interface CustomGridProps {
     size: number;
     rows: number;
     cols: number;

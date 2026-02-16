@@ -7,7 +7,7 @@ import { GlobalHeader } from './GlobalHeader';
 import { COLORS } from '@/config/theme';
 import { toSxArray } from '@/utils/muiUtils';
 
-interface PageLayoutProps {
+export interface PageLayoutProps {
     children: React.ReactNode;
     /** When provided, sets document.title so every page manages its title
      *  through the layout rather than ad-hoc useEffect calls. */

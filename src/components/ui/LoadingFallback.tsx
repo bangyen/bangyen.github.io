@@ -3,7 +3,7 @@ import React from 'react';
 
 import { COLORS } from '@/config/theme';
 
-interface LoadingFallbackProps {
+export interface LoadingFallbackProps {
     /** Text displayed while loading. */
     message?: string;
     /** Height of the container — accepts any CSS value or a number (px). */

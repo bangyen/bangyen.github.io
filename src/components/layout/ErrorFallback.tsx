@@ -11,7 +11,7 @@ import {
     COMPONENT_VARIANTS,
 } from '@/config/theme';
 
-interface ErrorFallbackProps {
+export interface ErrorFallbackProps {
     error: Error | null;
     errorInfo: React.ErrorInfo | null;
     onReload: () => void;

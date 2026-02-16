@@ -3,7 +3,7 @@ import React from 'react';
 
 type IconComponent = React.ElementType;
 
-interface TooltipButtonProps {
+export interface TooltipButtonProps {
     Icon: IconComponent;
     title: string;
     size?: 'small' | 'medium' | 'large' | 'inherit';
