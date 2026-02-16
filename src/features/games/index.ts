@@ -1,8 +1,3 @@
-// Games feature exports
+// Games feature public API -- only page components are consumed externally.
 export { LightsOut } from './lights-out/pages/LightsOut';
 export { Slant } from './slant/pages/Slant';
-
-export * from './components';
-export * from './hooks';
-export * from './types';
-export * from './config/constants';

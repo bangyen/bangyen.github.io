@@ -1,0 +1,33 @@
+---
+description: Convention for using useMobile() vs isMobile prop in React components
+globs: src/**/*.tsx,src/**/*.ts
+alwaysApply: false
+---
+
+# `isMobile` Convention
+
+## When to call `useMobile()` internally
+
+**Leaf components** that only need responsive behaviour for their own
+rendering should call `useMobile()` (or `useMobile('sm')`) directly.
+This keeps their API simpler and avoids threading a prop that the parent
+doesn't otherwise need.
+
+Examples: `Info`, `SlantInfo`, `GhostCanvas`, `Example`.
+
+## When to accept `isMobile` as a prop
+
+**Coordinating parents** that call `useMobile()` once and distribute
+the value to several children should pass it as a prop.  This avoids
+redundant `useMediaQuery` subscriptions and keeps all children in sync
+within the same render frame.
+
+Examples: `ResearchDemo` passes `isMobile` to both `ResearchHeader` and
+`ResearchChart`.
+
+## Rule of thumb
+
+- One consumer in the subtree -> call `useMobile()` internally.
+- Two or more siblings need the value -> parent calls it and passes down.
+- Never mix: if a parent passes `isMobile`, the child must NOT also call
+  `useMobile()`.

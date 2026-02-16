@@ -5,8 +5,6 @@ import React from 'react';
 import { TrophyOverlay, type TrophyOverlayProps } from './TrophyOverlay';
 import { BOARD_STYLES } from '../config/constants';
 
-import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
-import { FeatureErrorFallback } from '@/components/layout/FeatureErrorFallback';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { COLORS } from '@/config/theme';
 import { toSxArray } from '@/utils/muiUtils';
@@ -27,8 +25,9 @@ interface GamePageLayoutProps {
 
 /**
  * Standard layout wrapper for all game pages. Provides sensible defaults
- * for board padding, text selection, trophy colors, and error handling so
- * individual game pages only need to specify what differs.
+ * for board padding, text selection, and trophy colors so individual game
+ * pages only need to specify what differs.  Error handling is provided by
+ * the route-level `FeatureErrorLayout` wrapper.
  */
 export function GamePageLayout({
     children,
@@ -43,67 +42,62 @@ export function GamePageLayout({
     onClick,
 }: GamePageLayoutProps) {
     return (
-        <ErrorBoundary
-            FallbackComponent={FeatureErrorFallback}
-            fallbackProps={{ title: 'Game Error', resetLabel: 'Reset Game' }}
+        <PageLayout
+            title={title}
+            infoUrl={infoUrl}
+            background={background}
+            containerSx={{
+                height: '100vh',
+                transition: 'background 0.5s ease-in-out',
+                cursor: onClick ? 'pointer' : 'inherit',
+            }}
+            sx={{
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+            onClick={onClick}
         >
-            <PageLayout
-                title={title}
-                infoUrl={infoUrl}
-                background={background}
-                containerSx={{
-                    height: '100vh',
-                    transition: 'background 0.5s ease-in-out',
-                    cursor: onClick ? 'pointer' : 'inherit',
-                }}
-                sx={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                }}
-                onClick={onClick}
+            <Box
+                sx={
+                    [
+                        {
+                            flex: 1,
+                            position: 'relative',
+                            width: '100%',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            overflow: 'hidden',
+                            pb: paddingBottom,
+                        },
+                        ...toSxArray(contentSx),
+                    ] as SxProps<Theme>
+                }
             >
                 <Box
                     sx={
                         [
                             {
-                                flex: 1,
                                 position: 'relative',
-                                width: '100%',
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                overflow: 'hidden',
-                                pb: paddingBottom,
+                                width: 'fit-content',
+                                userSelect: 'none',
+                                padding: {
+                                    xs: BOARD_STYLES.PADDING.MOBILE,
+                                    sm: BOARD_STYLES.PADDING.DESKTOP,
+                                },
+                                borderRadius: BOARD_STYLES.BORDER_RADIUS,
+                                border: BOARD_STYLES.BORDER,
                             },
-                            ...toSxArray(contentSx),
+                            ...toSxArray(boardSx),
                         ] as SxProps<Theme>
                     }
                 >
-                    <Box
-                        sx={
-                            [
-                                {
-                                    position: 'relative',
-                                    width: 'fit-content',
-                                    userSelect: 'none',
-                                    padding: {
-                                        xs: BOARD_STYLES.PADDING.MOBILE,
-                                        sm: BOARD_STYLES.PADDING.DESKTOP,
-                                    },
-                                    borderRadius: BOARD_STYLES.BORDER_RADIUS,
-                                    border: BOARD_STYLES.BORDER,
-                                },
-                                ...toSxArray(boardSx),
-                            ] as SxProps<Theme>
-                        }
-                    >
-                        {children}
-                        <TrophyOverlay {...trophyProps} />
-                    </Box>
+                    {children}
+                    <TrophyOverlay {...trophyProps} />
                 </Box>
-                {controls}
-            </PageLayout>
-        </ErrorBoundary>
+            </Box>
+            {controls}
+        </PageLayout>
     );
 }
