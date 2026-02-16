@@ -48,7 +48,7 @@ interface InfoProps {
  * Step 0: rule explanations, Step 1: example, Step 2: calculator.
  * Calculator state is hoisted here so it persists when switching steps.
  */
-export function Info(props: InfoProps): React.ReactElement {
+export function Info(props: InfoProps): React.ReactElement | null {
     const {
         rows,
         cols,
@@ -60,6 +60,7 @@ export function Info(props: InfoProps): React.ReactElement {
         getFrontProps,
         getBackProps,
     } = props;
+
     const isMobile = useMobile('md');
     const isMobileSm = useMobile('sm');
 
@@ -104,6 +105,8 @@ export function Info(props: InfoProps): React.ReactElement {
 
     // The example is always 3×3; use smaller cells on mobile.
     const exampleSize = isMobileSm ? 3 : 4;
+
+    if (!open) return null;
 
     return (
         <GameInfo
