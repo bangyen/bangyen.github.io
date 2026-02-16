@@ -115,7 +115,9 @@ function ResearchChartInner<T>({
                                 itemStyle={tooltipItemStyle}
                                 labelStyle={tooltipLabelStyle}
                                 labelFormatter={
-                                    currentChartConfig.tooltipLabelFormatter
+                                    currentChartConfig.tooltipLabelFormatter as (
+                                        label: unknown,
+                                    ) => string
                                 }
                                 formatter={(
                                     value: number | undefined,

@@ -12,8 +12,9 @@ vi.mock('@/hooks/useTheme', () => ({
 
 describe('ThemeToggle', () => {
     it('should show dark mode icon and correct title in light mode', () => {
-        (useThemeContext as any).mockReturnValue({
+        vi.mocked(useThemeContext).mockReturnValue({
             mode: 'light',
+            resolvedMode: 'light',
             toggleTheme: vi.fn(),
         });
 
@@ -23,8 +24,9 @@ describe('ThemeToggle', () => {
     });
 
     it('should show system theme icon and correct title in dark mode', () => {
-        (useThemeContext as any).mockReturnValue({
+        vi.mocked(useThemeContext).mockReturnValue({
             mode: 'dark',
+            resolvedMode: 'dark',
             toggleTheme: vi.fn(),
         });
 
@@ -34,8 +36,9 @@ describe('ThemeToggle', () => {
     });
 
     it('should show light mode icon and correct title in system mode', () => {
-        (useThemeContext as any).mockReturnValue({
+        vi.mocked(useThemeContext).mockReturnValue({
             mode: 'system',
+            resolvedMode: 'light',
             toggleTheme: vi.fn(),
         });
 
@@ -46,8 +49,9 @@ describe('ThemeToggle', () => {
 
     it('should call toggleTheme on click', () => {
         const toggleTheme = vi.fn();
-        (useThemeContext as any).mockReturnValue({
+        vi.mocked(useThemeContext).mockReturnValue({
             mode: 'light',
+            resolvedMode: 'light',
             toggleTheme,
         });
 

@@ -8,6 +8,7 @@ import {
     GRID_CONFIG,
     getSpace,
 } from '@/config/theme';
+import { spreadSx } from '@/utils/muiUtils';
 
 /** Known styling props extracted by `Cell`; additional DOM attributes are forwarded. */
 interface CellKnownProps {
@@ -72,7 +73,7 @@ const Cell = memo(function Cell({ size, children, ...rest }: CellProps) {
                 border,
                 opacity,
                 transition,
-                ...(sx as Record<string, unknown> | undefined),
+                ...spreadSx(sx),
             }}
         >
             {children}
@@ -155,7 +156,7 @@ export const CustomGrid = memo(function CustomGrid({
                 flexDirection: 'column',
                 alignItems: 'center',
                 gap: rem,
-                ...(sx as Record<string, unknown> | undefined),
+                ...spreadSx(sx),
             }}
             {...rest}
         >

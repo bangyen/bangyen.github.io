@@ -16,12 +16,12 @@ describe('renderers', () => {
                 .fn()
                 .mockReturnValue({ 'data-testid': 'drag' });
             const factory = getFrontProps(getDragProps, mockGetters);
-            const props = factory(0, 0) as any;
+            const props = factory(0, 0) as Record<string, unknown>;
 
             expect(props['data-testid']).toBe('drag');
-            expect(props.backgroundColor).toBe('red');
-            expect(props.color).toBe('red');
-            expect(props.style).toEqual({ border: '1px solid black' });
+            expect(props['backgroundColor']).toBe('red');
+            expect(props['color']).toBe('red');
+            expect(props['style']).toEqual({ border: '1px solid black' });
             expect(props['aria-label']).toBe('Cell at row 1, column 1');
             expect(getDragProps).toHaveBeenCalledWith('0,0');
         });

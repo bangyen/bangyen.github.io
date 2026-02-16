@@ -178,7 +178,7 @@ vi.mock('@/hooks/useTheme', () => ({
 }));
 
 describe('LightsOut', () => {
-    let mockHandleBoard: any;
+    let mockHandleBoard: Mock<typeof boardHandlers.handleBoard>;
 
     beforeEach(() => {
         mockHandleBoard = boardHandlers.handleBoard as Mock;
@@ -186,21 +186,19 @@ describe('LightsOut', () => {
         vi.clearAllMocks();
         vi.useFakeTimers();
 
-        mockHandleBoard.mockImplementation(
-            (state: BoardState, action: BoardAction) => {
-                if (
-                    action.type === 'resize' &&
-                    action.newRows &&
-                    action.newCols
-                )
-                    return {
-                        ...state,
-                        rows: action.newRows,
-                        cols: action.newCols,
-                    };
-                return state;
-            },
-        );
+        mockHandleBoard.mockImplementation((state, action) => {
+            if (
+                action.type === 'resize' &&
+                'newRows' in action &&
+                'newCols' in action
+            )
+                return {
+                    ...state,
+                    rows: action.newRows,
+                    cols: action.newCols,
+                } as BoardState;
+            return state;
+        });
     });
 
     afterEach(() => {

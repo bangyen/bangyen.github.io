@@ -51,6 +51,7 @@ export function SlantLoadingSkeleton({
                 overlayProps={skeletonFront}
                 cellProps={skeletonBack}
                 overlayLayerSx={{ pointerEvents: 'none' }}
+                overlayDecorative
             />
         </Box>
     );

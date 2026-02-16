@@ -233,6 +233,7 @@ export function Example({ size }: ExampleProps): React.ReactElement {
                     overlayProps={frontProps}
                     cellProps={backProps}
                     overlayLayerSx={{ pointerEvents: 'none' }}
+                    overlayDecorative
                 />
                 <TrophyOverlay
                     show={isSolved}

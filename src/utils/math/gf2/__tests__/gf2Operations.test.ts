@@ -121,23 +121,23 @@ describe('gf2Operations', () => {
 
     describe('defensive checks and edge cases', () => {
         it('addSym handles undefined rows', () => {
-            const A = [1n, undefined as any];
+            const A = [1n, undefined as unknown as bigint];
             const B = [1n, 1n];
             expect(gf2.addSym(A, B)).toEqual([0n]);
         });
 
         it('multiplySym handles undefined rows', () => {
-            const A = [1n, undefined as any];
+            const A = [1n, undefined as unknown as bigint];
             const B = [1n, 1n];
             expect(gf2.multiplySym(A, B)).toEqual([1n, 0n]);
 
             const A2 = [1n];
-            const B2 = [undefined as any];
+            const B2 = [undefined as unknown as bigint];
             expect(gf2.multiplySym(A2, B2)).toEqual([0n]);
         });
 
         it('sortMatrices handles undefined rows', () => {
-            const A = [undefined as any, 1n];
+            const A = [undefined as unknown as bigint, 1n];
             const I = [1n, 0n];
             const [outA, outI] = gf2.sortMatrices(A, I);
             expect(outA).toEqual([0n, 1n]);

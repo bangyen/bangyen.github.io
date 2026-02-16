@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useLoaderData } from 'react-router-dom';
 
 import { ResearchDemo } from '../components';
@@ -12,7 +12,7 @@ import {
 
 import { URLS, PAGE_TITLES } from '@/config/constants';
 
-export const Oligopoly: React.FC = () => {
+export function Oligopoly() {
     const matrixData = useLoaderData<MatrixItem[]>();
 
     const [numFirms, setNumFirms] = useState(
@@ -79,4 +79,4 @@ export const Oligopoly: React.FC = () => {
             resetLabel="Reset"
         />
     );
-};
+}

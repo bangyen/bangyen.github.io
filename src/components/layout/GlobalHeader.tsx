@@ -1,5 +1,4 @@
 import { Box } from '@mui/material';
-import React from 'react';
 
 import {
     getHeaderSx,
@@ -20,12 +19,12 @@ export interface GlobalHeaderProps {
     infoUrl?: string;
     transparent?: boolean;
 }
-export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
+export function GlobalHeader({
     showHome = false,
     githubUrl = URLS.githubProfile,
     infoUrl,
     transparent = true,
-}) => {
+}: GlobalHeaderProps) {
     return (
         <Box
             component="header"
@@ -72,4 +71,4 @@ export const GlobalHeader: React.FC<GlobalHeaderProps> = ({
             </Box>
         </Box>
     );
-};
+}
