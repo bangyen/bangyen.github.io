@@ -10,11 +10,16 @@ import { renderWithDataRouter } from '@/utils/test-utils';
 vi.mock('../../components/ResearchDemo', () => ({
     ResearchDemo: ({
         title,
-        chartData,
-        viewTypes,
-        currentViewType,
-        onViewTypeChange,
+        chart = {},
+        view = {},
     }: ResearchDemoProps<unknown>) => {
+        const { data: chartData } = chart;
+        const {
+            types: viewTypes,
+            current: currentViewType,
+            onChange: onViewTypeChange,
+        } = view;
+
         if (chartData && chartData.length > 0 && viewTypes) {
             viewTypes.forEach((vt: ViewType<unknown>) => {
                 vt.dataProcessor(chartData);

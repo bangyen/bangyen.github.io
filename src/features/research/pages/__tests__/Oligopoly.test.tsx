@@ -11,11 +11,11 @@ vi.mock('../../components/ResearchDemo', () => ({
     ResearchDemo: ({
         title,
         pageTitle,
-        chartData = [],
-        chartConfig,
+        chart = {},
         controls = [],
         onReset,
     }: ResearchDemoProps<unknown>) => {
+        const { data: chartData = [], config: chartConfig } = chart;
         if (pageTitle) document.title = pageTitle;
         if (chartConfig) {
             chartConfig.yAxisFormatter(0);

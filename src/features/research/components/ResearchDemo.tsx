@@ -24,20 +24,28 @@ export const ResearchDemo = <T,>({
     pageTitle,
     subtitle,
     githubUrl,
-    chartData = [],
-    chartConfig = DEFAULT_CHART_CONFIG,
-    viewTypes = [],
-    currentViewType = 'default',
-    onViewTypeChange = () => {},
+    chart = {},
+    view = {},
     controls = [],
-    loading = false,
-    loadingMessage = 'Loading data...',
     onReset,
     resetLabel = 'Reset',
-    chartTitle = null,
     children,
     backUrl,
 }: ResearchDemoProps<T>) => {
+    const {
+        data: chartData = [],
+        config: chartConfig = DEFAULT_CHART_CONFIG,
+        title: chartTitle = null,
+        loading = false,
+        loadingMessage = 'Loading data...',
+    } = chart;
+
+    const {
+        types: viewTypes = [],
+        current: currentViewType = 'default',
+        onChange: onViewTypeChange = () => {},
+    } = view;
+
     const {
         data: currentData,
         chartConfig: currentChartConfig,

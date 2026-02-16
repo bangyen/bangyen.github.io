@@ -10,11 +10,22 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 
+import {
+    chartCardSx,
+    chartTitleSx,
+    chartContainerSx,
+    loadingBoxSx,
+    axisTickStyle,
+    xAxisLineStyle,
+    tooltipContentStyle,
+    tooltipItemStyle,
+    tooltipLabelStyle,
+} from './ResearchChart.styles';
 import { CHART_DIMENSIONS, CHART_FORMATTING } from '../config';
 import type { ChartConfig } from '../types';
 
 import { GlassCard } from '@/components/ui/GlassCard';
-import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';
+import { COLORS } from '@/config/theme';
 
 export interface ResearchChartProps<T> {
     currentData: T[];
@@ -40,43 +51,13 @@ function ResearchChartInner<T>({
     isMobile,
 }: ResearchChartProps<T>) {
     return (
-        <GlassCard
-            sx={{
-                marginBottom: 3,
-                width: '100%',
-                boxSizing: 'border-box',
-                overflow: 'hidden',
-            }}
-        >
-            <Typography
-                variant="subtitle1"
-                sx={{
-                    color: COLORS.text.secondary,
-                    marginBottom: 2,
-                    textAlign: 'center',
-                    fontWeight: TYPOGRAPHY.fontWeight.medium,
-                    fontSize: TYPOGRAPHY.fontSize.subheading,
-                }}
-            >
+        <GlassCard sx={chartCardSx}>
+            <Typography variant="subtitle1" sx={chartTitleSx}>
                 {chartTitle}
             </Typography>
-            <Box
-                sx={{
-                    height: CHART_DIMENSIONS.height,
-                    width: '100%',
-                    position: 'relative',
-                }}
-            >
+            <Box sx={chartContainerSx}>
                 {loading ? (
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            height: '100%',
-                            color: COLORS.text.secondary,
-                        }}
-                    >
+                    <Box sx={loadingBoxSx}>
                         <Typography>{loadingMessage}</Typography>
                     </Box>
                 ) : (
@@ -98,23 +79,15 @@ function ResearchChartInner<T>({
                             <XAxis
                                 dataKey={currentChartConfig.xAxisKey}
                                 stroke={COLORS.text.secondary}
-                                tick={{
-                                    fill: COLORS.text.secondary,
-                                    fontSize: 10,
-                                }}
-                                axisLine={{
-                                    stroke: COLORS.border.subtle,
-                                }}
+                                tick={axisTickStyle}
+                                axisLine={xAxisLineStyle}
                                 tickLine={false}
                             />
                             <YAxis
                                 yAxisId="left"
                                 hide={isMobile}
                                 stroke={COLORS.text.secondary}
-                                tick={{
-                                    fill: COLORS.text.secondary,
-                                    fontSize: 10,
-                                }}
+                                tick={axisTickStyle}
                                 axisLine={false}
                                 tickLine={false}
                                 tickFormatter={
@@ -128,10 +101,7 @@ function ResearchChartInner<T>({
                                     orientation="right"
                                     hide={isMobile}
                                     stroke={COLORS.text.secondary}
-                                    tick={{
-                                        fill: COLORS.text.secondary,
-                                        fontSize: 10,
-                                    }}
+                                    tick={axisTickStyle}
                                     axisLine={false}
                                     tickLine={false}
                                     tickFormatter={
@@ -141,23 +111,9 @@ function ResearchChartInner<T>({
                                 />
                             )}
                             <RechartsTooltip
-                                contentStyle={{
-                                    backgroundColor: COLORS.surface.glass,
-                                    backdropFilter: 'blur(8px) saturate(180%)',
-                                    border: `1px solid ${COLORS.border.subtle}`,
-                                    borderRadius: SPACING.borderRadius.md,
-                                    color: COLORS.text.primary,
-                                    boxShadow: 'none',
-                                }}
-                                itemStyle={{
-                                    fontSize: '12px',
-                                    padding: '2px 0',
-                                }}
-                                labelStyle={{
-                                    fontWeight: 'bold',
-                                    marginBottom: '4px',
-                                    color: COLORS.text.primary,
-                                }}
+                                contentStyle={tooltipContentStyle}
+                                itemStyle={tooltipItemStyle}
+                                labelStyle={tooltipLabelStyle}
                                 labelFormatter={
                                     currentChartConfig.tooltipLabelFormatter
                                 }

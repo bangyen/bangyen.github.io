@@ -56,23 +56,35 @@ export interface Control {
     options: ControlOption[];
 }
 
+/** Chart-related props grouped for `ResearchDemo`. */
+export interface ResearchDemoChartProps<T> {
+    data?: T[];
+    config?: ChartConfig;
+    title?: string | null;
+    loading?: boolean;
+    loadingMessage?: string;
+}
+
+/** View-selector props grouped for `ResearchDemo`. */
+export interface ResearchDemoViewProps<T> {
+    types?: ViewType<T>[];
+    current?: string;
+    onChange?: (value: string) => void;
+}
+
 export interface ResearchDemoProps<T> {
     title: string;
     /** Document title set via PageLayout. Falls back to `title` if omitted. */
     pageTitle?: string;
     subtitle: string;
     githubUrl: string;
-    chartData?: T[];
-    chartConfig?: ChartConfig;
-    viewTypes?: ViewType<T>[];
-    currentViewType?: string;
-    onViewTypeChange?: (value: string) => void;
+    /** Chart data, configuration, and loading state. */
+    chart?: ResearchDemoChartProps<T>;
+    /** View-type selector configuration. */
+    view?: ResearchDemoViewProps<T>;
     controls?: Control[];
-    loading?: boolean;
-    loadingMessage?: string;
     onReset?: () => void;
     resetLabel?: string;
-    chartTitle?: string | null;
     children?: React.ReactNode;
     backUrl?: string;
 }

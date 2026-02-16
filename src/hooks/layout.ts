@@ -1,4 +1,5 @@
 import { useMediaQuery } from '@mui/material';
+import type { Breakpoint, Theme } from '@mui/material/styles';
 import { useState, useEffect } from 'react';
 
 /**
@@ -56,11 +57,6 @@ export function useWindow(): Size {
  * @param size - MUI breakpoint size (e.g., 'sm', 'md', 'lg')
  * @returns True if viewport is below the specified breakpoint
  */
-export function useMobile(size: string): boolean {
-    return useMediaQuery((theme: unknown) => {
-        const muiTheme = theme as {
-            breakpoints: { down: (size: string) => string };
-        };
-        return muiTheme.breakpoints.down(size);
-    });
+export function useMobile(size: Breakpoint): boolean {
+    return useMediaQuery((theme: Theme) => theme.breakpoints.down(size));
 }
