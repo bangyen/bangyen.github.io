@@ -12,6 +12,7 @@ import {
 import { useHandler, usePalette } from '../hooks/boardUtils';
 import type { BoardState, BoardAction } from '../types';
 import { handleBoard, isSolved, getInitialState } from '../utils/boardHandlers';
+import { isBoardState } from '../utils/persistence';
 import {
     getFrontProps,
     getBackProps,
@@ -43,6 +44,14 @@ export function useLightsOutGame() {
             reducer: handleBoard,
             getInitialState,
             isSolved: (s: BoardState) => s.initialized && isSolved(s.grid),
+            persistence: {
+                deserialize: (saved: unknown) => {
+                    if (!isBoardState(saved)) {
+                        throw new Error('Corrupt Lights Out state');
+                    }
+                    return saved;
+                },
+            },
         },
     });
 

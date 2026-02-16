@@ -1,53 +1,14 @@
 import type { ReactNode } from 'react';
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext } from 'react';
 
-import { useLocalStorage } from './useLocalStorage';
+import type { ThemePreference } from './useThemePreference';
+import { useThemePreference } from './useThemePreference';
 
-/**
- * Theme mode setting - can be explicitly set or follow system preference.
- * - 'light': Force light theme
- * - 'dark': Force dark theme
- * - 'system': Follow OS/browser preference
- */
-type ThemeMode = 'light' | 'dark' | 'system';
+const ThemeContext = createContext<ThemePreference | undefined>(undefined);
 
 /**
- * Resolved theme mode after system preference is applied.
- * Always resolves to either 'light' or 'dark'.
- */
-type ResolvedThemeMode = 'light' | 'dark';
-
-/**
- * Context value provided by ThemeProvider.
- */
-interface ThemeContextType {
-    /** Current theme mode setting (may be 'system') */
-    mode: ThemeMode;
-    /** Actual resolved theme ('light' or 'dark') */
-    resolvedMode: ResolvedThemeMode;
-    /** Cycles through light → dark → system → light */
-    toggleTheme: () => void;
-}
-
-const THEME_SERIALIZE = (v: ThemeMode): string => v;
-
-const THEME_DESERIALIZE = (raw: string): ThemeMode | undefined => {
-    if (raw === 'light' || raw === 'dark' || raw === 'system') return raw;
-    return undefined;
-};
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-/**
- * Provides theme context to the application.
- *
- * Features:
- * - Persists theme preference to localStorage via `useLocalStorage`
- * - Supports system preference detection via `prefers-color-scheme`
- * - Updates `data-theme` attribute on document root for CSS styling
- * - Automatically responds to system theme changes when mode is 'system'
- *
- * @param children - React children to wrap with theme context
+ * Provides theme context to the application by delegating to
+ * `useThemePreference` and distributing the result via Context.
  *
  * @example
  * ```tsx
@@ -57,59 +18,10 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
  * ```
  */
 export function ThemeProvider({ children }: { children: ReactNode }) {
-    const [mode, setMode] = useLocalStorage<ThemeMode>('theme-mode', 'system', {
-        serialize: THEME_SERIALIZE,
-        deserialize: THEME_DESERIALIZE,
-    });
-
-    const [resolvedMode, setResolvedMode] = useState<ResolvedThemeMode>(() => {
-        if (mode !== 'system') return mode;
-        return globalThis.matchMedia('(prefers-color-scheme: dark)').matches
-            ? 'dark'
-            : 'light';
-    });
-
-    // Effect to determine resolvedMode based on mode and system preference
-    useEffect(() => {
-        const handleSystemChange = (
-            e: MediaQueryListEvent | MediaQueryList,
-        ) => {
-            if (mode === 'system') {
-                setResolvedMode(e.matches ? 'dark' : 'light');
-            }
-        };
-
-        const mediaQuery = globalThis.matchMedia(
-            '(prefers-color-scheme: dark)',
-        );
-
-        if (mode === 'system') {
-            handleSystemChange(mediaQuery); // Set initial value
-            mediaQuery.addEventListener('change', handleSystemChange);
-        } else {
-            setResolvedMode(mode);
-        }
-
-        return () => {
-            mediaQuery.removeEventListener('change', handleSystemChange);
-        };
-    }, [mode]);
-
-    // Update data-theme attribute when resolved theme changes
-    useEffect(() => {
-        document.documentElement.dataset['theme'] = resolvedMode;
-    }, [resolvedMode]);
-
-    const toggleTheme = () => {
-        setMode(prev => {
-            if (prev === 'light') return 'dark';
-            if (prev === 'dark') return 'system';
-            return 'light';
-        });
-    };
+    const preference = useThemePreference();
 
     return (
-        <ThemeContext.Provider value={{ mode, resolvedMode, toggleTheme }}>
+        <ThemeContext.Provider value={preference}>
             {children}
         </ThemeContext.Provider>
     );

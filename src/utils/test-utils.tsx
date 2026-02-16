@@ -7,7 +7,11 @@ import {
     type RenderResult,
 } from '@testing-library/react';
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import {
+    createMemoryRouter,
+    RouterProvider,
+    type RouteObject,
+} from 'react-router-dom';
 import { vi, type Mock } from 'vitest';
 
 /**
@@ -31,16 +35,28 @@ interface TestWrapperProps {
 }
 
 /**
- * Test wrapper component that provides necessary providers
+ * Test wrapper component that provides necessary providers.
+ * Uses a data router (createMemoryRouter) so components calling
+ * `useLoaderData`, `useRouteError`, etc. work correctly in tests.
  */
 export const TestWrapper: React.FC<TestWrapperProps> = ({
     children,
     theme = createTestTheme(),
-}) => (
-    <BrowserRouter>
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
-    </BrowserRouter>
-);
+}) => {
+    const router = React.useMemo(
+        () =>
+            createMemoryRouter([{ path: '/', element: children }], {
+                initialEntries: ['/'],
+            }),
+        [children],
+    );
+
+    return (
+        <ThemeProvider theme={theme}>
+            <RouterProvider router={router} />
+        </ThemeProvider>
+    );
+};
 
 interface RenderWithProvidersOptions extends Omit<RenderOptions, 'wrapper'> {
     theme?: Theme;
@@ -60,6 +76,48 @@ export const renderWithProviders = (
     );
 
     return render(ui, { wrapper: Wrapper, ...renderOptions });
+};
+
+interface RenderWithDataRouterOptions extends Omit<RenderOptions, 'wrapper'> {
+    theme?: Theme;
+    /** Loader data returned by `useLoaderData()` inside the component. */
+    loaderData?: unknown;
+    /** Initial URL entries for the memory router. */
+    initialEntries?: string[];
+    /** Additional route objects (e.g. siblings, layout routes). */
+    routes?: RouteObject[];
+}
+
+/**
+ * Renders a component inside a `createMemoryRouter` so hooks like
+ * `useLoaderData`, `useRouteError`, `useNavigate`, etc. work.
+ */
+export const renderWithDataRouter = (
+    ui: React.ReactElement,
+    {
+        theme = createTestTheme(),
+        loaderData,
+        initialEntries = ['/'],
+        routes: extraRoutes = [],
+        ...renderOptions
+    }: RenderWithDataRouterOptions = {},
+): RenderResult => {
+    const mainRoute: RouteObject = {
+        path: '/',
+        element: ui,
+        ...(loaderData === undefined ? {} : { loader: () => loaderData }),
+    };
+
+    const router = createMemoryRouter([mainRoute, ...extraRoutes], {
+        initialEntries,
+    });
+
+    return render(
+        <ThemeProvider theme={theme}>
+            <RouterProvider router={router} />
+        </ThemeProvider>,
+        renderOptions,
+    );
 };
 
 /**

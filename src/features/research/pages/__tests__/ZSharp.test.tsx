@@ -1,19 +1,12 @@
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import {
-    render,
-    screen,
-    fireEvent,
-    act,
-    waitFor,
-} from '@testing-library/react';
+import { screen, fireEvent, act, waitFor } from '@testing-library/react';
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import { vi, type Mock } from 'vitest';
+import { vi } from 'vitest';
 
 import type { ResearchDemoProps, ViewType } from '../../types';
 import { ZSharp } from '../ZSharp';
 
-// Mocks
+import { renderWithDataRouter } from '@/utils/test-utils';
+
 vi.mock('../../components/ResearchDemo', () => ({
     ResearchDemo: ({
         title,
@@ -21,9 +14,7 @@ vi.mock('../../components/ResearchDemo', () => ({
         viewTypes,
         currentViewType,
         onViewTypeChange,
-        loading,
     }: ResearchDemoProps<unknown>) => {
-        // Exercise data processors and formatters for coverage
         if (chartData && chartData.length > 0 && viewTypes) {
             viewTypes.forEach((vt: ViewType<unknown>) => {
                 vt.dataProcessor(chartData);
@@ -36,7 +27,6 @@ vi.mock('../../components/ResearchDemo', () => ({
         return (
             <div data-testid="research-demo">
                 <h1>{title}</h1>
-                {loading && <div data-testid="loading">Loading...</div>}
                 <div data-testid="chart-data-count">
                     {chartData ? chartData.length : 0}
                 </div>
@@ -57,125 +47,34 @@ vi.mock('../../components/ResearchDemo', () => ({
     },
 }));
 
-// Mock DecompressionStream and ReadableStream
-class MockDecompressionStream {
-    writable = {
-        getWriter: () => ({
-            write: vi.fn().mockResolvedValue(undefined),
-            close: vi.fn().mockResolvedValue(undefined),
-        }),
-    };
-    readable = {
-        getReader: () => ({
-            read: vi
-                .fn()
-                .mockResolvedValueOnce({
-                    done: false,
-                    value: new TextEncoder().encode(
-                        JSON.stringify({
-                            'SGD Baseline': {
-                                train_accuracies: [80, 85],
-                                train_losses: [0.5, 0.4],
-                            },
-                            ZSharp: {
-                                train_accuracies: [82, 87],
-                                train_losses: [0.45, 0.35],
-                            },
-                        }),
-                    ),
-                })
-                .mockResolvedValueOnce({ done: true }),
-        }),
-    };
-}
-
-const originalResponse = (
-    globalThis as unknown as { Response: typeof Response }
-).Response;
-
-Object.defineProperty(globalThis, 'DecompressionStream', {
-    value: MockDecompressionStream,
-    writable: true,
-});
-
-Object.defineProperty(globalThis, 'Response', {
-    value: class extends originalResponse {
-        override async text() {
-            const self = this as unknown as { _data: unknown };
-            if (self._data instanceof ReadableStream) {
-                return JSON.stringify({
-                    'SGD Baseline': {
-                        train_accuracies: [80, 85],
-                        train_losses: [0.5, 0.4],
-                    },
-                    ZSharp: {
-                        train_accuracies: [82, 87],
-                        train_losses: [0.45, 0.35],
-                    },
-                });
-            }
-            const proto = originalResponse.prototype as unknown as {
-                text?: () => Promise<string>;
-            };
-            return proto.text ? await proto.text.call(this) : '{}';
-        }
-    },
-    writable: true,
-});
+const MOCK_ZSHARP_DATA = [
+    { epoch: 1, sgd: 0.8, zsharp: 0.82, sgdLoss: 0.5, zsharpLoss: 0.45 },
+    { epoch: 2, sgd: 0.85, zsharp: 0.87, sgdLoss: 0.4, zsharpLoss: 0.35 },
+];
 
 describe('ZSharp Component', () => {
-    beforeEach(() => {
-        vi.clearAllMocks();
-        globalThis.fetch = vi.fn();
-    });
-
-    const renderZSharp = async () => {
-        let result: ReturnType<typeof render> | undefined;
+    const renderZSharp = async (loaderData: unknown = MOCK_ZSHARP_DATA) => {
+        let result: ReturnType<typeof renderWithDataRouter> | undefined;
         await act(async () => {
-            result = render(
-                <BrowserRouter>
-                    <ThemeProvider theme={createTheme()}>
-                        <ZSharp />
-                    </ThemeProvider>
-                </BrowserRouter>,
-            );
+            result = renderWithDataRouter(<ZSharp />, { loaderData });
             await Promise.resolve();
         });
         return result;
     };
 
-    test('renders correctly and loads data', async () => {
-        const validData = JSON.stringify({
-            'SGD Baseline': {
-                train_accuracies: [80, 85],
-                train_losses: [0.5, 0.4],
-            },
-            ZSharp: {
-                train_accuracies: [82, 87],
-                train_losses: [0.45, 0.35],
-            },
-        });
-
-        (globalThis.fetch as Mock).mockResolvedValue({
-            ok: true,
-            arrayBuffer: () =>
-                Promise.resolve(new TextEncoder().encode(validData).buffer),
-        });
-
+    test('renders correctly with loader data', async () => {
         await renderZSharp();
         expect(screen.getByText('ZSharp')).toBeInTheDocument();
 
         await waitFor(() => {
-            expect(
-                screen.getByTestId('chart-data-count'),
-            ).not.toHaveTextContent('0');
+            expect(screen.getByTestId('chart-data-count')).toHaveTextContent(
+                '2',
+            );
         });
     });
 
-    test('handles fetch failure gracefully with empty data', async () => {
-        (globalThis.fetch as Mock).mockRejectedValue(new Error('Fetch failed'));
-
-        await renderZSharp();
+    test('handles empty loader data gracefully', async () => {
+        await renderZSharp([]);
         await waitFor(() => {
             expect(screen.getByTestId('chart-data-count')).toHaveTextContent(
                 '0',
@@ -184,12 +83,6 @@ describe('ZSharp Component', () => {
     });
 
     test('handles view type changes', async () => {
-        (globalThis.fetch as Mock).mockResolvedValue({
-            ok: true,
-            arrayBuffer: () =>
-                Promise.resolve(new TextEncoder().encode('{}').buffer),
-        });
-
         await renderZSharp();
         await waitFor(() => {
             expect(screen.getByTestId('current-view')).toHaveTextContent(
