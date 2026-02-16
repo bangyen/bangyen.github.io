@@ -12,42 +12,42 @@
 import type { CssVarDefinition } from './cssVars';
 
 // ---------------------------------------------------------------------------
-// Slant ghost-mode variables
+// Slant analysis-mode variables
 // ---------------------------------------------------------------------------
 
-const SLANT_GHOST_CSS_VARS: readonly CssVarDefinition[] = [
+const SLANT_ANALYSIS_CSS_VARS: readonly CssVarDefinition[] = [
     {
-        name: '--slant-ghost-border',
+        name: '--slant-analysis-border',
         light: 'rgba(0, 0, 0, 0.1)',
         dark: 'rgba(255, 255, 255, 0.1)',
     },
     {
-        name: '--slant-ghost-bg-subtle',
+        name: '--slant-analysis-bg-subtle',
         light: 'rgba(0, 0, 0, 0.02)',
         dark: 'rgba(255, 255, 255, 0.02)',
     },
     {
-        name: '--slant-ghost-bg-hover',
+        name: '--slant-analysis-bg-hover',
         light: 'rgba(0, 0, 0, 0.05)',
         dark: 'rgba(255, 255, 255, 0.1)',
     },
     {
-        name: '--slant-ghost-dashed-border',
+        name: '--slant-analysis-dashed-border',
         light: 'rgba(0, 0, 0, 0.15)',
         dark: 'rgba(255, 255, 255, 0.2)',
     },
     {
-        name: '--slant-ghost-hint-bg',
+        name: '--slant-analysis-hint-bg',
         light: 'hsl(217, 30%, 94%)',
         dark: 'hsl(217, 50%, 8%)',
     },
     {
-        name: '--slant-ghost-hint-border',
+        name: '--slant-analysis-hint-border',
         light: 'rgba(0, 0, 0, 0.1)',
         dark: 'rgba(255, 255, 255, 0.3)',
     },
     {
-        name: '--slant-ghost-hint-text',
+        name: '--slant-analysis-hint-text',
         light: 'hsl(217, 91%, 30%)',
         dark: '#fff',
     },
@@ -147,5 +147,5 @@ const RESEARCH_CSS_VARS: readonly CssVarDefinition[] = [
 /** All feature-specific CSS variable definitions, consumed by `createAppTheme`. */
 export const FEATURE_CSS_VARS: readonly CssVarDefinition[] = [
     ...RESEARCH_CSS_VARS,
-    ...SLANT_GHOST_CSS_VARS,
+    ...SLANT_ANALYSIS_CSS_VARS,
 ];

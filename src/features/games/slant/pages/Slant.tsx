@@ -24,7 +24,9 @@ export function Slant() {
                 boardSx: layoutProps.boardSx,
             }}
             onClick={
-                boardProps.isGhostMode ? boardProps.onGhostClose : undefined
+                boardProps.isAnalysisMode
+                    ? boardProps.onAnalysisClose
+                    : undefined
             }
         >
             <Box onClick={infoProps.handleBoxClick}>

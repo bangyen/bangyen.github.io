@@ -7,8 +7,8 @@ interface DimensionRegenerationConfig {
     rows: number;
     /** Current grid column count. */
     cols: number;
-    /** Whether ghost mode is active (suppresses the saved-puzzle check). */
-    isGhostMode: boolean;
+    /** Whether analysis mode is active (suppresses the saved-puzzle check). */
+    isAnalysisMode: boolean;
     /** Request a new puzzle from the generation worker. */
     requestGeneration: (rows: number, cols: number) => void;
     /** Cancel any pending generation. */
@@ -26,7 +26,7 @@ interface DimensionRegenerationConfig {
 export function useDimensionRegeneration({
     rows,
     cols,
-    isGhostMode,
+    isAnalysisMode,
     requestGeneration,
     cancelGeneration,
 }: DimensionRegenerationConfig): void {
@@ -37,11 +37,11 @@ export function useDimensionRegeneration({
         if (key === prevDimsRef.current) return;
         prevDimsRef.current = key;
 
-        if (!isGhostMode && hasSavedUnsolvedPuzzle(rows, cols)) {
+        if (!isAnalysisMode && hasSavedUnsolvedPuzzle(rows, cols)) {
             cancelGeneration();
             return;
         }
 
         requestGeneration(rows, cols);
-    }, [rows, cols, requestGeneration, cancelGeneration, isGhostMode]);
+    }, [rows, cols, requestGeneration, cancelGeneration, isAnalysisMode]);
 }

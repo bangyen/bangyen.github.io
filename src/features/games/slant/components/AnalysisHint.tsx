@@ -3,17 +3,17 @@ import React from 'react';
 
 import { SLANT_STYLES } from '../config/constants';
 
-export interface GhostHintProps {
+export interface AnalysisHintProps {
     value: number | null;
     hasConflict: boolean;
     numberSize: number;
 }
 
-export const GhostHint = React.memo(function GhostHint({
+export const AnalysisHint = React.memo(function AnalysisHint({
     value,
     hasConflict,
     numberSize,
-}: GhostHintProps) {
+}: AnalysisHintProps) {
     return (
         <Box
             sx={{
@@ -26,7 +26,7 @@ export const GhostHint = React.memo(function GhostHint({
                 fontWeight: '800',
                 color: hasConflict
                     ? SLANT_STYLES.COLORS.WHITE
-                    : SLANT_STYLES.GHOST.HINT_TEXT,
+                    : SLANT_STYLES.ANALYSIS.HINT_TEXT,
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 userSelect: 'none',
                 WebkitUserSelect: 'none',

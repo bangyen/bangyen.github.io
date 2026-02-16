@@ -1,8 +1,8 @@
 import type { CellState } from '../types';
-import type { CellInfo, Conflict } from '../utils/ghostSolver';
-import { solveGhostConstraints } from '../utils/ghostSolver';
+import type { CellInfo, Conflict } from '../utils/analysisSolver';
+import { solveAnalysisConstraints } from '../utils/analysisSolver';
 
-export type { CellSource, CellInfo, Conflict } from '../utils/ghostSolver';
+export type { CellSource, CellInfo, Conflict } from '../utils/analysisSolver';
 
 export type SolverMessage =
     | {
@@ -26,7 +26,7 @@ export type SolverMessage =
 globalThis.onmessage = (e: MessageEvent<SolverMessage>) => {
     if (e.data.type === 'SOLVE') {
         const { rows, cols, numbers, userMoves } = e.data.payload;
-        const result = solveGhostConstraints(rows, cols, numbers, userMoves);
+        const result = solveAnalysisConstraints(rows, cols, numbers, userMoves);
         self.postMessage({ type: 'RESULT', payload: result });
     }
 };

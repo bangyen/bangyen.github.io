@@ -1,12 +1,12 @@
 import { Box } from '@mui/material';
 import { useMemo, useCallback } from 'react';
 
-import { GhostControls } from './GhostControls';
-import { buildCellProps, buildNumberProps } from './SlantGhostBoardProps';
+import { AnalysisControls } from './AnalysisControls';
+import { buildCellProps, buildNumberProps } from './SlantAnalysisBoardProps';
 import { BOARD_STYLES, GAME_CONSTANTS } from '../../config/constants';
 import { useDrag } from '../../hooks/useDrag';
 import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../config/constants';
-import { useGhostSolver } from '../hooks/useGhostSolver';
+import { useAnalysisSolver } from '../hooks/useAnalysisSolver';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD } from '../types';
 
@@ -15,7 +15,7 @@ import { LAYOUT } from '@/config/theme';
 import { useMobile } from '@/hooks';
 import { getPosKey } from '@/utils/gameUtils';
 
-export interface SlantGhostBoardProps {
+export interface SlantAnalysisBoardProps {
     rows: number;
     cols: number;
     numbers: (number | null)[][];
@@ -27,7 +27,7 @@ export interface SlantGhostBoardProps {
     onClose?: () => void;
 }
 
-export function SlantGhostBoard({
+export function SlantAnalysisBoard({
     rows,
     cols,
     numbers,
@@ -37,7 +37,7 @@ export function SlantGhostBoard({
     onCopy,
     onClear,
     onClose,
-}: SlantGhostBoardProps) {
+}: SlantAnalysisBoardProps) {
     const mobile = useMobile('sm');
     // User inputs: just strict assignments
     const userMoves = initialMoves;
@@ -82,7 +82,7 @@ export function SlantGhostBoard({
         checkEnabled: () => true,
     });
 
-    const { gridState, conflicts, cycleCells } = useGhostSolver({
+    const { gridState, conflicts, cycleCells } = useAnalysisSolver({
         rows,
         cols,
         numbers,
@@ -146,7 +146,7 @@ export function SlantGhostBoard({
                     padding: mobile
                         ? BOARD_STYLES.PADDING.MOBILE
                         : BOARD_STYLES.PADDING.DESKTOP,
-                    border: `2px dashed ${SLANT_STYLES.GHOST.DASHED_BORDER}`,
+                    border: `2px dashed ${SLANT_STYLES.ANALYSIS.DASHED_BORDER}`,
                     borderRadius: BOARD_STYLES.BORDER_RADIUS,
                 }}
             >
@@ -193,7 +193,7 @@ export function SlantGhostBoard({
                 </Box>
             </Box>
 
-            <GhostControls
+            <AnalysisControls
                 onCopy={onCopy}
                 onClear={onClear}
                 onClose={onClose}

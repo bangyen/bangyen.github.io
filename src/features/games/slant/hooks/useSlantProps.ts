@@ -34,7 +34,7 @@ interface SlantLayoutReturn {
 interface SlantInfoReturn {
     open: boolean;
     toggleOpen: () => void;
-    handleOpenCalculator: () => void;
+    handleOpenAnalysis: () => void;
     handleBoxClick: (e: React.MouseEvent) => void;
 }
 
@@ -45,21 +45,21 @@ export interface SlantGameParams {
     cols: number;
     size: number;
     mobile: boolean;
-    isGhostMode: boolean;
+    isAnalysisMode: boolean;
     generating: boolean;
     handleNextAsync: () => void;
 }
 
-/** Ghost-mode move map, handlers, and UI callbacks. */
-export interface SlantGhostParams {
-    ghostMoves: Map<string, CellState>;
-    handleGhostMove: (pos: string, val?: CellState) => void;
-    handleGhostCopy: () => void;
-    handleGhostClear: () => void;
-    handleGhostClose: () => void;
+/** Analysis-mode move map, handlers, and UI callbacks. */
+export interface SlantAnalysisParams {
+    analysisMoves: Map<string, CellState>;
+    handleAnalysisMove: (pos: string, val?: CellState) => void;
+    handleAnalysisCopy: () => void;
+    handleAnalysisClear: () => void;
+    handleAnalysisClose: () => void;
     handleBoxClick: (e: React.MouseEvent) => void;
-    handleOpenCalculator: () => void;
-    /** Board wrapper styles from ghost mode. */
+    handleOpenAnalysis: () => void;
+    /** Board wrapper styles from analysis mode. */
     boardSx?: Record<string, unknown>;
 }
 
@@ -71,7 +71,7 @@ export interface SlantInfoParams {
 
 export interface UseSlantPropsParams {
     game: SlantGameParams;
-    ghost: SlantGhostParams;
+    analysis: SlantAnalysisParams;
     info: SlantInfoParams;
     controls: BaseControlsProps;
     getDragProps: (pos: string) => DragProps;
@@ -91,18 +91,18 @@ export function useSlantProps({
         cols,
         size,
         mobile,
-        isGhostMode,
+        isAnalysisMode,
         generating,
         handleNextAsync,
     },
-    ghost: {
-        ghostMoves,
-        handleGhostMove,
-        handleGhostCopy,
-        handleGhostClear,
-        handleGhostClose,
+    analysis: {
+        analysisMoves,
+        handleAnalysisMove,
+        handleAnalysisCopy,
+        handleAnalysisClear,
+        handleAnalysisClose,
         handleBoxClick,
-        handleOpenCalculator,
+        handleOpenAnalysis,
         boardSx,
     },
     info: { infoOpen, toggleInfo },
@@ -124,18 +124,18 @@ export function useSlantProps({
 
     return {
         boardProps: {
-            isGhostMode,
+            isAnalysisMode,
             generating,
             dimensionsMismatch,
             rows,
             cols,
             state,
             size,
-            ghostMoves,
-            onGhostMove: handleGhostMove,
-            onGhostCopy: handleGhostCopy,
-            onGhostClear: handleGhostClear,
-            onGhostClose: handleGhostClose,
+            analysisMoves,
+            onAnalysisMove: handleAnalysisMove,
+            onAnalysisCopy: handleAnalysisCopy,
+            onAnalysisClear: handleAnalysisClear,
+            onAnalysisClose: handleAnalysisClose,
             cellProps: backProps,
             overlayProps: frontProps,
         },
@@ -144,7 +144,7 @@ export function useSlantProps({
             onRefresh: handleNextAsync,
             disabled: generating,
             onOpenInfo: toggleInfo,
-            hidden: isGhostMode,
+            hidden: isAnalysisMode,
         },
         layoutProps: {
             boardSx,
@@ -154,11 +154,11 @@ export function useSlantProps({
         infoProps: {
             open: infoOpen,
             toggleOpen: toggleInfo,
-            handleOpenCalculator,
+            handleOpenAnalysis,
             handleBoxClick,
         },
         trophyProps: {
-            show: !isGhostMode && state.solved,
+            show: !isAnalysisMode && state.solved,
             onReset: handleNextAsync,
             size,
             iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,

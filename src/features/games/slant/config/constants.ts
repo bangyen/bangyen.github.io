@@ -13,7 +13,7 @@ export const LAYOUT_CONSTANTS = {
 
 export const STORAGE_KEYS = {
     ...createStorageKeys('slant'),
-    GHOST_MOVES: 'slant-ghost-moves',
+    ANALYSIS_MOVES: 'slant-analysis-moves',
 } as const;
 
 export const GAME_LOGIC_CONSTANTS = {
@@ -32,14 +32,14 @@ export const SLANT_STYLES = {
         LINE: BOARD_STYLES.SHADOW,
         HINT: '0 4px 8px rgba(0,0,0,0.1)',
     },
-    GHOST: {
-        BORDER: 'var(--slant-ghost-border)',
-        BG_SUBTLE: 'var(--slant-ghost-bg-subtle)',
-        BG_HOVER: 'var(--slant-ghost-bg-hover)',
-        DASHED_BORDER: 'var(--slant-ghost-dashed-border)',
-        HINT_BG: 'var(--slant-ghost-hint-bg)',
-        HINT_BORDER: 'var(--slant-ghost-hint-border)',
-        HINT_TEXT: 'var(--slant-ghost-hint-text)',
+    ANALYSIS: {
+        BORDER: 'var(--slant-analysis-border)',
+        BG_SUBTLE: 'var(--slant-analysis-bg-subtle)',
+        BG_HOVER: 'var(--slant-analysis-bg-hover)',
+        DASHED_BORDER: 'var(--slant-analysis-dashed-border)',
+        HINT_BG: 'var(--slant-analysis-hint-bg)',
+        HINT_BORDER: 'var(--slant-analysis-hint-border)',
+        HINT_TEXT: 'var(--slant-analysis-hint-text)',
         OVERLAY_LABEL: 'rgba(255, 255, 255, 0.5)',
         OVERLAY_BG: 'rgba(0, 0, 0, 0.3)',
     },
