@@ -3,12 +3,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { useBaseGame } from '../../../hooks/useBaseGame';
 import { useDrag } from '../../../hooks/useDrag';
+import { useGridNavigation } from '../../../hooks/useGridNavigation';
 import { useSkipTransition } from '../../../hooks/useSkipTransition';
 import { useLightsOutGame } from '../useLightsOutGame';
 import { useLightsOutProps } from '../useLightsOutProps';
 
 vi.mock('../../../hooks/useBaseGame');
 vi.mock('../../../hooks/useDrag');
+vi.mock('../../../hooks/useGridNavigation');
 vi.mock('../../../hooks/useSkipTransition');
 vi.mock('../useLightsOutProps');
 vi.mock('@/hooks', () => ({
@@ -20,11 +22,19 @@ vi.mock('@/hooks', () => ({
 }));
 
 const mockDispatch = vi.fn();
-const mockGetDragProps = vi.fn().mockReturnValue({});
+const mockDragOnKeyDown = vi.fn();
+const mockGetDragProps = vi
+    .fn()
+    .mockReturnValue({ onKeyDown: mockDragOnKeyDown });
+const mockHandleGridNav = vi.fn();
 
 describe('useLightsOutGame', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+
+        vi.mocked(useGridNavigation).mockReturnValue({
+            handleKeyDown: mockHandleGridNav,
+        });
 
         vi.mocked(useBaseGame).mockReturnValue({
             rows: 5,
@@ -93,12 +103,33 @@ describe('useLightsOutGame', () => {
         expect(config.logic).toHaveProperty('isSolved');
     });
 
-    it('passes drag interaction props to useLightsOutProps', () => {
+    it('passes enhanced drag props with grid navigation to useLightsOutProps', () => {
         renderHook(() => useLightsOutGame());
 
         expect(useLightsOutProps).toHaveBeenCalledTimes(1);
         const params = vi.mocked(useLightsOutProps).mock.calls[0]![0];
-        expect(params.drag.getDragProps).toBe(mockGetDragProps);
+        // getDragProps is now wrapped, not the bare mock
+        expect(params.drag.getDragProps).not.toBe(mockGetDragProps);
+        expect(typeof params.drag.getDragProps).toBe('function');
+    });
+
+    it('enhanced onKeyDown invokes both drag and grid navigation handlers', () => {
+        renderHook(() => useLightsOutGame());
+
+        const params = vi.mocked(useLightsOutProps).mock.calls[0]![0];
+        const enhanced = params.drag.getDragProps('0,0');
+        const fakeEvent = { key: 'ArrowRight' } as React.KeyboardEvent;
+
+        enhanced.onKeyDown(fakeEvent);
+
+        expect(mockDragOnKeyDown).toHaveBeenCalledWith(fakeEvent);
+        expect(mockHandleGridNav).toHaveBeenCalledWith(fakeEvent);
+    });
+
+    it('calls useGridNavigation with correct dimensions', () => {
+        renderHook(() => useLightsOutGame());
+
+        expect(useGridNavigation).toHaveBeenCalledWith({ rows: 5, cols: 5 });
     });
 
     it('handleApply dispatches multi_adjacent and toggles modal', () => {

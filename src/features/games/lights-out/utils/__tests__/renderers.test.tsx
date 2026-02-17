@@ -23,11 +23,24 @@ describe('renderers', () => {
             expect(props['data-testid']).toBe('drag');
             expect(props['backgroundColor']).toBe('red');
             expect(props['color']).toBe('red');
-            expect(props['style']).toEqual({ border: '1px solid black' });
             expect(props['aria-label']).toBe(
                 'Light at row 1, column 1, currently unlit',
             );
             expect(getDragProps).toHaveBeenCalledWith('0,0');
+        });
+
+        it('keeps border overrides as inline style and includes focus-visible styles', () => {
+            const getDragProps = vi.fn().mockReturnValue({});
+            const factory = getFrontProps(getDragProps, mockGetters);
+            const props = factory(0, 0) as Record<string, unknown>;
+            const sx = props['sx'] as Record<string, unknown>;
+
+            // Border overrides stay as inline style (cell shape unchanged)
+            expect(props['style']).toEqual({ border: '1px solid black' });
+
+            // Focus ring drawn via pseudo-element, not outline on cell
+            expect(sx['&:focus-visible']).toBeDefined();
+            expect(sx['position']).toBe('relative');
         });
     });
 

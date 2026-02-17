@@ -67,6 +67,7 @@ const Cell = memo(function Cell({ size, children, ...rest }: CellProps) {
             {...props}
             {...domProps}
             sx={{
+                '--cell-radius': radius,
                 backgroundColor,
                 color,
                 boxShadow,
