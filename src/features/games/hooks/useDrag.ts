@@ -236,9 +236,12 @@ export function useDrag<T = void>({
             },
             onKeyDown: (e: React.KeyboardEvent) => {
                 if (!checkEnabled()) return;
-                if (e.key === 'Enter' || e.key === ' ') {
+                if (e.key === ' ') {
                     e.preventDefault();
-                    onAction(pos, e.shiftKey, true);
+                    onAction(pos, false, true);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    onAction(pos, true, true);
                 }
             },
             onContextMenu: (e: React.MouseEvent) => {
