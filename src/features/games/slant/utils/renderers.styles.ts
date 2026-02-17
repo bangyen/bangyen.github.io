@@ -54,8 +54,15 @@ export const frontOverlaySx: SxProps<Theme> = {
 /** Interactive additions for drag-enhanced back cells. */
 export const INTERACTIVE_BACK_CELL_SX = {
     cursor: 'pointer',
+    outline: 'none',
     '&:hover': {
         backgroundColor: COLORS.interactive.hover,
+    },
+    '&:focus-visible': {
+        outline: `3px solid ${COLORS.primary.main}`,
+        outlineOffset: '-3px',
+        backgroundColor: COLORS.interactive.hover,
+        boxShadow: `inset 0 0 15px ${COLORS.interactive.focus}`,
     },
 } as const;
 

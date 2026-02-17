@@ -10,6 +10,7 @@ import { STORAGE_KEYS } from '../config/constants';
 import type { SlantAction, SlantState } from '../types';
 import { useGenerationWorker } from './useGenerationWorker';
 import { useSlantProps } from './useSlantProps';
+import { useGridNavigation } from '../../hooks/useGridNavigation';
 import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import {
     serializeSlantState,
@@ -128,6 +129,8 @@ export function useSlantGame() {
         }
     }, [state.solved, isAnalysisMode, rows, cols, prefetch]);
 
+    const { handleKeyDown: handleGridNav } = useGridNavigation({ rows, cols });
+
     const { getDragProps } = useDrag({
         onToggle: (r: number, c: number, isRightClick: boolean) => {
             dispatch({
@@ -140,6 +143,20 @@ export function useSlantGame() {
         checkEnabled: () => !state.solved,
         touchTimeout: GAME_CONSTANTS.timing.touchHoldDelay,
     });
+
+    const getEnhancedDragProps = useCallback(
+        (pos: string) => {
+            const dragProps = getDragProps(pos);
+            return {
+                ...dragProps,
+                onKeyDown: (e: React.KeyboardEvent) => {
+                    dragProps.onKeyDown(e);
+                    handleGridNav(e);
+                },
+            };
+        },
+        [getDragProps, handleGridNav],
+    );
 
     return useSlantProps({
         game: {
@@ -164,6 +181,6 @@ export function useSlantGame() {
         },
         info: { infoOpen, toggleInfo },
         controls: controlsProps,
-        getDragProps,
+        getDragProps: getEnhancedDragProps,
     });
 }
