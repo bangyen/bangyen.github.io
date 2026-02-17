@@ -139,8 +139,9 @@ export function SlantAnalysisBoard({
                 conflictSet,
                 cycleCells,
                 getDragProps: getEnhancedDragProps,
+                size,
             }),
-        [gridState, conflictSet, cycleCells, getEnhancedDragProps],
+        [gridState, conflictSet, cycleCells, getEnhancedDragProps, size],
     );
 
     const getNumberProps = useCallback(
