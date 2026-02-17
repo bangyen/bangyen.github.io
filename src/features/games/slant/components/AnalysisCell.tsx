@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import React from 'react';
 
-import { SLANT_STYLES, LAYOUT_CONSTANTS } from '../config/constants';
+import { SLANT_STYLES } from '../config/constants';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD } from '../types';
 
@@ -10,12 +10,17 @@ import { ANIMATIONS, SPACING } from '@/config/theme';
 export interface AnalysisCellProps {
     value: CellState;
     color: string;
+    /** Cell size in rem, used to scale slash thickness to match the main board. */
+    size: number;
 }
 
 export const AnalysisCell = React.memo(function AnalysisCell({
     value,
     color,
+    size,
 }: AnalysisCellProps) {
+    const thickness = `${String(Math.max(2, size))}px`;
+
     return (
         <Box
             sx={{
@@ -28,8 +33,8 @@ export const AnalysisCell = React.memo(function AnalysisCell({
                 <Box
                     sx={{
                         position: 'absolute',
-                        width: LAYOUT_CONSTANTS.LINE_WIDTH,
-                        height: LAYOUT_CONSTANTS.LINE_THICKNESS,
+                        width: '115%',
+                        height: thickness,
                         backgroundColor: color,
                         borderRadius: SPACING.borderRadius.full,
                         top: '50%',
@@ -48,8 +53,8 @@ export const AnalysisCell = React.memo(function AnalysisCell({
                 <Box
                     sx={{
                         position: 'absolute',
-                        width: LAYOUT_CONSTANTS.LINE_WIDTH,
-                        height: LAYOUT_CONSTANTS.LINE_THICKNESS,
+                        width: '115%',
+                        height: thickness,
                         backgroundColor: color,
                         borderRadius: SPACING.borderRadius.full,
                         top: '50%',

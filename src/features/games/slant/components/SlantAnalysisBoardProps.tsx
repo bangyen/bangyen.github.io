@@ -25,6 +25,7 @@ interface BuildCellPropsArgs {
     conflictSet: Set<string>;
     cycleCells: Set<string>;
     getDragProps: (pos: string) => DragProps;
+    size: number;
 }
 
 /**
@@ -39,6 +40,7 @@ export function buildCellProps({
     conflictSet,
     cycleCells,
     getDragProps,
+    size,
 }: BuildCellPropsArgs) {
     const pos = getPosKey(r, c);
     const info = gridState.get(pos);
@@ -81,7 +83,7 @@ export function buildCellProps({
                 boxShadow: `inset 0 0 15px ${COLORS.interactive.focus}`,
             },
         },
-        children: <AnalysisCell value={value} color={color} />,
+        children: <AnalysisCell value={value} color={color} size={size} />,
     };
 }
 
