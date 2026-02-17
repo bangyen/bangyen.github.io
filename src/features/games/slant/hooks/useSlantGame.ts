@@ -150,12 +150,26 @@ export function useSlantGame() {
             return {
                 ...dragProps,
                 onKeyDown: (e: React.KeyboardEvent) => {
-                    dragProps.onKeyDown(e);
-                    handleGridNav(e);
+                    const lower = e.key.toLowerCase();
+                    if (lower === 'q' || lower === 'e') {
+                        if (state.solved) return;
+                        e.preventDefault();
+                        const [r, c] = pos.split(',').map(Number);
+                        if (r === undefined || c === undefined) return;
+                        dispatch({
+                            type: 'toggle',
+                            row: createCellIndex(r),
+                            col: createCellIndex(c),
+                            reverse: lower === 'e',
+                        });
+                    } else {
+                        dragProps.onKeyDown(e);
+                        handleGridNav(e);
+                    }
                 },
             };
         },
-        [getDragProps, handleGridNav],
+        [getDragProps, handleGridNav, state.solved, dispatch],
     );
 
     return useSlantProps({

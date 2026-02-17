@@ -6,8 +6,23 @@ interface UseGridNavigationOptions {
     posAttribute?: string;
 }
 
+const NAVIGATION_KEYS: Record<string, 'up' | 'down' | 'left' | 'right'> = {
+    ArrowUp: 'up',
+    ArrowDown: 'down',
+    ArrowLeft: 'left',
+    ArrowRight: 'right',
+    w: 'up',
+    W: 'up',
+    a: 'left',
+    A: 'left',
+    s: 'down',
+    S: 'down',
+    d: 'right',
+    D: 'right',
+};
+
 /**
- * Hook for handling 2D grid keyboard navigation via arrow keys.
+ * Hook for handling 2D grid keyboard navigation via arrow keys and WASD.
  * Finds neighbor elements using a position attribute and focuses them.
  */
 export function useGridNavigation({
@@ -18,11 +33,8 @@ export function useGridNavigation({
     const handleKeyDown = useCallback(
         (e: React.KeyboardEvent) => {
             const { key, currentTarget } = e;
-            if (
-                !['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(
-                    key,
-                )
-            ) {
+            const direction = NAVIGATION_KEYS[key];
+            if (!direction) {
                 return;
             }
 
@@ -38,20 +50,20 @@ export function useGridNavigation({
             let nextR = r;
             let nextC = c;
 
-            switch (key) {
-                case 'ArrowUp': {
+            switch (direction) {
+                case 'up': {
                     nextR = Math.max(0, r - 1);
                     break;
                 }
-                case 'ArrowDown': {
+                case 'down': {
                     nextR = Math.min(rows - 1, r + 1);
                     break;
                 }
-                case 'ArrowLeft': {
+                case 'left': {
                     nextC = Math.max(0, c - 1);
                     break;
                 }
-                case 'ArrowRight': {
+                case 'right': {
                     nextC = Math.min(cols - 1, c + 1);
                     break;
                 }
