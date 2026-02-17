@@ -7,6 +7,7 @@ import { useState, useRef, useCallback, useEffect, useMemo } from 'react';
 export interface DragProps {
     onMouseDown: (e: React.MouseEvent) => void;
     onMouseEnter: () => void;
+    onFocus: () => void;
     onTouchStart: (e: React.TouchEvent) => void;
     onKeyDown: (e: React.KeyboardEvent) => void;
     onContextMenu?: (e: React.MouseEvent) => void;
@@ -84,7 +85,7 @@ type UseDragOptions<T = void> = UseDragRawOptions | UseDragGridOptions<T>;
  * Handles:
  * - Left/right-click dragging with continuous action on hover
  * - Touch dragging with movement tracking
- * - Keyboard activation (Enter/Space)
+ * - Keyboard activation (Space/Enter) and keyboard drag (hold key + navigate)
  * - Accessibility with proper ARIA roles
  *
  * @param options - Configuration for drag behavior
@@ -158,9 +159,23 @@ export function useDrag<T = void>({
     const draggedItems = useRef(new Set<string>());
     const lastTouchTime = useRef(0);
 
+    // Keyboard drag: null = inactive, false = Space (forward), true = Enter (reverse).
+    const kbDragReverse = useRef<boolean | null>(null);
+
     const stopDragging = useCallback(() => {
         setIsDragging(null);
+        kbDragReverse.current = null;
         draggedItems.current.clear();
+    }, []);
+
+    const handleKeyUp = useCallback((e: KeyboardEvent) => {
+        if (
+            (e.key === ' ' || e.key === 'Enter') &&
+            kbDragReverse.current !== null
+        ) {
+            kbDragReverse.current = null;
+            draggedItems.current.clear();
+        }
     }, []);
 
     const handleTouchMove = useCallback(
@@ -192,6 +207,7 @@ export function useDrag<T = void>({
         globalThis.addEventListener('mouseup', stopDragging);
         globalThis.addEventListener('touchend', stopDragging);
         globalThis.addEventListener('touchcancel', stopDragging);
+        globalThis.addEventListener('keyup', handleKeyUp);
         globalThis.addEventListener('touchmove', handleTouchMove, {
             passive: false,
         });
@@ -200,9 +216,10 @@ export function useDrag<T = void>({
             globalThis.removeEventListener('mouseup', stopDragging);
             globalThis.removeEventListener('touchend', stopDragging);
             globalThis.removeEventListener('touchcancel', stopDragging);
+            globalThis.removeEventListener('keyup', handleKeyUp);
             globalThis.removeEventListener('touchmove', handleTouchMove);
         };
-    }, [stopDragging, handleTouchMove]);
+    }, [stopDragging, handleKeyUp, handleTouchMove]);
 
     const getDragProps = useCallback(
         (pos: string): DragProps => ({
@@ -211,6 +228,7 @@ export function useDrag<T = void>({
                 if (e.button !== 0 && e.button !== 2) return;
                 if (Date.now() - lastTouchTime.current < touchTimeout) return;
 
+                kbDragReverse.current = null;
                 if (preventDefault) e.preventDefault();
                 setIsDragging(e.button);
                 onAction(pos, e.button === 2, true);
@@ -226,6 +244,16 @@ export function useDrag<T = void>({
                     draggedItems.current.add(pos);
                 }
             },
+            onFocus: () => {
+                if (
+                    kbDragReverse.current !== null &&
+                    !draggedItems.current.has(pos) &&
+                    checkEnabled()
+                ) {
+                    onAction(pos, kbDragReverse.current, false);
+                    draggedItems.current.add(pos);
+                }
+            },
             onTouchStart: (e: React.TouchEvent) => {
                 if (!checkEnabled()) return;
                 if (e.cancelable && preventDefault) e.preventDefault();
@@ -236,12 +264,22 @@ export function useDrag<T = void>({
             },
             onKeyDown: (e: React.KeyboardEvent) => {
                 if (!checkEnabled()) return;
-                if (e.key === ' ') {
+                if (e.key === ' ' && !e.repeat) {
                     e.preventDefault();
+                    setIsDragging(null);
+                    kbDragReverse.current = false;
+                    draggedItems.current.clear();
                     onAction(pos, false, true);
-                } else if (e.key === 'Enter') {
+                    draggedItems.current.add(pos);
+                } else if (e.key === 'Enter' && !e.repeat) {
                     e.preventDefault();
+                    setIsDragging(null);
+                    kbDragReverse.current = true;
+                    draggedItems.current.clear();
                     onAction(pos, true, true);
+                    draggedItems.current.add(pos);
+                } else if ((e.key === ' ' || e.key === 'Enter') && e.repeat) {
+                    e.preventDefault();
                 }
             },
             onContextMenu: (e: React.MouseEvent) => {
