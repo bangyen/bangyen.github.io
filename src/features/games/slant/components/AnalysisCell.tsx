@@ -34,9 +34,12 @@ export const AnalysisCell = React.memo(function AnalysisCell({
                         borderRadius: SPACING.borderRadius.full,
                         top: '50%',
                         left: '50%',
-                        transform: 'translate(-50%, -50%) rotate(-45deg)',
+                        '--slant-base-transform':
+                            'translate(-50%, -50%) rotate(-45deg)',
+                        transform: 'var(--slant-base-transform)',
                         boxShadow: SLANT_STYLES.SHADOWS.LINE,
                         transition: ANIMATIONS.transition,
+                        animation: SLANT_STYLES.ANIMATIONS.POP_IN_STYLE,
                         pointerEvents: 'none',
                     }}
                 />
@@ -51,9 +54,12 @@ export const AnalysisCell = React.memo(function AnalysisCell({
                         borderRadius: SPACING.borderRadius.full,
                         top: '50%',
                         left: '50%',
-                        transform: 'translate(-50%, -50%) rotate(45deg)',
+                        '--slant-base-transform':
+                            'translate(-50%, -50%) rotate(45deg)',
+                        transform: 'var(--slant-base-transform)',
                         boxShadow: SLANT_STYLES.SHADOWS.LINE,
                         transition: ANIMATIONS.transition,
+                        animation: SLANT_STYLES.ANIMATIONS.POP_IN_STYLE,
                         pointerEvents: 'none',
                     }}
                 />

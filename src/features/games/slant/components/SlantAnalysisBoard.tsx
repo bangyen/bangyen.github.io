@@ -145,6 +145,7 @@ export function SlantAnalysisBoard({
                 e.preventDefault();
             }}
         >
+            <style>{SLANT_STYLES.ANIMATIONS.POP_IN}</style>
             <Box
                 sx={{
                     position: 'relative',

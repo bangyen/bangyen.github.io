@@ -3,6 +3,7 @@ import React from 'react';
 import { SlantAnalysisBoard } from './SlantAnalysisBoard';
 import { SlantLoadingSkeleton } from './SlantLoadingSkeleton';
 import { Board } from '../../components/Board';
+import { SLANT_STYLES } from '../config/constants';
 import type { CellState, SlantState } from '../types';
 
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
@@ -95,6 +96,7 @@ export function SlantBoard({
                 resetLabel: GAME_TEXT.errors.boardReset,
             }}
         >
+            <style>{SLANT_STYLES.ANIMATIONS.POP_IN}</style>
             <Board
                 size={size}
                 rows={rows + 1}
