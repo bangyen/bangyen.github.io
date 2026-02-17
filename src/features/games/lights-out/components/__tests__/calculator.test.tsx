@@ -54,8 +54,8 @@ describe('Lights Out Calculator UI Helpers', () => {
             expect(props.color).toBe('red');
             expect(props.sx).toBeDefined();
 
-            // Verify getDragProps was called
-            expect(mockGetDragProps).toHaveBeenCalledWith('0');
+            // Verify getDragProps was called with row,col pos key
+            expect(mockGetDragProps).toHaveBeenCalledWith('0,0');
         });
 
         it('calls getters with correct coordinates', () => {
