@@ -33,7 +33,7 @@ export function getSlashLineSx(
 
 /** Base sx for the back (slash) cell visual layer. */
 export const backCellVisualSx: SxProps<Theme> = {
-    border: `1px solid ${COLORS.border.subtle}`,
+    border: `2px solid ${COLORS.border.subtle}`,
     position: 'relative',
 };
 
