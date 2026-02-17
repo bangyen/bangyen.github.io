@@ -139,7 +139,12 @@ export function SlantAnalysisBoard({
     );
 
     return (
-        <Box sx={{ position: 'relative', userSelect: 'none' }}>
+        <Box
+            sx={{ position: 'relative', userSelect: 'none' }}
+            onContextMenu={e => {
+                e.preventDefault();
+            }}
+        >
             <Box
                 sx={{
                     position: 'relative',

@@ -65,7 +65,12 @@ export const Board = React.memo(function Board(
     } = props;
 
     return (
-        <Box sx={boardContainerSx}>
+        <Box
+            sx={boardContainerSx}
+            onContextMenu={e => {
+                e.preventDefault();
+            }}
+        >
             <Box
                 sx={{
                     ...spreadSx(cellLayerBaseSx),
