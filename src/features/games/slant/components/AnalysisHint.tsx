@@ -27,7 +27,7 @@ export const AnalysisHint = React.memo(function AnalysisHint({
                 color: hasConflict
                     ? SLANT_STYLES.COLORS.WHITE
                     : SLANT_STYLES.ANALYSIS.HINT_TEXT,
-                transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                 userSelect: 'none',
                 WebkitUserSelect: 'none',
                 transform: hasConflict ? 'scale(1.15)' : 'scale(1)',
