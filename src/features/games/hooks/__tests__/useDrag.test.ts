@@ -106,8 +106,7 @@ describe('useDrag', () => {
 
         act(() => {
             props.onKeyDown({
-                key: 'Enter',
-                shiftKey: false,
+                key: ' ',
                 preventDefault: vi.fn(),
             } as unknown as React.KeyboardEvent);
         });
@@ -116,24 +115,13 @@ describe('useDrag', () => {
 
         act(() => {
             props.onKeyDown({
-                key: ' ',
-                shiftKey: false,
-                preventDefault: vi.fn(),
-            } as unknown as React.KeyboardEvent);
-        });
-
-        expect(onAction).toHaveBeenCalledTimes(2);
-
-        act(() => {
-            props.onKeyDown({
-                key: ' ',
-                shiftKey: true,
+                key: 'Enter',
                 preventDefault: vi.fn(),
             } as unknown as React.KeyboardEvent);
         });
 
         expect(onAction).toHaveBeenCalledWith('0,0', true, true);
-        expect(onAction).toHaveBeenCalledTimes(3);
+        expect(onAction).toHaveBeenCalledTimes(2);
     });
 
     it('should respect checkEnabled', () => {
