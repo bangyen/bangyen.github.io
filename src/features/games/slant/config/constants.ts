@@ -43,4 +43,15 @@ export const SLANT_STYLES = {
         OVERLAY_LABEL: 'rgba(255, 255, 255, 0.5)',
         OVERLAY_BG: 'rgba(0, 0, 0, 0.3)',
     },
+    ANIMATIONS: {
+        POP_IN: `
+            @keyframes slant-pop-in {
+                0% { transform: var(--slant-base-transform) scale(0.5); opacity: 0; }
+                70% { transform: var(--slant-base-transform) scale(1.1); opacity: 1; }
+                100% { transform: var(--slant-base-transform) scale(1); opacity: 1; }
+            }
+        `,
+        POP_IN_STYLE:
+            'slant-pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+    },
 };

@@ -24,9 +24,11 @@ export function getSlashLineSx(
         borderRadius: '99px',
         top: '50%',
         left: '50%',
-        transform: `translate(-50%, -50%) rotate(${angle})`,
+        '--slant-base-transform': `translate(-50%, -50%) rotate(${angle})`,
+        transform: 'var(--slant-base-transform)',
         boxShadow: SLANT_STYLES.SHADOWS.LINE,
         transition: ANIMATIONS.transition,
+        animation: SLANT_STYLES.ANIMATIONS.POP_IN_STYLE,
         pointerEvents: 'none',
     };
 }
@@ -100,7 +102,11 @@ export function getNumberBubbleSx(params: {
         transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
         userSelect: 'none',
         WebkitUserSelect: 'none',
-        transform: hasError ? 'scale(1.1)' : 'scale(1)',
+        transform: hasError
+            ? 'scale(1.15)'
+            : isSatisfied
+              ? 'scale(0.95)'
+              : 'scale(1)',
         width: `${String(numberSize)}rem`,
         height: `${String(numberSize)}rem`,
     };

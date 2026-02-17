@@ -38,9 +38,11 @@ function slashLineSx(angle: string, size: number) {
         borderRadius: '99px',
         top: '50%',
         left: '50%',
-        transform: `translate(-50%, -50%) rotate(${angle})`,
+        '--slant-base-transform': `translate(-50%, -50%) rotate(${angle})`,
+        transform: 'var(--slant-base-transform)',
         boxShadow: SLANT_STYLES.SHADOWS.LINE,
         transition: ANIMATIONS.transition,
+        animation: SLANT_STYLES.ANIMATIONS.POP_IN_STYLE,
         pointerEvents: 'none' as const,
     };
 }
@@ -224,6 +226,7 @@ export function Example({ size }: ExampleProps): React.ReactElement {
             }}
         >
             <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                <style>{SLANT_STYLES.ANIMATIONS.POP_IN}</style>
                 <Board
                     size={size}
                     rows={EXAMPLE_DIMS + 1}

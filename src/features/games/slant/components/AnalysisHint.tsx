@@ -30,7 +30,7 @@ export const AnalysisHint = React.memo(function AnalysisHint({
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 userSelect: 'none',
                 WebkitUserSelect: 'none',
-                transform: hasConflict ? 'scale(1.1)' : 'scale(1)',
+                transform: hasConflict ? 'scale(1.15)' : 'scale(1)',
             }}
         >
             {value ?? ''}
