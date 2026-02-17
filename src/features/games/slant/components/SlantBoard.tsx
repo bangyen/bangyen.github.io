@@ -101,7 +101,7 @@ export function SlantBoard({
                 cols={cols + 1}
                 cellRows={rows}
                 cellCols={cols}
-                space={0.05}
+                space={0.125}
                 overlayProps={overlayProps}
                 cellProps={cellProps}
                 overlayLayerSx={{ pointerEvents: 'none' }}
