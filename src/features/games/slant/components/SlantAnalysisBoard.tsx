@@ -92,7 +92,7 @@ export function SlantAnalysisBoard({
     // View Helpers
 
     const numberSize = size * NUMBER_SIZE_RATIO;
-    const numberSpace = size - numberSize;
+    const numberSpace = size - numberSize + 0.125;
 
     const conflictSet = useMemo(
         () =>
@@ -167,7 +167,7 @@ export function SlantAnalysisBoard({
                         rows={rows}
                         cols={cols}
                         cellProps={getCellProps}
-                        space={0}
+                        space={0.125}
                         sx={{ width: 'fit-content' }}
                     />
                 </Box>
