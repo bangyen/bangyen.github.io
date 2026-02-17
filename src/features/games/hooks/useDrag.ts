@@ -238,7 +238,7 @@ export function useDrag<T = void>({
                 if (!checkEnabled()) return;
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    onAction(pos, false, true);
+                    onAction(pos, e.shiftKey, true);
                 }
             },
             onContextMenu: (e: React.MouseEvent) => {
