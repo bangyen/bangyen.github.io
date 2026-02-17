@@ -37,6 +37,7 @@ describe('Lights Out Calculator UI Helpers', () => {
             const mockGetDragProps = vi.fn((pos: string) => ({
                 onMouseDown: vi.fn(),
                 onMouseEnter: vi.fn(),
+                onFocus: vi.fn(),
                 onTouchStart: vi.fn(),
                 onKeyDown: vi.fn(),
                 role: 'button',
@@ -65,6 +66,7 @@ describe('Lights Out Calculator UI Helpers', () => {
                         ({
                             onMouseDown: vi.fn(),
                             onMouseEnter: vi.fn(),
+                            onFocus: vi.fn(),
                             onTouchStart: vi.fn(),
                             onKeyDown: vi.fn(),
                             role: 'button',

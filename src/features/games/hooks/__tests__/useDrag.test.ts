@@ -107,6 +107,7 @@ describe('useDrag', () => {
         act(() => {
             props.onKeyDown({
                 key: ' ',
+                repeat: false,
                 preventDefault: vi.fn(),
             } as unknown as React.KeyboardEvent);
         });
@@ -116,12 +117,118 @@ describe('useDrag', () => {
         act(() => {
             props.onKeyDown({
                 key: 'Enter',
+                repeat: false,
                 preventDefault: vi.fn(),
             } as unknown as React.KeyboardEvent);
         });
 
         expect(onAction).toHaveBeenCalledWith('0,0', true, true);
         expect(onAction).toHaveBeenCalledTimes(2);
+    });
+
+    it('should ignore repeated key presses during keyboard drag', () => {
+        const { result } = renderHook(() => useDrag(defaultOptions));
+        const props = result.current.getDragProps('0,0');
+
+        act(() => {
+            props.onKeyDown({
+                key: ' ',
+                repeat: false,
+                preventDefault: vi.fn(),
+            } as unknown as React.KeyboardEvent);
+        });
+
+        expect(onAction).toHaveBeenCalledTimes(1);
+
+        act(() => {
+            props.onKeyDown({
+                key: ' ',
+                repeat: true,
+                preventDefault: vi.fn(),
+            } as unknown as React.KeyboardEvent);
+        });
+
+        expect(onAction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should toggle cells on focus during keyboard drag', () => {
+        const { result } = renderHook(() => useDrag(defaultOptions));
+        const props00 = result.current.getDragProps('0,0');
+
+        act(() => {
+            props00.onKeyDown({
+                key: ' ',
+                repeat: false,
+                preventDefault: vi.fn(),
+            } as unknown as React.KeyboardEvent);
+        });
+
+        expect(onAction).toHaveBeenCalledWith('0,0', false, true);
+
+        const props10 = result.current.getDragProps('1,0');
+        act(() => {
+            props10.onFocus();
+        });
+
+        expect(onAction).toHaveBeenCalledWith('1,0', false, false);
+        expect(onAction).toHaveBeenCalledTimes(2);
+    });
+
+    it('should use reverse direction for Enter keyboard drag', () => {
+        const { result } = renderHook(() => useDrag(defaultOptions));
+        const props00 = result.current.getDragProps('0,0');
+
+        act(() => {
+            props00.onKeyDown({
+                key: 'Enter',
+                repeat: false,
+                preventDefault: vi.fn(),
+            } as unknown as React.KeyboardEvent);
+        });
+
+        expect(onAction).toHaveBeenCalledWith('0,0', true, true);
+
+        const props10 = result.current.getDragProps('1,0');
+        act(() => {
+            props10.onFocus();
+        });
+
+        expect(onAction).toHaveBeenCalledWith('1,0', true, false);
+    });
+
+    it('should stop keyboard drag on keyup', () => {
+        const { result } = renderHook(() => useDrag(defaultOptions));
+        const props00 = result.current.getDragProps('0,0');
+
+        act(() => {
+            props00.onKeyDown({
+                key: ' ',
+                repeat: false,
+                preventDefault: vi.fn(),
+            } as unknown as React.KeyboardEvent);
+        });
+
+        act(() => {
+            globalThis.dispatchEvent(new KeyboardEvent('keyup', { key: ' ' }));
+        });
+
+        const props10 = result.current.getDragProps('1,0');
+        act(() => {
+            props10.onFocus();
+        });
+
+        expect(onAction).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not trigger onFocus toggle when not keyboard dragging', () => {
+        const { result } = renderHook(() => useDrag(defaultOptions));
+        const props = result.current.getDragProps('0,0');
+
+        act(() => {
+            props.onFocus();
+        });
+
+        expect(onAction).not.toHaveBeenCalled();
     });
 
     it('should respect checkEnabled', () => {
