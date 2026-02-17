@@ -1,6 +1,8 @@
+import type React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 
 import { useDrag } from '../../hooks/useDrag';
+import { useGridNavigation } from '../../hooks/useGridNavigation';
 import { getInput, getOutput, useHandler } from '../components/Calculator';
 import type { Palette } from '../types';
 import { getProduct } from '../utils';
@@ -24,31 +26,43 @@ export function useCalculator({ rows, cols, palette }: UseCalculatorParams) {
         setCalcRow(new Array(cols).fill(0));
     }, [cols, palette]);
 
-    const toggleTile = useCallback(
-        (colAttr: string) => {
-            const col = Number.parseInt(colAttr, 10);
+    const res = getProduct(calcRow, rows, cols);
+
+    const { handleKeyDown: handleGridNav } = useGridNavigation({
+        rows: 1,
+        cols,
+    });
+
+    const { getDragProps } = useDrag({
+        onToggle: (_r: number, c: number) => {
             setCalcRow(prev => {
                 const next = [...prev];
-                if (next[col] !== undefined) {
-                    next[col] ^= 1;
+                if (next[c] !== undefined) {
+                    next[c] ^= 1;
                 }
                 return next;
             });
         },
-        [setCalcRow],
-    );
-
-    const res = getProduct(calcRow, rows, cols);
-
-    const { getDragProps } = useDrag({
-        onAction: toggleTile,
         checkEnabled: () => true,
-        posAttribute: 'data-col',
     });
+
+    const getEnhancedDragProps = useCallback(
+        (pos: string) => {
+            const dragProps = getDragProps(pos);
+            return {
+                ...dragProps,
+                onKeyDown: (e: React.KeyboardEvent) => {
+                    dragProps.onKeyDown(e);
+                    handleGridNav(e);
+                },
+            };
+        },
+        [getDragProps, handleGridNav],
+    );
 
     const inputGetters = useHandler(calcRow, cols, palette);
     const outputGetters = useHandler(res, cols, palette);
-    const inputProps = getInput(inputGetters, getDragProps);
+    const inputProps = getInput(inputGetters, getEnhancedDragProps);
     const outputProps = getOutput(outputGetters);
 
     const handleReset = useCallback(() => {

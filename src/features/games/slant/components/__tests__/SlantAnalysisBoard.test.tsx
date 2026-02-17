@@ -113,6 +113,13 @@ vi.mock('@/config/theme', () => ({
     SPACING: { borderRadius: { full: 999, sm: 4 } },
 }));
 
+// Mock useGridNavigation
+vi.mock('../../../hooks/useGridNavigation', () => ({
+    useGridNavigation: () => ({
+        handleKeyDown: vi.fn(),
+    }),
+}));
+
 // Mock useDrag (grid mode)
 vi.mock('../../../hooks/useDrag', () => ({
     useDrag: ({

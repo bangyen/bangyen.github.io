@@ -67,11 +67,18 @@ export function buildCellProps({
         sx: {
             ...dragProps.sx,
             cursor: 'pointer',
+            outline: 'none',
             border: `1px solid ${SLANT_STYLES.ANALYSIS.BORDER}`,
             position: 'relative',
             backgroundColor: SLANT_STYLES.ANALYSIS.BG_SUBTLE,
             '&:hover': {
                 backgroundColor: SLANT_STYLES.ANALYSIS.BG_HOVER,
+            },
+            '&:focus-visible': {
+                outline: `3px solid ${COLORS.primary.main}`,
+                outlineOffset: '-3px',
+                backgroundColor: SLANT_STYLES.ANALYSIS.BG_HOVER,
+                boxShadow: `inset 0 0 15px ${COLORS.interactive.focus}`,
             },
         },
         children: <AnalysisCell value={value} color={color} />,

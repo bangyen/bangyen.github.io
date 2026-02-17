@@ -1,10 +1,11 @@
 import { Box } from '@mui/material';
-import { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 
 import { AnalysisControls } from './AnalysisControls';
 import { buildCellProps, buildNumberProps } from './SlantAnalysisBoardProps';
 import { BOARD_STYLES, GAME_CONSTANTS } from '../../config/constants';
 import { useDrag } from '../../hooks/useDrag';
+import { useGridNavigation } from '../../hooks/useGridNavigation';
 import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../config/constants';
 import { useAnalysisSolver } from '../hooks/useAnalysisSolver';
 import type { CellState } from '../types';
@@ -82,6 +83,22 @@ export function SlantAnalysisBoard({
         checkEnabled: () => true,
     });
 
+    const { handleKeyDown: handleGridNav } = useGridNavigation({ rows, cols });
+
+    const getEnhancedDragProps = useCallback(
+        (pos: string) => {
+            const dragProps = getDragProps(pos);
+            return {
+                ...dragProps,
+                onKeyDown: (e: React.KeyboardEvent) => {
+                    dragProps.onKeyDown(e);
+                    handleGridNav(e);
+                },
+            };
+        },
+        [getDragProps, handleGridNav],
+    );
+
     const { gridState, conflicts, cycleCells } = useAnalysisSolver({
         rows,
         cols,
@@ -121,9 +138,9 @@ export function SlantAnalysisBoard({
                 gridState,
                 conflictSet,
                 cycleCells,
-                getDragProps,
+                getDragProps: getEnhancedDragProps,
             }),
-        [gridState, conflictSet, cycleCells, getDragProps],
+        [gridState, conflictSet, cycleCells, getEnhancedDragProps],
     );
 
     const getNumberProps = useCallback(
