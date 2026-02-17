@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 
-import { iconSx } from './renderers.styles';
+import { FOCUS_VISIBLE_SX, iconSx } from './renderers.styles';
 import type { DragProps } from '../../hooks/useDrag';
 import { LIGHTS_OUT_STYLES } from '../config';
 import type { Getters } from '../types';
@@ -63,11 +63,13 @@ export function getFrontProps(
             ...dragProps,
             ...visual,
             sx: {
+                position: 'relative',
                 ...dragProps.sx,
                 '&:hover': {
                     cursor: 'pointer',
                     color: back,
                 },
+                '&:focus-visible': FOCUS_VISIBLE_SX,
             },
         };
     };
