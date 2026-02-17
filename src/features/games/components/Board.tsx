@@ -25,6 +25,8 @@ export interface BoardProps {
     cellRows?: number;
     /** Cols for the cell (bottom) layer. Defaults to `cols` (same as overlay). */
     cellCols?: number;
+    /** Gap between cells in rem units. Defaults to 0. */
+    space?: number;
     overlayLayerSx?: SxProps<Theme>;
     cellLayerSx?: SxProps<Theme>;
     /** When true, marks the overlay layer as decorative (aria-hidden). */
@@ -55,6 +57,7 @@ export const Board = React.memo(function Board(
         cols,
         cellRows = rows,
         cellCols = cols,
+        space = 0,
         overlayLayerSx,
         cellLayerSx,
         overlayDecorative = false,
@@ -70,7 +73,7 @@ export const Board = React.memo(function Board(
                 }}
             >
                 <CustomGrid
-                    space={0}
+                    space={space}
                     size={size}
                     rows={cellRows}
                     cols={cellCols}
@@ -87,7 +90,7 @@ export const Board = React.memo(function Board(
                 }}
             >
                 <CustomGrid
-                    space={0}
+                    space={space}
                     size={size}
                     rows={rows}
                     cols={cols}
