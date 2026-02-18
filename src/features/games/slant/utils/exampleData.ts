@@ -34,10 +34,10 @@ export const EXAMPLE_SOLUTION: CellState[][] = [
 
 /** Clue numbers at every corner of the 3×3 grid (4×4 array). */
 export const EXAMPLE_NUMBERS: (number | null)[][] = [
-    [1, 0, 2, 0],
-    [1, 2, 2, 1],
-    [1, 2, 2, 1],
-    [0, 2, 0, 1],
+    [1, 0, 2, null],
+    [null, null, null, 1],
+    [1, null, null, null],
+    [null, 2, 0, 1],
 ];
 
 /**
@@ -49,15 +49,15 @@ export const EXAMPLE_NUMBERS: (number | null)[][] = [
  *   3. Interior cells resolved last
  */
 export const SOLVE_ORDER: [number, number][] = [
-    [0, 0], // \ — corner (0,0)=1 forces backslash
-    [2, 2], // \ — corner (3,3)=1 forces backslash
-    [0, 2], // \ — corner (0,3)=0 prevents forward slash
-    [2, 0], // \ — corner (3,0)=0 prevents forward slash
-    [0, 1], // / — corner (0,2)=2 needs one more
-    [2, 1], // / — corner (2,2)=2 needs one more
-    [1, 0], // \ — corner (1,1)=2 already full, must not add
-    [1, 1], // / — corner (1,1)=2 already full, must not add
-    [1, 2], // \ — last cell, corner (1,2)=2 needs it
+    [0, 0], // \ — Forced by 1 at (0,0) [or neighboring 0]
+    [0, 1], // / — Forced by 0 at (0,1)
+    [0, 2], // \ — Forced by 2 at (0,2) [needs one more]
+    [1, 2], // \ — Forced by 1 at (1,3)
+    [2, 2], // \ — Forced by 1 at (3,3)
+    [2, 1], // / — Forced by 0 at (3,2)
+    [2, 0], // \ — Forced by 2 at (3,1)
+    [1, 0], // \ — Forced by 1 at (2,0)
+    [1, 1], // / — The final logical deduction
 ];
 
 /**
