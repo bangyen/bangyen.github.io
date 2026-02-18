@@ -1,4 +1,4 @@
-import { Backdrop, Box, Modal, Typography } from '@mui/material';
+import { Backdrop, Box, Button, Modal, Typography } from '@mui/material';
 import React, { Suspense } from 'react';
 
 import {
@@ -10,8 +10,10 @@ import {
 
 import type { GameInfoProps } from './index';
 
+import { Refresh } from '@/components/icons';
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
-import { ErrorState } from '@/components/ui/ErrorState';
+import { ErrorCard } from '@/components/ui/ErrorCard';
+import { errorButtonSx } from '@/components/ui/ErrorCard.styles';
 import { COLORS } from '@/config/theme';
 import { GAME_TEXT } from '@/features/games/config/constants';
 import { lazyNamed } from '@/utils/lazyNamed';
@@ -36,6 +38,7 @@ function ModalPlaceholder({ children }: { children: React.ReactNode }) {
             sx={{
                 ...spreadSx(infoCardSx),
                 display: 'flex',
+                flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
             }}
@@ -59,14 +62,37 @@ function LoadingContent() {
     );
 }
 
+interface ErrorContentProps {
+    error: Error | null;
+    resetErrorBoundary: () => void;
+}
+
 /**
  * Error fallback rendered inside the modal when the `GameInfoContent`
- * chunk fails to load (e.g. network error).
+ * chunk fails to load (e.g. network error).  Provides a Retry button
+ * so the user can re-attempt the lazy load without closing the modal.
  */
-function ErrorContent() {
+function ErrorContent({ resetErrorBoundary }: ErrorContentProps) {
     return (
         <ModalPlaceholder>
-            <ErrorState message={GAME_TEXT.info.loadError} height="auto" />
+            <ErrorCard
+                title="Failed to Load"
+                message="Please check your connection and try again."
+                sx={{
+                    boxShadow: 'none',
+                    background: 'transparent',
+                    height: 'auto',
+                }}
+            >
+                <Button
+                    variant="contained"
+                    startIcon={<Refresh />}
+                    onClick={resetErrorBoundary}
+                    sx={errorButtonSx}
+                >
+                    Retry
+                </Button>
+            </ErrorCard>
         </ModalPlaceholder>
     );
 }
@@ -96,7 +122,7 @@ export function LazyGameInfo(props: GameInfoProps): React.ReactElement | null {
             sx={infoModalSx}
         >
             <Box sx={infoOuterBoxSx} role="document">
-                <ErrorBoundary fallback={<ErrorContent />}>
+                <ErrorBoundary FallbackComponent={ErrorContent}>
                     <Suspense fallback={<LoadingContent />}>
                         <GameInfoContentLazy
                             {...contentProps}

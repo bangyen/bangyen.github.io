@@ -1,13 +1,13 @@
 /**
- * Extracted style constants for the FeatureErrorFallback component.
- * Separates layout and typography styles from the component file.
+ * Style constants for the ErrorCard component and its full-page
+ * centering wrapper, shared across all card-based error surfaces.
  */
 
 import type { SxProps, Theme } from '@mui/material';
 
 import { COLORS, SPACING } from '@/config/theme';
 
-/** Full-viewport centering container. */
+/** Full-viewport centering container used by full-page error screens. */
 export const errorContainerSx: SxProps<Theme> = {
     display: 'flex',
     justifyContent: 'center',
@@ -43,8 +43,9 @@ export const errorMessageSx: SxProps<Theme> = {
     wordBreak: 'break-word',
 };
 
-/** Reset action button. */
+/** Shared action button styling with a fixed width for visual consistency. */
 export const errorButtonSx: SxProps<Theme> = {
     borderRadius: SPACING.borderRadius.md,
     textTransform: 'none',
+    width: '180px',
 };
