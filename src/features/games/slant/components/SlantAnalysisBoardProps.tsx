@@ -123,33 +123,27 @@ export function buildNumberProps({
     // Calculate if node is satisfied (connected slashes == number value AND all neighbors filled)
     let connected = 0;
     let filledNeighbors = 0;
-    let totalNeighbors = 0;
+    const neighbors = [
+        { r: r - 1, c: c - 1, required: BACKWARD }, // TL
+        { r: r - 1, c, required: FORWARD }, // TR
+        { r, c: c - 1, required: FORWARD }, // BL
+        { r, c, required: BACKWARD }, // BR
+    ];
 
-    if (value != null) {
-        const neighbors = [
-            { r: r - 1, c: c - 1, required: BACKWARD }, // TL
-            { r: r - 1, c, required: FORWARD }, // TR
-            { r, c: c - 1, required: FORWARD }, // BL
-            { r, c, required: BACKWARD }, // BR
-        ];
-
-        for (const nb of neighbors) {
-            if (nb.r >= 0 && nb.r < rows && nb.c >= 0 && nb.c < cols) {
-                totalNeighbors++;
-                const cell = gridState.get(getPosKey(nb.r, nb.c));
-                if (cell && cell.state !== EMPTY) {
-                    filledNeighbors++;
-                    if (cell.state === nb.required) {
-                        connected++;
-                    }
+    for (const nb of neighbors) {
+        if (nb.r >= 0 && nb.r < rows && nb.c >= 0 && nb.c < cols) {
+            const cell = gridState.get(getPosKey(nb.r, nb.c));
+            if (cell && cell.state !== EMPTY) {
+                filledNeighbors++;
+                if (cell.state === nb.required) {
+                    connected++;
                 }
             }
         }
     }
+
     const isSatisfied =
-        value != null &&
-        connected === value &&
-        filledNeighbors === totalNeighbors;
+        value != null && connected === value && filledNeighbors > 0;
 
     return {
         'data-pos': getPosKey(r, c),
