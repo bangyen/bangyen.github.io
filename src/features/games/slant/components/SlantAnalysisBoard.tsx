@@ -150,10 +150,13 @@ export function SlantAnalysisBoard({
                 r,
                 c,
                 numbers,
+                gridState,
+                rows,
+                cols,
                 nodeConflictSet,
                 numberSize,
             }),
-        [numbers, nodeConflictSet, numberSize],
+        [numbers, gridState, rows, cols, nodeConflictSet, numberSize],
     );
 
     return (
