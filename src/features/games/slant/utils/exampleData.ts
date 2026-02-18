@@ -28,7 +28,7 @@ export const EXAMPLE_DIMS = 3;
  */
 export const EXAMPLE_SOLUTION: CellState[][] = [
     [BACKWARD, FORWARD, BACKWARD],
-    [BACKWARD, FORWARD, BACKWARD],
+    [FORWARD, FORWARD, BACKWARD],
     [BACKWARD, FORWARD, BACKWARD],
 ];
 
@@ -36,7 +36,7 @@ export const EXAMPLE_SOLUTION: CellState[][] = [
 export const EXAMPLE_NUMBERS: (number | null)[][] = [
     [1, 0, 2, null],
     [null, null, null, 1],
-    [1, null, null, null],
+    [2, null, null, null],
     [null, 2, 0, 1],
 ];
 
