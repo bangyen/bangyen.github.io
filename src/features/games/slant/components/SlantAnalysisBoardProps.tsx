@@ -8,7 +8,7 @@ import { AnalysisCell } from './AnalysisCell';
 import { AnalysisHint } from './AnalysisHint';
 import type { DragProps } from '../../hooks/useDrag';
 import { SLANT_STYLES } from '../config/constants';
-import { EMPTY } from '../types';
+import { EMPTY, FORWARD, BACKWARD } from '../types';
 import type { CellInfo } from '../utils/analysisSolver';
 
 import { COLORS } from '@/config/theme';
@@ -96,6 +96,9 @@ interface BuildNumberPropsArgs {
     r: number;
     c: number;
     numbers: (number | null)[][];
+    gridState: Map<string, CellInfo>;
+    rows: number;
+    cols: number;
     nodeConflictSet: Set<string>;
     numberSize: number;
 }
@@ -108,11 +111,35 @@ export function buildNumberProps({
     r,
     c,
     numbers,
+    gridState,
+    rows,
+    cols,
     nodeConflictSet,
     numberSize,
 }: BuildNumberPropsArgs) {
     const value = numbers[r]?.[c];
     const hasConflict = nodeConflictSet.has(getPosKey(r, c));
+
+    // Calculate if node is satisfied (connected slashes == number value)
+    let connected = 0;
+    if (value != null) {
+        const neighbors = [
+            { r: r - 1, c: c - 1, required: BACKWARD }, // TL
+            { r: r - 1, c, required: FORWARD }, // TR
+            { r, c: c - 1, required: FORWARD }, // BL
+            { r, c, required: BACKWARD }, // BR
+        ];
+
+        for (const nb of neighbors) {
+            if (nb.r >= 0 && nb.r < rows && nb.c >= 0 && nb.c < cols) {
+                const cell = gridState.get(getPosKey(nb.r, nb.c));
+                if (cell?.state === nb.required) {
+                    connected++;
+                }
+            }
+        }
+    }
+    const isSatisfied = value != null && connected === value;
 
     return {
         'data-pos': getPosKey(r, c),
@@ -121,6 +148,7 @@ export function buildNumberProps({
             <AnalysisHint
                 value={value ?? null}
                 hasConflict={hasConflict}
+                isSatisfied={isSatisfied}
                 numberSize={numberSize}
             />
         ),
@@ -135,12 +163,15 @@ export function buildNumberProps({
                     : `2px solid ${
                           hasConflict
                               ? COLORS.data.red
-                              : SLANT_STYLES.ANALYSIS.HINT_BORDER
+                              : isSatisfied
+                                ? 'transparent'
+                                : SLANT_STYLES.ANALYSIS.HINT_BORDER
                       }`,
             zIndex: 5,
             opacity: value == null ? 0 : 1,
             position: 'relative',
             pointerEvents: 'none',
+            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
         },
     };
 }
