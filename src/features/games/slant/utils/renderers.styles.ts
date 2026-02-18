@@ -37,6 +37,7 @@ export function getSlashLineSx(
 export const backCellVisualSx: SxProps<Theme> = {
     border: `2px solid ${COLORS.border.subtle}`,
     position: 'relative',
+    backgroundColor: SLANT_STYLES.ANALYSIS.BG_SUBTLE,
 };
 
 /** Container for the slash line(s) within a cell. */
