@@ -131,7 +131,7 @@ function ErrorContent({
                     onClick={resetErrorBoundary}
                     sx={errorButtonSx}
                 >
-                    Retry
+                    Try Again
                 </Button>
                 {handleClose && (
                     <Button
