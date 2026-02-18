@@ -19,8 +19,8 @@ export interface RouteFeatureErrorProps {
  * to the current path (which clears the router error state).
  */
 export function RouteFeatureError({
-    title = 'Error',
-    resetLabel = 'Reset',
+    title = 'Something went wrong',
+    resetLabel = 'Try Again',
 }: RouteFeatureErrorProps) {
     const routeError = useRouteError();
     const navigate = useNavigate();
