@@ -14,7 +14,7 @@ import { Refresh } from '@/components/icons';
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
 import { ErrorCard } from '@/components/ui/ErrorCard';
 import { errorButtonSx } from '@/components/ui/ErrorCard.styles';
-import { COLORS } from '@/config/theme';
+import { COLORS, SPACING } from '@/config/theme';
 import { GAME_TEXT } from '@/features/games/config/constants';
 import { lazyNamed } from '@/utils/lazyNamed';
 import { spreadSx } from '@/utils/muiUtils';
@@ -72,16 +72,49 @@ interface ErrorContentProps {
  * chunk fails to load (e.g. network error).  Provides a Retry button
  * so the user can re-attempt the lazy load without closing the modal.
  */
-function ErrorContent({ resetErrorBoundary }: ErrorContentProps) {
+function ErrorContent({ error, resetErrorBoundary }: ErrorContentProps) {
+    const devDetail = (typeof process === 'undefined'
+        ? import.meta.env.DEV
+        : process.env['NODE_ENV'] === 'development') &&
+        error && (
+            <Box
+                sx={{
+                    backgroundColor: COLORS.surface.elevated,
+                    border: `1px solid ${COLORS.border.subtle}`,
+                    borderRadius: SPACING.borderRadius.md,
+                    padding: 2,
+                    marginBottom: 3,
+                    textAlign: 'left',
+                    overflow: 'auto',
+                    maxHeight: '150px',
+                    width: '100%',
+                }}
+            >
+                <Typography
+                    sx={{
+                        color: COLORS.text.secondary,
+                        fontSize: '0.75rem',
+                        fontFamily: 'monospace',
+                        whiteSpace: 'pre-wrap',
+                        overflowWrap: 'anywhere',
+                    }}
+                >
+                    {error.toString()}
+                </Typography>
+            </Box>
+        );
+
     return (
         <ModalPlaceholder>
             <ErrorCard
                 title="Failed to Load"
                 message="Please check your connection and try again."
+                detail={devDetail || undefined}
                 sx={{
                     boxShadow: 'none',
                     background: 'transparent',
                     height: 'auto',
+                    p: 0,
                 }}
             >
                 <Button
