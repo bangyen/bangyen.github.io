@@ -114,7 +114,6 @@ function ErrorContent({ error, resetErrorBoundary }: ErrorContentProps) {
                     boxShadow: 'none',
                     background: 'transparent',
                     height: 'auto',
-                    p: 0,
                 }}
             >
                 <Button
