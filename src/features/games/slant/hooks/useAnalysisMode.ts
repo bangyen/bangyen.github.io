@@ -110,7 +110,10 @@ export function useAnalysisMode({
     // base padding ({ xs: '30px', sm: '36px' }) when in analysis mode.
     // A plain `padding: 0` does not override the `sm` media query.
     const boardSx = useMemo(
-        () => (isAnalysisMode ? { padding: { xs: 0, sm: 0 } } : undefined),
+        () =>
+            isAnalysisMode
+                ? { padding: { xs: 0, sm: 0 }, border: 'none' }
+                : undefined,
         [isAnalysisMode],
     );
 
