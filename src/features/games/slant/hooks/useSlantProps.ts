@@ -35,6 +35,7 @@ interface SlantInfoReturn {
     open: boolean;
     toggleOpen: () => void;
     handleOpenAnalysis: () => void;
+    handleClearBoard: () => void;
     handleBoxClick: (e: React.MouseEvent) => void;
 }
 
@@ -67,6 +68,7 @@ export interface SlantAnalysisParams {
 export interface SlantInfoParams {
     infoOpen: boolean;
     toggleInfo: () => void;
+    handleClearBoard: () => void;
 }
 
 export interface UseSlantPropsParams {
@@ -105,7 +107,7 @@ export function useSlantProps({
         handleOpenAnalysis,
         boardSx,
     },
-    info: { infoOpen, toggleInfo },
+    info: { infoOpen, toggleInfo, handleClearBoard },
     controls: controlsProps,
     getDragProps,
 }: UseSlantPropsParams) {
@@ -155,6 +157,7 @@ export function useSlantProps({
             open: infoOpen,
             toggleOpen: toggleInfo,
             handleOpenAnalysis,
+            handleClearBoard,
             handleBoxClick,
         },
         trophyProps: {

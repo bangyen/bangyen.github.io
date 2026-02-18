@@ -46,11 +46,12 @@ export interface SlantState {
  */
 export interface SlantAction {
     /** Action type (currently only 'toggle' supported) */
-    type: 'toggle';
-    /** Row index of cell to toggle */
-    row: CellIndex;
-    /** Column index of cell to toggle */
-    col: CellIndex;
-    /** Whether to cycle in reverse (right-click) */
+    /** Action type */
+    type: 'toggle' | 'reset';
+    /** Row index of cell to toggle (not used for 'reset') */
+    row?: CellIndex;
+    /** Column index of cell to toggle (not used for 'reset') */
+    col?: CellIndex;
+    /** Whether to cycle in reverse (right-click) (not used for 'reset') */
     reverse?: boolean;
 }
