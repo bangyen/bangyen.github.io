@@ -71,7 +71,7 @@ describe('FeatureErrorLayout', () => {
             </MemoryRouter>,
         );
 
-        expect(screen.getByText('Error')).toBeInTheDocument();
-        expect(screen.getByText('Reset')).toBeInTheDocument();
+        expect(screen.getByText('Something went wrong')).toBeInTheDocument();
+        expect(screen.getByText('Try Again')).toBeInTheDocument();
     });
 });

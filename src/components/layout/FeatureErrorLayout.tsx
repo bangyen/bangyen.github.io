@@ -17,8 +17,8 @@ export interface FeatureErrorLayoutProps {
  * include their own ErrorBoundary wrapper.
  */
 export function FeatureErrorLayout({
-    title = 'Error',
-    resetLabel = 'Reset',
+    title = 'Something went wrong',
+    resetLabel = 'Try Again',
 }: FeatureErrorLayoutProps) {
     return (
         <ErrorBoundary
