@@ -26,10 +26,6 @@ export function RouteRootError() {
             onReload={() => {
                 globalThis.location.reload();
             }}
-            onReset={() => {
-                globalThis.location.hash = '#/';
-                globalThis.location.reload();
-            }}
         />
     );
 }

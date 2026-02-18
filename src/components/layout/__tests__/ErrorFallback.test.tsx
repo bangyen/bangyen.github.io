@@ -11,7 +11,6 @@ describe('ErrorFallback', () => {
             componentStack: 'component\nstack\ntrace',
         } as React.ErrorInfo,
         onReload: vi.fn(),
-        onReset: vi.fn(),
     };
 
     const renderWithRouter = (ui: React.ReactElement) => {
@@ -32,15 +31,9 @@ describe('ErrorFallback', () => {
         expect(mockProps.onReload).toHaveBeenCalled();
     });
 
-    test('calls onReset when Try Again button is clicked', () => {
+    test('renders Return to Home link', () => {
         renderWithRouter(<ErrorFallback {...mockProps} />);
-        fireEvent.click(screen.getByText('Try Again'));
-        expect(mockProps.onReset).toHaveBeenCalled();
-    });
-
-    test('renders Back to Home link', () => {
-        renderWithRouter(<ErrorFallback {...mockProps} />);
-        const homeLink = screen.getByRole('link', { name: /Back to Home/i });
+        const homeLink = screen.getByRole('link', { name: /Return to Home/i });
         expect(homeLink).toHaveAttribute('href', '/');
     });
 

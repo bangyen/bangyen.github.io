@@ -32,7 +32,7 @@ describe('Error Page', () => {
                 <ErrorPage />
             </BrowserRouter>,
         );
-        const homeLink = screen.getByRole('link', { name: /Back to Home/i });
+        const homeLink = screen.getByRole('link', { name: /Return to Home/i });
         expect(homeLink).toHaveAttribute('href', '/');
     });
 });

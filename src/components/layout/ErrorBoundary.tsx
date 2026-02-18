@@ -77,7 +77,6 @@ class ErrorBoundary extends React.Component<
                     error={error}
                     errorInfo={errorInfo}
                     onReload={this.handleReload}
-                    onReset={this.handleReset}
                 />
             );
         }
