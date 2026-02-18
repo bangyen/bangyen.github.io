@@ -25,7 +25,7 @@ export function useSteppedModal(
     const [step, setStep] = useState(() => {
         if (!persistenceKey) return 0;
         try {
-            const saved = localStorage.getItem(persistenceKey);
+            const saved = sessionStorage.getItem(persistenceKey);
             const parsed = saved ? parseInt(saved, 10) : 0;
             return isNaN(parsed) || parsed < 0 || parsed >= totalSteps
                 ? 0
@@ -40,7 +40,7 @@ export function useSteppedModal(
             const next = prev + 1;
             if (next < totalSteps) {
                 if (persistenceKey) {
-                    localStorage.setItem(persistenceKey, String(next));
+                    sessionStorage.setItem(persistenceKey, String(next));
                 }
                 return next;
             }
@@ -54,7 +54,7 @@ export function useSteppedModal(
             if (prev > 0) {
                 const next = prev - 1;
                 if (persistenceKey) {
-                    localStorage.setItem(persistenceKey, String(next));
+                    sessionStorage.setItem(persistenceKey, String(next));
                 }
                 return next;
             }
