@@ -204,7 +204,8 @@ export function SlantAnalysisBoard({
                         left: mobile
                             ? BOARD_STYLES.PADDING.MOBILE
                             : BOARD_STYLES.PADDING.DESKTOP,
-                        transform: `translate(-${String(numberSize / 2)}rem, -${String(numberSize / 2)}rem)`,
+                        transform: `translate(calc(-${String(numberSize / 2)}rem - 0.0625rem), calc(-${String(numberSize / 2)}rem - 0.0625rem))`,
+
                         zIndex: LAYOUT.zIndex.base + 2,
                         pointerEvents: 'none',
                     }}
