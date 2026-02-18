@@ -65,14 +65,23 @@ function LoadingContent() {
 interface ErrorContentProps {
     error: Error | null;
     resetErrorBoundary: () => void;
+    onClose?: unknown;
+    [key: string]: unknown;
 }
 
 /**
  * Error fallback rendered inside the modal when the `GameInfoContent`
  * chunk fails to load (e.g. network error).  Provides a Retry button
- * so the user can re-attempt the lazy load without closing the modal.
+ * so the user can re-attempt the lazy load without closing the modal,
+ * and a Return to Game button to exit the modal.
  */
-function ErrorContent({ error, resetErrorBoundary }: ErrorContentProps) {
+function ErrorContent({
+    error,
+    resetErrorBoundary,
+    onClose,
+}: ErrorContentProps) {
+    const handleClose =
+        typeof onClose === 'function' ? (onClose as () => void) : undefined;
     const devDetail = (typeof process === 'undefined'
         ? import.meta.env.DEV
         : process.env['NODE_ENV'] === 'development') &&
@@ -124,6 +133,15 @@ function ErrorContent({ error, resetErrorBoundary }: ErrorContentProps) {
                 >
                     Retry
                 </Button>
+                {handleClose && (
+                    <Button
+                        variant="outlined"
+                        onClick={handleClose}
+                        sx={errorButtonSx}
+                    >
+                        Return to Game
+                    </Button>
+                )}
             </ErrorCard>
         </ModalPlaceholder>
     );
@@ -154,7 +172,10 @@ export function LazyGameInfo(props: GameInfoProps): React.ReactElement | null {
             sx={infoModalSx}
         >
             <Box sx={infoOuterBoxSx} role="document">
-                <ErrorBoundary FallbackComponent={ErrorContent}>
+                <ErrorBoundary
+                    FallbackComponent={ErrorContent}
+                    fallbackProps={{ onClose: props.toggleOpen }}
+                >
                     <Suspense fallback={<LoadingContent />}>
                         <GameInfoContentLazy
                             {...contentProps}
