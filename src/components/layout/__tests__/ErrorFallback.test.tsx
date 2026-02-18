@@ -4,11 +4,6 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { ErrorFallback } from '../ErrorFallback';
 
-// Mock HomeButton as it uses navigation
-vi.mock('../../ui/Controls', () => ({
-    HomeButton: () => <button data-testid="home-button">Home</button>,
-}));
-
 describe('ErrorFallback', () => {
     const mockProps = {
         error: new Error('Test error message'),
@@ -43,9 +38,10 @@ describe('ErrorFallback', () => {
         expect(mockProps.onReset).toHaveBeenCalled();
     });
 
-    test('renders HomeButton', () => {
+    test('renders Back to Home link', () => {
         renderWithRouter(<ErrorFallback {...mockProps} />);
-        expect(screen.getByTestId('home-button')).toBeInTheDocument();
+        const homeLink = screen.getByRole('link', { name: /Back to Home/i });
+        expect(homeLink).toHaveAttribute('href', '/');
     });
 
     describe('Development mode details', () => {
