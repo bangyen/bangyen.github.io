@@ -116,6 +116,8 @@ describe('Lights Out Info Component', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
+        // Clear session storage to prevent step persistence from previous tests
+        sessionStorage.clear();
         (matrices.getProduct as Mock).mockReturnValue([0, 0, 0]);
         mockUseHandler.mockReturnValue({}); // simplistic mock
         // Mock getInput to return a function that returns props with onClick
