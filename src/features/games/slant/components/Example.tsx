@@ -65,9 +65,10 @@ function makeBackProps(
 
         return {
             sx: {
-                border: `1px solid ${COLORS.border.subtle}`,
+                border: `2px solid ${COLORS.border.subtle}`,
                 position: 'relative',
                 transition: ANIMATIONS.transition,
+                backgroundColor: SLANT_STYLES.ANALYSIS.BG_SUBTLE,
                 ...(isActive
                     ? { backgroundColor: COLORS.interactive.hover }
                     : {}),
@@ -134,9 +135,10 @@ function makeFrontProps(
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+                        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                         userSelect: 'none',
                         WebkitUserSelect: 'none',
+                        transform: isSatisfied ? 'scale(0.95)' : 'scale(1)',
                         width: `${String(numberSize)}rem`,
                         height: `${String(numberSize)}rem`,
                     }}
@@ -244,6 +246,7 @@ export function Example({
                     cols={EXAMPLE_DIMS + 1}
                     cellRows={EXAMPLE_DIMS}
                     cellCols={EXAMPLE_DIMS}
+                    space={0.125}
                     overlayProps={frontProps}
                     cellProps={backProps}
                     overlayLayerSx={{ pointerEvents: 'none' }}
