@@ -43,6 +43,7 @@ export function SlantInfo({
             }
             cardSx={SLANT_INFO_CARD_SX}
             contentSxOverride={slantInfoContentSx}
+            persistenceKey="slant_info_step"
         />
     );
 }

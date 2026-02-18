@@ -20,20 +20,47 @@ interface SteppedModalControls {
 export function useSteppedModal(
     totalSteps: number,
     onClose: () => void,
+    persistenceKey?: string,
 ): SteppedModalControls {
-    const [step, setStep] = useState(0);
+    const [step, setStep] = useState(() => {
+        if (!persistenceKey) return 0;
+        try {
+            const saved = localStorage.getItem(persistenceKey);
+            const parsed = saved ? parseInt(saved, 10) : 0;
+            return isNaN(parsed) || parsed < 0 || parsed >= totalSteps
+                ? 0
+                : parsed;
+        } catch {
+            return 0;
+        }
+    });
 
     const handleNext = useCallback(() => {
         setStep(prev => {
-            if (prev < totalSteps - 1) return prev + 1;
+            const next = prev + 1;
+            if (next < totalSteps) {
+                if (persistenceKey) {
+                    localStorage.setItem(persistenceKey, String(next));
+                }
+                return next;
+            }
             onClose();
             return prev;
         });
-    }, [totalSteps, onClose]);
+    }, [totalSteps, onClose, persistenceKey]);
 
     const handleBack = useCallback(() => {
-        setStep(prev => (prev > 0 ? prev - 1 : prev));
-    }, []);
+        setStep(prev => {
+            if (prev > 0) {
+                const next = prev - 1;
+                if (persistenceKey) {
+                    localStorage.setItem(persistenceKey, String(next));
+                }
+                return next;
+            }
+            return prev;
+        });
+    }, [persistenceKey]);
 
     return { step, handleNext, handleBack };
 }

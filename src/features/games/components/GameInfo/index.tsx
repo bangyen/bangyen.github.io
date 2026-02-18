@@ -80,6 +80,8 @@ export interface GameInfoProps {
     cardSx?: SxProps<Theme>;
     /** Optional per-step override for the scrollable content area sx. */
     contentSxOverride?: (step: number) => SxProps<Theme>;
+    /** Optional key to persist the current step in localStorage. */
+    persistenceKey?: string;
 }
 
 /** Props for the inner content rendered inside an already-open Modal. */
@@ -114,12 +116,14 @@ export function GameInfoContent({
     extraSteps = [],
     cardSx,
     contentSxOverride,
+    persistenceKey,
     titleId,
 }: GameInfoContentProps) {
     const totalSteps = titles.length;
     const { step, handleNext, handleBack } = useSteppedModal(
         totalSteps,
         toggleOpen,
+        persistenceKey,
     );
 
     const steps = [
