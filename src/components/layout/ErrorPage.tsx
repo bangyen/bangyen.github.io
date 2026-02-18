@@ -1,8 +1,8 @@
 import { Box, Fade, Button } from '@mui/material';
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-import { HomeRounded } from '@/components/icons';
+import { HomeRounded, ArrowBackRounded } from '@/components/icons';
 import { ErrorCard } from '@/components/ui/ErrorCard';
 import {
     errorContainerSx,
@@ -17,6 +17,8 @@ import { PAGE_TITLES } from '@/config/constants';
  * rendered via the route table rather than belonging to any feature.
  */
 export function ErrorPage(): React.ReactElement {
+    const navigate = useNavigate();
+
     useEffect(() => {
         document.title = PAGE_TITLES.error;
     }, []);
@@ -29,6 +31,16 @@ export function ErrorPage(): React.ReactElement {
                         title="Page Not Found"
                         message="This page doesn't exist or has been moved."
                     >
+                        <Button
+                            variant="contained"
+                            startIcon={<ArrowBackRounded />}
+                            onClick={() => {
+                                void navigate(-1);
+                            }}
+                            sx={errorButtonSx}
+                        >
+                            Go Back
+                        </Button>
                         <Button
                             component={Link}
                             to="/"
