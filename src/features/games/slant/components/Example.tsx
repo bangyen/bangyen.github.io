@@ -139,6 +139,8 @@ function makeFrontProps(
                         userSelect: 'none',
                         WebkitUserSelect: 'none',
                         transform: isSatisfied ? 'scale(0.95)' : 'scale(1)',
+                        paddingTop: '0.1rem',
+                        lineHeight: 1,
                         width: `${String(numberSize)}rem`,
                         height: `${String(numberSize)}rem`,
                     }}
