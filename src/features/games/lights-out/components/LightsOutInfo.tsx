@@ -88,6 +88,7 @@ export function LightsOutInfo({
                     hasPattern={hasPattern}
                 />,
             ]}
+            persistenceKey="lights_out_info_step"
         />
     );
 }
