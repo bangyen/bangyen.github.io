@@ -15,7 +15,9 @@ describe('FeatureErrorFallback', () => {
     test('renders default title and error message', () => {
         renderWithRouter(<FeatureErrorFallback {...defaultProps} />);
         expect(screen.getByText('Error')).toBeInTheDocument();
-        expect(screen.getByText('test failure')).toBeInTheDocument();
+        expect(
+            screen.getByText('An unexpected error occurred.'),
+        ).toBeInTheDocument();
     });
 
     test('renders custom title and reset label', () => {

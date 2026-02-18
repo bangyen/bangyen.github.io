@@ -1,4 +1,4 @@
-import { Button, Box } from '@mui/material';
+import { Button, Box, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 import { Refresh, HomeRounded } from '@/components/icons';
@@ -7,6 +7,7 @@ import {
     errorContainerSx,
     errorButtonSx,
 } from '@/components/ui/ErrorCard.styles';
+import { COLORS, TYPOGRAPHY, SPACING } from '@/config/theme';
 
 export interface FeatureErrorFallbackProps {
     error: Error | null;
@@ -19,10 +20,9 @@ export interface FeatureErrorFallbackProps {
 
 /**
  * Compact error fallback used inside feature-level error boundaries
- * (games, research, etc.).  Renders a centered glass card with the
- * error message, a reset button, and a link back to the home page.
- * Parameterised by title and button label so a single component can
- * serve every feature.
+ * (games, research, etc.).  Renders a centered glass card with a
+ * standardized error message, optional dev-only details, a reset
+ * button, and a link back to the home page.
  */
 export function FeatureErrorFallback({
     error,
@@ -30,11 +30,43 @@ export function FeatureErrorFallback({
     title = 'Error',
     resetLabel = 'Reset',
 }: FeatureErrorFallbackProps) {
+    const devDetail = (typeof process === 'undefined'
+        ? import.meta.env.DEV
+        : process.env['NODE_ENV'] === 'development') &&
+        error && (
+            <Box
+                sx={{
+                    backgroundColor: COLORS.surface.elevated,
+                    border: `1px solid ${COLORS.border.subtle}`,
+                    borderRadius: SPACING.borderRadius.md,
+                    padding: 2,
+                    marginBottom: 3,
+                    textAlign: 'left',
+                    overflow: 'auto',
+                    maxHeight: '200px',
+                    width: '100%',
+                }}
+            >
+                <Typography
+                    sx={{
+                        color: COLORS.text.secondary,
+                        fontSize: TYPOGRAPHY.fontSize.caption,
+                        fontFamily: 'monospace',
+                        whiteSpace: 'pre-wrap',
+                        overflowWrap: 'anywhere',
+                    }}
+                >
+                    {error.toString()}
+                </Typography>
+            </Box>
+        );
+
     return (
         <Box sx={errorContainerSx}>
             <ErrorCard
                 title={title}
-                message={error?.message ?? 'An unexpected error occurred.'}
+                message="An unexpected error occurred."
+                detail={devDetail || undefined}
             >
                 <Button
                     variant="contained"
