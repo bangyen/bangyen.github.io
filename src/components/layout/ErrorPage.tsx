@@ -27,7 +27,7 @@ export function ErrorPage(): React.ReactElement {
                 <div>
                     <ErrorCard
                         title="Page Not Found"
-                        message="The page you're looking for doesn't exist or has been moved."
+                        message="This page doesn't exist or has been moved."
                     >
                         <Button
                             component={Link}
