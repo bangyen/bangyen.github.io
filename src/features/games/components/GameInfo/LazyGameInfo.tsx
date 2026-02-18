@@ -10,7 +10,7 @@ import {
 
 import type { GameInfoProps } from './index';
 
-import { Refresh } from '@/components/icons';
+import { Refresh, ArrowBackRounded } from '@/components/icons';
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
 import { ErrorCard } from '@/components/ui/ErrorCard';
 import { errorButtonSx } from '@/components/ui/ErrorCard.styles';
@@ -136,6 +136,7 @@ function ErrorContent({
                 {handleClose && (
                     <Button
                         variant="outlined"
+                        startIcon={<ArrowBackRounded />}
                         onClick={handleClose}
                         sx={errorButtonSx}
                     >

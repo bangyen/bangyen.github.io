@@ -48,7 +48,7 @@ export function ErrorPage(): React.ReactElement {
                             startIcon={<HomeRounded />}
                             sx={errorButtonSx}
                         >
-                            Back to Home
+                            Return to Home
                         </Button>
                     </ErrorCard>
                 </div>

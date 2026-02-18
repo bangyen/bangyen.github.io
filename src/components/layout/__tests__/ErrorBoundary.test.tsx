@@ -5,16 +5,9 @@ import { ErrorBoundary } from '../ErrorBoundary';
 
 // Mock ErrorFallback to simplify Boundary testing
 vi.mock('../ErrorFallback', () => ({
-    ErrorFallback: ({
-        onReload,
-        onReset,
-    }: {
-        onReload: () => void;
-        onReset: () => void;
-    }) => (
+    ErrorFallback: ({ onReload }: { onReload: () => void }) => (
         <div data-testid="error-fallback">
             <button onClick={onReload}>Reload</button>
-            <button onClick={onReset}>Reset</button>
         </div>
     ),
 }));
@@ -71,7 +64,13 @@ describe('ErrorBoundary', () => {
         );
     });
 
-    test('resets state when Reset is called in Fallback', () => {
+    test('resets state when resetErrorBoundary is called in FallbackComponent', () => {
+        const CustomFallback = ({
+            resetErrorBoundary,
+        }: {
+            resetErrorBoundary: () => void;
+        }) => <button onClick={resetErrorBoundary}>Reset</button>;
+
         const TestWrapper = () => {
             const [shouldThrow, setShouldThrow] = React.useState(true);
             return (
@@ -84,7 +83,7 @@ describe('ErrorBoundary', () => {
                     >
                         Fix Logic
                     </button>
-                    <ErrorBoundary>
+                    <ErrorBoundary FallbackComponent={CustomFallback}>
                         {shouldThrow ? (
                             <ThrowingComponent shouldThrow={true} />
                         ) : (
@@ -98,16 +97,16 @@ describe('ErrorBoundary', () => {
         render(<TestWrapper />);
 
         // Initially crashed
-        expect(screen.getByTestId('error-fallback')).toBeInTheDocument();
+        expect(screen.getByText('Reset')).toBeInTheDocument();
 
         // Fix the logic first (so it doesn't re-throw on reset)
         fireEvent.click(screen.getByTestId('fix-logic'));
 
-        // Click Reset (from mocked fallback)
+        // Click Reset (from custom fallback)
         fireEvent.click(screen.getByText('Reset'));
 
         // Should return to healthy state
-        expect(screen.queryByTestId('error-fallback')).not.toBeInTheDocument();
+        expect(screen.queryByText('Reset')).not.toBeInTheDocument();
         expect(screen.getByText('Healthy Component')).toBeInTheDocument();
     });
 

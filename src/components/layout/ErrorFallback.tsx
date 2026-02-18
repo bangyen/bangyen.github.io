@@ -15,7 +15,6 @@ export interface ErrorFallbackProps {
     error: Error | null;
     errorInfo: React.ErrorInfo | null;
     onReload: () => void;
-    onReset: () => void;
 }
 
 /**
@@ -27,7 +26,6 @@ export function ErrorFallback({
     error,
     errorInfo,
     onReload,
-    onReset,
 }: ErrorFallbackProps): React.ReactElement {
     const devDetail = (typeof process === 'undefined'
         ? import.meta.env.DEV
@@ -79,22 +77,13 @@ export function ErrorFallback({
                     Reload Page
                 </Button>
                 <Button
-                    variant="outlined"
-                    color="secondary"
-                    startIcon={<Refresh />}
-                    onClick={onReset}
-                    sx={errorButtonSx}
-                >
-                    Try Again
-                </Button>
-                <Button
                     component={Link}
                     to="/"
                     variant="outlined"
                     startIcon={<HomeRounded />}
                     sx={errorButtonSx}
                 >
-                    Back to Home
+                    Return to Home
                 </Button>
             </ErrorCard>
         </Box>

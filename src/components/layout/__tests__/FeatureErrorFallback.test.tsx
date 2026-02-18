@@ -14,7 +14,7 @@ describe('FeatureErrorFallback', () => {
 
     test('renders default title and error message', () => {
         renderWithRouter(<FeatureErrorFallback {...defaultProps} />);
-        expect(screen.getByText('Error')).toBeInTheDocument();
+        expect(screen.getByText('Something went wrong')).toBeInTheDocument();
         expect(
             screen.getByText('An unexpected error occurred.'),
         ).toBeInTheDocument();
@@ -34,13 +34,13 @@ describe('FeatureErrorFallback', () => {
 
     test('calls resetErrorBoundary on reset button click', () => {
         renderWithRouter(<FeatureErrorFallback {...defaultProps} />);
-        fireEvent.click(screen.getByText('Reset'));
+        fireEvent.click(screen.getByText('Try Again'));
         expect(defaultProps.resetErrorBoundary).toHaveBeenCalled();
     });
 
-    test('renders Back to Home link', () => {
+    test('renders Return to Home link', () => {
         renderWithRouter(<FeatureErrorFallback {...defaultProps} />);
-        const homeLink = screen.getByRole('link', { name: /Back to Home/i });
+        const homeLink = screen.getByRole('link', { name: /Return to Home/i });
         expect(homeLink).toHaveAttribute('href', '/');
     });
 

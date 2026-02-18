@@ -27,8 +27,8 @@ export interface FeatureErrorFallbackProps {
 export function FeatureErrorFallback({
     error,
     resetErrorBoundary,
-    title = 'Error',
-    resetLabel = 'Reset',
+    title = 'Something went wrong',
+    resetLabel = 'Try Again',
 }: FeatureErrorFallbackProps) {
     const devDetail = (typeof process === 'undefined'
         ? import.meta.env.DEV
@@ -83,7 +83,7 @@ export function FeatureErrorFallback({
                     startIcon={<HomeRounded />}
                     sx={errorButtonSx}
                 >
-                    Back to Home
+                    Return to Home
                 </Button>
             </ErrorCard>
         </Box>
