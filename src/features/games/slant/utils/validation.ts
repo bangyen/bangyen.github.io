@@ -107,7 +107,29 @@ export function getSatisfiedNodes(
 
             const current = currentNumbers[r]?.[c] ?? 0;
             if (current === target) {
-                satisfied.add(getPosKey(r, c));
+                let allNeighborsFilled = true;
+                const neighborGridCells = [
+                    { gr: r - 1, gc: c - 1 },
+                    { gr: r - 1, gc: c },
+                    { gr: r, gc: c - 1 },
+                    { gr: r, gc: c },
+                ];
+                for (const { gr, gc } of neighborGridCells) {
+                    if (
+                        gr >= 0 &&
+                        gr < rows &&
+                        gc >= 0 &&
+                        gc < cols &&
+                        grid[gr]?.[gc] === EMPTY
+                    ) {
+                        allNeighborsFilled = false;
+                        break;
+                    }
+                }
+
+                if (allNeighborsFilled) {
+                    satisfied.add(getPosKey(r, c));
+                }
             }
         }
     }

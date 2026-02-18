@@ -120,8 +120,11 @@ export function buildNumberProps({
     const value = numbers[r]?.[c];
     const hasConflict = nodeConflictSet.has(getPosKey(r, c));
 
-    // Calculate if node is satisfied (connected slashes == number value)
+    // Calculate if node is satisfied (connected slashes == number value AND all neighbors filled)
     let connected = 0;
+    let filledNeighbors = 0;
+    let totalNeighbors = 0;
+
     if (value != null) {
         const neighbors = [
             { r: r - 1, c: c - 1, required: BACKWARD }, // TL
@@ -132,14 +135,21 @@ export function buildNumberProps({
 
         for (const nb of neighbors) {
             if (nb.r >= 0 && nb.r < rows && nb.c >= 0 && nb.c < cols) {
+                totalNeighbors++;
                 const cell = gridState.get(getPosKey(nb.r, nb.c));
-                if (cell?.state === nb.required) {
-                    connected++;
+                if (cell && cell.state !== EMPTY) {
+                    filledNeighbors++;
+                    if (cell.state === nb.required) {
+                        connected++;
+                    }
                 }
             }
         }
     }
-    const isSatisfied = value != null && connected === value;
+    const isSatisfied =
+        value != null &&
+        connected === value &&
+        filledNeighbors === totalNeighbors;
 
     return {
         'data-pos': getPosKey(r, c),
