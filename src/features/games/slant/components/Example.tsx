@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import React, { useState, useEffect, useMemo } from 'react';
 
 import { Board } from '../../components/Board';
@@ -6,6 +6,7 @@ import { TrophyOverlay } from '../../components/TrophyOverlay';
 import { SLANT_STYLES, NUMBER_SIZE_RATIO } from '../config/constants';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
+import { exampleActionsSx, infoButtonSx } from './SlantInfo.styles';
 import {
     EXAMPLE_DIMS,
     EXAMPLE_NUMBERS,
@@ -14,6 +15,7 @@ import {
 } from '../utils/exampleData';
 import { getSatisfiedNodes } from '../utils/validation';
 
+import { Psychology, DeleteRounded } from '@/components/icons';
 import { COLORS, ANIMATIONS } from '@/config/theme';
 import { getPosKey } from '@/utils/gameUtils';
 
@@ -153,13 +155,21 @@ function makeFrontProps(
 interface ExampleProps {
     /** Cell size in rem units. */
     size: number;
+    /** Callback to open analysis mode. */
+    handleOpenAnalysis: () => void;
+    /** Callback to clear the board. */
+    handleClearBoard: () => void;
 }
 
 /**
  * Animated 3×3 Slant demo that cycles through a step-by-step solve.
  * Each frame adds one slash; numbers transition from pending to satisfied.
  */
-export function Example({ size }: ExampleProps): React.ReactElement {
+export function Example({
+    size,
+    handleOpenAnalysis,
+    handleClearBoard,
+}: ExampleProps): React.ReactElement {
     const frames = useMemo(() => getExampleFrames(), []);
 
     const [frameIdx, setFrameIdx] = useState(0);
@@ -220,6 +230,7 @@ export function Example({ size }: ExampleProps): React.ReactElement {
         <Box
             sx={{
                 display: 'flex',
+                flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
                 flex: 1,
@@ -245,6 +256,25 @@ export function Example({ size }: ExampleProps): React.ReactElement {
                     primaryColor={COLORS.primary.main}
                     showLabel={false}
                 />
+            </Box>
+
+            <Box sx={exampleActionsSx}>
+                <Button
+                    variant="outlined"
+                    startIcon={<DeleteRounded />}
+                    onClick={handleClearBoard}
+                    sx={infoButtonSx}
+                >
+                    Clear Board
+                </Button>
+                <Button
+                    variant="outlined"
+                    startIcon={<Psychology />}
+                    onClick={handleOpenAnalysis}
+                    sx={infoButtonSx}
+                >
+                    Open Analysis
+                </Button>
             </Box>
         </Box>
     );

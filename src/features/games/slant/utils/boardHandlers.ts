@@ -19,11 +19,27 @@ export { findCycles } from './cycleDetection';
 export const handleBoard = createGameReducer<SlantState, SlantAction>({
     getInitialState,
     customHandler: (state, action) => {
+        if (action.type === 'reset') {
+            return {
+                ...state,
+                grid: Array.from(
+                    { length: state.rows },
+                    () => new Array(state.cols).fill(EMPTY) as CellState[],
+                ),
+                solved: false,
+                errorNodes: new Set(),
+                cycleCells: new Set(),
+                satisfiedNodes: new Set(),
+            };
+        }
+
         if (action.type !== 'toggle') return null;
 
         if (state.solved) return state;
 
         const { row, col } = action;
+        if (row === undefined || col === undefined) return state;
+
         const newGrid = state.grid.map(r => [...r]);
         const rowArr = newGrid[row];
         if (!rowArr) return state;

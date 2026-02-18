@@ -93,6 +93,11 @@ export function useSlantGame() {
     dispatchRef.current = dispatch;
     dimsRef.current = { rows, cols };
 
+    const handleClearBoard = useCallback(() => {
+        dispatch({ type: 'reset' });
+        toggleInfo();
+    }, [dispatch, toggleInfo]);
+
     // Analysis mode state and handlers.
     const {
         analysisMoves,
@@ -179,7 +184,7 @@ export function useSlantGame() {
             handleOpenAnalysis,
             boardSx,
         },
-        info: { infoOpen, toggleInfo },
+        info: { infoOpen, toggleInfo, handleClearBoard },
         controls: controlsProps,
         getDragProps: getEnhancedDragProps,
     });
