@@ -70,9 +70,10 @@ export function buildCellProps({
             ...dragProps.sx,
             cursor: 'pointer',
             outline: 'none',
-            border: `1px solid ${SLANT_STYLES.ANALYSIS.BORDER}`,
+            border: `2px solid ${COLORS.border.subtle}`,
             position: 'relative',
             backgroundColor: SLANT_STYLES.ANALYSIS.BG_SUBTLE,
+
             '&:hover': {
                 backgroundColor: SLANT_STYLES.ANALYSIS.BG_HOVER,
             },

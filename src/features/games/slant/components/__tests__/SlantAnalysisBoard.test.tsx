@@ -106,7 +106,11 @@ vi.mock('@/config/theme', () => ({
             selected: 'lightgray',
             focus: 'gray',
         },
+        border: {
+            subtle: 'gray',
+        },
     },
+
     sxf: () => ({}),
     ANIMATIONS: { transition: 'none' },
     LAYOUT: { zIndex: { base: 1 } },
