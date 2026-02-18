@@ -110,6 +110,8 @@ export function getNumberBubbleSx(params: {
         transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
         userSelect: 'none',
         WebkitUserSelect: 'none',
+        paddingTop: '0.05rem',
+        lineHeight: 1,
         transform: hasError
             ? 'scale(1.15)'
             : isSatisfied

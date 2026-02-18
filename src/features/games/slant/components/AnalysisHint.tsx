@@ -41,6 +41,9 @@ export const AnalysisHint = React.memo(function AnalysisHint({
                 transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                 userSelect: 'none',
                 WebkitUserSelect: 'none',
+                paddingTop: '0.05rem',
+                lineHeight: 1,
+
                 transform: hasConflict
                     ? 'scale(1.15)'
                     : isSatisfied
