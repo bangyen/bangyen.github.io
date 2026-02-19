@@ -138,6 +138,7 @@ export const stepFadeInSx: SxProps<Theme> = {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
+    overflow: 'clip',
 };
 
 /** Centered content area within a step. */
