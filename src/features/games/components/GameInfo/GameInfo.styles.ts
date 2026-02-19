@@ -70,9 +70,11 @@ export const infoStepContentSx = (step?: number): SxProps<Theme> => ({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    // Apply right padding to scrolling steps (2+) on mobile to
+    // Apply right spacing to scrolling steps (2+) on mobile to
     // prevent text from running too close to the edge/scrollbar.
-    pr: (step ?? 0) < 2 ? 0 : { xs: 5, md: 3 },
+    // Shifted from 'pr' to 'mr' to move the scrollbar itself further left.
+    mr: (step ?? 0) < 2 ? 0 : { xs: 4, md: 3 },
+    pr: (step ?? 0) < 2 ? 0 : { xs: 1, md: 0 },
     overflowY: (step ?? 0) < 2 ? 'hidden' : 'auto',
     minHeight: 0,
 });
