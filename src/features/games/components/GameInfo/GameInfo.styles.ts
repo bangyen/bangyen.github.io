@@ -55,8 +55,9 @@ export const infoHeaderSx: SxProps<Theme> = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    mb: 2,
-    px: 2,
+    mb: 3,
+    pl: 3,
+    pr: 1,
 };
 
 /** Close button colour. */
@@ -117,6 +118,7 @@ export const instructionTitleSx: SxProps<Theme> = {
 
 /** Icon preceding the instruction title. */
 export const instructionIconSx: SxProps<Theme> = {
+    ml: 1,
     mr: 2,
     color: COLORS.primary.main,
     fontSize: '1.75rem',
@@ -127,7 +129,7 @@ export const instructionTextSx: SxProps<Theme> = {
     color: COLORS.text.secondary,
     lineHeight: 1.6,
     fontSize: TYPOGRAPHY.fontSize.body,
-    ml: 6,
+    ml: 6.5,
 };
 
 // ---------------------------------------------------------------------------
