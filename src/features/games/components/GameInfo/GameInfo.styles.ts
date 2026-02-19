@@ -55,7 +55,7 @@ export const infoHeaderSx: SxProps<Theme> = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    mb: 3,
+    mb: 2,
     pl: 3,
     pr: 1,
 };
