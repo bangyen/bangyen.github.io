@@ -23,6 +23,8 @@ export {
     OpenInNew,
     ArrowForward,
     LaunchRounded,
+    PlayArrowRounded,
+    PauseRounded,
 } from '@mui/icons-material';
 
 // Game Icons

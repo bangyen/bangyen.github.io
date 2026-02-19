@@ -6,7 +6,11 @@ import { TrophyOverlay } from '../../components/TrophyOverlay';
 import { SLANT_STYLES, NUMBER_SIZE_RATIO } from '../config/constants';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
-import { exampleActionsSx, infoButtonSx } from './SlantInfo.styles';
+import {
+    exampleActionsSx,
+    infoButtonSx,
+    exampleContainerSx,
+} from './SlantInfo.styles';
 import {
     EXAMPLE_DIMS,
     EXAMPLE_NUMBERS,
@@ -15,7 +19,13 @@ import {
 } from '../utils/exampleData';
 import { getSatisfiedNodes } from '../utils/validation';
 
-import { Psychology, DeleteRounded } from '@/components/icons';
+import {
+    Psychology,
+    DeleteRounded,
+    Replay as ReplayIcon,
+    PlayArrowRounded,
+    PauseRounded,
+} from '@/components/icons';
 import { COLORS, ANIMATIONS } from '@/config/theme';
 import { getPosKey } from '@/utils/gameUtils';
 
@@ -177,15 +187,27 @@ export function Example({
     const frames = useMemo(() => getExampleFrames(), []);
 
     const [frameIdx, setFrameIdx] = useState(0);
+    const [isPlaying, setIsPlaying] = useState(true);
 
     useEffect(() => {
+        if (!isPlaying) return;
+
         const id = setInterval(() => {
             setFrameIdx(prev => (prev + 1) % frames.length);
         }, FRAME_MS);
         return () => {
             clearInterval(id);
         };
-    }, [frames.length]);
+    }, [frames.length, isPlaying]);
+
+    const handleTogglePlay = () => {
+        setIsPlaying(prev => !prev);
+    };
+
+    const handleReplay = () => {
+        setFrameIdx(0);
+        setIsPlaying(true);
+    };
 
     const grid = useMemo(
         () => frames[frameIdx] ?? frames[0] ?? [],
@@ -231,15 +253,7 @@ export function Example({
     );
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                flex: 1,
-            }}
-        >
+        <Box sx={exampleContainerSx}>
             <Box sx={{ position: 'relative', display: 'inline-flex' }}>
                 <style>{SLANT_STYLES.ANIMATIONS.POP_IN}</style>
                 <Board
@@ -266,6 +280,24 @@ export function Example({
             <Box sx={exampleActionsSx}>
                 <Button
                     variant="outlined"
+                    startIcon={
+                        isPlaying ? <PauseRounded /> : <PlayArrowRounded />
+                    }
+                    onClick={handleTogglePlay}
+                    sx={infoButtonSx}
+                >
+                    {isPlaying ? 'Pause' : 'Play'}
+                </Button>
+                <Button
+                    variant="outlined"
+                    startIcon={<ReplayIcon />}
+                    onClick={handleReplay}
+                    sx={infoButtonSx}
+                >
+                    Replay
+                </Button>
+                <Button
+                    variant="outlined"
                     startIcon={<DeleteRounded />}
                     onClick={handleClearBoard}
                     sx={infoButtonSx}
@@ -278,7 +310,7 @@ export function Example({
                     onClick={handleOpenAnalysis}
                     sx={infoButtonSx}
                 >
-                    Open Analysis
+                    Analysis
                 </Button>
             </Box>
         </Box>
