@@ -108,7 +108,8 @@ const patternContainerSx = {
     gridTemplateColumns: { xs: '1fr', md: '1fr 1fr' },
     gap: 4,
     width: '100%',
-    py: 4,
+    py: 2,
+    pr: 4,
     // Overflow handled by parent infoStepContentSx
 };
 
