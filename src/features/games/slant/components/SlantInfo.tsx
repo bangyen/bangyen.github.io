@@ -13,7 +13,6 @@ import { useMobile } from '@/hooks';
 
 interface SlantInfoProps extends BaseInfoProps {
     handleOpenAnalysis: () => void;
-    handleClearBoard: () => void;
 }
 
 /**
@@ -25,7 +24,6 @@ export function SlantInfo({
     open,
     toggleOpen,
     handleOpenAnalysis,
-    handleClearBoard,
 }: SlantInfoProps) {
     const isMobile = useMobile('sm');
 
@@ -39,7 +37,6 @@ export function SlantInfo({
                 <Example
                     size={isMobile ? 4 : 4.5}
                     handleOpenAnalysis={handleOpenAnalysis}
-                    handleClearBoard={handleClearBoard}
                 />
             }
             cardSx={SLANT_INFO_CARD_SX}

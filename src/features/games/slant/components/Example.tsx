@@ -21,8 +21,8 @@ import { getSatisfiedNodes } from '../utils/validation';
 
 import {
     Psychology,
-    DeleteRounded,
-    Replay as ReplayIcon,
+    NavigateBeforeRounded,
+    NavigateNextRounded,
     PlayArrowRounded,
     PauseRounded,
 } from '@/components/icons';
@@ -171,8 +171,6 @@ interface ExampleProps {
     size: number;
     /** Callback to open analysis mode. */
     handleOpenAnalysis: () => void;
-    /** Callback to clear the board. */
-    handleClearBoard: () => void;
 }
 
 /**
@@ -182,7 +180,6 @@ interface ExampleProps {
 export function Example({
     size,
     handleOpenAnalysis,
-    handleClearBoard,
 }: ExampleProps): React.ReactElement {
     const frames = useMemo(() => getExampleFrames(), []);
 
@@ -204,9 +201,14 @@ export function Example({
         setIsPlaying(prev => !prev);
     };
 
-    const handleReplay = () => {
-        setFrameIdx(0);
-        setIsPlaying(true);
+    const handleStepForward = () => {
+        setIsPlaying(false);
+        setFrameIdx(prev => (prev + 1) % frames.length);
+    };
+
+    const handleStepBack = () => {
+        setIsPlaying(false);
+        setFrameIdx(prev => (prev - 1 + frames.length) % frames.length);
     };
 
     const grid = useMemo(
@@ -290,19 +292,19 @@ export function Example({
                 </Button>
                 <Button
                     variant="outlined"
-                    startIcon={<ReplayIcon />}
-                    onClick={handleReplay}
+                    startIcon={<NavigateBeforeRounded />}
+                    onClick={handleStepBack}
                     sx={infoButtonSx}
                 >
-                    Replay
+                    Step Back
                 </Button>
                 <Button
                     variant="outlined"
-                    startIcon={<DeleteRounded />}
-                    onClick={handleClearBoard}
+                    startIcon={<NavigateNextRounded />}
+                    onClick={handleStepForward}
                     sx={infoButtonSx}
                 >
-                    Clear Board
+                    Step Next
                 </Button>
                 <Button
                     variant="outlined"
