@@ -90,8 +90,5 @@ export function getExampleFrames(): CellState[][][] {
         frames.push(current);
     }
 
-    // Add a "hold" frame so the solved state lingers before looping.
-    frames.push(current.map(row => [...row]));
-
     return frames;
 }
