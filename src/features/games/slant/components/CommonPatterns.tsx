@@ -231,6 +231,8 @@ function makeFrontProps(numbers: (number | null)[][], numberSize: number) {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
+                        paddingTop: '0.05rem',
+                        lineHeight: 1,
                         width: `${String(numberSize)}rem`,
                         height: `${String(numberSize)}rem`,
                     }}
@@ -260,6 +262,7 @@ const numberBadgeSx = {
     mx: 0.4,
     verticalAlign: 'middle',
     lineHeight: 1,
+    pt: '0.05em',
     boxShadow: SLANT_STYLES.SHADOWS.HINT,
     // Optical adjustment to sit nicely with text
     position: 'relative',
