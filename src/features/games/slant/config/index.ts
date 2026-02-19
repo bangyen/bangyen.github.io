@@ -20,7 +20,7 @@ export * from './constants';
 // Info modal content (previously inline in Slant.tsx)
 // ---------------------------------------------------------------------------
 
-export const SLANT_INFO_TITLES = ['Slant Rules', 'Example'];
+export const SLANT_INFO_TITLES = ['Slant Rules', 'Example', 'Common Patterns'];
 
 export const SLANT_INSTRUCTIONS = [
     {
@@ -49,7 +49,7 @@ export const SLANT_INFO_CARD_SX: SxProps<Theme> = {
 export const slantInfoContentSx = (step: number): SxProps<Theme> =>
     [
         ...toSxArray(infoContentSx(step)),
-        { overflowY: 'hidden' },
+        step === 1 ? { overflowY: 'hidden' } : {},
     ] as SxProps<Theme>;
 
 // ---------------------------------------------------------------------------
