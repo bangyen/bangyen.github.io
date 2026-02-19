@@ -14,6 +14,7 @@ export const calculatorRootSx: SxProps<Theme> = {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
+    overflow: 'clip',
 };
 
 /** Flex container holding input / output grids and buttons. */
