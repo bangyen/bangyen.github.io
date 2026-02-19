@@ -4,7 +4,7 @@ import React from 'react';
 import { Board } from '../../components/Board';
 import { SLANT_STYLES, NUMBER_SIZE_RATIO } from '../config/constants';
 import type { CellState } from '../types';
-import { FORWARD, BACKWARD, EMPTY } from '../types';
+import { FORWARD, BACKWARD } from '../types';
 
 import { COLORS } from '@/config/theme';
 
@@ -56,7 +56,7 @@ const PATTERNS: PatternDef[] = [
             [null, 0, null],
             [null, null, null],
         ],
-        grid: [[FORWARD, BACKWARD]],
+        grid: [[BACKWARD, FORWARD]],
     },
     {
         title: 'Edge 2',
@@ -68,7 +68,7 @@ const PATTERNS: PatternDef[] = [
             [null, 2, null],
             [null, null, null],
         ],
-        grid: [[BACKWARD, FORWARD]],
+        grid: [[FORWARD, BACKWARD]],
     },
     {
         title: 'Middle 4',
@@ -88,14 +88,14 @@ const PATTERNS: PatternDef[] = [
     {
         title: 'Adjacent 1s',
         description:
-            'Two adjacent "1"s on an edge cannot share a connection, forcing lines away.',
+            'Two adjacent "1"s on an edge force the surrounding lines into the same orientation.',
         rows: 2,
         cols: 4,
         numbers: [
             [null, 1, 1, null],
             [null, null, null, null],
         ],
-        grid: [[FORWARD, EMPTY, BACKWARD]],
+        grid: [[FORWARD, FORWARD, FORWARD]],
     },
 ];
 
