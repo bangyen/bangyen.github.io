@@ -157,25 +157,10 @@ export function buildNumberProps({
             />
         ),
         sx: {
-            borderRadius: '50%',
-            backgroundColor: hasConflict
-                ? COLORS.data.red
-                : SLANT_STYLES.ANALYSIS.HINT_BG,
-            border:
-                value == null
-                    ? 'none'
-                    : `2px solid ${
-                          hasConflict
-                              ? COLORS.data.red
-                              : isSatisfied
-                                ? 'transparent'
-                                : SLANT_STYLES.ANALYSIS.HINT_BORDER
-                      }`,
-            zIndex: 5,
-            opacity: value == null ? 0 : 1,
-            position: 'relative',
             pointerEvents: 'none',
-            transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
         },
     };
 }

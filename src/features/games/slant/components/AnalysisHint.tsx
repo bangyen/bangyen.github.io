@@ -21,8 +21,22 @@ export const AnalysisHint = React.memo(function AnalysisHint({
     return (
         <Box
             sx={{
-                width: '100%',
-                height: '100%',
+                width: `${String(numberSize)}rem`,
+                height: `${String(numberSize)}rem`,
+                borderRadius: '50%',
+                backgroundColor: hasConflict
+                    ? COLORS.data.red
+                    : SLANT_STYLES.ANALYSIS.HINT_BG,
+                border:
+                    value == null
+                        ? 'none'
+                        : `2px solid ${
+                              hasConflict
+                                  ? COLORS.data.red
+                                  : isSatisfied
+                                    ? 'transparent'
+                                    : SLANT_STYLES.ANALYSIS.HINT_BORDER
+                          }`,
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -37,7 +51,9 @@ export const AnalysisHint = React.memo(function AnalysisHint({
                     isSatisfied && !hasConflict
                         ? 'none'
                         : SLANT_STYLES.SHADOWS.HINT,
-                opacity: isSatisfied ? 0.6 : 1,
+                opacity: value == null ? 0 : isSatisfied ? 0.6 : 1,
+                zIndex: 5,
+                position: 'relative',
                 transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
                 userSelect: 'none',
                 WebkitUserSelect: 'none',

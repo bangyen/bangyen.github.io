@@ -3,6 +3,7 @@ import React, { useMemo, useCallback } from 'react';
 
 import { AnalysisControls } from './AnalysisControls';
 import { buildCellProps, buildNumberProps } from './SlantAnalysisBoardProps';
+import { Board } from '../../components/Board';
 import { BOARD_STYLES, GAME_CONSTANTS } from '../../config/constants';
 import { useDrag } from '../../hooks/useDrag';
 import { useGridNavigation } from '../../hooks/useGridNavigation';
@@ -11,9 +12,6 @@ import { useAnalysisSolver } from '../hooks/useAnalysisSolver';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
 
-import { CustomGrid } from '@/components/ui/CustomGrid';
-import { LAYOUT } from '@/config/theme';
-import { useMobile } from '@/hooks';
 import { getPosKey } from '@/utils/gameUtils';
 
 export interface SlantAnalysisBoardProps {
@@ -41,8 +39,6 @@ export function SlantAnalysisBoard({
     onClose,
     onApply,
 }: SlantAnalysisBoardProps) {
-    const mobile = useMobile('sm');
-    // User inputs: just strict assignments
     const userMoves = initialMoves;
 
     const { getDragProps } = useDrag<CellState | undefined>({
@@ -111,7 +107,6 @@ export function SlantAnalysisBoard({
     // View Helpers
 
     const numberSize = size * NUMBER_SIZE_RATIO;
-    const numberSpace = size - numberSize + 0.125;
 
     const conflictSet = useMemo(
         () =>
@@ -174,7 +169,10 @@ export function SlantAnalysisBoard({
 
     return (
         <Box
-            sx={{ position: 'relative', userSelect: 'none' }}
+            sx={{
+                position: 'relative',
+                userSelect: 'none',
+            }}
             onContextMenu={e => {
                 e.preventDefault();
             }}
@@ -183,55 +181,22 @@ export function SlantAnalysisBoard({
             <Box
                 sx={{
                     position: 'relative',
-                    padding: mobile
-                        ? BOARD_STYLES.PADDING.MOBILE
-                        : BOARD_STYLES.PADDING.DESKTOP,
                     border: `2px dashed ${SLANT_STYLES.ANALYSIS.DASHED_BORDER}`,
                     borderRadius: BOARD_STYLES.BORDER_RADIUS,
                 }}
             >
-                {/* Main Grid */}
-                <Box
-                    sx={{
-                        position: 'relative',
-                        zIndex: LAYOUT.zIndex.base + 1,
-                    }}
-                >
-                    <CustomGrid
-                        size={size}
-                        rows={rows}
-                        cols={cols}
-                        cellProps={getCellProps}
-                        space={0.125}
-                        sx={{ width: 'fit-content' }}
-                    />
-                </Box>
-
-                {/* Numbers Grid Overlay */}
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: mobile
-                            ? BOARD_STYLES.PADDING.MOBILE
-                            : BOARD_STYLES.PADDING.DESKTOP,
-                        left: mobile
-                            ? BOARD_STYLES.PADDING.MOBILE
-                            : BOARD_STYLES.PADDING.DESKTOP,
-                        transform: `translate(calc(-${String(numberSize / 2)}rem - 0.0625rem), calc(-${String(numberSize / 2)}rem - 0.0625rem))`,
-
-                        zIndex: LAYOUT.zIndex.base + 2,
-                        pointerEvents: 'none',
-                    }}
-                >
-                    <CustomGrid
-                        size={numberSize}
-                        rows={rows + 1}
-                        cols={cols + 1}
-                        cellProps={getNumberProps}
-                        space={numberSpace}
-                        sx={{ width: 'fit-content' }}
-                    />
-                </Box>
+                <Board
+                    size={size}
+                    rows={rows + 1}
+                    cols={cols + 1}
+                    cellRows={rows}
+                    cellCols={cols}
+                    space={0.125}
+                    overlayProps={getNumberProps}
+                    cellProps={getCellProps}
+                    overlayLayerSx={{ pointerEvents: 'none' }}
+                    overlayDecorative
+                />
             </Box>
 
             <AnalysisControls
