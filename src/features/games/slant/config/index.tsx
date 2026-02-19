@@ -1,4 +1,4 @@
-import type { SxProps, Theme } from '@mui/material';
+import { Box, type SxProps, type Theme } from '@mui/material';
 
 import { LAYOUT_CONSTANTS, GAME_LOGIC_CONSTANTS } from './constants';
 import { infoContentSx } from '../../components/GameInfo/GameInfo.styles';
@@ -11,10 +11,20 @@ import {
 import { toSxArray } from '@/utils/muiUtils';
 
 // ---------------------------------------------------------------------------
-// Re-export constants for convenient single-import access
-// ---------------------------------------------------------------------------
+export * from './constants'; // eslint-disable-line react-refresh/only-export-components
 
-export * from './constants';
+const slashSx: SxProps<Theme> = {
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontWeight: 'bold',
+    color: 'primary.main',
+    fontSize: '1em',
+    borderRadius: 1,
+    px: 0.6,
+    lineHeight: 1,
+    verticalAlign: 'baseline',
+};
 
 // ---------------------------------------------------------------------------
 // Info modal content (previously inline in Slant.tsx)
@@ -26,7 +36,41 @@ export const SLANT_INSTRUCTIONS = [
     {
         Icon: TextureRounded,
         title: 'Fill with Slashes',
-        text: String.raw`Place a forward (/) or backward (\) slash in every cell of the grid.`,
+        text: (
+            <>
+                Place a forward{' '}
+                <Box component="span" sx={slashSx}>
+                    <svg
+                        viewBox="0 0 10 10"
+                        style={{
+                            width: '0.8em',
+                            height: '0.8em',
+                            stroke: 'currentColor',
+                            strokeWidth: 1.5,
+                            strokeLinecap: 'round',
+                        }}
+                    >
+                        <line x1="1" y1="9" x2="9" y2="1" />
+                    </svg>
+                </Box>{' '}
+                or backward{' '}
+                <Box component="span" sx={slashSx}>
+                    <svg
+                        viewBox="0 0 10 10"
+                        style={{
+                            width: '0.8em',
+                            height: '0.8em',
+                            stroke: 'currentColor',
+                            strokeWidth: 1.5,
+                            strokeLinecap: 'round',
+                        }}
+                    >
+                        <line x1="1" y1="1" x2="9" y2="9" />
+                    </svg>
+                </Box>{' '}
+                slash in every cell of the grid.
+            </>
+        ),
     },
     {
         Icon: TagRounded,
