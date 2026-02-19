@@ -76,6 +76,8 @@ vi.mock('@/components/icons', () => ({
     ContentCopyRounded: () => <div data-testid="contentcopyrounded-icon" />,
     Refresh: () => <div data-testid="refresh-icon" />,
     MenuBookRounded: () => <div data-testid="menubookrounded-icon" />,
+    ArrowBackRounded: () => <div data-testid="arrowbackrounded-icon" />,
+    HomeRounded: () => <div data-testid="homerounded-icon" />,
 }));
 
 // Mock calculator helpers

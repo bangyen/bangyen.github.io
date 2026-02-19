@@ -1,14 +1,10 @@
-import { Typography, Box, Button } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import React from 'react';
-import { Link } from 'react-router-dom';
 
-import { Refresh, HomeRounded } from '../icons';
-
+import { ReloadButton, ReturnToHomeButton } from '@/components/ui/ErrorActions';
 import { ErrorCard } from '@/components/ui/ErrorCard';
-import {
-    errorContainerSx,
-    errorButtonSx,
-} from '@/components/ui/ErrorCard.styles';
+import { errorContainerSx } from '@/components/ui/ErrorCard.styles';
+import { ERROR_TEXT } from '@/config/constants';
 import { COLORS, TYPOGRAPHY, SPACING } from '@/config/theme';
 
 export interface ErrorFallbackProps {
@@ -63,28 +59,12 @@ export function ErrorFallback({
     return (
         <Box sx={errorContainerSx}>
             <ErrorCard
-                title="Something went wrong"
-                message="An unexpected error occurred while rendering this page."
+                title={ERROR_TEXT.title.default}
+                message={ERROR_TEXT.message.appCrash}
                 detail={devDetail || undefined}
             >
-                <Button
-                    variant="contained"
-                    color="primary"
-                    startIcon={<Refresh />}
-                    onClick={onReload}
-                    sx={errorButtonSx}
-                >
-                    Reload Page
-                </Button>
-                <Button
-                    component={Link}
-                    to="/"
-                    variant="outlined"
-                    startIcon={<HomeRounded />}
-                    sx={errorButtonSx}
-                >
-                    Return to Home
-                </Button>
+                <ReloadButton onClick={onReload} />
+                <ReturnToHomeButton />
             </ErrorCard>
         </Box>
     );
