@@ -49,7 +49,7 @@ export const SLANT_INFO_CARD_SX: SxProps<Theme> = {
 export const slantInfoContentSx = (step: number): SxProps<Theme> =>
     [
         ...toSxArray(infoContentSx(step)),
-        step === 1 ? { overflowY: 'hidden' } : {},
+        step < 2 ? { overflowY: 'hidden' } : {},
     ] as SxProps<Theme>;
 
 // ---------------------------------------------------------------------------
