@@ -23,9 +23,21 @@ interface PatternDef {
 
 const PATTERNS: PatternDef[] = [
     {
+        title: 'Corner 0',
+        description:
+            'A "0" in a corner forces the line to point away from that corner.',
+        rows: 2,
+        cols: 2,
+        numbers: [
+            [0, null],
+            [null, null],
+        ],
+        grid: [[FORWARD]],
+    },
+    {
         title: 'Corner 1',
         description:
-            'A "1" in a corner forces a line extending away to avoid trapping the corner.',
+            'A "1" in a corner forces the line to connect directly to that corner.',
         rows: 2,
         cols: 2,
         numbers: [
@@ -35,9 +47,32 @@ const PATTERNS: PatternDef[] = [
         grid: [[BACKWARD]],
     },
     {
-        title: 'Middle 4',
+        title: 'Edge 0',
         description:
-            'A "4" inside the grid must catch lines from all four surrounding cells.',
+            'A "0" on the edge forces all surrounding lines to point away from it.',
+        rows: 2,
+        cols: 3,
+        numbers: [
+            [null, 0, null],
+            [null, null, null],
+        ],
+        grid: [[FORWARD, BACKWARD]],
+    },
+    {
+        title: 'Edge 2',
+        description:
+            'A "2" on the edge forces both surrounding lines to connect to it.',
+        rows: 2,
+        cols: 3,
+        numbers: [
+            [null, 2, null],
+            [null, null, null],
+        ],
+        grid: [[BACKWARD, FORWARD]],
+    },
+    {
+        title: 'Middle 4',
+        description: 'A "4" must catch lines from all four surrounding cells.',
         rows: 3,
         cols: 3,
         numbers: [
@@ -53,14 +88,14 @@ const PATTERNS: PatternDef[] = [
     {
         title: 'Adjacent 1s',
         description:
-            'Two adjacent "1"s cannot share a connection, forcing external lines.',
+            'Two adjacent "1"s on an edge cannot share a connection, forcing lines away.',
         rows: 2,
-        cols: 3,
+        cols: 4,
         numbers: [
-            [null, 1, 1],
-            [null, null, null],
+            [null, 1, 1, null],
+            [null, null, null, null],
         ],
-        grid: [[EMPTY, FORWARD]], // Just illustrating one possible result or constraint
+        grid: [[FORWARD, EMPTY, BACKWARD]],
     },
 ];
 
