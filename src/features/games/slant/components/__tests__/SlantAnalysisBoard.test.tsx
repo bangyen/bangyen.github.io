@@ -354,8 +354,8 @@ describe('SlantAnalysisBoard', () => {
                 '[data-type="hint"][data-pos="0,1"]',
             );
             expect(hint01).toBeInTheDocument();
-            // Hint style is on the wrapper or inner?
-            expect(hint01).toHaveAttribute(
+            const innerHint = hint01?.firstElementChild;
+            expect(innerHint).toHaveAttribute(
                 'style',
                 expect.stringMatching(/background-color:\s*red/),
             );
