@@ -109,7 +109,7 @@ const patternContainerSx = {
     gap: 4,
     width: '100%',
     py: 2,
-    pr: 2,
+    pr: 4,
     // Overflow handled by parent infoStepContentSx
 };
 
