@@ -271,7 +271,7 @@ export function Example({
                     overlayDecorative
                 />
                 <TrophyOverlay
-                    show={isSolved}
+                    show={isSolved && isPlaying}
                     size={size}
                     iconSizeRatio={1}
                     primaryColor={COLORS.primary.main}
