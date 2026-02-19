@@ -15,8 +15,46 @@ import {
     getIconStyles,
     getToggleButtonGroupStyles,
 } from './ResearchControls.styles';
+import { useListNavigation } from '../hooks/useListNavigation';
 
 import { Refresh } from '@/components/icons';
+
+interface ControlToggleGroupProps {
+    control: Control;
+}
+
+function ControlToggleGroup({ control }: ControlToggleGroupProps) {
+    const { getItemProps } = useListNavigation({
+        count: control.options.length,
+        containerRole: 'group',
+    });
+
+    return (
+        <ToggleButtonGroup
+            value={control.value}
+            exclusive
+            onChange={(_e, newValue) => {
+                if (newValue !== null) {
+                    control.onChange(newValue as number);
+                }
+            }}
+            size="small"
+            aria-label={control.label}
+            sx={getToggleButtonGroupStyles(control)}
+        >
+            {control.options.map((option, index) => (
+                <ToggleButton
+                    key={option.value}
+                    value={option.value}
+                    aria-label={`${control.label}: ${option.label}`}
+                    {...getItemProps(index, option.value === control.value)}
+                >
+                    {option.label}
+                </ToggleButton>
+            ))}
+        </ToggleButtonGroup>
+    );
+}
 
 export interface ResearchControlsProps {
     controls: Control[];
@@ -68,28 +106,7 @@ export const ResearchControls = React.memo(function ResearchControls({
                                     {control.label}
                                 </Typography>
                             </Box>
-                            <ToggleButtonGroup
-                                value={control.value}
-                                exclusive
-                                onChange={(_e, newValue) => {
-                                    if (newValue !== null) {
-                                        control.onChange(newValue as number);
-                                    }
-                                }}
-                                size="small"
-                                aria-label={control.label}
-                                sx={getToggleButtonGroupStyles(control)}
-                            >
-                                {control.options.map(option => (
-                                    <ToggleButton
-                                        key={option.value}
-                                        value={option.value}
-                                        aria-label={`${control.label}: ${option.label}`}
-                                    >
-                                        {option.label}
-                                    </ToggleButton>
-                                ))}
-                            </ToggleButtonGroup>
+                            <ControlToggleGroup control={control} />
                         </Box>
                     </Grid>
                 ))}

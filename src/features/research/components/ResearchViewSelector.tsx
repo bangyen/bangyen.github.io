@@ -6,6 +6,7 @@ import {
     getGridSx,
     getButtonSx,
 } from './ResearchViewSelector.styles';
+import { useListNavigation } from '../hooks/useListNavigation';
 import type { ViewType } from '../types';
 
 export interface ResearchViewSelectorProps<T> {
@@ -25,12 +26,18 @@ const ResearchViewSelectorInner = <T,>({
     currentViewType,
     onViewTypeChange,
 }: ResearchViewSelectorProps<T>) => {
+    const { getItemProps } = useListNavigation({ count: viewTypes.length });
+
     if (viewTypes.length <= 1) return null;
 
     return (
         <Box sx={selectorContainerSx}>
-            <Box sx={getGridSx(viewTypes.length)}>
-                {viewTypes.map(viewType => {
+            <Box
+                role="toolbar"
+                aria-label="View type"
+                sx={getGridSx(viewTypes.length)}
+            >
+                {viewTypes.map((viewType, index) => {
                     const IconComponent = viewType.icon;
                     const isActive = currentViewType === viewType.key;
                     return (
@@ -45,6 +52,7 @@ const ResearchViewSelectorInner = <T,>({
                             aria-label={`View ${viewType.label}`}
                             aria-pressed={isActive}
                             sx={getButtonSx(isActive)}
+                            {...getItemProps(index, isActive)}
                         >
                             {viewType.label}
                         </Button>
