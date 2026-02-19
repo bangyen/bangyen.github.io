@@ -3,6 +3,8 @@ import { Outlet } from 'react-router-dom';
 import { ErrorBoundary } from './ErrorBoundary';
 import { FeatureErrorFallback } from './FeatureErrorFallback';
 
+import { ERROR_TEXT } from '@/config/constants';
+
 export interface FeatureErrorLayoutProps {
     /** Heading shown in the error fallback, e.g. "Game Error". */
     title?: string;
@@ -17,8 +19,8 @@ export interface FeatureErrorLayoutProps {
  * include their own ErrorBoundary wrapper.
  */
 export function FeatureErrorLayout({
-    title = 'Something went wrong',
-    resetLabel = 'Try Again',
+    title = ERROR_TEXT.title.default,
+    resetLabel = ERROR_TEXT.labels.tryAgain,
 }: FeatureErrorLayoutProps) {
     return (
         <ErrorBoundary

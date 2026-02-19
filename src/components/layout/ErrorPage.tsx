@@ -1,20 +1,14 @@
-import { Box, Fade, Button } from '@mui/material';
 import React, { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-import { HomeRounded, ArrowBackRounded } from '@/components/icons';
+import { GoBackButton, ReturnToHomeButton } from '@/components/ui/ErrorActions';
 import { ErrorCard } from '@/components/ui/ErrorCard';
-import {
-    errorContainerSx,
-    errorButtonSx,
-} from '@/components/ui/ErrorCard.styles';
-import { PAGE_TITLES } from '@/config/constants';
+import { ERROR_TEXT, PAGE_TITLES } from '@/config/constants';
 
 /**
- * Full-page 404 error component shown when a route is not found.
- *
- * Lives in the layout layer because it is a router-level concern,
- * rendered via the route table rather than belonging to any feature.
+ * 404 Not Found page component.
+ * Renders a glass card with a standardized error message and navigation
+ * actions when the user visits an invalid URL.
  */
 export function ErrorPage(): React.ReactElement {
     const navigate = useNavigate();
@@ -24,35 +18,26 @@ export function ErrorPage(): React.ReactElement {
     }, []);
 
     return (
-        <Box sx={errorContainerSx}>
-            <Fade in timeout={1000}>
-                <div>
-                    <ErrorCard
-                        title="Page Not Found"
-                        message="This page doesn't exist or has been moved."
-                    >
-                        <Button
-                            variant="contained"
-                            startIcon={<ArrowBackRounded />}
-                            onClick={() => {
-                                void navigate(-1);
-                            }}
-                            sx={errorButtonSx}
-                        >
-                            Go Back
-                        </Button>
-                        <Button
-                            component={Link}
-                            to="/"
-                            variant="outlined"
-                            startIcon={<HomeRounded />}
-                            sx={errorButtonSx}
-                        >
-                            Return to Home
-                        </Button>
-                    </ErrorCard>
-                </div>
-            </Fade>
-        </Box>
+        <div
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                minHeight: '100vh',
+                padding: '20px',
+            }}
+        >
+            <ErrorCard
+                title={ERROR_TEXT.title.notFound}
+                message={ERROR_TEXT.message.notFound}
+            >
+                <GoBackButton
+                    onClick={() => {
+                        void navigate(-1);
+                    }}
+                />
+                <ReturnToHomeButton />
+            </ErrorCard>
+        </div>
     );
 }
