@@ -7,10 +7,13 @@ import { Board } from '../../components/Board';
 import { BOARD_STYLES, GAME_CONSTANTS } from '../../config/constants';
 import { useDrag } from '../../hooks/useDrag';
 import { useGridNavigation } from '../../hooks/useGridNavigation';
-import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../config/constants';
+import { getDerivedBoardDimensions, SLANT_STYLES } from '../config/constants';
 import { useAnalysisSolver } from '../hooks/useAnalysisSolver';
 import type { CellState } from '../types';
-import { FORWARD, BACKWARD, EMPTY } from '../types';
+import {
+    filterEmptyMoves,
+    getNextAnalysisState,
+} from '../utils/analysisSolver';
 
 import { getPosKey } from '@/utils/gameUtils';
 
@@ -57,23 +60,8 @@ export function SlantAnalysisBoard({
             }
 
             const current = userMoves.get(pos);
-            let newState: CellState | undefined;
+            const newState = getNextAnalysisState(current, isRightClick);
 
-            if (isRightClick) {
-                newState =
-                    current === FORWARD
-                        ? BACKWARD
-                        : current === BACKWARD
-                          ? undefined
-                          : FORWARD;
-            } else {
-                newState =
-                    current === BACKWARD
-                        ? FORWARD
-                        : current === FORWARD
-                          ? undefined
-                          : BACKWARD;
-            }
             onMove(pos, newState);
             return newState;
         },
@@ -106,7 +94,7 @@ export function SlantAnalysisBoard({
 
     // View Helpers
 
-    const numberSize = size * NUMBER_SIZE_RATIO;
+    const { numberSize } = getDerivedBoardDimensions(size);
 
     const conflictSet = useMemo(
         () =>
@@ -143,13 +131,7 @@ export function SlantAnalysisBoard({
 
     const handleApply = useCallback(() => {
         if (!onApply) return;
-        const moves = new Map<string, CellState>();
-        gridState.forEach((info, pos) => {
-            if (info.state !== EMPTY) {
-                moves.set(pos, info.state);
-            }
-        });
-        onApply(moves);
+        onApply(filterEmptyMoves(gridState));
     }, [onApply, gridState]);
 
     const getNumberProps = useCallback(
