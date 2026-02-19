@@ -81,7 +81,7 @@ const patternItemSx = {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: 0,
     width: '100%',
     // maxWidth removed to let grid control width
 };
@@ -96,7 +96,7 @@ const patternBoardContainerSx = {
 const patternTextSx = {
     display: 'flex',
     flexDirection: 'column',
-    gap: 0.5,
+    gap: 1,
     flex: 1,
     minWidth: 0, // Allow text to wrap properly
 };

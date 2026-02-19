@@ -91,8 +91,8 @@ export const STEP_DOT_SIZE = 8;
 
 /** Footer row containing back/next buttons and the dot indicator. */
 export const infoFooterSx: SxProps<Theme> = {
-    px: 2.5,
-    pb: 2.5,
+    px: 3,
+    pb: 2,
     pt: 0,
     display: 'flex',
     justifyContent: 'space-between',
