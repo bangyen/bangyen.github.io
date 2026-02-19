@@ -167,3 +167,39 @@ export function solveAnalysisConstraints(
         cycleCells: cycles,
     };
 }
+
+/**
+ * Calculates the next state for the slant cell in analysis mode.
+ */
+export function getNextAnalysisState(
+    current: CellState | undefined,
+    isRightClick: boolean,
+): CellState | undefined {
+    if (isRightClick) {
+        return current === FORWARD
+            ? BACKWARD
+            : current === BACKWARD
+              ? undefined
+              : FORWARD;
+    }
+    return current === BACKWARD
+        ? FORWARD
+        : current === FORWARD
+          ? undefined
+          : BACKWARD;
+}
+
+/**
+ * Extracts the raw user moves and valid propagated moves from a CellInfo grid map.
+ */
+export function filterEmptyMoves(
+    gridState: Map<string, CellInfo>,
+): Map<string, CellState> {
+    const moves = new Map<string, CellState>();
+    gridState.forEach((info, pos) => {
+        if (info.state !== EMPTY) {
+            moves.set(pos, info.state);
+        }
+    });
+    return moves;
+}

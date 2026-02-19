@@ -2,6 +2,12 @@ import { BOARD_STYLES, createStorageKeys } from '../../config/constants';
 
 export const NUMBER_SIZE_RATIO = 0.4;
 
+export function getDerivedBoardDimensions(size: number) {
+    return {
+        numberSize: size * NUMBER_SIZE_RATIO,
+    };
+}
+
 export const LAYOUT_CONSTANTS = {
     LINE_WIDTH: '130%',
     LINE_THICKNESS: '6px',
