@@ -28,13 +28,13 @@ export function AnalysisControls({
                 display: 'flex',
                 justifyContent: 'center',
                 gap: 2,
-                position: 'absolute',
-                bottom: -90,
-                left: 0,
-                right: 0,
                 pointerEvents: 'auto',
                 zIndex: LAYOUT.zIndex.base + 5,
+                width: '100%',
                 paddingBottom: 2,
+                position: 'absolute',
+                top: 'calc(100% + 32px)',
+                left: 0,
             }}
         >
             <TooltipButton
