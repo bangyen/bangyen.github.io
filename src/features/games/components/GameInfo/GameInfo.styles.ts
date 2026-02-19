@@ -73,7 +73,7 @@ export const infoStepContentSx = (step?: number): SxProps<Theme> => ({
     // Apply right spacing to scrolling steps (2+) on mobile to
     // prevent text from running too close to the edge/scrollbar.
     // Shifted from 'pr' to 'mr' to move the scrollbar itself further left.
-    mr: (step ?? 0) < 2 ? 0 : { xs: 4, md: 3 },
+    mr: (step ?? 0) < 2 ? 0 : 2,
     pr: (step ?? 0) < 2 ? 0 : { xs: 1, md: 0 },
     overflowY: (step ?? 0) < 2 ? 'hidden' : 'auto',
     minHeight: 0,
