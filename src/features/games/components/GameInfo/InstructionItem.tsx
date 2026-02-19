@@ -11,7 +11,7 @@ import {
 export interface InstructionItemData {
     Icon: React.ElementType;
     title: string;
-    text: string;
+    text: React.ReactNode;
 }
 
 /**
