@@ -53,7 +53,7 @@ export const router = createHashRouter(
                     errorElement: (
                         <RouteFeatureError
                             title="Research Tool Error"
-                            resetLabel="Reset Component"
+                            resetLabel="Reset Tool"
                         />
                     ),
                     children: researchRoutes,
