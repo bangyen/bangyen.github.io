@@ -70,13 +70,17 @@ export const infoStepContentSx = (step?: number): SxProps<Theme> => ({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    pr: step === 0 ? { xs: 3, md: 0 } : 0,
+    // Apply right padding to scrolling steps (0 and 2+) on mobile to
+    // prevent text from running too close to the edge/scrollbar.
+    pr: step === 1 ? 0 : { xs: 5, md: 3 },
+    overflowY: step === 1 ? 'hidden' : 'auto',
+    minHeight: 0,
 });
 
 /** Scrollable content area wrapping steps. */
-export const infoContentSx = (step: number): SxProps<Theme> => ({
+export const infoContentSx = (_step: number): SxProps<Theme> => ({
     flex: 1,
-    overflowY: step === 1 ? 'hidden' : 'auto',
+    overflow: 'hidden',
     p: { xs: 2.5, md: 3 },
     display: 'flex',
     flexDirection: 'column',

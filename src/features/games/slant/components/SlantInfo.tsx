@@ -1,3 +1,4 @@
+import { CommonPatterns } from './CommonPatterns';
 import { Example } from './Example';
 import {
     SLANT_INFO_TITLES,
@@ -44,6 +45,7 @@ export function SlantInfo({
             cardSx={SLANT_INFO_CARD_SX}
             contentSxOverride={slantInfoContentSx}
             persistenceKey="slant_info_step"
+            extraSteps={[<CommonPatterns key="patterns" />]}
         />
     );
 }
