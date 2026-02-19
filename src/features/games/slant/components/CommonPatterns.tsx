@@ -4,7 +4,7 @@ import React from 'react';
 import { Board } from '../../components/Board';
 import { SLANT_STYLES, NUMBER_SIZE_RATIO } from '../config/constants';
 import type { CellState } from '../types';
-import { FORWARD, BACKWARD } from '../types';
+import { FORWARD, BACKWARD, EMPTY } from '../types';
 
 import { COLORS } from '@/config/theme';
 
@@ -26,61 +26,81 @@ const PATTERNS: PatternDef[] = [
         title: 'Corner 0',
         description:
             'A "0" in a corner forces the line to point away from that corner.',
-        rows: 2,
-        cols: 2,
+        rows: 3,
+        cols: 3,
         numbers: [
-            [0, null],
-            [null, null],
+            [0, null, null],
+            [null, null, null],
+            [null, null, null],
         ],
-        grid: [[FORWARD]],
+        grid: [
+            [FORWARD, EMPTY],
+            [EMPTY, EMPTY],
+        ],
     },
     {
         title: 'Corner 1',
         description:
             'A "1" in a corner forces the line to connect directly to that corner.',
-        rows: 2,
-        cols: 2,
+        rows: 3,
+        cols: 3,
         numbers: [
-            [1, null],
-            [null, null],
+            [1, null, null],
+            [null, null, null],
+            [null, null, null],
         ],
-        grid: [[BACKWARD]],
+        grid: [
+            [BACKWARD, EMPTY],
+            [EMPTY, EMPTY],
+        ],
     },
     {
         title: 'Edge 0',
         description:
             'A "0" on the edge forces all surrounding lines to point away from it.',
-        rows: 2,
+        rows: 3,
         cols: 3,
         numbers: [
             [null, 0, null],
             [null, null, null],
+            [null, null, null],
         ],
-        grid: [[BACKWARD, FORWARD]],
+        grid: [
+            [BACKWARD, FORWARD],
+            [EMPTY, EMPTY],
+        ],
     },
     {
         title: 'Edge 1',
         description:
             'A "1" on the edge forces the two surrounding lines into the same orientation.',
-        rows: 2,
+        rows: 3,
         cols: 3,
         numbers: [
             [null, 1, null],
             [null, null, null],
+            [null, null, null],
         ],
-        grid: [[FORWARD, FORWARD]],
+        grid: [
+            [FORWARD, FORWARD],
+            [EMPTY, EMPTY],
+        ],
     },
     {
         title: 'Edge 2',
         description:
             'A "2" on the edge forces both surrounding lines to connect to it.',
-        rows: 2,
+        rows: 3,
         cols: 3,
         numbers: [
             [null, 2, null],
             [null, null, null],
+            [null, null, null],
         ],
-        grid: [[FORWARD, BACKWARD]],
+        grid: [
+            [FORWARD, BACKWARD],
+            [EMPTY, EMPTY],
+        ],
     },
     {
         title: 'Middle 4',
