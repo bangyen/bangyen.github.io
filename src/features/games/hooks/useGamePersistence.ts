@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 import { useDebouncedEffect, useStableCallback } from '@/hooks';
 
@@ -42,17 +42,23 @@ export function useGamePersistence<T>({
     );
 
     // Restore on mount or dimension change
+    const lastRestoredKey = useRef<string | null>(null);
     useEffect(() => {
-        if (!enabled) return;
+        if (!enabled || lastRestoredKey.current === key) return;
 
         const saved = localStorage.getItem(key);
         if (saved) {
             try {
                 const parsed: unknown = JSON.parse(saved);
                 stableOnRestore(stableDeserialize(parsed));
+                lastRestoredKey.current = key;
             } catch {
                 localStorage.removeItem(key);
             }
+        } else {
+            // Even if nothing was found, we mark it as "restored" so we don't
+            // wipe out future in-memory updates if the hook is re-enabled.
+            lastRestoredKey.current = key;
         }
     }, [key, enabled, stableOnRestore, stableDeserialize]);
 

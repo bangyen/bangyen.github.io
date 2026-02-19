@@ -9,7 +9,7 @@ import { useGridNavigation } from '../../hooks/useGridNavigation';
 import { NUMBER_SIZE_RATIO, SLANT_STYLES } from '../config/constants';
 import { useAnalysisSolver } from '../hooks/useAnalysisSolver';
 import type { CellState } from '../types';
-import { FORWARD, BACKWARD } from '../types';
+import { FORWARD, BACKWARD, EMPTY } from '../types';
 
 import { CustomGrid } from '@/components/ui/CustomGrid';
 import { LAYOUT } from '@/config/theme';
@@ -26,6 +26,7 @@ export interface SlantAnalysisBoardProps {
     onCopy?: () => void;
     onClear?: () => void;
     onClose?: () => void;
+    onApply?: (moves: Map<string, CellState>) => void;
 }
 
 export function SlantAnalysisBoard({
@@ -38,6 +39,7 @@ export function SlantAnalysisBoard({
     onCopy,
     onClear,
     onClose,
+    onApply,
 }: SlantAnalysisBoardProps) {
     const mobile = useMobile('sm');
     // User inputs: just strict assignments
@@ -144,6 +146,17 @@ export function SlantAnalysisBoard({
         [gridState, conflictSet, cycleCells, getEnhancedDragProps, size],
     );
 
+    const handleApply = useCallback(() => {
+        if (!onApply) return;
+        const moves = new Map<string, CellState>();
+        gridState.forEach((info, pos) => {
+            if (info.state !== EMPTY) {
+                moves.set(pos, info.state);
+            }
+        });
+        onApply(moves);
+    }, [onApply, gridState]);
+
     const getNumberProps = useCallback(
         (r: number, c: number) =>
             buildNumberProps({
@@ -225,6 +238,7 @@ export function SlantAnalysisBoard({
                 onCopy={onCopy}
                 onClear={onClear}
                 onClose={onClose}
+                onApply={handleApply}
             />
         </Box>
     );

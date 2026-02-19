@@ -76,6 +76,7 @@ describe('useSlantGame', () => {
             handleAnalysisCopy: vi.fn(),
             handleAnalysisClear: vi.fn(),
             handleAnalysisClose: vi.fn(),
+            handleAnalysisApply: vi.fn(),
             handleBoxClick: vi.fn(),
             handleOpenAnalysis: vi.fn(),
         });

@@ -36,6 +36,8 @@ export interface SlantBoardProps {
     onAnalysisClear: () => void;
     /** Close analysis mode. */
     onAnalysisClose: () => void;
+    /** Apply analysis moves to the real board. */
+    onAnalysisApply: (moves?: Map<string, CellState>) => void;
     /** Cell factory for the bottom (interactive slash cell) layer. */
     cellProps: (row: number, col: number) => Record<string, unknown>;
     /** Cell factory for the top (number overlay) layer. */
@@ -59,6 +61,7 @@ export function SlantBoard({
     onAnalysisCopy,
     onAnalysisClear,
     onAnalysisClose,
+    onAnalysisApply,
     cellProps,
     overlayProps,
 }: SlantBoardProps): React.ReactElement {
@@ -79,6 +82,7 @@ export function SlantBoard({
                     onCopy={onAnalysisCopy}
                     onClear={onAnalysisClear}
                     onClose={onAnalysisClose}
+                    onApply={onAnalysisApply}
                 />
             </ErrorBoundary>
         );

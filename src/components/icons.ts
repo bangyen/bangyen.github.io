@@ -25,6 +25,7 @@ export {
     LaunchRounded,
     PlayArrowRounded,
     PauseRounded,
+    DoneRounded,
 } from '@mui/icons-material';
 
 // Game Icons
