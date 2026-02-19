@@ -3,6 +3,7 @@ import { useRouteError, useNavigate } from 'react-router-dom';
 
 import { FeatureErrorFallback } from './FeatureErrorFallback';
 
+import { ERROR_TEXT } from '@/config/constants';
 import { logError } from '@/utils/errorReporting';
 
 export interface RouteFeatureErrorProps {
@@ -19,8 +20,8 @@ export interface RouteFeatureErrorProps {
  * to the current path (which clears the router error state).
  */
 export function RouteFeatureError({
-    title = 'Something went wrong',
-    resetLabel = 'Try Again',
+    title = ERROR_TEXT.title.default,
+    resetLabel = ERROR_TEXT.labels.tryAgain,
 }: RouteFeatureErrorProps) {
     const routeError = useRouteError();
     const navigate = useNavigate();

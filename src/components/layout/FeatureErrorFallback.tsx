@@ -1,12 +1,13 @@
-import { Button, Box, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Box, Typography } from '@mui/material';
+import React from 'react';
 
-import { Refresh, HomeRounded } from '@/components/icons';
-import { ErrorCard } from '@/components/ui/ErrorCard';
 import {
-    errorContainerSx,
-    errorButtonSx,
-} from '@/components/ui/ErrorCard.styles';
+    TryAgainButton,
+    ReturnToHomeButton,
+} from '@/components/ui/ErrorActions';
+import { ErrorCard } from '@/components/ui/ErrorCard';
+import { errorContainerSx } from '@/components/ui/ErrorCard.styles';
+import { ERROR_TEXT } from '@/config/constants';
 import { COLORS, TYPOGRAPHY, SPACING } from '@/config/theme';
 
 export interface FeatureErrorFallbackProps {
@@ -27,8 +28,8 @@ export interface FeatureErrorFallbackProps {
 export function FeatureErrorFallback({
     error,
     resetErrorBoundary,
-    title = 'Something went wrong',
-    resetLabel = 'Try Again',
+    title = ERROR_TEXT.title.default,
+    resetLabel = ERROR_TEXT.labels.tryAgain,
 }: FeatureErrorFallbackProps) {
     const devDetail = (typeof process === 'undefined'
         ? import.meta.env.DEV
@@ -65,26 +66,13 @@ export function FeatureErrorFallback({
         <Box sx={errorContainerSx}>
             <ErrorCard
                 title={title}
-                message="An unexpected error occurred."
+                message={ERROR_TEXT.message.default}
                 detail={devDetail || undefined}
             >
-                <Button
-                    variant="contained"
-                    startIcon={<Refresh />}
-                    onClick={resetErrorBoundary}
-                    sx={errorButtonSx}
-                >
+                <TryAgainButton onClick={resetErrorBoundary}>
                     {resetLabel}
-                </Button>
-                <Button
-                    component={Link}
-                    to="/"
-                    variant="outlined"
-                    startIcon={<HomeRounded />}
-                    sx={errorButtonSx}
-                >
-                    Return to Home
-                </Button>
+                </TryAgainButton>
+                <ReturnToHomeButton />
             </ErrorCard>
         </Box>
     );

@@ -1,4 +1,4 @@
-import { Backdrop, Box, Button, Modal, Typography } from '@mui/material';
+import { Backdrop, Box, Modal, Typography } from '@mui/material';
 import React, { Suspense } from 'react';
 
 import {
@@ -10,10 +10,13 @@ import {
 
 import type { GameInfoProps } from './index';
 
-import { Refresh, ArrowBackRounded } from '@/components/icons';
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
+import {
+    TryAgainButton,
+    ReturnToGameButton,
+} from '@/components/ui/ErrorActions';
 import { ErrorCard } from '@/components/ui/ErrorCard';
-import { errorButtonSx } from '@/components/ui/ErrorCard.styles';
+import { ERROR_TEXT } from '@/config/constants';
 import { COLORS, SPACING } from '@/config/theme';
 import { GAME_TEXT } from '@/features/games/config/constants';
 import { lazyNamed } from '@/utils/lazyNamed';
@@ -116,8 +119,8 @@ function ErrorContent({
     return (
         <ModalPlaceholder>
             <ErrorCard
-                title="Failed to Load"
-                message="Please check your connection and try again."
+                title={ERROR_TEXT.title.failedToLoad}
+                message={ERROR_TEXT.message.failedToLoad}
                 detail={devDetail || undefined}
                 sx={{
                     boxShadow: 'none',
@@ -125,24 +128,8 @@ function ErrorContent({
                     height: 'auto',
                 }}
             >
-                <Button
-                    variant="contained"
-                    startIcon={<Refresh />}
-                    onClick={resetErrorBoundary}
-                    sx={errorButtonSx}
-                >
-                    Try Again
-                </Button>
-                {handleClose && (
-                    <Button
-                        variant="outlined"
-                        startIcon={<ArrowBackRounded />}
-                        onClick={handleClose}
-                        sx={errorButtonSx}
-                    >
-                        Return to Game
-                    </Button>
-                )}
+                <TryAgainButton onClick={resetErrorBoundary} />
+                {handleClose && <ReturnToGameButton onClick={handleClose} />}
             </ErrorCard>
         </ModalPlaceholder>
     );
