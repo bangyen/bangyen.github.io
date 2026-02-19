@@ -1,11 +1,11 @@
-import { Typography, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 
+import { DevErrorDetail } from '@/components/ui/DevErrorDetail';
 import { ReloadButton, ReturnToHomeButton } from '@/components/ui/ErrorActions';
 import { ErrorCard } from '@/components/ui/ErrorCard';
 import { errorContainerSx } from '@/components/ui/ErrorCard.styles';
 import { ERROR_TEXT } from '@/config/constants';
-import { COLORS, TYPOGRAPHY, SPACING } from '@/config/theme';
 
 export interface ErrorFallbackProps {
     error: Error | null;
@@ -23,38 +23,13 @@ export function ErrorFallback({
     errorInfo,
     onReload,
 }: ErrorFallbackProps): React.ReactElement {
-    const devDetail = (typeof process === 'undefined'
-        ? import.meta.env.DEV
-        : process.env['NODE_ENV'] === 'development') &&
-        error && (
-            <Box
-                sx={{
-                    backgroundColor: COLORS.surface.elevated,
-                    border: `1px solid ${COLORS.border.subtle}`,
-                    borderRadius: SPACING.borderRadius.md,
-                    padding: 2,
-                    marginBottom: 3,
-                    textAlign: 'left',
-                    overflow: 'auto',
-                    maxHeight: '300px',
-                }}
-            >
-                <Typography
-                    sx={{
-                        color: COLORS.text.secondary,
-                        fontSize: TYPOGRAPHY.fontSize.caption,
-                        fontFamily: 'monospace',
-                        whiteSpace: 'pre-wrap',
-                    }}
-                >
-                    {error.toString()}
-                    {errorInfo?.componentStack
-                        ?.split('\n')
-                        .slice(0, 5)
-                        .join('\n')}
-                </Typography>
-            </Box>
-        );
+    const devDetail = error ? (
+        <DevErrorDetail
+            error={error}
+            componentStack={errorInfo?.componentStack ?? undefined}
+            maxHeight="300px"
+        />
+    ) : null;
 
     return (
         <Box sx={errorContainerSx}>

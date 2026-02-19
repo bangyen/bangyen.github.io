@@ -39,7 +39,7 @@ export interface GamePageLayoutProps {
  * Standard layout wrapper for all game pages. Provides sensible defaults
  * for board padding, text selection, and trophy colors so individual game
  * pages only need to specify what differs.  Error handling is provided by
- * the route-level `FeatureErrorLayout` wrapper.
+ * the route-level `RouteFeatureError` wrapper.
  */
 export function GamePageLayout({
     children,

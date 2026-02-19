@@ -1,6 +1,7 @@
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 
+import { DevErrorDetail } from '@/components/ui/DevErrorDetail';
 import {
     TryAgainButton,
     ReturnToHomeButton,
@@ -8,7 +9,6 @@ import {
 import { ErrorCard } from '@/components/ui/ErrorCard';
 import { errorContainerSx } from '@/components/ui/ErrorCard.styles';
 import { ERROR_TEXT } from '@/config/constants';
-import { COLORS, TYPOGRAPHY, SPACING } from '@/config/theme';
 
 export interface FeatureErrorFallbackProps {
     error: Error | null;
@@ -31,36 +31,9 @@ export function FeatureErrorFallback({
     title = ERROR_TEXT.title.default,
     resetLabel = ERROR_TEXT.labels.tryAgain,
 }: FeatureErrorFallbackProps) {
-    const devDetail = (typeof process === 'undefined'
-        ? import.meta.env.DEV
-        : process.env['NODE_ENV'] === 'development') &&
-        error && (
-            <Box
-                sx={{
-                    backgroundColor: COLORS.surface.elevated,
-                    border: `1px solid ${COLORS.border.subtle}`,
-                    borderRadius: SPACING.borderRadius.md,
-                    padding: 2,
-                    marginBottom: 3,
-                    textAlign: 'left',
-                    overflow: 'auto',
-                    maxHeight: '200px',
-                    width: '100%',
-                }}
-            >
-                <Typography
-                    sx={{
-                        color: COLORS.text.secondary,
-                        fontSize: TYPOGRAPHY.fontSize.caption,
-                        fontFamily: 'monospace',
-                        whiteSpace: 'pre-wrap',
-                        overflowWrap: 'anywhere',
-                    }}
-                >
-                    {error.toString()}
-                </Typography>
-            </Box>
-        );
+    const devDetail = error ? (
+        <DevErrorDetail error={error} maxHeight="200px" />
+    ) : null;
 
     return (
         <Box sx={errorContainerSx}>

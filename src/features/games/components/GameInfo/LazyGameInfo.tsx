@@ -11,13 +11,14 @@ import {
 import type { GameInfoProps } from './index';
 
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
+import { DevErrorDetail } from '@/components/ui/DevErrorDetail';
 import {
     TryAgainButton,
     ReturnToGameButton,
 } from '@/components/ui/ErrorActions';
 import { ErrorCard } from '@/components/ui/ErrorCard';
 import { ERROR_TEXT } from '@/config/constants';
-import { COLORS, SPACING } from '@/config/theme';
+import { COLORS } from '@/config/theme';
 import { GAME_TEXT } from '@/features/games/config/constants';
 import { lazyNamed } from '@/utils/lazyNamed';
 import { spreadSx } from '@/utils/muiUtils';
@@ -85,36 +86,9 @@ function ErrorContent({
 }: ErrorContentProps) {
     const handleClose =
         typeof onClose === 'function' ? (onClose as () => void) : undefined;
-    const devDetail = (typeof process === 'undefined'
-        ? import.meta.env.DEV
-        : process.env['NODE_ENV'] === 'development') &&
-        error && (
-            <Box
-                sx={{
-                    backgroundColor: COLORS.surface.elevated,
-                    border: `1px solid ${COLORS.border.subtle}`,
-                    borderRadius: SPACING.borderRadius.md,
-                    padding: 2,
-                    marginBottom: 3,
-                    textAlign: 'left',
-                    overflow: 'auto',
-                    maxHeight: '150px',
-                    width: '100%',
-                }}
-            >
-                <Typography
-                    sx={{
-                        color: COLORS.text.secondary,
-                        fontSize: '0.75rem',
-                        fontFamily: 'monospace',
-                        whiteSpace: 'pre-wrap',
-                        overflowWrap: 'anywhere',
-                    }}
-                >
-                    {error.toString()}
-                </Typography>
-            </Box>
-        );
+    const devDetail = error ? (
+        <DevErrorDetail error={error} maxHeight="150px" />
+    ) : null;
 
     return (
         <ModalPlaceholder>
