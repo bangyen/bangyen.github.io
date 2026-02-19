@@ -2,7 +2,7 @@ import type React from 'react';
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 
 import { useGamePersistence } from '../../hooks/useGamePersistence';
-import type { SlantState, CellState } from '../types';
+import type { SlantState, CellState, SlantAction } from '../types';
 import { EMPTY } from '../types';
 
 import { getPosKey } from '@/utils/gameUtils';
@@ -22,6 +22,8 @@ interface UseAnalysisModeOptions {
     storageKey: string;
     /** Toggle the "How to Play" info modal. */
     toggleInfo: () => void;
+    /** Dispatch function for the main game reducer. */
+    dispatch: React.Dispatch<SlantAction>;
 }
 
 /**
@@ -44,6 +46,7 @@ export function useAnalysisMode({
     cols,
     storageKey,
     toggleInfo,
+    dispatch,
 }: UseAnalysisModeOptions) {
     const [analysisMoves, setAnalysisMoves] = useState<Map<string, CellState>>(
         new Map(),
@@ -102,6 +105,14 @@ export function useAnalysisMode({
         setIsAnalysisMode(false);
     }, [setIsAnalysisMode]);
 
+    const handleAnalysisApply = useCallback(
+        (moves?: Map<string, CellState>) => {
+            dispatch({ type: 'applyAnalysis', moves: moves ?? analysisMoves });
+            handleAnalysisClose();
+        },
+        [dispatch, analysisMoves, handleAnalysisClose],
+    );
+
     const handleBoxClick = useCallback((e: React.MouseEvent) => {
         e.stopPropagation();
     }, []);
@@ -129,6 +140,7 @@ export function useAnalysisMode({
         handleAnalysisCopy,
         handleAnalysisClear,
         handleAnalysisClose,
+        handleAnalysisApply,
         handleBoxClick,
         handleOpenAnalysis,
     } as const;

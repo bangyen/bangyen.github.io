@@ -4,6 +4,7 @@ import {
     CloseRounded,
     ContentCopyRounded,
     DeleteRounded,
+    DoneRounded,
 } from '@/components/icons';
 import { TooltipButton } from '@/components/ui/TooltipButton';
 import { COLORS, LAYOUT } from '@/config/theme';
@@ -12,12 +13,14 @@ export interface AnalysisControlsProps {
     onCopy?: () => void;
     onClear?: () => void;
     onClose?: () => void;
+    onApply?: () => void;
 }
 
 export function AnalysisControls({
     onCopy,
     onClear,
     onClose,
+    onApply,
 }: AnalysisControlsProps) {
     return (
         <Box
@@ -55,6 +58,18 @@ export function AnalysisControls({
                     color: COLORS.data.red,
                     '&:hover': {
                         backgroundColor: 'rgba(255, 68, 68, 0.2)',
+                    },
+                }}
+            />
+            <TooltipButton
+                title="Apply to Game"
+                Icon={DoneRounded}
+                onClick={onApply}
+                sx={{
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    color: COLORS.data.green,
+                    '&:hover': {
+                        backgroundColor: 'rgba(76, 175, 80, 0.2)',
                     },
                 }}
             />

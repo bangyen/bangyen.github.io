@@ -57,6 +57,7 @@ export interface SlantAnalysisParams {
     handleAnalysisCopy: () => void;
     handleAnalysisClear: () => void;
     handleAnalysisClose: () => void;
+    handleAnalysisApply: () => void;
     handleBoxClick: (e: React.MouseEvent) => void;
     handleOpenAnalysis: () => void;
     /** Board wrapper styles from analysis mode. */
@@ -101,6 +102,7 @@ export function useSlantProps({
         handleAnalysisCopy,
         handleAnalysisClear,
         handleAnalysisClose,
+        handleAnalysisApply,
         handleBoxClick,
         handleOpenAnalysis,
         boardSx,
@@ -136,6 +138,7 @@ export function useSlantProps({
             onAnalysisCopy: handleAnalysisCopy,
             onAnalysisClear: handleAnalysisClear,
             onAnalysisClose: handleAnalysisClose,
+            onAnalysisApply: handleAnalysisApply,
             cellProps: backProps,
             overlayProps: frontProps,
         },

@@ -101,6 +101,7 @@ export function useSlantGame() {
         handleAnalysisCopy,
         handleAnalysisClear,
         handleAnalysisClose,
+        handleAnalysisApply,
         handleBoxClick,
         handleOpenAnalysis,
     } = useAnalysisMode({
@@ -111,6 +112,7 @@ export function useSlantGame() {
         cols,
         storageKey: STORAGE_KEYS.ANALYSIS_MOVES,
         toggleInfo,
+        dispatch,
     });
 
     useDimensionRegeneration({
@@ -175,6 +177,7 @@ export function useSlantGame() {
             handleAnalysisCopy,
             handleAnalysisClear,
             handleAnalysisClose,
+            handleAnalysisApply,
             handleBoxClick,
             handleOpenAnalysis,
             boardSx,

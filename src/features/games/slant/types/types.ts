@@ -47,11 +47,13 @@ export interface SlantState {
 export interface SlantAction {
     /** Action type (currently only 'toggle' supported) */
     /** Action type */
-    type: 'toggle' | 'reset';
-    /** Row index of cell to toggle (not used for 'reset') */
+    type: 'toggle' | 'reset' | 'applyAnalysis';
+    /** Row index of cell to toggle (not used for 'reset' or 'applyAnalysis') */
     row?: CellIndex;
-    /** Column index of cell to toggle (not used for 'reset') */
+    /** Column index of cell to toggle (not used for 'reset' or 'applyAnalysis') */
     col?: CellIndex;
-    /** Whether to cycle in reverse (right-click) (not used for 'reset') */
+    /** Whether to cycle in reverse (right-click) (not used for 'reset' or 'applyAnalysis') */
     reverse?: boolean;
+    /** Moves to apply from analysis mode */
+    moves?: Map<string, CellState>;
 }

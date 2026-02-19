@@ -33,6 +33,35 @@ export const handleBoard = createGameReducer<SlantState, SlantAction>({
             };
         }
 
+        if (action.type === 'applyAnalysis') {
+            if (!action.moves) return state;
+
+            const newGrid = Array.from(
+                { length: state.rows },
+                () => new Array(state.cols).fill(EMPTY) as CellState[],
+            );
+            action.moves.forEach((val, pos) => {
+                const [r, c] = pos.split(',').map(Number);
+                if (r !== undefined && c !== undefined) {
+                    const row = newGrid[r];
+                    if (row !== undefined) {
+                        row[c] = val;
+                    }
+                }
+            });
+
+            return {
+                ...state,
+                ...getValidationState(
+                    newGrid,
+                    state.numbers,
+                    state.rows,
+                    state.cols,
+                ),
+                grid: newGrid,
+            };
+        }
+
         if (action.type !== 'toggle') return null;
 
         if (state.solved) return state;
@@ -63,50 +92,52 @@ export const handleBoard = createGameReducer<SlantState, SlantAction>({
                       : EMPTY;
         }
 
-        const isFull = newGrid.every(r => r.every(c => c !== EMPTY));
-        let solved = false;
-
-        if (isFull) {
-            const currentNumbers = calculateNumbers(
-                newGrid,
-                state.rows,
-                state.cols,
-            );
-            const numbersMatch = state.numbers.every((rowArr, r) =>
-                rowArr.every(
-                    (val, c) => val == null || val === currentNumbers[r]?.[c],
-                ),
-            );
-
-            if (numbersMatch && !hasCycle(newGrid, state.rows, state.cols)) {
-                solved = true;
-            }
-        }
-
-        const errorNodes = getErrorNodes(
-            newGrid,
-            state.numbers,
-            state.rows,
-            state.cols,
-        );
-        const cycleCells = findCycles(newGrid, state.rows, state.cols);
-        const satisfiedNodes = getSatisfiedNodes(
-            newGrid,
-            state.numbers,
-            state.rows,
-            state.cols,
-        );
-
         return {
             ...state,
+            ...getValidationState(
+                newGrid,
+                state.numbers,
+                state.rows,
+                state.cols,
+            ),
             grid: newGrid,
-            solved,
-            errorNodes,
-            cycleCells,
-            satisfiedNodes,
         };
     },
 });
+
+function getValidationState(
+    grid: CellState[][],
+    numbers: (number | null)[][],
+    rows: number,
+    cols: number,
+) {
+    const isFull = grid.every(r => r.every(c => c !== EMPTY));
+    let solved = false;
+
+    if (isFull) {
+        const currentNumbers = calculateNumbers(grid, rows, cols);
+        const numbersMatch = numbers.every((rowArr, r) =>
+            rowArr.every(
+                (val, c) => val == null || val === currentNumbers[r]?.[c],
+            ),
+        );
+
+        if (numbersMatch && !hasCycle(grid, rows, cols)) {
+            solved = true;
+        }
+    }
+
+    const errorNodes = getErrorNodes(grid, numbers, rows, cols);
+    const cycleCells = findCycles(grid, rows, cols);
+    const satisfiedNodes = getSatisfiedNodes(grid, numbers, rows, cols);
+
+    return {
+        solved,
+        errorNodes,
+        cycleCells,
+        satisfiedNodes,
+    };
+}
 
 export function getInitialState(rows: number, cols: number): SlantState {
     const { numbers, solution } = generatePuzzle(rows, cols);
