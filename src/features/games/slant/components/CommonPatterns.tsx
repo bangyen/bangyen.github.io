@@ -59,6 +59,18 @@ const PATTERNS: PatternDef[] = [
         grid: [[BACKWARD, FORWARD]],
     },
     {
+        title: 'Edge 1',
+        description:
+            'A "1" on the edge forces the two surrounding lines into the same orientation.',
+        rows: 2,
+        cols: 3,
+        numbers: [
+            [null, 1, null],
+            [null, null, null],
+        ],
+        grid: [[FORWARD, FORWARD]],
+    },
+    {
         title: 'Edge 2',
         description:
             'A "2" on the edge forces both surrounding lines to connect to it.',
@@ -85,18 +97,6 @@ const PATTERNS: PatternDef[] = [
             [FORWARD, BACKWARD],
         ],
     },
-    {
-        title: 'Adjacent 1s',
-        description:
-            'Two adjacent "1"s on an edge force the surrounding lines into the same orientation.',
-        rows: 2,
-        cols: 4,
-        numbers: [
-            [null, 1, 1, null],
-            [null, null, null, null],
-        ],
-        grid: [[FORWARD, FORWARD, FORWARD]],
-    },
 ];
 
 // ---------------------------------------------------------------------------
@@ -109,7 +109,7 @@ const patternContainerSx = {
     gap: 4,
     width: '100%',
     py: 2,
-    pr: 4,
+    pr: 2,
     // Overflow handled by parent infoStepContentSx
 };
 
