@@ -117,8 +117,8 @@ export function useAnalysisMode({
         e.stopPropagation();
     }, []);
 
-    // Use a responsive override to fully clear GamePageLayout's responsive
-    // base padding ({ xs: '30px', sm: '36px' }) when in analysis mode.
+    // Use a responsive override to fully clear GamePage's responsive
+    // content padding when in analysis mode.
     // A plain `padding: 0` does not override the `sm` media query.
     const boardSx = useMemo(
         () =>
