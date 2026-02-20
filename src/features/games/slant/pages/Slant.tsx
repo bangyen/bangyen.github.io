@@ -10,7 +10,7 @@ import { useSlantGame } from '../hooks/useSlantGame';
 import { PAGE_TITLES } from '@/config/constants';
 
 export function Slant() {
-    const { boardProps, layoutProps, infoProps, contextValue } = useSlantGame();
+    const { boardProps, layoutProps, infoProps, gameState } = useSlantGame();
 
     return (
         <>
@@ -40,8 +40,8 @@ export function Slant() {
                     </GamePage.BoardContainer>
                 </GamePage.Content>
                 <GameControls
-                    {...contextValue.controlsProps}
-                    onRefresh={contextValue.handleNext}
+                    {...gameState.controlsProps}
+                    onRefresh={gameState.handleNext}
                     disabled={boardProps.generating}
                     hidden={boardProps.isAnalysisMode}
                 >

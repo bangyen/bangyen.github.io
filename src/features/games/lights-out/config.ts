@@ -56,10 +56,10 @@ export const EXAMPLE_SIZE = {
 
 /**
  * Returns the `useBaseGame` configuration for Lights Out.
- * Accepts `mobile` so responsive padding offsets are resolved here
- * instead of cluttering the page component.
+ * Note: responsive board padding (which depends on mobile state computed
+ * in useBaseGame) should be inlined directly in the game hook or config.
  */
-export function getLightsOutGameConfig(mobile: boolean) {
+export function getLightsOutGameConfig() {
     return {
         storageKey: 'lights-out',
         grid: {
@@ -69,15 +69,15 @@ export function getLightsOutGameConfig(mobile: boolean) {
                 desktop: LAYOUT.headerHeight.md,
             },
             gridPadding: {
-                x: mobile ? 60 : 80,
+                x: 80,
                 y: 60,
             },
         },
         board: {
-            boardPadding: {
+            boardPadding: (mobile: boolean) => ({
                 x: mobile ? 40 : 120,
                 y: mobile ? 120 : 160,
-            },
+            }),
             maxCellSize: 80,
         },
     };

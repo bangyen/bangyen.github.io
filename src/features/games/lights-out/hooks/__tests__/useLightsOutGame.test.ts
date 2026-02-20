@@ -88,7 +88,7 @@ describe('useLightsOutGame', () => {
         expect(result.current).toHaveProperty('boardProps');
         expect(result.current).toHaveProperty('layoutProps');
         expect(result.current).toHaveProperty('infoProps');
-        expect(result.current).toHaveProperty('contextValue');
+        expect(result.current).toHaveProperty('gameState');
     });
 
     it('calls useBaseGame with a valid config', () => {

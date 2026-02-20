@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { useLocalStorage, useWindow, useMobile } from '@/hooks';
 
@@ -156,7 +156,7 @@ export function useGridSize({
         };
     }, [desiredSize, dynamicSize, mobile, mobileRowOffset]);
 
-    const handlePlus = () => {
+    const handlePlus = useCallback(() => {
         const currentSize = Math.min(rows, cols);
         if (desiredSize === null) return;
 
@@ -166,9 +166,9 @@ export function useGridSize({
         ) {
             setDesiredSize(currentSize + 1);
         }
-    };
+    }, [rows, cols, desiredSize, dynamicSize, _maxSize, setDesiredSize]);
 
-    const handleMinus = () => {
+    const handleMinus = useCallback(() => {
         const currentSize = Math.min(rows, cols);
         if (desiredSize === null) {
             const minDim = Math.min(dynamicSize.rows, dynamicSize.cols);
@@ -180,7 +180,7 @@ export function useGridSize({
         } else if (currentSize > minSize) {
             setDesiredSize(currentSize - 1);
         }
-    };
+    }, [rows, cols, desiredSize, dynamicSize, minSize, setDesiredSize]);
 
     return {
         rows,
