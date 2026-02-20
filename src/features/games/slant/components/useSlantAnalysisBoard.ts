@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 
-import { buildCellProps, buildNumberProps } from './SlantAnalysisBoardProps';
 import { getDerivedBoardDimensions } from '../config/constants';
 import { useAnalysisSolver } from '../hooks/useAnalysisSolver';
 import type { CellState } from '../types';
@@ -86,39 +85,18 @@ export function useSlantAnalysisBoard({
 
     const { numberSize } = getDerivedBoardDimensions(size);
 
-    const getCellProps = useCallback(
-        (r: number, c: number) =>
-            buildCellProps({
-                r,
-                c,
-                gridState,
-                conflictSet,
-                cycleCells,
-                getDragProps: getEnhancedDragProps,
-                size,
-            }),
-        [gridState, conflictSet, cycleCells, getEnhancedDragProps, size],
-    );
-
     const handleApply = useCallback(() => {
         if (!onApply) return;
         onApply(filterEmptyMoves(gridState));
     }, [onApply, gridState]);
 
-    const getNumberProps = useCallback(
-        (r: number, c: number) =>
-            buildNumberProps({
-                r,
-                c,
-                numbers,
-                gridState,
-                rows,
-                cols,
-                nodeConflictSet,
-                numberSize,
-            }),
-        [numbers, gridState, rows, cols, nodeConflictSet, numberSize],
-    );
-
-    return { getCellProps, getNumberProps, handleApply };
+    return {
+        gridState,
+        conflictSet,
+        cycleCells,
+        nodeConflictSet,
+        numberSize,
+        getEnhancedDragProps,
+        handleApply,
+    };
 }

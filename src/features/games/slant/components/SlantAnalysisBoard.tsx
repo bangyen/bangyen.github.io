@@ -3,6 +3,8 @@ import React from 'react';
 
 import { AnalysisProvider } from './AnalysisContext';
 import { AnalysisControls } from './AnalysisControls';
+import { AnalysisGridCell } from './AnalysisGridCell';
+import { AnalysisGridHint } from './AnalysisGridHint';
 import { useSlantAnalysisBoard } from './useSlantAnalysisBoard';
 import { Board } from '../../components/Board';
 import { BOARD_STYLES } from '../../config/constants';
@@ -43,17 +45,23 @@ export function SlantAnalysisBoard({
     onClose,
     onApply,
 }: SlantAnalysisBoardProps) {
-    const { getCellProps, getNumberProps, handleApply } = useSlantAnalysisBoard(
-        {
-            rows,
-            cols,
-            numbers,
-            size,
-            initialMoves,
-            onMove,
-            onApply,
-        },
-    );
+    const {
+        gridState,
+        conflictSet,
+        cycleCells,
+        nodeConflictSet,
+        numberSize,
+        getEnhancedDragProps,
+        handleApply,
+    } = useSlantAnalysisBoard({
+        rows,
+        cols,
+        numbers,
+        size,
+        initialMoves,
+        onMove,
+        onApply,
+    });
 
     return (
         <AnalysisProvider
@@ -81,12 +89,39 @@ export function SlantAnalysisBoard({
                             {
                                 rows,
                                 cols,
-                                cellProps: getCellProps,
+                                cellProps: (r, c) => ({
+                                    children: (
+                                        <AnalysisGridCell
+                                            r={r}
+                                            c={c}
+                                            gridState={gridState}
+                                            conflictSet={conflictSet}
+                                            cycleCells={cycleCells}
+                                            size={size}
+                                            {...getEnhancedDragProps(
+                                                `${String(r)},${String(c)}`,
+                                            )}
+                                        />
+                                    ),
+                                }),
                             },
                             {
                                 rows: rows + 1,
                                 cols: cols + 1,
-                                cellProps: getNumberProps,
+                                cellProps: (r, c) => ({
+                                    children: (
+                                        <AnalysisGridHint
+                                            r={r}
+                                            c={c}
+                                            numbers={numbers}
+                                            gridState={gridState}
+                                            rows={rows}
+                                            cols={cols}
+                                            nodeConflictSet={nodeConflictSet}
+                                            numberSize={numberSize}
+                                        />
+                                    ),
+                                }),
                                 layerSx: { pointerEvents: 'none' },
                                 decorative: true,
                             },
