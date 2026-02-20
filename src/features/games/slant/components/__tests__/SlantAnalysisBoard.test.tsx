@@ -223,6 +223,8 @@ vi.mock('@mui/material', () => ({
             {children}
         </div>
     ),
+    keyframes: vi.fn().mockReturnValue('mock-keyframes'),
+    styled: vi.fn().mockImplementation(Component => () => Component),
 }));
 
 const DEFAULT_PROPS = {

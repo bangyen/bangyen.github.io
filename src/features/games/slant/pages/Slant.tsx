@@ -25,7 +25,7 @@ export function Slant() {
             }}
             onClick={
                 boardProps.isAnalysisMode
-                    ? boardProps.onAnalysisClose
+                    ? boardProps.analysis.onClose
                     : undefined
             }
         >
