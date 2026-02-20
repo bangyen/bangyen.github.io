@@ -1,12 +1,5 @@
-import { Box, Typography } from '@mui/material';
-import type { SxProps, Theme } from '@mui/material';
+import { Box, Typography, styled } from '@mui/material';
 
-import {
-    getOverlayContainerSx,
-    trophyCardSx,
-    getTrophyIconSx,
-    trophyLabelSx,
-} from './TrophyOverlay.styles';
 import { GAME_TEXT } from '../config/constants';
 
 import { EmojiEventsRounded } from '@/components/icons';
@@ -29,6 +22,56 @@ export interface TrophyOverlayProps {
     /** Whether to show the "Solved!" label beneath the icon (default true). */
     showLabel?: boolean;
 }
+
+const OverlayContainer = styled(Box, {
+    shouldForwardProp: prop => prop !== 'show',
+})<{ show: boolean }>(({ show }) => ({
+    position: 'absolute',
+    inset: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    opacity: show ? 1 : 0,
+    transform: show ? 'scale(1)' : 'scale(0.5)',
+    visibility: show ? 'visible' : 'hidden',
+    transition: [
+        'opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
+        'visibility 0.5s step-start',
+    ].join(', '),
+    willChange: 'opacity, transform',
+    backfaceVisibility: 'hidden',
+    zIndex: 10,
+    backgroundColor: 'transparent',
+    pointerEvents: 'none',
+}));
+
+const TrophyCard = styled(GlassCard, {
+    shouldForwardProp: prop => prop !== 'containerSize',
+})<{ containerSize: string }>(({ theme, containerSize }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: theme.spacing(1.5),
+    maxWidth: '80%',
+    width: containerSize,
+    height: containerSize,
+}));
+
+const TrophyIcon = styled(EmojiEventsRounded, {
+    shouldForwardProp: prop => prop !== 'sizeRem' && prop !== 'customColor',
+})<{ sizeRem: string; customColor: string }>(({ sizeRem, customColor }) => ({
+    fontSize: sizeRem,
+    color: customColor,
+    filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))',
+}));
+
+const TrophyLabel = styled(Typography)({
+    color: COLORS.text.primary,
+    fontWeight: 600,
+    letterSpacing: '0.02em',
+});
 
 /**
  * Win-state overlay displayed over the game board when the puzzle is solved.
@@ -54,29 +97,18 @@ export function TrophyOverlay({
     const containerSize = sizeVariant === 'small' ? '5rem' : '9rem';
 
     return (
-        <Box sx={getOverlayContainerSx(show)}>
-            <GlassCard
+        <OverlayContainer show={show}>
+            <TrophyCard
                 padding={SPACING.padding.md}
-                sx={
-                    [
-                        trophyCardSx,
-                        {
-                            width: containerSize,
-                            height: containerSize,
-                            justifyContent: 'center',
-                        },
-                    ] as SxProps<Theme>
-                }
+                containerSize={containerSize}
             >
-                <EmojiEventsRounded
-                    sx={getTrophyIconSx(iconSize, activeColor)}
-                />
+                <TrophyIcon sizeRem={iconSize} customColor={activeColor} />
                 {showLabel && (
-                    <Typography variant="h6" sx={trophyLabelSx}>
+                    <TrophyLabel variant="h6">
                         {GAME_TEXT.trophy.solvedLabel}
-                    </Typography>
+                    </TrophyLabel>
                 )}
-            </GlassCard>
-        </Box>
+            </TrophyCard>
+        </OverlayContainer>
     );
 }

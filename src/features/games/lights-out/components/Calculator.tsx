@@ -4,7 +4,7 @@ import type { DragProps } from '../../hooks/useDrag';
 import { LIGHTS_OUT_STYLES } from '../config';
 import { useGetters } from '../hooks/boardUtils';
 import type { Getters, Palette } from '../types';
-import { FOCUS_VISIBLE_SX } from '../utils/renderers.styles';
+import { FOCUS_VISIBLE_SX } from '../utils/renderers';
 
 import { CircleRounded } from '@/components/icons';
 import { getPosKey } from '@/utils/gameUtils';
