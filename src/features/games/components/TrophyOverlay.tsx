@@ -6,6 +6,7 @@ import {
     TrophyIcon,
     TrophyLabel,
 } from './TrophyOverlay.styles';
+import { overlayScalePop, overlayTransition } from '../config/animations';
 import { GAME_TEXT } from '../config/constants';
 import { useGameViewport } from '../hooks/useGameViewport';
 
@@ -35,20 +36,8 @@ export function TrophyOverlay({
         <AnimatePresence>
             {show && (
                 <OverlayContainer
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.5 }}
-                    transition={{
-                        scale: {
-                            type: 'spring',
-                            damping: 20,
-                            stiffness: 300,
-                        },
-                        opacity: {
-                            duration: 0.4,
-                            ease: 'easeOut',
-                        },
-                    }}
+                    {...overlayScalePop}
+                    transition={overlayTransition}
                 >
                     <TrophyCard
                         padding={scaling.padding}
