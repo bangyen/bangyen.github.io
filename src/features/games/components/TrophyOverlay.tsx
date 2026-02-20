@@ -1,3 +1,5 @@
+import { AnimatePresence } from 'framer-motion';
+
 import {
     OverlayContainer,
     TrophyCard,
@@ -5,8 +7,7 @@ import {
     TrophyLabel,
 } from './TrophyOverlay.styles';
 import { GAME_TEXT } from '../config/constants';
-
-import { SPACING } from '@/config/theme';
+import { useGameViewport } from '../hooks/useGameViewport';
 
 export interface TrophyOverlayProps {
     /** Whether the win card is visible (default false). */
@@ -28,27 +29,34 @@ export function TrophyOverlay({
     sizeVariant = 'default',
     showLabel = true,
 }: TrophyOverlayProps) {
-    const isShow = show;
-
-    // Scale with screen size using viewport units (vmin) rather than board size.
-    // Bounded by rem values to ensure it remains legible on tiny screens
-    // and doesn't become grotesquely large on huge desktop monitors.
-    const iconSize = sizeVariant === 'small' ? '2rem' : '3rem';
-    const containerSize = sizeVariant === 'small' ? '5rem' : '9rem';
+    const { scaling } = useGameViewport({ sizeVariant });
 
     return (
-        <OverlayContainer show={isShow}>
-            <TrophyCard
-                padding={SPACING.padding.md}
-                containerSize={containerSize}
-            >
-                <TrophyIcon sizeRem={iconSize} />
-                {showLabel && (
-                    <TrophyLabel variant="h6">
-                        {GAME_TEXT.trophy.solvedLabel}
-                    </TrophyLabel>
-                )}
-            </TrophyCard>
-        </OverlayContainer>
+        <AnimatePresence>
+            {show && (
+                <OverlayContainer
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.5 }}
+                    transition={{
+                        type: 'spring',
+                        damping: 20,
+                        stiffness: 300,
+                    }}
+                >
+                    <TrophyCard
+                        padding={scaling.padding}
+                        containerSize={scaling.containerSize}
+                    >
+                        <TrophyIcon sizeRem={scaling.iconSize} />
+                        {showLabel && (
+                            <TrophyLabel variant="h6">
+                                {GAME_TEXT.trophy.solvedLabel}
+                            </TrophyLabel>
+                        )}
+                    </TrophyCard>
+                </OverlayContainer>
+            )}
+        </AnimatePresence>
     );
 }

@@ -1,7 +1,10 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
+import { expect, vi } from 'vitest';
 import '@testing-library/jest-dom/vitest';
-import { vi } from 'vitest';
+import * as axeMatchers from 'vitest-axe/matchers';
+
+expect.extend(axeMatchers);
 
 // Mock window.matchMedia
 Object.defineProperty(globalThis, 'matchMedia', {
