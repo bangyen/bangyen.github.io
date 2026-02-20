@@ -39,9 +39,15 @@ export function TrophyOverlay({
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.5 }}
                     transition={{
-                        type: 'spring',
-                        damping: 20,
-                        stiffness: 300,
+                        scale: {
+                            type: 'spring',
+                            damping: 20,
+                            stiffness: 300,
+                        },
+                        opacity: {
+                            duration: 0.4,
+                            ease: 'easeOut',
+                        },
                     }}
                 >
                     <TrophyCard

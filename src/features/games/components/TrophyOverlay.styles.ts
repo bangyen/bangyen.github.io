@@ -14,6 +14,7 @@ export const OverlayContainer = styled(motion.div)({
     zIndex: 10,
     backgroundColor: 'transparent',
     pointerEvents: 'none',
+    willChange: 'transform, opacity',
 });
 
 export const TrophyCard = styled(GlassCard, {
