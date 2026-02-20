@@ -44,14 +44,20 @@ export function SlantLoadingSkeleton({
         >
             <Board
                 size={size}
-                rows={rows + 1}
-                cols={cols + 1}
-                cellRows={rows}
-                cellCols={cols}
-                overlayProps={skeletonFront}
-                cellProps={skeletonBack}
-                overlayLayerSx={{ pointerEvents: 'none' }}
-                overlayDecorative
+                layers={[
+                    {
+                        rows,
+                        cols,
+                        cellProps: skeletonBack,
+                    },
+                    {
+                        rows: rows + 1,
+                        cols: cols + 1,
+                        cellProps: skeletonFront,
+                        layerSx: { pointerEvents: 'none' },
+                        decorative: true,
+                    },
+                ]}
             />
         </Box>
     );

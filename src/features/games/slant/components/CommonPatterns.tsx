@@ -67,18 +67,27 @@ export function CommonPatterns() {
                     <Box sx={patternBoardContainerSx}>
                         <Board
                             size={size}
-                            rows={pattern.rows}
-                            cols={pattern.cols}
-                            cellRows={pattern.rows - 1}
-                            cellCols={pattern.cols - 1}
+                            layers={[
+                                {
+                                    rows: pattern.rows - 1,
+                                    cols: pattern.cols - 1,
+                                    cellProps: makeBackProps(
+                                        pattern.grid,
+                                        size,
+                                    ),
+                                },
+                                {
+                                    rows: pattern.rows,
+                                    cols: pattern.cols,
+                                    cellProps: makeFrontProps(
+                                        pattern.numbers,
+                                        numberSize,
+                                    ),
+                                    layerSx: { pointerEvents: 'none' },
+                                    decorative: true,
+                                },
+                            ]}
                             space={0.125}
-                            overlayProps={makeFrontProps(
-                                pattern.numbers,
-                                numberSize,
-                            )}
-                            cellProps={makeBackProps(pattern.grid, size)}
-                            overlayLayerSx={{ pointerEvents: 'none' }}
-                            overlayDecorative
                         />
                     </Box>
                     <Box sx={patternTextSx}>

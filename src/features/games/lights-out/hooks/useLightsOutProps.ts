@@ -96,12 +96,20 @@ export function useLightsOutProps({
     return {
         boardProps: {
             size,
-            rows,
-            cols,
-            cellRows: rows - 1,
-            cellCols: cols - 1,
-            overlayProps: frontProps,
-            cellProps: backProps,
+            space: 0,
+            layers: [
+                {
+                    rows: rows - 1,
+                    cols: cols - 1,
+                    cellProps: backProps,
+                },
+                {
+                    rows,
+                    cols,
+                    cellProps: frontProps,
+                    decorative: true,
+                },
+            ],
         },
         controlsProps: {
             ...controlsProps,

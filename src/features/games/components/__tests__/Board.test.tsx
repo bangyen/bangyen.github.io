@@ -22,13 +22,11 @@ describe('Board Component', () => {
     test('renders overlay and cell grids correctly', () => {
         render(
             <Board
-                overlayProps={mockOverlayProps}
-                cellProps={mockCellProps}
                 size={20}
-                rows={2}
-                cols={2}
-                cellRows={1}
-                cellCols={1}
+                layers={[
+                    { rows: 1, cols: 1, cellProps: mockCellProps },
+                    { rows: 2, cols: 2, cellProps: mockOverlayProps },
+                ]}
             />,
         );
 
@@ -45,11 +43,11 @@ describe('Board Component', () => {
     test('renders with correct layout styles', () => {
         const { container } = render(
             <Board
-                overlayProps={mockOverlayProps}
-                cellProps={mockCellProps}
                 size={20}
-                rows={2}
-                cols={2}
+                layers={[
+                    { rows: 2, cols: 2, cellProps: mockCellProps },
+                    { rows: 2, cols: 2, cellProps: mockOverlayProps },
+                ]}
             />,
         );
 
@@ -61,13 +59,21 @@ describe('Board Component', () => {
     test('handles decorative layers via explicit boolean props', () => {
         const { container } = render(
             <Board
-                overlayProps={mockOverlayProps}
-                cellProps={mockCellProps}
                 size={20}
-                rows={2}
-                cols={2}
-                overlayDecorative
-                cellDecorative
+                layers={[
+                    {
+                        rows: 2,
+                        cols: 2,
+                        cellProps: mockCellProps,
+                        decorative: true,
+                    },
+                    {
+                        rows: 2,
+                        cols: 2,
+                        cellProps: mockOverlayProps,
+                        decorative: true,
+                    },
+                ]}
             />,
         );
 
