@@ -1,11 +1,13 @@
+import { Box, styled } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
-import { Box } from '@mui/material';
-import { useMemo } from 'react';
 import type { MouseEvent, ReactNode } from 'react';
 
-import { getContentSx, getBoardSx } from './GamePageLayout.styles';
 import { TrophyOverlay, type TrophyOverlayProps } from './TrophyOverlay';
-import { DEFAULT_CONTENT_PADDING, GAME_TEXT } from '../config/constants';
+import {
+    BOARD_STYLES,
+    DEFAULT_CONTENT_PADDING,
+    GAME_TEXT,
+} from '../config/constants';
 
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
 import { FeatureErrorFallback } from '@/components/layout/FeatureErrorFallback';
@@ -35,6 +37,29 @@ export interface GamePageLayoutProps {
     onClick?: (e: MouseEvent) => void;
 }
 
+const ContentContainer = styled(Box)({
+    flex: 1,
+    position: 'relative',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+});
+
+const BoardContainer = styled(Box)({
+    position: 'relative',
+    width: 'fit-content',
+    userSelect: 'none',
+    padding: BOARD_STYLES.PADDING.MOBILE,
+    '@media (min-width:600px)': {
+        padding: BOARD_STYLES.PADDING.DESKTOP,
+    },
+    borderRadius: BOARD_STYLES.BORDER_RADIUS,
+    border: BOARD_STYLES.BORDER,
+});
+
 /**
  * Standard layout wrapper for all game pages. Provides sensible defaults
  * for board padding, text selection, and trophy colors so individual game
@@ -53,15 +78,9 @@ export function GamePageLayout({
 }: GamePageLayoutProps) {
     const {
         paddingBottom = DEFAULT_CONTENT_PADDING,
-        contentSx = {},
+        contentSx,
         boardSx,
     } = layout;
-
-    const mergedContentSx = useMemo(
-        () => getContentSx(paddingBottom, contentSx),
-        [paddingBottom, contentSx],
-    );
-    const mergedBoardSx = useMemo(() => getBoardSx(boardSx), [boardSx]);
 
     return (
         <PageLayout
@@ -86,12 +105,22 @@ export function GamePageLayout({
                     resetLabel: GAME_TEXT.errors.boardReset,
                 }}
             >
-                <Box sx={mergedContentSx}>
-                    <Box sx={mergedBoardSx}>
+                <ContentContainer
+                    sx={
+                        [
+                            { pb: paddingBottom },
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                            ...(Array.isArray(contentSx)
+                                ? contentSx
+                                : [contentSx]),
+                        ] as SxProps<Theme>
+                    }
+                >
+                    <BoardContainer sx={boardSx}>
                         {children}
                         <TrophyOverlay {...trophyProps} />
-                    </Box>
-                </Box>
+                    </BoardContainer>
+                </ContentContainer>
             </ErrorBoundary>
             {controls}
         </PageLayout>
