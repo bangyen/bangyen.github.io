@@ -41,10 +41,10 @@ export const TrophyCard = styled(GlassCard, {
 }));
 
 export const TrophyIcon = styled(EmojiEventsRounded, {
-    shouldForwardProp: prop => prop !== 'sizeRem' && prop !== 'customColor',
-})<{ sizeRem: string; customColor: string }>(({ sizeRem, customColor }) => ({
+    shouldForwardProp: prop => prop !== 'sizeRem',
+})<{ sizeRem: string }>(({ theme, sizeRem }) => ({
     fontSize: sizeRem,
-    color: customColor,
+    color: theme.palette.primary.main,
     filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))',
 }));
 

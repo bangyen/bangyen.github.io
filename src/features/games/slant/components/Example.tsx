@@ -323,7 +323,6 @@ export function Example({
                 <TrophyOverlay
                     show={isSolved && isPlaying}
                     sizeVariant="small"
-                    primaryColor={COLORS.primary.main}
                     showLabel={false}
                 />
             </Box>

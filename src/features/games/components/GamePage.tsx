@@ -30,7 +30,7 @@ export interface GamePageProps {
  *   <GameControls ... />
  * </GamePage>
  */
-export function GamePage({
+function GamePageBase({
     children,
     title,
     infoUrl,
@@ -64,7 +64,7 @@ export interface GamePageContentProps {
     sx?: SxProps<Theme>;
 }
 
-GamePage.Content = function GamePageContent({
+const GamePageContent = function GamePageContent({
     children,
     paddingBottom = DEFAULT_CONTENT_PADDING,
     sx,
@@ -100,7 +100,7 @@ export interface GamePageBoardContainerProps {
     sx?: SxProps<Theme>;
 }
 
-GamePage.BoardContainer = function GamePageBoardContainer({
+const GamePageBoardContainer = function GamePageBoardContainer({
     children,
     padding,
     borderRadius,
@@ -118,3 +118,8 @@ GamePage.BoardContainer = function GamePageBoardContainer({
         </BoardContainerBase>
     );
 };
+
+export const GamePage = Object.assign(GamePageBase, {
+    Content: GamePageContent,
+    BoardContainer: GamePageBoardContainer,
+});
