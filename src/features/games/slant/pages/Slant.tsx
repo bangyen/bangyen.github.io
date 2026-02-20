@@ -45,9 +45,7 @@ export function Slant() {
                         <TrophyOverlay {...trophyProps} />
                     </GamePage.BoardContainer>
                 </GamePage.Content>
-                <GamePage.Controls>
-                    <GameControls {...controlsProps} />
-                </GamePage.Controls>
+                <GameControls {...controlsProps} />
             </GamePage>
             <SlantInfo {...infoProps} />
         </GameProvider>

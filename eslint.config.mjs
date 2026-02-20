@@ -10,7 +10,16 @@ import tseslint from 'typescript-eslint';
 
 /* eslint-disable @typescript-eslint/no-deprecated, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
 export default tseslint.config(
-    { ignores: ['build/**', 'node_modules/**', 'coverage/**', 'config/**', 'dist/**', 'public/**'] },
+    {
+        ignores: [
+            'build/**',
+            'node_modules/**',
+            'coverage/**',
+            'config/**',
+            'dist/**',
+            'public/**',
+        ],
+    },
 
     // Base configuration
     js.configs.recommended,
@@ -164,7 +173,10 @@ export default tseslint.config(
 
     // Script overrides
     {
-        files: ['**/scripts/*.ts', 'src/features/games/lights-out/scripts/*.ts'],
+        files: [
+            '**/scripts/*.ts',
+            'src/features/games/lights-out/scripts/*.ts',
+        ],
         rules: {
             'no-console': 'off',
             '@typescript-eslint/restrict-template-expressions': 'off',

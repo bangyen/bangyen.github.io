@@ -1,66 +1,66 @@
 name: CI/CD
 
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 permissions:
-  contents: write
-  id-token: write
-  pages: write
+    contents: write
+    id-token: write
+    pages: write
 
 jobs:
-  quality-check:
-    name: Quality Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    quality-check:
+        name: Quality Check
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
 
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-          
-      - name: Restore Bun Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json') }}
-          restore-keys: |
-            ${{ runner.os }}-bun-
-            
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-        
-      - name: Run Quality Checks
-        run: bun run ci
+            - uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
 
-  deploy:
-    name: Deploy
-    needs: quality-check
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    steps:
-      - uses: actions/checkout@v4
+            - name: Restore Bun Cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.bun/install/cache
+                  key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-bun-
 
-      - uses: oven-sh/setup-bun@v2
-        with:
-          bun-version: latest
-          
-      - name: Restore Bun Cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json') }}
-          
-      - name: Install and Build
-        run: |
-          bun install --frozen-lockfile
-          bun run build
-          
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+            - name: Install dependencies
+              run: bun install --frozen-lockfile
+
+            - name: Run Quality Checks
+              run: bun run ci
+
+    deploy:
+        name: Deploy
+        needs: quality-check
+        runs-on: ubuntu-latest
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+
+            - name: Restore Bun Cache
+              uses: actions/cache@v4
+              with:
+                  path: ~/.bun/install/cache
+                  key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json') }}
+
+            - name: Install and Build
+              run: |
+                  bun install --frozen-lockfile
+                  bun run build
+
+            - name: Deploy to GitHub Pages
+              uses: peaceiris/actions-gh-pages@v4
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./build

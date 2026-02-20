@@ -1,9 +1,9 @@
 import type { SxProps, Theme } from '@mui/material';
-import { Box, styled } from '@mui/material';
 import React from 'react';
 
+import { BoardContainer, LayerContainer } from './Board.styles';
+
 import { CustomGrid } from '@/components/ui/CustomGrid';
-import { LAYOUT } from '@/config/theme';
 
 export interface BoardLayer {
     /** Factory function for cell props in this layer. */
@@ -28,20 +28,6 @@ export interface BoardProps {
     /** Gap between cells in rem units. Defaults to 0. */
     space?: number;
 }
-
-const BoardContainer = styled(Box)({
-    display: 'grid',
-    placeItems: 'center',
-});
-
-const LayerContainer = styled(Box, {
-    shouldForwardProp: prop => prop !== 'isOverlay',
-})<{ isOverlay?: boolean }>(({ isOverlay }) => ({
-    gridArea: '1/1',
-    ...(isOverlay && {
-        zIndex: LAYOUT.zIndex.base + 1,
-    }),
-}));
 
 /**
  * Multi-layer stacked grid used by game boards.

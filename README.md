@@ -13,14 +13,17 @@ A personal portfolio showcasing interactive games, algorithm implementation, and
 ## Features
 
 ### Interactive Games
+
 - **Lights Out**: Grid puzzle game with [algebraic solver](src/features/games/lights-out/README.md) (pure TypeScript GF(2) linear algebra)
 - **Slant**: Diagonal line logic puzzle with procedural generation and cycle detection
 
 ### Research & Visualization
+
 - **ZSharp**: Sharpness-Aware Minimization (SAM) visualization comparing ML optimization algorithms
 - **Oligopoly**: Cournot competition economic simulation with interactive parameter controls
 
 ### Technical Highlights
+
 - **Pure TypeScript**: All game logic and algorithms implemented in TypeScript (no WASM)
 - **Algorithm Showcase**: Lights Out (GF(2) linear algebra), Slant (graph theory + DSU)
 - **Responsive Design**: Glassmorphism UI with dark/light theme toggle
@@ -38,7 +41,6 @@ A personal portfolio showcasing interactive games, algorithm implementation, and
 - **Quality Control**: ESLint 9 (Flat Config), Prettier 3, Husky, lint-staged
 - **Deployment**: GitHub Pages, Bun (package manager)
 
-
 ## Getting Started
 
 ### Prerequisites
@@ -48,17 +50,20 @@ A personal portfolio showcasing interactive games, algorithm implementation, and
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/bangyen/bangyen.github.io.git
 cd bangyen.github.io
 ```
 
 2. Install dependencies:
+
 ```bash
 bun install
 ```
 
 3. Start the development server:
+
 ```bash
 bun start
 ```

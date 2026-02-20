@@ -7,7 +7,6 @@ import { VitePWA } from 'vite-plugin-pwa';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
-
 export default defineConfig(() => {
     const plugins = [
         react(),
@@ -15,11 +14,16 @@ export default defineConfig(() => {
         viteCompression(),
         VitePWA({
             registerType: 'autoUpdate',
-            includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.webp'],
+            includeAssets: [
+                'favicon.ico',
+                'robots.txt',
+                'apple-touch-icon.webp',
+            ],
             manifest: {
                 name: 'Bangyen Pham - Portfolio',
                 short_name: 'Bangyen',
-                description: 'Portfolio of Bangyen Pham - Backend Developer and AI/ML Engineer',
+                description:
+                    'Portfolio of Bangyen Pham - Backend Developer and AI/ML Engineer',
                 theme_color: '#0a0a0a',
                 background_color: '#0a0a0a',
                 display: 'standalone',
@@ -107,7 +111,10 @@ export default defineConfig(() => {
                             if (id.includes('@mui/icons-material')) {
                                 return 'vendor_mui_icons';
                             }
-                            if (id.includes('@mui') || id.includes('@emotion')) {
+                            if (
+                                id.includes('@mui') ||
+                                id.includes('@emotion')
+                            ) {
                                 return 'vendor_mui_core';
                             }
                             if (id.includes('recharts')) {
