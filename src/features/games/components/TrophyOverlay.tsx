@@ -6,7 +6,7 @@ import {
 } from './TrophyOverlay.styles';
 import { GAME_TEXT } from '../config/constants';
 
-import { COLORS, SPACING } from '@/config/theme';
+import { SPACING } from '@/config/theme';
 
 export interface TrophyOverlayProps {
     /** Whether the win card is visible (default false). */
@@ -15,12 +15,6 @@ export interface TrophyOverlayProps {
     onReset?: () => void;
     /** Whether to use a smaller size variant for info modals (default 'default'). */
     sizeVariant?: 'default' | 'small';
-    /** Primary trophy color (default COLORS.primary.main). */
-    primaryColor?: string;
-    /** Secondary trophy color (used when useSecondary is true, default COLORS.primary.main). */
-    secondaryColor?: string;
-    /** Whether to use the secondary color for the trophy. */
-    useSecondary?: boolean;
     /** Whether to show the "Solved!" label beneath the icon (default true). */
     showLabel?: boolean;
 }
@@ -35,12 +29,8 @@ export function TrophyOverlay({
     show = false,
     onReset: _onReset,
     sizeVariant = 'default',
-    primaryColor = COLORS.primary.main,
-    secondaryColor = COLORS.primary.main,
-    useSecondary = false,
     showLabel = true,
 }: TrophyOverlayProps) {
-    const activeColor = useSecondary ? secondaryColor : primaryColor;
     const isShow = show;
 
     // Scale with screen size using viewport units (vmin) rather than board size.
@@ -55,7 +45,7 @@ export function TrophyOverlay({
                 padding={SPACING.padding.md}
                 containerSize={containerSize}
             >
-                <TrophyIcon sizeRem={iconSize} customColor={activeColor} />
+                <TrophyIcon sizeRem={iconSize} />
                 {showLabel && (
                     <TrophyLabel variant="h6">
                         {GAME_TEXT.trophy.solvedLabel}

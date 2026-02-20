@@ -32,16 +32,4 @@ describe('TrophyOverlay', () => {
         expect(overlay).toHaveStyle('opacity: 0');
         expect(overlay).toHaveStyle('visibility: hidden');
     });
-
-    it('should use secondary color if useSecondary is true', () => {
-        const { container } = render(
-            <TrophyOverlay
-                {...defaultProps}
-                useSecondary={true}
-                secondaryColor="rgb(0, 0, 255)"
-            />,
-        );
-        const icon = container.querySelector('svg');
-        expect(icon).toHaveStyle('color: rgb(0, 0, 255)');
-    });
 });
