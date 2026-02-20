@@ -1,12 +1,13 @@
-import { Box, keyframes, styled } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 
 import { AnalysisProvider } from './AnalysisContext';
 import { AnalysisControls } from './AnalysisControls';
 import { AnalysisGridCell } from './AnalysisGridCell';
 import { AnalysisGridHint } from './AnalysisGridHint';
+import { SlantBoard } from './SlantBoard';
 import { useSlantAnalysisBoard } from './useSlantAnalysisBoard';
-import { Board } from '../../components/Board';
+import { AnimatedBoardContainer } from '../../components/AnimatedBoardContainer';
 import { BOARD_STYLES } from '../../config/constants';
 import { SLANT_STYLES } from '../config/constants';
 import { EMPTY, type CellState } from '../types';
@@ -26,15 +27,6 @@ export interface SlantAnalysisBoardProps {
     onClose?: () => void;
     onApply?: (moves: Map<string, CellState>) => void;
 }
-
-const popIn = keyframes`
-    0% { transform: scale(0.95); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-`;
-
-const AnimatedBox = styled(Box)(() => ({
-    animation: `${popIn} 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)`,
-}));
 
 export function SlantAnalysisBoard({
     rows,
@@ -70,7 +62,7 @@ export function SlantAnalysisBoard({
         <AnalysisProvider
             value={{ onCopy, onClear, onClose, onApply: handleApply }}
         >
-            <AnimatedBox
+            <AnimatedBoardContainer
                 sx={{
                     position: 'relative',
                     userSelect: 'none',
@@ -86,67 +78,56 @@ export function SlantAnalysisBoard({
                         borderRadius: BOARD_STYLES.BORDER_RADIUS,
                     }}
                 >
-                    <Board
+                    <SlantBoard
                         size={size}
-                        layers={[
-                            {
+                        rows={rows}
+                        cols={cols}
+                        renderCell={(r, c) => {
+                            const pos = getPosKey(r, c);
+                            const info = gridState.get(pos);
+                            return (
+                                <AnalysisGridCell
+                                    r={r}
+                                    c={c}
+                                    value={info?.state ?? EMPTY}
+                                    source={info?.source}
+                                    isConflict={conflictSet.has(pos)}
+                                    isCycle={cycleCells.has(pos)}
+                                    size={size}
+                                    pos={pos}
+                                    getDragProps={getEnhancedDragProps}
+                                />
+                            );
+                        }}
+                        renderOverlay={(r, c) => {
+                            const value = numbers[r]?.[c] ?? null;
+                            const hasConflict = nodeConflictSet.has(
+                                getPosKey(r, c),
+                            );
+                            const isSatisfied = computeSatisfied(
+                                r,
+                                c,
+                                value,
+                                gridState,
                                 rows,
                                 cols,
-                                renderCell: (r, c) => {
-                                    const pos = getPosKey(r, c);
-                                    const info = gridState.get(pos);
-                                    return (
-                                        <AnalysisGridCell
-                                            r={r}
-                                            c={c}
-                                            value={info?.state ?? EMPTY}
-                                            source={info?.source}
-                                            isConflict={conflictSet.has(pos)}
-                                            isCycle={cycleCells.has(pos)}
-                                            size={size}
-                                            pos={pos}
-                                            getDragProps={getEnhancedDragProps}
-                                        />
-                                    );
-                                },
-                            },
-                            {
-                                rows: rows + 1,
-                                cols: cols + 1,
-                                renderCell: (r, c) => {
-                                    const value = numbers[r]?.[c] ?? null;
-                                    const hasConflict = nodeConflictSet.has(
-                                        getPosKey(r, c),
-                                    );
-                                    const isSatisfied = computeSatisfied(
-                                        r,
-                                        c,
-                                        value,
-                                        gridState,
-                                        rows,
-                                        cols,
-                                    );
-                                    return (
-                                        <AnalysisGridHint
-                                            r={r}
-                                            c={c}
-                                            value={value}
-                                            hasConflict={hasConflict}
-                                            isSatisfied={isSatisfied}
-                                            numberSize={numberSize}
-                                        />
-                                    );
-                                },
-                                layerSx: { pointerEvents: 'none' },
-                                decorative: true,
-                            },
-                        ]}
-                        space={0.125}
+                            );
+                            return (
+                                <AnalysisGridHint
+                                    r={r}
+                                    c={c}
+                                    value={value}
+                                    hasConflict={hasConflict}
+                                    isSatisfied={isSatisfied}
+                                    numberSize={numberSize}
+                                />
+                            );
+                        }}
                     />
                 </Box>
 
                 <AnalysisControls />
-            </AnimatedBox>
+            </AnimatedBoardContainer>
         </AnalysisProvider>
     );
 }

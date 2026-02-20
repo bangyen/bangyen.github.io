@@ -1,9 +1,9 @@
-import { keyframes, styled } from '@mui/material';
 import React from 'react';
 
 import { SlantAnalysisBoard } from './SlantAnalysisBoard';
 import { SlantBoard } from './SlantBoard';
 import { SlantLoadingSkeleton } from './SlantLoadingSkeleton';
+import { AnimatedBoardContainer } from '../../components/AnimatedBoardContainer';
 import type { CellState, SlantState } from '../types';
 
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
@@ -48,15 +48,6 @@ export interface SlantGameContainerProps {
     /** Cell factory for the top (number overlay) layer. */
     overlayProps: (row: number, col: number) => Record<string, unknown>;
 }
-
-const popIn = keyframes`
-    0% { transform: scale(0.95); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-`;
-
-const AnimatedBoardContainer = styled('div')(() => ({
-    animation: `${popIn} 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275)`,
-}));
 
 /**
  * Handles the domain branching for Slant:

@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import React from 'react';
 
-import { Board } from '../../components/Board';
+import { SlantBoard } from './SlantBoard';
 import { getDerivedBoardDimensions } from '../config/constants';
 import { PATTERNS } from '../config/patterns';
 import { makeBackProps, makeFrontProps } from '../utils/patternHelpers';
@@ -65,29 +65,15 @@ export function CommonPatterns() {
             {PATTERNS.map(pattern => (
                 <Box key={pattern.title} sx={patternItemSx}>
                     <Box sx={patternBoardContainerSx}>
-                        <Board
+                        <SlantBoard
                             size={size}
-                            layers={[
-                                {
-                                    rows: pattern.rows - 1,
-                                    cols: pattern.cols - 1,
-                                    cellProps: makeBackProps(
-                                        pattern.grid,
-                                        size,
-                                    ),
-                                },
-                                {
-                                    rows: pattern.rows,
-                                    cols: pattern.cols,
-                                    cellProps: makeFrontProps(
-                                        pattern.numbers,
-                                        numberSize,
-                                    ),
-                                    layerSx: { pointerEvents: 'none' },
-                                    decorative: true,
-                                },
-                            ]}
-                            space={0.125}
+                            rows={pattern.rows - 1}
+                            cols={pattern.cols - 1}
+                            cellProps={makeBackProps(pattern.grid, size)}
+                            overlayProps={makeFrontProps(
+                                pattern.numbers,
+                                numberSize,
+                            )}
                         />
                     </Box>
                     <Box sx={patternTextSx}>
