@@ -21,7 +21,10 @@ export function Slant() {
     } = useSlantGame();
 
     return (
-        <GameProvider value={contextValue}>
+        <GameProvider
+            stateValue={contextValue}
+            dispatchValue={contextValue.dispatch}
+        >
             <GamePage
                 title={PAGE_TITLES.slant}
                 infoUrl="https://en.wikipedia.org/wiki/Gokigen_Naname"

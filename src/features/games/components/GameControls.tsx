@@ -1,7 +1,7 @@
 import React from 'react';
 
 import type { BaseControlsProps } from '../hooks/types';
-import { useOptionalGameContext } from '../hooks/useGameContext';
+import { useOptionalGameState } from '../hooks/useGameContext';
 
 import { RemoveRounded, AddRounded, MenuBookRounded } from '@/components/icons';
 import { Navigation } from '@/components/layout/Navigation';
@@ -30,11 +30,11 @@ export interface GameControlsProps extends Partial<BaseControlsProps> {
 export const GameControls = React.memo(function GameControls(
     props: GameControlsProps,
 ) {
-    const context = useOptionalGameContext();
+    const state = useOptionalGameState();
 
     // Spread context first, then explicit props (so explicit props can override context)
     // Filter out undefined from props so they don't overwrite valid context values
-    const mergedBaseProps = { ...context?.controlsProps };
+    const mergedBaseProps = { ...state?.controlsProps };
     for (const key of [
         'rows',
         'cols',

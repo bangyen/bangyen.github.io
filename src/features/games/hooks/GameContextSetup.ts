@@ -2,11 +2,10 @@ import { createContext } from 'react';
 
 import type { BaseControlsProps } from './types';
 
-export interface GameContextValue<S = unknown, A = unknown> {
+export interface GameStateContextValue<S = unknown> {
     rows: number;
     cols: number;
     state: S;
-    dispatch: React.Dispatch<A>;
     size: number;
     mobile: boolean;
     solved: boolean;
@@ -14,7 +13,12 @@ export interface GameContextValue<S = unknown, A = unknown> {
     controlsProps: BaseControlsProps;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const GameContext = createContext<GameContextValue<any, any> | null>(
-    null,
-);
+export type GameDispatchContextValue<A = unknown> = React.Dispatch<A>;
+
+export const GameStateContext =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    createContext<GameStateContextValue<any> | null>(null);
+
+export const GameDispatchContext =
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    createContext<GameDispatchContextValue<any> | null>(null);
