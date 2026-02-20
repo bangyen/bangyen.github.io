@@ -61,6 +61,13 @@ export function AnalysisGridCell({
                 outline: 'none',
                 border: `2px solid ${COLORS.border.subtle}`,
                 position: 'relative',
+                width: '100%',
+                height: '100%',
+                boxSizing: 'border-box',
+                borderRadius: 'inherit',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 backgroundColor: SLANT_STYLES.ANALYSIS.BG_SUBTLE,
                 transition:
                     'background-color 0.2s, outline 0.2s, box-shadow 0.2s',
