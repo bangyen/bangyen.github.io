@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { useOptionalGameContext } from '../hooks/GameContext.hooks';
 import type { BaseControlsProps } from '../hooks/types';
+import { useOptionalGameContext } from '../hooks/useGameContext';
 
 import { RemoveRounded, AddRounded, MenuBookRounded } from '@/components/icons';
 import { Navigation } from '@/components/layout/Navigation';

@@ -1,7 +1,6 @@
-import React from 'react';
 import type { ReactNode } from 'react';
 
-import { GameContext, type GameContextValue } from './GameContext';
+import { GameContext, type GameContextValue } from './GameContextSetup';
 
 export function GameProvider<S, A>({
     value,

@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import { GameControls } from '../../components/GameControls';
 import { GamePage } from '../../components/GamePage';
 import { TrophyOverlay } from '../../components/TrophyOverlay';
-import { GameProvider } from '../../hooks/GameProvider';
+import { GameProvider } from '../../hooks/GameContext';
 import { SlantGameContainer } from '../components/SlantGameContainer';
 import { SlantInfo } from '../components/SlantInfo';
 import { useSlantGame } from '../hooks/useSlantGame';

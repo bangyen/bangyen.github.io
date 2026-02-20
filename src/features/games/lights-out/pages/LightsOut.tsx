@@ -2,7 +2,7 @@ import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
 import { GamePage } from '../../components/GamePage';
 import { TrophyOverlay } from '../../components/TrophyOverlay';
-import { GameProvider } from '../../hooks/GameProvider';
+import { GameProvider } from '../../hooks/GameContext';
 import { LightsOutInfo as Info } from '../components/LightsOutInfo';
 import { useLightsOutGame } from '../hooks/useLightsOutGame';
 
