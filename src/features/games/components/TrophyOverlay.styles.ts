@@ -1,31 +1,20 @@
-import { Box, Typography, styled } from '@mui/material';
+import { Typography, styled } from '@mui/material';
+import { motion } from 'framer-motion';
 
 import { EmojiEventsRounded } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS } from '@/config/theme';
 
-export const OverlayContainer = styled(Box, {
-    shouldForwardProp: prop => prop !== 'show',
-})<{ show: boolean }>(({ show }) => ({
+export const OverlayContainer = styled(motion.div)({
     position: 'absolute',
     inset: 0,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    opacity: show ? 1 : 0,
-    transform: show ? 'scale(1)' : 'scale(0.5)',
-    visibility: show ? 'visible' : 'hidden',
-    transition: [
-        'opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-        'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
-        'visibility 0.5s step-start',
-    ].join(', '),
-    willChange: 'opacity, transform',
-    backfaceVisibility: 'hidden',
     zIndex: 10,
     backgroundColor: 'transparent',
     pointerEvents: 'none',
-}));
+});
 
 export const TrophyCard = styled(GlassCard, {
     shouldForwardProp: prop => prop !== 'containerSize',

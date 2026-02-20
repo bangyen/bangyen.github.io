@@ -7,7 +7,10 @@ import { AnalysisGridCell } from './AnalysisGridCell';
 import { AnalysisGridHint } from './AnalysisGridHint';
 import { SlantBoard } from './SlantBoard';
 import { useSlantAnalysisBoard } from './useSlantAnalysisBoard';
-import { AnimatedBoardContainer } from '../../components/AnimatedBoardContainer';
+import {
+    AnimatedBoardContainer,
+    boardPopIn,
+} from '../../components/AnimatedBoardContainer';
 import { BOARD_STYLES } from '../../config/constants';
 import { SLANT_STYLES } from '../config/constants';
 import { EMPTY, type CellState } from '../types';
@@ -63,6 +66,7 @@ export function SlantAnalysisBoard({
             value={{ onCopy, onClear, onClose, onApply: handleApply }}
         >
             <AnimatedBoardContainer
+                {...boardPopIn}
                 sx={{
                     position: 'relative',
                     userSelect: 'none',
