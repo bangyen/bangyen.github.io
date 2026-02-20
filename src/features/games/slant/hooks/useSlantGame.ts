@@ -20,7 +20,7 @@ import {
 } from '../utils/persistence';
 
 import { createCellIndex } from '@/features/games/types';
-import { useDisclosure, useMobile } from '@/hooks';
+import { useDisclosure } from '@/hooks';
 
 /**
  * Orchestrates all Slant-specific game logic: worker-based puzzle
@@ -31,7 +31,6 @@ import { useDisclosure, useMobile } from '@/hooks';
  * composition, mirroring the LightsOut page pattern.
  */
 export function useSlantGame() {
-    const mobile = useMobile('sm');
     const [isAnalysisMode, setIsAnalysisMode] = React.useState(false);
     const { isOpen: infoOpen, toggle: toggleInfo } = useDisclosure();
 
@@ -62,11 +61,10 @@ export function useSlantGame() {
         onStaleResult: handleStaleResult,
     });
 
-    const { rows, cols, state, dispatch, size, controlsProps } = useBaseGame<
-        SlantState,
-        SlantAction
-    >({
-        ...getSlantGameConfig(mobile),
+    // useMobile is already called inside useBaseGame via useGridSize,
+    // so we derive mobile from the baseGame result instead of subscribing twice
+    const baseGame = useBaseGame<SlantState, SlantAction>({
+        ...getSlantGameConfig(),
         logic: {
             reducer: handleBoard,
             getInitialState: (rows: number, cols: number) =>
@@ -88,6 +86,8 @@ export function useSlantGame() {
             },
         },
     });
+
+    const { rows, cols, state, dispatch, size, mobile } = baseGame;
 
     // Keep refs in sync with latest values from useBaseGame.
     dispatchRef.current = dispatch;
@@ -185,16 +185,10 @@ export function useSlantGame() {
             info: { infoOpen, toggleInfo },
             getDragProps: getEnhancedDragProps,
         }),
-        contextValue: {
-            rows,
-            cols,
-            state,
-            dispatch,
-            size,
-            mobile,
+        gameState: {
+            ...baseGame,
             solved: state.solved,
             handleNext: handleNextAsync,
-            controlsProps,
         },
     };
 }
