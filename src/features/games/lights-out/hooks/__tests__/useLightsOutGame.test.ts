@@ -37,8 +37,6 @@ describe('useLightsOutGame', () => {
         });
 
         vi.mocked(useBaseGame).mockReturnValue({
-            rows: 5,
-            cols: 5,
             state: {
                 grid: [0, 0, 0, 0, 0],
                 score: 0,
@@ -47,10 +45,14 @@ describe('useLightsOutGame', () => {
                 initialized: true,
             } as never,
             dispatch: mockDispatch,
-            size: 3,
-            mobile: false,
             solved: false,
             handleNext: vi.fn(),
+            layout: {
+                rows: 5,
+                cols: 5,
+                size: 3,
+                mobile: false,
+            },
             controlsProps: {
                 rows: 5,
                 cols: 5,

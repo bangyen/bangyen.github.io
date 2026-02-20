@@ -8,13 +8,14 @@ import {
 } from './TrophyOverlay.styles';
 import { overlayScalePop, overlayTransition } from '../config/animations';
 import { GAME_TEXT } from '../config/constants';
+import type { GameScalingVariant } from '../config/tokens';
 import { useGameViewport } from '../hooks/useGameViewport';
 
 export interface TrophyOverlayProps {
     /** Whether the win card is visible (default false). */
     show?: boolean;
     /** Whether to use a smaller size variant for info modals (default 'default'). */
-    sizeVariant?: 'default' | 'small';
+    sizeVariant?: GameScalingVariant;
     /** Whether to show the "Solved!" label beneath the icon (default true). */
     showLabel?: boolean;
 }
@@ -41,9 +42,9 @@ export function TrophyOverlay({
                 >
                     <TrophyCard
                         padding={scaling.padding}
-                        containerSize={scaling.containerSize}
+                        size={scaling.containerSize}
                     >
-                        <TrophyIcon sizeRem={scaling.iconSize} />
+                        <TrophyIcon fontSizeRem={scaling.iconSize} />
                         {showLabel && (
                             <TrophyLabel variant="h6">
                                 {GAME_TEXT.trophy.solvedLabel}
