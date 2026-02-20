@@ -1,12 +1,8 @@
-import { Box, styled } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import React, { type ReactNode, type MouseEvent } from 'react';
 
-import {
-    BOARD_STYLES,
-    DEFAULT_CONTENT_PADDING,
-    GAME_TEXT,
-} from '../config/constants';
+import { BoardContainerBase, ContentContainer } from './GamePage.styles';
+import { DEFAULT_CONTENT_PADDING, GAME_TEXT } from '../config/constants';
 
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
 import { FeatureErrorFallback } from '@/components/layout/FeatureErrorFallback';
@@ -21,42 +17,6 @@ export interface GamePageProps {
     onClick?: (e: MouseEvent) => void;
 }
 
-const ContentContainer = styled(Box)({
-    flex: 1,
-    position: 'relative',
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'hidden',
-});
-
-interface BoardContainerBaseProps {
-    customPadding?: { mobile: string | number; desktop: string | number };
-    customBorderRadius?: string | number;
-    customBorder?: string;
-}
-
-const BoardContainerBase = styled(Box, {
-    shouldForwardProp: prop =>
-        !['customPadding', 'customBorderRadius', 'customBorder'].includes(
-            prop as string,
-        ),
-})<BoardContainerBaseProps>(
-    ({ theme, customPadding, customBorderRadius, customBorder }) => ({
-        position: 'relative',
-        width: 'fit-content',
-        userSelect: 'none',
-        padding: customPadding?.mobile ?? BOARD_STYLES.PADDING.MOBILE,
-        [theme.breakpoints.up('sm')]: {
-            padding: customPadding?.desktop ?? BOARD_STYLES.PADDING.DESKTOP,
-        },
-        borderRadius: customBorderRadius ?? BOARD_STYLES.BORDER_RADIUS,
-        border: customBorder ?? BOARD_STYLES.BORDER,
-    }),
-);
-
 /**
  * GamePage Compound Component.
  * Usage:
@@ -67,9 +27,7 @@ const BoardContainerBase = styled(Box, {
  *       <TrophyOverlay />
  *     </GamePage.BoardContainer>
  *   </GamePage.Content>
- *   <GamePage.Controls>
- *     <GameControls ... />
- *   </GamePage.Controls>
+ *   <GameControls ... />
  * </GamePage>
  */
 export function GamePage({
@@ -159,14 +117,4 @@ GamePage.BoardContainer = function GamePageBoardContainer({
             {children}
         </BoardContainerBase>
     );
-};
-
-export interface GamePageControlsProps {
-    children: ReactNode;
-}
-
-GamePage.Controls = function GamePageControls({
-    children,
-}: GamePageControlsProps) {
-    return children;
 };

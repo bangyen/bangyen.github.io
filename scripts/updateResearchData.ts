@@ -1,5 +1,3 @@
-
-
 import { execSync } from 'node:child_process';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
@@ -15,10 +13,12 @@ const REPOS = {
     oligopoly: 'https://github.com/bangyen/oligopoly.git',
 };
 
-
-
 // Helper functions
-function runCmd(cmd: string, cwd: string = process.cwd(), env: NodeJS.ProcessEnv = process.env) {
+function runCmd(
+    cmd: string,
+    cwd: string = process.cwd(),
+    env: NodeJS.ProcessEnv = process.env,
+) {
     console.log(`Running: ${cmd} in ${cwd}`);
     execSync(cmd, { cwd, env, stdio: 'inherit' });
 }
@@ -65,7 +65,10 @@ function installDeps(pipCmd: string) {
 function runZSharp(pythonCmd: string) {
     const cwd = path.join(TEMP_DIR, 'zsharp');
     const scriptPath = path.join(cwd, 'generate_data.py');
-    const sourcePath = path.join(process.cwd(), 'scripts/python/generate_zsharp_data.py');
+    const sourcePath = path.join(
+        process.cwd(),
+        'scripts/python/generate_zsharp_data.py',
+    );
 
     fs.copyFileSync(sourcePath, scriptPath);
 
@@ -77,7 +80,10 @@ function runZSharp(pythonCmd: string) {
 function runOligopoly(pythonCmd: string) {
     const cwd = path.join(TEMP_DIR, 'oligopoly');
     const scriptPath = path.join(cwd, 'generate_matrix.py');
-    const sourcePath = path.join(process.cwd(), 'scripts/python/generate_oligopoly_matrix.py');
+    const sourcePath = path.join(
+        process.cwd(),
+        'scripts/python/generate_oligopoly_matrix.py',
+    );
 
     fs.copyFileSync(sourcePath, scriptPath);
 

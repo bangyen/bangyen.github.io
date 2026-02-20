@@ -33,9 +33,7 @@ export function LightsOut() {
                         <TrophyOverlay {...trophyProps} />
                     </GamePage.BoardContainer>
                 </GamePage.Content>
-                <GamePage.Controls>
-                    <GameControls {...controlsProps} />
-                </GamePage.Controls>
+                <GameControls {...controlsProps} />
             </GamePage>
             <Info {...infoProps} />
         </GameProvider>

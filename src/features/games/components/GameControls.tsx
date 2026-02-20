@@ -1,14 +1,13 @@
 import React from 'react';
 
 import type { BaseControlsProps } from '../hooks/types';
-import { useOptionalGameState } from '../hooks/useGameContext';
 
 import { RemoveRounded, AddRounded, MenuBookRounded } from '@/components/icons';
 import { Navigation } from '@/components/layout/Navigation';
 import { RefreshButton } from '@/components/ui/Controls';
 import { TooltipButton } from '@/components/ui/TooltipButton';
 
-export interface GameControlsProps extends Partial<BaseControlsProps> {
+export interface GameControlsProps extends BaseControlsProps {
     disabled?: boolean;
     /** When provided, renders a built-in "How to Play" tutorial button. */
     onOpenInfo?: () => void;
@@ -23,34 +22,11 @@ export interface GameControlsProps extends Partial<BaseControlsProps> {
  * button, and an optional slot for extra buttons -- without routing
  * through the generic Controls wrapper.
  *
- * Memoised because the parent re-renders on every game-state
- * dispatch yet the control props (`controlsProps` from `useBaseGame`)
- * are stable between size changes.
+ * Memoised to prevent unnecessary re-renders when game state updates.
  */
 export const GameControls = React.memo(function GameControls(
     props: GameControlsProps,
 ) {
-    const state = useOptionalGameState();
-
-    // Spread context first, then explicit props (so explicit props can override context)
-    // Filter out undefined from props so they don't overwrite valid context values
-    const mergedBaseProps = { ...state?.controlsProps };
-    for (const key of [
-        'rows',
-        'cols',
-        'dynamicSize',
-        'minSize',
-        'maxSize',
-        'handlePlus',
-        'handleMinus',
-        'onRefresh',
-    ] as const) {
-        if (props[key] !== undefined) {
-            // @ts-expect-error dynamic access
-            mergedBaseProps[key] = props[key];
-        }
-    }
-
     const {
         rows,
         cols,
@@ -60,9 +36,11 @@ export const GameControls = React.memo(function GameControls(
         handlePlus,
         handleMinus,
         onRefresh,
-    } = mergedBaseProps as BaseControlsProps;
-
-    const { disabled = false, onOpenInfo, hidden = false, children } = props;
+        disabled = false,
+        onOpenInfo,
+        hidden = false,
+        children,
+    } = props;
 
     if (hidden) return null;
 
