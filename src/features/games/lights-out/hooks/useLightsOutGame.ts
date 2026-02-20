@@ -44,7 +44,7 @@ export function useLightsOutGame() {
     });
 
     const { state, dispatch, solved, layout } = baseGame;
-    const { rows, cols, size, mobile } = layout;
+    const { rows, cols, size, mobile, scaling } = layout;
 
     const { handleKeyDown: handleGridNav } = useGridNavigation({ rows, cols });
 
@@ -105,7 +105,7 @@ export function useLightsOutGame() {
 
     return {
         ...useLightsOutProps({
-            game: { rows, cols, size, mobile },
+            game: { rows, cols, size, mobile, scaling },
             info: { open, toggleOpen, handleApply },
             rendering: { palette, getters, skipTransition },
             drag: {

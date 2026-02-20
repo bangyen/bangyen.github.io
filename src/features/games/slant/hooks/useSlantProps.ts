@@ -11,6 +11,7 @@ import { useMemo } from 'react';
 import { useSlantBoard } from './useSlantBoard';
 import { getSlantContentSx } from './useSlantProps.styles';
 import type { GameControlsProps } from '../../components/GameControls';
+import type { GAME_TOKENS, GameScalingVariant } from '../../config/tokens';
 import type { GamePageProps } from '../../hooks/types';
 import type { DragProps } from '../../hooks/useDrag';
 import type { SlantGameContainerProps } from '../components/SlantGameContainer';
@@ -45,6 +46,7 @@ export interface SlantGameParams {
     mobile: boolean;
     isAnalysisMode: boolean;
     generating: boolean;
+    scaling: (typeof GAME_TOKENS.scaling)[GameScalingVariant];
 }
 
 /** Analysis-mode move map, handlers, and UI callbacks. */
@@ -82,7 +84,16 @@ export interface UseSlantPropsParams {
  * structurally consistent contract.
  */
 export function useSlantProps({
-    game: { state, rows, cols, size, mobile, isAnalysisMode, generating },
+    game: {
+        state,
+        rows,
+        cols,
+        size,
+        mobile,
+        isAnalysisMode,
+        generating,
+        scaling,
+    },
     analysis: {
         analysisMoves,
         handleAnalysisMove,
@@ -106,6 +117,13 @@ export function useSlantProps({
     const contentSx = useMemo(() => getSlantContentSx(mobile), [mobile]);
 
     const dimensionsMismatch = rows !== state.rows || cols !== state.cols;
+
+    const trophyProps = useMemo(
+        () => ({
+            scaling,
+        }),
+        [scaling],
+    );
 
     return {
         boardProps: {
@@ -138,6 +156,7 @@ export function useSlantProps({
             handleOpenAnalysis,
             handleBoxClick,
         },
+        trophyProps,
     } satisfies Omit<
         GamePageProps<
             SlantGameContainerProps,
@@ -145,6 +164,6 @@ export function useSlantProps({
             SlantLayoutReturn,
             SlantInfoReturn
         >,
-        'controlsProps' | 'trophyProps'
+        'controlsProps'
     >;
 }

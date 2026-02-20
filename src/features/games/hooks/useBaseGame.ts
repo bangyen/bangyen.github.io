@@ -17,6 +17,7 @@ import { useReducer, useEffect, useMemo, useCallback, useRef } from 'react';
 import type { BaseGameConfig, MergedBoardConfig } from './types';
 import { useBoardSize } from './useBoardSize';
 import { useGamePersistence } from './useGamePersistence';
+import { useGameViewport } from './useGameViewport';
 import { useGridSize } from './useGridSize';
 import { useWinTransition } from './useWinTransition';
 import {
@@ -186,6 +187,8 @@ export function useBaseGame<
         boardConfig: mergedBoard,
     });
 
+    const { scaling } = useGameViewport();
+
     return {
         // State management
         state,
@@ -199,6 +202,7 @@ export function useBaseGame<
             cols,
             size,
             mobile,
+            scaling,
         },
 
         // Child component props

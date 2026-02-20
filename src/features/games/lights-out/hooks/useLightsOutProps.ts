@@ -9,6 +9,7 @@ import { useMemo } from 'react';
 
 import type { BoardProps } from '../../components/Board';
 import type { GameControlsProps } from '../../components/GameControls';
+import type { GAME_TOKENS, GameScalingVariant } from '../../config/tokens';
 import type { GamePageProps } from '../../hooks/types';
 import type { DragProps } from '../../hooks/useDrag';
 import type { LightsOutInfoProps as InfoProps } from '../components/LightsOutInfo';
@@ -33,6 +34,7 @@ export interface LightsOutGameParams {
     cols: number;
     size: number;
     mobile: boolean;
+    scaling: (typeof GAME_TOKENS.scaling)[GameScalingVariant];
 }
 
 /** Info-dialog state and callbacks. */
@@ -72,7 +74,7 @@ export interface UseLightsOutPropsParams {
  * page receives a structurally consistent contract.
  */
 export function useLightsOutProps({
-    game: { rows, cols, size, mobile },
+    game: { rows, cols, size, mobile, scaling },
     info: { open, toggleOpen, handleApply },
     rendering: { palette, getters, skipTransition },
     drag: { getDragProps, frontPropsFactory },
@@ -133,12 +135,20 @@ export function useLightsOutProps({
         [open, toggleOpen, rows, cols, size, palette, handleApply],
     );
 
+    const trophyProps = useMemo(
+        () => ({
+            scaling,
+        }),
+        [scaling],
+    );
+
     return useMemo(
         () =>
             ({
                 boardProps,
                 layoutProps,
                 infoProps,
+                trophyProps,
             }) satisfies Omit<
                 GamePageProps<
                     BoardProps,
@@ -146,8 +156,8 @@ export function useLightsOutProps({
                     LightsOutLayoutReturn,
                     InfoProps
                 >,
-                'controlsProps' | 'trophyProps'
+                'controlsProps'
             >,
-        [boardProps, layoutProps, infoProps],
+        [boardProps, layoutProps, infoProps, trophyProps],
     );
 }
