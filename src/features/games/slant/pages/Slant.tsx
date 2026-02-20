@@ -10,7 +10,8 @@ import { useSlantGame } from '../hooks/useSlantGame';
 import { PAGE_TITLES } from '@/config/constants';
 
 export function Slant() {
-    const { boardProps, layoutProps, infoProps, gameState } = useSlantGame();
+    const { boardProps, layoutProps, infoProps, gameState, trophyProps } =
+        useSlantGame();
 
     return (
         <>
@@ -36,6 +37,7 @@ export function Slant() {
                                 !boardProps.isAnalysisMode &&
                                 boardProps.state.solved
                             }
+                            {...trophyProps}
                         />
                     </GamePage.BoardContainer>
                 </GamePage.Content>

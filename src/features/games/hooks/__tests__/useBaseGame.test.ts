@@ -18,6 +18,15 @@ vi.mock('../useWinTransition', () => ({
 vi.mock('../useBoardSize', () => ({
     useBoardSize: vi.fn().mockReturnValue(3),
 }));
+vi.mock('../useGameViewport', () => ({
+    useGameViewport: vi.fn().mockReturnValue({
+        scaling: {
+            iconSize: '3rem',
+            containerSize: '9rem',
+            padding: 2,
+        },
+    }),
+}));
 vi.mock('../../../utils/gameUtils', () => ({
     createGameReducer: vi.fn().mockReturnValue((state: unknown) => state),
     getPosKey: vi.fn(),

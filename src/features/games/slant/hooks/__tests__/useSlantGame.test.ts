@@ -51,6 +51,11 @@ describe('useSlantGame', () => {
                 cols: 5,
                 size: 3,
                 mobile: false,
+                scaling: {
+                    iconSize: '3rem',
+                    containerSize: '9rem',
+                    padding: 2,
+                },
             },
             controlsProps: {
                 rows: 5,

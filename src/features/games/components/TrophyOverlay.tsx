@@ -8,7 +8,7 @@ import {
 } from './TrophyOverlay.styles';
 import { overlayScalePop, overlayTransition } from '../config/animations';
 import { GAME_TEXT } from '../config/constants';
-import type { GameScalingVariant } from '../config/tokens';
+import type { GAME_TOKENS, GameScalingVariant } from '../config/tokens';
 import { useGameViewport } from '../hooks/useGameViewport';
 
 export interface TrophyOverlayProps {
@@ -18,6 +18,8 @@ export interface TrophyOverlayProps {
     sizeVariant?: GameScalingVariant;
     /** Whether to show the "Solved!" label beneath the icon (default true). */
     showLabel?: boolean;
+    /** Optional pre-calculated scaling data. */
+    scaling?: (typeof GAME_TOKENS.scaling)[GameScalingVariant];
 }
 
 /**
@@ -30,8 +32,11 @@ export function TrophyOverlay({
     show = false,
     sizeVariant = 'default',
     showLabel = true,
+    scaling: propScaling,
 }: TrophyOverlayProps) {
-    const { scaling } = useGameViewport({ sizeVariant });
+    // Fallback to hook if scaling not provided (for backward compatibility/standalone use)
+    const { scaling: hookScaling } = useGameViewport({ sizeVariant });
+    const scaling = propScaling ?? hookScaling;
 
     return (
         <AnimatePresence>
