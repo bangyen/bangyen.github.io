@@ -1,7 +1,7 @@
 import { Box, Typography, styled } from '@mui/material';
 
 import { GAME_TEXT } from '../config/constants';
-import { useOptionalGameContext } from '../hooks/GameContext.hooks';
+import { useOptionalGameContext } from '../hooks/useGameContext';
 
 import { EmojiEventsRounded } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
@@ -91,7 +91,7 @@ export function TrophyOverlay({
 }: TrophyOverlayProps) {
     const context = useOptionalGameContext();
     const activeColor = useSecondary ? secondaryColor : primaryColor;
-    const isShow = show || !!context?.solved;
+    const isShow = show || context?.solved || false;
 
     // Scale with screen size using viewport units (vmin) rather than board size.
     // Bounded by rem values to ensure it remains legible on tiny screens
