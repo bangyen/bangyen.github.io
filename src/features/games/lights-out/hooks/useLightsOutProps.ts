@@ -136,8 +136,6 @@ export function useLightsOutProps({
         trophyProps: {
             show: solved,
             onReset: handleNext,
-            size,
-            iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
             primaryColor: palette.primary,
             secondaryColor: palette.secondary,
             useSecondary: allOn,

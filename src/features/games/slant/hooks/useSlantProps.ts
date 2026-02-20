@@ -160,8 +160,6 @@ export function useSlantProps({
         trophyProps: {
             show: !isAnalysisMode && state.solved,
             onReset: handleNextAsync,
-            size,
-            iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
         },
     } satisfies GamePageProps<
         SlantGameContainerProps,

@@ -35,9 +35,8 @@ export const trophyCardSx: SxProps<Theme> = {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
     gap: 1.5,
-    height: 'auto',
-    width: 'auto',
     maxWidth: '80%',
 };
 

@@ -1,4 +1,5 @@
 import { Box, Typography } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material';
 
 import {
     getOverlayContainerSx,
@@ -17,10 +18,6 @@ export interface TrophyOverlayProps {
     show?: boolean;
     /** Callback to advance to the next puzzle (used by auto-advance hook). */
     onReset?: () => void;
-    /** Board size in rem, used to scale the trophy icon (default 0). */
-    size?: number;
-    /** Ratio applied to size for the icon font-size (default 1). */
-    iconSizeRatio?: number;
     /** Primary trophy color (default COLORS.primary.main). */
     primaryColor?: string;
     /** Secondary trophy color (used when useSecondary is true, default COLORS.primary.main). */
@@ -40,8 +37,6 @@ export interface TrophyOverlayProps {
 export function TrophyOverlay({
     show = false,
     onReset: _onReset,
-    size = 0,
-    iconSizeRatio = 1,
     primaryColor = COLORS.primary.main,
     secondaryColor = COLORS.primary.main,
     useSecondary = false,
@@ -49,23 +44,36 @@ export function TrophyOverlay({
 }: TrophyOverlayProps) {
     const activeColor = useSecondary ? secondaryColor : primaryColor;
 
+    // Scale with screen size using viewport units (vmin) rather than board size.
+    // Bounded by rem values to ensure it remains legible on tiny screens
+    // and doesn't become grotesquely large on huge desktop monitors.
+    const iconSize = '3rem';
+    const containerSize = '9rem';
+
     return (
         <Box sx={getOverlayContainerSx(show)}>
-            {size > 0 && (
-                <GlassCard padding={SPACING.padding.md} sx={trophyCardSx}>
-                    <EmojiEventsRounded
-                        sx={getTrophyIconSx(
-                            `${(size * iconSizeRatio * 0.6).toString()}rem`,
-                            activeColor,
-                        )}
-                    />
-                    {showLabel && (
-                        <Typography variant="h6" sx={trophyLabelSx}>
-                            {GAME_TEXT.trophy.solvedLabel}
-                        </Typography>
-                    )}
-                </GlassCard>
-            )}
+            <GlassCard
+                padding={SPACING.padding.md}
+                sx={
+                    [
+                        trophyCardSx,
+                        {
+                            width: containerSize,
+                            height: containerSize,
+                            justifyContent: 'center',
+                        },
+                    ] as SxProps<Theme>
+                }
+            >
+                <EmojiEventsRounded
+                    sx={getTrophyIconSx(iconSize, activeColor)}
+                />
+                {showLabel && (
+                    <Typography variant="h6" sx={trophyLabelSx}>
+                        {GAME_TEXT.trophy.solvedLabel}
+                    </Typography>
+                )}
+            </GlassCard>
         </Box>
     );
 }
