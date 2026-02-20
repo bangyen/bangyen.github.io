@@ -1,15 +1,9 @@
 import type { SxProps, Theme } from '@mui/material';
-import { Box } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import React from 'react';
 
-import {
-    boardContainerSx,
-    cellLayerBaseSx,
-    overlayLayerBaseSx,
-} from './Board.styles';
-
 import { CustomGrid } from '@/components/ui/CustomGrid';
-import { spreadSx } from '@/utils/muiUtils';
+import { LAYOUT } from '@/config/theme';
 
 export interface BoardLayer {
     /** Factory function for cell props in this layer. */
@@ -35,6 +29,20 @@ export interface BoardProps {
     space?: number;
 }
 
+const BoardContainer = styled(Box)({
+    display: 'grid',
+    placeItems: 'center',
+});
+
+const LayerContainer = styled(Box, {
+    shouldForwardProp: prop => prop !== 'isOverlay',
+})<{ isOverlay?: boolean }>(({ isOverlay }) => ({
+    gridArea: '1/1',
+    ...(isOverlay && {
+        zIndex: LAYOUT.zIndex.base + 1,
+    }),
+}));
+
 /**
  * Multi-layer stacked grid used by game boards.
  *
@@ -52,21 +60,16 @@ export const Board = React.memo(function Board(
     const { layers, size, space = 0 } = props;
 
     return (
-        <Box
-            sx={boardContainerSx}
+        <BoardContainer
             onContextMenu={e => {
                 e.preventDefault();
             }}
         >
             {layers.map((layer, index) => (
-                <Box
+                <LayerContainer
                     key={`layer-${String(index)}`}
-                    sx={{
-                        ...spreadSx(
-                            index === 0 ? cellLayerBaseSx : overlayLayerBaseSx,
-                        ),
-                        ...spreadSx(layer.layerSx),
-                    }}
+                    isOverlay={index !== 0}
+                    sx={layer.layerSx}
                 >
                     <CustomGrid
                         space={space}
@@ -79,8 +82,8 @@ export const Board = React.memo(function Board(
                             ? { role: 'presentation', 'aria-hidden': true }
                             : {})}
                     />
-                </Box>
+                </LayerContainer>
             ))}
-        </Box>
+        </BoardContainer>
     );
 });
