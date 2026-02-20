@@ -19,7 +19,10 @@ export function LightsOut() {
     } = useLightsOutGame();
 
     return (
-        <GameProvider value={contextValue}>
+        <GameProvider
+            stateValue={contextValue}
+            dispatchValue={contextValue.dispatch}
+        >
             <GamePage
                 title={PAGE_TITLES.lightsOut}
                 infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"

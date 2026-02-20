@@ -93,8 +93,8 @@ export function useLightsOutProps({
         [getters, skipTransition],
     );
 
-    return {
-        boardProps: {
+    const boardProps = useMemo(
+        () => ({
             size,
             space: 0,
             layers: [
@@ -110,19 +110,31 @@ export function useLightsOutProps({
                     decorative: true,
                 },
             ],
-        },
-        controlsProps: {
+        }),
+        [size, rows, cols, backProps, frontProps],
+    );
+
+    const controlsPropsMemo = useMemo(
+        () => ({
             ...controlsProps,
             onOpenInfo: toggleOpen,
-        },
-        layoutProps: {
+        }),
+        [controlsProps, toggleOpen],
+    );
+
+    const layoutProps = useMemo(
+        () => ({
             boardSx: {
                 marginTop: mobile
                     ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
                     : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
             },
-        },
-        infoProps: {
+        }),
+        [mobile],
+    );
+
+    const infoProps = useMemo(
+        () => ({
             open,
             toggleOpen,
             board: { rows, cols, size },
@@ -132,18 +144,35 @@ export function useLightsOutProps({
                 getBackProps,
             },
             onApply: handleApply,
-        },
-        trophyProps: {
+        }),
+        [open, toggleOpen, rows, cols, size, palette, handleApply],
+    );
+
+    const trophyProps = useMemo(
+        () => ({
             show: solved,
             onReset: handleNext,
             primaryColor: palette.primary,
             secondaryColor: palette.secondary,
             useSecondary: allOn,
-        },
-    } satisfies GamePageProps<
-        BoardProps,
-        GameControlsProps,
-        LightsOutLayoutReturn,
-        InfoProps
-    >;
+        }),
+        [solved, handleNext, palette, allOn],
+    );
+
+    return useMemo(
+        () =>
+            ({
+                boardProps,
+                controlsProps: controlsPropsMemo,
+                layoutProps,
+                infoProps,
+                trophyProps,
+            }) satisfies GamePageProps<
+                BoardProps,
+                GameControlsProps,
+                LightsOutLayoutReturn,
+                InfoProps
+            >,
+        [boardProps, controlsPropsMemo, layoutProps, infoProps, trophyProps],
+    );
 }

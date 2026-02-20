@@ -1,15 +1,26 @@
 import type { ReactNode } from 'react';
 
-import { GameContext, type GameContextValue } from './GameContextSetup';
+import {
+    GameStateContext,
+    GameDispatchContext,
+    type GameStateContextValue,
+    type GameDispatchContextValue,
+} from './GameContextSetup';
 
 export function GameProvider<S, A>({
-    value,
+    stateValue,
+    dispatchValue,
     children,
 }: {
-    value: GameContextValue<S, A>;
+    stateValue: GameStateContextValue<S>;
+    dispatchValue: GameDispatchContextValue<A>;
     children: ReactNode;
 }) {
     return (
-        <GameContext.Provider value={value}>{children}</GameContext.Provider>
+        <GameStateContext.Provider value={stateValue}>
+            <GameDispatchContext.Provider value={dispatchValue}>
+                {children}
+            </GameDispatchContext.Provider>
+        </GameStateContext.Provider>
     );
 }

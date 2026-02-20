@@ -1,4 +1,6 @@
+// @vitest-environment happy-dom
 import { render, screen, renderHook } from '@testing-library/react';
+import React from 'react';
 
 import {
     usePalette,
@@ -182,9 +184,6 @@ describe('useHandler', () => {
 
         const { result } = renderHook(() => useHandler(state, mockPalette));
 
-        // Access getTile internally via the exported getters wrappers if possible,
-        // or re-verify via getColor which uses getTile
-
         expect(result.current.getColor(0, 0).front).toBe('blue'); // 1
         expect(result.current.getColor(0, 1).front).toBe('red'); // 0
     });
@@ -198,8 +197,6 @@ describe('useHandler', () => {
 
         const { result } = renderHook(() => useHandler(state, mockPalette));
 
-        // -1 should map to truthy logic in getColor?
-        // In useGetters: val ? primary : secondary. -1 is truthy in JS.
         expect(result.current.getColor(-1, 0).front).toBe('blue');
     });
 });
