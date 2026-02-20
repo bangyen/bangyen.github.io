@@ -11,8 +11,6 @@ import { SPACING } from '@/config/theme';
 export interface TrophyOverlayProps {
     /** Whether the win card is visible (default false). */
     show?: boolean;
-    /** Callback to advance to the next puzzle (used by auto-advance hook). */
-    onReset?: () => void;
     /** Whether to use a smaller size variant for info modals (default 'default'). */
     sizeVariant?: 'default' | 'small';
     /** Whether to show the "Solved!" label beneath the icon (default true). */
@@ -27,7 +25,6 @@ export interface TrophyOverlayProps {
  */
 export function TrophyOverlay({
     show = false,
-    onReset: _onReset,
     sizeVariant = 'default',
     showLabel = true,
 }: TrophyOverlayProps) {

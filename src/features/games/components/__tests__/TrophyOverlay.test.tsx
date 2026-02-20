@@ -5,10 +5,8 @@ import React from 'react';
 import { TrophyOverlay } from '../TrophyOverlay';
 
 describe('TrophyOverlay', () => {
-    const onReset = vi.fn();
     const defaultProps = {
         show: true,
-        onReset,
         size: 5,
         iconSizeRatio: 0.8,
     };
