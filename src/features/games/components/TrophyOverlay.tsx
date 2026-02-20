@@ -18,6 +18,8 @@ export interface TrophyOverlayProps {
     show?: boolean;
     /** Callback to advance to the next puzzle (used by auto-advance hook). */
     onReset?: () => void;
+    /** Whether to use a smaller size variant for info modals (default 'default'). */
+    sizeVariant?: 'default' | 'small';
     /** Primary trophy color (default COLORS.primary.main). */
     primaryColor?: string;
     /** Secondary trophy color (used when useSecondary is true, default COLORS.primary.main). */
@@ -37,6 +39,7 @@ export interface TrophyOverlayProps {
 export function TrophyOverlay({
     show = false,
     onReset: _onReset,
+    sizeVariant = 'default',
     primaryColor = COLORS.primary.main,
     secondaryColor = COLORS.primary.main,
     useSecondary = false,
@@ -47,8 +50,8 @@ export function TrophyOverlay({
     // Scale with screen size using viewport units (vmin) rather than board size.
     // Bounded by rem values to ensure it remains legible on tiny screens
     // and doesn't become grotesquely large on huge desktop monitors.
-    const iconSize = '3rem';
-    const containerSize = '9rem';
+    const iconSize = sizeVariant === 'small' ? '2rem' : '3rem';
+    const containerSize = sizeVariant === 'small' ? '5rem' : '9rem';
 
     return (
         <Box sx={getOverlayContainerSx(show)}>
