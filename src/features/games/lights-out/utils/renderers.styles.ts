@@ -9,8 +9,8 @@ import { COLORS } from '@/config/theme';
 
 /** Circular indicator dot centered inside each cell. */
 export const iconSx: SxProps<Theme> = {
-    width: '45%',
-    height: '45%',
+    width: '35%',
+    height: '35%',
     borderRadius: '50%',
     backgroundColor: 'currentColor',
 };

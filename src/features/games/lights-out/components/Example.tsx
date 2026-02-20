@@ -202,6 +202,7 @@ export function Example({
                     sx={{
                         justifyContent: 'center',
                         alignItems: 'center',
+                        alignContent: 'center',
                         flex: 1,
                         height: '100%',
                         overflow: 'hidden',
