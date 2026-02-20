@@ -32,8 +32,6 @@ describe('useSlantGame', () => {
         vi.clearAllMocks();
 
         vi.mocked(useBaseGame).mockReturnValue({
-            rows: 5,
-            cols: 5,
             state: {
                 grid: [],
                 numbers: [],
@@ -46,10 +44,14 @@ describe('useSlantGame', () => {
                 satisfiedNodes: new Set<string>(),
             } as never,
             dispatch: mockDispatch,
-            size: 3,
-            mobile: false,
             solved: false,
             handleNext: vi.fn(),
+            layout: {
+                rows: 5,
+                cols: 5,
+                size: 3,
+                mobile: false,
+            },
             controlsProps: {
                 rows: 5,
                 cols: 5,

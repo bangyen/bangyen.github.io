@@ -187,14 +187,21 @@ export function useBaseGame<
     });
 
     return {
-        rows,
-        cols,
+        // State management
         state,
         dispatch,
-        size,
-        mobile,
         solved,
         handleNext,
+
+        // Layout and sizing
+        layout: {
+            rows,
+            cols,
+            size,
+            mobile,
+        },
+
+        // Child component props
         controlsProps: {
             rows,
             cols,
@@ -205,5 +212,8 @@ export function useBaseGame<
             handleMinus,
             onRefresh: handleNext,
         },
+
+        // Legacy/Direct access (optional, but good for reducing refactor churn if needed)
+        // For now, let's go with the clean grouped structure and update consumers.
     };
 }

@@ -87,7 +87,8 @@ export function useSlantGame() {
         },
     });
 
-    const { rows, cols, state, dispatch, size, mobile } = baseGame;
+    const { state, dispatch, layout } = baseGame;
+    const { rows, cols, size, mobile } = layout;
 
     // Keep refs in sync with latest values from useBaseGame.
     dispatchRef.current = dispatch;

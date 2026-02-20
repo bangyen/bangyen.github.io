@@ -43,7 +43,8 @@ export function useLightsOutGame() {
         },
     });
 
-    const { rows, cols, state, dispatch, size, solved, mobile } = baseGame;
+    const { state, dispatch, solved, layout } = baseGame;
+    const { rows, cols, size, mobile } = layout;
 
     const { handleKeyDown: handleGridNav } = useGridNavigation({ rows, cols });
 

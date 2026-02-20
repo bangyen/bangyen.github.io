@@ -61,8 +61,8 @@ describe('useBaseGame', () => {
 
     it('should initialize and return state', () => {
         const { result } = renderHook(() => useBaseGame(defaultProps));
-        expect(result.current.rows).toBe(5);
-        expect(result.current.cols).toBe(5);
+        expect(result.current.layout.rows).toBe(5);
+        expect(result.current.layout.cols).toBe(5);
         expect(result.current.state).toBeDefined();
     });
 
@@ -97,6 +97,6 @@ describe('useBaseGame', () => {
             }),
         );
 
-        expect(result.current.size).toBeDefined();
+        expect(result.current.layout.size).toBeDefined();
     });
 });

@@ -5,35 +5,35 @@ import { EmojiEventsRounded } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS } from '@/config/theme';
 
-export const OverlayContainer = styled(motion.div)({
+export const OverlayContainer = styled(motion.div)(({ theme }) => ({
     position: 'absolute',
     inset: 0,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 10,
+    zIndex: theme.zIndex.modal,
     backgroundColor: 'transparent',
     pointerEvents: 'none',
     willChange: 'transform, opacity',
-});
+}));
 
 export const TrophyCard = styled(GlassCard, {
-    shouldForwardProp: prop => prop !== 'containerSize',
-})<{ containerSize: string }>(({ theme, containerSize }) => ({
+    shouldForwardProp: prop => prop !== 'size',
+})<{ size: string }>(({ theme, size }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
     gap: theme.spacing(1.5),
     maxWidth: '80%',
-    width: containerSize,
-    height: containerSize,
+    width: size,
+    height: size,
 }));
 
 export const TrophyIcon = styled(EmojiEventsRounded, {
-    shouldForwardProp: prop => prop !== 'sizeRem',
-})<{ sizeRem: string }>(({ theme, sizeRem }) => ({
-    fontSize: sizeRem,
+    shouldForwardProp: prop => prop !== 'fontSizeRem',
+})<{ fontSizeRem: string }>(({ theme, fontSizeRem }) => ({
+    fontSize: fontSizeRem,
     color: theme.palette.primary.main,
     filter: 'drop-shadow(0 4px 12px rgba(0,0,0,0.1))',
 }));
