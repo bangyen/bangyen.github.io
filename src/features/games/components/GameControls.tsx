@@ -1,7 +1,6 @@
 import React from 'react';
 
 import type { BaseControlsProps } from '../hooks/types';
-import { useOptionalGameState } from '../hooks/useGameContext';
 
 import { RemoveRounded, AddRounded, MenuBookRounded } from '@/components/icons';
 import { Navigation } from '@/components/layout/Navigation';
@@ -28,27 +27,21 @@ export interface GameControlsProps extends Partial<BaseControlsProps> {
 export const GameControls = React.memo(function GameControls(
     props: GameControlsProps,
 ) {
-    const gameState = useOptionalGameState();
-    const fallback = gameState?.controlsProps;
-
     const {
-        rows = fallback?.rows ?? 0,
-        cols = fallback?.cols ?? 0,
-        dynamicSize = fallback?.dynamicSize ?? { rows: 0, cols: 0 },
-        minSize = fallback?.minSize ?? 0,
-        maxSize = fallback?.maxSize ?? 0,
-        handlePlus = fallback?.handlePlus ??
-            (() => {
-                /* noop */
-            }),
-        handleMinus = fallback?.handleMinus ??
-            (() => {
-                /* noop */
-            }),
-        onRefresh = fallback?.onRefresh ??
-            (() => {
-                /* noop */
-            }),
+        rows = 0,
+        cols = 0,
+        dynamicSize = { rows: 0, cols: 0 },
+        minSize = 0,
+        maxSize = 0,
+        handlePlus = () => {
+            /* noop */
+        },
+        handleMinus = () => {
+            /* noop */
+        },
+        onRefresh = () => {
+            /* noop */
+        },
         disabled = false,
         onOpenInfo,
         hidden = false,

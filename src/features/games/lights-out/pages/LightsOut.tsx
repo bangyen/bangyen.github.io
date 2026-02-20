@@ -2,7 +2,6 @@ import { Board } from '../../components/Board';
 import { GameControls } from '../../components/GameControls';
 import { GamePage } from '../../components/GamePage';
 import { TrophyOverlay } from '../../components/TrophyOverlay';
-import { GameProvider } from '../../hooks/GameContext';
 import { LightsOutInfo as Info } from '../components/LightsOutInfo';
 import { useLightsOutGame } from '../hooks/useLightsOutGame';
 
@@ -13,10 +12,7 @@ export function LightsOut() {
         useLightsOutGame();
 
     return (
-        <GameProvider
-            stateValue={contextValue}
-            dispatchValue={contextValue.dispatch}
-        >
+        <>
             <GamePage
                 title={PAGE_TITLES.lightsOut}
                 infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
@@ -24,15 +20,15 @@ export function LightsOut() {
                 <GamePage.Content>
                     <GamePage.BoardContainer sx={layoutProps.boardSx}>
                         <Board {...boardProps} />
-                        <TrophyOverlay
-                            show={contextValue.solved}
-                            onReset={contextValue.handleNext}
-                        />
+                        <TrophyOverlay show={contextValue.solved} />
                     </GamePage.BoardContainer>
                 </GamePage.Content>
-                <GameControls onOpenInfo={infoProps.toggleOpen} />
+                <GameControls
+                    {...contextValue.controlsProps}
+                    onOpenInfo={infoProps.toggleOpen}
+                />
             </GamePage>
             <Info {...infoProps} />
-        </GameProvider>
+        </>
     );
 }

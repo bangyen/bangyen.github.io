@@ -3,7 +3,6 @@ import { Box } from '@mui/material';
 import { GameControls } from '../../components/GameControls';
 import { GamePage } from '../../components/GamePage';
 import { TrophyOverlay } from '../../components/TrophyOverlay';
-import { GameProvider } from '../../hooks/GameContext';
 import { SlantGameContainer } from '../components/SlantGameContainer';
 import { SlantInfo } from '../components/SlantInfo';
 import { useSlantGame } from '../hooks/useSlantGame';
@@ -14,10 +13,7 @@ export function Slant() {
     const { boardProps, layoutProps, infoProps, contextValue } = useSlantGame();
 
     return (
-        <GameProvider
-            stateValue={contextValue}
-            dispatchValue={contextValue.dispatch}
-        >
+        <>
             <GamePage
                 title={PAGE_TITLES.slant}
                 infoUrl="https://en.wikipedia.org/wiki/Gokigen_Naname"
@@ -40,11 +36,11 @@ export function Slant() {
                                 !boardProps.isAnalysisMode &&
                                 boardProps.state.solved
                             }
-                            onReset={contextValue.handleNext}
                         />
                     </GamePage.BoardContainer>
                 </GamePage.Content>
                 <GameControls
+                    {...contextValue.controlsProps}
                     onRefresh={contextValue.handleNext}
                     disabled={boardProps.generating}
                     onOpenInfo={infoProps.toggleOpen}
@@ -52,6 +48,6 @@ export function Slant() {
                 />
             </GamePage>
             <SlantInfo {...infoProps} />
-        </GameProvider>
+        </>
     );
 }
