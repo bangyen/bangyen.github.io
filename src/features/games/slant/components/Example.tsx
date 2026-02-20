@@ -1,4 +1,4 @@
-import { Box, Button } from '@mui/material';
+import { Box, Button, styled } from '@mui/material';
 import React, { useState, useEffect, useMemo } from 'react';
 
 import { Board } from '../../components/Board';
@@ -6,11 +6,6 @@ import { TrophyOverlay } from '../../components/TrophyOverlay';
 import { SLANT_STYLES, NUMBER_SIZE_RATIO } from '../config/constants';
 import type { CellState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
-import {
-    exampleActionsSx,
-    infoButtonSx,
-    exampleContainerSx,
-} from './SlantInfo.styles';
 import {
     EXAMPLE_DIMS,
     EXAMPLE_NUMBERS,
@@ -166,6 +161,55 @@ function makeFrontProps(
 // Example component
 // ---------------------------------------------------------------------------
 
+const ExampleContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    [theme.breakpoints.up('sm')]: {
+        flexDirection: 'row',
+        gap: theme.spacing(4),
+    },
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: theme.spacing(2),
+    width: '100%',
+    flex: 1,
+}));
+
+const ExampleActions = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    [theme.breakpoints.up('sm')]: {
+        gridTemplateColumns: '1fr',
+        marginTop: 0,
+        width: 'auto',
+        maxWidth: 'none',
+    },
+    gap: theme.spacing(1.5),
+    justifyContent: 'center',
+    justifyItems: 'center',
+    alignItems: 'center',
+    marginTop: theme.spacing(2),
+    width: '100%',
+    maxWidth: '320px',
+}));
+
+const InfoButton = styled(Button)(({ theme }) => ({
+    borderColor: COLORS.border.subtle,
+    color: COLORS.text.secondary,
+    width: '140px',
+    [theme.breakpoints.up('sm')]: {
+        width: '180px',
+    },
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    '& .MuiButton-startIcon': {
+        marginRight: theme.spacing(0.5),
+        [theme.breakpoints.up('sm')]: {
+            marginRight: theme.spacing(1),
+        },
+    },
+}));
+
 interface ExampleProps {
     /** Cell size in rem units. */
     size: number;
@@ -255,7 +299,7 @@ export function Example({
     );
 
     return (
-        <Box sx={exampleContainerSx}>
+        <ExampleContainer>
             <Box sx={{ position: 'relative', display: 'inline-flex' }}>
                 <style>{SLANT_STYLES.ANIMATIONS.POP_IN}</style>
                 <Board
@@ -284,42 +328,38 @@ export function Example({
                 />
             </Box>
 
-            <Box sx={exampleActionsSx}>
-                <Button
+            <ExampleActions>
+                <InfoButton
                     variant="outlined"
                     startIcon={
                         isPlaying ? <PauseRounded /> : <PlayArrowRounded />
                     }
                     onClick={handleTogglePlay}
-                    sx={infoButtonSx}
                 >
                     {isPlaying ? 'Pause' : 'Play'}
-                </Button>
-                <Button
+                </InfoButton>
+                <InfoButton
                     variant="outlined"
                     startIcon={<Psychology />}
                     onClick={handleOpenAnalysis}
-                    sx={infoButtonSx}
                 >
                     Analysis
-                </Button>
-                <Button
+                </InfoButton>
+                <InfoButton
                     variant="outlined"
                     startIcon={<NavigateBeforeRounded />}
                     onClick={handleStepBack}
-                    sx={infoButtonSx}
                 >
                     Step Back
-                </Button>
-                <Button
+                </InfoButton>
+                <InfoButton
                     variant="outlined"
                     startIcon={<NavigateNextRounded />}
                     onClick={handleStepForward}
-                    sx={infoButtonSx}
                 >
                     Step Next
-                </Button>
-            </Box>
-        </Box>
+                </InfoButton>
+            </ExampleActions>
+        </ExampleContainer>
     );
 }

@@ -1,13 +1,33 @@
-import { Box } from '@mui/material';
+import { Box, styled } from '@mui/material';
 
-import { FOCUS_VISIBLE_SX, iconSx } from './renderers.styles';
 import type { DragProps } from '../../hooks/useDrag';
 import { LIGHTS_OUT_STYLES } from '../config';
 import type { Getters } from '../types';
 
+import { COLORS } from '@/config/theme';
 import { getPosKey } from '@/utils/gameUtils';
 
-const ICON = <Box sx={iconSx} />;
+const IconBox = styled(Box)({
+    width: '35%',
+    height: '35%',
+    borderRadius: '50%',
+    backgroundColor: 'currentColor',
+});
+
+const ICON = <IconBox />;
+
+export const FOCUS_VISIBLE_SX = {
+    outline: 'none',
+    zIndex: 1,
+    '&::after': {
+        content: '""',
+        position: 'absolute',
+        inset: 0,
+        borderRadius: 'var(--cell-radius)',
+        boxShadow: `inset 0 0 0 3px ${COLORS.text.secondary}`,
+        pointerEvents: 'none',
+    },
+};
 
 /**
  * Visual-only cell factory for the front layer.
