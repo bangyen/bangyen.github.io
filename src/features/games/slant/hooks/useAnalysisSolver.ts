@@ -1,10 +1,12 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 
 import type { CellState } from '../types';
 import type { CellInfo, Conflict } from '../utils/analysisSolver';
 import { solveAnalysisConstraints } from '../utils/analysisSolver';
 import { createWorker } from '../utils/workerUtils';
 import type { SolverMessage } from '../workers/solverWorker';
+
+import { getPosKey } from '@/utils/gameUtils';
 
 /** Timeout for the initial worker health probe (ms). */
 const WORKER_PROBE_TIMEOUT_MS = 2000;
@@ -20,6 +22,8 @@ interface UseAnalysisSolverResult {
     gridState: Map<string, CellInfo>;
     conflicts: Conflict[];
     cycleCells: Set<string>;
+    conflictSet: Set<string>;
+    nodeConflictSet: Set<string>;
 }
 
 /**
@@ -138,5 +142,25 @@ export function useAnalysisSolver({
         }
     }, [userMoves, numbers, rows, cols, workerReady]);
 
-    return { gridState, conflicts, cycleCells };
+    const conflictSet = useMemo(
+        () =>
+            new Set(
+                conflicts
+                    .filter(c => c.type === 'cell')
+                    .map(c => getPosKey(c.r, c.c)),
+            ),
+        [conflicts],
+    );
+
+    const nodeConflictSet = useMemo(
+        () =>
+            new Set(
+                conflicts
+                    .filter(c => c.type === 'node')
+                    .map(c => getPosKey(c.r, c.c)),
+            ),
+        [conflicts],
+    );
+
+    return { gridState, conflicts, cycleCells, conflictSet, nodeConflictSet };
 }

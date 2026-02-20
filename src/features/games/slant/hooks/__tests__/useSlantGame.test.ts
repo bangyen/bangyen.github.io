@@ -21,6 +21,7 @@ vi.mock('@/hooks', () => ({
         toggle: vi.fn(),
     }),
     useMobile: vi.fn().mockReturnValue(false),
+    useDebouncedEffect: vi.fn(),
 }));
 
 const mockDispatch = vi.fn();
