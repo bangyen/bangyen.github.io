@@ -297,6 +297,14 @@ export function Example({
                 </Button>
                 <Button
                     variant="outlined"
+                    startIcon={<Psychology />}
+                    onClick={handleOpenAnalysis}
+                    sx={infoButtonSx}
+                >
+                    Analysis
+                </Button>
+                <Button
+                    variant="outlined"
                     startIcon={<NavigateBeforeRounded />}
                     onClick={handleStepBack}
                     sx={infoButtonSx}
@@ -310,14 +318,6 @@ export function Example({
                     sx={infoButtonSx}
                 >
                     Step Next
-                </Button>
-                <Button
-                    variant="outlined"
-                    startIcon={<Psychology />}
-                    onClick={handleOpenAnalysis}
-                    sx={infoButtonSx}
-                >
-                    Analysis
                 </Button>
             </Box>
         </Box>
