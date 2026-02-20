@@ -72,23 +72,23 @@ describe('useLightsOutGame', () => {
 
         vi.mocked(useSkipTransition).mockReturnValue(false);
 
-        vi.mocked(useLightsOutProps).mockImplementation(params => ({
-            boardProps: params.game as never,
-            controlsProps: params.controls as never,
-            layoutProps: {} as never,
-            infoProps: params.info as never,
-            trophyProps: {} as never,
-        }));
+        vi.mocked(useLightsOutProps).mockImplementation(
+            params =>
+                ({
+                    boardProps: params.game as never,
+                    layoutProps: {} as never,
+                    infoProps: params.info as never,
+                }) as any,
+        );
     });
 
     it('returns the standard GamePageProps shape', () => {
         const { result } = renderHook(() => useLightsOutGame());
 
         expect(result.current).toHaveProperty('boardProps');
-        expect(result.current).toHaveProperty('controlsProps');
         expect(result.current).toHaveProperty('layoutProps');
         expect(result.current).toHaveProperty('infoProps');
-        expect(result.current).toHaveProperty('trophyProps');
+        expect(result.current).toHaveProperty('contextValue');
     });
 
     it('calls useBaseGame with a valid config', () => {
@@ -136,13 +136,11 @@ describe('useLightsOutGame', () => {
         vi.mocked(useLightsOutProps).mockImplementation(params => {
             return {
                 boardProps: {} as never,
-                controlsProps: {} as never,
                 layoutProps: {} as never,
                 infoProps: {
                     handleApply: params.info.handleApply,
                 } as unknown as never,
-                trophyProps: {} as never,
-            };
+            } as any;
         });
 
         const { result } = renderHook(() => useLightsOutGame());
@@ -165,15 +163,16 @@ describe('useLightsOutGame', () => {
     });
 
     it('does not dispatch when solution has no active columns', () => {
-        vi.mocked(useLightsOutProps).mockImplementation(params => ({
-            boardProps: {} as never,
-            controlsProps: {} as never,
-            layoutProps: {} as never,
-            infoProps: {
-                handleApply: params.info.handleApply,
-            } as unknown as never,
-            trophyProps: {} as never,
-        }));
+        vi.mocked(useLightsOutProps).mockImplementation(
+            params =>
+                ({
+                    boardProps: {} as never,
+                    layoutProps: {} as never,
+                    infoProps: {
+                        handleApply: params.info.handleApply,
+                    } as unknown as never,
+                }) as any,
+        );
 
         const { result } = renderHook(() => useLightsOutGame());
 

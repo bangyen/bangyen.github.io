@@ -11,14 +11,7 @@ import { useSlantGame } from '../hooks/useSlantGame';
 import { PAGE_TITLES } from '@/config/constants';
 
 export function Slant() {
-    const {
-        boardProps,
-        controlsProps,
-        layoutProps,
-        infoProps,
-        trophyProps,
-        contextValue,
-    } = useSlantGame();
+    const { boardProps, layoutProps, infoProps, contextValue } = useSlantGame();
 
     return (
         <GameProvider
@@ -42,10 +35,21 @@ export function Slant() {
                         <Box onClick={infoProps.handleBoxClick}>
                             <SlantGameContainer {...boardProps} />
                         </Box>
-                        <TrophyOverlay {...trophyProps} />
+                        <TrophyOverlay
+                            show={
+                                !boardProps.isAnalysisMode &&
+                                boardProps.state.solved
+                            }
+                            onReset={contextValue.handleNext}
+                        />
                     </GamePage.BoardContainer>
                 </GamePage.Content>
-                <GameControls {...controlsProps} />
+                <GameControls
+                    onRefresh={contextValue.handleNext}
+                    disabled={boardProps.generating}
+                    onOpenInfo={infoProps.toggleOpen}
+                    hidden={boardProps.isAnalysisMode}
+                />
             </GamePage>
             <SlantInfo {...infoProps} />
         </GameProvider>

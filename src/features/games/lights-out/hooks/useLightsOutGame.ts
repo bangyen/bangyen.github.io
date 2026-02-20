@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
@@ -84,13 +84,6 @@ export function useLightsOutGame() {
 
     const palette = usePalette(state.score);
 
-    const allOn = useMemo(
-        () =>
-            state.initialized &&
-            state.grid.every((row: number) => row === (1 << cols) - 1),
-        [state.initialized, state.grid, cols],
-    );
-
     const getters = useHandler(state, palette);
 
     const boardKey = `${String(rows)},${String(cols)},${String(state.score)}`;
@@ -117,10 +110,9 @@ export function useLightsOutGame() {
 
     return {
         ...useLightsOutProps({
-            game: { rows, cols, size, solved, mobile, handleNext },
-            controls: controlsProps,
+            game: { rows, cols, size, mobile },
             info: { open, toggleOpen, handleApply },
-            rendering: { palette, allOn, getters, skipTransition },
+            rendering: { palette, getters, skipTransition },
             drag: {
                 getDragProps: getEnhancedDragProps,
                 frontPropsFactory: getFrontProps,

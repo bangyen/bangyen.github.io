@@ -1,13 +1,14 @@
 import React from 'react';
 
 import type { BaseControlsProps } from '../hooks/types';
+import { useOptionalGameState } from '../hooks/useGameContext';
 
 import { RemoveRounded, AddRounded, MenuBookRounded } from '@/components/icons';
 import { Navigation } from '@/components/layout/Navigation';
 import { RefreshButton } from '@/components/ui/Controls';
 import { TooltipButton } from '@/components/ui/TooltipButton';
 
-export interface GameControlsProps extends BaseControlsProps {
+export interface GameControlsProps extends Partial<BaseControlsProps> {
     disabled?: boolean;
     /** When provided, renders a built-in "How to Play" tutorial button. */
     onOpenInfo?: () => void;
@@ -27,15 +28,27 @@ export interface GameControlsProps extends BaseControlsProps {
 export const GameControls = React.memo(function GameControls(
     props: GameControlsProps,
 ) {
+    const gameState = useOptionalGameState();
+    const fallback = gameState?.controlsProps;
+
     const {
-        rows,
-        cols,
-        dynamicSize,
-        minSize,
-        maxSize,
-        handlePlus,
-        handleMinus,
-        onRefresh,
+        rows = fallback?.rows ?? 0,
+        cols = fallback?.cols ?? 0,
+        dynamicSize = fallback?.dynamicSize ?? { rows: 0, cols: 0 },
+        minSize = fallback?.minSize ?? 0,
+        maxSize = fallback?.maxSize ?? 0,
+        handlePlus = fallback?.handlePlus ??
+            (() => {
+                /* noop */
+            }),
+        handleMinus = fallback?.handleMinus ??
+            (() => {
+                /* noop */
+            }),
+        onRefresh = fallback?.onRefresh ??
+            (() => {
+                /* noop */
+            }),
         disabled = false,
         onOpenInfo,
         hidden = false,

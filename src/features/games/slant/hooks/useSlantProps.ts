@@ -10,7 +10,7 @@ import { useMemo } from 'react';
 
 import { getSlantContentSx } from './useSlantProps.styles';
 import type { GameControlsProps } from '../../components/GameControls';
-import type { BaseControlsProps, GamePageProps } from '../../hooks/types';
+import type { GamePageProps } from '../../hooks/types';
 import type { DragProps } from '../../hooks/useDrag';
 import type { SlantGameContainerProps } from '../components/SlantGameContainer';
 import { useSlantBoard } from '../components/useSlantBoard';
@@ -45,7 +45,6 @@ export interface SlantGameParams {
     mobile: boolean;
     isAnalysisMode: boolean;
     generating: boolean;
-    handleNextAsync: () => void;
 }
 
 /** Analysis-mode move map, handlers, and UI callbacks. */
@@ -72,7 +71,6 @@ export interface UseSlantPropsParams {
     game: SlantGameParams;
     analysis: SlantAnalysisParams;
     info: SlantInfoParams;
-    controls: BaseControlsProps;
     getDragProps: (pos: string) => DragProps;
 }
 
@@ -84,16 +82,7 @@ export interface UseSlantPropsParams {
  * structurally consistent contract.
  */
 export function useSlantProps({
-    game: {
-        state,
-        rows,
-        cols,
-        size,
-        mobile,
-        isAnalysisMode,
-        generating,
-        handleNextAsync,
-    },
+    game: { state, rows, cols, size, mobile, isAnalysisMode, generating },
     analysis: {
         analysisMoves,
         handleAnalysisMove,
@@ -106,7 +95,6 @@ export function useSlantProps({
         boardSx,
     },
     info: { infoOpen, toggleInfo },
-    controls: controlsProps,
     getDragProps,
 }: UseSlantPropsParams) {
     const { cellProps, overlayProps } = useSlantBoard({
@@ -139,13 +127,6 @@ export function useSlantProps({
             cellProps,
             overlayProps,
         },
-        controlsProps: {
-            ...controlsProps,
-            onRefresh: handleNextAsync,
-            disabled: generating,
-            onOpenInfo: toggleInfo,
-            hidden: isAnalysisMode,
-        },
         layoutProps: {
             boardSx,
             contentSx,
@@ -157,14 +138,13 @@ export function useSlantProps({
             handleOpenAnalysis,
             handleBoxClick,
         },
-        trophyProps: {
-            show: !isAnalysisMode && state.solved,
-            onReset: handleNextAsync,
-        },
-    } satisfies GamePageProps<
-        SlantGameContainerProps,
-        GameControlsProps,
-        SlantLayoutReturn,
-        SlantInfoReturn
+    } satisfies Omit<
+        GamePageProps<
+            SlantGameContainerProps,
+            GameControlsProps,
+            SlantLayoutReturn,
+            SlantInfoReturn
+        >,
+        'controlsProps' | 'trophyProps'
     >;
 }
