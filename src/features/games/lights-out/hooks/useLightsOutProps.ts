@@ -9,7 +9,7 @@ import { useMemo } from 'react';
 
 import type { BoardProps } from '../../components/Board';
 import type { GameControlsProps } from '../../components/GameControls';
-import type { BaseControlsProps, GamePageProps } from '../../hooks/types';
+import type { GamePageProps } from '../../hooks/types';
 import type { DragProps } from '../../hooks/useDrag';
 import type { LightsOutInfoProps as InfoProps } from '../components/LightsOutInfo';
 import { LAYOUT_CONSTANTS } from '../config';
@@ -28,14 +28,11 @@ interface LightsOutLayoutReturn {
     boardSx: { marginTop: string };
 }
 
-/** Core game dimensions and state flags. */
 export interface LightsOutGameParams {
     rows: number;
     cols: number;
     size: number;
-    solved: boolean;
     mobile: boolean;
-    handleNext: () => void;
 }
 
 /** Info-dialog state and callbacks. */
@@ -45,10 +42,8 @@ export interface LightsOutInfoParams {
     handleApply: (solution: number[]) => void;
 }
 
-/** Visual rendering state for the board cells. */
 export interface LightsOutRenderingParams {
     palette: Palette;
-    allOn: boolean;
     getters: Getters;
     skipTransition: boolean;
 }
@@ -65,7 +60,6 @@ export interface LightsOutDragParams {
 
 export interface UseLightsOutPropsParams {
     game: LightsOutGameParams;
-    controls: BaseControlsProps;
     info: LightsOutInfoParams;
     rendering: LightsOutRenderingParams;
     drag: LightsOutDragParams;
@@ -78,10 +72,9 @@ export interface UseLightsOutPropsParams {
  * page receives a structurally consistent contract.
  */
 export function useLightsOutProps({
-    game: { rows, cols, size, solved, mobile, handleNext },
-    controls: controlsProps,
+    game: { rows, cols, size, mobile },
     info: { open, toggleOpen, handleApply },
-    rendering: { palette, allOn, getters, skipTransition },
+    rendering: { palette, getters, skipTransition },
     drag: { getDragProps, frontPropsFactory },
 }: UseLightsOutPropsParams) {
     const frontProps = useCellFactory(frontPropsFactory, getDragProps, [
@@ -114,14 +107,6 @@ export function useLightsOutProps({
         [size, rows, cols, backProps, frontProps],
     );
 
-    const controlsPropsMemo = useMemo(
-        () => ({
-            ...controlsProps,
-            onOpenInfo: toggleOpen,
-        }),
-        [controlsProps, toggleOpen],
-    );
-
     const layoutProps = useMemo(
         () => ({
             boardSx: {
@@ -148,31 +133,21 @@ export function useLightsOutProps({
         [open, toggleOpen, rows, cols, size, palette, handleApply],
     );
 
-    const trophyProps = useMemo(
-        () => ({
-            show: solved,
-            onReset: handleNext,
-            primaryColor: palette.primary,
-            secondaryColor: palette.secondary,
-            useSecondary: allOn,
-        }),
-        [solved, handleNext, palette, allOn],
-    );
-
     return useMemo(
         () =>
             ({
                 boardProps,
-                controlsProps: controlsPropsMemo,
                 layoutProps,
                 infoProps,
-                trophyProps,
-            }) satisfies GamePageProps<
-                BoardProps,
-                GameControlsProps,
-                LightsOutLayoutReturn,
-                InfoProps
+            }) satisfies Omit<
+                GamePageProps<
+                    BoardProps,
+                    GameControlsProps,
+                    LightsOutLayoutReturn,
+                    InfoProps
+                >,
+                'controlsProps' | 'trophyProps'
             >,
-        [boardProps, controlsPropsMemo, layoutProps, infoProps, trophyProps],
+        [boardProps, layoutProps, infoProps],
     );
 }

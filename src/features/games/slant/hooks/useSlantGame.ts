@@ -170,7 +170,6 @@ export function useSlantGame() {
                 mobile,
                 isAnalysisMode,
                 generating,
-                handleNextAsync,
             },
             analysis: {
                 analysisMoves,
@@ -184,7 +183,6 @@ export function useSlantGame() {
                 boardSx,
             },
             info: { infoOpen, toggleInfo },
-            controls: controlsProps,
             getDragProps: getEnhancedDragProps,
         }),
         contextValue: {

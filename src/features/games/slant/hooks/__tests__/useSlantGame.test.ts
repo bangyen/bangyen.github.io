@@ -91,23 +91,23 @@ describe('useSlantGame', () => {
 
         vi.mocked(useDimensionRegeneration).mockReturnValue(undefined);
 
-        vi.mocked(useSlantProps).mockImplementation(params => ({
-            boardProps: params.game as never,
-            controlsProps: params.controls as never,
-            layoutProps: {} as never,
-            infoProps: params.info as never,
-            trophyProps: {} as never,
-        }));
+        vi.mocked(useSlantProps).mockImplementation(
+            params =>
+                ({
+                    boardProps: params.game as never,
+                    layoutProps: {} as never,
+                    infoProps: params.info as never,
+                }) as any,
+        );
     });
 
     it('returns the standard GamePageProps shape', () => {
         const { result } = renderHook(() => useSlantGame());
 
         expect(result.current).toHaveProperty('boardProps');
-        expect(result.current).toHaveProperty('controlsProps');
         expect(result.current).toHaveProperty('layoutProps');
         expect(result.current).toHaveProperty('infoProps');
-        expect(result.current).toHaveProperty('trophyProps');
+        expect(result.current).toHaveProperty('contextValue');
     });
 
     it('calls useBaseGame with manualResize enabled', () => {
@@ -150,10 +150,12 @@ describe('useSlantGame', () => {
             cancelGeneration: vi.fn(),
         });
 
-        renderHook(() => useSlantGame());
+        const { result } = renderHook(() => useSlantGame());
 
         const params = vi.mocked(useSlantProps).mock.calls[0]![0];
         expect(params.game.generating).toBe(true);
-        expect(params.game.handleNextAsync).toBe(mockHandleNextAsync);
+        expect(result.current.contextValue.handleNext).toBe(
+            mockHandleNextAsync,
+        );
     });
 });
