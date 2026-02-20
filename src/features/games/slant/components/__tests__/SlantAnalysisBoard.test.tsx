@@ -220,22 +220,26 @@ vi.mock('@/components/ui/CustomGrid', () => ({
 }));
 
 // Mock MUI to ensure styles are applied
-vi.mock('@mui/material', () => ({
-    Box: ({
-        children,
-        sx,
-        ...props
-    }: {
-        children: React.ReactNode;
-        sx?: React.CSSProperties;
-    }) => (
-        <div style={sx} {...props}>
-            {children}
-        </div>
-    ),
-    keyframes: vi.fn().mockReturnValue('mock-keyframes'),
-    styled: vi.fn().mockImplementation(Component => () => Component),
-}));
+vi.mock('@mui/material', async importOriginal => {
+    const actual = await importOriginal();
+    return {
+        ...(actual as Record<string, unknown>),
+        Box: ({
+            children,
+            sx,
+            ...props
+        }: {
+            children: React.ReactNode;
+            sx?: React.CSSProperties;
+        }) => (
+            <div style={sx} {...props}>
+                {children}
+            </div>
+        ),
+        keyframes: vi.fn().mockReturnValue('mock-keyframes'),
+        styled: vi.fn().mockImplementation(Component => () => Component),
+    };
+});
 
 const DEFAULT_PROPS = {
     rows: 3,

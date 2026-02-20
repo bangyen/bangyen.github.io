@@ -8,12 +8,12 @@
 import type { SxProps, Theme } from '@mui/material';
 import { useMemo } from 'react';
 
+import { useSlantBoard } from './useSlantBoard';
 import { getSlantContentSx } from './useSlantProps.styles';
 import type { GameControlsProps } from '../../components/GameControls';
 import type { GamePageProps } from '../../hooks/types';
 import type { DragProps } from '../../hooks/useDrag';
 import type { SlantGameContainerProps } from '../components/SlantGameContainer';
-import { useSlantBoard } from '../components/useSlantBoard';
 import { LAYOUT_CONSTANTS } from '../config/constants';
 import type { CellState, SlantState } from '../types';
 

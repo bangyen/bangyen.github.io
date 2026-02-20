@@ -6,13 +6,13 @@ import { AnalysisControls } from './AnalysisControls';
 import { AnalysisGridCell } from './AnalysisGridCell';
 import { AnalysisGridHint } from './AnalysisGridHint';
 import { SlantBoard } from './SlantBoard';
-import { useSlantAnalysisBoard } from './useSlantAnalysisBoard';
 import {
     AnimatedBoardContainer,
     boardPopIn,
 } from '../../components/AnimatedBoardContainer';
 import { BOARD_STYLES } from '../../config/constants';
 import { SLANT_STYLES } from '../config/constants';
+import { useSlantAnalysisBoard } from '../hooks/useSlantAnalysisBoard';
 import { EMPTY, type CellState } from '../types';
 import { computeSatisfied } from '../utils/analysisSolver';
 

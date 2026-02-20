@@ -15,25 +15,17 @@ import { isBoardState } from '../utils/persistence';
 import { getFrontProps } from '../utils/renderers';
 
 import { createCellIndex, type CellIndex } from '@/features/games/types';
-import { useDisclosure, useMobile } from '@/hooks';
+import { useDisclosure } from '@/hooks';
 
 /**
  * Orchestrates Lights Out game logic: grid state, drag interactions,
  * palette management, and modal state. Mimics the Slant pattern.
  */
 export function useLightsOutGame() {
-    const mobile = useMobile('sm');
-    const {
-        rows,
-        cols,
-        state,
-        dispatch,
-        size,
-        solved,
-        handleNext,
-        controlsProps,
-    } = useBaseGame<BoardState, BoardAction>({
-        ...getLightsOutGameConfig(mobile),
+    // useMobile is already called inside useBaseGame via useGridSize,
+    // so we derive mobile from the baseGame result instead of subscribing twice
+    const baseGame = useBaseGame<BoardState, BoardAction>({
+        ...getLightsOutGameConfig(),
         logic: {
             reducer: handleBoard,
             getInitialState,
@@ -50,6 +42,8 @@ export function useLightsOutGame() {
             },
         },
     });
+
+    const { rows, cols, state, dispatch, size, solved, mobile } = baseGame;
 
     const { handleKeyDown: handleGridNav } = useGridNavigation({ rows, cols });
 
@@ -118,16 +112,6 @@ export function useLightsOutGame() {
                 frontPropsFactory: getFrontProps,
             },
         }),
-        contextValue: {
-            rows,
-            cols,
-            state,
-            dispatch,
-            size,
-            mobile,
-            solved,
-            handleNext,
-            controlsProps,
-        },
+        gameState: baseGame,
     };
 }
