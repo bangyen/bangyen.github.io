@@ -69,8 +69,7 @@ function LoadingContent() {
 interface ErrorContentProps {
     error: Error | null;
     resetErrorBoundary: () => void;
-    onClose?: unknown;
-    [key: string]: unknown;
+    onClose?: () => void;
 }
 
 /**
@@ -84,8 +83,6 @@ function ErrorContent({
     resetErrorBoundary,
     onClose,
 }: ErrorContentProps) {
-    const handleClose =
-        typeof onClose === 'function' ? (onClose as () => void) : undefined;
     const devDetail = error ? (
         <DevErrorDetail error={error} maxHeight="150px" />
     ) : null;
@@ -103,7 +100,7 @@ function ErrorContent({
                 }}
             >
                 <TryAgainButton onClick={resetErrorBoundary} />
-                {handleClose && <ReturnToGameButton onClick={handleClose} />}
+                {onClose && <ReturnToGameButton onClick={onClose} />}
             </ErrorCard>
         </ModalPlaceholder>
     );

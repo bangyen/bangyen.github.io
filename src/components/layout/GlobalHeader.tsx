@@ -1,4 +1,5 @@
 import { Box } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 import {
     getHeaderSx,
@@ -61,8 +62,8 @@ export function GlobalHeader({
                 )}
                 {showHome && (
                     <TooltipButton
-                        component="a"
-                        href="/"
+                        component={Link}
+                        to="/"
                         title="Back to Home"
                         Icon={Home}
                         sx={iconButtonHoverSx}

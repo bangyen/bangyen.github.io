@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import React, { useCallback } from 'react';
 
-import { Board } from '../../components/Board';
+import { SlantBoard } from './SlantBoard';
 
 export interface SlantLoadingSkeletonProps {
     /** Cell size in rem units for the board. */
@@ -42,22 +42,12 @@ export function SlantLoadingSkeleton({
                 animation: 'pulse 1.4s ease-in-out infinite',
             }}
         >
-            <Board
+            <SlantBoard
                 size={size}
-                layers={[
-                    {
-                        rows,
-                        cols,
-                        cellProps: skeletonBack,
-                    },
-                    {
-                        rows: rows + 1,
-                        cols: cols + 1,
-                        cellProps: skeletonFront,
-                        layerSx: { pointerEvents: 'none' },
-                        decorative: true,
-                    },
-                ]}
+                rows={rows}
+                cols={cols}
+                cellProps={skeletonBack}
+                overlayProps={skeletonFront}
             />
         </Box>
     );

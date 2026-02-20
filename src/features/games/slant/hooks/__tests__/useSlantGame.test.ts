@@ -107,7 +107,7 @@ describe('useSlantGame', () => {
         expect(result.current).toHaveProperty('boardProps');
         expect(result.current).toHaveProperty('layoutProps');
         expect(result.current).toHaveProperty('infoProps');
-        expect(result.current).toHaveProperty('contextValue');
+        expect(result.current).toHaveProperty('gameState');
     });
 
     it('calls useBaseGame with manualResize enabled', () => {
@@ -154,8 +154,6 @@ describe('useSlantGame', () => {
 
         const params = vi.mocked(useSlantProps).mock.calls[0]![0];
         expect(params.game.generating).toBe(true);
-        expect(result.current.contextValue.handleNext).toBe(
-            mockHandleNextAsync,
-        );
+        expect(result.current.gameState.handleNext).toBe(mockHandleNextAsync);
     });
 });

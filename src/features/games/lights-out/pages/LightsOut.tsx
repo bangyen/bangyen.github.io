@@ -8,7 +8,7 @@ import { useLightsOutGame } from '../hooks/useLightsOutGame';
 import { PAGE_TITLES } from '@/config/constants';
 
 export function LightsOut() {
-    const { boardProps, layoutProps, infoProps, contextValue } =
+    const { boardProps, layoutProps, infoProps, gameState } =
         useLightsOutGame();
 
     return (
@@ -20,10 +20,10 @@ export function LightsOut() {
                 <GamePage.Content>
                     <GamePage.BoardContainer sx={layoutProps.boardSx}>
                         <Board {...boardProps} />
-                        <TrophyOverlay show={contextValue.solved} />
+                        <TrophyOverlay show={gameState.solved} />
                     </GamePage.BoardContainer>
                 </GamePage.Content>
-                <GameControls {...contextValue.controlsProps}>
+                <GameControls {...gameState.controlsProps}>
                     <GameControls.Refresh />
                     <GameControls.ResizeMinus />
                     <GameControls.ResizePlus />
