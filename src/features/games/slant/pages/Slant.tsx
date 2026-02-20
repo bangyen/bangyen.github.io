@@ -43,9 +43,13 @@ export function Slant() {
                     {...contextValue.controlsProps}
                     onRefresh={contextValue.handleNext}
                     disabled={boardProps.generating}
-                    onOpenInfo={infoProps.toggleOpen}
                     hidden={boardProps.isAnalysisMode}
-                />
+                >
+                    <GameControls.Refresh />
+                    <GameControls.ResizeMinus />
+                    <GameControls.ResizePlus />
+                    <GameControls.Info onClick={infoProps.toggleOpen} />
+                </GameControls>
             </GamePage>
             <SlantInfo {...infoProps} />
         </>
