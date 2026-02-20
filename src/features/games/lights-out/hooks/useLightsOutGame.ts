@@ -115,14 +115,27 @@ export function useLightsOutGame() {
         [dispatch, toggleOpen],
     );
 
-    return useLightsOutProps({
-        game: { rows, cols, size, solved, mobile, handleNext },
-        controls: controlsProps,
-        info: { open, toggleOpen, handleApply },
-        rendering: { palette, allOn, getters, skipTransition },
-        drag: {
-            getDragProps: getEnhancedDragProps,
-            frontPropsFactory: getFrontProps,
+    return {
+        ...useLightsOutProps({
+            game: { rows, cols, size, solved, mobile, handleNext },
+            controls: controlsProps,
+            info: { open, toggleOpen, handleApply },
+            rendering: { palette, allOn, getters, skipTransition },
+            drag: {
+                getDragProps: getEnhancedDragProps,
+                frontPropsFactory: getFrontProps,
+            },
+        }),
+        contextValue: {
+            rows,
+            cols,
+            state,
+            dispatch,
+            size,
+            mobile,
+            solved,
+            handleNext,
+            controlsProps,
         },
-    });
+    };
 }

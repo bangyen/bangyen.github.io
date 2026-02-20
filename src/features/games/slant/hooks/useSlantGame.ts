@@ -160,30 +160,43 @@ export function useSlantGame() {
         [getDragProps, handleGridNav],
     );
 
-    return useSlantProps({
-        game: {
-            state,
+    return {
+        ...useSlantProps({
+            game: {
+                state,
+                rows,
+                cols,
+                size,
+                mobile,
+                isAnalysisMode,
+                generating,
+                handleNextAsync,
+            },
+            analysis: {
+                analysisMoves,
+                handleAnalysisMove,
+                handleAnalysisCopy,
+                handleAnalysisClear,
+                handleAnalysisClose,
+                handleAnalysisApply,
+                handleBoxClick,
+                handleOpenAnalysis,
+                boardSx,
+            },
+            info: { infoOpen, toggleInfo },
+            controls: controlsProps,
+            getDragProps: getEnhancedDragProps,
+        }),
+        contextValue: {
             rows,
             cols,
+            state,
+            dispatch,
             size,
             mobile,
-            isAnalysisMode,
-            generating,
-            handleNextAsync,
+            solved: state.solved,
+            handleNext: handleNextAsync,
+            controlsProps,
         },
-        analysis: {
-            analysisMoves,
-            handleAnalysisMove,
-            handleAnalysisCopy,
-            handleAnalysisClear,
-            handleAnalysisClose,
-            handleAnalysisApply,
-            handleBoxClick,
-            handleOpenAnalysis,
-            boardSx,
-        },
-        info: { infoOpen, toggleInfo },
-        controls: controlsProps,
-        getDragProps: getEnhancedDragProps,
-    });
+    };
 }
