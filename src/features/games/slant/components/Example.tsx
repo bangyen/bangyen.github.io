@@ -278,8 +278,7 @@ export function Example({
                 />
                 <TrophyOverlay
                     show={isSolved && isPlaying}
-                    size={size}
-                    iconSizeRatio={1}
+                    sizeVariant="small"
                     primaryColor={COLORS.primary.main}
                     showLabel={false}
                 />
