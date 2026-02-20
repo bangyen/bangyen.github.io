@@ -1,0 +1,66 @@
+$ vitest run src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx
+[1m[43m DEPRECATED [49m[22m [33m`test.poolOptions` was removed in Vitest 4. All previous `poolOptions` are now top-level options. Please, refer to the migration guide: https://vitest.dev/guide/migration#pool-rework[39m
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/Users/bangyen/Documents/repos/bangyen.github.io[39m
+
+ [31m❯[39m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx [2m([22m[2m16 tests[22m[2m | [22m[31m16 failed[39m[2m)[22m[32m 33[2mms[22m[39m
+[31m     [31m×[31m renders the grid correctly[39m[32m 14[2mms[22m[39m
+[31m     [31m×[31m handles click interactions[39m[32m 2[2mms[22m[39m
+[31m     [31m×[31m handles drag interactions (paint mode)[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m propagates constraints (shallow propagation check)[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m detects conflicts (red highlight)[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m handles state cycling with existing moves[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m renders control buttons when provided[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m updates grid state when worker sends result[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m displays empty state for missing numbers[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m handles both desktop and mobile padding variants[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m cycles cell states on multiple clicks[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m shows cycle cells with distinct color[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m color logic: user-set cells show primary color[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m color logic: propagated cells show green[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m number hints display when value is present[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m number hints are hidden when value is null[39m[32m 1[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 16 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mrenders the grid correctly
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mhandles click interactions
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mhandles drag interactions (paint mode)
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mpropagates constraints (shallow propagation check)
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mdetects conflicts (red highlight)
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mhandles state cycling with existing moves
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mrenders control buttons when provided
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mupdates grid state when worker sends result
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mdisplays empty state for missing numbers
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mhandles both desktop and mobile padding variants
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mcycles cell states on multiple clicks
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mshows cycle cells with distinct color
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mcolor logic: user-set cells show primary color
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mcolor logic: propagated cells show green
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mnumber hints display when value is present
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mnumber hints are hidden when value is null
+[31m[1mTypeError[22m: cellProps is not a function[39m
+[36m [2m❯[22m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx:[2m184:46[22m[39m
+    [90m182| [39m            [33m{[39m[33mArray[39m[33m.[39m[35mfrom[39m({ length[33m:[39m rows })[33m.[39m[34mmap[39m((_[33m,[39m r) [33m=>[39m
+    [90m183| [39m                [33mArray[39m[33m.[39m[35mfrom[39m({ length[33m:[39m cols })[33m.[39m[34mmap[39m((_[33m,[39m c) [33m=>[39m {
+    [90m184| [39m                    [35mconst[39m { sx[33m,[39m [33m...[39mprops } [33m=[39m [34mcellProps[39m(r[33m,[39m c)[33m;[39m
+    [90m   | [39m                                             [31m^[39m
+    [90m185| [39m                    [90m// Sanitize sx for style prop[39m
+    [90m186| [39m                    [35mconst[39m sanitizedStyle[33m:[39m [33mRecord[39m[33m<[39mstring[33m,[39m unknown[33m>[39m [33m=[39m {}[33m;[39m
+[90m [2m❯[22m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx:[2m183:46[22m[39m
+[90m [2m❯[22m CustomGrid src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx:[2m182:43[22m[39m
+[90m [2m❯[22m Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:[2m25904:20[22m[39m
+[90m [2m❯[22m renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:[2m7662:22[22m[39m
+[90m [2m❯[22m updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:[2m10166:19[22m[39m
+[90m [2m❯[22m beginWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m11778:18[22m[39m
+[90m [2m❯[22m runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:[2m874:13[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m16 failed[39m[22m[90m (16)[39m
+[2m   Start at [22m 19:13:31
+[2m   Duration [22m 2.48s[2m (transform 153ms, setup 62ms, import 2.17s, tests 33ms, environment 144ms)[22m
+
+error: script "test" exited with code 1

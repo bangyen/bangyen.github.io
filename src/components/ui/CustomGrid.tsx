@@ -92,7 +92,8 @@ export interface RowProps {
     size: number;
     index: number;
     spacing: string;
-    cellProps: (row: number, col: number) => CellOptions;
+    cellProps?: (row: number, col: number) => CellOptions;
+    renderCell?: (row: number, col: number) => React.ReactNode;
 }
 
 const Row = memo(function Row({
@@ -101,6 +102,7 @@ const Row = memo(function Row({
     index,
     spacing,
     cellProps,
+    renderCell,
 }: RowProps) {
     return (
         <Box
@@ -111,13 +113,26 @@ const Row = memo(function Row({
                 justifyContent: 'center',
             }}
         >
-            {Array.from({ length: cols }, (_, j) => (
-                <Cell
-                    {...cellProps(index, j)}
-                    key={`${index.toString()}_${j.toString()}`}
-                    size={size}
-                />
-            ))}
+            {Array.from({ length: cols }, (_, j) => {
+                if (renderCell) {
+                    return (
+                        <Cell
+                            key={`${index.toString()}_${j.toString()}`}
+                            size={size}
+                        >
+                            {renderCell(index, j)}
+                        </Cell>
+                    );
+                }
+                const props = cellProps ? cellProps(index, j) : {};
+                return (
+                    <Cell
+                        {...props}
+                        key={`${index.toString()}_${j.toString()}`}
+                        size={size}
+                    />
+                );
+            })}
         </Box>
     );
 });
@@ -127,7 +142,8 @@ interface CustomGridKnownProps {
     size: number;
     rows: number;
     cols: number;
-    cellProps: (row: number, col: number) => CellOptions;
+    cellProps?: (row: number, col: number) => CellOptions;
+    renderCell?: (row: number, col: number) => React.ReactNode;
     space?: number;
     sx?: SxProps<Theme>;
 }
@@ -140,6 +156,7 @@ export const CustomGrid = memo(function CustomGrid({
     rows,
     cols,
     cellProps,
+    renderCell,
     space,
     sx,
     ...rest
@@ -169,6 +186,7 @@ export const CustomGrid = memo(function CustomGrid({
                     spacing={rem}
                     key={`row_${i.toString()}`}
                     cellProps={cellProps}
+                    renderCell={renderCell}
                 />
             ))}
         </Box>

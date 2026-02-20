@@ -4,38 +4,34 @@ import React from 'react';
 import { AnalysisCell } from './AnalysisCell';
 import type { DragProps } from '../../hooks/useDrag';
 import { SLANT_STYLES } from '../config/constants';
-import { EMPTY } from '../types';
-import type { CellInfo } from '../utils/analysisSolver';
+import type { CellState } from '../types';
 
 import { COLORS } from '@/config/theme';
-import { getPosKey } from '@/utils/gameUtils';
 
-interface AnalysisGridCellProps extends DragProps {
+interface AnalysisGridCellProps {
     r: number;
     c: number;
-    gridState: Map<string, CellInfo>;
-    conflictSet: Set<string>;
-    cycleCells: Set<string>;
+    value: CellState;
+    source?: 'user' | 'propagated';
+    isConflict: boolean;
+    isCycle: boolean;
     size: number;
-    onKeyDown: (e: React.KeyboardEvent) => void;
+    pos: string;
+    getDragProps: (pos: string) => DragProps;
 }
 
-export function AnalysisGridCell({
-    r,
-    c,
-    gridState,
-    conflictSet,
-    cycleCells,
+export const AnalysisGridCell = React.memo(function AnalysisGridCell({
+    r: _r,
+    c: _c,
+    value,
+    source,
+    isConflict,
+    isCycle,
     size,
-    onKeyDown,
-    ...dragProps
+    pos,
+    getDragProps,
 }: AnalysisGridCellProps) {
-    const pos = getPosKey(r, c);
-    const info = gridState.get(pos);
-    const value = info?.state ?? EMPTY;
-    const source = info?.source;
-    const isConflict = conflictSet.has(pos);
-    const isCycle = cycleCells.has(pos);
+    const dragProps = getDragProps(pos);
 
     let color = COLORS.text.primary;
 
@@ -53,7 +49,6 @@ export function AnalysisGridCell({
         <Box
             data-pos={pos}
             data-type="cell"
-            onKeyDown={onKeyDown}
             {...dragProps}
             sx={{
                 ...dragProps.sx,
@@ -85,4 +80,4 @@ export function AnalysisGridCell({
             <AnalysisCell value={value} color={color} size={size} />
         </Box>
     );
-}
+});

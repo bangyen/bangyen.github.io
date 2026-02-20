@@ -1,0 +1,136 @@
+$ vitest run
+[1m[43m DEPRECATED [49m[22m [33m`test.poolOptions` was removed in Vitest 4. All previous `poolOptions` are now top-level options. Please, refer to the migration guide: https://vitest.dev/guide/migration#pool-rework[39m
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/Users/bangyen/Documents/repos/bangyen.github.io[39m
+
+ [32m✓[39m src/hooks/__tests__/useAsync.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 350[2mms[22m[39m
+ [32m✓[39m src/features/games/lights-out/components/__tests__/Example.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 138[2mms[22m[39m
+ [32m✓[39m src/features/games/lights-out/components/__tests__/LightsOutInfo.test.tsx [2m([22m[2m20 tests[22m[2m)[22m[33m 736[2mms[22m[39m
+     [33m[2m✓[22m[39m renders instruction step initially [33m 336[2mms[22m[39m
+ [32m✓[39m src/features/research/components/__tests__/MathText.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 110[2mms[22m[39m
+ [32m✓[39m src/components/layout/__tests__/FeatureErrorFallback.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 171[2mms[22m[39m
+ [32m✓[39m src/components/ui/__tests__/common.test.tsx [2m([22m[2m26 tests[22m[2m)[22m[33m 302[2mms[22m[39m
+ [32m✓[39m src/features/home/components/__tests__/HeroSection.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 307[2mms[22m[39m
+ [31m❯[39m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx [2m([22m[2m16 tests[22m[2m | [22m[31m16 failed[39m[2m)[22m[32m 59[2mms[22m[39m
+[31m     [31m×[31m renders the grid correctly[39m[32m 28[2mms[22m[39m
+[31m     [31m×[31m handles click interactions[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m handles drag interactions (paint mode)[39m[32m 2[2mms[22m[39m
+[31m     [31m×[31m propagates constraints (shallow propagation check)[39m[32m 2[2mms[22m[39m
+[31m     [31m×[31m detects conflicts (red highlight)[39m[32m 3[2mms[22m[39m
+[31m     [31m×[31m handles state cycling with existing moves[39m[32m 2[2mms[22m[39m
+[31m     [31m×[31m renders control buttons when provided[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m updates grid state when worker sends result[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m displays empty state for missing numbers[39m[32m 2[2mms[22m[39m
+[31m     [31m×[31m handles both desktop and mobile padding variants[39m[32m 2[2mms[22m[39m
+[31m     [31m×[31m cycles cell states on multiple clicks[39m[32m 5[2mms[22m[39m
+[31m     [31m×[31m shows cycle cells with distinct color[39m[32m 2[2mms[22m[39m
+[31m     [31m×[31m color logic: user-set cells show primary color[39m[32m 2[2mms[22m[39m
+[31m     [31m×[31m color logic: propagated cells show green[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m number hints display when value is present[39m[32m 1[2mms[22m[39m
+[31m     [31m×[31m number hints are hidden when value is null[39m[32m 1[2mms[22m[39m
+ [32m✓[39m src/features/research/components/__tests__/ResearchDemo.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[33m 637[2mms[22m[39m
+   [33m[2m✓[22m[39m renders the chart with correct data [33m 325[2mms[22m[39m
+ [32m✓[39m src/components/layout/ProjectMenu/__tests__/ProjectMenu.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 134[2mms[22m[39m
+ [32m✓[39m src/features/home/pages/__tests__/Home.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 1016[2mms[22m[39m
+ [32m✓[39m src/features/games/lights-out/pages/__tests__/LightsOut.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 119[2mms[22m[39m
+ [32m✓[39m src/features/games/components/__tests__/Board.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+ [32m✓[39m src/features/games/hooks/__tests__/useGameInteraction.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/features/games/lights-out/utils/__tests__/persistence.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/features/home/components/__tests__/Layout.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 61[2mms[22m[39m
+ [32m✓[39m src/features/games/components/__tests__/TrophyOverlay.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 92[2mms[22m[39m
+ [32m✓[39m src/components/layout/__tests__/ErrorFallback.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 236[2mms[22m[39m
+ [32m✓[39m src/components/layout/__tests__/ErrorBoundary.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+ [32m✓[39m src/features/home/components/__tests__/FeaturedWork.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m src/components/layout/__tests__/ErrorPage.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 129[2mms[22m[39m
+ [32m✓[39m src/features/games/hooks/__tests__/useDrag.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 60[2mms[22m[39m
+ [32m✓[39m src/hooks/__tests__/useTheme.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/components/ui/__tests__/ThemeToggle.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 90[2mms[22m[39m
+ [32m✓[39m src/__tests__/utils.test.tsx [2m([22m[2m29 tests[22m[2m)[22m[32m 77[2mms[22m[39m
+ [32m✓[39m src/hooks/__tests__/useLocalStorage.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+[90mstderr[2m | src/features/research/pages/__tests__/Oligopoly.test.tsx[2m > [22m[2mOligopoly Component[2m > [22m[2mrenders correctly with loader data
+[22m[39mNo `HydrateFallback` element provided to render during initial hydration
+
+ [32m✓[39m src/features/research/pages/__tests__/Oligopoly.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 103[2mms[22m[39m
+ [32m✓[39m src/features/games/hooks/__tests__/useWinTransition.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/components/ui/__tests__/ErrorCard.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 60[2mms[22m[39m
+ [32m✓[39m src/hooks/__tests__/useDocumentTitle.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+ [32m✓[39m src/hooks/__tests__/useStableCallback.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/features/games/hooks/__tests__/useBoardSize.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+[90mstderr[2m | src/features/research/pages/__tests__/ZSharp.test.tsx[2m > [22m[2mZSharp Component[2m > [22m[2mrenders correctly with loader data
+[22m[39mNo `HydrateFallback` element provided to render during initial hydration
+
+ [32m✓[39m src/features/research/pages/__tests__/ZSharp.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+ [32m✓[39m src/hooks/__tests__/useDebouncedEffect.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/features/games/hooks/__tests__/useGridSize.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 44[2mms[22m[39m
+ [32m✓[39m src/features/games/slant/hooks/__tests__/useAnalysisSolver.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m src/hooks/__tests__/useThemePreference.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/utils/math/gf2/__tests__/gf2Operations.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/features/games/hooks/__tests__/useBaseGame.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/hooks/__tests__/layout.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m src/hooks/__tests__/useMobileContext.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m src/features/games/hooks/__tests__/useGamePersistence.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/gameUtils.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m src/utils/math/gf2/__tests__/polynomialUtils.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/utils/math/gf2/__tests__/matrixOperations.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/features/games/lights-out/utils/__tests__/boardHandlers.test.ts [2m([22m[2m31 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/features/games/lights-out/utils/__tests__/matrices.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/features/games/lights-out/utils/__tests__/animationFrames.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/features/games/lights-out/utils/__tests__/chaseHandlers.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/DSU.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/features/games/slant/utils/__tests__/persistence.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/features/games/slant/utils/__tests__/boardHandlers_apply.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/utils/math/gf2/__tests__/inversion.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/features/games/components/__tests__/GameControls.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/objectUtils.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m src/utils/__tests__/muiUtils.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/features/research/hooks/__tests__/useResearchDemoDefaults.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/features/games/hooks/__tests__/boardSizeUtils.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/features/games/slant/hooks/__tests__/useSlantGame.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/features/games/lights-out/hooks/__tests__/useLightsOutGame.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/features/games/lights-out/components/__tests__/calculator.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/features/home/components/HeroSection/__tests__/TechStack.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/features/games/lights-out/utils/__tests__/renderers.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 16 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mrenders the grid correctly
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mhandles click interactions
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mhandles drag interactions (paint mode)
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mpropagates constraints (shallow propagation check)
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mdetects conflicts (red highlight)
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mhandles state cycling with existing moves
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mrenders control buttons when provided
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mupdates grid state when worker sends result
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mdisplays empty state for missing numbers
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mhandles both desktop and mobile padding variants
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mcycles cell states on multiple clicks
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mshows cycle cells with distinct color
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mcolor logic: user-set cells show primary color
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mcolor logic: propagated cells show green
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mnumber hints display when value is present
+[41m[1m FAIL [22m[49m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx[2m > [22mSlantAnalysisBoard[2m > [22mnumber hints are hidden when value is null
+[31m[1mTypeError[22m: cellProps is not a function[39m
+[36m [2m❯[22m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx:[2m184:46[22m[39m
+    [90m182| [39m            [33m{[39m[33mArray[39m[33m.[39m[35mfrom[39m({ length[33m:[39m rows })[33m.[39m[34mmap[39m((_[33m,[39m r) [33m=>[39m
+    [90m183| [39m                [33mArray[39m[33m.[39m[35mfrom[39m({ length[33m:[39m cols })[33m.[39m[34mmap[39m((_[33m,[39m c) [33m=>[39m {
+    [90m184| [39m                    [35mconst[39m { sx[33m,[39m [33m...[39mprops } [33m=[39m [34mcellProps[39m(r[33m,[39m c)[33m;[39m
+    [90m   | [39m                                             [31m^[39m
+    [90m185| [39m                    [90m// Sanitize sx for style prop[39m
+    [90m186| [39m                    [35mconst[39m sanitizedStyle[33m:[39m [33mRecord[39m[33m<[39mstring[33m,[39m unknown[33m>[39m [33m=[39m {}[33m;[39m
+[90m [2m❯[22m src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx:[2m183:46[22m[39m
+[90m [2m❯[22m CustomGrid src/features/games/slant/components/__tests__/SlantAnalysisBoard.test.tsx:[2m182:43[22m[39m
+[90m [2m❯[22m Object.react_stack_bottom_frame node_modules/react-dom/cjs/react-dom-client.development.js:[2m25904:20[22m[39m
+[90m [2m❯[22m renderWithHooks node_modules/react-dom/cjs/react-dom-client.development.js:[2m7662:22[22m[39m
+[90m [2m❯[22m updateFunctionComponent node_modules/react-dom/cjs/react-dom-client.development.js:[2m10166:19[22m[39m
+[90m [2m❯[22m beginWork node_modules/react-dom/cjs/react-dom-client.development.js:[2m11778:18[22m[39m
+[90m [2m❯[22m runWithFiberInDEV node_modules/react-dom/cjs/react-dom-client.development.js:[2m874:13[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m62 passed[39m[22m[90m (63)[39m
+[2m      Tests [22m [1m[31m16 failed[39m[22m[2m | [22m[1m[32m524 passed[39m[22m[90m (540)[39m
+[2m   Start at [22m 19:13:04
+[2m   Duration [22m 18.62s[2m (transform 2.87s, setup 4.68s, import 107.14s, tests 5.81s, environment 14.67s)[22m
+
+error: script "test" exited with code 1
