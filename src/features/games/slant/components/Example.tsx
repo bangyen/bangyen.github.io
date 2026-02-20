@@ -260,15 +260,21 @@ export function Example({
                 <style>{SLANT_STYLES.ANIMATIONS.POP_IN}</style>
                 <Board
                     size={size}
-                    rows={EXAMPLE_DIMS + 1}
-                    cols={EXAMPLE_DIMS + 1}
-                    cellRows={EXAMPLE_DIMS}
-                    cellCols={EXAMPLE_DIMS}
+                    layers={[
+                        {
+                            rows: EXAMPLE_DIMS,
+                            cols: EXAMPLE_DIMS,
+                            cellProps: backProps,
+                        },
+                        {
+                            rows: EXAMPLE_DIMS + 1,
+                            cols: EXAMPLE_DIMS + 1,
+                            cellProps: frontProps,
+                            layerSx: { pointerEvents: 'none' },
+                            decorative: true,
+                        },
+                    ]}
                     space={0.125}
-                    overlayProps={frontProps}
-                    cellProps={backProps}
-                    overlayLayerSx={{ pointerEvents: 'none' }}
-                    overlayDecorative
                 />
                 <TrophyOverlay
                     show={isSolved && isPlaying}

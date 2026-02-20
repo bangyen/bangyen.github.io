@@ -1,6 +1,7 @@
 import { Box, keyframes, styled } from '@mui/material';
 import React from 'react';
 
+import { AnalysisProvider } from './AnalysisContext';
 import { AnalysisControls } from './AnalysisControls';
 import { useSlantAnalysisBoard } from './useSlantAnalysisBoard';
 import { Board } from '../../components/Board';
@@ -55,42 +56,47 @@ export function SlantAnalysisBoard({
     );
 
     return (
-        <AnimatedBox
-            sx={{
-                position: 'relative',
-                userSelect: 'none',
-            }}
-            onContextMenu={e => {
-                e.preventDefault();
-            }}
+        <AnalysisProvider
+            value={{ onCopy, onClear, onClose, onApply: handleApply }}
         >
-            <Box
+            <AnimatedBox
                 sx={{
                     position: 'relative',
-                    border: `2px dashed ${SLANT_STYLES.ANALYSIS.DASHED_BORDER}`,
-                    borderRadius: BOARD_STYLES.BORDER_RADIUS,
+                    userSelect: 'none',
+                }}
+                onContextMenu={e => {
+                    e.preventDefault();
                 }}
             >
-                <Board
-                    size={size}
-                    rows={rows + 1}
-                    cols={cols + 1}
-                    cellRows={rows}
-                    cellCols={cols}
-                    space={0.125}
-                    overlayProps={getNumberProps}
-                    cellProps={getCellProps}
-                    overlayLayerSx={{ pointerEvents: 'none' }}
-                    overlayDecorative
-                />
-            </Box>
+                <Box
+                    sx={{
+                        position: 'relative',
+                        border: `2px dashed ${SLANT_STYLES.ANALYSIS.DASHED_BORDER}`,
+                        borderRadius: BOARD_STYLES.BORDER_RADIUS,
+                    }}
+                >
+                    <Board
+                        size={size}
+                        layers={[
+                            {
+                                rows,
+                                cols,
+                                cellProps: getCellProps,
+                            },
+                            {
+                                rows: rows + 1,
+                                cols: cols + 1,
+                                cellProps: getNumberProps,
+                                layerSx: { pointerEvents: 'none' },
+                                decorative: true,
+                            },
+                        ]}
+                        space={0.125}
+                    />
+                </Box>
 
-            <AnalysisControls
-                onCopy={onCopy}
-                onClear={onClear}
-                onClose={onClose}
-                onApply={handleApply}
-            />
-        </AnimatedBox>
+                <AnalysisControls />
+            </AnimatedBox>
+        </AnalysisProvider>
     );
 }

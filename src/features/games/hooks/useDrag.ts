@@ -127,6 +127,9 @@ export function useDrag<T = void>({
     const isGridMode = callbacks.onToggle !== undefined;
     const rawOnAction = callbacks.onAction;
 
+    const checkEnabledRef = useRef(checkEnabled);
+    checkEnabledRef.current = checkEnabled;
+
     const onAction = useMemo(() => {
         if (!isGridMode && rawOnAction) return rawOnAction;
 
@@ -135,7 +138,7 @@ export function useDrag<T = void>({
             isRightClick: boolean,
             isInitialClick: boolean,
         ) => {
-            if (!checkEnabled()) return;
+            if (!checkEnabledRef.current()) return;
             const toggle = onToggleRef.current;
             if (!toggle) return;
 
@@ -154,8 +157,15 @@ export function useDrag<T = void>({
                 toggle(r, c, isRightClick, draggingValue.current, false);
             }
         };
-    }, [isGridMode, rawOnAction, checkEnabled]);
+    }, [isGridMode, rawOnAction]);
     const [isDragging, setIsDragging] = useState<number | null>(null);
+    const isDraggingRef = useRef<number | null>(null);
+
+    const updateDragging = useCallback((val: number | null) => {
+        setIsDragging(val);
+        isDraggingRef.current = val;
+    }, []);
+
     const draggedItems = useRef(new Set<string>());
     const lastTouchTime = useRef(0);
 
@@ -163,10 +173,10 @@ export function useDrag<T = void>({
     const kbDragReverse = useRef<boolean | null>(null);
 
     const stopDragging = useCallback(() => {
-        setIsDragging(null);
+        updateDragging(null);
         kbDragReverse.current = null;
         draggedItems.current.clear();
-    }, []);
+    }, [updateDragging]);
 
     const handleKeyUp = useCallback((e: KeyboardEvent) => {
         if (
@@ -180,7 +190,7 @@ export function useDrag<T = void>({
 
     const handleTouchMove = useCallback(
         (e: TouchEvent) => {
-            if (isDragging === null) return;
+            if (isDraggingRef.current === null) return;
 
             const touch = e.touches[0];
             if (!touch) return;
@@ -195,12 +205,12 @@ export function useDrag<T = void>({
             if (cell) {
                 const pos = cell.getAttribute(posAttribute);
                 if (pos && !draggedItems.current.has(pos)) {
-                    onAction(pos, isDragging === 2, false);
+                    onAction(pos, isDraggingRef.current === 2, false);
                     draggedItems.current.add(pos);
                 }
             }
         },
-        [isDragging, onAction, posAttribute],
+        [onAction, posAttribute],
     );
 
     useEffect(() => {
@@ -224,23 +234,23 @@ export function useDrag<T = void>({
     const getDragProps = useCallback(
         (pos: string): DragProps => ({
             onMouseDown: (e: React.MouseEvent) => {
-                if (!checkEnabled()) return;
+                if (!checkEnabledRef.current()) return;
                 if (e.button !== 0 && e.button !== 2) return;
                 if (Date.now() - lastTouchTime.current < touchTimeout) return;
 
                 kbDragReverse.current = null;
                 if (preventDefault) e.preventDefault();
-                setIsDragging(e.button);
+                updateDragging(e.button);
                 onAction(pos, e.button === 2, true);
                 draggedItems.current.add(pos);
             },
             onMouseEnter: () => {
                 if (
-                    isDragging !== null &&
+                    isDraggingRef.current !== null &&
                     !draggedItems.current.has(pos) &&
-                    checkEnabled()
+                    checkEnabledRef.current()
                 ) {
-                    onAction(pos, isDragging === 2, false);
+                    onAction(pos, isDraggingRef.current === 2, false);
                     draggedItems.current.add(pos);
                 }
             },
@@ -248,32 +258,32 @@ export function useDrag<T = void>({
                 if (
                     kbDragReverse.current !== null &&
                     !draggedItems.current.has(pos) &&
-                    checkEnabled()
+                    checkEnabledRef.current()
                 ) {
                     onAction(pos, kbDragReverse.current, false);
                     draggedItems.current.add(pos);
                 }
             },
             onTouchStart: (e: React.TouchEvent) => {
-                if (!checkEnabled()) return;
+                if (!checkEnabledRef.current()) return;
                 if (e.cancelable && preventDefault) e.preventDefault();
                 lastTouchTime.current = Date.now();
-                setIsDragging(0); // Touch as left click
+                updateDragging(0); // Touch as left click
                 onAction(pos, false, true);
                 draggedItems.current.add(pos);
             },
             onKeyDown: (e: React.KeyboardEvent) => {
-                if (!checkEnabled()) return;
+                if (!checkEnabledRef.current()) return;
                 if (e.key === ' ' && !e.repeat) {
                     e.preventDefault();
-                    setIsDragging(null);
+                    updateDragging(null);
                     kbDragReverse.current = false;
                     draggedItems.current.clear();
                     onAction(pos, false, true);
                     draggedItems.current.add(pos);
                 } else if (e.key === 'Enter' && !e.repeat) {
                     e.preventDefault();
-                    setIsDragging(null);
+                    updateDragging(null);
                     kbDragReverse.current = true;
                     draggedItems.current.clear();
                     onAction(pos, true, true);
@@ -295,8 +305,7 @@ export function useDrag<T = void>({
         }),
         [
             onAction,
-            checkEnabled,
-            isDragging,
+            updateDragging,
             touchTimeout,
             posAttribute,
             preventDefault,

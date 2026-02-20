@@ -12,12 +12,10 @@ import { getSlantContentSx } from './useSlantProps.styles';
 import type { GameControlsProps } from '../../components/GameControls';
 import type { BaseControlsProps, GamePageProps } from '../../hooks/types';
 import type { DragProps } from '../../hooks/useDrag';
-import type { SlantBoardProps } from '../components/SlantBoard';
-import { LAYOUT_CONSTANTS, NUMBER_SIZE_RATIO } from '../config/constants';
+import type { SlantGameContainerProps } from '../components/SlantGameContainer';
+import { useSlantBoard } from '../components/useSlantBoard';
+import { LAYOUT_CONSTANTS } from '../config/constants';
 import type { CellState, SlantState } from '../types';
-import { getBackProps, getFrontProps } from '../utils/renderers';
-
-import { useCellFactory } from '@/utils/gameUtils';
 
 // ---------------------------------------------------------------------------
 // Concrete return-shape types for compile-time safety
@@ -111,14 +109,11 @@ export function useSlantProps({
     controls: controlsProps,
     getDragProps,
 }: UseSlantPropsParams) {
-    const numberSize = size * NUMBER_SIZE_RATIO;
-
-    const backProps = useCellFactory(getBackProps, getDragProps, [state, size]);
-
-    const frontProps = useMemo(
-        () => getFrontProps(state, numberSize),
-        [state, numberSize],
-    );
+    const { cellProps, overlayProps } = useSlantBoard({
+        state,
+        size,
+        getDragProps,
+    });
 
     const contentSx = useMemo(() => getSlantContentSx(mobile), [mobile]);
 
@@ -141,8 +136,8 @@ export function useSlantProps({
                 onClose: handleAnalysisClose,
                 onApply: handleAnalysisApply,
             },
-            cellProps: backProps,
-            overlayProps: frontProps,
+            cellProps,
+            overlayProps,
         },
         controlsProps: {
             ...controlsProps,
@@ -169,7 +164,7 @@ export function useSlantProps({
             iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
         },
     } satisfies GamePageProps<
-        SlantBoardProps,
+        SlantGameContainerProps,
         GameControlsProps,
         SlantLayoutReturn,
         SlantInfoReturn

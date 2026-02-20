@@ -1,5 +1,7 @@
 import { Box } from '@mui/material';
 
+import { useAnalysisContext } from './AnalysisContext';
+
 import {
     CloseRounded,
     ContentCopyRounded,
@@ -9,19 +11,9 @@ import {
 import { TooltipButton } from '@/components/ui/TooltipButton';
 import { COLORS, LAYOUT } from '@/config/theme';
 
-export interface AnalysisControlsProps {
-    onCopy?: () => void;
-    onClear?: () => void;
-    onClose?: () => void;
-    onApply?: () => void;
-}
+export function AnalysisControls() {
+    const { onCopy, onClear, onClose, onApply } = useAnalysisContext();
 
-export function AnalysisControls({
-    onCopy,
-    onClear,
-    onClose,
-    onApply,
-}: AnalysisControlsProps) {
     return (
         <Box
             sx={{

@@ -225,12 +225,19 @@ export function Example({
                         >
                             <Board
                                 size={width}
-                                rows={dims}
-                                cols={dims}
-                                cellRows={dims - 1}
-                                cellCols={dims - 1}
-                                overlayProps={frontProps}
-                                cellProps={backProps}
+                                layers={[
+                                    {
+                                        rows: dims - 1,
+                                        cols: dims - 1,
+                                        cellProps: backProps,
+                                        decorative: true,
+                                    },
+                                    {
+                                        rows: dims,
+                                        cols: dims,
+                                        cellProps: frontProps,
+                                    },
+                                ]}
                             />
                             <Box
                                 sx={{
