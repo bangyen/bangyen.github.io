@@ -32,17 +32,30 @@ const ContentContainer = styled(Box)({
     overflow: 'hidden',
 });
 
-const BoardContainerBase = styled(Box)({
-    position: 'relative',
-    width: 'fit-content',
-    userSelect: 'none',
-    padding: BOARD_STYLES.PADDING.MOBILE,
-    '@media (min-width:600px)': {
-        padding: BOARD_STYLES.PADDING.DESKTOP,
-    },
-    borderRadius: BOARD_STYLES.BORDER_RADIUS,
-    border: BOARD_STYLES.BORDER,
-});
+interface BoardContainerBaseProps {
+    customPadding?: { mobile: string | number; desktop: string | number };
+    customBorderRadius?: string | number;
+    customBorder?: string;
+}
+
+const BoardContainerBase = styled(Box, {
+    shouldForwardProp: prop =>
+        !['customPadding', 'customBorderRadius', 'customBorder'].includes(
+            prop as string,
+        ),
+})<BoardContainerBaseProps>(
+    ({ theme, customPadding, customBorderRadius, customBorder }) => ({
+        position: 'relative',
+        width: 'fit-content',
+        userSelect: 'none',
+        padding: customPadding?.mobile ?? BOARD_STYLES.PADDING.MOBILE,
+        [theme.breakpoints.up('sm')]: {
+            padding: customPadding?.desktop ?? BOARD_STYLES.PADDING.DESKTOP,
+        },
+        borderRadius: customBorderRadius ?? BOARD_STYLES.BORDER_RADIUS,
+        border: customBorder ?? BOARD_STYLES.BORDER,
+    }),
+);
 
 /**
  * GamePage Compound Component.
@@ -87,15 +100,17 @@ export function GamePage({
     );
 }
 
+export interface GamePageContentProps {
+    children: ReactNode;
+    paddingBottom?: string | object;
+    sx?: SxProps<Theme>;
+}
+
 GamePage.Content = function GamePageContent({
     children,
     paddingBottom = DEFAULT_CONTENT_PADDING,
     sx,
-}: {
-    children: ReactNode;
-    paddingBottom?: string | object;
-    sx?: SxProps<Theme>;
-}) {
+}: GamePageContentProps) {
     return (
         <ErrorBoundary
             FallbackComponent={FeatureErrorFallback}
@@ -119,20 +134,39 @@ GamePage.Content = function GamePageContent({
     );
 };
 
+export interface GamePageBoardContainerProps {
+    children: ReactNode;
+    padding?: { mobile: string | number; desktop: string | number };
+    borderRadius?: string | number;
+    border?: string;
+    sx?: SxProps<Theme>;
+}
+
 GamePage.BoardContainer = function GamePageBoardContainer({
     children,
+    padding,
+    borderRadius,
+    border,
     sx,
-}: {
-    children: ReactNode;
-    sx?: SxProps<Theme>;
-}) {
-    return <BoardContainerBase sx={sx}>{children}</BoardContainerBase>;
+}: GamePageBoardContainerProps) {
+    return (
+        <BoardContainerBase
+            customPadding={padding}
+            customBorderRadius={borderRadius}
+            customBorder={border}
+            sx={sx}
+        >
+            {children}
+        </BoardContainerBase>
+    );
 };
+
+export interface GamePageControlsProps {
+    children: ReactNode;
+}
 
 GamePage.Controls = function GamePageControls({
     children,
-}: {
-    children: ReactNode;
-}) {
+}: GamePageControlsProps) {
     return children;
 };
