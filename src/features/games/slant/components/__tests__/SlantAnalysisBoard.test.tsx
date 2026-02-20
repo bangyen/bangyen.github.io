@@ -167,20 +167,30 @@ vi.mock('@/components/ui/CustomGrid', () => ({
         rows,
         cols,
         cellProps,
+        renderCell,
     }: {
         rows: number;
         cols: number;
-        cellProps: (
+        cellProps?: (
             r: number,
             c: number,
         ) => {
             sx?: Record<string, unknown>;
-            children: React.ReactNode;
+            children?: React.ReactNode;
         };
+        renderCell?: (r: number, c: number) => React.ReactNode;
     }) => (
         <div>
             {Array.from({ length: rows }).map((_, r) =>
                 Array.from({ length: cols }).map((_, c) => {
+                    if (renderCell) {
+                        return (
+                            <div key={`${String(r)}-${String(c)}`}>
+                                {renderCell(r, c)}
+                            </div>
+                        );
+                    }
+                    if (!cellProps) return null;
                     const { sx, ...props } = cellProps(r, c);
                     // Sanitize sx for style prop
                     const sanitizedStyle: Record<string, unknown> = {};

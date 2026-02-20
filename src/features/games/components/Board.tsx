@@ -13,7 +13,9 @@ import { spreadSx } from '@/utils/muiUtils';
 
 export interface BoardLayer {
     /** Factory function for cell props in this layer. */
-    cellProps: (row: number, col: number) => Record<string, unknown>;
+    cellProps?: (row: number, col: number) => Record<string, unknown>;
+    /** Factory function for cell rendering. */
+    renderCell?: (row: number, col: number) => React.ReactNode;
     /** Number of rows in this layer. */
     rows: number;
     /** Number of cols in this layer. */
@@ -72,6 +74,7 @@ export const Board = React.memo(function Board(
                         rows={layer.rows}
                         cols={layer.cols}
                         cellProps={layer.cellProps}
+                        renderCell={layer.renderCell}
                         {...(layer.decorative
                             ? { role: 'presentation', 'aria-hidden': true }
                             : {})}

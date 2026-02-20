@@ -9,7 +9,43 @@ import { useSlantAnalysisBoard } from './useSlantAnalysisBoard';
 import { Board } from '../../components/Board';
 import { BOARD_STYLES } from '../../config/constants';
 import { SLANT_STYLES } from '../config/constants';
-import type { CellState } from '../types';
+import { EMPTY, FORWARD, BACKWARD, type CellState } from '../types';
+import type { CellInfo } from '../utils/analysisSolver';
+
+import { getPosKey } from '@/utils/gameUtils';
+
+function computeSatisfied(
+    r: number,
+    c: number,
+    value: number | null,
+    gridState: Map<string, CellInfo>,
+    rows: number,
+    cols: number,
+) {
+    if (value == null) return false;
+    let connected = 0;
+    let filledNeighbors = 0;
+    const neighbors = [
+        { r: r - 1, c: c - 1, required: BACKWARD }, // TL
+        { r: r - 1, c, required: FORWARD }, // TR
+        { r, c: c - 1, required: FORWARD }, // BL
+        { r, c, required: BACKWARD }, // BR
+    ];
+
+    for (const nb of neighbors) {
+        if (nb.r >= 0 && nb.r < rows && nb.c >= 0 && nb.c < cols) {
+            const cell = gridState.get(getPosKey(nb.r, nb.c));
+            if (cell && cell.state !== EMPTY) {
+                filledNeighbors++;
+                if (cell.state === nb.required) {
+                    connected++;
+                }
+            }
+        }
+    }
+
+    return connected === value && filledNeighbors > 0;
+}
 
 export interface SlantAnalysisBoardProps {
     rows: number;
@@ -89,39 +125,51 @@ export function SlantAnalysisBoard({
                             {
                                 rows,
                                 cols,
-                                cellProps: (r, c) => ({
-                                    children: (
+                                renderCell: (r, c) => {
+                                    const pos = getPosKey(r, c);
+                                    const info = gridState.get(pos);
+                                    return (
                                         <AnalysisGridCell
                                             r={r}
                                             c={c}
-                                            gridState={gridState}
-                                            conflictSet={conflictSet}
-                                            cycleCells={cycleCells}
+                                            value={info?.state ?? EMPTY}
+                                            source={info?.source}
+                                            isConflict={conflictSet.has(pos)}
+                                            isCycle={cycleCells.has(pos)}
                                             size={size}
-                                            {...getEnhancedDragProps(
-                                                `${String(r)},${String(c)}`,
-                                            )}
+                                            pos={pos}
+                                            getDragProps={getEnhancedDragProps}
                                         />
-                                    ),
-                                }),
+                                    );
+                                },
                             },
                             {
                                 rows: rows + 1,
                                 cols: cols + 1,
-                                cellProps: (r, c) => ({
-                                    children: (
+                                renderCell: (r, c) => {
+                                    const value = numbers[r]?.[c] ?? null;
+                                    const hasConflict = nodeConflictSet.has(
+                                        getPosKey(r, c),
+                                    );
+                                    const isSatisfied = computeSatisfied(
+                                        r,
+                                        c,
+                                        value,
+                                        gridState,
+                                        rows,
+                                        cols,
+                                    );
+                                    return (
                                         <AnalysisGridHint
                                             r={r}
                                             c={c}
-                                            numbers={numbers}
-                                            gridState={gridState}
-                                            rows={rows}
-                                            cols={cols}
-                                            nodeConflictSet={nodeConflictSet}
+                                            value={value}
+                                            hasConflict={hasConflict}
+                                            isSatisfied={isSatisfied}
                                             numberSize={numberSize}
                                         />
-                                    ),
-                                }),
+                                    );
+                                },
                                 layerSx: { pointerEvents: 'none' },
                                 decorative: true,
                             },
