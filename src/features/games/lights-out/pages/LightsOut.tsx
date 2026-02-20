@@ -23,10 +23,12 @@ export function LightsOut() {
                         <TrophyOverlay show={contextValue.solved} />
                     </GamePage.BoardContainer>
                 </GamePage.Content>
-                <GameControls
-                    {...contextValue.controlsProps}
-                    onOpenInfo={infoProps.toggleOpen}
-                />
+                <GameControls {...contextValue.controlsProps}>
+                    <GameControls.Refresh />
+                    <GameControls.ResizeMinus />
+                    <GameControls.ResizePlus />
+                    <GameControls.Info onClick={infoProps.toggleOpen} />
+                </GameControls>
             </GamePage>
             <Info {...infoProps} />
         </>
