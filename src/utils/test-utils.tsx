@@ -12,7 +12,7 @@ import {
     RouterProvider,
     type RouteObject,
 } from 'react-router-dom';
-import { vi, type Mock } from 'vitest';
+import { vi } from 'vitest';
 
 /**
  * Creates a test theme for consistent testing across all components
@@ -155,11 +155,6 @@ export const mockFetchResponses = {
  * Common test utilities
  */
 export const testUtils = {
-    /**
-     * Creates a mock function
-     */
-    createMockFunction: (): Mock => vi.fn(),
-
     /**
      * Mocks console methods to suppress expected warnings in tests
      */

@@ -21,11 +21,6 @@ export interface Urls {
         cluster2023: string;
         sc2024: string;
     };
-    fonts: {
-        googleFonts: string;
-        googleFontsStatic: string;
-        interFont: string;
-    };
     local: {
         localhost: string;
         liveSite: string;
@@ -96,12 +91,6 @@ export const URLS: Urls = {
     publications: {
         cluster2023: 'https://ieeexplore.ieee.org/document/10319968',
         sc2024: 'https://ieeexplore.ieee.org/document/10793131',
-    },
-    fonts: {
-        googleFonts: 'https://fonts.googleapis.com',
-        googleFontsStatic: 'https://fonts.gstatic.com',
-        interFont:
-            'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
     },
     local: {
         localhost: 'http://localhost:3000',

@@ -1,5 +1,3 @@
-import { useMemo } from 'react';
-
 /**
  * Base state properties common to all grid-based games.
  */
@@ -118,71 +116,4 @@ export function createGameReducer<
             }
         }
     };
-}
-
-/**
- * Common prop types for cell renderers in grid-based games.
- */
-export interface CellRenderProps {
-    /** Row index of the cell */
-    row: number;
-    /** Column index of the cell */
-    col: number;
-    /** Additional props specific to the game */
-    [key: string]: unknown;
-}
-
-/**
- * Factory function that creates props for a cell at given position.
- *
- * @template R - Type of props object returned
- */
-export type CellFactory<R = Record<string, unknown>> = (
-    row: number,
-    col: number,
-) => R;
-
-/**
- * Memoizes a cell factory function to prevent unnecessary re-renders.
- *
- * Useful for optimizing grid rendering when cell props depend on:
- * - Drag-and-drop handlers
- * - Game state
- * - Other dynamic dependencies
- *
- * @template T - Tuple type of additional dependencies
- * @template P - Type of drag props
- * @template R - Type of cell props returned by factory
- *
- * @param factory - Function that creates the cell factory
- * @param getDragProps - Function to get drag props for a position
- * @param dependencies - Array of dependencies to trigger re-memoization
- * @returns Memoized cell factory function
- *
- * @example
- * ```tsx
- * const cellFactory = useCellFactory(
- *   (getDragProps, board, onCellClick) => (row, col) => ({
- *     ...getDragProps(`${row.toString()},${col.toString()}`),
- *     value: board[row][col],
- *     onClick: () => onCellClick(row, col),
- *   }),
- *   getDragProps,
- *   [board, onCellClick]
- * );
- *
- * // Use in render
- * const cellProps = cellFactory(2, 3);
- * ```
- */
-export function useCellFactory<T extends unknown[], P, R>(
-    factory: (getDragProps: (pos: string) => P, ...args: T) => CellFactory<R>,
-    getDragProps: (pos: string) => P,
-    dependencies: T,
-): CellFactory<R> {
-    return useMemo(
-        () => factory(getDragProps, ...dependencies),
-        // eslint-disable-next-line react-hooks/exhaustive-deps -- dependencies are intentionally spread into the dep array
-        [factory, getDragProps, ...dependencies],
-    );
 }

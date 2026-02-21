@@ -17,9 +17,6 @@ import { LAYOUT_CONSTANTS } from '../config';
 import type { Getters, Palette } from '../types';
 import { getBackProps, getCellVisualProps } from '../utils/renderers';
 
-import type { CellFactory } from '@/utils/gameUtils';
-import { useCellFactory } from '@/utils/gameUtils';
-
 // ---------------------------------------------------------------------------
 // Concrete return-shape types for compile-time safety
 // ---------------------------------------------------------------------------
@@ -57,7 +54,7 @@ export interface LightsOutDragParams {
         getDragProps: (pos: string) => DragProps,
         getters: Getters,
         skipTransition?: boolean,
-    ) => CellFactory;
+    ) => (row: number, col: number) => Record<string, unknown>;
 }
 
 export interface UseLightsOutPropsParams {
@@ -79,10 +76,10 @@ export function useLightsOutProps({
     rendering: { palette, getters, skipTransition },
     drag: { getDragProps, frontPropsFactory },
 }: UseLightsOutPropsParams) {
-    const frontProps = useCellFactory(frontPropsFactory, getDragProps, [
-        getters,
-        skipTransition,
-    ]);
+    const frontProps = useMemo(
+        () => frontPropsFactory(getDragProps, getters, skipTransition),
+        [frontPropsFactory, getDragProps, getters, skipTransition],
+    );
     const backProps = useMemo(
         () => getBackProps(getters, skipTransition),
         [getters, skipTransition],
