@@ -29,8 +29,20 @@ const chartErrorFallback = (
 /**
  * Generic research demo page shell that provides a consistent layout
  * (header, chart, view selector, controls) for every research tool.
+ *
+ * Exists so individual research pages (Oligopoly, ZSharp, etc.) only
+ * need to supply data-specific configuration while the common chrome
+ * and responsive behaviour is handled once.
  */
-export function ResearchDemo<T>(props: ResearchDemoProps<T>) {
+export const ResearchDemo = <T,>({
+    title,
+    pageTitle,
+    subtitle,
+    githubUrl,
+    children,
+    backUrl,
+    ...rest
+}: ResearchDemoProps<T>) => {
     const {
         chartData,
         chartConfig,
@@ -43,72 +55,67 @@ export function ResearchDemo<T>(props: ResearchDemoProps<T>) {
         controls,
         onReset,
         resetLabel,
-    } = resolveResearchDemoDefaults(props);
+    } = resolveResearchDemoDefaults(rest);
 
-    const { title, subtitle } = props;
-
-    const activeView = useCurrentView(
+    const {
+        data: currentData,
+        chartConfig: currentChartConfig,
+        title: calculatedChartTitle,
+    } = useCurrentView(
         viewTypes,
         currentViewType,
         chartData,
         chartConfig,
-        chartTitle,
-    );
-
-    const controlsElement = (
-        <ResearchControls
-            controls={controls}
-            onReset={onReset}
-            resetLabel={resetLabel}
-        />
+        chartTitle ?? null,
     );
 
     return (
-        <MobileProvider>
-            <PageLayout
-                background="surface.background"
-                containerSx={demoContainerSx}
-            >
-                <Box sx={demoContentBoxSx}>
-                    <ResearchHeader title={title} subtitle={subtitle} />
+        <PageLayout title={pageTitle ?? title} githubUrl={githubUrl}>
+            <MobileProvider>
+                <Grid
+                    container={true}
+                    flex={1}
+                    flexDirection="column"
+                    sx={demoContainerSx}
+                >
+                    <Grid size={{ xs: 12 }} flex={1} sx={demoContentGridSx}>
+                        <Box sx={demoContentBoxSx}>
+                            <ResearchHeader
+                                title={title}
+                                subtitle={subtitle}
+                                backUrl={backUrl}
+                            />
 
-                    <Grid container spacing={3} sx={demoContentGridSx}>
-                        {/* Main Chart Area */}
-                        <Grid size={{ xs: 12, md: 8, lg: 9 }}>
                             <LazySuspense
                                 message={loadingMessage}
                                 errorFallback={chartErrorFallback}
                             >
                                 <ResearchChart
-                                    currentData={activeView.data}
-                                    currentChartConfig={activeView.chartConfig}
+                                    currentData={currentData}
+                                    currentChartConfig={currentChartConfig}
                                     loading={loading}
                                     loadingMessage={loadingMessage}
-                                    chartTitle={activeView.title}
+                                    chartTitle={calculatedChartTitle}
                                 />
                             </LazySuspense>
-                        </Grid>
 
-                        {/* Sidebar / Controls */}
-                        <Grid size={{ xs: 12, md: 4, lg: 3 }}>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: 3,
-                                }}
-                            >
-                                <ResearchViewSelector
-                                    viewTypes={viewTypes}
-                                    currentViewType={currentViewType}
-                                    onViewTypeChange={onViewTypeChange}
-                                />
-                                {controlsElement}
-                            </Box>
-                        </Grid>
+                            <ResearchViewSelector
+                                viewTypes={viewTypes}
+                                currentViewType={currentViewType}
+                                onViewTypeChange={onViewTypeChange}
+                            />
+
+                            <ResearchControls
+                                controls={controls}
+                                onReset={onReset}
+                                resetLabel={resetLabel}
+                            />
+
+                            {children}
+                        </Box>
                     </Grid>
-                </Box>
-            </PageLayout>
-        </MobileProvider>
+                </Grid>
+            </MobileProvider>
+        </PageLayout>
     );
-}
+};
