@@ -22,7 +22,6 @@ import { HOME_TEXT } from '../config/constants';
 import { LocationOn, ArrowForward } from '@/components/icons';
 import { PERSONAL_INFO } from '@/config/constants';
 import { ANIMATIONS } from '@/config/theme';
-import { scrollToElement } from '@/utils/domUtils';
 
 export function HeroSection(): React.ReactElement {
     return (
@@ -54,12 +53,24 @@ export function HeroSection(): React.ReactElement {
                                 role="button"
                                 tabIndex={0}
                                 onClick={() => {
-                                    scrollToElement('#featured-work');
+                                    document
+                                        .querySelector('#featured-work')
+                                        ?.scrollIntoView({
+                                            behavior: 'smooth',
+                                            block: 'start',
+                                            inline: 'nearest',
+                                        });
                                 }}
                                 onKeyDown={(e: React.KeyboardEvent) => {
                                     if (e.key === 'Enter' || e.key === ' ') {
                                         e.preventDefault();
-                                        scrollToElement('#featured-work');
+                                        document
+                                            .querySelector('#featured-work')
+                                            ?.scrollIntoView({
+                                                behavior: 'smooth',
+                                                block: 'start',
+                                                inline: 'nearest',
+                                            });
                                     }
                                 }}
                                 aria-label="View featured work"
