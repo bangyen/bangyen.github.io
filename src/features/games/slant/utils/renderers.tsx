@@ -1,126 +1,153 @@
-import { Box } from '@mui/material';
+import { Box, type SxProps, type Theme } from '@mui/material';
+import React, { memo } from 'react';
 
+import { getBackVisualProps, getFrontProps } from './renderers.logic';
 import {
-    getSlashLineSx,
     backCellVisualSx,
-    slashContainerSx,
     frontOverlaySx,
     INTERACTIVE_BACK_CELL_SX,
-    getNumberBubbleSx,
 } from './renderers.styles';
-import type { DragProps } from '../../hooks/useDrag';
 import type { SlantState } from '../types';
-import { FORWARD, BACKWARD, EMPTY } from '../types';
 
+import type { CellProps } from '@/components/ui/CustomGrid';
 import { getPosKey } from '@/utils/gameUtils';
 
 /**
- * Visual-only cell factory for the back (slash) layer.
- *
- * Returns appearance props (aria-label, children, border) without drag
- * interaction, so the same factory can drive both the interactive board
- * (via `getBackProps`) and non-interactive contexts.
+ * Component-based cell renderer for the back (slash) layer.
+ * Consumes the same props as a standard grid cell but adds Slant-specific logic
+ * and fine-grained memoization to prevent unnecessary re-renders.
  */
-export function getBackVisualProps(state: SlantState, size: number) {
-    return (r: number, c: number) => {
-        const value = state.grid[r]?.[c];
-        const pos = getPosKey(r, c);
-        const isError = state.cycleCells.has(pos);
+export const SlantSlashCell = memo(
+    function SlantSlashCell({
+        row,
+        col,
+        size,
+        state,
+        isInteractive = false,
+        ...rest
+    }: CellProps & {
+        row: number;
+        col: number;
+        size: number;
+        state?: SlantState;
+        isInteractive?: boolean;
+    }) {
+        if (!state) return <Box {...rest} sx={backCellVisualSx} />;
 
-        const clues = [
-            { v: state.numbers[r]?.[c], p: getPosKey(r, c) },
-            { v: state.numbers[r]?.[c + 1], p: getPosKey(r, c + 1) },
-            { v: state.numbers[r + 1]?.[c], p: getPosKey(r + 1, c) },
-            { v: state.numbers[r + 1]?.[c + 1], p: getPosKey(r + 1, c + 1) },
-        ].map(({ v, p }) => {
-            if (v == null) return '-';
-            const status = state.errorNodes.has(p)
-                ? 'Error'
-                : state.satisfiedNodes.has(p)
-                  ? 'Ok'
-                  : 'Pending';
-            return `${String(v)} (${status})`;
-        });
+        const visualProps = getBackVisualProps(state, size)(row, col);
 
-        return {
-            'aria-label': `Cell ${String(r + 1)}, ${String(c + 1)}. Clues: ${clues.join(', ')}. ${
-                value === EMPTY
-                    ? 'Empty'
-                    : value === FORWARD
-                      ? 'Forward Slash'
-                      : 'Backward Slash'
-            }${isError ? ', Loop Error' : ''}`,
-            sx: backCellVisualSx,
-            children: (
-                <Box sx={slashContainerSx}>
-                    {value === FORWARD && (
-                        <Box sx={getSlashLineSx('-45deg', size, isError)} />
-                    )}
-                    {value === BACKWARD && (
-                        <Box sx={getSlashLineSx('45deg', size, isError)} />
-                    )}
-                </Box>
-            ),
-        };
-    };
-}
+        const sx: SxProps<Theme> = {
+            ...(visualProps.sx as Record<string, unknown>),
+            ...(isInteractive ? INTERACTIVE_BACK_CELL_SX : {}),
+            ...(rest.sx as Record<string, unknown>),
+        } as SxProps<Theme>;
+
+        return (
+            <Box {...rest} aria-label={visualProps['aria-label']} sx={sx}>
+                {visualProps.children}
+            </Box>
+        );
+    },
+    (prev, next) => {
+        if (
+            prev.row !== next.row ||
+            prev.col !== next.col ||
+            prev.size !== next.size ||
+            prev.isInteractive !== next.isInteractive
+        )
+            return false;
+
+        if (!prev.state || !next.state) return prev.state === next.state;
+
+        // Cell value and loop error
+        const pos = getPosKey(prev.row, prev.col);
+        if (
+            prev.state.grid[prev.row]?.[prev.col] !==
+            next.state.grid[next.row]?.[next.col]
+        )
+            return false;
+        if (prev.state.cycleCells.has(pos) !== next.state.cycleCells.has(pos))
+            return false;
+
+        // Accessibility/Aria check: clues affect aria-label
+        const neighbors = [
+            [0, 0] as const,
+            [0, 1] as const,
+            [1, 0] as const,
+            [1, 1] as const,
+        ];
+        for (const [dr, dc] of neighbors) {
+            const nr = prev.row + dr;
+            const nc = prev.col + dc;
+            const npos = getPosKey(nr, nc);
+            if (
+                prev.state.numbers[nr]?.[nc] !== next.state.numbers[nr]?.[nc] ||
+                prev.state.errorNodes.has(npos) !==
+                    next.state.errorNodes.has(npos) ||
+                prev.state.satisfiedNodes.has(npos) !==
+                    next.state.satisfiedNodes.has(npos)
+            )
+                return false;
+        }
+
+        return true;
+    },
+);
 
 /**
- * Drag-enhanced cell factory for the interactive back (slash) layer.
- *
- * Merges drag interaction props on top of the visual props from
- * `getBackVisualProps`, adding cursor and hover behavior.
+ * Component-based cell renderer for the front (number hint) layer.
+ * Includes fine-grained memoization.
  */
-export const getBackProps = (
-    getDragProps: (pos: string) => DragProps,
-    state: SlantState,
-    size: number,
-) => {
-    const visualFactory = getBackVisualProps(state, size);
+export const SlantHintCell = memo(
+    function SlantHintCell({
+        row,
+        col,
+        size,
+        state,
+        ...rest
+    }: CellProps & {
+        row: number;
+        col: number;
+        size: number;
+        state?: SlantState;
+    }) {
+        if (!state) return <Box {...rest} sx={frontOverlaySx} />;
 
-    return (r: number, c: number) => {
-        const visual = visualFactory(r, c);
-        const pos = getPosKey(r, c);
-        const dragProps = getDragProps(pos);
+        // Matching NUMBER_SIZE_RATIO roughly (0.4)
+        const numberSize = size * 0.4;
+        const visualProps = getFrontProps(state, numberSize)(row, col);
 
-        return {
-            ...dragProps,
-            ...visual,
-            sx: {
-                ...dragProps.sx,
-                ...(visual.sx as Record<string, unknown>),
-                ...INTERACTIVE_BACK_CELL_SX,
-            },
-        };
-    };
-};
+        const sx: SxProps<Theme> = {
+            ...(visualProps.sx as Record<string, unknown>),
+            ...(rest.sx as Record<string, unknown>),
+        } as SxProps<Theme>;
 
-/**
- * Visual-only cell factory for the front (number hint) layer.
- *
- * Returns appearance props for the number overlay. Uses
- * `pointerEvents: 'none'` so clicks pass through to the back layer.
- */
-export const getFrontProps =
-    (state: SlantState, numberSize: number) => (r: number, c: number) => {
-        const value = state.numbers[r]?.[c];
-        const pos = getPosKey(r, c);
-        const hasError = state.errorNodes.has(pos);
-        const isSatisfied = state.satisfiedNodes.has(pos);
+        return (
+            <Box {...rest} sx={sx}>
+                {visualProps.children}
+            </Box>
+        );
+    },
+    (prev, next) => {
+        if (
+            prev.row !== next.row ||
+            prev.col !== next.col ||
+            prev.size !== next.size
+        )
+            return false;
 
-        return {
-            sx: frontOverlaySx,
-            children: (
-                <Box
-                    sx={getNumberBubbleSx({
-                        numberSize,
-                        hasError,
-                        isSatisfied,
-                        isVisible: value != null,
-                    })}
-                >
-                    {value ?? ''}
-                </Box>
-            ),
-        };
-    };
+        if (!prev.state || !next.state) return prev.state === next.state;
+
+        const pos = getPosKey(prev.row, prev.col);
+        if (
+            prev.state.numbers[prev.row]?.[prev.col] !==
+                next.state.numbers[next.row]?.[next.col] ||
+            prev.state.errorNodes.has(pos) !== next.state.errorNodes.has(pos) ||
+            prev.state.satisfiedNodes.has(pos) !==
+                next.state.satisfiedNodes.has(pos)
+        )
+            return false;
+
+        return true;
+    },
+);
