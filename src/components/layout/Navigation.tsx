@@ -4,8 +4,6 @@ import type { ReactNode } from 'react';
 
 import { navigationPaperSx, navigationGridSx } from './Navigation.styles';
 
-import { toSxArray } from '@/utils/muiUtils';
-
 export interface NavigationProps {
     children: ReactNode;
     sx?: SxProps<Theme>;
@@ -26,13 +24,7 @@ export function Navigation({ children, sx, opacity }: NavigationProps) {
             onClick={e => {
                 e.stopPropagation();
             }}
-            sx={
-                [
-                    ...toSxArray(navigationPaperSx),
-                    { opacity },
-                    ...toSxArray(sx),
-                ] as SxProps<Theme>
-            }
+            sx={[navigationPaperSx, { opacity }, sx] as SxProps<Theme>}
         >
             <Grid container spacing={2} sx={navigationGridSx}>
                 {children}

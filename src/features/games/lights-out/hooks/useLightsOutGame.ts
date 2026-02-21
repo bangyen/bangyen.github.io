@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
@@ -15,7 +15,6 @@ import { isBoardState } from '../utils/persistence';
 import { getFrontProps } from '../utils/renderers';
 
 import type { CellIndex } from '@/features/games/types/types';
-import { useDisclosure } from '@/hooks';
 
 /**
  * Orchestrates Lights Out game logic: grid state, drag interactions,
@@ -75,7 +74,10 @@ export function useLightsOutGame() {
         [getDragProps, handleGridNav],
     );
 
-    const { isOpen: open, toggle: toggleOpen } = useDisclosure();
+    const [open, setOpen] = useState(false);
+    const toggleOpen = useCallback(() => {
+        setOpen(prev => !prev);
+    }, []);
 
     const palette = usePalette(state.score);
 

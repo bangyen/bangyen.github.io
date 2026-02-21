@@ -5,8 +5,6 @@ import { useEffect, useRef } from 'react';
 
 import 'katex/dist/katex.min.css';
 
-import { spreadSx } from '@/utils/muiUtils';
-
 export interface LatexProps {
     formula: string;
     block?: boolean;
@@ -29,11 +27,15 @@ export function Latex({ formula, block = false, sx }: LatexProps) {
         <Box
             component={block ? 'div' : 'span'}
             ref={containerRef}
-            sx={{
-                display: block ? 'block' : 'inline-block',
-                my: block ? 2 : 0,
-                ...spreadSx(sx),
-            }}
+            sx={
+                [
+                    {
+                        display: block ? 'block' : 'inline-block',
+                        my: block ? 2 : 0,
+                    },
+                    sx,
+                ] as SxProps<Theme>
+            }
         />
     );
 }

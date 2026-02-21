@@ -8,7 +8,6 @@ import {
     GRID_CONFIG,
     getSpace,
 } from '@/config/theme';
-import { spreadSx } from '@/utils/muiUtils';
 
 /** Known styling props extracted by `Cell`; additional DOM attributes are forwarded. */
 export interface CellKnownProps {
@@ -66,16 +65,20 @@ const Cell = memo(function Cell({ size, children, ...rest }: CellProps) {
             role="gridcell"
             {...props}
             {...domProps}
-            sx={{
-                '--cell-radius': radius,
-                backgroundColor,
-                color,
-                boxShadow,
-                border,
-                opacity,
-                transition,
-                ...spreadSx(sx),
-            }}
+            sx={
+                [
+                    {
+                        '--cell-radius': radius,
+                        backgroundColor,
+                        color,
+                        boxShadow,
+                        border,
+                        opacity,
+                        transition,
+                    },
+                    sx,
+                ] as SxProps<Theme>
+            }
         >
             {children}
         </Box>
@@ -169,13 +172,17 @@ export const CustomGrid = memo(function CustomGrid({
         <Box
             role="grid"
             aria-label={`Grid with ${rows.toString()} rows and ${cols.toString()} columns`}
-            sx={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: rem,
-                ...spreadSx(sx),
-            }}
+            sx={
+                [
+                    {
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: rem,
+                    },
+                    sx,
+                ] as SxProps<Theme>
+            }
             {...rest}
         >
             {Array.from({ length: rows }, (_, i) => (

@@ -1,7 +1,6 @@
 import type { SxProps, Theme } from '@mui/material';
 
 import { COLORS } from '@/config/theme';
-import { toSxArray } from '@/utils/muiUtils';
 
 /**
  * Base styles for the outermost page wrapper.
@@ -22,7 +21,7 @@ export const getContainerSx = (
             position: 'relative',
             overflow: 'hidden',
         },
-        ...toSxArray(containerSx),
+        containerSx,
     ] as SxProps<Theme>;
 
 /**
@@ -40,5 +39,5 @@ export const getMainSx = (sx: SxProps<Theme> = {}): SxProps<Theme> =>
             width: '100%',
             position: 'relative',
         },
-        ...toSxArray(sx),
+        sx,
     ] as SxProps<Theme>;

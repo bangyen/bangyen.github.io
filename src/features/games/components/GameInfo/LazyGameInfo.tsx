@@ -20,12 +20,9 @@ import { ErrorCard } from '@/components/ui/ErrorCard';
 import { ERROR_TEXT } from '@/config/constants';
 import { COLORS } from '@/config/theme';
 import { GAME_TEXT } from '@/features/games/config/constants';
-import { lazyNamed } from '@/utils/lazyNamed';
-import { spreadSx } from '@/utils/muiUtils';
 
-const GameInfoContentLazy = lazyNamed(
-    () => import('./index'),
-    'GameInfoContent',
+const GameInfoContentLazy = React.lazy(() =>
+    import('./index').then(m => ({ default: m.GameInfoContent })),
 );
 
 /** Shared DOM id linking the Modal's `aria-labelledby` to the step title. */
@@ -40,7 +37,7 @@ function ModalPlaceholder({ children }: { children: React.ReactNode }) {
     return (
         <Box
             sx={{
-                ...spreadSx(infoCardSx),
+                ...(infoCardSx as Record<string, unknown>),
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',

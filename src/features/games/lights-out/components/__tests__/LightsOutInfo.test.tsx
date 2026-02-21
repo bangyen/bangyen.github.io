@@ -15,11 +15,10 @@ vi.mock('../Example', () => ({
 vi.mock('@/components/ui/GlassCard', () => ({
     GlassCard: function MockGlassCard({
         children,
-        sx,
         onClick,
     }: {
         children: React.ReactNode;
-        sx?: React.CSSProperties;
+        sx?: any;
         onClick?: (event: React.MouseEvent) => void;
     }) {
         return (
@@ -33,7 +32,6 @@ vi.mock('@/components/ui/GlassCard', () => ({
                 }}
                 role="button"
                 tabIndex={0}
-                style={sx}
             >
                 {children}
             </div>

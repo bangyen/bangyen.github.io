@@ -8,7 +8,6 @@ import {
     TagRounded,
     NotInterestedRounded,
 } from '@/components/icons';
-import { toSxArray } from '@/utils/muiUtils';
 
 // ---------------------------------------------------------------------------
 export * from './constants'; // eslint-disable-line react-refresh/only-export-components
@@ -89,12 +88,13 @@ export const SLANT_INFO_CARD_SX: SxProps<Theme> = {
     minHeight: { xs: '660px', sm: '525px' },
 };
 
-/** Content-area sx with overflow hidden for the animated example. */
-export const slantInfoContentSx = (step: number): SxProps<Theme> =>
-    [
-        ...toSxArray(infoContentSx(step)),
+export const slantInfoContentSx = (step: number): SxProps<Theme> => {
+    const normalized = infoContentSx(step);
+    return [
+        normalized,
         step < 2 ? { overflowY: 'hidden' } : {},
     ] as SxProps<Theme>;
+};
 
 // ---------------------------------------------------------------------------
 // useBaseGame configuration

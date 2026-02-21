@@ -20,7 +20,6 @@ import { useSteppedModal } from './useSteppedModal';
 import { CloseRounded } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
-import { spreadSx } from '@/utils/muiUtils';
 
 // Re-export so consumers can import from the barrel.
 export type { InstructionItemData } from './InstructionItem';
@@ -144,10 +143,7 @@ export function GameInfoContent({
             onClick={(e: React.MouseEvent) => {
                 e.stopPropagation();
             }}
-            sx={{
-                ...spreadSx(infoCardSx),
-                ...spreadSx(cardSx),
-            }}
+            sx={[infoCardSx, cardSx] as SxProps<Theme>}
         >
             {/* Content Area */}
             <Box sx={contentSx}>
