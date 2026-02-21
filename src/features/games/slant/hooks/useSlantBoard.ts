@@ -5,7 +5,6 @@ import type { SlantState } from '../types';
 import { getBackProps, getFrontProps } from '../utils/renderers.logic';
 
 import type { DragProps } from '@/features/games/hooks/useDrag';
-import { useCellFactory } from '@/utils/gameUtils';
 
 export interface UseSlantBoardProps {
     /** Current Slant game state */
@@ -23,7 +22,10 @@ export function useSlantBoard({
 }: UseSlantBoardProps) {
     const numberSize = size * NUMBER_SIZE_RATIO;
 
-    const backProps = useCellFactory(getBackProps, getDragProps, [state, size]);
+    const backProps = useMemo(
+        () => getBackProps(getDragProps, state, size),
+        [getDragProps, state, size],
+    );
 
     const frontProps = useMemo(
         () => getFrontProps(state, numberSize),

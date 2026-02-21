@@ -160,12 +160,6 @@ describe('Test Utilities', () => {
     });
 
     describe('testUtils', () => {
-        test('createMockFunction returns vitest mock', () => {
-            const mockFn = testUtils.createMockFunction();
-
-            expect(vi.isMockFunction(mockFn)).toBe(true);
-        });
-
         test('suppressConsoleWarnings suppresses console methods', () => {
             const restore = testUtils.suppressConsoleWarnings();
 
@@ -199,7 +193,7 @@ describe('Test Utilities', () => {
     describe('Integration Tests', () => {
         test('all utilities work together', () => {
             const theme = createTestTheme();
-            const mockFn = testUtils.createMockFunction();
+            const mockFn = vi.fn();
 
             expect(theme).toBeDefined();
             expect(vi.isMockFunction(mockFn)).toBe(true);
