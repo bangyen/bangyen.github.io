@@ -5,8 +5,6 @@ import { useGamePersistence } from '../../hooks/useGamePersistence';
 import type { SlantState, CellState, SlantAction } from '../types';
 import { EMPTY } from '../types';
 
-import { getPosKey } from '@/utils/gameUtils';
-
 interface UseAnalysisModeOptions {
     /** Whether analysis mode is currently active (owned by the caller). */
     isAnalysisMode: boolean;
@@ -90,7 +88,7 @@ export function useAnalysisMode({
         state.grid.forEach((row: CellState[], r: number) => {
             row.forEach((cell: CellState, c: number) => {
                 if (cell !== EMPTY) {
-                    newMoves.set(getPosKey(r, c), cell);
+                    newMoves.set(`${r.toString()},${c.toString()}`, cell);
                 }
             });
         });

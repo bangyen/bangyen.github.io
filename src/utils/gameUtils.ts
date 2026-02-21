@@ -1,22 +1,6 @@
 import { useMemo } from 'react';
 
 /**
- * Generates a consistent position key for game grid cells.
- *
- * @param row - Row index (0-based)
- * @param col - Column index (0-based)
- * @returns String key in format "row,col"
- *
- * @example
- * ```ts
- * const key = getPosKey(2, 3); // "2,3"
- * ```
- */
-export function getPosKey(row: number, col: number): string {
-    return `${row.toString()},${col.toString()}`;
-}
-
-/**
  * Base state properties common to all grid-based games.
  */
 export interface BaseGameState {
@@ -179,7 +163,7 @@ export type CellFactory<R = Record<string, unknown>> = (
  * ```tsx
  * const cellFactory = useCellFactory(
  *   (getDragProps, board, onCellClick) => (row, col) => ({
- *     ...getDragProps(getPosKey(row, col)),
+ *     ...getDragProps(`${row.toString()},${col.toString()}`),
  *     value: board[row][col],
  *     onClick: () => onCellClick(row, col),
  *   }),

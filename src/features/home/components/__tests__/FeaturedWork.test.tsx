@@ -2,10 +2,10 @@ import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 
 import { FeaturedWork } from '../FeaturedWork';
-import type { Project } from '../FeaturedWork/ProjectCard';
 import { ProjectCard } from '../FeaturedWork/ProjectCard';
-import type { Publication } from '../FeaturedWork/PublicationCard';
 import { PublicationCard } from '../FeaturedWork/PublicationCard';
+
+import type { Project, Publication } from '@/config/constants';
 
 describe('FeaturedWork Components', () => {
     const mockPublication: Publication = {

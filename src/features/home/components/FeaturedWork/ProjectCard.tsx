@@ -4,10 +4,8 @@ import { BaseCard } from './BaseCard';
 import { HOME_TEXT } from '../../config/constants';
 
 import { GitHub } from '@/components/icons';
-import type { Project } from '@/config/constants/types';
+import type { Project } from '@/config/constants';
 import { COLORS } from '@/config/theme';
-
-export type { Project } from '@/config/constants/types';
 
 export interface ProjectCardProps {
     project: Project;

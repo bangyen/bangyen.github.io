@@ -1,9 +1,9 @@
-import { getProduct } from './matrices';
 import { PRECOMPUTED_SOLUTIONS } from './precomputedTables';
+import { getProduct } from '../../../../utils/math/gf2/inversion';
 import type { BoardState, BoardAction } from '../types';
 
 import { validateGridSize } from '@/features/games/types/types';
-import { createGameReducer, getPosKey } from '@/utils/gameUtils';
+import { createGameReducer } from '@/utils/gameUtils';
 
 export function getGrid(rows: number, _cols: number): number[] {
     return Array.from({ length: rows }, () => 0);
@@ -89,7 +89,7 @@ function solveLastRow(
     lastRow: number,
 ): number[] | null {
     // Check precomputed
-    const key = getPosKey(rows, cols);
+    const key = `${rows.toString()},${cols.toString()}`;
     const precomputed = PRECOMPUTED_SOLUTIONS[key];
 
     let solutionMask = 0;

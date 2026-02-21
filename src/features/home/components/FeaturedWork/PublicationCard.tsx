@@ -4,10 +4,8 @@ import { BaseCard } from './BaseCard';
 import { HOME_TEXT } from '../../config/constants';
 
 import { OpenInNew } from '@/components/icons';
-import type { Publication } from '@/config/constants/types';
+import type { Publication } from '@/config/constants';
 import { COLORS } from '@/config/theme';
-
-export type { Publication } from '@/config/constants/types';
 
 export interface PublicationCardProps {
     publication: Publication;

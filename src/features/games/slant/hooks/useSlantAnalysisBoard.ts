@@ -11,7 +11,6 @@ import {
 import { GAME_CONSTANTS } from '@/features/games/config/constants';
 import { useDrag } from '@/features/games/hooks/useDrag';
 import { useGridNavigation } from '@/features/games/hooks/useGridNavigation';
-import { getPosKey } from '@/utils/gameUtils';
 
 export interface UseSlantAnalysisBoardProps {
     rows: number;
@@ -42,7 +41,7 @@ export function useSlantAnalysisBoard({
             draggingValue: CellState | undefined,
             isInitialClick?: boolean,
         ) => {
-            const pos = getPosKey(r, c);
+            const pos = `${r.toString()},${c.toString()}`;
 
             if (!isInitialClick) {
                 onMove(pos, draggingValue);
