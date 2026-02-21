@@ -2,8 +2,6 @@ import React from 'react';
 
 import { ErrorFallback } from './ErrorFallback';
 
-import { logError } from '@/utils/errorReporting';
-
 interface ErrorBoundaryState {
     hasError: boolean;
     error: Error | null;
@@ -40,7 +38,8 @@ class ErrorBoundary extends React.Component<
     }
 
     override componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-        logError(error, { component: 'ErrorBoundary', errorInfo });
+        // eslint-disable-next-line no-console
+        console.error('[ErrorBoundary]', error, errorInfo);
         this.setState({ error, errorInfo });
     }
 

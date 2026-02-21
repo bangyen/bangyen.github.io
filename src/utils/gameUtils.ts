@@ -33,8 +33,7 @@ export interface BaseGameState {
  * - `new`: Generate new puzzle with current dimensions
  * - `hydrate`: Load saved state
  *
- * Legacy aliases (`next`, `reset`, `restore`) are kept for backward
- * compatibility but new code should prefer the canonical names.
+ * - `hydrate`: Load saved state
  */
 export type BaseGameAction<S> =
     | {
@@ -45,9 +44,7 @@ export type BaseGameAction<S> =
           newCols?: number;
       }
     | { type: 'new' }
-    | { type: 'hydrate'; state: S }
-    | { type: 'next' | 'reset' }
-    | { type: 'restore'; state: S };
+    | { type: 'hydrate'; state: S };
 
 /**
  * Creates a standardized game reducer with common handlers.
@@ -123,17 +120,10 @@ export function createGameReducer<
                 }
                 return state;
             }
-            // Canonical action for generating a new puzzle.
-            // Legacy aliases: 'next', 'reset'.
-            case 'new':
-            case 'next':
-            case 'reset': {
+            case 'new': {
                 return config.getInitialState(state.rows, state.cols);
             }
-            // Canonical action for restoring persisted state.
-            // Legacy alias: 'restore'.
-            case 'hydrate':
-            case 'restore': {
+            case 'hydrate': {
                 if ('state' in action) {
                     return action.state;
                 }

@@ -9,15 +9,13 @@ import {
     hasSavedUnsolvedPuzzle,
 } from '../persistence';
 
-import { createGridSize } from '@/features/games/types';
-
 function makeMockState(overrides: Partial<SlantState> = {}): SlantState {
     return {
         grid: [[0]],
         numbers: [[1]],
         solution: [[0]],
-        rows: createGridSize(3),
-        cols: createGridSize(3),
+        rows: 3,
+        cols: 3,
         solved: false,
         errorNodes: new Set(['0,0']),
         cycleCells: new Set(['1,1']),
@@ -41,8 +39,8 @@ describe('serializeSlantState', () => {
 
     test('preserves other state fields', () => {
         const state = makeMockState({
-            rows: createGridSize(5),
-            cols: createGridSize(7),
+            rows: 5,
+            cols: 7,
             solved: true,
         });
         const result = serializeSlantState(state);
@@ -143,8 +141,8 @@ describe('persistSlantState', () => {
 
     test('stores serialized state under the correct key', () => {
         const state = makeMockState({
-            rows: createGridSize(4),
-            cols: createGridSize(5),
+            rows: 4,
+            cols: 5,
         });
         persistSlantState(state, 4, 5);
 

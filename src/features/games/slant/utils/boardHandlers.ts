@@ -8,7 +8,7 @@ import {
     getSatisfiedNodes,
 } from './validation';
 
-import { createGridSize } from '@/features/games/types';
+import { validateGridSize } from '@/features/games/types/types';
 import { createGameReducer } from '@/utils/gameUtils';
 
 // Export everything from types for backward compatibility where needed,
@@ -140,6 +140,8 @@ function getValidationState(
 }
 
 export function getInitialState(rows: number, cols: number): SlantState {
+    validateGridSize(rows);
+    validateGridSize(cols);
     const { numbers, solution } = generatePuzzle(rows, cols);
     return {
         grid: Array.from(
@@ -148,8 +150,8 @@ export function getInitialState(rows: number, cols: number): SlantState {
         ),
         numbers,
         solution,
-        rows: createGridSize(rows),
-        cols: createGridSize(cols),
+        rows,
+        cols,
         solved: false,
         errorNodes: new Set(),
         cycleCells: new Set(),

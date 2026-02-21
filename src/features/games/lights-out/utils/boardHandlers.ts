@@ -2,7 +2,7 @@ import { getProduct } from './matrices';
 import { PRECOMPUTED_SOLUTIONS } from './precomputedTables';
 import type { BoardState, BoardAction } from '../types';
 
-import { createGridSize } from '@/features/games/types';
+import { validateGridSize } from '@/features/games/types/types';
 import { createGameReducer, getPosKey } from '@/utils/gameUtils';
 
 export function getGrid(rows: number, _cols: number): number[] {
@@ -170,11 +170,13 @@ export function getNextMove(
 }
 
 export function getInitialState(rows: number, cols: number): BoardState {
+    validateGridSize(rows);
+    validateGridSize(cols);
     return {
         grid: getGrid(rows, cols),
         score: 0,
-        rows: createGridSize(rows),
-        cols: createGridSize(cols),
+        rows,
+        cols,
         initialized: false,
     };
 }
@@ -221,7 +223,22 @@ export const handleBoard = createGameReducer<BoardState, BoardAction>({
                     initialized: true,
                 };
             }
-            case 'new':
+            case 'reset': {
+                return {
+                    ...getInitialState(rows, cols),
+                    grid: randomize(rows, cols),
+                    score: 0,
+                    initialized: true,
+                };
+            }
+            case 'new': {
+                return {
+                    ...getInitialState(rows, cols),
+                    grid: randomize(rows, cols),
+                    score: 0,
+                    initialized: true,
+                };
+            }
             case 'next': {
                 return {
                     ...getInitialState(rows, cols),
