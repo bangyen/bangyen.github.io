@@ -14,7 +14,7 @@ import { handleBoard, isSolved, getInitialState } from '../utils/boardHandlers';
 import { isBoardState } from '../utils/persistence';
 import { getFrontProps } from '../utils/renderers';
 
-import { createCellIndex, type CellIndex } from '@/features/games/types';
+import type { CellIndex } from '@/features/games/types/types';
 import { useDisclosure } from '@/hooks';
 
 /**
@@ -52,8 +52,8 @@ export function useLightsOutGame() {
         onToggle: (r: number, c: number) => {
             dispatch({
                 type: 'adjacent' as const,
-                row: createCellIndex(r),
-                col: createCellIndex(c),
+                row: r,
+                col: c,
             });
         },
         checkEnabled: () => !solved,
@@ -87,11 +87,7 @@ export function useLightsOutGame() {
     const handleApply = useCallback(
         (solution: number[]) => {
             const moves = solution
-                .map((val, col) =>
-                    val
-                        ? { row: createCellIndex(0), col: createCellIndex(col) }
-                        : null,
-                )
+                .map((val, col) => (val ? { row: 0, col: col } : null))
                 .filter(
                     (m): m is { row: CellIndex; col: CellIndex } => m !== null,
                 );

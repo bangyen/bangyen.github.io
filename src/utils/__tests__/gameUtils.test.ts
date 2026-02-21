@@ -57,16 +57,16 @@ describe('gameUtils', () => {
             expect(next.board).toHaveLength(3);
         });
 
-        it('should handle new/next/reset actions', () => {
+        it('should handle new/reset actions', () => {
             const state = getInitialState(5, 5);
             const next = reducer(state, { type: 'new' });
             expect(next).toEqual(getInitialState(5, 5));
         });
 
-        it('should handle restore/hydrate actions', () => {
+        it('should handle hydrate actions', () => {
             const state = getInitialState(5, 5);
             const savedState = getInitialState(2, 2);
-            const next = reducer(state, { type: 'restore', state: savedState });
+            const next = reducer(state, { type: 'hydrate', state: savedState });
             expect(next).toBe(savedState);
         });
 
@@ -151,7 +151,7 @@ describe('gameUtils', () => {
             ).toBe(state);
         });
 
-        it('should return state for restore/hydrate without state prop', () => {
+        it('should return state for hydrate without state prop', () => {
             const reducer = createGameReducer({
                 getInitialState: (r, c) => ({ rows: r, cols: c }),
             });
@@ -159,7 +159,7 @@ describe('gameUtils', () => {
             // Intentionally pass restore without state to test defensive handling
             expect(
                 reducer(state, {
-                    type: 'restore',
+                    type: 'hydrate',
                 } as unknown as BaseGameAction<{
                     rows: number;
                     cols: number;

@@ -19,7 +19,6 @@ import {
     persistSlantState,
 } from '../utils/persistence';
 
-import { createCellIndex } from '@/features/games/types';
 import { useDisclosure } from '@/hooks';
 
 /**
@@ -138,8 +137,8 @@ export function useSlantGame() {
         onToggle: (r: number, c: number, isRightClick: boolean) => {
             dispatch({
                 type: 'toggle',
-                row: createCellIndex(r),
-                col: createCellIndex(c),
+                row: r,
+                col: c,
                 reverse: isRightClick,
             });
         },

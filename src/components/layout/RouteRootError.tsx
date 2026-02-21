@@ -2,8 +2,6 @@ import { useRouteError } from 'react-router-dom';
 
 import { ErrorFallback } from './ErrorFallback';
 
-import { logError } from '@/utils/errorReporting';
-
 /**
  * Root-level error element for the data router.  Replaces the
  * class-based `ErrorBoundary` that previously wrapped `<HashRouter>`.
@@ -17,7 +15,8 @@ export function RouteRootError() {
             ? routeError
             : new Error(String(routeError));
 
-    logError(error, { component: 'RouteRootError' });
+    // eslint-disable-next-line no-console
+    console.error('[RouteRootError]', error);
 
     return (
         <ErrorFallback

@@ -1,10 +1,9 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { useRouteError, useNavigate } from 'react-router-dom';
 
 import { FeatureErrorFallback } from './FeatureErrorFallback';
 
 import { ERROR_TEXT } from '@/config/constants';
-import { logError } from '@/utils/errorReporting';
 
 export interface RouteFeatureErrorProps {
     /** Heading shown in the error fallback, e.g. "Game Error". */
@@ -31,7 +30,8 @@ export function RouteFeatureError({
             ? routeError
             : new Error(String(routeError));
 
-    logError(error, { component: 'RouteFeatureError' });
+    // eslint-disable-next-line no-console
+    console.error('[RouteFeatureError]', error);
 
     const handleReset = useCallback(() => {
         void navigate(0);

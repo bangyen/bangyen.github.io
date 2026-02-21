@@ -1,40 +1,30 @@
-// ---------------------------------------------------------------------------
-// Branded numeric types for compile-time safety
-// ---------------------------------------------------------------------------
-
 /**
- * Branded type for grid sizes (rows and columns).
- * Ensures that any number used as a grid size has been validated.
+ * Simple numeric type for grid sizes (rows and columns).
  */
-export type GridSize = number & { readonly __brand: 'GridSize' };
+export type GridSize = number;
 
 /**
- * Branded type for cell indices.
- * Ensures that any number used as an index has been validated.
+ * Simple numeric type for cell indices.
  */
-export type CellIndex = number & { readonly __brand: 'CellIndex' };
+export type CellIndex = number;
 
 /**
- * Validates and creates a GridSize.
- * @param n - The number to convert to a GridSize.
- * @returns A GridSize branded number.
+ * Validates a grid size.
+ * @param n - The number to validate.
  * @throws Error if the grid size is invalid.
  */
-export const createGridSize = (n: number): GridSize => {
+export const validateGridSize = (n: number): void => {
     if (n < 1 || n > 100)
         throw new Error('Invalid grid size: must be between 1 and 100');
-    return n as GridSize;
 };
 
 /**
- * Validates and creates a CellIndex.
- * @param idx - The index to convert to a CellIndex.
- * @returns A CellIndex branded number.
+ * Validates a cell index.
+ * @param idx - The index to validate.
  * @throws Error if the index is negative.
  */
-export const createCellIndex = (idx: number): CellIndex => {
+export const validateCellIndex = (idx: number): void => {
     if (idx < 0) throw new Error('Invalid cell index: cannot be negative');
-    return idx as CellIndex;
 };
 
 // ---------------------------------------------------------------------------

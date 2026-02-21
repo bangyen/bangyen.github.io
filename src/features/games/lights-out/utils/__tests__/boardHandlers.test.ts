@@ -16,7 +16,7 @@ import {
 } from '../boardHandlers';
 
 import type { BoardAction } from '@/features/games/lights-out/types';
-import { createGridSize, createCellIndex } from '@/features/games/types';
+import type { CellIndex } from '@/features/games/types/types';
 
 // Helper to access bitmask grid
 function getBit(grid: number[], r: number, c: number): number {
@@ -78,16 +78,16 @@ describe('boardHandlers', () => {
         const initialState = {
             grid: getGrid(3, 3),
             score: 0,
-            rows: createGridSize(3),
-            cols: createGridSize(3),
+            rows: 3,
+            cols: 3,
             initialized: false,
         };
 
         it('should handle adjacent action', () => {
             const action: BoardAction = {
                 type: 'adjacent',
-                row: createCellIndex(1),
-                col: createCellIndex(1),
+                row: 1,
+                col: 1,
             };
             const newState = handleBoard(initialState, action);
 
@@ -187,8 +187,8 @@ describe('boardHandlers', () => {
             const state = {
                 grid: getGrid(3, 3),
                 score: 0,
-                rows: createGridSize(3),
-                cols: createGridSize(3),
+                rows: 3,
+                cols: 3,
                 auto: false,
                 initialized: true,
             };
@@ -204,15 +204,15 @@ describe('boardHandlers', () => {
             const state = {
                 grid: getGrid(3, 3),
                 score: 0,
-                rows: createGridSize(3),
-                cols: createGridSize(3),
+                rows: 3,
+                cols: 3,
                 auto: false,
                 initialized: true,
             };
 
             const moves = [
-                { row: createCellIndex(0), col: createCellIndex(0) },
-                { row: createCellIndex(0), col: createCellIndex(1) },
+                { row: 0 as CellIndex, col: 0 as CellIndex },
+                { row: 0 as CellIndex, col: 1 as CellIndex },
             ];
             const action: BoardAction = { type: 'multi_adjacent', moves };
 
@@ -345,8 +345,8 @@ describe('boardHandlers', () => {
             const state = {
                 grid: getGrid(3, 3),
                 score: 0,
-                rows: createGridSize(3),
-                cols: createGridSize(3),
+                rows: 3,
+                cols: 3,
                 initialized: false,
             };
 
@@ -365,8 +365,8 @@ describe('boardHandlers', () => {
             const state = {
                 grid: getGrid(3, 3),
                 score: 0,
-                rows: createGridSize(3),
-                cols: createGridSize(3),
+                rows: 3,
+                cols: 3,
                 initialized: false,
             };
 
@@ -383,8 +383,8 @@ describe('boardHandlers', () => {
             const state = {
                 grid: getGrid(3, 3),
                 score: 0,
-                rows: createGridSize(3),
-                cols: createGridSize(3),
+                rows: 3,
+                cols: 3,
                 initialized: false,
             };
 
@@ -401,8 +401,8 @@ describe('boardHandlers', () => {
             const state = {
                 grid: getGrid(3, 3),
                 score: 0,
-                rows: createGridSize(3),
-                cols: createGridSize(3),
+                rows: 3,
+                cols: 3,
                 initialized: false,
             };
 
@@ -422,8 +422,8 @@ describe('boardHandlers', () => {
             const state = {
                 grid: getGrid(3, 3),
                 score: 0,
-                rows: createGridSize(3),
-                cols: createGridSize(3),
+                rows: 3,
+                cols: 3,
                 initialized: false,
             };
             const action = { type: 'unknown' } as unknown as BoardAction;
