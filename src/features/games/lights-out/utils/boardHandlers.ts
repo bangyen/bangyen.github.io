@@ -226,7 +226,6 @@ export const handleBoard = createGameReducer<BoardState, BoardAction>({
             case 'reset': {
                 return {
                     ...getInitialState(rows, cols),
-                    grid: randomize(rows, cols),
                     score: 0,
                     initialized: true,
                 };
