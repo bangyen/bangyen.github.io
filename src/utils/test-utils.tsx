@@ -178,42 +178,6 @@ export const testUtils = {
     },
 };
 
-interface ChartDataPoint {
-    x: number;
-    y: number;
-}
-
-interface UserData {
-    id: number;
-    name: string;
-    email: string;
-    [key: string]: unknown;
-}
-
-/**
- * Common test data generators
- */
-export const testDataGenerators = {
-    /**
-     * Generates mock chart data for testing
-     */
-    generateChartData: (length = 10): ChartDataPoint[] =>
-        Array.from({ length }, (_, i) => ({
-            x: i + 1,
-            y: Math.random() * 100,
-        })),
-
-    /**
-     * Generates mock user data for testing
-     */
-    generateUserData: (overrides: Partial<UserData> = {}): UserData => ({
-        id: 1,
-        name: 'Test User',
-        email: 'test@example.com',
-        ...overrides,
-    }),
-};
-
 const testUtilsExport = {
     createTestTheme,
     TestWrapper,
@@ -221,7 +185,6 @@ const testUtilsExport = {
     mockData,
     mockFetchResponses,
     testUtils,
-    testDataGenerators,
 };
 
 export default testUtilsExport;

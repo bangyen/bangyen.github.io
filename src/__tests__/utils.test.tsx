@@ -8,7 +8,6 @@ import {
     mockData,
     mockFetchResponses,
     testUtils,
-    testDataGenerators,
 } from '../utils';
 
 // Mock component for testing
@@ -197,71 +196,13 @@ describe('Test Utilities', () => {
         });
     });
 
-    describe('testDataGenerators', () => {
-        test('generateChartData creates array of correct length', () => {
-            const data = testDataGenerators.generateChartData(5);
-
-            expect(data).toHaveLength(5);
-            expect(Array.isArray(data)).toBe(true);
-        });
-
-        test('generateChartData creates valid data structure', () => {
-            const data = testDataGenerators.generateChartData(3);
-
-            for (const [index, item] of data.entries()) {
-                expect(item).toHaveProperty('x', index + 1);
-                expect(item).toHaveProperty('y');
-                expect(typeof item.x).toBe('number');
-                expect(typeof item.y).toBe('number');
-            }
-        });
-
-        test('generateChartData uses default length', () => {
-            const data = testDataGenerators.generateChartData();
-
-            expect(data).toHaveLength(10);
-        });
-
-        test('generateUserData creates valid user object', () => {
-            const user = testDataGenerators.generateUserData();
-
-            expect(user).toHaveProperty('id', 1);
-            expect(user).toHaveProperty('name', 'Test User');
-            expect(user).toHaveProperty('email', 'test@example.com');
-        });
-
-        test('generateUserData accepts overrides', () => {
-            const overrides = { name: 'Custom User', age: 25 };
-            const user = testDataGenerators.generateUserData(overrides);
-
-            expect(user).toHaveProperty('id', 1);
-            expect(user).toHaveProperty('name', 'Custom User');
-            expect(user).toHaveProperty('email', 'test@example.com');
-            expect(user).toHaveProperty('age', 25);
-        });
-
-        test('generateUserData handles empty overrides', () => {
-            const user = testDataGenerators.generateUserData({});
-
-            expect(user).toHaveProperty('id', 1);
-            expect(user).toHaveProperty('name', 'Test User');
-            expect(user).toHaveProperty('email', 'test@example.com');
-        });
-    });
-
     describe('Integration Tests', () => {
         test('all utilities work together', () => {
             const theme = createTestTheme();
             const mockFn = testUtils.createMockFunction();
-            const chartData = testDataGenerators.generateChartData(3);
-            const userData = testDataGenerators.generateUserData({
-                name: 'Integration Test',
-            });
 
             expect(theme).toBeDefined();
             expect(vi.isMockFunction(mockFn)).toBe(true);
-            expect(chartData).toHaveLength(3);
-            expect(userData.name).toBe('Integration Test');
         });
 
         test('renderWithProviders works with mock data', () => {
@@ -287,34 +228,6 @@ describe('Test Utilities', () => {
             const parsed = JSON.parse(decoded) as unknown;
 
             expect(parsed).toEqual(testData);
-        });
-    });
-
-    describe('Error Handling', () => {
-        test('handles invalid chart data length', () => {
-            const data = testDataGenerators.generateChartData(0);
-
-            expect(data).toHaveLength(0);
-            expect(Array.isArray(data)).toBe(true);
-        });
-
-        test('handles negative chart data length', () => {
-            const data = testDataGenerators.generateChartData(-1);
-
-            expect(data).toHaveLength(0);
-            expect(Array.isArray(data)).toBe(true);
-        });
-
-        test('handles null overrides in generateUserData', () => {
-            const user = testDataGenerators.generateUserData(
-                null as unknown as Partial<
-                    ReturnType<typeof testDataGenerators.generateUserData>
-                >,
-            );
-
-            expect(user).toHaveProperty('id', 1);
-            expect(user).toHaveProperty('name', 'Test User');
-            expect(user).toHaveProperty('email', 'test@example.com');
         });
     });
 });
