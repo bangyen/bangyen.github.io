@@ -172,14 +172,3 @@ export const testUtils = {
         };
     },
 };
-
-const testUtilsExport = {
-    createTestTheme,
-    TestWrapper,
-    renderWithProviders,
-    mockData,
-    mockFetchResponses,
-    testUtils,
-};
-
-export default testUtilsExport;
