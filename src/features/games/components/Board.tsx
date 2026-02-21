@@ -16,6 +16,9 @@ export interface BoardLayer {
     cols: number;
     /** Optional styles for the layer container. */
     layerSx?: SxProps<Theme>;
+    /** Optional component to use for cells in this layer. */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    CellComponent?: React.ComponentType<any>;
     /** When true, marks the layer as decorative (aria-hidden). */
     decorative?: boolean;
 }
@@ -64,6 +67,7 @@ export const Board = React.memo(function Board(
                         cols={layer.cols}
                         cellProps={layer.cellProps}
                         renderCell={layer.renderCell}
+                        CellComponent={layer.CellComponent}
                         {...(layer.decorative
                             ? { role: 'presentation', 'aria-hidden': true }
                             : {})}

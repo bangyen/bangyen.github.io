@@ -11,7 +11,7 @@ import {
 import { spreadSx } from '@/utils/muiUtils';
 
 /** Known styling props extracted by `Cell`; additional DOM attributes are forwarded. */
-interface CellKnownProps {
+export interface CellKnownProps {
     size: number;
     children?: React.ReactNode;
     backgroundColor?: string;

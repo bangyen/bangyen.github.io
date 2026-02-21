@@ -105,6 +105,7 @@ export function SlantGameContainer({
         >
             <AnimatedBoardContainer {...boardPopIn}>
                 <SlantBoard
+                    state={state}
                     size={size}
                     rows={rows}
                     cols={cols}
