@@ -6,7 +6,6 @@ import { GlobalHeader } from './GlobalHeader';
 import { getContainerSx, getMainSx } from './PageLayout.styles';
 
 import { COLORS } from '@/config/theme';
-import { useDocumentTitle } from '@/hooks/useDocumentTitle';
 
 export interface PageLayoutProps {
     children: React.ReactNode;
@@ -40,7 +39,9 @@ export function PageLayout({
     headerTransparent = true,
     onClick,
 }: PageLayoutProps) {
-    useDocumentTitle(title);
+    React.useEffect(() => {
+        if (title) document.title = title;
+    }, [title]);
 
     const mergedContainerSx = useMemo(
         () => getContainerSx(background, containerSx),

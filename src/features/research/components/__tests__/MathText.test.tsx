@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 
@@ -59,9 +58,7 @@ describe('MathText', () => {
         const { container } = render(<MathText text="x^{n}" />);
         const sup = container.querySelector('sup');
 
-        expect(sup).toHaveStyle({
-            fontSize: '0.6em',
-            verticalAlign: 'super',
-        });
+        expect(sup?.style.fontSize).toBe('0.6em');
+        expect(sup?.style.verticalAlign).toBe('super');
     });
 });

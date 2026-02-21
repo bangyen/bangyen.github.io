@@ -3,7 +3,6 @@ export type { UseAsyncResult } from './useAsync';
 export { useDebouncedEffect } from './useDebouncedEffect';
 export { useDisclosure } from './useDisclosure';
 export type { UseDisclosureReturn } from './useDisclosure';
-export { useDocumentTitle } from './useDocumentTitle';
 export { useWindow, useMobile } from './layout';
 export { useLocalStorage } from './useLocalStorage';
 export { MobileProvider, useMobileContext } from './useMobileContext';

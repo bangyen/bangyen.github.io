@@ -1,4 +1,3 @@
-// @vitest-environment jsdom
 import React from 'react';
 import { axe } from 'vitest-axe';
 import 'vitest-axe/extend-expect';

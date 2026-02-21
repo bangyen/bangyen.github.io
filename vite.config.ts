@@ -84,14 +84,9 @@ export default defineConfig(() => {
             outDir: 'build', // Maintain 'build' for gh-pages compatibility
             // Enable source maps for production debugging (can be disabled for smaller builds)
             sourcemap: false,
-            // Minification options
-            minify: 'terser',
-            terserOptions: {
-                compress: {
-                    drop_console: true, // Remove console.logs in production
-                    drop_debugger: true,
-                    pure_funcs: ['console.log', 'console.info'], // Remove specific console methods
-                },
+            // ESBuild minification with console stripping
+            esbuild: {
+                drop: ['console', 'debugger'],
             },
             // CSS code splitting
             cssCodeSplit: true,
