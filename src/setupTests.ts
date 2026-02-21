@@ -124,16 +124,4 @@ Object.defineProperty(globalThis, 'DecompressionStream', {
     writable: true,
 });
 
-// Mock WASM modules
-vi.mock('lights-out-wasm', () => ({
-    default: vi.fn().mockResolvedValue(undefined),
-    invert_matrix: vi.fn((input: BigUint64Array) => input),
-}));
-
-vi.mock('slant-wasm', () => ({
-    default: vi.fn().mockResolvedValue(undefined),
-    generate_puzzle_wasm: vi.fn(),
-    find_cycles_wasm: vi.fn(),
-}));
-
 // All warnings have been fixed at the root cause - no suppressions needed!

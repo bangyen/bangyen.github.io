@@ -22,7 +22,6 @@ import {
     PauseRounded,
 } from '@/components/icons';
 import { COLORS, ANIMATIONS } from '@/config/theme';
-import { getPosKey } from '@/utils/gameUtils';
 
 /** Interval between animation frames (ms). */
 const FRAME_MS = 1500;
@@ -65,7 +64,7 @@ function makeBackProps(
 ) {
     return (r: number, c: number) => {
         const value = grid[r]?.[c];
-        const pos = getPosKey(r, c);
+        const pos = `${r.toString()},${c.toString()}`;
         const isActive = pos === activeCell;
 
         return {
@@ -109,7 +108,7 @@ function makeFrontProps(
 ) {
     return (r: number, c: number) => {
         const value = numbers[r]?.[c];
-        const pos = getPosKey(r, c);
+        const pos = `${r.toString()},${c.toString()}`;
         const isSatisfied = satisfiedNodes.has(pos);
 
         return {
@@ -266,7 +265,9 @@ export function Example({
         frameIdx > 0 && frameIdx <= SOLVE_ORDER.length
             ? (() => {
                   const entry = SOLVE_ORDER[frameIdx - 1];
-                  return entry ? getPosKey(entry[0], entry[1]) : null;
+                  return entry
+                      ? `${entry[0].toString()},${entry[1].toString()}`
+                      : null;
               })()
             : null;
 

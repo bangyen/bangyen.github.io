@@ -1,8 +1,6 @@
 import type { CellState } from '../types';
 import { EMPTY, FORWARD, BACKWARD } from '../types';
 
-import { getPosKey } from '@/utils/gameUtils';
-
 export function calculateNumbers(
     grid: CellState[][],
     rows: number,
@@ -64,7 +62,7 @@ export function getErrorNodes(
 
             // Overfilled
             if (current > target) {
-                errors.add(getPosKey(r, c));
+                errors.add(`${r.toString()},${c.toString()}`);
                 continue;
             }
 
@@ -84,7 +82,7 @@ export function getErrorNodes(
             ).length;
 
             if (current + possible < target) {
-                errors.add(getPosKey(r, c));
+                errors.add(`${r.toString()},${c.toString()}`);
             }
         }
     }
@@ -128,7 +126,7 @@ export function getSatisfiedNodes(
                 }
 
                 if (atLeastOneFilled) {
-                    satisfied.add(getPosKey(r, c));
+                    satisfied.add(`${r.toString()},${c.toString()}`);
                 }
             }
         }

@@ -2,8 +2,6 @@ import type { CellState } from '../types';
 import { EMPTY, BACKWARD, FORWARD } from '../types';
 import { findCycles } from './cycleDetection';
 
-import { getPosKey } from '@/utils/gameUtils';
-
 export type CellSource = 'user' | 'propagated';
 
 export interface CellInfo {
@@ -31,7 +29,7 @@ export function computeSatisfied(
 
     for (const nb of neighbors) {
         if (nb.r >= 0 && nb.r < rows && nb.c >= 0 && nb.c < cols) {
-            const cell = gridState.get(getPosKey(nb.r, nb.c));
+            const cell = gridState.get(`${nb.r.toString()},${nb.c.toString()}`);
             if (cell && cell.state !== EMPTY) {
                 filledNeighbors++;
                 if (cell.state === nb.required) {
@@ -84,7 +82,7 @@ export function solveAnalysisConstraints(
     // Helper to get current cell state
     const getCell = (r: number, c: number): CellState => {
         if (r < 0 || r >= rows || c < 0 || c >= cols) return EMPTY;
-        const pos = getPosKey(r, c);
+        const pos = `${r.toString()},${c.toString()}`;
         return newGrid.get(pos)?.state ?? EMPTY;
     };
 
@@ -94,7 +92,7 @@ export function solveAnalysisConstraints(
         state: CellState,
         source: CellSource,
     ) => {
-        const pos = getPosKey(r, c);
+        const pos = `${r.toString()},${c.toString()}`;
         const existing = newGrid.get(pos);
 
         if (existing) {
@@ -161,7 +159,11 @@ export function solveAnalysisConstraints(
 
             // If this update was propagated, we stop here.
             // We checked for conflicts (above), but we don't trigger further chains.
-            if (newGrid.get(getPosKey(cr, cc))?.source !== 'user') continue;
+            if (
+                newGrid.get(`${cr.toString()},${cc.toString()}`)?.source !==
+                'user'
+            )
+                continue;
 
             if (connected === limit && unknowns.length > 0) {
                 for (const unk of unknowns) {

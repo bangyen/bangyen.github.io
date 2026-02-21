@@ -1,7 +1,6 @@
 import { countBits, invertMatrix } from './gf2Operations';
 import { getMatrix } from './matrixOperations';
 import { evalPolynomial, getPolynomial } from './polynomialUtils';
-import { getPosKey } from '../../gameUtils';
 
 /**
  * Cache for matrix inversions.
@@ -35,7 +34,7 @@ export function getProduct(
     rows: number,
     cols: number,
 ): number[] {
-    const key = getPosKey(rows, cols);
+    const key = `${rows.toString()},${cols.toString()}`;
 
     if (!inverseCache[key]) {
         const matrix = getMatrix(cols);

@@ -1,12 +1,3 @@
-// @vitest-environment node
-vi.mock('lights-out-wasm', () => ({
-    __esModule: true,
-    default: vi.fn().mockResolvedValue(undefined),
-    invert_matrix: () => {
-        throw new Error('Wasm not mocked');
-    },
-}));
-
 import {
     getGrid,
     flipAdj,

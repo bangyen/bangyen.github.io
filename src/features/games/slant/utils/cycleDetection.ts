@@ -2,7 +2,6 @@ import type { CellState } from '../types';
 import { EMPTY, FORWARD } from '../types';
 
 import { DSU } from '@/utils/DSU';
-import { getPosKey } from '@/utils/gameUtils';
 
 /**
  * Maps grid node coordinates (intersections) to a flat index.
@@ -69,11 +68,11 @@ export function findCycles(
 
             if (onStack.has(v)) {
                 // Cycle detected! Trace back edgeStack
-                cycleCells.add(getPosKey(r, c));
+                cycleCells.add(`${r.toString()},${c.toString()}`);
                 for (let i = edgeStack.length - 1; i >= 0; i--) {
                     const edge = edgeStack[i];
                     if (!edge) break;
-                    cycleCells.add(getPosKey(edge.r, edge.c));
+                    cycleCells.add(`${edge.r.toString()},${edge.c.toString()}`);
                     if (edge.u === v || edge.v === v) break;
                 }
             } else if (!visited.has(v)) {

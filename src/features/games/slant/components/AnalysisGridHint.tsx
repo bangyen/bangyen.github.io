@@ -2,8 +2,6 @@ import React from 'react';
 
 import { AnalysisHint } from './AnalysisHint';
 
-import { getPosKey } from '@/utils/gameUtils';
-
 interface AnalysisGridHintProps {
     r: number;
     c: number;
@@ -23,7 +21,7 @@ export const AnalysisGridHint = React.memo(function AnalysisGridHint({
 }: AnalysisGridHintProps) {
     return (
         <div
-            data-pos={getPosKey(r, c)}
+            data-pos={`${r.toString()},${c.toString()}`}
             data-type="hint"
             style={{
                 pointerEvents: 'none',

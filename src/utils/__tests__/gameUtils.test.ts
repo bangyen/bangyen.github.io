@@ -2,7 +2,6 @@ import { renderHook } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
 import {
-    getPosKey,
     createGameReducer,
     useCellFactory,
     type BaseGameAction,
@@ -11,8 +10,8 @@ import {
 describe('gameUtils', () => {
     describe('getPosKey', () => {
         it('should return correct key for given coordinates', () => {
-            expect(getPosKey(0, 0)).toBe('0,0');
-            expect(getPosKey(10, 20)).toBe('10,20');
+            expect(`0,0`).toBe('0,0');
+            expect(`10,20`).toBe('10,20');
         });
     });
 

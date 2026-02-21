@@ -6,8 +6,6 @@ import { solveAnalysisConstraints } from '../utils/analysisSolver';
 import { createWorker } from '../utils/workerUtils';
 import type { SolverMessage } from '../workers/solverWorker';
 
-import { getPosKey } from '@/utils/gameUtils';
-
 /** Timeout for the initial worker health probe (ms). */
 const WORKER_PROBE_TIMEOUT_MS = 2000;
 
@@ -147,7 +145,7 @@ export function useAnalysisSolver({
             new Set(
                 conflicts
                     .filter(c => c.type === 'cell')
-                    .map(c => getPosKey(c.r, c.c)),
+                    .map(c => `${c.r.toString()},${c.c.toString()}`),
             ),
         [conflicts],
     );
@@ -157,7 +155,7 @@ export function useAnalysisSolver({
             new Set(
                 conflicts
                     .filter(c => c.type === 'node')
-                    .map(c => getPosKey(c.r, c.c)),
+                    .map(c => `${c.r.toString()},${c.c.toString()}`),
             ),
         [conflicts],
     );

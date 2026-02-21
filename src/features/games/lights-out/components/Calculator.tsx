@@ -7,7 +7,6 @@ import type { Getters, Palette } from '../types';
 import { FOCUS_VISIBLE_SX } from '../utils/renderers';
 
 import { CircleRounded } from '@/components/icons';
-import { getPosKey } from '@/utils/gameUtils';
 
 export function getInput(
     getters: Getters,
@@ -17,7 +16,7 @@ export function getInput(
 
     return (r: number, c: number) => {
         const { front, back } = getColor(r, c);
-        const dragProps = getDragProps(getPosKey(r, c));
+        const dragProps = getDragProps(`${r.toString()},${c.toString()}`);
 
         return {
             ...dragProps,

@@ -12,22 +12,29 @@ import type { DragProps } from '../../hooks/useDrag';
 import type { SlantState } from '../types';
 import { FORWARD, BACKWARD, EMPTY } from '../types';
 
-import { getPosKey } from '@/utils/gameUtils';
-
 /**
  * Visual-only cell factory for the back (slash) layer.
  */
 export function getBackVisualProps(state: SlantState, size: number) {
     return (r: number, c: number) => {
         const value = state.grid[r]?.[c];
-        const pos = getPosKey(r, c);
+        const pos = `${r.toString()},${c.toString()}`;
         const isError = state.cycleCells.has(pos);
 
         const clues = [
-            { v: state.numbers[r]?.[c], p: getPosKey(r, c) },
-            { v: state.numbers[r]?.[c + 1], p: getPosKey(r, c + 1) },
-            { v: state.numbers[r + 1]?.[c], p: getPosKey(r + 1, c) },
-            { v: state.numbers[r + 1]?.[c + 1], p: getPosKey(r + 1, c + 1) },
+            { v: state.numbers[r]?.[c], p: `${r.toString()},${c.toString()}` },
+            {
+                v: state.numbers[r]?.[c + 1],
+                p: `${r.toString()},${(c + 1).toString()}`,
+            },
+            {
+                v: state.numbers[r + 1]?.[c],
+                p: `${(r + 1).toString()},${c.toString()}`,
+            },
+            {
+                v: state.numbers[r + 1]?.[c + 1],
+                p: `${(r + 1).toString()},${(c + 1).toString()}`,
+            },
         ].map(({ v, p }) => {
             if (v == null) return '-';
             const status = state.errorNodes.has(p)
@@ -73,7 +80,7 @@ export const getBackProps = (
 
     return (r: number, c: number) => {
         const visual = visualFactory(r, c);
-        const pos = getPosKey(r, c);
+        const pos = `${r.toString()},${c.toString()}`;
         const dragProps = getDragProps(pos);
 
         return {
@@ -94,7 +101,7 @@ export const getBackProps = (
 export const getFrontProps =
     (state: SlantState, numberSize: number) => (r: number, c: number) => {
         const value = state.numbers[r]?.[c];
-        const pos = getPosKey(r, c);
+        const pos = `${r.toString()},${c.toString()}`;
         const hasError = state.errorNodes.has(pos);
         const isSatisfied = state.satisfiedNodes.has(pos);
 

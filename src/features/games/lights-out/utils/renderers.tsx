@@ -5,7 +5,6 @@ import { LIGHTS_OUT_STYLES } from '../config';
 import type { Getters } from '../types';
 
 import { COLORS } from '@/config/theme';
-import { getPosKey } from '@/utils/gameUtils';
 
 const IconBox = styled(Box)({
     width: '35%',
@@ -76,7 +75,7 @@ export function getFrontProps(
     return (row: number, col: number) => {
         const visual = visualFactory(row, col);
         const { back } = getColor(row, col);
-        const pos = getPosKey(row, col);
+        const pos = `${row.toString()},${col.toString()}`;
         const dragProps = getDragProps(pos);
 
         return {

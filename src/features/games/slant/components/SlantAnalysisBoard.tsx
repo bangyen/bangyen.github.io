@@ -16,8 +16,6 @@ import { useSlantAnalysisBoard } from '../hooks/useSlantAnalysisBoard';
 import { EMPTY, type CellState } from '../types';
 import { computeSatisfied } from '../utils/analysisSolver';
 
-import { getPosKey } from '@/utils/gameUtils';
-
 export interface SlantAnalysisBoardProps {
     rows: number;
     cols: number;
@@ -87,7 +85,7 @@ export function SlantAnalysisBoard({
                         rows={rows}
                         cols={cols}
                         renderCell={(r, c) => {
-                            const pos = getPosKey(r, c);
+                            const pos = `${r.toString()},${c.toString()}`;
                             const info = gridState.get(pos);
                             return (
                                 <AnalysisGridCell
@@ -106,7 +104,7 @@ export function SlantAnalysisBoard({
                         renderOverlay={(r, c) => {
                             const value = numbers[r]?.[c] ?? null;
                             const hasConflict = nodeConflictSet.has(
-                                getPosKey(r, c),
+                                `${r.toString()},${c.toString()}`,
                             );
                             const isSatisfied = computeSatisfied(
                                 r,
