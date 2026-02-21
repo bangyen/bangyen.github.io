@@ -19,8 +19,6 @@ import {
     persistSlantState,
 } from '../utils/persistence';
 
-import { useDisclosure } from '@/hooks';
-
 /**
  * Orchestrates all Slant-specific game logic: worker-based puzzle
  * generation, analysis mode, drag interaction, cell prop factories,
@@ -31,7 +29,10 @@ import { useDisclosure } from '@/hooks';
  */
 export function useSlantGame() {
     const [isAnalysisMode, setIsAnalysisMode] = React.useState(false);
-    const { isOpen: infoOpen, toggle: toggleInfo } = useDisclosure();
+    const [infoOpen, setInfoOpen] = React.useState(false);
+    const toggleInfo = React.useCallback(() => {
+        setInfoOpen(prev => !prev);
+    }, []);
 
     // Refs kept in sync with useBaseGame output, shared with the worker hook.
     const dispatchRef = useRef<React.Dispatch<

@@ -16,10 +16,6 @@ vi.mock('../useGenerationWorker');
 vi.mock('../useAnalysisMode');
 vi.mock('../useDimensionRegeneration');
 vi.mock('@/hooks', () => ({
-    useDisclosure: vi.fn().mockReturnValue({
-        isOpen: false,
-        toggle: vi.fn(),
-    }),
     useMobile: vi.fn().mockReturnValue(false),
     useDebouncedEffect: vi.fn(),
 }));

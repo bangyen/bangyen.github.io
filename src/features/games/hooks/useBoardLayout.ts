@@ -1,12 +1,9 @@
 import { useMemo } from 'react';
 
-import type { MergedBoardConfig } from './types';
 import { useBoardSize } from './useBoardSize';
 import { useGameViewport } from './useGameViewport';
 import { useGridSize } from './useGridSize';
 import { DEFAULT_BOARD_CONFIG, DEFAULT_GRID_CONFIG } from '../config/constants';
-
-import { mergeDefaults } from '@/utils/objectUtils';
 
 export interface UseBoardLayoutConfig {
     /** localStorage key for grid dimensions. */
@@ -27,14 +24,25 @@ export function useBoardLayout({
     board = {},
 }: UseBoardLayoutConfig) {
     // Build the grid config by merging caller overrides with defaults.
-    const gridMerged = mergeDefaults(DEFAULT_GRID_CONFIG, grid);
+    const gridMerged = {
+        ...DEFAULT_GRID_CONFIG,
+        ...Object.fromEntries(
+            Object.entries(grid).filter(([, v]) => v !== undefined),
+        ),
+    };
 
     // Build the board config by merging caller overrides with defaults.
     const mergedBoard = useMemo(
         () => ({
-            ...mergeDefaults<
-                Omit<MergedBoardConfig, 'rowOffset' | 'colOffset'>
-            >(DEFAULT_BOARD_CONFIG, board),
+            ...DEFAULT_BOARD_CONFIG,
+            ...Object.fromEntries(
+                Object.entries(board).filter(
+                    ([k, v]) =>
+                        v !== undefined &&
+                        k !== 'rowOffset' &&
+                        k !== 'colOffset',
+                ),
+            ),
             rowOffset: board['rowOffset'] as number | undefined,
             colOffset: board['colOffset'] as number | undefined,
         }),

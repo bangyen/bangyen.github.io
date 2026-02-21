@@ -14,10 +14,6 @@ vi.mock('../../../hooks/useGridNavigation');
 vi.mock('../../../hooks/useSkipTransition');
 vi.mock('../useLightsOutProps');
 vi.mock('@/hooks', () => ({
-    useDisclosure: vi.fn().mockReturnValue({
-        isOpen: false,
-        toggle: vi.fn(),
-    }),
     useMobile: vi.fn().mockReturnValue(false),
 }));
 

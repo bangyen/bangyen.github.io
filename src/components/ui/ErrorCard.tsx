@@ -6,8 +6,6 @@ import React from 'react';
 import { errorCardSx, errorTitleSx, errorMessageSx } from './ErrorCard.styles';
 import { GlassCard } from './GlassCard';
 
-import { toSxArray } from '@/utils/muiUtils';
-
 export interface ErrorCardProps {
     /** Bold heading displayed at the top of the card. */
     title: string;
@@ -39,10 +37,7 @@ export function ErrorCard({
     sx,
 }: ErrorCardProps): React.ReactElement {
     return (
-        <GlassCard
-            role="alert"
-            sx={[errorCardSx, ...toSxArray(sx)] as SxProps<Theme>}
-        >
+        <GlassCard role="alert" sx={[errorCardSx, sx] as SxProps<Theme>}>
             <Typography variant="h5" sx={errorTitleSx}>
                 {title}
             </Typography>
