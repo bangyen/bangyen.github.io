@@ -14,8 +14,6 @@ export interface BaseGameState {
  * - `resize`: Change grid dimensions
  * - `new`: Generate new puzzle with current dimensions
  * - `hydrate`: Load saved state
- *
- * - `hydrate`: Load saved state
  */
 export type BaseGameAction<S> =
     | {

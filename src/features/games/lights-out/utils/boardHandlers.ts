@@ -1,4 +1,5 @@
 import { PRECOMPUTED_SOLUTIONS } from './precomputedTables';
+import { countBits } from '../../../../utils/math/gf2/gf2Operations';
 import { getProduct } from '../../../../utils/math/gf2/inversion';
 import type { BoardState, BoardAction } from '../types';
 
@@ -99,15 +100,7 @@ function solveLastRow(
             const rowInv = precomputed[i];
             if (rowInv !== undefined) {
                 const dot = rowInv & lastRow;
-                // Count bits of dot
-                let count = 0;
-                let n = dot;
-                while (n > 0) {
-                    n &= n - 1;
-                    count++;
-                }
-
-                if (count % 2 === 1) {
+                if (countBits(BigInt(dot)) % 2 === 1) {
                     solutionMask |= 1 << i;
                 }
             }
