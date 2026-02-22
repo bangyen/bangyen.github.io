@@ -6,9 +6,8 @@ import type { BoardState, BoardAction } from '../types';
 import { validateGridSize } from '@/features/games/types/types';
 import { createGameReducer } from '@/utils/gameUtils';
 
-export function getGrid(rows: number, _cols: number): number[] {
-    return Array.from({ length: rows }, () => 0);
-}
+export const getGrid = (rows: number): number[] =>
+    new Array<number>(rows).fill(0);
 
 export function flipAdj(
     row: number,
@@ -71,7 +70,7 @@ export function isSolved(grid: number[]): boolean {
 }
 
 function randomize(rows: number, cols: number): number[] {
-    const grid = getGrid(rows, cols);
+    const grid = getGrid(rows);
 
     for (let r = 0; r < rows; r++) {
         for (let c = 0; c < cols; c++) {
@@ -166,7 +165,7 @@ export function getInitialState(rows: number, cols: number): BoardState {
     validateGridSize(rows);
     validateGridSize(cols);
     return {
-        grid: getGrid(rows, cols),
+        grid: getGrid(rows),
         score: 0,
         rows,
         cols,

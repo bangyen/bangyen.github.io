@@ -223,25 +223,3 @@ export function invertMatrix(matrix: bigint[]): bigint[] {
     }
     return inverted;
 }
-
-/**
- * Checks if a matrix is the identity matrix.
- *
- * @param matrix - Matrix to check
- * @returns True if matrix is identity, false otherwise
- */
-export function isIdentity(matrix: bigint[]): boolean {
-    const size = matrix.length;
-    const identity = getIdentity(size);
-    return matrix.every((val, i) => val === identity[i]);
-}
-
-/**
- * Checks if a matrix is the zero matrix.
- *
- * @param matrix - Matrix to check
- * @returns True if all entries are 0, false otherwise
- */
-export function isZero(matrix: bigint[]): boolean {
-    return matrix.every(val => val === 0n);
-}

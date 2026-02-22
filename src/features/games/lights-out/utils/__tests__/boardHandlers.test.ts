@@ -18,8 +18,7 @@ describe('boardHandlers', () => {
     describe('getGrid', () => {
         it('should create a grid of correct size initialized to 0', () => {
             const rows = 3;
-            const cols = 4;
-            const grid = getGrid(rows, cols);
+            const grid = getGrid(rows);
 
             expect(grid.length).toBe(rows);
             // Each row should be 0
@@ -33,7 +32,7 @@ describe('boardHandlers', () => {
         it('should flip the target cell and adjacent neighbors', () => {
             const rows = 3;
             const cols = 3;
-            const grid = getGrid(rows, cols);
+            const grid = getGrid(rows);
             // Flip center
             const newGrid = flipAdj(1, 1, grid, rows, cols);
 
@@ -54,7 +53,7 @@ describe('boardHandlers', () => {
         it('should handle corners correctly', () => {
             const rows = 3;
             const cols = 3;
-            const grid = getGrid(rows, cols);
+            const grid = getGrid(rows);
             // Flip top-left
             const newGrid = flipAdj(0, 0, grid, rows, cols);
 
@@ -67,7 +66,7 @@ describe('boardHandlers', () => {
 
     describe('handleBoard', () => {
         const initialState = {
-            grid: getGrid(3, 3),
+            grid: getGrid(3),
             score: 0,
             rows: 3,
             cols: 3,
@@ -125,7 +124,7 @@ describe('boardHandlers', () => {
 
     describe('getNextMove', () => {
         it('should return null for empty grid', () => {
-            const grid = getGrid(3, 3);
+            const grid = getGrid(3);
             const moves = getNextMove(grid, 3, 3);
             // Might return null or empty array depending on implementation
             expect(moves).toBeNull();
@@ -133,7 +132,7 @@ describe('boardHandlers', () => {
 
         it('should chase lights down', () => {
             // Light at top-left
-            const grid = getGrid(3, 3);
+            const grid = getGrid(3);
             // Set bit 0 of row 0
             grid[0] = 1;
 
@@ -148,7 +147,7 @@ describe('boardHandlers', () => {
             // 0 0
             // 1 1  (row 1: 3)
             // Last row is 1 1.
-            const grid2 = getGrid(2, 2);
+            const grid2 = getGrid(2);
             grid2[1] = 3; // 1 | 2 = 3 (bits 0 and 1)
 
             const moves = getNextMove(grid2, 2, 2);
@@ -163,7 +162,7 @@ describe('boardHandlers', () => {
         });
 
         it('should use precomputed solutions for last row (5x5)', () => {
-            const grid5 = getGrid(5, 5);
+            const grid5 = getGrid(5);
             grid5[4] = 1;
 
             const moves = getNextMove(grid5, 5, 5);
@@ -176,7 +175,7 @@ describe('boardHandlers', () => {
     describe('handleBoard - Win Condition', () => {
         it('should increment score and randomize on next action', () => {
             const state = {
-                grid: getGrid(3, 3),
+                grid: getGrid(3),
                 score: 0,
                 rows: 3,
                 cols: 3,
@@ -193,7 +192,7 @@ describe('boardHandlers', () => {
 
         it('should handle multi_adjacent', () => {
             const state = {
-                grid: getGrid(3, 3),
+                grid: getGrid(3),
                 score: 0,
                 rows: 3,
                 cols: 3,
@@ -219,7 +218,7 @@ describe('boardHandlers', () => {
 
     describe('getNextMove - edge cases', () => {
         it('should return null when last row is solved (all zeros)', () => {
-            const grid = getGrid(3, 3);
+            const grid = getGrid(3);
             // Leave all zeros - already solved
             const moves = getNextMove(grid, 3, 3);
 
@@ -227,7 +226,7 @@ describe('boardHandlers', () => {
         });
 
         it('should handle single non-zero row (not last)', () => {
-            const grid = getGrid(3, 3);
+            const grid = getGrid(3);
             grid[0] = 1; // Light at position (0,0)
             grid[1] = 0;
             grid[2] = 0;
@@ -241,7 +240,7 @@ describe('boardHandlers', () => {
         });
 
         it('should handle alternating zero and non-zero rows', () => {
-            const grid = getGrid(3, 3);
+            const grid = getGrid(3);
             grid[0] = 0;
             grid[1] = 1; // Light at (1,0)
             grid[2] = 0;
@@ -253,7 +252,7 @@ describe('boardHandlers', () => {
         });
 
         it('should return null when no solution exists', () => {
-            const grid = getGrid(2, 2);
+            const grid = getGrid(2);
             grid[1] = 3; // Last row has lights
             // Solution may return null if unsolvable
 
@@ -264,7 +263,7 @@ describe('boardHandlers', () => {
         });
 
         it('should use precomputed solutions for 3x3', () => {
-            const grid = getGrid(3, 3);
+            const grid = getGrid(3);
             grid[2] = 1; // Single light in last row
 
             const moves = getNextMove(grid, 3, 3);
@@ -275,7 +274,7 @@ describe('boardHandlers', () => {
         });
 
         it('should fallback to getProduct for non-precomputed sizes', () => {
-            const grid = getGrid(7, 7);
+            const grid = getGrid(7);
             grid[6] = 1; // Single light in last row of 7x7
 
             const moves = getNextMove(grid, 7, 7);
@@ -287,7 +286,7 @@ describe('boardHandlers', () => {
         });
 
         it('should handle power of 2 values in last row', () => {
-            const grid = getGrid(4, 4);
+            const grid = getGrid(4);
             grid[3] = 4; // Binary 0100 (single bit at position 2)
 
             const moves = getNextMove(grid, 4, 4);
@@ -296,7 +295,7 @@ describe('boardHandlers', () => {
         });
 
         it('should handle all bits set in last row', () => {
-            const grid = getGrid(3, 3);
+            const grid = getGrid(3);
             grid[2] = 7; // Binary 111 (all 3 bits set)
 
             const moves = getNextMove(grid, 3, 3);
@@ -309,20 +308,20 @@ describe('boardHandlers', () => {
 
     describe('isSolved', () => {
         it('returns true when all rows are zero', () => {
-            const grid = getGrid(3, 3);
+            const grid = getGrid(3);
 
             expect(isSolved(grid)).toBe(true);
         });
 
         it('returns false when single row has lights', () => {
-            const grid = getGrid(3, 3);
+            const grid = getGrid(3);
             grid[1] = 1;
 
             expect(isSolved(grid)).toBe(false);
         });
 
         it('returns false when alternating rows have lights', () => {
-            const grid = getGrid(3, 3);
+            const grid = getGrid(3);
             grid[0] = 0;
             grid[1] = 1;
             grid[2] = 0;
@@ -334,7 +333,7 @@ describe('boardHandlers', () => {
     describe('handleBoard - resize action', () => {
         it('should handle resize with explicit newRows and newCols', () => {
             const state = {
-                grid: getGrid(3, 3),
+                grid: getGrid(3),
                 score: 0,
                 rows: 3,
                 cols: 3,
@@ -354,7 +353,7 @@ describe('boardHandlers', () => {
 
         it('should handle resize with only newRows', () => {
             const state = {
-                grid: getGrid(3, 3),
+                grid: getGrid(3),
                 score: 0,
                 rows: 3,
                 cols: 3,
@@ -372,7 +371,7 @@ describe('boardHandlers', () => {
 
         it('should handle resize with only newCols', () => {
             const state = {
-                grid: getGrid(3, 3),
+                grid: getGrid(3),
                 score: 0,
                 rows: 3,
                 cols: 3,
@@ -390,7 +389,7 @@ describe('boardHandlers', () => {
 
         it('should handle resize with action.rows and action.cols', () => {
             const state = {
-                grid: getGrid(3, 3),
+                grid: getGrid(3),
                 score: 0,
                 rows: 3,
                 cols: 3,
@@ -411,7 +410,7 @@ describe('boardHandlers', () => {
     describe('handleBoard - unknown action', () => {
         it('should return current state for unknown action', () => {
             const state = {
-                grid: getGrid(3, 3),
+                grid: getGrid(3),
                 score: 0,
                 rows: 3,
                 cols: 3,
