@@ -50,6 +50,7 @@ export const Board = React.memo(function Board(
 
     return (
         <BoardContainer
+            data-testid="board-container"
             onContextMenu={e => {
                 e.preventDefault();
             }}

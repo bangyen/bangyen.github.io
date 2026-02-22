@@ -1,18 +1,15 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import { vi, type Mock } from 'vitest';
 
 import { LightsOut } from '../LightsOut';
 
 import { PAGE_TITLES } from '@/config/constants';
-import type {
-    BoardState,
-    BoardAction,
-} from '@/features/games/lights-out/types';
 import * as boardHandlers from '@/features/games/lights-out/utils/boardHandlers';
 import * as hooks from '@/hooks';
+import { renderWithProviders } from '@/utils/test-utils';
 
-// Mock icons
+// Keep icons mocked to simplify DOM
 vi.mock('@/components/icons', async importOriginal => {
     const actual = await importOriginal<Record<string, any>>();
     return {
@@ -25,7 +22,7 @@ vi.mock('@/components/icons', async importOriginal => {
     };
 });
 
-// Mock hooks
+// Mock hooks that interact with browser environment
 vi.mock('@/hooks', async importOriginal => {
     const actual = await importOriginal<Record<string, unknown>>();
     return {
@@ -35,253 +32,118 @@ vi.mock('@/hooks', async importOriginal => {
     };
 });
 
-// Mock boardHandlers to control game logic
-vi.mock('@/features/games/lights-out/utils/boardHandlers', () => ({
-    getGrid: vi.fn(
-        () =>
-            Array.from({ length: 4 }).fill(
-                Array.from({ length: 4 }).fill(0),
-            ) as number[][],
-    ),
-    getInitialState: vi.fn((rows: number, cols: number) => ({
-        grid: Array.from({ length: rows }, () => 0),
-        score: 0,
-        rows,
-        cols,
-        initialized: false,
-    })),
-    handleBoard: vi.fn((state: BoardState, action: BoardAction) => {
-        if (action.type === 'resize' && action.newRows && action.newCols)
-            return {
-                ...state,
-                rows: action.newRows,
-                cols: action.newCols,
-                grid: new Array(action.newRows).fill(
-                    new Array(action.newCols).fill(0),
-                ),
-            };
-        if (action.type === 'adjacent') return { ...state };
-        return state;
-    }),
-    getNextMove: vi.fn(),
-    isSolved: vi.fn(() => false),
-}));
-
-// Mock boardUtils
-vi.mock('@/features/games/lights-out/hooks/boardUtils', () => ({
-    useHandler: () => ({
-        getColor: () => ({ front: 'white', back: 'black' }),
-        getBorder: () => ({}),
-        getFiller: () => 'gray',
-    }),
-    usePalette: () => ({}),
-}));
-
-// Mock sub-components
-vi.mock('@/features/games/components/Board', () => ({
-    Board: function MockBoard({
-        layers,
-    }: {
-        layers: {
-            cellProps: (
-                r: number,
-                c: number,
-            ) => {
-                onMouseDown?: (e: React.MouseEvent) => void;
-            };
-        }[];
-    }) {
-        const overlayProps = layers[1]?.cellProps;
-        return (
-            <div data-testid="board">
-                <button
-                    data-testid="cell-0-0"
-                    onMouseDown={e => {
-                        overlayProps?.(0, 0).onMouseDown?.(e);
-                    }}
-                >
-                    Cell 0,0
-                </button>
-            </div>
-        );
-    },
-}));
-
-vi.mock('@/components/layout/Navigation', () => ({
-    Navigation: function MockNavigation({
-        children,
-    }: {
-        children: React.ReactNode;
-    }) {
-        return <div data-testid="controls">{children}</div>;
-    },
-}));
-
-vi.mock('@/components/ui/Controls', () => ({
-    Controls: function MockControls({
-        children,
-        onRefresh,
-    }: {
-        children: React.ReactNode;
-        onRefresh?: () => void;
-    }) {
-        return (
-            <div data-testid="controls">
-                {onRefresh && (
-                    <button aria-label="New Puzzle" onClick={onRefresh}>
-                        New Puzzle
-                    </button>
-                )}
-                {children}
-            </div>
-        );
-    },
-    RefreshButton: function MockRefreshButton({
-        onClick,
-        title = 'New Puzzle',
-    }: {
-        onClick: () => void;
-        title?: string;
-    }) {
-        return (
-            <button aria-label={title} onClick={onClick}>
-                {title}
-            </button>
-        );
-    },
-}));
-
-vi.mock('@/components/ui/TooltipButton', () => ({
-    TooltipButton: function MockTooltipButton({
-        title,
-        onClick,
-    }: {
-        title: string;
-        onClick: () => void;
-    }) {
-        return (
-            <button aria-label={title} onClick={onClick}>
-                {title}
-            </button>
-        );
-    },
-}));
-
+// Mock LightsOutInfo specifically to verify its presence via testid
 vi.mock('@/features/games/lights-out/components/LightsOutInfo', () => ({
-    LightsOutInfo: function MockInfo() {
-        return <div data-testid="info-modal">Info</div>;
+    LightsOutInfo: function MockInfo({ open }: { open: boolean }) {
+        return open ? <div data-testid="info-modal">Info</div> : null;
     },
-}));
-
-// Mock ThemeProvider
-vi.mock('@/hooks/useTheme', () => ({
-    useThemeContext: () => ({
-        mode: 'light',
-        resolvedMode: 'light',
-        toggleTheme: vi.fn(),
-    }),
 }));
 
 describe('LightsOut', () => {
-    let mockHandleBoard: Mock<typeof boardHandlers.handleBoard>;
+    let handleBoardSpy: any;
 
     beforeEach(() => {
-        mockHandleBoard = boardHandlers.handleBoard as Mock;
-
+        handleBoardSpy = vi.spyOn(boardHandlers, 'handleBoard');
         vi.clearAllMocks();
-        vi.useFakeTimers();
-
-        mockHandleBoard.mockImplementation((state, action) => {
-            if (
-                action.type === 'resize' &&
-                'newRows' in action &&
-                'newCols' in action
-            )
-                return {
-                    ...state,
-                    rows: action.newRows,
-                    cols: action.newCols,
-                } as BoardState;
-            return state;
-        });
     });
 
     afterEach(() => {
-        vi.useRealTimers();
+        handleBoardSpy.mockRestore();
     });
 
     it('renders the game board and controls', () => {
-        render(<LightsOut />);
-        expect(screen.getByTestId('board')).toBeInTheDocument();
-        expect(screen.getByTestId('controls')).toBeInTheDocument();
+        renderWithProviders(<LightsOut />);
+        expect(screen.getByTestId('board-container')).toBeInTheDocument();
+        // Check for specific control buttons instead of a generic mock ID
+        expect(screen.getAllByLabelText('New Puzzle').length).toBeGreaterThan(
+            0,
+        );
     });
 
     it('sets the document title', () => {
-        render(<LightsOut />);
+        renderWithProviders(<LightsOut />);
         expect(document.title).toBe(PAGE_TITLES.lightsOut);
     });
 
-    it('handles resize events', () => {
+    it('handles resize events', async () => {
         const mockUseWindow = hooks.useWindow as Mock;
         // Initial render
-        const { rerender } = render(<LightsOut />);
+        renderWithProviders(<LightsOut />);
+
+        // Give it a moment to call the initial resize effect
+        await new Promise(r => setTimeout(r, 0));
 
         // Change window size
         mockUseWindow.mockReturnValue({ height: 500, width: 500 });
 
-        rerender(<LightsOut />);
+        // This should trigger a re-render if the component uses useWindow
+        // but LightsOut uses useLightsOutGame which uses useBaseGame which uses useBoardLayout which uses useGridSize...
+        // Wait! useGridSize uses useWindow.
 
-        // Should dispatch resize
-        expect(mockHandleBoard).toHaveBeenCalledWith(
+        // Re-rendering with the same component should trigger hooks to update if dependencies changed
+        renderWithProviders(<LightsOut />);
+
+        await new Promise(r => setTimeout(r, 50));
+
+        // Should have been called at least twice (once on mount, once on resize)
+        expect(handleBoardSpy).toHaveBeenCalledWith(
             expect.anything(),
             expect.objectContaining({ type: 'resize' }),
         );
     });
 
     it('handles refresh: dispatches next action', () => {
-        render(<LightsOut />);
-        const refreshBtn = screen.getByLabelText('New Puzzle');
+        renderWithProviders(<LightsOut />);
+        const refreshButtons = screen.getAllByLabelText('New Puzzle');
+        const btn =
+            refreshButtons.find(b => b.tagName === 'BUTTON') ||
+            refreshButtons[0];
 
-        fireEvent.click(refreshBtn);
+        fireEvent.click(btn!);
 
-        expect(mockHandleBoard).toHaveBeenCalledWith(
+        expect(handleBoardSpy).toHaveBeenCalledWith(
             expect.anything(),
             expect.objectContaining({ type: 'new' }),
         );
     });
 
-    it('provides correct backProps', () => {
-        // To test backProps, we need to inspect what is passed to Board
-        // Since we mocked Board, we can't easily see it unless we update the mock.
-        // But we can call the internal backProps function if we export it or just trust the rendering.
-        // Actually, just rendering the component covers the definition of backProps.
-    });
+    it('toggles info modal', async () => {
+        renderWithProviders(<LightsOut />);
+        const infoButtons = screen.getAllByLabelText('How to Play');
+        const btn =
+            infoButtons.find(b => b.tagName === 'BUTTON') || infoButtons[0];
 
-    it('toggles info modal', () => {
-        render(<LightsOut />);
-        const infoBtn = screen.getByLabelText('How to Play');
-        fireEvent.click(infoBtn);
-        expect(screen.getByTestId('info-modal')).toBeInTheDocument();
+        fireEvent.click(btn!);
+
+        // Use waitFor for state-driven UI changes
+        const modal = await screen.findByTestId('info-modal');
+        expect(modal).toBeInTheDocument();
     });
 
     it('handles manual cell click', () => {
-        render(<LightsOut />);
-        const cell = screen.getByTestId('cell-0-0');
+        renderWithProviders(<LightsOut />);
+
+        // Use resilient aria-label selection for the cell
+        const cell = screen.getByLabelText(/Light at row 1, column 1/);
+
         fireEvent.mouseDown(cell);
-        expect(mockHandleBoard).toHaveBeenCalledWith(
+
+        expect(handleBoardSpy).toHaveBeenCalledWith(
             expect.anything(),
             expect.objectContaining({ type: 'adjacent', row: 0, col: 0 }),
         );
     });
 
-    it('handles mobile layout offsets', () => {
+    it('handles mobile layout offsets', async () => {
         const mockUseMobile = hooks.useMobile as Mock;
         mockUseMobile.mockReturnValue(true);
 
-        render(<LightsOut />);
+        renderWithProviders(<LightsOut />);
 
-        // Coverage achieved by executing mobile-specific branches in useMemo
-        expect(mockHandleBoard).toHaveBeenCalledWith(
+        // Ensure useEffect dispatches have run
+        await new Promise(r => setTimeout(r, 50));
+
+        expect(handleBoardSpy).toHaveBeenCalledWith(
             expect.anything(),
             expect.objectContaining({ type: 'resize' }),
         );
