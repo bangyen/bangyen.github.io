@@ -74,7 +74,7 @@ export function getStates(
     inputStates: number[][];
     outputStates: number[][];
 } {
-    let board = getGrid(dims, dims);
+    let board = getGrid(dims);
 
     for (const index of grid) {
         const row = Math.floor(index / dims);

@@ -31,53 +31,6 @@ export function getPolynomial(index: number): bigint {
 }
 
 /**
- * Returns the degree of a polynomial in GF(2).
- *
- * @param p - The polynomial as a bigint
- * @returns Degree of the polynomial, or -1 for the zero polynomial
- */
-export function polyDegree(p: bigint): number {
-    if (p === 0n) return -1;
-    return p.toString(2).length - 1;
-}
-
-/**
- * Performs polynomial division in GF(2)[x].
- *
- * @param a - Dividend polynomial
- * @param b - Divisor polynomial
- * @returns Quotient and remainder polynomials
- */
-export function polyDiv(
-    a: bigint,
-    b: bigint,
-): { quotient: bigint; remainder: bigint } {
-    if (b === 0n) throw new Error('Division by zero polynomial');
-    let quotient = 0n;
-    let remainder = a;
-    const degreeB = polyDegree(b);
-
-    while (polyDegree(remainder) >= degreeB) {
-        const shift = polyDegree(remainder) - degreeB;
-        quotient ^= 1n << BigInt(shift);
-        remainder ^= b << BigInt(shift);
-    }
-
-    return { quotient, remainder };
-}
-
-/**
- * Computes a modulo b in GF(2)[x].
- *
- * @param a - Dividend
- * @param b - Divisor
- * @returns Remainder
- */
-export function polyMod(a: bigint, b: bigint): bigint {
-    return polyDiv(a, b).remainder;
-}
-
-/**
  * Evaluates a polynomial p(M) where M is a matrix in GF(2).
  *
  * @param matrix - The symbolic matrix M

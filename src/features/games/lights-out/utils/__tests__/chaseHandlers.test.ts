@@ -28,7 +28,7 @@ describe('Lights Out Chase Handlers', () => {
         it('chases lights down properly', () => {
             // 3x3 grid
             // (0,1) is ON.
-            const grid = boardHandlers.getGrid(3, 3);
+            const grid = boardHandlers.getGrid(3);
             grid[0] = 2; // (0,1) ON
 
             const states = chaseLights([grid], 3);
@@ -133,7 +133,7 @@ describe('Lights Out Chase Handlers', () => {
 
     describe('chaseLights - edge cases', () => {
         it('handles grid with all zeros (no lights on)', () => {
-            const grid = boardHandlers.getGrid(3, 3);
+            const grid = boardHandlers.getGrid(3);
             const states = chaseLights([grid], 3);
 
             expect(states.length).toBeGreaterThanOrEqual(1);
@@ -141,7 +141,7 @@ describe('Lights Out Chase Handlers', () => {
         });
 
         it('handles grid with lights only in last row', () => {
-            const grid = boardHandlers.getGrid(3, 3);
+            const grid = boardHandlers.getGrid(3);
             grid[2] = 7; // All bits set in last row
             const states = chaseLights([grid], 3);
 
@@ -150,7 +150,7 @@ describe('Lights Out Chase Handlers', () => {
         });
 
         it('handles grid with undefined rows gracefully', () => {
-            const grid = boardHandlers.getGrid(3, 3);
+            const grid = boardHandlers.getGrid(3);
             grid[1] = undefined as unknown as number;
 
             const states = chaseLights([grid], 3);

@@ -86,21 +86,6 @@ describe('gf2Operations', () => {
         });
     });
 
-    describe('isIdentity', () => {
-        it('should correctly identify identity matrices', () => {
-            expect(gf2.isIdentity([0b10n, 0b01n])).toBe(true);
-            expect(gf2.isIdentity([0b11n, 0b01n])).toBe(false);
-            expect(gf2.isIdentity([0b00n, 0b00n])).toBe(false);
-        });
-    });
-
-    describe('isZero', () => {
-        it('should correctly identify zero matrices', () => {
-            expect(gf2.isZero([0n, 0n])).toBe(true);
-            expect(gf2.isZero([0n, 1n])).toBe(false);
-        });
-    });
-
     describe('invertMatrix', () => {
         it('should invert an invertible matrix', () => {
             // [1 1]
@@ -115,7 +100,7 @@ describe('gf2Operations', () => {
             const A = [0b110n, 0b011n, 0b111n];
             const inv = gf2.invertMatrix(A);
             const product = gf2.multiplySym(A, inv);
-            expect(gf2.isIdentity(product)).toBe(true);
+            expect(product).toEqual(gf2.getIdentity(3));
         });
     });
 
