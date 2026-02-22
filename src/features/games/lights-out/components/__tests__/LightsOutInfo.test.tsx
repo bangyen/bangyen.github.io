@@ -2,9 +2,10 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { vi, type Mock } from 'vitest';
 
 import type { DragProps } from '../../../hooks/useDrag';
-import * as matrices from '../../utils/matrices';
 import * as calculator from '../Calculator';
 import { LightsOutInfo as Info } from '../LightsOutInfo';
+
+import * as mathUtils from '@/utils/math/gf2';
 
 // Mock dependencies
 vi.mock('../Example', () => ({
@@ -41,8 +42,9 @@ vi.mock('@/components/ui/GlassCard', () => ({
 vi.mock('../../../../../hooks', () => ({
     useMobile: vi.fn(() => false),
 }));
-vi.mock('../../utils/matrices', () => ({
+vi.mock('@/utils/math/gf2', () => ({
     getProduct: vi.fn(() => [0, 0, 0]),
+    countBits: vi.fn(n => Number(n.toString(2).replaceAll('0', '').length)),
 }));
 
 // Mock MUI components
@@ -118,7 +120,7 @@ describe('Lights Out Info Component', () => {
         vi.clearAllMocks();
         // Clear session storage to prevent step persistence from previous tests
         sessionStorage.clear();
-        (matrices.getProduct as Mock).mockReturnValue([0, 0, 0]);
+        (mathUtils.getProduct as Mock).mockReturnValue([0, 0, 0]);
         mockUseHandler.mockReturnValue({}); // simplistic mock
         // Mock getInput to return a function that returns props with onClick
         mockGetInput.mockImplementation(
@@ -319,7 +321,7 @@ describe('Lights Out Info Component', () => {
 
     it('calls onApply when Copy Pattern is clicked with a non-zero solution', async () => {
         // Make getProduct return a non-zero solution so the button is enabled
-        (matrices.getProduct as Mock).mockReturnValue([1, 0, 1]);
+        (mathUtils.getProduct as Mock).mockReturnValue([1, 0, 1]);
 
         await renderInfo();
         const nextBtn = screen.getByText('Next');
