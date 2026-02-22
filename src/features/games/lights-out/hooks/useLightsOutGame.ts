@@ -1,10 +1,9 @@
-import type React from 'react';
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
-import { useDrag } from '../../hooks/useDrag';
-import { useGridNavigation } from '../../hooks/useGridNavigation';
+import { useEnhancedDrag } from '../../hooks/useEnhancedDrag';
+import { useGameInfo } from '../../hooks/useGameInfo';
 import { useSkipTransition } from '../../hooks/useSkipTransition';
 import { LIGHTS_OUT_STYLES, getLightsOutGameConfig } from '../config';
 import { useHandler, usePalette } from '../hooks/boardUtils';
@@ -14,15 +13,11 @@ import { handleBoard, isSolved, getInitialState } from '../utils/boardHandlers';
 import { isBoardState } from '../utils/persistence';
 import { getFrontProps } from '../utils/renderers';
 
-import type { CellIndex } from '@/features/games/types/types';
-
 /**
  * Orchestrates Lights Out game logic: grid state, drag interactions,
- * palette management, and modal state. Mimics the Slant pattern.
+ * palette management, and modal state.
  */
 export function useLightsOutGame() {
-    // useMobile is already called inside useBaseGame via useGridSize,
-    // so we derive mobile from the baseGame result instead of subscribing twice
     const baseGame = useBaseGame<BoardState, BoardAction>({
         ...getLightsOutGameConfig(),
         logic: {
@@ -45,9 +40,9 @@ export function useLightsOutGame() {
     const { state, dispatch, solved, layout } = baseGame;
     const { rows, cols, size, mobile, scaling } = layout;
 
-    const { handleKeyDown: handleGridNav } = useGridNavigation({ rows, cols });
-
-    const { getDragProps } = useDrag({
+    const { getDragProps } = useEnhancedDrag({
+        rows,
+        cols,
         onToggle: (r: number, c: number) => {
             dispatch({
                 type: 'adjacent' as const,
@@ -60,27 +55,9 @@ export function useLightsOutGame() {
         transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
     });
 
-    const getEnhancedDragProps = useCallback(
-        (pos: string) => {
-            const dragProps = getDragProps(pos);
-            return {
-                ...dragProps,
-                onKeyDown: (e: React.KeyboardEvent) => {
-                    dragProps.onKeyDown(e);
-                    handleGridNav(e);
-                },
-            };
-        },
-        [getDragProps, handleGridNav],
-    );
-
-    const [open, setOpen] = useState(false);
-    const toggleOpen = useCallback(() => {
-        setOpen(prev => !prev);
-    }, []);
+    const { open, toggleOpen } = useGameInfo();
 
     const palette = usePalette(state.score);
-
     const getters = useHandler(state, palette);
 
     const boardKey = `${String(rows)},${String(cols)},${String(state.score)}`;
@@ -90,9 +67,7 @@ export function useLightsOutGame() {
         (solution: number[]) => {
             const moves = solution
                 .map((val, col) => (val ? { row: 0, col: col } : null))
-                .filter(
-                    (m): m is { row: CellIndex; col: CellIndex } => m !== null,
-                );
+                .filter((m): m is { row: number; col: number } => m !== null);
             if (moves.length > 0) {
                 dispatch({ type: 'multi_adjacent', moves });
             }
@@ -107,7 +82,7 @@ export function useLightsOutGame() {
             info: { open, toggleOpen, handleApply },
             rendering: { palette, getters, skipTransition },
             drag: {
-                getDragProps: getEnhancedDragProps,
+                getDragProps,
                 frontPropsFactory: getFrontProps,
             },
         }),

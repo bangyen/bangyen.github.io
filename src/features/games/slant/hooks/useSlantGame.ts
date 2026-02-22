@@ -4,13 +4,13 @@ import { useAnalysisMode } from './useAnalysisMode';
 import { useDimensionRegeneration } from './useDimensionRegeneration';
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
-import { useDrag } from '../../hooks/useDrag';
+import { useEnhancedDrag } from '../../hooks/useEnhancedDrag';
+import { useGameInfo } from '../../hooks/useGameInfo';
 import { getSlantGameConfig } from '../config';
 import { STORAGE_KEYS } from '../config/constants';
 import type { SlantAction, SlantState } from '../types';
 import { useGenerationWorker } from './useGenerationWorker';
 import { useSlantProps } from './useSlantProps';
-import { useGridNavigation } from '../../hooks/useGridNavigation';
 import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import {
     serializeSlantState,
@@ -23,16 +23,10 @@ import {
  * Orchestrates all Slant-specific game logic: worker-based puzzle
  * generation, analysis mode, drag interaction, cell prop factories,
  * and dimension-change detection.
- *
- * Extracted from Slant.tsx so the page component is pure JSX
- * composition, mirroring the LightsOut page pattern.
  */
 export function useSlantGame() {
     const [isAnalysisMode, setIsAnalysisMode] = React.useState(false);
-    const [infoOpen, setInfoOpen] = React.useState(false);
-    const toggleInfo = React.useCallback(() => {
-        setInfoOpen(prev => !prev);
-    }, []);
+    const { open: infoOpen, toggleOpen: toggleInfo } = useGameInfo();
 
     // Refs kept in sync with useBaseGame output, shared with the worker hook.
     const dispatchRef = useRef<React.Dispatch<
@@ -61,8 +55,6 @@ export function useSlantGame() {
         onStaleResult: handleStaleResult,
     });
 
-    // useMobile is already called inside useBaseGame via useGridSize,
-    // so we derive mobile from the baseGame result instead of subscribing twice
     const baseGame = useBaseGame<SlantState, SlantAction>({
         ...getSlantGameConfig(),
         logic: {
@@ -132,9 +124,9 @@ export function useSlantGame() {
         }
     }, [state.solved, isAnalysisMode, rows, cols, prefetch]);
 
-    const { handleKeyDown: handleGridNav } = useGridNavigation({ rows, cols });
-
-    const { getDragProps } = useDrag({
+    const { getDragProps } = useEnhancedDrag({
+        rows,
+        cols,
         onToggle: (r: number, c: number, isRightClick: boolean) => {
             dispatch({
                 type: 'toggle',
@@ -146,20 +138,6 @@ export function useSlantGame() {
         checkEnabled: () => !state.solved,
         touchTimeout: GAME_CONSTANTS.timing.touchHoldDelay,
     });
-
-    const getEnhancedDragProps = useCallback(
-        (pos: string) => {
-            const dragProps = getDragProps(pos);
-            return {
-                ...dragProps,
-                onKeyDown: (e: React.KeyboardEvent) => {
-                    dragProps.onKeyDown(e);
-                    handleGridNav(e);
-                },
-            };
-        },
-        [getDragProps, handleGridNav],
-    );
 
     return {
         ...useSlantProps({
@@ -185,7 +163,7 @@ export function useSlantGame() {
                 boardSx,
             },
             info: { infoOpen, toggleInfo },
-            getDragProps: getEnhancedDragProps,
+            getDragProps,
         }),
         gameState: {
             ...baseGame,

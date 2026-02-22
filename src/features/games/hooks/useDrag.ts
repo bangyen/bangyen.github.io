@@ -71,7 +71,9 @@ interface UseDragGridOptions<T> extends UseDragOptionsBase {
     ) => T | undefined;
 }
 
-type UseDragOptions<T = void> = UseDragRawOptions | UseDragGridOptions<T>;
+export type UseDragOptions<T = void> =
+    | UseDragRawOptions
+    | UseDragGridOptions<T>;
 
 /**
  * Custom hook for managing drag interactions across mouse, touch, and keyboard.

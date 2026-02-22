@@ -1,8 +1,6 @@
 import { Box } from '@mui/material';
 
-import { GameControls } from '../../components/GameControls';
-import { GamePage } from '../../components/GamePage';
-import { TrophyOverlay } from '../../components/TrophyOverlay';
+import { StandardGameLayout } from '../../components/StandardGameLayout';
 import { SlantGameContainer } from '../components/SlantGameContainer';
 import { SlantInfo } from '../components/SlantInfo';
 import { useSlantGame } from '../hooks/useSlantGame';
@@ -14,46 +12,31 @@ export function Slant() {
         useSlantGame();
 
     return (
-        <>
-            <GamePage
-                title={PAGE_TITLES.slant}
-                infoUrl="https://en.wikipedia.org/wiki/Gokigen_Naname"
-                onClick={
-                    boardProps.isAnalysisMode
-                        ? boardProps.analysis.onClose
-                        : undefined
-                }
-            >
-                <GamePage.Content
-                    paddingBottom={{ xs: '120px', md: '150px' }}
-                    sx={layoutProps.contentSx}
-                >
-                    <GamePage.BoardContainer sx={layoutProps.boardSx}>
-                        <Box onClick={infoProps.handleBoxClick}>
-                            <SlantGameContainer {...boardProps} />
-                        </Box>
-                        <TrophyOverlay
-                            show={
-                                !boardProps.isAnalysisMode &&
-                                boardProps.state.solved
-                            }
-                            {...trophyProps}
-                        />
-                    </GamePage.BoardContainer>
-                </GamePage.Content>
-                <GameControls
-                    {...gameState.controlsProps}
-                    onRefresh={gameState.handleNext}
-                    disabled={boardProps.generating}
-                    hidden={boardProps.isAnalysisMode}
-                >
-                    <GameControls.Refresh />
-                    <GameControls.ResizeMinus />
-                    <GameControls.ResizePlus />
-                    <GameControls.Info onClick={infoProps.toggleOpen} />
-                </GameControls>
-            </GamePage>
-            <SlantInfo {...infoProps} />
-        </>
+        <StandardGameLayout
+            title={PAGE_TITLES.slant}
+            infoUrl="https://en.wikipedia.org/wiki/Gokigen_Naname"
+            boardProps={boardProps}
+            layoutProps={layoutProps}
+            infoProps={infoProps}
+            gameState={gameState}
+            trophyProps={trophyProps}
+            showTrophy={!boardProps.isAnalysisMode && boardProps.state.solved}
+            renderBoard={props => (
+                <Box onClick={infoProps.handleBoxClick}>
+                    <SlantGameContainer {...props} />
+                </Box>
+            )}
+            InfoComponent={SlantInfo}
+            onPageClick={
+                boardProps.isAnalysisMode
+                    ? boardProps.analysis.onClose
+                    : undefined
+            }
+            controlsConfig={{
+                onRefresh: gameState.handleNext,
+                disabled: boardProps.generating,
+                hidden: boardProps.isAnalysisMode,
+            }}
+        />
     );
 }
