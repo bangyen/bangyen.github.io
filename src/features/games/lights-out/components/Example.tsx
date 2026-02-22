@@ -1,4 +1,4 @@
-import { Typography, Box, Button, styled } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 
 import { getOutput, useHandler as useCalculatorHandler } from './Calculator';
@@ -12,65 +12,16 @@ import {
     EmojiEventsRounded,
     Calculate,
     ViewModuleRounded,
-    NavigateBeforeRounded,
-    NavigateNextRounded,
-    PlayArrowRounded,
-    PauseRounded,
 } from '@/components/icons';
 import { CustomGrid } from '@/components/ui/CustomGrid';
 import { COLORS } from '@/config/theme';
+import { ExampleActionButton } from '@/features/games/components/GameInfo/ExampleBase';
+import { GameInfoExample } from '@/features/games/components/GameInfo/GameInfoExample';
+import { useExampleAnimation } from '@/features/games/components/GameInfo/useExampleAnimation';
 
 // ---------------------------------------------------------------------------
-// Styled Components
+// Helpers
 // ---------------------------------------------------------------------------
-
-const ExampleContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: theme.spacing(4),
-    width: '100%',
-    maxWidth: '800px',
-    margin: 'auto',
-    [theme.breakpoints.up('sm')]: {
-        flexDirection: 'row',
-        gap: theme.spacing(8),
-    },
-}));
-
-const ExampleActions = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: theme.spacing(1.5),
-    justifyContent: 'center',
-    justifyItems: 'center',
-    alignItems: 'center',
-    width: '100%',
-    maxWidth: '320px',
-    [theme.breakpoints.up('sm')]: {
-        gridTemplateColumns: '1fr',
-        width: 'auto',
-        maxWidth: 'none',
-    },
-}));
-
-const InfoButton = styled(Button)(({ theme }) => ({
-    borderColor: COLORS.border.subtle,
-    color: COLORS.text.secondary,
-    width: '140px',
-    [theme.breakpoints.up('sm')]: {
-        width: '180px',
-    },
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-    '& .MuiButton-startIcon': {
-        marginRight: theme.spacing(0.5),
-        [theme.breakpoints.up('sm')]: {
-            marginRight: theme.spacing(1),
-        },
-    },
-}));
 
 function createIconHandler(
     indicator: { r?: number; c?: number; label?: string } | null,
@@ -128,11 +79,7 @@ function createIconHandler(
 }
 
 /**
- * Merges a base cell-prop factory with an animated-icon factory, layering
- * the icon on top of the existing children and adding `position: relative`.
- *
- * Both the board and input cells need the same merge logic, so this
- * eliminates the duplicated inline merge blocks.
+ * Merges a base cell-prop factory with an animated-icon factory.
  */
 function mergeWithIcons(
     baseFactory: (row: number, col: number) => Record<string, unknown>,
@@ -159,76 +106,28 @@ function mergeWithIcons(
 }
 
 // ---------------------------------------------------------------------------
-// Example component
+// FrameRenderer component
 // ---------------------------------------------------------------------------
 
-interface ExampleProps {
-    palette: Palette;
+interface FrameRendererProps {
+    frameIdx: number;
+    activeView: 'board' | 'calculator';
     size: number;
+    palette: Palette;
     getFrontProps: PropsFactory;
     getBackProps: PropsFactory;
 }
 
-export function Example({
+const FrameRenderer = ({
+    frameIdx: remainder,
+    activeView,
     size,
     palette,
     getFrontProps,
     getBackProps,
-}: ExampleProps): React.ReactElement {
-    const { boardStates, inputStates, outputStates, phaseIndices } =
-        EXAMPLE_ANIMATION_DATA;
+}: FrameRendererProps) => {
+    const { boardStates, inputStates, outputStates } = EXAMPLE_ANIMATION_DATA;
     const dims = 3;
-
-    const [frameIdx, setFrameIdx] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(true);
-    const [activeView, setActiveView] = useState<'board' | 'calculator'>(
-        'board',
-    );
-
-    useEffect(() => {
-        if (!isPlaying) return;
-
-        const interval = setInterval(() => {
-            setFrameIdx(prev => (prev + 1) % inputStates.length);
-        }, 2000);
-
-        return () => {
-            clearInterval(interval);
-        };
-    }, [isPlaying, inputStates.length]);
-
-    // Handle auto-switching logic
-    useEffect(() => {
-        if (!isPlaying) return;
-
-        if (
-            frameIdx >= phaseIndices.calculatorStart &&
-            frameIdx < phaseIndices.secondChaseStart
-        ) {
-            setActiveView('calculator');
-        } else {
-            setActiveView('board');
-        }
-    }, [frameIdx, isPlaying, phaseIndices]);
-
-    const handleTogglePlay = () => {
-        setIsPlaying(prev => !prev);
-    };
-    const handleStepForward = () => {
-        setIsPlaying(false);
-        setFrameIdx(prev => (prev + 1) % inputStates.length);
-    };
-    const handleStepBack = () => {
-        setIsPlaying(false);
-        setFrameIdx(prev => (prev === 0 ? inputStates.length - 1 : prev - 1));
-    };
-    const handleToggleView = () => {
-        setIsPlaying(false);
-        setActiveView(prev => (prev === 'board' ? 'calculator' : 'board'));
-    };
-
-    const width = size;
-    const remainder = frameIdx % inputStates.length;
     const isSolved = remainder === inputStates.length - 1;
 
     const gridState = {
@@ -274,131 +173,166 @@ export function Example({
 
     const inputProps = mergeWithIcons(baseInputProps, inputIconHandler);
 
-    // mobile status is derived from useMobile inside the container if needed
+    return activeView === 'board' ? (
+        <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+            <style>{LIGHTS_OUT_STYLES.ANIMATIONS.POP_IN}</style>
+            <Board
+                size={size}
+                layers={[
+                    {
+                        rows: dims - 1,
+                        cols: dims - 1,
+                        cellProps: backProps,
+                        decorative: true,
+                    },
+                    {
+                        rows: dims,
+                        cols: dims,
+                        cellProps: frontProps,
+                    },
+                ]}
+            />
+            {isSolved && (
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        inset: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        pointerEvents: 'none',
+                        zIndex: 10,
+                        animation: LIGHTS_OUT_STYLES.ANIMATIONS.POP_IN_STYLE,
+                    }}
+                >
+                    {(() => {
+                        const finalState = boardStates[inputStates.length - 1];
+                        const allOn = finalState?.every(
+                            (rowVal: number) => rowVal === (1 << dims) - 1,
+                        );
+                        return (
+                            <EmojiEventsRounded
+                                sx={{
+                                    fontSize: {
+                                        xs: '2.5rem',
+                                        sm: '4rem',
+                                    },
+                                    color: allOn
+                                        ? palette.secondary
+                                        : palette.primary,
+                                }}
+                            />
+                        );
+                    })()}
+                </Box>
+            )}
+        </Box>
+    ) : (
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 2,
+            }}
+        >
+            <Box sx={{ textAlign: 'center' }}>
+                <Typography
+                    variant="subtitle2"
+                    sx={{ mb: 1, color: COLORS.text.secondary }}
+                >
+                    Input
+                </Typography>
+                <CustomGrid
+                    rows={1}
+                    cols={dims}
+                    size={size}
+                    cellProps={inputProps}
+                    space={0}
+                />
+            </Box>
+            <Box sx={{ textAlign: 'center' }}>
+                <CustomGrid
+                    rows={1}
+                    cols={dims}
+                    size={size}
+                    cellProps={outputProps}
+                    space={0}
+                />
+                <Typography
+                    variant="subtitle2"
+                    sx={{ mt: 1, color: COLORS.text.secondary }}
+                >
+                    Result
+                </Typography>
+            </Box>
+        </Box>
+    );
+};
+
+// ---------------------------------------------------------------------------
+// Example component
+// ---------------------------------------------------------------------------
+
+interface ExampleProps {
+    palette: Palette;
+    size: number;
+    getFrontProps: PropsFactory;
+    getBackProps: PropsFactory;
+}
+
+export function Example({
+    size,
+    palette,
+    getFrontProps,
+    getBackProps,
+}: ExampleProps): React.ReactElement {
+    const { inputStates, phaseIndices } = EXAMPLE_ANIMATION_DATA;
+
+    const animation = useExampleAnimation({
+        frameCount: inputStates.length,
+    });
+    const { frameIdx, isPlaying, setIsPlaying } = animation;
+
+    const [activeView, setActiveView] = useState<'board' | 'calculator'>(
+        'board',
+    );
+
+    // Handle auto-switching logic
+    useEffect(() => {
+        if (!isPlaying) return;
+
+        if (
+            frameIdx >= phaseIndices.calculatorStart &&
+            frameIdx < phaseIndices.secondChaseStart
+        ) {
+            setActiveView('calculator');
+        } else {
+            setActiveView('board');
+        }
+    }, [frameIdx, isPlaying, phaseIndices]);
+
+    const handleToggleView = () => {
+        setIsPlaying(false);
+        setActiveView(prev => (prev === 'board' ? 'calculator' : 'board'));
+    };
 
     return (
-        <ExampleContainer>
-            <style>{LIGHTS_OUT_STYLES.ANIMATIONS.POP_IN}</style>
-            <Box
-                sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    flexShrink: 0,
-                }}
-            >
-                {activeView === 'board' ? (
-                    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-                        <Board
-                            size={width}
-                            layers={[
-                                {
-                                    rows: dims - 1,
-                                    cols: dims - 1,
-                                    cellProps: backProps,
-                                    decorative: true,
-                                },
-                                {
-                                    rows: dims,
-                                    cols: dims,
-                                    cellProps: frontProps,
-                                },
-                            ]}
-                        />
-                        {isSolved && (
-                            <Box
-                                sx={{
-                                    position: 'absolute',
-                                    inset: 0,
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    pointerEvents: 'none',
-                                    zIndex: 10,
-                                    animation:
-                                        LIGHTS_OUT_STYLES.ANIMATIONS
-                                            .POP_IN_STYLE,
-                                }}
-                            >
-                                {(() => {
-                                    const finalState =
-                                        boardStates[inputStates.length - 1];
-                                    const allOn = finalState?.every(
-                                        (rowVal: number) =>
-                                            rowVal === (1 << dims) - 1,
-                                    );
-                                    return (
-                                        <EmojiEventsRounded
-                                            sx={{
-                                                fontSize: {
-                                                    xs: '2.5rem',
-                                                    sm: '4rem',
-                                                },
-                                                color: allOn
-                                                    ? palette.secondary
-                                                    : palette.primary,
-                                            }}
-                                        />
-                                    );
-                                })()}
-                            </Box>
-                        )}
-                    </Box>
-                ) : (
-                    <Box
-                        sx={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            gap: 2,
-                        }}
-                    >
-                        <Box sx={{ textAlign: 'center' }}>
-                            <Typography
-                                variant="subtitle2"
-                                sx={{ mb: 1, color: COLORS.text.secondary }}
-                            >
-                                Input
-                            </Typography>
-                            <CustomGrid
-                                rows={1}
-                                cols={dims}
-                                size={width}
-                                cellProps={inputProps}
-                                space={0}
-                            />
-                        </Box>
-                        <Box sx={{ textAlign: 'center' }}>
-                            <CustomGrid
-                                rows={1}
-                                cols={dims}
-                                size={width}
-                                cellProps={outputProps}
-                                space={0}
-                            />
-                            <Typography
-                                variant="subtitle2"
-                                sx={{ mt: 1, color: COLORS.text.secondary }}
-                            >
-                                Result
-                            </Typography>
-                        </Box>
-                    </Box>
-                )}
-            </Box>
-
-            <ExampleActions>
-                <InfoButton
-                    variant="outlined"
-                    startIcon={
-                        isPlaying ? <PauseRounded /> : <PlayArrowRounded />
-                    }
-                    onClick={handleTogglePlay}
-                >
-                    {isPlaying ? 'Pause' : 'Play'}
-                </InfoButton>
-                <InfoButton
+        <GameInfoExample
+            animation={animation}
+            renderFrame={remainder => (
+                <FrameRenderer
+                    frameIdx={remainder}
+                    activeView={activeView}
+                    size={size}
+                    palette={palette}
+                    getFrontProps={getFrontProps}
+                    getBackProps={getBackProps}
+                />
+            )}
+            extraActions={
+                <ExampleActionButton
                     variant="outlined"
                     startIcon={
                         activeView === 'board' ? (
@@ -410,22 +344,8 @@ export function Example({
                     onClick={handleToggleView}
                 >
                     {activeView === 'board' ? 'Calculator' : 'Board'}
-                </InfoButton>
-                <InfoButton
-                    variant="outlined"
-                    startIcon={<NavigateBeforeRounded />}
-                    onClick={handleStepBack}
-                >
-                    Step Back
-                </InfoButton>
-                <InfoButton
-                    variant="outlined"
-                    startIcon={<NavigateNextRounded />}
-                    onClick={handleStepForward}
-                >
-                    Step Next
-                </InfoButton>
-            </ExampleActions>
-        </ExampleContainer>
+                </ExampleActionButton>
+            }
+        />
     );
 }

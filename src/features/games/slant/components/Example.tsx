@@ -1,5 +1,5 @@
-import { Box, Button, styled } from '@mui/material';
-import React, { useState, useEffect, useMemo } from 'react';
+import { Box } from '@mui/material';
+import React, { useMemo } from 'react';
 
 import { Board } from '../../components/Board';
 import { TrophyOverlay } from '../../components/TrophyOverlay';
@@ -14,27 +14,19 @@ import {
 } from '../utils/exampleData';
 import { getSatisfiedNodes } from '../utils/validation';
 
-import {
-    Psychology,
-    NavigateBeforeRounded,
-    NavigateNextRounded,
-    PlayArrowRounded,
-    PauseRounded,
-} from '@/components/icons';
+import { Psychology } from '@/components/icons';
 import { COLORS, ANIMATIONS } from '@/config/theme';
+import { ExampleActionButton } from '@/features/games/components/GameInfo/ExampleBase';
+import { GameInfoExample } from '@/features/games/components/GameInfo/GameInfoExample';
+import { useExampleAnimation } from '@/features/games/components/GameInfo/useExampleAnimation';
 
 /** Interval between animation frames (ms). */
 const FRAME_MS = 1500;
 
 // ---------------------------------------------------------------------------
-// Lightweight cell renderers (no drag, no error handling)
+// Lightweight cell renderers
 // ---------------------------------------------------------------------------
 
-/**
- * Builds the sx props for a diagonal slash line inside a cell.
- * Matches the production renderer but omits error styling since
- * the tutorial never has errors.
- */
 function slashLineSx(angle: string, size: number) {
     return {
         position: 'absolute' as const,
@@ -53,10 +45,6 @@ function slashLineSx(angle: string, size: number) {
     };
 }
 
-/**
- * Returns cell-level props for the back (slash) layer.
- * Highlights the most recently placed cell with a subtle pulse.
- */
 function makeBackProps(
     grid: CellState[][],
     size: number,
@@ -97,10 +85,6 @@ function makeBackProps(
     };
 }
 
-/**
- * Returns cell-level props for the front (number hint) layer.
- * Colors satisfied numbers the same way the production renderer does.
- */
 function makeFrontProps(
     numbers: (number | null)[][],
     satisfiedNodes: Set<string>,
@@ -160,55 +144,6 @@ function makeFrontProps(
 // Example component
 // ---------------------------------------------------------------------------
 
-const ExampleContainer = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    [theme.breakpoints.up('sm')]: {
-        flexDirection: 'row',
-        gap: theme.spacing(4),
-    },
-    justifyContent: 'center',
-    alignItems: 'center',
-    gap: theme.spacing(2),
-    width: '100%',
-    flex: 1,
-}));
-
-const ExampleActions = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    [theme.breakpoints.up('sm')]: {
-        gridTemplateColumns: '1fr',
-        marginTop: 0,
-        width: 'auto',
-        maxWidth: 'none',
-    },
-    gap: theme.spacing(1.5),
-    justifyContent: 'center',
-    justifyItems: 'center',
-    alignItems: 'center',
-    marginTop: theme.spacing(2),
-    width: '100%',
-    maxWidth: '320px',
-}));
-
-const InfoButton = styled(Button)(({ theme }) => ({
-    borderColor: COLORS.border.subtle,
-    color: COLORS.text.secondary,
-    width: '140px',
-    [theme.breakpoints.up('sm')]: {
-        width: '180px',
-    },
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-    '& .MuiButton-startIcon': {
-        marginRight: theme.spacing(0.5),
-        [theme.breakpoints.up('sm')]: {
-            marginRight: theme.spacing(1),
-        },
-    },
-}));
-
 interface ExampleProps {
     /** Cell size in rem units. */
     size: number;
@@ -216,91 +151,44 @@ interface ExampleProps {
     handleOpenAnalysis: () => void;
 }
 
-/**
- * Animated 3×3 Slant demo that cycles through a step-by-step solve.
- * Each frame adds one slash; numbers transition from pending to satisfied.
- */
 export function Example({
     size,
     handleOpenAnalysis,
 }: ExampleProps): React.ReactElement {
     const frames = useMemo(() => getExampleFrames(), []);
+    const animation = useExampleAnimation({
+        frameCount: frames.length,
+        intervalMs: FRAME_MS,
+    });
+    const { isPlaying } = animation;
 
-    const [frameIdx, setFrameIdx] = useState(0);
-    const [isPlaying, setIsPlaying] = useState(true);
+    const renderFrame = (idxValue: number) => {
+        const grid = frames[idxValue] ?? frames[0] ?? [];
 
-    useEffect(() => {
-        if (!isPlaying) return;
+        // Determine which cell was most recently placed (for highlight).
+        const activeCell =
+            idxValue > 0 && idxValue <= SOLVE_ORDER.length
+                ? (() => {
+                      const entry = SOLVE_ORDER[idxValue - 1];
+                      return entry
+                          ? `${entry[0].toString()},${entry[1].toString()}`
+                          : null;
+                  })()
+                : null;
 
-        const id = setInterval(() => {
-            setFrameIdx(prev => (prev + 1) % frames.length);
-        }, FRAME_MS);
-        return () => {
-            clearInterval(id);
-        };
-    }, [frames.length, isPlaying]);
+        const satisfiedNodes = getSatisfiedNodes(
+            grid,
+            EXAMPLE_NUMBERS,
+            EXAMPLE_DIMS,
+            EXAMPLE_DIMS,
+        );
 
-    const handleTogglePlay = () => {
-        setIsPlaying(prev => !prev);
-    };
+        const numberSize = size * NUMBER_SIZE_RATIO;
+        const isSolved =
+            idxValue >= SOLVE_ORDER.length &&
+            grid.every(row => row.every(cell => cell !== EMPTY));
 
-    const handleStepForward = () => {
-        setIsPlaying(false);
-        setFrameIdx(prev => (prev + 1) % frames.length);
-    };
-
-    const handleStepBack = () => {
-        setIsPlaying(false);
-        setFrameIdx(prev => (prev - 1 + frames.length) % frames.length);
-    };
-
-    const grid = useMemo(
-        () => frames[frameIdx] ?? frames[0] ?? [],
-        [frames, frameIdx],
-    );
-
-    // Determine which cell was most recently placed (for highlight).
-    // Frame 0 is the empty board; frame i corresponds to SOLVE_ORDER[i-1].
-    const activeCell =
-        frameIdx > 0 && frameIdx <= SOLVE_ORDER.length
-            ? (() => {
-                  const entry = SOLVE_ORDER[frameIdx - 1];
-                  return entry
-                      ? `${entry[0].toString()},${entry[1].toString()}`
-                      : null;
-              })()
-            : null;
-
-    // Compute satisfied nodes for the current frame.
-    const satisfiedNodes = useMemo(
-        () =>
-            getSatisfiedNodes(
-                grid,
-                EXAMPLE_NUMBERS,
-                EXAMPLE_DIMS,
-                EXAMPLE_DIMS,
-            ),
-        [grid],
-    );
-
-    const numberSize = size * NUMBER_SIZE_RATIO;
-
-    const isSolved =
-        frameIdx >= SOLVE_ORDER.length &&
-        grid.every(row => row.every(cell => cell !== EMPTY));
-
-    const backProps = useMemo(
-        () => makeBackProps(grid, size, activeCell),
-        [grid, size, activeCell],
-    );
-
-    const frontProps = useMemo(
-        () => makeFrontProps(EXAMPLE_NUMBERS, satisfiedNodes, numberSize),
-        [satisfiedNodes, numberSize],
-    );
-
-    return (
-        <ExampleContainer>
+        return (
             <Box sx={{ position: 'relative', display: 'inline-flex' }}>
                 <style>{SLANT_STYLES.ANIMATIONS.POP_IN}</style>
                 <Board
@@ -309,12 +197,16 @@ export function Example({
                         {
                             rows: EXAMPLE_DIMS,
                             cols: EXAMPLE_DIMS,
-                            cellProps: backProps,
+                            cellProps: makeBackProps(grid, size, activeCell),
                         },
                         {
                             rows: EXAMPLE_DIMS + 1,
                             cols: EXAMPLE_DIMS + 1,
-                            cellProps: frontProps,
+                            cellProps: makeFrontProps(
+                                EXAMPLE_NUMBERS,
+                                satisfiedNodes,
+                                numberSize,
+                            ),
                             layerSx: { pointerEvents: 'none' },
                             decorative: true,
                         },
@@ -327,39 +219,22 @@ export function Example({
                     showLabel={false}
                 />
             </Box>
+        );
+    };
 
-            <ExampleActions>
-                <InfoButton
-                    variant="outlined"
-                    startIcon={
-                        isPlaying ? <PauseRounded /> : <PlayArrowRounded />
-                    }
-                    onClick={handleTogglePlay}
-                >
-                    {isPlaying ? 'Pause' : 'Play'}
-                </InfoButton>
-                <InfoButton
+    return (
+        <GameInfoExample
+            animation={animation}
+            renderFrame={renderFrame}
+            extraActions={
+                <ExampleActionButton
                     variant="outlined"
                     startIcon={<Psychology />}
                     onClick={handleOpenAnalysis}
                 >
                     Analysis
-                </InfoButton>
-                <InfoButton
-                    variant="outlined"
-                    startIcon={<NavigateBeforeRounded />}
-                    onClick={handleStepBack}
-                >
-                    Step Back
-                </InfoButton>
-                <InfoButton
-                    variant="outlined"
-                    startIcon={<NavigateNextRounded />}
-                    onClick={handleStepForward}
-                >
-                    Step Next
-                </InfoButton>
-            </ExampleActions>
-        </ExampleContainer>
+                </ExampleActionButton>
+            }
+        />
     );
 }
