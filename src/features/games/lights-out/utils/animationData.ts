@@ -7,11 +7,12 @@ export const EXAMPLE_ANIMATION_DATA = {
         [0, 0, 7], // 4: Calculator Start
         [0, 0, 7], // 5: Entering Input...
         [0, 0, 7], // 6: Entering Input...
-        [0, 0, 7], // 7: Calculator Result / Switch to Board
-        [7, 2, 7], // 8: After (0,1)
-        [6, 1, 6], // 9: After (1,0)
-        [4, 6, 4], // 10: After (1,1)
-        [0, 0, 0], // 11: Solved
+        [0, 0, 7], // 7: Entering Input...
+        [0, 0, 7], // 8: Calculator Result / Switch to Board
+        [7, 2, 7], // 9: After (0,1)
+        [6, 1, 6], // 10: After (1,0)
+        [4, 6, 4], // 11: After (1,1)
+        [0, 0, 0], // 12: Solved
     ],
     inputStates: [
         [0, 0, 0], // 0
@@ -26,6 +27,7 @@ export const EXAMPLE_ANIMATION_DATA = {
         [1, 1, 1], // 9
         [1, 1, 1], // 10
         [1, 1, 1], // 11
+        [1, 1, 1], // 12
     ],
     outputStates: [
         [0, 0, 0], // 0
@@ -40,10 +42,11 @@ export const EXAMPLE_ANIMATION_DATA = {
         [0, 1, 0], // 9
         [0, 1, 0], // 10
         [0, 1, 0], // 11
+        [0, 1, 0], // 12
     ],
     phaseIndices: {
         calculatorStart: 4,
-        secondChaseStart: 7,
+        secondChaseStart: 8,
     },
     // Explicit indicators to show at each frame
     indicators: [
@@ -54,10 +57,11 @@ export const EXAMPLE_ANIMATION_DATA = {
         { c: 0, label: '4' }, // 4: Calculator Input 1
         { c: 1, label: '5' }, // 5: Calculator Input 2
         { c: 2, label: '6' }, // 6: Calculator Input 3
-        { r: 0, c: 1, label: '7' }, // 7: Back to Board -> Click (0,1) -> frame 8
-        { r: 1, c: 0, label: '8' }, // 8: Click (1,0) -> frame 9
-        { r: 1, c: 1, label: '9' }, // 9: Click (1,1) -> frame 10
-        { r: 1, c: 2, label: '10' }, // 10: Click (1,2) -> Solved
-        null, // 11: Solved (Trophy)
+        null, // 7: Calculator Result / Switch to Board
+        { r: 0, c: 1, label: '7' }, // 8: Back to Board -> Click (0,1) -> frame 9
+        { r: 1, c: 0, label: '8' }, // 9: Click (1,0) -> frame 10
+        { r: 1, c: 1, label: '9' }, // 10: Click (1,1) -> frame 11
+        { r: 1, c: 2, label: '10' }, // 11: Click (1,2) -> Solved
+        null, // 12: Solved (Trophy)
     ],
 };
