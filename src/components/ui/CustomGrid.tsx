@@ -12,6 +12,7 @@ import {
 /** Known styling props extracted by `Cell`; additional DOM attributes are forwarded. */
 export interface CellKnownProps {
     size: number;
+    width?: number;
     children?: React.ReactNode;
     backgroundColor?: string;
     color?: string;
@@ -25,8 +26,10 @@ export interface CellKnownProps {
 /** Full prop type for a single grid cell, including passthrough DOM attributes. */
 export type CellProps = CellKnownProps & Record<string, unknown>;
 
-const Cell = memo(function Cell({ size, children, ...rest }: CellProps) {
+const Cell = memo(function Cell({ size, width, children, ...rest }: CellProps) {
+    const w = width ?? size;
     const remSize = `${size.toString()}rem`;
+    const remWidth = `${w.toString()}rem`;
     const radius = `${(size / GRID_CONFIG.cellSize.divisor).toString()}rem`;
 
     const {
@@ -52,12 +55,12 @@ const Cell = memo(function Cell({ size, children, ...rest }: CellProps) {
             ...COMPONENT_VARIANTS.flexCenter,
             borderRadius: radius,
             height: remSize,
-            width: remSize,
+            width: remWidth,
             fontSize: `${(size * GRID_CONFIG.cellSize.fontSizeMultiplier).toString()}rem`,
             fontWeight: TYPOGRAPHY.fontWeight.semibold,
             fontFamily: 'monospace',
         }),
-        [radius, remSize, size],
+        [radius, remSize, remWidth, size],
     );
 
     return (
@@ -93,6 +96,7 @@ interface CellOptions {
 export interface RowProps {
     cols: number;
     size: number;
+    width?: number;
     index: number;
     spacing: string;
     cellProps?: (row: number, col: number) => CellOptions;
@@ -102,6 +106,7 @@ export interface RowProps {
 const Row = memo(function Row({
     cols,
     size,
+    width,
     index,
     spacing,
     cellProps,
@@ -122,6 +127,7 @@ const Row = memo(function Row({
                         <Cell
                             key={`${index.toString()}_${j.toString()}`}
                             size={size}
+                            width={width}
                         >
                             {renderCell(index, j)}
                         </Cell>
@@ -133,6 +139,7 @@ const Row = memo(function Row({
                         {...props}
                         key={`${index.toString()}_${j.toString()}`}
                         size={size}
+                        width={width}
                     />
                 );
             })}
@@ -143,6 +150,7 @@ const Row = memo(function Row({
 /** Known props for the grid container; additional DOM attributes are forwarded to the root `Box`. */
 interface CustomGridKnownProps {
     size: number;
+    width?: number;
     rows: number;
     cols: number;
     cellProps?: (row: number, col: number) => CellOptions;
@@ -156,6 +164,7 @@ export type CustomGridProps = CustomGridKnownProps & Record<string, unknown>;
 
 export const CustomGrid = memo(function CustomGrid({
     size,
+    width,
     rows,
     cols,
     cellProps,
@@ -190,6 +199,7 @@ export const CustomGrid = memo(function CustomGrid({
                     index={i}
                     cols={cols}
                     size={size}
+                    width={width}
                     spacing={rem}
                     key={`row_${i.toString()}`}
                     cellProps={cellProps}

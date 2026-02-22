@@ -45,10 +45,11 @@ export const InfoCalculator = React.memo(function InfoCalculator({
 }: InfoCalculatorProps) {
     const MAX_CELL = 3; // rem
     const cellSize = Math.min(size * (isMobile ? 0.9 : 0.8), MAX_CELL);
+    const cellWidth = cols < 7 ? cellSize * Math.pow(1.5, 3 / cols) : cellSize;
 
     // Use horizontal layout only when the two grid rows, buttons, and gaps
     // can comfortably fit side-by-side inside the modal (~55rem usable).
-    const ROW_WIDTH_REM = cols * cellSize;
+    const ROW_WIDTH_REM = cols * cellWidth;
     const BUTTON_WIDTH_REM = 10; // approximate width of the button group
     const GAP_REM = 3 * 0.5; // MUI gap: 3 → 24px ≈ 1.5rem per gap, ×2
     const totalWidth = ROW_WIDTH_REM * 2 + BUTTON_WIDTH_REM + GAP_REM * 2;
@@ -69,6 +70,7 @@ export const InfoCalculator = React.memo(function InfoCalculator({
                         rows={1}
                         cols={cols}
                         size={cellSize}
+                        width={cellWidth}
                         cellProps={inputProps}
                     />
                 </Box>
@@ -85,6 +87,7 @@ export const InfoCalculator = React.memo(function InfoCalculator({
                         rows={1}
                         cols={cols}
                         size={cellSize}
+                        width={cellWidth}
                         cellProps={outputProps}
                     />
                 </Box>
