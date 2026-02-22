@@ -1,52 +1,105 @@
-import { Typography, Grid, Box } from '@mui/material';
+import { Typography, Box, Button, styled } from '@mui/material';
 import React, { useState, useEffect } from 'react';
 
-import { GridWithKeyframes } from './AnimatedGrid';
 import { getOutput, useHandler as useCalculatorHandler } from './Calculator';
 import { Board } from '../../components/Board';
 import { LIGHTS_OUT_STYLES } from '../config';
 import { useHandler as useBoardHandler } from '../hooks/boardUtils';
 import type { Palette, PropsFactory } from '../types';
-import type { KeyframeMap } from '../utils/animationFrames';
-import {
-    getBoardIconFrames,
-    getInputIconFrames,
-} from '../utils/animationFrames';
-import { getStates } from '../utils/chaseHandlers';
+import { EXAMPLE_ANIMATION_DATA } from '../utils/animationData';
 
-import { EmojiEventsRounded } from '@/components/icons';
+import {
+    EmojiEventsRounded,
+    Calculate,
+    ViewModuleRounded,
+    NavigateBeforeRounded,
+    NavigateNextRounded,
+    PlayArrowRounded,
+    PauseRounded,
+} from '@/components/icons';
 import { CustomGrid } from '@/components/ui/CustomGrid';
 import { COLORS } from '@/config/theme';
-import { useMobile } from '@/hooks';
 
 // ---------------------------------------------------------------------------
-// Shared icon-animation helpers
+// Styled Components
 // ---------------------------------------------------------------------------
 
-/** Shape returned by `createIconHandler` for each cell. */
-interface AnimatedIconResult {
-    icon: React.ReactNode;
-    keyframes: KeyframeMap;
-    keyframeName: string;
-}
+const ExampleContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: theme.spacing(4),
+    width: '100%',
+    maxWidth: '800px',
+    margin: 'auto',
+    [theme.breakpoints.up('sm')]: {
+        flexDirection: 'row',
+        gap: theme.spacing(8),
+    },
+}));
 
-/**
- * Builds the shared animated-icon `<Box>` used by both the board and
- * input icon handlers.  The only difference between the two is which
- * keyframe generator produces the frames, so we parameterise that.
- */
+const ExampleActions = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    gap: theme.spacing(1.5),
+    justifyContent: 'center',
+    justifyItems: 'center',
+    alignItems: 'center',
+    width: '100%',
+    maxWidth: '320px',
+    [theme.breakpoints.up('sm')]: {
+        gridTemplateColumns: '1fr',
+        width: 'auto',
+        maxWidth: 'none',
+    },
+}));
+
+const InfoButton = styled(Button)(({ theme }) => ({
+    borderColor: COLORS.border.subtle,
+    color: COLORS.text.secondary,
+    width: '140px',
+    [theme.breakpoints.up('sm')]: {
+        width: '180px',
+    },
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+    '& .MuiButton-startIcon': {
+        marginRight: theme.spacing(0.5),
+        [theme.breakpoints.up('sm')]: {
+            marginRight: theme.spacing(1),
+        },
+    },
+}));
+
 function createIconHandler(
-    getFrames: (row: number, col: number) => KeyframeMap,
-    prefix: string,
-    totalFrames: number,
+    indicator: { r?: number; c?: number; label?: string } | null,
+    gridState: number | number[],
+    frameIdx: number,
+    palette: Palette,
+    isBoard: boolean,
 ) {
-    return (row: number, col: number): AnimatedIconResult => {
-        const frames = getFrames(row, col);
-        const name = `${prefix}-${String(row)}-${String(col)}`;
+    return (row: number, col: number) => {
+        // Strict matching: board indicators must have 'r', calculator ones must not.
+        const typeMatch =
+            indicator &&
+            (isBoard ? indicator.r !== undefined : indicator.r === undefined);
+        const posMatch =
+            indicator &&
+            (indicator.r === undefined || indicator.r === row) &&
+            (indicator.c === undefined || indicator.c === col);
+
+        if (!typeMatch || !posMatch) return { icon: null };
+
+        // Determine contrast color based on current cell state
+        const isLit = Array.isArray(gridState)
+            ? gridState[col] === 1
+            : Boolean((gridState >> col) & 1);
 
         return {
             icon: (
                 <Box
+                    key={`${String(row)}-${String(col)}-${String(frameIdx)}`}
                     sx={{
                         width: '100%',
                         height: '100%',
@@ -58,18 +111,18 @@ function createIconHandler(
                         pointerEvents: 'none',
                         zIndex: 2,
                         '&::after': {
-                            content: '""',
+                            content: `"${indicator.label ?? ''}"`,
                             fontSize: '1.2rem',
-                            fontWeight: 'bold',
+                            fontWeight: '600',
                             filter: LIGHTS_OUT_STYLES.SHADOWS.DROP,
                             paddingTop: '0.15rem',
-                            animation: `${name} ${String(totalFrames * 2)}s linear infinite`,
+                            color: isLit ? palette.secondary : palette.primary,
+                            animation:
+                                LIGHTS_OUT_STYLES.ANIMATIONS.POP_IN_STYLE,
                         },
                     }}
                 />
             ),
-            keyframes: frames,
-            keyframeName: name,
         };
     };
 }
@@ -83,7 +136,7 @@ function createIconHandler(
  */
 function mergeWithIcons(
     baseFactory: (row: number, col: number) => Record<string, unknown>,
-    iconFactory: (row: number, col: number) => AnimatedIconResult,
+    iconFactory: (row: number, col: number) => { icon: React.ReactNode },
 ) {
     return (row: number, col: number) => {
         const baseProps = baseFactory(row, col);
@@ -112,37 +165,70 @@ function mergeWithIcons(
 interface ExampleProps {
     palette: Palette;
     size: number;
-    dims?: number;
-    start?: number[];
     getFrontProps: PropsFactory;
     getBackProps: PropsFactory;
 }
 
 export function Example({
-    start = [],
-    dims = 3,
     size,
     palette,
     getFrontProps,
     getBackProps,
 }: ExampleProps): React.ReactElement {
-    const [frame, setFrame] = useState(0);
+    const { boardStates, inputStates, outputStates, phaseIndices } =
+        EXAMPLE_ANIMATION_DATA;
+    const dims = 3;
+
+    const [frameIdx, setFrameIdx] = useState(0);
+    const [isPlaying, setIsPlaying] = useState(true);
+    const [activeView, setActiveView] = useState<'board' | 'calculator'>(
+        'board',
+    );
 
     useEffect(() => {
+        if (!isPlaying) return;
+
         const interval = setInterval(() => {
-            setFrame(prev => prev + 1);
+            setFrameIdx(prev => (prev + 1) % inputStates.length);
         }, 2000);
 
         return () => {
             clearInterval(interval);
         };
-    }, []);
+    }, [isPlaying, inputStates.length]);
 
-    const states = getStates(start, dims);
+    // Handle auto-switching logic
+    useEffect(() => {
+        if (!isPlaying) return;
+
+        if (
+            frameIdx >= phaseIndices.calculatorStart &&
+            frameIdx < phaseIndices.secondChaseStart
+        ) {
+            setActiveView('calculator');
+        } else {
+            setActiveView('board');
+        }
+    }, [frameIdx, isPlaying, phaseIndices]);
+
+    const handleTogglePlay = () => {
+        setIsPlaying(prev => !prev);
+    };
+    const handleStepForward = () => {
+        setIsPlaying(false);
+        setFrameIdx(prev => (prev + 1) % inputStates.length);
+    };
+    const handleStepBack = () => {
+        setIsPlaying(false);
+        setFrameIdx(prev => (prev === 0 ? inputStates.length - 1 : prev - 1));
+    };
+    const handleToggleView = () => {
+        setIsPlaying(false);
+        setActiveView(prev => (prev === 'board' ? 'calculator' : 'board'));
+    };
+
     const width = size;
-
-    const { boardStates, inputStates, outputStates } = states;
-    const remainder = frame % inputStates.length;
+    const remainder = frameIdx % inputStates.length;
     const isSolved = remainder === inputStates.length - 1;
 
     const gridState = {
@@ -155,91 +241,71 @@ export function Example({
     const baseFrontProps = getFrontProps(boardGetters);
     const backProps = getBackProps(boardGetters);
 
-    // Unified icon handlers — one for the board grid, one for the input row.
+    const inputState = inputStates[remainder] ?? [];
+    const outputState = outputStates[remainder] ?? [];
+
+    const indicator = EXAMPLE_ANIMATION_DATA.indicators[remainder] ?? null;
+
+    const boardIndicator = activeView === 'board' ? indicator : null;
+    const inputIndicator = activeView === 'calculator' ? indicator : null;
+
     const boardIconHandler = createIconHandler(
-        (row, col) => getBoardIconFrames(boardStates, row, col, dims, palette),
-        'example-board-icon',
-        boardStates.length,
+        boardIndicator,
+        indicator?.r === undefined ? 0 : (gridState.grid[indicator.r] ?? 0),
+        remainder,
+        palette,
+        true,
     );
     const inputIconHandler = createIconHandler(
-        (_row, col) => getInputIconFrames(inputStates, col, palette),
-        'example-input-icon',
-        inputStates.length,
+        inputIndicator,
+        inputState,
+        remainder,
+        palette,
+        false,
     );
 
     const frontProps = mergeWithIcons(baseFrontProps, boardIconHandler);
 
-    const inputGetters = useCalculatorHandler(
-        inputStates[remainder] ?? [],
-        dims,
-        palette,
-    );
-    const outputGetters = useCalculatorHandler(
-        outputStates[remainder] ?? [],
-        dims,
-        palette,
-    );
+    const inputGetters = useCalculatorHandler(inputState, dims, palette);
+    const outputGetters = useCalculatorHandler(outputState, dims, palette);
+
     const baseInputProps = getOutput(inputGetters);
     const outputProps = getOutput(outputGetters);
 
     const inputProps = mergeWithIcons(baseInputProps, inputIconHandler);
 
-    const mobile = useMobile('sm');
+    // mobile status is derived from useMobile inside the container if needed
 
     return (
-        <GridWithKeyframes
-            boardStates={boardStates}
-            inputStates={inputStates}
-            dims={dims}
-            id="example"
-            palette={palette}
-        >
-            <Grid container size={12} spacing={2} sx={{ height: '100%' }}>
-                <Grid
-                    container
-                    size={12}
-                    wrap={mobile ? 'wrap' : 'nowrap'}
-                    sx={{
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        alignContent: 'center',
-                        flex: 1,
-                        height: '100%',
-                        overflow: 'hidden',
-                        flexDirection: mobile ? 'column' : 'row',
-                    }}
-                >
-                    <Grid
-                        size={mobile ? 12 : 6}
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            overflow: 'hidden',
-                        }}
-                    >
-                        <Box
-                            sx={{
-                                position: 'relative',
-                                display: 'inline-flex',
-                            }}
-                        >
-                            <Board
-                                size={width}
-                                layers={[
-                                    {
-                                        rows: dims - 1,
-                                        cols: dims - 1,
-                                        cellProps: backProps,
-                                        decorative: true,
-                                    },
-                                    {
-                                        rows: dims,
-                                        cols: dims,
-                                        cellProps: frontProps,
-                                    },
-                                ]}
-                            />
+        <ExampleContainer>
+            <style>{LIGHTS_OUT_STYLES.ANIMATIONS.POP_IN}</style>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexShrink: 0,
+                }}
+            >
+                {activeView === 'board' ? (
+                    <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+                        <Board
+                            size={width}
+                            layers={[
+                                {
+                                    rows: dims - 1,
+                                    cols: dims - 1,
+                                    cellProps: backProps,
+                                    decorative: true,
+                                },
+                                {
+                                    rows: dims,
+                                    cols: dims,
+                                    cellProps: frontProps,
+                                },
+                            ]}
+                        />
+                        {isSolved && (
                             <Box
                                 sx={{
                                     position: 'absolute',
@@ -247,15 +313,11 @@ export function Example({
                                     display: 'flex',
                                     alignItems: 'center',
                                     justifyContent: 'center',
-                                    opacity: isSolved ? 1 : 0,
-                                    transform: isSolved
-                                        ? 'scale(1)'
-                                        : 'scale(0.5)',
-                                    visibility: isSolved ? 'visible' : 'hidden',
-                                    transition:
-                                        'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)',
                                     pointerEvents: 'none',
                                     zIndex: 10,
+                                    animation:
+                                        LIGHTS_OUT_STYLES.ANIMATIONS
+                                            .POP_IN_STYLE,
                                 }}
                             >
                                 {(() => {
@@ -280,25 +342,19 @@ export function Example({
                                     );
                                 })()}
                             </Box>
-                        </Box>
-                    </Grid>
-                    <Grid
-                        container
-                        size={mobile ? 12 : 6}
-                        spacing={mobile ? 1 : 2}
+                        )}
+                    </Box>
+                ) : (
+                    <Box
                         sx={{
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
                             justifyContent: 'center',
+                            gap: 2,
                         }}
                     >
-                        <Box
-                            sx={{
-                                mb: mobile ? 0 : 2,
-                                textAlign: 'center',
-                            }}
-                        >
+                        <Box sx={{ textAlign: 'center' }}>
                             <Typography
                                 variant="subtitle2"
                                 sx={{ mb: 1, color: COLORS.text.secondary }}
@@ -328,9 +384,48 @@ export function Example({
                                 Result
                             </Typography>
                         </Box>
-                    </Grid>
-                </Grid>
-            </Grid>
-        </GridWithKeyframes>
+                    </Box>
+                )}
+            </Box>
+
+            <ExampleActions>
+                <InfoButton
+                    variant="outlined"
+                    startIcon={
+                        isPlaying ? <PauseRounded /> : <PlayArrowRounded />
+                    }
+                    onClick={handleTogglePlay}
+                >
+                    {isPlaying ? 'Pause' : 'Play'}
+                </InfoButton>
+                <InfoButton
+                    variant="outlined"
+                    startIcon={
+                        activeView === 'board' ? (
+                            <Calculate />
+                        ) : (
+                            <ViewModuleRounded />
+                        )
+                    }
+                    onClick={handleToggleView}
+                >
+                    {activeView === 'board' ? 'Calculator' : 'Board'}
+                </InfoButton>
+                <InfoButton
+                    variant="outlined"
+                    startIcon={<NavigateBeforeRounded />}
+                    onClick={handleStepBack}
+                >
+                    Step Back
+                </InfoButton>
+                <InfoButton
+                    variant="outlined"
+                    startIcon={<NavigateNextRounded />}
+                    onClick={handleStepForward}
+                >
+                    Step Next
+                </InfoButton>
+            </ExampleActions>
+        </ExampleContainer>
     );
 }

@@ -1,13 +1,11 @@
-import { render, screen, act } from '@testing-library/react';
-import { vi, type Mock } from 'vitest';
+/**
+ * @vitest-environment happy-dom
+ */
+import { render, screen, act, fireEvent } from '@testing-library/react';
+import { vi, describe, it, expect } from 'vitest';
 
-import * as chaseHandlers from '../../utils/chaseHandlers';
+import { EXAMPLE_ANIMATION_DATA } from '../../utils/animationData';
 import { Example } from '../Example';
-
-// Mock chaseHandlers
-vi.mock('../../utils/chaseHandlers', () => ({
-    getStates: vi.fn(),
-}));
 
 // Mock calculator to avoid real implementation issues
 vi.mock('../Calculator', () => ({
@@ -27,6 +25,11 @@ vi.mock('@/components/icons', () => ({
     KeyboardArrowDown: () => <div data-testid="icon-arrow-down" />,
     Calculate: () => <div data-testid="icon-calculate" />,
     Replay: () => <div data-testid="icon-replay" />,
+    ViewModuleRounded: () => <div data-testid="icon-board" />,
+    NavigateBeforeRounded: () => <div data-testid="icon-step-back" />,
+    NavigateNextRounded: () => <div data-testid="icon-step-next" />,
+    PlayArrowRounded: () => <div data-testid="icon-play" />,
+    PauseRounded: () => <div data-testid="icon-pause" />,
 }));
 
 // Mock CustomGrid to avoid complex rendering and animations
@@ -71,31 +74,43 @@ vi.mock('@/components/ui/CustomGrid', () => ({
 }));
 
 describe('Lights Out Example Component', () => {
-    const mockGetStates = chaseHandlers.getStates as Mock;
     const mockPalette = { primary: 'red', secondary: 'blue' };
     const mockGetFrontProps = vi.fn(() => () => ({}));
     const mockGetBackProps = vi.fn(() => () => ({}));
 
-    beforeEach(() => {
-        const grid3x3 = [
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-        ];
-        mockGetStates.mockReturnValue({
-            boardStates: [grid3x3, grid3x3],
-            inputStates: [
-                [0, 0, 0],
-                [0, 0, 0],
-            ],
-            outputStates: [
-                [0, 0, 0],
-                [0, 0, 0],
-            ],
+    it('automatically switches views based on animation phase', () => {
+        vi.useFakeTimers();
+        render(
+            <Example
+                size={100}
+                palette={mockPalette}
+                getFrontProps={mockGetFrontProps}
+                getBackProps={mockGetBackProps}
+            />,
+        );
+
+        const { calculatorStart, secondChaseStart } =
+            EXAMPLE_ANIMATION_DATA.phaseIndices;
+
+        // Start phase
+        expect(screen.queryByText('Input')).not.toBeInTheDocument();
+
+        // Advance to Calculator phase
+        act(() => {
+            vi.advanceTimersByTime(2000 * calculatorStart);
         });
+        expect(screen.getByText('Input')).toBeInTheDocument();
+
+        // Advance to Second Board phase
+        act(() => {
+            vi.advanceTimersByTime(2000 * (secondChaseStart - calculatorStart));
+        });
+        expect(screen.queryByText('Input')).not.toBeInTheDocument();
+
+        vi.useRealTimers();
     });
 
-    it('renders board, input, and output grids with correct dimensions', () => {
+    it('pauses animation when manually switching views', () => {
         render(
             <Example
                 size={100}
@@ -105,41 +120,43 @@ describe('Lights Out Example Component', () => {
             />,
         );
 
-        // Should render exactly 4 grids: 2 from board (3x3 + 2x2) + 1 input (1x3) + 1 output (1x3)
+        // Initially playing
+        expect(screen.getByText('Pause')).toBeInTheDocument();
+
+        // Switch view
+        const switchBtn = screen.getByText('Calculator');
+        fireEvent.click(switchBtn);
+
+        // Should now be paused
+        expect(screen.getByText('Play')).toBeInTheDocument();
+    });
+
+    it('renders board initially and can switch to calculator', () => {
+        render(
+            <Example
+                size={100}
+                palette={mockPalette}
+                getFrontProps={mockGetFrontProps}
+                getBackProps={mockGetBackProps}
+            />,
+        );
+
+        // Initially shows board (2 layers: back and front)
         const grids = screen.getAllByTestId('custom-grid');
-        expect(grids).toHaveLength(4);
+        expect(grids).toHaveLength(2);
 
-        // Verify cells are rendered (multiple grids have cells with same IDs)
-        // Board grid has 9 cells (3x3), input has 3 cells (1x3), output has 3 cells (1x3)
-        // cell-0-0, cell-0-1, cell-0-2 appear in all 3 grids
-        // cell-0-0, cell-0-1, cell-0-2 appear in most grids
-        const cell00Elements = screen.getAllByTestId('cell-0-0');
-        expect(cell00Elements).toHaveLength(4); // One in each grid
+        // Switch to calculator
+        const switchBtn = screen.getByText('Calculator');
+        fireEvent.click(switchBtn);
 
-        // Verify board-specific cells (only in 3x3 board grid)
-        const cell22Elements = screen.getAllByTestId('cell-2-2');
-        expect(cell22Elements).toHaveLength(1); // Only in board grid
-    });
-
-    it('calls getStates with correct start and dims', () => {
-        const start = [1, 2, 3];
-        render(
-            <Example
-                size={100}
-                palette={mockPalette}
-                start={start}
-                dims={3}
-                getFrontProps={mockGetFrontProps}
-                getBackProps={mockGetBackProps}
-            />,
-        );
-        expect(mockGetStates).toHaveBeenCalledWith(start, 3);
+        // Now should show Input and Result grids (1x3 each)
+        const newGrids = screen.getAllByTestId('custom-grid');
+        expect(newGrids).toHaveLength(2);
+        expect(screen.getByText('Input')).toBeInTheDocument();
+        expect(screen.getByText('Result')).toBeInTheDocument();
     });
 
     it('passes cellProps to CustomGrid', () => {
-        // The mock CustomGrid calls cellProps.
-        // We verified cellProps generates props in the component code.
-        // Here we just ensure the grid is rendered.
         render(
             <Example
                 size={100}
@@ -148,43 +165,13 @@ describe('Lights Out Example Component', () => {
                 getBackProps={mockGetBackProps}
             />,
         );
-        // There are multiple grids (board, input, output) so multiple cell-0-0
-        expect(screen.getAllByTestId('cell-0-0').length).toBeGreaterThan(0);
+
+        expect(mockGetFrontProps).toHaveBeenCalled();
+        expect(mockGetBackProps).toHaveBeenCalled();
     });
 
-    it('cycles through frames over time', async () => {
+    it('cycles through frames over time', () => {
         vi.useFakeTimers();
-
-        mockGetStates.mockReturnValue({
-            boardStates: [
-                [
-                    [0, 0, 0],
-                    [0, 0, 0],
-                    [0, 0, 0],
-                ],
-                [
-                    [1, 0, 0],
-                    [0, 0, 0],
-                    [0, 0, 0],
-                ],
-                [
-                    [1, 1, 0],
-                    [0, 0, 0],
-                    [0, 0, 0],
-                ],
-            ],
-            inputStates: [
-                [0, 0, 0],
-                [1, 0, 0],
-                [1, 1, 0],
-            ],
-            outputStates: [
-                [0, 0, 0],
-                [1, 0, 0],
-                [1, 1, 0],
-            ],
-        });
-
         render(
             <Example
                 size={100}
@@ -194,34 +181,18 @@ describe('Lights Out Example Component', () => {
             />,
         );
 
-        // Advance time and check frame updates
-        await act(async () => {
-            await vi.advanceTimersByTimeAsync(2000);
-        });
-
-        // The component should update frames
         expect(screen.getAllByTestId('cell-0-0').length).toBeGreaterThan(0);
 
+        act(() => {
+            vi.advanceTimersByTime(2000);
+        });
+
+        expect(screen.getAllByTestId('cell-0-0').length).toBeGreaterThan(0);
         vi.useRealTimers();
     });
 
-    it('shows trophy on last frame when solved', async () => {
-        const allOnState = [7, 7, 7]; // All bits on for 3x3
-
-        mockGetStates.mockReturnValue({
-            boardStates: [[0, 0, 0], allOnState],
-            inputStates: [
-                [0, 0, 0],
-                [0, 0, 0],
-            ],
-            outputStates: [
-                [0, 0, 0],
-                [0, 0, 0],
-            ],
-        });
-
+    it('shows trophy on last frame', () => {
         vi.useFakeTimers();
-
         render(
             <Example
                 size={100}
@@ -232,82 +203,13 @@ describe('Lights Out Example Component', () => {
         );
 
         // Advance to last frame
-        await act(async () => {
-            await vi.advanceTimersByTimeAsync(2000);
+        act(() => {
+            vi.advanceTimersByTime(
+                2000 * (EXAMPLE_ANIMATION_DATA.boardStates.length - 1),
+            );
         });
 
-        expect(screen.getByTestId('emoji-events-rounded')).toBeInTheDocument();
-
-        vi.useRealTimers();
-    });
-
-    it('handles missing board states gracefully', () => {
-        mockGetStates.mockReturnValue({
-            boardStates: [],
-            inputStates: [],
-            outputStates: [],
-        });
-
-        render(
-            <Example
-                size={100}
-                palette={mockPalette}
-                getFrontProps={mockGetFrontProps}
-                getBackProps={mockGetBackProps}
-            />,
-        );
-
-        // Should still render without crashing (multiple grids)
-        const grids = screen.getAllByTestId('custom-grid');
-        expect(grids.length).toBeGreaterThanOrEqual(0);
-    });
-
-    it('uses default dims when not provided', () => {
-        render(
-            <Example
-                size={100}
-                palette={mockPalette}
-                getFrontProps={mockGetFrontProps}
-                getBackProps={mockGetBackProps}
-            />,
-        );
-        // Should use default dims=3
-        expect(mockGetStates).toHaveBeenCalledWith([], 3);
-    });
-
-    it('shows trophy when not all lights are on on last frame', async () => {
-        const someOnState = [1, 0, 0];
-
-        mockGetStates.mockReturnValue({
-            boardStates: [[0, 0, 0], someOnState],
-            inputStates: [
-                [0, 0, 0],
-                [0, 0, 0],
-            ],
-            outputStates: [
-                [0, 0, 0],
-                [0, 0, 0],
-            ],
-        });
-
-        vi.useFakeTimers();
-
-        render(
-            <Example
-                size={100}
-                palette={mockPalette}
-                getFrontProps={mockGetFrontProps}
-                getBackProps={mockGetBackProps}
-            />,
-        );
-
-        // Advance to last frame
-        await act(async () => {
-            await vi.advanceTimersByTimeAsync(2000);
-        });
-
-        expect(screen.getByTestId('emoji-events-rounded')).toBeInTheDocument();
-
+        expect(screen.getByTestId('emoji-events-rounded')).toBeVisible();
         vi.useRealTimers();
     });
 });

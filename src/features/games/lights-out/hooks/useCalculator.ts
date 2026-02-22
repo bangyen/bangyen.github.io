@@ -5,7 +5,8 @@ import { useDrag } from '../../hooks/useDrag';
 import { useGridNavigation } from '../../hooks/useGridNavigation';
 import { getInput, getOutput, useHandler } from '../components/Calculator';
 import type { Palette } from '../types';
-import { getProduct } from '../utils';
+
+import { getProduct } from '@/utils/math/gf2';
 
 interface UseCalculatorParams {
     rows: number;

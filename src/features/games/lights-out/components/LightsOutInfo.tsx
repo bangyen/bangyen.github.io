@@ -65,9 +65,7 @@ export function LightsOutInfo({
             instructions={INSTRUCTIONS}
             exampleContent={
                 <Example
-                    dims={3}
                     size={exampleSize}
-                    start={[1, 3, 8]}
                     palette={palette}
                     getFrontProps={getFrontProps}
                     getBackProps={getBackProps}

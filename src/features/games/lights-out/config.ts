@@ -12,6 +12,16 @@ export const LIGHTS_OUT_STYLES = {
     SHADOWS: {
         DROP: BOARD_STYLES.DROP_SHADOW,
     },
+    ANIMATIONS: {
+        POP_IN_STYLE: 'popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+        POP_IN: `
+            @keyframes popIn {
+                0% { opacity: 0; transform: scale(0.5); }
+                70% { opacity: 1; transform: scale(1.1); }
+                100% { opacity: 1; transform: scale(1); }
+            }
+        `,
+    },
 };
 
 export const LAYOUT_CONSTANTS = {
