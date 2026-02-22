@@ -14,6 +14,8 @@ import {
 } from 'react-router-dom';
 import { vi } from 'vitest';
 
+import { ThemeProvider as AppThemeProvider } from '@/hooks/useTheme';
+
 /**
  * Creates a test theme for consistent testing across all components
  */
@@ -52,9 +54,11 @@ export const TestWrapper: React.FC<TestWrapperProps> = ({
     );
 
     return (
-        <ThemeProvider theme={theme}>
-            <RouterProvider router={router} />
-        </ThemeProvider>
+        <AppThemeProvider>
+            <ThemeProvider theme={theme}>
+                <RouterProvider router={router} />
+            </ThemeProvider>
+        </AppThemeProvider>
     );
 };
 

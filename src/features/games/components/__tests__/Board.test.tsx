@@ -43,7 +43,7 @@ describe('Board Component', () => {
     });
 
     test('renders with correct layout styles', () => {
-        const { container } = render(
+        render(
             <Board
                 size={20}
                 layers={[
@@ -53,9 +53,11 @@ describe('Board Component', () => {
             />,
         );
 
-        const outerBox = container.firstChild as HTMLElement;
-        expect(outerBox).toHaveStyle('display: grid');
-        expect(outerBox).toHaveStyle('place-items: center');
+        const outerBox = screen.getByTestId('board-container');
+        expect(outerBox).toHaveStyle({
+            display: 'grid',
+            placeItems: 'center',
+        });
     });
 
     test('handles decorative layers via explicit boolean props', () => {
