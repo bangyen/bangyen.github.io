@@ -39,19 +39,10 @@ vi.mock('./CanvasBoard', () => ({
 
 describe('Lights Out Example Component', () => {
     const mockPalette = { primary: 'red', secondary: 'blue' };
-    const mockGetFrontProps = vi.fn(() => () => ({}));
-    const mockGetBackProps = vi.fn(() => () => ({}));
 
     it('automatically switches views based on animation phase', () => {
         vi.useFakeTimers();
-        render(
-            <Example
-                size={100}
-                palette={mockPalette}
-                getFrontProps={mockGetFrontProps}
-                getBackProps={mockGetBackProps}
-            />,
-        );
+        render(<Example size={100} palette={mockPalette} />);
 
         const { calculatorStart, secondChaseStart } =
             EXAMPLE_ANIMATION_DATA.phaseIndices;
@@ -75,14 +66,7 @@ describe('Lights Out Example Component', () => {
     });
 
     it('pauses animation when manually switching views', () => {
-        render(
-            <Example
-                size={100}
-                palette={mockPalette}
-                getFrontProps={mockGetFrontProps}
-                getBackProps={mockGetBackProps}
-            />,
-        );
+        render(<Example size={100} palette={mockPalette} />);
 
         // Initially playing
         expect(screen.getByText('Pause')).toBeInTheDocument();
@@ -96,14 +80,7 @@ describe('Lights Out Example Component', () => {
     });
 
     it('renders board initially and can switch to calculator', () => {
-        render(
-            <Example
-                size={100}
-                palette={mockPalette}
-                getFrontProps={mockGetFrontProps}
-                getBackProps={mockGetBackProps}
-            />,
-        );
+        render(<Example size={100} palette={mockPalette} />);
 
         // Initially shows board (CanvasBoard)
         expect(screen.getByTestId('canvas-board')).toBeInTheDocument();
@@ -121,14 +98,7 @@ describe('Lights Out Example Component', () => {
 
     it('cycles through frames over time', () => {
         vi.useFakeTimers();
-        render(
-            <Example
-                size={100}
-                palette={mockPalette}
-                getFrontProps={mockGetFrontProps}
-                getBackProps={mockGetBackProps}
-            />,
-        );
+        render(<Example size={100} palette={mockPalette} />);
 
         expect(screen.getByTestId('canvas-board')).toBeInTheDocument();
 
@@ -142,14 +112,7 @@ describe('Lights Out Example Component', () => {
 
     it('shows trophy on last frame', () => {
         vi.useFakeTimers();
-        render(
-            <Example
-                size={100}
-                palette={mockPalette}
-                getFrontProps={mockGetFrontProps}
-                getBackProps={mockGetBackProps}
-            />,
-        );
+        render(<Example size={100} palette={mockPalette} />);
 
         // Advance to last frame
         act(() => {

@@ -4,7 +4,7 @@ import { Example } from './Example';
 import { InfoCalculator } from './InfoCalculator';
 import { INFO_TITLES, INSTRUCTIONS, EXAMPLE_SIZE } from '../config';
 import { useCalculator } from '../hooks/useCalculator';
-import type { Palette, PropsFactory } from '../types';
+import type { Palette } from '../types';
 
 import { LazyGameInfo } from '@/features/games/components/GameInfo/LazyGameInfo';
 import type { BaseInfoProps } from '@/features/games/types';
@@ -20,8 +20,6 @@ interface InfoBoardProps {
 /** Rendering factories for the example animation. */
 interface InfoRenderingProps {
     palette: Palette;
-    getFrontProps: PropsFactory;
-    getBackProps: PropsFactory;
 }
 
 export interface LightsOutInfoProps extends BaseInfoProps {
@@ -47,7 +45,7 @@ export function LightsOutInfo({
     onApply,
 }: LightsOutInfoProps): React.ReactElement | null {
     const { rows, cols, size } = board;
-    const { palette, getFrontProps, getBackProps } = rendering;
+    const { palette } = rendering;
 
     const isMobile = useMobile('md');
     const isMobileSm = useMobile('sm');
@@ -63,14 +61,7 @@ export function LightsOutInfo({
             toggleOpen={toggleOpen}
             titles={INFO_TITLES}
             instructions={INSTRUCTIONS}
-            exampleContent={
-                <Example
-                    size={exampleSize}
-                    palette={palette}
-                    getFrontProps={getFrontProps}
-                    getBackProps={getBackProps}
-                />
-            }
+            exampleContent={<Example size={exampleSize} palette={palette} />}
             extraSteps={[
                 <InfoCalculator
                     key="calculator"
