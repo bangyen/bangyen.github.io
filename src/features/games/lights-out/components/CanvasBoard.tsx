@@ -113,10 +113,7 @@ export function CanvasBoard({
                     const backgroundColor = bgColorsRGB[y];
                     if (backgroundColor) {
                         backgroundColor[x] = parseColor(
-                            dominantColor ||
-                                (Math.random() > 0.5
-                                    ? palette.primary
-                                    : palette.secondary),
+                            dominantColor || palette.secondary,
                         );
                     }
                 }
