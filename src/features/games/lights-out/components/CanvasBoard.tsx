@@ -14,17 +14,27 @@ interface RGB {
     b: number;
 }
 
+const colorCache = new Map<string, RGB>();
+let sharedCtx: CanvasRenderingContext2D | null = null;
+
 const parseColor = (color: string): RGB => {
-    // We use an offscreen canvas to parse any CSS color (hex, hsl, rgb, name)
-    const canvas = document.createElement('canvas');
-    canvas.width = 1;
-    canvas.height = 1;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return { r: 0, g: 0, b: 0 };
-    ctx.fillStyle = color;
-    ctx.fillRect(0, 0, 1, 1);
-    const data = ctx.getImageData(0, 0, 1, 1).data;
-    return { r: data[0] || 0, g: data[1] || 0, b: data[2] || 0 };
+    const cached = colorCache.get(color);
+    if (cached) return cached;
+
+    if (!sharedCtx) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 1;
+        canvas.height = 1;
+        sharedCtx = canvas.getContext('2d', { willReadFrequently: true });
+    }
+    if (!sharedCtx) return { r: 0, g: 0, b: 0 };
+
+    sharedCtx.fillStyle = color;
+    sharedCtx.fillRect(0, 0, 1, 1);
+    const data = sharedCtx.getImageData(0, 0, 1, 1).data;
+    const res = { r: data[0] || 0, g: data[1] || 0, b: data[2] || 0 };
+    colorCache.set(color, res);
+    return res;
 };
 
 const lerp = (start: number, end: number, t: number) =>
@@ -49,7 +59,7 @@ export function CanvasBoard({
     const cols = grid[0]?.length ?? 0;
     const pxScale = 40;
     const size = remSize * pxScale;
-    const maxR = size * 0.25;
+    const maxR = size * 0.35;
 
     // Animation state refs
     const currentColors = useRef<RGB[][]>([]);
@@ -180,7 +190,7 @@ export function CanvasBoard({
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const lerpFactor = 0.2; // Speed of transition
+            const lerpFactor = 0.4; // Speed of transition
 
             const updateLayer = (
                 currentLColors: RGB[][],

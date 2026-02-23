@@ -31,6 +31,29 @@ export function LightsOutBoard({
     // The top layer (index 1) contains the interactive front cells.
     const frontLayer = layers[1];
 
+    // Enhance cell props to be transparent while maintaining interaction
+    const enhancedCellProps = React.useMemo(() => {
+        if (!frontLayer) return;
+        return (row: number, col: number) => {
+            const props = frontLayer.cellProps(row, col);
+            return {
+                ...props,
+                backgroundColor: 'transparent',
+                color: 'transparent',
+                style: {
+                    ...(props['style'] as object),
+                    backgroundColor: 'transparent',
+                    color: 'transparent',
+                },
+                // Preserve sx for hover/focus but ensure no background
+                ['sx']: {
+                    ...(props['sx'] as object),
+                    backgroundColor: 'transparent !important',
+                },
+            };
+        };
+    }, [frontLayer]);
+
     return (
         <BoardContainer
             data-testid="lights-out-board"
@@ -56,7 +79,7 @@ export function LightsOutBoard({
                             cols={frontLayer.cols}
                             size={size}
                             space={0}
-                            cellProps={frontLayer.cellProps}
+                            cellProps={enhancedCellProps}
                         />
                     </Box>
                 )}
