@@ -78,6 +78,7 @@ vi.mock('@/components/icons', () => ({
     MenuBookRounded: () => <div data-testid="menubookrounded-icon" />,
     ArrowBackRounded: () => <div data-testid="arrowbackrounded-icon" />,
     HomeRounded: () => <div data-testid="homerounded-icon" />,
+    FileDownloadRounded: () => <div data-testid="filedownloadrounded-icon" />,
 }));
 
 // Mock calculator helpers
@@ -101,6 +102,8 @@ describe('Lights Out Info Component', () => {
             getBackProps: () => (_r: number, _c: number) => ({}),
         },
         onApply: mockOnApply,
+        solved: false,
+        bottomRow: [0, 0, 0],
     };
 
     const mockGetInput = calculator.getInput as Mock;
@@ -159,8 +162,8 @@ describe('Lights Out Info Component', () => {
         fireEvent.click(nextBtn); // To Example
         fireEvent.click(nextBtn); // To Calculator
 
-        expect(screen.getByText('Input')).toBeInTheDocument(); // Header for input
-        expect(screen.getByText('Solution')).toBeInTheDocument();
+        expect(screen.getAllByText(/Input/i).length).toBeGreaterThan(0); // Header for input
+        expect(screen.getAllByText(/Solution/i).length).toBeGreaterThan(0);
     });
 
     it('allows toggling input bits in calculator', async () => {
@@ -213,7 +216,7 @@ describe('Lights Out Info Component', () => {
 
         // Navigate to step 2: Calculator
         fireEvent.click(nextBtn);
-        expect(screen.getByText('Input')).toBeInTheDocument();
+        expect(screen.getByText(/Input/i)).toBeInTheDocument();
     });
 
     it('does not go back past first step', async () => {
@@ -236,7 +239,7 @@ describe('Lights Out Info Component', () => {
         fireEvent.click(nextBtn);
 
         // Should be in calculator view
-        expect(screen.getByText('Input')).toBeInTheDocument();
+        expect(screen.getByText(/Input/i)).toBeInTheDocument();
 
         // Simulate cols change (should trigger reset)
         rerender(
@@ -247,7 +250,7 @@ describe('Lights Out Info Component', () => {
         );
 
         // Component should still render calculator
-        expect(screen.getByText('Input')).toBeInTheDocument();
+        expect(screen.getByText(/Input/i)).toBeInTheDocument();
     });
 
     it('handles reset button in calculator', async () => {
@@ -259,7 +262,7 @@ describe('Lights Out Info Component', () => {
         fireEvent.click(nextBtn);
 
         // Should be in calculator view with input and solution labels
-        expect(screen.getByText('Input')).toBeInTheDocument();
+        expect(screen.getByText(/Input/i)).toBeInTheDocument();
     });
 
     it('prevents modal from closing when clicking inside GlassCard', async () => {
@@ -312,14 +315,14 @@ describe('Lights Out Info Component', () => {
         fireEvent.click(nextBtn); // To Example
         fireEvent.click(nextBtn); // To Calculator
 
-        const clearBtn = screen.getByText('Clear Pattern');
+        const clearBtn = screen.getByText('Clear');
         fireEvent.click(clearBtn);
 
         // Verify it doesn't crash
-        expect(screen.getByText('Input')).toBeInTheDocument();
+        expect(screen.getByText(/Input/i)).toBeInTheDocument();
     });
 
-    it('calls onApply when Copy Pattern is clicked with a non-zero solution', async () => {
+    it('calls onApply when Apply Solution is clicked with a non-zero solution', async () => {
         // Make getProduct return a non-zero solution so the button is enabled
         (mathUtils.getProduct as Mock).mockReturnValue([1, 0, 1]);
 
@@ -328,19 +331,19 @@ describe('Lights Out Info Component', () => {
         fireEvent.click(nextBtn); // To Example
         fireEvent.click(nextBtn); // To Calculator
 
-        const copyBtn = screen.getByText('Copy Pattern');
+        const copyBtn = screen.getByText('Apply Solution');
         fireEvent.click(copyBtn);
 
         expect(mockOnApply).toHaveBeenCalledWith([1, 0, 1]);
     });
 
-    it('disables Copy Pattern when solution is all zeros', async () => {
+    it('disables Apply Solution when solution is all zeros', async () => {
         await renderInfo();
         const nextBtn = screen.getByText('Next');
         fireEvent.click(nextBtn); // To Example
         fireEvent.click(nextBtn); // To Calculator
 
-        const copyBtn = screen.getByText('Copy Pattern');
+        const copyBtn = screen.getByText('Apply Solution');
         expect(copyBtn.closest('button')).toBeDisabled();
     });
 
@@ -390,6 +393,6 @@ describe('Lights Out Info Component', () => {
         const invCell = screen.getByTestId('cell-999');
         fireEvent.mouseDown(invCell);
 
-        expect(screen.getByText('Input')).toBeInTheDocument();
+        expect(screen.getByText(/Input/i)).toBeInTheDocument();
     });
 });
