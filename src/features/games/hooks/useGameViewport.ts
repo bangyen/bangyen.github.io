@@ -26,7 +26,7 @@ export function useGameViewport(config: ViewportConfig = {}): GameViewport {
     // 'small' variant is forced on mobile regardless of config,
     // unless we want to allow explicit overrides to 'default' on mobile (rare).
     const resolvedVariant: GameScalingVariant =
-        sizeVariant === 'small' || isMobile ? 'small' : 'default';
+        sizeVariant === 'small' ? 'small' : 'default';
 
     return {
         isMobile,

@@ -27,6 +27,8 @@ export interface LightsOutInfoProps extends BaseInfoProps {
     board: InfoBoardProps;
     /** Rendering factories for the example animation. */
     rendering: InfoRenderingProps;
+    /** Whether the board is currently solved. */
+    solved: boolean;
     /** Applies the calculator solution to the game board. */
     onApply: (solution: number[]) => void;
     /** The board's current bottom row configuration. */
@@ -41,6 +43,7 @@ export interface LightsOutInfoProps extends BaseInfoProps {
  */
 export function LightsOutInfo({
     open,
+    solved,
     toggleOpen,
     board,
     rendering,
@@ -61,7 +64,7 @@ export function LightsOutInfo({
         inputGrid,
         outputGrid,
         hasPattern,
-    } = useCalculator({ rows, cols, palette });
+    } = useCalculator({ rows, cols, palette, solved });
 
     const exampleSize = isMobileSm ? EXAMPLE_SIZE.MOBILE : EXAMPLE_SIZE.DESKTOP;
 

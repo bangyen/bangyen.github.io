@@ -12,6 +12,7 @@ interface UseCalculatorParams {
     rows: number;
     cols: number;
     palette: Palette;
+    solved: boolean;
 }
 
 /**
@@ -20,12 +21,24 @@ interface UseCalculatorParams {
  * users toggle individual cells.  Extracted from `Info` so the component can
  * focus purely on presentation while this hook owns the logic.
  */
-export function useCalculator({ rows, cols, palette }: UseCalculatorParams) {
+export function useCalculator({
+    rows,
+    cols,
+    palette,
+    solved,
+}: UseCalculatorParams) {
     const [calcRow, setCalcRow] = useState<number[]>(new Array(cols).fill(0));
 
     useEffect(() => {
         setCalcRow(new Array(cols).fill(0));
     }, [cols, palette]);
+
+    // Clear the calculator when the board is solved.
+    useEffect(() => {
+        if (solved) {
+            setCalcRow(new Array(cols).fill(0));
+        }
+    }, [solved, cols]);
 
     const res = getProduct(calcRow, rows, cols);
 

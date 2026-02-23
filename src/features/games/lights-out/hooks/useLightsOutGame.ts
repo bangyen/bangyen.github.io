@@ -88,6 +88,7 @@ export function useLightsOutGame() {
             game: { rows, cols, size, mobile, scaling },
             info: {
                 open,
+                solved: baseGame.solved,
                 toggleOpen,
                 handleApply,
                 bottomRow: bottomRowArray,
