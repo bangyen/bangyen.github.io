@@ -53,7 +53,7 @@ describe('LightsOut', () => {
 
     it('renders the game board and controls', () => {
         renderWithProviders(<LightsOut />);
-        expect(screen.getByTestId('board-container')).toBeInTheDocument();
+        expect(screen.getByTestId('lights-out-board')).toBeInTheDocument();
         // Check for specific control buttons instead of a generic mock ID
         expect(screen.getAllByLabelText('New Puzzle').length).toBeGreaterThan(
             0,

@@ -1,5 +1,5 @@
-import { Board } from '../../components/Board';
 import { StandardGameLayout } from '../../components/StandardGameLayout';
+import { LightsOutBoard as Board } from '../components/LightsOutBoard';
 import { LightsOutInfo as Info } from '../components/LightsOutInfo';
 import { useLightsOutGame } from '../hooks/useLightsOutGame';
 

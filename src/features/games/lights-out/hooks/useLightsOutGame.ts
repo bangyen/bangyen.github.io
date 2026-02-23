@@ -78,6 +78,7 @@ export function useLightsOutGame() {
 
     return {
         ...useLightsOutProps({
+            gameState: baseGame,
             game: { rows, cols, size, mobile, scaling },
             info: { open, toggleOpen, handleApply },
             rendering: { palette, getters, skipTransition },

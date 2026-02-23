@@ -58,6 +58,7 @@ export interface LightsOutDragParams {
 }
 
 export interface UseLightsOutPropsParams {
+    gameState: { state: { grid: number[] } };
     game: LightsOutGameParams;
     info: LightsOutInfoParams;
     rendering: LightsOutRenderingParams;
@@ -71,6 +72,7 @@ export interface UseLightsOutPropsParams {
  * page receives a structurally consistent contract.
  */
 export function useLightsOutProps({
+    gameState: { state },
     game: { rows, cols, size, mobile, scaling },
     info: { open, toggleOpen, handleApply },
     rendering: { palette, getters, skipTransition },
@@ -85,10 +87,17 @@ export function useLightsOutProps({
         [getters, skipTransition],
     );
 
-    const boardProps = useMemo(
-        () => ({
+    const boardProps = useMemo(() => {
+        const grid2D = Array.from({ length: rows }, (_, r) => {
+            const rowVal = state.grid[r] ?? 0;
+            return Array.from({ length: cols }, (_, c) => (rowVal >> c) & 1);
+        });
+
+        return {
             size,
             space: 0,
+            grid: grid2D,
+            palette,
             layers: [
                 {
                     rows: rows - 1,
@@ -102,9 +111,8 @@ export function useLightsOutProps({
                     decorative: true,
                 },
             ],
-        }),
-        [size, rows, cols, backProps, frontProps],
-    );
+        };
+    }, [size, rows, cols, state.grid, palette, backProps, frontProps]);
 
     const layoutProps = useMemo(
         () => ({
