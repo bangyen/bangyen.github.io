@@ -5,7 +5,8 @@ import type { Palette } from '../types';
 interface CanvasBoardProps {
     grid: number[][];
     palette: Palette;
-    size: number; // in rem
+    size: number; // in rem (height)
+    width?: number; // in rem (optional, defaults to size)
 }
 
 interface RGB {
@@ -52,14 +53,16 @@ const rgbToCss = ({ r, g, b }: RGB) =>
 export function CanvasBoard({
     grid,
     palette,
-    size: remSize,
+    size: remHeight,
+    width: remWidth,
 }: CanvasBoardProps): React.ReactElement {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const rows = grid.length;
     const cols = grid[0]?.length ?? 0;
     const pxScale = 40;
-    const size = remSize * pxScale;
-    const maxR = size * 0.35;
+    const h = remHeight * pxScale;
+    const w = (remWidth ?? remHeight) * pxScale;
+    const maxR = Math.min(w, h) * 0.35;
 
     // Animation state refs
     const currentColors = useRef<RGB[][]>([]);
@@ -197,7 +200,8 @@ export function CanvasBoard({
                 targetLColors: RGB[][],
                 currentLCorners: number[][][],
                 targetLCorners: number[][][],
-                offset: number,
+                offsetX: number,
+                offsetY: number,
             ) => {
                 for (const [y, rowColors] of targetLColors.entries()) {
                     const curRowColors = currentLColors[y];
@@ -233,10 +237,10 @@ export function CanvasBoard({
 
                         ctx.beginPath();
                         ctx.roundRect(
-                            x * size + offset,
-                            y * size + offset,
-                            size + 1,
-                            size + 1,
+                            x * w + offsetX,
+                            y * h + offsetY,
+                            w + 1,
+                            h + 1,
                             curCellCorners as [number, number, number, number],
                         );
                         ctx.fillStyle = rgbToCss(curRowColors[x]);
@@ -251,7 +255,8 @@ export function CanvasBoard({
                     targetBgColors.current,
                     currentBgCorners.current,
                     targetBgCorners.current,
-                    size / 2,
+                    w / 2,
+                    h / 2,
                 );
             }
             updateLayer(
@@ -259,6 +264,7 @@ export function CanvasBoard({
                 targetColors.current,
                 currentCorners.current,
                 targetCorners.current,
+                0,
                 0,
             );
 
@@ -269,18 +275,18 @@ export function CanvasBoard({
         return () => {
             cancelAnimationFrame(animationRef.current);
         };
-    }, [size, rows, cols, maxR]);
+    }, [w, h, rows, cols, maxR]);
 
     return (
         <canvas
             ref={canvasRef}
             data-testid="canvas-board"
-            width={size * cols}
-            height={size * rows}
+            width={w * cols}
+            height={h * rows}
             style={{
                 display: 'block',
-                width: `${String(remSize * cols)}rem`,
-                height: `${String(remSize * rows)}rem`,
+                width: `${String((remWidth ?? remHeight) * cols)}rem`,
+                height: `${String(remHeight * rows)}rem`,
                 borderRadius: '8px',
                 overflow: 'hidden',
             }}

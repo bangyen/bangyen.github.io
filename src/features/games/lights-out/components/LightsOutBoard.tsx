@@ -36,21 +36,28 @@ export function LightsOutBoard({
         if (!frontLayer) return;
         return (row: number, col: number) => {
             const props = frontLayer.cellProps(row, col);
+            /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
+            const sx = props['sx'] as any;
+
             return {
                 ...props,
-                backgroundColor: 'transparent',
-                color: 'transparent',
-                style: {
-                    ...(props['style'] as object),
-                    backgroundColor: 'transparent',
-                    color: 'transparent',
-                },
-                // Preserve sx for hover/focus but ensure no background
+                // Preserve sx for hover/focus but ensure no background.
+                // Icons (children) are only visible on hover/focus.
                 ['sx']: {
-                    ...(props['sx'] as object),
+                    ...sx,
                     backgroundColor: 'transparent !important',
+                    color: 'transparent',
+                    '&:hover': {
+                        ...sx['&:hover'],
+                        color: sx['&:hover']?.color ?? 'inherit',
+                    },
+                    '&:focus-visible': {
+                        ...sx['&:focus-visible'],
+                        color: sx['&:focus-visible']?.color ?? 'inherit',
+                    },
                 },
             };
+            /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
         };
     }, [frontLayer]);
 

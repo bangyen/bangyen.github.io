@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from 'react';
 
 import { useDrag } from '../../hooks/useDrag';
 import { useGridNavigation } from '../../hooks/useGridNavigation';
-import { getInput, getOutput, useHandler } from '../components/Calculator';
+import { getInput, useHandler } from '../components/Calculator';
 import type { Palette } from '../types';
 
 import { getProduct } from '@/utils/math/gf2';
@@ -62,9 +62,7 @@ export function useCalculator({ rows, cols, palette }: UseCalculatorParams) {
     );
 
     const inputGetters = useHandler(calcRow, cols, palette);
-    const outputGetters = useHandler(res, cols, palette);
     const inputProps = getInput(inputGetters, getEnhancedDragProps);
-    const outputProps = getOutput(outputGetters);
 
     const handleReset = useCallback(() => {
         setCalcRow(new Array(cols).fill(0));
@@ -72,9 +70,10 @@ export function useCalculator({ rows, cols, palette }: UseCalculatorParams) {
 
     return {
         inputProps,
-        outputProps,
         handleReset,
         res,
+        inputGrid: [calcRow],
+        outputGrid: [res],
         hasPattern: res.some(v => v !== 0),
     };
 }
