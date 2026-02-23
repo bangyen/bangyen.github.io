@@ -39,6 +39,7 @@ export interface LightsOutInfoParams {
     open: boolean;
     toggleOpen: () => void;
     handleApply: (solution: number[]) => void;
+    bottomRow: number[];
 }
 
 export interface LightsOutRenderingParams {
@@ -74,7 +75,7 @@ export interface UseLightsOutPropsParams {
 export function useLightsOutProps({
     gameState: { state },
     game: { rows, cols, size, mobile, scaling },
-    info: { open, toggleOpen, handleApply },
+    info: { open, toggleOpen, handleApply, bottomRow },
     rendering: { palette, getters, skipTransition },
     drag: { getDragProps, frontPropsFactory },
 }: UseLightsOutPropsParams) {
@@ -136,8 +137,9 @@ export function useLightsOutProps({
                 getBackProps,
             },
             onApply: handleApply,
+            bottomRow,
         }),
-        [open, toggleOpen, rows, cols, size, palette, handleApply],
+        [open, toggleOpen, rows, cols, size, palette, handleApply, bottomRow],
     );
 
     const trophyProps = useMemo(

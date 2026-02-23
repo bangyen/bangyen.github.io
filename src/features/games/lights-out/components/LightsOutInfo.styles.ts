@@ -45,16 +45,19 @@ export const calculatorSubLabelSx: SxProps<Theme> = {
 /** Button-group container layout. */
 export const calculatorButtonGroupSx = (
     useHorizontal: boolean,
-    isMobile: boolean,
+    isMobileSm: boolean,
 ): SxProps<Theme> => ({
     display: 'flex',
-    flexDirection: useHorizontal || isMobile ? 'column' : 'row',
+    flexDirection: useHorizontal || isMobileSm ? 'column' : 'row',
     gap: 1,
-    alignItems: 'center',
+    alignItems: 'stretch',
 });
 
 /** Outlined action button. */
 export const calculatorButtonSx: SxProps<Theme> = {
     borderColor: COLORS.border.subtle,
     color: COLORS.text.secondary,
+    flex: 1,
+    width: '100%',
+    whiteSpace: 'nowrap',
 };

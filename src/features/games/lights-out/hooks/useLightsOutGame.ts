@@ -76,11 +76,22 @@ export function useLightsOutGame() {
         [dispatch, toggleOpen],
     );
 
+    const bottomRow = state.grid[rows - 1] ?? 0;
+    const bottomRowArray = Array.from(
+        { length: cols },
+        (_, c) => (bottomRow >> c) & 1,
+    );
+
     return {
         ...useLightsOutProps({
             gameState: baseGame,
             game: { rows, cols, size, mobile, scaling },
-            info: { open, toggleOpen, handleApply },
+            info: {
+                open,
+                toggleOpen,
+                handleApply,
+                bottomRow: bottomRowArray,
+            },
             rendering: { palette, getters, skipTransition },
             drag: {
                 getDragProps,

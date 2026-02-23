@@ -68,9 +68,14 @@ export function useCalculator({ rows, cols, palette }: UseCalculatorParams) {
         setCalcRow(new Array(cols).fill(0));
     }, [cols]);
 
+    const handleSetRow = useCallback((row: number[]) => {
+        setCalcRow(row);
+    }, []);
+
     return {
         inputProps,
         handleReset,
+        handleSetRow,
         res,
         inputGrid: [calcRow],
         outputGrid: [res],

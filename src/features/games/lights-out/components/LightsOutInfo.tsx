@@ -29,6 +29,8 @@ export interface LightsOutInfoProps extends BaseInfoProps {
     rendering: InfoRenderingProps;
     /** Applies the calculator solution to the game board. */
     onApply: (solution: number[]) => void;
+    /** The board's current bottom row configuration. */
+    bottomRow: number[];
 }
 
 /**
@@ -43,6 +45,7 @@ export function LightsOutInfo({
     board,
     rendering,
     onApply,
+    bottomRow,
 }: LightsOutInfoProps): React.ReactElement | null {
     const { rows, cols, size } = board;
     const { palette } = rendering;
@@ -50,8 +53,15 @@ export function LightsOutInfo({
     const isMobile = useMobile('md');
     const isMobileSm = useMobile('sm');
 
-    const { inputProps, handleReset, res, inputGrid, outputGrid, hasPattern } =
-        useCalculator({ rows, cols, palette });
+    const {
+        inputProps,
+        handleReset,
+        handleSetRow,
+        res,
+        inputGrid,
+        outputGrid,
+        hasPattern,
+    } = useCalculator({ rows, cols, palette });
 
     const exampleSize = isMobileSm ? EXAMPLE_SIZE.MOBILE : EXAMPLE_SIZE.DESKTOP;
 
@@ -68,6 +78,7 @@ export function LightsOutInfo({
                     cols={cols}
                     size={size}
                     isMobile={isMobile}
+                    isMobileSm={isMobileSm}
                     palette={palette}
                     inputGrid={inputGrid}
                     outputGrid={outputGrid}
@@ -75,6 +86,9 @@ export function LightsOutInfo({
                     onReset={handleReset}
                     onApply={() => {
                         onApply(res);
+                    }}
+                    onFillFromBoard={() => {
+                        handleSetRow(bottomRow);
                     }}
                     hasPattern={hasPattern}
                 />,

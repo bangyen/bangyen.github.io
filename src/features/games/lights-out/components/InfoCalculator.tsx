@@ -12,19 +12,25 @@ import {
 } from './LightsOutInfo.styles';
 import type { Palette } from '../types';
 
-import { ContentCopyRounded, Refresh } from '@/components/icons';
+import {
+    ContentCopyRounded,
+    Refresh,
+    FileDownloadRounded,
+} from '@/components/icons';
 import { CustomGrid } from '@/components/ui/CustomGrid';
 
 export interface InfoCalculatorProps {
     cols: number;
     size: number;
     isMobile: boolean;
+    isMobileSm: boolean;
     palette: Palette;
     inputGrid: number[][];
     outputGrid: number[][];
     inputProps: (row: number, col: number) => Record<string, unknown>;
     onReset: () => void;
     onApply: () => void;
+    onFillFromBoard: () => void;
     hasPattern: boolean;
 }
 
@@ -37,12 +43,14 @@ export const InfoCalculator = React.memo(function InfoCalculator({
     cols,
     size,
     isMobile,
+    isMobileSm,
     palette,
     inputGrid,
     outputGrid,
     inputProps: rawInputProps,
     onReset,
     onApply,
+    onFillFromBoard,
     hasPattern,
 }: InfoCalculatorProps) {
     const MAX_CELL = 3; // rem
@@ -130,7 +138,16 @@ export const InfoCalculator = React.memo(function InfoCalculator({
                     />
                 </Box>
 
-                <Box sx={calculatorButtonGroupSx(useHorizontal, isMobile)}>
+                <Box sx={calculatorButtonGroupSx(useHorizontal, isMobileSm)}>
+                    <Button
+                        variant="outlined"
+                        size="small"
+                        startIcon={<FileDownloadRounded />}
+                        onClick={onFillFromBoard}
+                        sx={calculatorButtonSx}
+                    >
+                        Fill from Board
+                    </Button>
                     <Button
                         variant="outlined"
                         size="small"
@@ -139,7 +156,7 @@ export const InfoCalculator = React.memo(function InfoCalculator({
                         onClick={onApply}
                         sx={calculatorButtonSx}
                     >
-                        Copy Pattern
+                        Apply Solution
                     </Button>
                     <Button
                         variant="outlined"
@@ -148,7 +165,7 @@ export const InfoCalculator = React.memo(function InfoCalculator({
                         onClick={onReset}
                         sx={calculatorButtonSx}
                     >
-                        Clear Pattern
+                        Clear
                     </Button>
                 </Box>
             </Box>

@@ -54,6 +54,8 @@ export {
     RemoveRounded,
     ContentCopyRounded,
     DeleteRounded,
+    FileDownloadRounded,
+    RestartAltRounded,
 } from '@mui/icons-material';
 
 // Code Icons

@@ -1,5 +1,8 @@
+/**
+ * @vitest-environment happy-dom
+ */
 import { renderHook } from '@testing-library/react';
-import { vi, type Mock } from 'vitest';
+import { vi, type Mock, describe, it, expect } from 'vitest';
 
 import type { DragProps } from '../../../hooks/useDrag';
 import { useGetters } from '../../hooks/boardUtils';
