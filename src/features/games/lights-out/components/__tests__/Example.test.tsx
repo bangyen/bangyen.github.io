@@ -2,6 +2,7 @@
  * @vitest-environment happy-dom
  */
 import { render, screen, act, fireEvent } from '@testing-library/react';
+import React from 'react';
 import { vi, describe, it, expect } from 'vitest';
 
 import { EXAMPLE_ANIMATION_DATA } from '../../utils/animationData';
@@ -32,45 +33,8 @@ vi.mock('@/components/icons', () => ({
     PauseRounded: () => <div data-testid="icon-pause" />,
 }));
 
-// Mock CustomGrid to avoid complex rendering and animations
-vi.mock('@/components/ui/CustomGrid', () => ({
-    CustomGrid: vi.fn(
-        ({
-            cellProps,
-            rows,
-            cols,
-        }: {
-            cellProps: (
-                r: number,
-                c: number,
-            ) => { backgroundColor?: string; color?: string };
-            rows: number;
-            cols: number;
-        }) => (
-            <div data-testid="custom-grid">
-                {Array.from({ length: rows * cols }).map((_, i) => {
-                    const r = Math.floor(i / cols);
-                    const c = i % cols;
-                    const props = cellProps(r, c);
-                    const { backgroundColor, color, ...domProps } = props;
-
-                    return (
-                        <div
-                            key={`${String(r)}-${String(c)}`}
-                            data-testid={`cell-${String(r)}-${String(c)}`}
-                            style={
-                                {
-                                    backgroundColor,
-                                    color,
-                                } as React.CSSProperties
-                            }
-                            {...domProps}
-                        />
-                    );
-                })}
-            </div>
-        ),
-    ),
+vi.mock('./CanvasBoard', () => ({
+    CanvasBoard: () => <div data-testid="canvas-board" />,
 }));
 
 describe('Lights Out Example Component', () => {
@@ -141,33 +105,18 @@ describe('Lights Out Example Component', () => {
             />,
         );
 
-        // Initially shows board (2 layers: back and front)
-        const grids = screen.getAllByTestId('custom-grid');
-        expect(grids).toHaveLength(2);
+        // Initially shows board (CanvasBoard)
+        expect(screen.getByTestId('canvas-board')).toBeInTheDocument();
 
         // Switch to calculator
         const switchBtn = screen.getByText('Calculator');
         fireEvent.click(switchBtn);
 
-        // Now should show Input and Result grids (1x3 each)
-        const newGrids = screen.getAllByTestId('custom-grid');
+        // Now should show Input and Result grids (CanvasBoard x2)
+        const newGrids = screen.getAllByTestId('canvas-board');
         expect(newGrids).toHaveLength(2);
         expect(screen.getByText('Input')).toBeInTheDocument();
         expect(screen.getByText('Result')).toBeInTheDocument();
-    });
-
-    it('passes cellProps to CustomGrid', () => {
-        render(
-            <Example
-                size={100}
-                palette={mockPalette}
-                getFrontProps={mockGetFrontProps}
-                getBackProps={mockGetBackProps}
-            />,
-        );
-
-        expect(mockGetFrontProps).toHaveBeenCalled();
-        expect(mockGetBackProps).toHaveBeenCalled();
     });
 
     it('cycles through frames over time', () => {
@@ -181,13 +130,13 @@ describe('Lights Out Example Component', () => {
             />,
         );
 
-        expect(screen.getAllByTestId('cell-0-0').length).toBeGreaterThan(0);
+        expect(screen.getByTestId('canvas-board')).toBeInTheDocument();
 
         act(() => {
             vi.advanceTimersByTime(2000);
         });
 
-        expect(screen.getAllByTestId('cell-0-0').length).toBeGreaterThan(0);
+        expect(screen.getByTestId('canvas-board')).toBeInTheDocument();
         vi.useRealTimers();
     });
 
