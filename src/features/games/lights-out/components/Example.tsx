@@ -24,14 +24,33 @@ import { useExampleAnimation } from '@/features/games/components/GameInfo/useExa
 interface FrameRendererProps {
     remainder: number;
     activeView: 'board' | 'calculator';
+    direction: number;
     dims: number;
     size: number;
     palette: Palette;
 }
 
+const variants = {
+    enter: (direction: number) => ({
+        x: direction > 0 ? '100%' : '-100%',
+        opacity: 0,
+    }),
+    center: {
+        zIndex: 1,
+        x: 0,
+        opacity: 1,
+    },
+    exit: (direction: number) => ({
+        zIndex: 0,
+        x: direction < 0 ? '100%' : '-100%',
+        opacity: 0,
+    }),
+};
+
 const FrameRenderer = ({
     remainder,
     activeView,
+    direction,
     dims,
     size,
     palette,
@@ -70,12 +89,18 @@ const FrameRenderer = ({
             }}
         >
             <style>{LIGHTS_OUT_STYLES.ANIMATIONS.POP_IN}</style>
-            <AnimatePresence mode="popLayout" initial={false}>
+            <AnimatePresence
+                mode="popLayout"
+                custom={direction}
+                initial={false}
+            >
                 <motion.div
                     key={activeView}
-                    initial={{ x: '100%', opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: '-100%', opacity: 0 }}
+                    custom={direction}
+                    variants={variants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
                     transition={{
                         x: { type: 'spring', stiffness: 300, damping: 30 },
                         opacity: { duration: 0.2 },
@@ -278,27 +303,31 @@ export function Example({ size, palette }: ExampleProps): React.ReactElement {
     });
     const { frameIdx, isPlaying, setIsPlaying } = animation;
 
-    const [activeView, setActiveView] = useState<'board' | 'calculator'>(
-        'board',
-    );
+    const [[activeView, direction], setView] = useState<
+        ['board' | 'calculator', number]
+    >(['board', 0]);
 
     // Handle auto-switching logic
     useEffect(() => {
         if (!isPlaying) return;
 
-        if (
+        const nextView =
             frameIdx >= phaseIndices.calculatorStart &&
             frameIdx < phaseIndices.secondChaseStart
-        ) {
-            setActiveView('calculator');
-        } else {
-            setActiveView('board');
+                ? 'calculator'
+                : 'board';
+
+        if (nextView !== activeView) {
+            setView([nextView, nextView === 'calculator' ? 1 : -1]);
         }
-    }, [frameIdx, isPlaying, phaseIndices]);
+    }, [frameIdx, isPlaying, phaseIndices, activeView]);
 
     const handleToggleView = () => {
         setIsPlaying(false);
-        setActiveView(prev => (prev === 'board' ? 'calculator' : 'board'));
+        setView(prev => [
+            prev[0] === 'board' ? 'calculator' : 'board',
+            prev[0] === 'board' ? 1 : -1,
+        ]);
     };
 
     return (
@@ -311,6 +340,7 @@ export function Example({ size, palette }: ExampleProps): React.ReactElement {
                     size={size}
                     palette={palette}
                     activeView={activeView}
+                    direction={direction}
                 />
             )}
             extraActions={
