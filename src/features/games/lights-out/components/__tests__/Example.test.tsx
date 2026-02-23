@@ -37,6 +37,13 @@ vi.mock('./CanvasBoard', () => ({
     CanvasBoard: () => <div data-testid="canvas-board" />,
 }));
 
+vi.mock('framer-motion', () => ({
+    motion: {
+        div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    },
+    AnimatePresence: ({ children }: any) => children,
+}));
+
 describe('Lights Out Example Component', () => {
     const mockPalette = { primary: 'red', secondary: 'blue' };
 
