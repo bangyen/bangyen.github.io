@@ -70,13 +70,16 @@ const FrameRenderer = ({
             }}
         >
             <style>{LIGHTS_OUT_STYLES.ANIMATIONS.POP_IN}</style>
-            <AnimatePresence mode="wait">
+            <AnimatePresence mode="popLayout" initial={false}>
                 <motion.div
                     key={activeView}
-                    initial={{ x: 50, opacity: 0 }}
+                    initial={{ x: '100%', opacity: 0 }}
                     animate={{ x: 0, opacity: 1 }}
-                    exit={{ x: -50, opacity: 0 }}
-                    transition={{ duration: 0.4, ease: [0.4, 0, 0.2, 1] }}
+                    exit={{ x: '-100%', opacity: 0 }}
+                    transition={{
+                        x: { type: 'spring', stiffness: 300, damping: 30 },
+                        opacity: { duration: 0.2 },
+                    }}
                     style={{
                         display: 'flex',
                         alignItems: 'center',
