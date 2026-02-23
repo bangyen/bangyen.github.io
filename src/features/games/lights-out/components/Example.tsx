@@ -28,6 +28,7 @@ interface FrameRendererProps {
     dims: number;
     size: number;
     palette: Palette;
+    onClick: () => void;
 }
 
 const variants = {
@@ -54,6 +55,7 @@ const FrameRenderer = ({
     dims,
     size,
     palette,
+    onClick,
 }: FrameRendererProps) => {
     const { boardStates, inputStates, outputStates } = EXAMPLE_ANIMATION_DATA;
     const isSolved = remainder === inputStates.length - 1;
@@ -79,6 +81,7 @@ const FrameRenderer = ({
 
     return (
         <Box
+            onClick={onClick}
             sx={{
                 position: 'relative',
                 overflow: 'hidden',
@@ -86,6 +89,7 @@ const FrameRenderer = ({
                 display: 'flex',
                 justifyContent: 'center',
                 minHeight: { xs: '20rem', sm: '22rem' }, // Ensure enough space for transitions
+                cursor: 'pointer',
             }}
         >
             <style>{LIGHTS_OUT_STYLES.ANIMATIONS.POP_IN}</style>
@@ -341,6 +345,7 @@ export function Example({ size, palette }: ExampleProps): React.ReactElement {
                     palette={palette}
                     activeView={activeView}
                     direction={direction}
+                    onClick={handleToggleView}
                 />
             )}
             extraActions={
