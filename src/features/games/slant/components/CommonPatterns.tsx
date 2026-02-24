@@ -1,19 +1,12 @@
 import { Box, Typography } from '@mui/material';
-import React from 'react';
+import React, { useMemo } from 'react';
 
-import { SlantBoard } from './SlantBoard';
-import { getDerivedBoardDimensions } from '../config/constants';
+import { SlantCanvasBoard } from './SlantCanvasBoard';
 import { PATTERNS } from '../config/patterns';
-import { makeBackProps, makeFrontProps } from '../utils/patternHelpers';
 
 import { GameTextRenderer } from '@/components/ui/GameTextRenderer';
 import { COLORS } from '@/config/theme';
 
-// ---------------------------------------------------------------------------
-// Pattern Description Renderer
-// ---------------------------------------------------------------------------
-
-// Replaced with generic GameTextRenderer Component
 // ---------------------------------------------------------------------------
 // Styles
 // ---------------------------------------------------------------------------
@@ -25,7 +18,6 @@ const patternContainerSx = {
     width: '100%',
     py: 2,
     pr: 4,
-    // Overflow handled by parent infoStepContentSx
 };
 
 const patternItemSx = {
@@ -34,11 +26,10 @@ const patternItemSx = {
     alignItems: 'center',
     gap: 0,
     width: '100%',
-    // maxWidth removed to let grid control width
 };
 
 const patternBoardContainerSx = {
-    width: '180px', // Fixed width to align all boards
+    width: '180px',
     display: 'flex',
     justifyContent: 'center',
     flexShrink: 0,
@@ -49,7 +40,7 @@ const patternTextSx = {
     flexDirection: 'column',
     gap: 1,
     flex: 1,
-    minWidth: 0, // Allow text to wrap properly
+    minWidth: 0,
 };
 
 // ---------------------------------------------------------------------------
@@ -57,23 +48,21 @@ const patternTextSx = {
 // ---------------------------------------------------------------------------
 
 export function CommonPatterns() {
-    const size = 3; // Fixed cell size for patterns
-    const { numberSize } = getDerivedBoardDimensions(size);
+    const size = 2.5; // Adjusted size for canvas boards to fit similar to before
+    const emptySet = useMemo(() => new Set<string>(), []);
 
     return (
         <Box sx={patternContainerSx}>
             {PATTERNS.map(pattern => (
                 <Box key={pattern.title} sx={patternItemSx}>
                     <Box sx={patternBoardContainerSx}>
-                        <SlantBoard
+                        <SlantCanvasBoard
+                            grid={pattern.grid}
+                            numbers={pattern.numbers}
+                            satisfiedNodes={emptySet}
+                            activeCell={null}
                             size={size}
-                            rows={pattern.rows - 1}
-                            cols={pattern.cols - 1}
-                            cellProps={makeBackProps(pattern.grid, size)}
-                            overlayProps={makeFrontProps(
-                                pattern.numbers,
-                                numberSize,
-                            )}
+                            lineWidth={8}
                         />
                     </Box>
                     <Box sx={patternTextSx}>

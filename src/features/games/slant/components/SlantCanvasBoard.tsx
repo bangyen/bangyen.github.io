@@ -13,6 +13,7 @@ interface SlantCanvasBoardProps {
     satisfiedNodes: Set<string>;
     activeCell: string | null;
     size: number; // cell size in rem
+    lineWidth?: number;
 }
 
 export function SlantCanvasBoard({
@@ -21,6 +22,7 @@ export function SlantCanvasBoard({
     satisfiedNodes,
     activeCell,
     size: remSize,
+    lineWidth,
 }: SlantCanvasBoardProps): React.ReactElement {
     const theme = useTheme();
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -155,11 +157,12 @@ export function SlantCanvasBoard({
 
                         ctx.beginPath();
                         const lineLength = cellSize * 1.1;
+                        const strokeWidth = lineWidth ?? 12;
                         ctx.roundRect(
                             -lineLength / 2,
-                            -6, // Offset centered for thickness 12
+                            -strokeWidth / 2,
                             lineLength,
-                            12,
+                            strokeWidth,
                             99,
                         );
                         ctx.fillStyle = lineColor;
@@ -248,6 +251,7 @@ export function SlantCanvasBoard({
         rows,
         cols,
         theme.palette.mode,
+        lineWidth,
     ]);
 
     const remPadding = remSize * 0.4 * 1.5;
