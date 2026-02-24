@@ -12,9 +12,11 @@ import {
     ViewModuleRounded,
 } from '@/components/icons';
 import { COLORS } from '@/config/theme';
-import { ExampleActionButton } from '@/features/games/components/GameInfo/ExampleBase';
-import { GameInfoExample } from '@/features/games/components/GameInfo/GameInfoExample';
-import { useExampleAnimation } from '@/features/games/components/GameInfo/useExampleAnimation';
+import {
+    GameInfoExample,
+    ExampleActionButton,
+    useExampleAnimation,
+} from '@/features/games/components/GameInfo/Example';
 
 // ---------------------------------------------------------------------------
 // FrameRenderer component

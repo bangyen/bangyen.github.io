@@ -18,7 +18,6 @@ export function LightsOut() {
             infoProps={infoProps}
             gameState={gameState}
             trophyProps={trophyProps}
-            showTrophy={gameState.solved}
             renderBoard={props => <Board {...props} />}
             InfoComponent={Info}
         />

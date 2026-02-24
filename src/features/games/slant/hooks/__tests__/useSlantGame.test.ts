@@ -4,10 +4,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useBaseGame } from '../../../hooks/useBaseGame';
 import { useDrag } from '../../../hooks/useDrag';
 import { useAnalysisMode } from '../useAnalysisMode';
-import { useDimensionRegeneration } from '../useDimensionRegeneration';
 import { useGenerationWorker } from '../useGenerationWorker';
 import { useSlantGame } from '../useSlantGame';
-
 vi.mock('../../../hooks/useBaseGame');
 vi.mock('../../../hooks/useDrag');
 vi.mock('../../config', () => ({
@@ -15,7 +13,6 @@ vi.mock('../../config', () => ({
 }));
 vi.mock('../useGenerationWorker');
 vi.mock('../useAnalysisMode');
-vi.mock('../useDimensionRegeneration');
 vi.mock('../useSlantBoard', () => ({
     useSlantBoard: vi.fn().mockReturnValue({
         cellProps: {},
@@ -98,8 +95,6 @@ describe('useSlantGame', () => {
             getDragProps: mockGetDragProps,
             lastTouchTime: { current: 0 } as React.RefObject<number>,
         } as any);
-
-        vi.mocked(useDimensionRegeneration).mockReturnValue(undefined);
     });
 
     it('returns the standard GamePageProps shape', () => {
@@ -126,10 +121,10 @@ describe('useSlantGame', () => {
         expect(result.current.layoutProps).toBeDefined();
     });
 
-    it('wires up dimension regeneration', () => {
+    it('wires up generation worker with correct config', () => {
         renderHook(() => useSlantGame());
 
-        expect(useDimensionRegeneration).toHaveBeenCalledWith(
+        expect(useGenerationWorker).toHaveBeenCalledWith(
             expect.objectContaining({
                 rows: 5,
                 cols: 5,
@@ -151,6 +146,6 @@ describe('useSlantGame', () => {
         const { result } = renderHook(() => useSlantGame());
 
         expect(result.current.boardProps.generating).toBe(true);
-        expect(result.current.gameState.handleNext).toBe(mockHandleNextAsync);
+        expect(result.current.gameState.controlsProps.onRefresh).toBeDefined();
     });
 });

@@ -37,20 +37,12 @@ export interface StandardGameLayoutProps<TBoardProps, TInfoProps> {
     infoProps: TInfoProps & { toggleOpen: () => void };
     /** Props for the win overlay. */
     trophyProps: TrophyOverlayProps;
-    /** Whether to show the win overlay. */
-    showTrophy: boolean;
     /** Function to render the specific game board. */
     renderBoard: (props: TBoardProps) => React.ReactNode;
     /** The game-specific Info modal component. */
     InfoComponent: React.ComponentType<TInfoProps>;
     /** Optional click handler for the entire page background. */
     onPageClick?: (e: React.MouseEvent) => void;
-    /** Optional overrides for the standard control bar. */
-    controlsConfig?: {
-        onRefresh?: () => void;
-        disabled?: boolean;
-        hidden?: boolean;
-    };
     /** Optional background color override. */
     background?: string;
 }
@@ -69,11 +61,9 @@ export function StandardGameLayout<TBoardProps, TInfoProps>({
     layoutProps,
     infoProps,
     trophyProps,
-    showTrophy,
     renderBoard,
     InfoComponent,
     onPageClick,
-    controlsConfig,
     background = COLORS.surface.background,
 }: StandardGameLayoutProps<TBoardProps, TInfoProps>) {
     return (
@@ -115,23 +105,14 @@ export function StandardGameLayout<TBoardProps, TInfoProps>({
                 >
                     <BoardContainerBase sx={layoutProps.boardSx}>
                         {renderBoard(boardProps)}
-                        <TrophyOverlay show={showTrophy} {...trophyProps} />
+                        <TrophyOverlay
+                            show={gameState.solved}
+                            {...trophyProps}
+                        />
                     </BoardContainerBase>
                 </ContentContainer>
             </ErrorBoundary>
-            <GameControls
-                {...gameState.controlsProps}
-                onRefresh={
-                    controlsConfig?.onRefresh ??
-                    gameState.controlsProps.onRefresh
-                }
-                disabled={
-                    controlsConfig?.disabled ?? gameState.controlsProps.disabled
-                }
-                hidden={
-                    controlsConfig?.hidden ?? gameState.controlsProps.hidden
-                }
-            >
+            <GameControls {...gameState.controlsProps}>
                 <GameControls.Refresh />
                 <GameControls.ResizeMinus />
                 <GameControls.ResizePlus />

@@ -1,4 +1,4 @@
-import { screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent, within } from '@testing-library/react';
 import React from 'react';
 import { vi, type Mock } from 'vitest';
 
@@ -123,9 +123,11 @@ describe('LightsOut', () => {
     it('handles manual cell click', () => {
         renderWithProviders(<LightsOut />);
 
+        const board = screen.getByTestId('lights-out-board');
+
         // Use resilient aria-label selection for the cell
-        const cell = screen.getByLabelText(
-            'Light at row 1, column 1, currently unlit',
+        const cell = within(board).getByLabelText(
+            /Light at row 1, column 1\b/i,
         );
 
         fireEvent.mouseDown(cell);

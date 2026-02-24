@@ -2,7 +2,6 @@ import type React from 'react';
 import { useRef, useMemo, useCallback, useState } from 'react';
 
 import { useAnalysisMode } from './useAnalysisMode';
-import { useDimensionRegeneration } from './useDimensionRegeneration';
 import { useGenerationWorker } from './useGenerationWorker';
 import { useSlantBoard } from './useSlantBoard';
 import { GAME_CONSTANTS } from '../../config/constants';
@@ -79,20 +78,14 @@ export function useSlantGame() {
     dimsRef.current = { rows, cols };
 
     // 1. Worker and Dimension Regeneration logic
-    const { generating, handleNextAsync, requestGeneration, cancelGeneration } =
-        useGenerationWorker({
-            getInitialState,
-            dispatchRef,
-            dimsRef,
-            onStaleResult: persistSlantState,
-        });
-
-    useDimensionRegeneration({
+    const { generating, handleNextAsync } = useGenerationWorker({
         rows,
         cols,
         isAnalysisMode,
-        requestGeneration,
-        cancelGeneration,
+        getInitialState,
+        dispatchRef,
+        dimsRef,
+        onStaleResult: persistSlantState,
     });
 
     // 2. Interaction logic (useDrag)
@@ -199,12 +192,13 @@ export function useSlantGame() {
         () => ({
             ...controlsProps,
             hidden: isAnalysisMode,
+            disabled: generating,
             onRefresh: () => {
                 handleNextAsync();
                 controlsProps.onRefresh();
             },
         }),
-        [controlsProps, isAnalysisMode, handleNextAsync],
+        [controlsProps, isAnalysisMode, generating, handleNextAsync],
     );
 
     const dimensionsMismatch = state.rows !== rows || state.cols !== cols;
@@ -233,8 +227,8 @@ export function useSlantGame() {
         infoProps,
         gameState: {
             ...baseGame,
+            solved: !isAnalysisMode && solved,
             controlsProps: activeControlsProps,
-            handleNext: handleNextAsync,
         },
         analysis,
         trophyProps,

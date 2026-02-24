@@ -20,7 +20,6 @@ export function Slant() {
             infoProps={infoProps}
             gameState={gameState}
             trophyProps={trophyProps}
-            showTrophy={!boardProps.isAnalysisMode && boardProps.state.solved}
             renderBoard={props => (
                 <Box onClick={infoProps.handleBoxClick}>
                     <SlantGameContainer {...props} />
@@ -32,11 +31,6 @@ export function Slant() {
                     ? boardProps.analysis.onClose
                     : undefined
             }
-            controlsConfig={{
-                onRefresh: gameState.handleNext,
-                disabled: boardProps.generating,
-                hidden: boardProps.isAnalysisMode,
-            }}
         />
     );
 }

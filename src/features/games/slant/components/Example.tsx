@@ -13,9 +13,11 @@ import {
 import { getSatisfiedNodes } from '../utils/validation';
 
 import { Psychology } from '@/components/icons';
-import { ExampleActionButton } from '@/features/games/components/GameInfo/ExampleBase';
-import { GameInfoExample } from '@/features/games/components/GameInfo/GameInfoExample';
-import { useExampleAnimation } from '@/features/games/components/GameInfo/useExampleAnimation';
+import {
+    GameInfoExample,
+    ExampleActionButton,
+    useExampleAnimation,
+} from '@/features/games/components/GameInfo/Example';
 
 /** Interval between animation frames (ms). */
 const FRAME_MS = 1500;

@@ -1,6 +1,13 @@
 import type { SxProps, Theme } from '@mui/material';
-import { Backdrop, Modal, Box, IconButton, Typography } from '@mui/material';
-import React from 'react';
+import {
+    Backdrop,
+    Modal,
+    Box,
+    IconButton,
+    Typography,
+    Button,
+} from '@mui/material';
+import React, { useState, useCallback } from 'react';
 
 import {
     infoBackdropSx,
@@ -11,29 +18,173 @@ import {
     infoCloseButtonSx,
     infoStepContentSx,
     infoContentSx,
+    infoFooterSx,
+    STEP_DOT_SIZE,
+    stepFadeInSx,
+    stepCenteredContentSx,
+    stepInstructionsListSx,
+    instructionTitleSx,
+    instructionIconSx,
+    instructionTextSx,
 } from './GameInfo.styles';
-import type { InstructionItemData } from './InstructionItem';
-import { InstructionsStep, ExampleStep } from './StepContent';
-import { StepNavigation } from './StepNavigation';
-import { useSteppedModal } from './useSteppedModal';
 
-import { CloseRounded } from '@/components/icons';
+import {
+    CloseRounded,
+    NavigateBeforeRounded,
+    NavigateNextRounded,
+} from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
-// Re-export so consumers can import from the barrel.
-export type { InstructionItemData } from './InstructionItem';
+// ---------------------------------------------------------------------------
+// Internal Components & Hooks
+// ---------------------------------------------------------------------------
 
-// ---------------------------------------------------------------------------
-// Internal helpers
-// ---------------------------------------------------------------------------
+/** Data for a single instruction row shown on the first step. */
+export interface InstructionItemData {
+    Icon: React.ElementType;
+    title: string;
+    text: React.ReactNode;
+}
+
+/**
+ * Renders a single instruction row: an icon, bold title, and description.
+ */
+function InstructionItem({ Icon, title, text }: InstructionItemData) {
+    return (
+        <Box sx={{ px: 2 }}>
+            <Typography variant="h6" sx={instructionTitleSx}>
+                <Icon sx={instructionIconSx} />
+                {title}
+            </Typography>
+            <Typography variant="body1" sx={instructionTextSx}>
+                {text}
+            </Typography>
+        </Box>
+    );
+}
+
+/**
+ * Encapsulates the step-navigation state for a multi-step modal.
+ */
+function useSteppedModal(
+    totalSteps: number,
+    onClose: () => void,
+    persistenceKey?: string,
+) {
+    const [step, setStep] = useState(() => {
+        if (!persistenceKey) return 0;
+        try {
+            const saved = sessionStorage.getItem(persistenceKey);
+            const parsed = saved ? parseInt(saved, 10) : 0;
+            return isNaN(parsed) || parsed < 0 || parsed >= totalSteps
+                ? 0
+                : parsed;
+        } catch {
+            return 0;
+        }
+    });
+
+    const handleNext = useCallback(() => {
+        setStep(prev => {
+            const next = prev + 1;
+            if (next < totalSteps) {
+                if (persistenceKey) {
+                    sessionStorage.setItem(persistenceKey, String(next));
+                }
+                return next;
+            }
+            onClose();
+            return prev;
+        });
+    }, [totalSteps, onClose, persistenceKey]);
+
+    const handleBack = useCallback(() => {
+        setStep(prev => {
+            if (prev > 0) {
+                const next = prev - 1;
+                if (persistenceKey) {
+                    sessionStorage.setItem(persistenceKey, String(next));
+                }
+                return next;
+            }
+            return prev;
+        });
+    }, [persistenceKey]);
+
+    return { step, handleNext, handleBack };
+}
+
+/**
+ * Back / dot-indicator / Next footer used by `GameInfo`.
+ */
+function StepNavigation({
+    step,
+    totalSteps,
+    onBack,
+    onNext,
+}: {
+    step: number;
+    totalSteps: number;
+    onBack: () => void;
+    onNext: () => void;
+}) {
+    return (
+        <Box sx={infoFooterSx} role="navigation" aria-label="Step navigation">
+            <Button
+                onClick={onBack}
+                disabled={step === 0}
+                startIcon={<NavigateBeforeRounded />}
+                aria-label="Previous step"
+                sx={{
+                    visibility: step === 0 ? 'hidden' : 'visible',
+                    color: COLORS.text.primary,
+                }}
+            >
+                Back
+            </Button>
+
+            <Box
+                sx={{ display: 'flex', gap: 1 }}
+                role="group"
+                aria-label={`Step ${String(step + 1)} of ${String(totalSteps)}`}
+            >
+                {Array.from({ length: totalSteps }, (_, i) => (
+                    <Box
+                        key={i}
+                        aria-hidden="true"
+                        sx={{
+                            width: STEP_DOT_SIZE,
+                            height: STEP_DOT_SIZE,
+                            borderRadius: '50%',
+                            backgroundColor:
+                                step === i
+                                    ? COLORS.primary.main
+                                    : COLORS.interactive.disabled,
+                            transition: 'background-color 0.3s',
+                        }}
+                    />
+                ))}
+            </Box>
+
+            <Button
+                onClick={onNext}
+                disabled={step === totalSteps - 1}
+                endIcon={<NavigateNextRounded />}
+                aria-label="Next step"
+                sx={{
+                    visibility: step === totalSteps - 1 ? 'hidden' : 'visible',
+                    color: COLORS.text.primary,
+                }}
+            >
+                Next
+            </Button>
+        </Box>
+    );
+}
 
 /**
  * Renders the title for the current step inside the modal header.
- *
- * Extracted as a small component so the GameInfo layout stays
- * declarative and the title typography can be updated in one place
- * without touching the modal structure.
  */
 const StepTitle = ({
     children,
@@ -89,22 +240,9 @@ export interface GameInfoContentProps extends Omit<GameInfoProps, 'open'> {
     titleId: string;
 }
 
-// ---------------------------------------------------------------------------
-// GameInfoContent — inner card rendered inside a Modal shell
-// ---------------------------------------------------------------------------
-
 /**
  * Inner content for the "How to Play" modal, rendering the GlassCard
  * with step navigation, header, and content.
- *
- * Separated from the Modal wrapper so `LazyGameInfo` can render the
- * Modal eagerly (single backdrop transition) while lazy-loading only
- * this content via Suspense.
- *
- * Step layout:
- *   0 — Instructions (rendered from `instructions` data)
- *   1 — Example      (renders `exampleContent`)
- *   2…— Extra steps  (renders each element from `extraSteps`)
  */
 export function GameInfoContent({
     toggleOpen,
@@ -126,14 +264,25 @@ export function GameInfoContent({
     );
 
     const steps = [
-        <InstructionsStep
-            key="instructions"
-            instructions={instructions}
-            footer={instructionsFooter}
-        />,
-        <ExampleStep key="example">{exampleContent}</ExampleStep>,
+        <Box key="instructions" sx={stepFadeInSx}>
+            <Box sx={stepInstructionsListSx}>
+                {instructions.map(({ Icon, title, text }) => (
+                    <InstructionItem
+                        key={title}
+                        Icon={Icon}
+                        title={title}
+                        text={text}
+                    />
+                ))}
+            </Box>
+            {instructionsFooter}
+        </Box>,
+        <Box key="example" sx={stepFadeInSx}>
+            <Box sx={stepCenteredContentSx}>{exampleContent}</Box>
+        </Box>,
         ...extraSteps,
     ];
+
     const contentSx = contentSxOverride
         ? contentSxOverride(step)
         : infoContentSx(step);
@@ -145,9 +294,7 @@ export function GameInfoContent({
             }}
             sx={[infoCardSx, cardSx] as SxProps<Theme>}
         >
-            {/* Content Area */}
             <Box sx={contentSx}>
-                {/* Header (Title + Close Button) */}
                 <Box sx={infoHeaderSx}>
                     <StepTitle id={titleId}>{titles[step]}</StepTitle>
                     <IconButton
@@ -160,11 +307,9 @@ export function GameInfoContent({
                     </IconButton>
                 </Box>
 
-                {/* Step Content */}
                 <Box sx={infoStepContentSx(step)}>{steps[step]}</Box>
             </Box>
 
-            {/* Footer (Navigation) */}
             <StepNavigation
                 step={step}
                 totalSteps={totalSteps}
@@ -175,17 +320,8 @@ export function GameInfoContent({
     );
 }
 
-// ---------------------------------------------------------------------------
-// GameInfo — full modal (kept for backward compatibility / direct use)
-// ---------------------------------------------------------------------------
-
 /**
- * Unified "How to Play" modal for all games.  Wraps `GameInfoContent`
- * in a MUI Modal with the standard backdrop.
- *
- * Prefer using `LazyGameInfo` from the barrel — it renders the Modal
- * eagerly and lazy-loads only the content, avoiding layout shift and
- * backdrop flicker.
+ * Unified "How to Play" modal for all games.
  */
 export function GameInfo({ open, toggleOpen, ...contentProps }: GameInfoProps) {
     const titleId = 'game-info-title';

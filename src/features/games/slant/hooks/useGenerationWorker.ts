@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 
 import type { SlantAction, SlantState, CellState } from '../types';
 import { EMPTY } from '../types';
+import { hasSavedUnsolvedPuzzle } from '../utils/persistence';
 import { createGenerationWorker } from '../utils/workerUtils';
 import type { GenerationMessage } from '../workers/generationWorker';
 
@@ -20,6 +21,12 @@ type SlantDispatch = React.Dispatch<
 >;
 
 interface UseGenerationWorkerConfig {
+    /** Current grid row count. */
+    rows: number;
+    /** Current grid column count. */
+    cols: number;
+    /** Whether analysis mode is active (suppresses the saved-puzzle check). */
+    isAnalysisMode: boolean;
     /** Creates the initial state synchronously (main-thread fallback). */
     getInitialState: (rows: number, cols: number) => SlantState;
     /** Ref to the latest game dispatch, kept in sync by the caller. */
@@ -61,6 +68,9 @@ function buildHydrateState(
 /**
  * Manages the Web Worker lifecycle for off-thread puzzle generation.
  *
+ * Handles both manual generation requests and automatic regeneration
+ * when dimensions change (unless a saved puzzle is available).
+ *
  * On mount the hook boots a generation worker, probes it with a tiny
  * puzzle to confirm it is alive, and then uses it for all subsequent
  * generation requests.  If the worker fails or times out the hook
@@ -74,6 +84,9 @@ function buildHydrateState(
  * applied instantly when `handleNextAsync()` is called.
  */
 export function useGenerationWorker({
+    rows,
+    cols,
+    isAnalysisMode,
     getInitialState,
     dispatchRef,
     dimsRef,
@@ -201,6 +214,34 @@ export function useGenerationWorker({
         [generateSync, clearPrefetch],
     );
 
+    /** Cancel any pending generation (debounce, sync fallback, or prefetch). */
+    const cancelGeneration = useCallback(() => {
+        if (debounceRef.current !== null) {
+            clearTimeout(debounceRef.current);
+            debounceRef.current = null;
+        }
+        cancelAnimationFrame(rafRef.current);
+        clearPrefetch();
+        setGenerating(false);
+    }, [clearPrefetch]);
+
+    // --- Dimension Regeneration ---
+    // Request a new puzzle whenever the dimensions change, unless a
+    // saved puzzle is available for the new size.
+    const prevDimsRef = useRef<string>(`${String(rows)},${String(cols)}`);
+    useEffect(() => {
+        const key = `${String(rows)},${String(cols)}`;
+        if (key === prevDimsRef.current) return;
+        prevDimsRef.current = key;
+
+        if (!isAnalysisMode && hasSavedUnsolvedPuzzle(rows, cols)) {
+            cancelGeneration();
+            return;
+        }
+
+        requestGeneration(rows, cols);
+    }, [rows, cols, requestGeneration, cancelGeneration, isAnalysisMode]);
+
     /**
      * Start generating the next puzzle off-screen so the result is ready
      * when `handleNextAsync` is called (e.g. during a win animation).
@@ -234,17 +275,6 @@ export function useGenerationWorker({
         },
         [getInitialState],
     );
-
-    /** Cancel any pending generation (debounce, sync fallback, or prefetch). */
-    const cancelGeneration = useCallback(() => {
-        if (debounceRef.current !== null) {
-            clearTimeout(debounceRef.current);
-            debounceRef.current = null;
-        }
-        cancelAnimationFrame(rafRef.current);
-        clearPrefetch();
-        setGenerating(false);
-    }, [clearPrefetch]);
 
     /**
      * Request generation using the latest dimensions from the ref.
