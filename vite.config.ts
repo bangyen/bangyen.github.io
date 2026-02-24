@@ -155,10 +155,8 @@ export default defineConfig(() => {
             fileParallelism: true,
             isolate: true,
             maxWorkers: process.env['CI'] ? '100%' : '80%',
-            poolOptions: {
-                threads: {
-                    useAtomics: true,
-                },
+            threads: {
+                useAtomics: true,
             },
             sequence: {
                 hooks: 'list',
