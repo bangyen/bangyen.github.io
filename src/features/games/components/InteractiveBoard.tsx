@@ -1,7 +1,28 @@
 import { Box, styled, type SxProps, type Theme } from '@mui/material';
 import React from 'react';
 
-import { BoardContainer } from './AnimatedBoardContainer';
+export const BoardOuterWrapper = styled(Box)({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '2rem',
+    width: '100%',
+    maxWidth: 'max-content',
+    margin: '0 auto',
+    willChange: 'transform, opacity',
+    animation: 'board-pop-in 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+    '@keyframes board-pop-in': {
+        '0%': { transform: 'scale(0.95)', opacity: 0 },
+        '100%': { transform: 'scale(1)', opacity: 1 },
+    },
+});
+
+const RelativeWrapper = styled(Box)({
+    position: 'relative',
+    display: 'grid',
+    placeItems: 'center',
+    gridArea: '1/1',
+});
 
 interface InteractiveBoardProps {
     /** Total rows in the interaction grid. */
@@ -34,14 +55,9 @@ interface InteractiveBoardProps {
     sx?: SxProps<Theme>;
 }
 
-const RelativeWrapper = styled(Box)({
-    position: 'relative',
-    display: 'grid',
-    placeItems: 'center',
-});
-
 /**
  * A standardized layout for canvas-based boards with interaction overlays.
+ * Consolidates animation and base layout into a single, direct component.
  */
 export function InteractiveBoard({
     rows,
@@ -61,7 +77,7 @@ export function InteractiveBoard({
     const h = cellHeight;
 
     return (
-        <BoardContainer
+        <BoardOuterWrapper
             data-testid={testId}
             sx={sx}
             onContextMenu={e => {
@@ -120,6 +136,6 @@ export function InteractiveBoard({
                     </Box>
                 )}
             </RelativeWrapper>
-        </BoardContainer>
+        </BoardOuterWrapper>
     );
 }

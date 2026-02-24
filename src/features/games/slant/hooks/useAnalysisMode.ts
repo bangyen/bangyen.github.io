@@ -1,9 +1,10 @@
 import type React from 'react';
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 
-import { useGamePersistence } from '../../hooks/useGamePersistence';
 import type { SlantState, CellState, SlantAction } from '../types';
 import { EMPTY } from '../types';
+
+import { useDebouncedEffect } from '@/hooks';
 
 interface UseAnalysisModeOptions {
     /** Whether analysis mode is currently active (owned by the caller). */
@@ -50,19 +51,39 @@ export function useAnalysisMode({
         new Map(),
     );
 
-    // Persistence for analysis moves
-    useGamePersistence<Map<string, CellState>>({
-        storageKey,
-        rows,
-        cols,
-        state: analysisMoves,
-        onRestore: (saved: Map<string, CellState>) => {
-            setAnalysisMoves(saved);
+    // 5. Persistence for analysis moves (inlined)
+    const persistenceKey = `${storageKey}-${String(rows)}x${String(cols)}`;
+    const lastRestoredKey = useRef<string | null>(null);
+
+    useEffect(() => {
+        if (lastRestoredKey.current === persistenceKey) return;
+        const saved = localStorage.getItem(persistenceKey);
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved) as [string, CellState][];
+                setAnalysisMoves(new Map(parsed));
+            } catch {
+                localStorage.removeItem(persistenceKey);
+            }
+        }
+        lastRestoredKey.current = persistenceKey;
+    }, [persistenceKey]);
+
+    const serializeMoves = useCallback(
+        () => [...analysisMoves.entries()],
+        [analysisMoves],
+    );
+
+    useDebouncedEffect(
+        () => {
+            localStorage.setItem(
+                persistenceKey,
+                JSON.stringify(serializeMoves()),
+            );
         },
-        serialize: (m: Map<string, CellState>) => [...m.entries()],
-        deserialize: (saved: unknown) =>
-            new Map(saved as [string, CellState][]),
-    });
+        300,
+        [persistenceKey, serializeMoves],
+    );
 
     // Reset analysis moves when puzzle changes
     const lastPuzzleRef = useRef<string>('');

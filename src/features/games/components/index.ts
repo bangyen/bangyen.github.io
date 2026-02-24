@@ -1,4 +1,3 @@
-export { AnimatedBoardContainer } from './AnimatedBoardContainer';
 export { StandardGameLayout } from './StandardGameLayout';
 export { GameControls } from './GameControls';
 export { GameInfo } from './GameInfo';

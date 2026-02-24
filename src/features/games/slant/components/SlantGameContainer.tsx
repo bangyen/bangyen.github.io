@@ -3,7 +3,7 @@ import React from 'react';
 import { SlantAnalysisBoard } from './SlantAnalysisBoard';
 import { SlantBoard } from './SlantBoard';
 import { SlantLoadingSkeleton } from './SlantLoadingSkeleton';
-import { AnimatedBoardContainer } from '../../components/AnimatedBoardContainer';
+import { BoardOuterWrapper } from '../../components/InteractiveBoard';
 import type { CellState, SlantState } from '../types';
 
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
@@ -100,7 +100,7 @@ export function SlantGameContainer({
                 resetLabel: GAME_TEXT.errors.boardReset,
             }}
         >
-            <AnimatedBoardContainer>
+            <BoardOuterWrapper>
                 <SlantBoard
                     state={state}
                     size={size}
@@ -109,7 +109,7 @@ export function SlantGameContainer({
                     cellProps={cellProps}
                     overlayProps={overlayProps}
                 />
-            </AnimatedBoardContainer>
+            </BoardOuterWrapper>
         </ErrorBoundary>
     );
 }

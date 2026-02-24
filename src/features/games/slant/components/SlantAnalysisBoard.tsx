@@ -4,7 +4,7 @@ import React from 'react';
 import { AnalysisProvider } from './AnalysisContext';
 import { AnalysisControls } from './AnalysisControls';
 import { SlantBoard } from './SlantBoard';
-import { AnimatedBoardContainer } from '../../components/AnimatedBoardContainer';
+import { BoardOuterWrapper } from '../../components/InteractiveBoard';
 import { SLANT_STYLES } from '../config/constants';
 import { useSlantAnalysisBoard } from '../hooks/useSlantAnalysisBoard';
 import { EMPTY } from '../types';
@@ -60,7 +60,7 @@ export function SlantAnalysisBoard({
         <AnalysisProvider
             value={{ onCopy, onClear, onClose, onApply: handleApply }}
         >
-            <AnimatedBoardContainer
+            <BoardOuterWrapper
                 sx={{
                     position: 'relative',
                     userSelect: 'none',
@@ -137,7 +137,7 @@ export function SlantAnalysisBoard({
                 </Box>
 
                 <AnalysisControls />
-            </AnimatedBoardContainer>
+            </BoardOuterWrapper>
         </AnalysisProvider>
     );
 }
