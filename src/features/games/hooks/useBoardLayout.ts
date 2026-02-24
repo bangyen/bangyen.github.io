@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
-import { useBoardSize } from './useBoardSize';
+import { calculateBoardSize } from './boardSizeUtils';
+import type { MergedBoardConfig } from './types';
 import { useGameViewport } from './useGameViewport';
 import { useGridSize } from './useGridSize';
 import { DEFAULT_BOARD_CONFIG, DEFAULT_GRID_CONFIG } from '../config/constants';
@@ -33,19 +34,20 @@ export function useBoardLayout({
 
     // Build the board config by merging caller overrides with defaults.
     const mergedBoard = useMemo(
-        () => ({
-            ...DEFAULT_BOARD_CONFIG,
-            ...Object.fromEntries(
-                Object.entries(board).filter(
-                    ([k, v]) =>
-                        v !== undefined &&
-                        k !== 'rowOffset' &&
-                        k !== 'colOffset',
+        () =>
+            ({
+                ...DEFAULT_BOARD_CONFIG,
+                ...Object.fromEntries(
+                    Object.entries(board).filter(
+                        ([k, v]) =>
+                            v !== undefined &&
+                            k !== 'rowOffset' &&
+                            k !== 'colOffset',
+                    ),
                 ),
-            ),
-            rowOffset: board['rowOffset'] as number | undefined,
-            colOffset: board['colOffset'] as number | undefined,
-        }),
+                rowOffset: board['rowOffset'] as number | undefined,
+                colOffset: board['colOffset'] as number | undefined,
+            }) as MergedBoardConfig,
         [board],
     );
 
@@ -54,15 +56,34 @@ export function useBoardLayout({
         ...gridMerged,
     });
 
-    const size = useBoardSize({
-        rows: gridLayout.rows,
-        cols: gridLayout.cols,
-        width: gridLayout.width,
-        height: gridLayout.height,
-        mobile: gridLayout.mobile,
-        headerOffset: gridMerged.headerOffset,
-        boardConfig: mergedBoard,
-    });
+    const { rows, cols, width, height, mobile } = gridLayout;
+
+    const size = useMemo(() => {
+        const boardConfig = mergedBoard;
+        const resolvedBoardPadding =
+            typeof boardConfig.boardPadding === 'function'
+                ? boardConfig.boardPadding(mobile)
+                : boardConfig.boardPadding;
+
+        return calculateBoardSize({
+            rows: rows + (boardConfig.rowOffset ?? 0),
+            cols: cols + (boardConfig.colOffset ?? 0),
+            width,
+            height,
+            mobile,
+            headerOffset: gridMerged.headerOffset,
+            ...boardConfig,
+            boardPadding: resolvedBoardPadding,
+        });
+    }, [
+        rows,
+        cols,
+        width,
+        height,
+        mobile,
+        gridMerged.headerOffset,
+        mergedBoard,
+    ]);
 
     const { scaling } = useGameViewport();
 

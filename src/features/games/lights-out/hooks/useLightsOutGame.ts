@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
@@ -6,17 +6,23 @@ import { useDrag } from '../../hooks/useDrag';
 import { useGameInfo } from '../../hooks/useGameInfo';
 import { useGridNavigation } from '../../hooks/useGridNavigation';
 import { useSkipTransition } from '../../hooks/useSkipTransition';
-import { LIGHTS_OUT_STYLES, getLightsOutGameConfig } from '../config';
+import {
+    LIGHTS_OUT_STYLES,
+    getLightsOutGameConfig,
+    LAYOUT_CONSTANTS,
+} from '../config';
 import { useHandler, usePalette } from '../hooks/boardUtils';
-import { useLightsOutProps } from '../hooks/useLightsOutProps';
 import type { BoardState, BoardAction } from '../types';
 import { handleBoard, isSolved, getInitialState } from '../utils/boardHandlers';
 import { isBoardState } from '../utils/persistence';
-import { getFrontProps } from '../utils/renderers';
+import {
+    getBackProps,
+    getCellVisualProps,
+    getFrontProps,
+} from '../utils/renderers';
 
 /**
- * Orchestrates Lights Out game logic: grid state, drag interactions,
- * palette management, and modal state.
+ * Orchestrates Lights Out game logic and prepares props for the UI.
  */
 export function useLightsOutGame() {
     const baseGame = useBaseGame<BoardState, BoardAction>({
@@ -95,28 +101,98 @@ export function useLightsOutGame() {
     );
 
     const bottomRow = state.grid[rows - 1] ?? 0;
-    const bottomRowArray = Array.from(
-        { length: cols },
-        (_, c) => (bottomRow >> c) & 1,
+    const bottomRowArray = useMemo(
+        () => Array.from({ length: cols }, (_, c) => (bottomRow >> c) & 1),
+        [bottomRow, cols],
+    );
+
+    // UI Props derivations (formerly in useLightsOutProps)
+    const frontProps = useMemo(
+        () => getFrontProps(getDragProps, getters, skipTransition),
+        [getDragProps, getters, skipTransition],
+    );
+    const backProps = useMemo(
+        () => getBackProps(getters, skipTransition),
+        [getters, skipTransition],
+    );
+
+    const boardProps = useMemo(() => {
+        const grid2D = Array.from({ length: rows }, (_, r) => {
+            const rowVal = state.grid[r] ?? 0;
+            return Array.from({ length: cols }, (_, c) => (rowVal >> c) & 1);
+        });
+
+        return {
+            size,
+            space: 0,
+            grid: grid2D,
+            palette,
+            layers: [
+                {
+                    rows: rows - 1,
+                    cols: cols - 1,
+                    cellProps: backProps,
+                },
+                {
+                    rows,
+                    cols,
+                    cellProps: frontProps,
+                    decorative: true,
+                },
+            ],
+        };
+    }, [size, rows, cols, state.grid, palette, backProps, frontProps]);
+
+    const layoutProps = useMemo(
+        () => ({
+            boardSx: {
+                marginTop: mobile
+                    ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
+                    : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
+            },
+        }),
+        [mobile],
+    );
+
+    const infoProps = useMemo(
+        () => ({
+            open,
+            solved,
+            toggleOpen,
+            board: { rows, cols, size },
+            rendering: {
+                palette,
+                getFrontProps: getCellVisualProps,
+                getBackProps,
+            },
+            onApply: handleApply,
+            bottomRow: bottomRowArray,
+        }),
+        [
+            open,
+            solved,
+            toggleOpen,
+            rows,
+            cols,
+            size,
+            palette,
+            handleApply,
+            bottomRowArray,
+        ],
+    );
+
+    const trophyProps = useMemo(
+        () => ({
+            scaling,
+        }),
+        [scaling],
     );
 
     return {
-        ...useLightsOutProps({
-            gameState: baseGame,
-            game: { rows, cols, size, mobile, scaling },
-            info: {
-                open,
-                solved: baseGame.solved,
-                toggleOpen,
-                handleApply,
-                bottomRow: bottomRowArray,
-            },
-            rendering: { palette, getters, skipTransition },
-            drag: {
-                getDragProps,
-                frontPropsFactory: getFrontProps,
-            },
-        }),
+        boardProps,
+        layoutProps,
+        infoProps,
         gameState: baseGame,
+        trophyProps,
     };
 }

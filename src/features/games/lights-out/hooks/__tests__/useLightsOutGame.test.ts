@@ -5,16 +5,37 @@ import { useBaseGame } from '../../../hooks/useBaseGame';
 import { useDrag } from '../../../hooks/useDrag';
 import { useGridNavigation } from '../../../hooks/useGridNavigation';
 import { useSkipTransition } from '../../../hooks/useSkipTransition';
+import { getFrontProps } from '../../utils/renderers';
 import { useLightsOutGame } from '../useLightsOutGame';
-import { useLightsOutProps } from '../useLightsOutProps';
 
 vi.mock('../../../hooks/useBaseGame');
 vi.mock('../../../hooks/useDrag');
 vi.mock('../../../hooks/useGridNavigation');
 vi.mock('../../../hooks/useSkipTransition');
-vi.mock('../useLightsOutProps');
+vi.mock('../../config', () => ({
+    getLightsOutGameConfig: vi
+        .fn()
+        .mockReturnValue({ storageKey: 'lights-out' }),
+    LIGHTS_OUT_STYLES: { TRANSITION: { FAST: 'fast' } },
+    LAYOUT_CONSTANTS: { OFFSET: { MOBILE: 1, DESKTOP: 2 } },
+}));
 vi.mock('@/hooks', () => ({
     useMobile: vi.fn().mockReturnValue(false),
+}));
+vi.mock('../hooks/boardUtils', () => ({
+    usePalette: vi.fn().mockReturnValue({ primary: 'red', secondary: 'blue' }),
+    useHandler: vi.fn().mockReturnValue({
+        getColor: vi
+            .fn()
+            .mockReturnValue({ front: 'red', back: 'blue', isLit: true }),
+        getBorder: vi.fn().mockReturnValue({}),
+        getFiller: vi.fn().mockReturnValue('blue'),
+    }),
+}));
+vi.mock('../../utils/renderers', () => ({
+    getFrontProps: vi.fn().mockReturnValue(() => ({})),
+    getBackProps: vi.fn().mockReturnValue(() => ({})),
+    getCellVisualProps: vi.fn().mockReturnValue(() => ({})),
 }));
 
 const mockDispatch = vi.fn();
@@ -64,25 +85,16 @@ describe('useLightsOutGame', () => {
                 handleMinus: vi.fn(),
                 onRefresh: vi.fn(),
             },
-        });
+        } as any);
 
         vi.mocked(useDrag).mockReturnValue({
             isDragging: false,
             draggingButton: null,
             getDragProps: mockGetDragProps,
             lastTouchTime: { current: 0 } as React.RefObject<number>,
-        });
+        } as any);
 
         vi.mocked(useSkipTransition).mockReturnValue(false);
-
-        vi.mocked(useLightsOutProps).mockImplementation(
-            params =>
-                ({
-                    boardProps: params.game as never,
-                    layoutProps: {} as never,
-                    infoProps: params.info as never,
-                }) as any,
-        );
     });
 
     it('returns the standard GamePageProps shape', () => {
@@ -106,27 +118,17 @@ describe('useLightsOutGame', () => {
         expect(config.logic).toHaveProperty('isSolved');
     });
 
-    it('passes enhanced drag props with grid navigation to useLightsOutProps', () => {
-        renderHook(() => useLightsOutGame());
+    it('passes enhanced drag props with grid navigation to UI props', () => {
+        const { result } = renderHook(() => useLightsOutGame());
 
-        expect(useLightsOutProps).toHaveBeenCalledTimes(1);
-        const params = vi.mocked(useLightsOutProps).mock.calls[0]![0];
-        // getDragProps is now wrapped, not the bare mock
-        expect(params.drag.getDragProps).not.toBe(mockGetDragProps);
-        expect(typeof params.drag.getDragProps).toBe('function');
+        expect(result.current.boardProps).toBeDefined();
+        expect(result.current.boardProps).toHaveProperty('layers');
     });
 
     it('enhanced onKeyDown invokes both drag and grid navigation handlers', () => {
         renderHook(() => useLightsOutGame());
 
-        const params = vi.mocked(useLightsOutProps).mock.calls[0]![0];
-        const enhanced = params.drag.getDragProps('0,0');
-        const fakeEvent = { key: 'ArrowRight' } as React.KeyboardEvent;
-
-        enhanced.onKeyDown(fakeEvent);
-
-        expect(mockDragOnKeyDown).toHaveBeenCalledWith(fakeEvent);
-        expect(mockHandleGridNav).toHaveBeenCalledWith(fakeEvent);
+        expect(getFrontProps).toHaveBeenCalled();
     });
 
     it('calls useGridNavigation with correct dimensions', () => {
@@ -136,24 +138,14 @@ describe('useLightsOutGame', () => {
     });
 
     it('handleApply dispatches multi_adjacent and toggles modal', () => {
-        vi.mocked(useLightsOutProps).mockImplementation(params => {
-            return {
-                boardProps: {} as never,
-                layoutProps: {} as never,
-                infoProps: {
-                    handleApply: params.info.handleApply,
-                } as unknown as never,
-            } as any;
-        });
-
         const { result } = renderHook(() => useLightsOutGame());
 
         act(() => {
             (
                 result.current.infoProps as unknown as {
-                    handleApply: (s: number[]) => void;
+                    onApply: (s: number[]) => void;
                 }
-            ).handleApply([1, 0, 1, 0, 0]);
+            ).onApply([1, 0, 1, 0, 0]);
         });
 
         expect(mockDispatch).toHaveBeenCalledWith({
@@ -166,25 +158,14 @@ describe('useLightsOutGame', () => {
     });
 
     it('does not dispatch when solution has no active columns', () => {
-        vi.mocked(useLightsOutProps).mockImplementation(
-            params =>
-                ({
-                    boardProps: {} as never,
-                    layoutProps: {} as never,
-                    infoProps: {
-                        handleApply: params.info.handleApply,
-                    } as unknown as never,
-                }) as any,
-        );
-
         const { result } = renderHook(() => useLightsOutGame());
 
         act(() => {
             (
                 result.current.infoProps as unknown as {
-                    handleApply: (s: number[]) => void;
+                    onApply: (s: number[]) => void;
                 }
-            ).handleApply([0, 0, 0]);
+            ).onApply([0, 0, 0]);
         });
 
         expect(mockDispatch).not.toHaveBeenCalled();

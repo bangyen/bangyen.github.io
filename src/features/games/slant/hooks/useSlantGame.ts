@@ -1,17 +1,17 @@
-import React, { useEffect, useCallback, useRef } from 'react';
+import React, { useEffect, useCallback, useRef, useMemo } from 'react';
 
 import { useAnalysisMode } from './useAnalysisMode';
 import { useDimensionRegeneration } from './useDimensionRegeneration';
+import { useGenerationWorker } from './useGenerationWorker';
+import { useSlantBoard } from './useSlantBoard';
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useDrag } from '../../hooks/useDrag';
 import { useGameInfo } from '../../hooks/useGameInfo';
 import { useGridNavigation } from '../../hooks/useGridNavigation';
 import { getSlantGameConfig } from '../config';
-import { STORAGE_KEYS } from '../config/constants';
+import { STORAGE_KEYS, LAYOUT_CONSTANTS } from '../config/constants';
 import type { SlantAction, SlantState } from '../types';
-import { useGenerationWorker } from './useGenerationWorker';
-import { useSlantProps } from './useSlantProps';
 import { getInitialState, handleBoard } from '../utils/boardHandlers';
 import {
     serializeSlantState,
@@ -21,9 +21,8 @@ import {
 } from '../utils/persistence';
 
 /**
- * Orchestrates all Slant-specific game logic: worker-based puzzle
- * generation, analysis mode, drag interaction, cell prop factories,
- * and dimension-change detection.
+ * Orchestrates all Slant-specific game logic and prepares props for the UI.
+ * Consolidates puzzle generation, analysis mode, and UI-ready prop bundles.
  */
 export function useSlantGame() {
     const [isAnalysisMode, setIsAnalysisMode] = React.useState(false);
@@ -157,36 +156,96 @@ export function useSlantGame() {
         [getBaseDragProps, handleGridNav],
     );
 
-    return {
-        ...useSlantProps({
-            game: {
-                state,
-                rows,
-                cols,
-                size,
-                mobile,
-                isAnalysisMode,
-                generating,
-                scaling,
-            },
-            analysis: {
-                analysisMoves,
-                handleAnalysisMove,
-                handleAnalysisCopy,
-                handleAnalysisClear,
-                handleAnalysisClose,
-                handleAnalysisApply,
-                handleBoxClick,
-                handleOpenAnalysis,
-                boardSx,
-            },
-            info: { infoOpen, toggleInfo },
-            getDragProps,
+    // UI Props derivations (formerly in useSlantProps)
+    const { cellProps, overlayProps } = useSlantBoard({
+        state,
+        size,
+        getDragProps,
+    });
+
+    const contentSx = useMemo(
+        () => ({
+            px: mobile ? '1rem' : '2rem',
+            pt: mobile ? '1rem' : '2rem',
         }),
+        [mobile],
+    );
+    const dimensionsMismatch = rows !== state.rows || cols !== state.cols;
+
+    const boardProps = useMemo(
+        () => ({
+            isAnalysisMode,
+            generating,
+            dimensionsMismatch,
+            rows,
+            cols,
+            state,
+            size,
+            analysis: {
+                moves: analysisMoves,
+                onMove: handleAnalysisMove,
+                onCopy: handleAnalysisCopy,
+                onClear: handleAnalysisClear,
+                onClose: handleAnalysisClose,
+                onApply: handleAnalysisApply,
+            },
+            cellProps,
+            overlayProps,
+        }),
+        [
+            isAnalysisMode,
+            generating,
+            dimensionsMismatch,
+            rows,
+            cols,
+            state,
+            size,
+            analysisMoves,
+            handleAnalysisMove,
+            handleAnalysisCopy,
+            handleAnalysisClear,
+            handleAnalysisClose,
+            handleAnalysisApply,
+            cellProps,
+            overlayProps,
+        ],
+    );
+
+    const layoutProps = useMemo(
+        () => ({
+            boardSx,
+            contentSx,
+            iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
+        }),
+        [boardSx, contentSx],
+    );
+
+    const infoProps = useMemo(
+        () => ({
+            open: infoOpen,
+            toggleOpen: toggleInfo,
+            handleOpenAnalysis,
+            handleBoxClick,
+        }),
+        [infoOpen, toggleInfo, handleOpenAnalysis, handleBoxClick],
+    );
+
+    const trophyProps = useMemo(
+        () => ({
+            scaling,
+        }),
+        [scaling],
+    );
+
+    return {
+        boardProps,
+        layoutProps,
+        infoProps,
         gameState: {
             ...baseGame,
             solved: state.solved,
             handleNext: handleNextAsync,
         },
+        trophyProps,
     };
 }

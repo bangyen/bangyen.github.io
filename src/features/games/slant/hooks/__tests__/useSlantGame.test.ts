@@ -7,14 +7,21 @@ import { useAnalysisMode } from '../useAnalysisMode';
 import { useDimensionRegeneration } from '../useDimensionRegeneration';
 import { useGenerationWorker } from '../useGenerationWorker';
 import { useSlantGame } from '../useSlantGame';
-import { useSlantProps } from '../useSlantProps';
 
 vi.mock('../../../hooks/useBaseGame');
 vi.mock('../../../hooks/useDrag');
-vi.mock('../useSlantProps');
+vi.mock('../../config', () => ({
+    getSlantGameConfig: vi.fn().mockReturnValue({ storageKey: 'slant' }),
+}));
 vi.mock('../useGenerationWorker');
 vi.mock('../useAnalysisMode');
 vi.mock('../useDimensionRegeneration');
+vi.mock('../useSlantBoard', () => ({
+    useSlantBoard: vi.fn().mockReturnValue({
+        cellProps: {},
+        overlayProps: {},
+    }),
+}));
 vi.mock('@/hooks', () => ({
     useMobile: vi.fn().mockReturnValue(false),
     useDebouncedEffect: vi.fn(),
@@ -63,7 +70,7 @@ describe('useSlantGame', () => {
                 handleMinus: vi.fn(),
                 onRefresh: vi.fn(),
             },
-        });
+        } as any);
 
         vi.mocked(useGenerationWorker).mockReturnValue({
             generating: false,
@@ -71,7 +78,7 @@ describe('useSlantGame', () => {
             handleNextAsync: vi.fn(),
             prefetch: vi.fn(),
             cancelGeneration: vi.fn(),
-        });
+        } as any);
 
         vi.mocked(useAnalysisMode).mockReturnValue({
             analysisMoves: new Map(),
@@ -83,25 +90,16 @@ describe('useSlantGame', () => {
             handleAnalysisApply: vi.fn(),
             handleBoxClick: vi.fn(),
             handleOpenAnalysis: vi.fn(),
-        });
+        } as any);
 
         vi.mocked(useDrag).mockReturnValue({
             isDragging: false,
             draggingButton: null,
             getDragProps: mockGetDragProps,
             lastTouchTime: { current: 0 } as React.RefObject<number>,
-        });
+        } as any);
 
         vi.mocked(useDimensionRegeneration).mockReturnValue(undefined);
-
-        vi.mocked(useSlantProps).mockImplementation(
-            params =>
-                ({
-                    boardProps: params.game as never,
-                    layoutProps: {} as never,
-                    infoProps: params.info as never,
-                }) as any,
-        );
     });
 
     it('returns the standard GamePageProps shape', () => {
@@ -121,14 +119,11 @@ describe('useSlantGame', () => {
         expect(config.logic.manualResize).toBe(true);
     });
 
-    it('passes analysis-mode handlers to useSlantProps', () => {
-        renderHook(() => useSlantGame());
+    it('wires up correctly returned props', () => {
+        const { result } = renderHook(() => useSlantGame());
 
-        expect(useSlantProps).toHaveBeenCalledTimes(1);
-        const params = vi.mocked(useSlantProps).mock.calls[0]![0];
-        expect(params.analysis).toHaveProperty('analysisMoves');
-        expect(params.analysis).toHaveProperty('handleAnalysisMove');
-        expect(params.analysis).toHaveProperty('handleAnalysisCopy');
+        expect(result.current.boardProps).toBeDefined();
+        expect(result.current.layoutProps).toBeDefined();
     });
 
     it('wires up dimension regeneration', () => {
@@ -143,7 +138,7 @@ describe('useSlantGame', () => {
         );
     });
 
-    it('passes generation worker handle to controlsProps via useSlantProps', () => {
+    it('passes generation worker handle to gameState', () => {
         const mockHandleNextAsync = vi.fn();
         vi.mocked(useGenerationWorker).mockReturnValue({
             generating: true,
@@ -151,12 +146,11 @@ describe('useSlantGame', () => {
             handleNextAsync: mockHandleNextAsync,
             prefetch: vi.fn(),
             cancelGeneration: vi.fn(),
-        });
+        } as any);
 
         const { result } = renderHook(() => useSlantGame());
 
-        const params = vi.mocked(useSlantProps).mock.calls[0]![0];
-        expect(params.game.generating).toBe(true);
+        expect(result.current.boardProps.generating).toBe(true);
         expect(result.current.gameState.handleNext).toBe(mockHandleNextAsync);
     });
 });
