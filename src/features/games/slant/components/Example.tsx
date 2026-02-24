@@ -88,6 +88,11 @@ export function Example({
                     show={isSolved && isPlaying}
                     sizeVariant="small"
                     showLabel={false}
+                    scaling={{
+                        iconSize: '2rem',
+                        containerSize: '6rem',
+                        padding: 1,
+                    }}
                 />
             </Box>
         );

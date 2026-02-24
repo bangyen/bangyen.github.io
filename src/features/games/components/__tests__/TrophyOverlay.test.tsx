@@ -9,6 +9,11 @@ import { renderWithProviders } from '@/utils/test-utils';
 describe('TrophyOverlay', () => {
     const defaultProps = {
         show: true,
+        scaling: {
+            iconSize: '3rem',
+            containerSize: '9rem',
+            padding: 2,
+        },
     };
 
     it('should be non-interactive (pointer-events: none)', () => {

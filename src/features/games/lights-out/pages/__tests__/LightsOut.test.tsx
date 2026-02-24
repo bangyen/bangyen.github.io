@@ -124,7 +124,9 @@ describe('LightsOut', () => {
         renderWithProviders(<LightsOut />);
 
         // Use resilient aria-label selection for the cell
-        const cell = screen.getByLabelText(/Light at row 1, column 1/);
+        const cell = screen.getByLabelText(
+            'Light at row 1, column 1, currently unlit',
+        );
 
         fireEvent.mouseDown(cell);
 

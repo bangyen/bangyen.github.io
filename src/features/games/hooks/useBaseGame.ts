@@ -1,26 +1,19 @@
 /**
  * Custom hook that orchestrates all game state management.
- *
- * This hook is a high-level orchestrator that recomposes lower-level
- * hooks for layout and state management.
  */
+import type { Dispatch } from 'react';
 import { useEffect, useReducer, useMemo, useCallback, useRef } from 'react';
 
-import type { BaseGameConfig } from './types';
+import type { BaseGameConfig, BaseControlsProps } from './types';
 import { useBoardLayout } from './useBoardLayout';
 import { useGamePersistence } from './useGamePersistence';
-import { useWinTransition } from './useWinTransition';
+import { useStableCallback } from '../../../hooks/useStableCallback';
 import { createStorageKeys, GAME_CONSTANTS } from '../config/constants';
 
-import type { BaseGameState } from '@/utils/gameUtils';
+import type { BaseGameState, BaseGameAction } from '@/utils/gameUtils';
 
 /**
  * Custom hook that orchestrates all game state management.
- *
- * Combines:
- * - Grid sizing and responsiveness (via useBoardLayout)
- * - Game state management (reducer)
- * - Persistence and transitions (via useGamePersistence, useWinTransition)
  *
  * @template S - Game state type
  * @template A - Game action type
@@ -51,14 +44,14 @@ export function useBaseGame<
     // 1. Manage layout and sizing
     const layout = useBoardLayout({
         storageKey: keys.SIZE,
-        grid: grid as Record<string, unknown>,
-        board: board as Record<string, unknown>,
+        gridConfig: grid,
+        boardConfig: board as Record<string, unknown>,
+        manualResize,
     });
 
     const { rows, cols } = layout;
 
     // 2. Manage game state
-    // We use a ref for initial state to ensure it's stable even if getInitialState is unstable
     const initialRef = useRef<S | null>(null);
     if (initialRef.current === null) {
         initialRef.current = getInitialState(rows, cols);
@@ -85,7 +78,17 @@ export function useBaseGame<
         ...persistence,
     });
 
-    useWinTransition(solved, handleNext, winAnimationDelay);
+    const stableHandleNext = useStableCallback(handleNext);
+    useEffect(() => {
+        if (solved) {
+            const timeout = setTimeout(() => {
+                stableHandleNext();
+            }, winAnimationDelay);
+            return () => {
+                clearTimeout(timeout);
+            };
+        }
+    }, [solved, winAnimationDelay, stableHandleNext]);
 
     // 4. Coordinate resize events
     useEffect(() => {
@@ -99,14 +102,28 @@ export function useBaseGame<
         } as unknown as A);
     }, [rows, cols, dispatch, manualResize]);
 
-    return {
-        // State management
+    const result: {
+        state: S;
+        dispatch: Dispatch<A | BaseGameAction<S>>;
+        solved: boolean;
+        handleNext: () => void;
+        layout: {
+            rows: number;
+            cols: number;
+            size: number;
+            mobile: boolean;
+            scaling: {
+                iconSize: string;
+                containerSize: string;
+                padding: number;
+            };
+        };
+        controlsProps: BaseControlsProps;
+    } = {
         state,
         dispatch,
         solved,
         handleNext,
-
-        // Layout and sizing
         layout: {
             rows: layout.rows,
             cols: layout.cols,
@@ -114,17 +131,17 @@ export function useBaseGame<
             mobile: layout.mobile,
             scaling: layout.scaling,
         },
-
-        // Child component props
         controlsProps: {
             rows: layout.rows,
             cols: layout.cols,
-            dynamicSize: layout.dynamicSize,
-            minSize: layout.minSize,
-            maxSize: layout.maxSize,
-            handlePlus: layout.handlePlus,
-            handleMinus: layout.handleMinus,
+            dynamicSize: layout.gridConfig.dynamicSize,
+            minSize: layout.gridConfig.minSize,
+            maxSize: layout.gridConfig.maxSize,
+            handlePlus: layout.gridConfig.handlePlus,
+            handleMinus: layout.gridConfig.handleMinus,
             onRefresh: handleNext,
         },
     };
+
+    return result;
 }

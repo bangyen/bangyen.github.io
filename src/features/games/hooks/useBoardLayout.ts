@@ -1,96 +1,111 @@
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 
 import { calculateBoardSize } from './boardSizeUtils';
-import type { MergedBoardConfig } from './types';
-import { useGameViewport } from './useGameViewport';
+import type { MergedBoardConfig, GridConfig } from './types';
 import { useGridSize } from './useGridSize';
 import { DEFAULT_BOARD_CONFIG, DEFAULT_GRID_CONFIG } from '../config/constants';
+import { GAME_TOKENS } from '../config/tokens';
 
 export interface UseBoardLayoutConfig {
     /** localStorage key for grid dimensions. */
-    storageKey: string;
-    /** Grid configuration overrides. */
-    grid?: Record<string, unknown>;
-    /** Board configuration overrides. */
-    board?: Record<string, unknown>;
+    storageKey?: string;
+    /** Grid sizing configuration. */
+    gridConfig?: GridConfig;
+    /** Game-specific board configuration (cell sizes, paddings). */
+    boardConfig?: Partial<MergedBoardConfig>;
+    /** Whether dimensions are manually managed (e.g. by a generator). */
+    manualResize?: boolean;
 }
 
 /**
- * Manages grid dimensions, board sizing, and responsive layout.
- * Extracted from useBaseGame for better separation of concerns.
+ * Orchestrates grid dimension management and board size calculations.
  */
 export function useBoardLayout({
     storageKey,
-    grid = {},
-    board = {},
-}: UseBoardLayoutConfig) {
-    // Build the grid config by merging caller overrides with defaults.
-    const gridMerged = {
-        ...DEFAULT_GRID_CONFIG,
-        ...Object.fromEntries(
-            Object.entries(grid).filter(([, v]) => v !== undefined),
-        ),
-    };
+    gridConfig: callerGridConfig,
+    boardConfig,
+    manualResize,
+}: UseBoardLayoutConfig = {}) {
+    const currentHeaderOffset =
+        callerGridConfig?.headerOffset ?? DEFAULT_GRID_CONFIG.headerOffset;
 
-    // Build the board config by merging caller overrides with defaults.
-    const mergedBoard = useMemo(
-        () =>
-            ({
-                ...DEFAULT_BOARD_CONFIG,
-                ...Object.fromEntries(
-                    Object.entries(board).filter(
-                        ([k, v]) =>
-                            v !== undefined &&
-                            k !== 'rowOffset' &&
-                            k !== 'colOffset',
-                    ),
-                ),
-                rowOffset: board['rowOffset'] as number | undefined,
-                colOffset: board['colOffset'] as number | undefined,
-            }) as MergedBoardConfig,
-        [board],
-    );
-
-    const gridLayout = useGridSize({
-        storageKey,
-        ...gridMerged,
+    // 1. Manage grid dimensions (rows, cols)
+    const { rows, cols, width, height, mobile, ...gridConfig } = useGridSize({
+        storageKey: storageKey ?? '',
+        defaultSize:
+            callerGridConfig?.defaultSize === undefined
+                ? DEFAULT_GRID_CONFIG.defaultSize
+                : callerGridConfig.defaultSize,
+        minSize: callerGridConfig?.minSize ?? DEFAULT_GRID_CONFIG.minSize,
+        maxSize: callerGridConfig?.maxSize ?? DEFAULT_GRID_CONFIG.maxSize,
+        headerOffset: currentHeaderOffset,
+        gridPadding:
+            callerGridConfig?.gridPadding ?? DEFAULT_GRID_CONFIG.gridPadding,
+        widthLimit:
+            callerGridConfig?.widthLimit ?? DEFAULT_GRID_CONFIG.widthLimit,
+        cellSizeReference:
+            callerGridConfig?.cellSizeReference ??
+            DEFAULT_GRID_CONFIG.cellSizeReference,
+        mobileRowOffset:
+            callerGridConfig?.mobileRowOffset ??
+            DEFAULT_GRID_CONFIG.mobileRowOffset,
     });
 
-    const { rows, cols, width, height, mobile } = gridLayout;
-
-    const size = useMemo(() => {
-        const boardConfig = mergedBoard;
-        const resolvedBoardPadding =
-            typeof boardConfig.boardPadding === 'function'
-                ? boardConfig.boardPadding(mobile)
-                : boardConfig.boardPadding;
-
-        return calculateBoardSize({
-            rows: rows + (boardConfig.rowOffset ?? 0),
-            cols: cols + (boardConfig.colOffset ?? 0),
-            width,
-            height,
-            mobile,
-            headerOffset: gridMerged.headerOffset,
+    // 2. Derive visual board metrics based on grid dimensions and current viewport
+    const mergedBoard = useMemo(
+        () => ({
+            ...DEFAULT_BOARD_CONFIG,
             ...boardConfig,
-            boardPadding: resolvedBoardPadding,
-        });
-    }, [
+        }),
+        [boardConfig],
+    );
+
+    const resolvedPadding =
+        typeof mergedBoard.boardPadding === 'function'
+            ? mergedBoard.boardPadding(mobile)
+            : mergedBoard.boardPadding;
+
+    const size = calculateBoardSize({
         rows,
         cols,
         width,
         height,
         mobile,
-        gridMerged.headerOffset,
-        mergedBoard,
-    ]);
+        headerOffset: currentHeaderOffset,
+        ...mergedBoard,
+        boardPadding: resolvedPadding,
+    });
 
-    const { scaling } = useGameViewport();
+    const updateConfig = gridConfig.setDesiredSize;
+
+    const handleResize = useCallback(
+        (newRows: number, newCols: number) => {
+            if (manualResize) {
+                updateConfig(newCols);
+            }
+        },
+        [manualResize, updateConfig],
+    );
+
+    const handleRefresh = useCallback(() => {
+        // Refresh logic
+    }, []);
+
+    const scaling = GAME_TOKENS.scaling.default;
 
     return {
-        ...gridLayout,
+        rows,
+        cols,
         size,
+        mobile,
         scaling,
-        gridMerged,
+        gridConfig: {
+            ...gridConfig,
+            handleResize,
+            handleRefresh,
+            mobile,
+            width,
+            height,
+        },
     };
 }

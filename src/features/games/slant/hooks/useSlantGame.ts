@@ -1,4 +1,5 @@
-import React, { useEffect, useCallback, useRef, useMemo } from 'react';
+import type React from 'react';
+import { useRef, useMemo, useCallback, useState } from 'react';
 
 import { useAnalysisMode } from './useAnalysisMode';
 import { useDimensionRegeneration } from './useDimensionRegeneration';
@@ -7,71 +8,55 @@ import { useSlantBoard } from './useSlantBoard';
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useDrag } from '../../hooks/useDrag';
-import { useGameInfo } from '../../hooks/useGameInfo';
 import { useGridNavigation } from '../../hooks/useGridNavigation';
 import { getSlantGameConfig } from '../config';
-import { STORAGE_KEYS, LAYOUT_CONSTANTS } from '../config/constants';
-import type { SlantAction, SlantState } from '../types';
-import { getInitialState, handleBoard } from '../utils/boardHandlers';
+import { LAYOUT_CONSTANTS, STORAGE_KEYS } from '../config/constants';
+import type { SlantState, SlantAction, CellState } from '../types';
+import { handleBoard, getInitialState } from '../utils/boardHandlers';
 import {
-    serializeSlantState,
     isSavedSlantState,
+    serializeSlantState,
     deserializeSlantState,
     persistSlantState,
 } from '../utils/persistence';
 
+type SlantDispatch = React.Dispatch<
+    SlantAction | { type: 'hydrate'; state: SlantState }
+>;
+
 /**
- * Orchestrates all Slant-specific game logic and prepares props for the UI.
- * Consolidates puzzle generation, analysis mode, and UI-ready prop bundles.
+ * Orchestrates Slant game logic and prepares props for the UI.
+ * Consolidates layout, state, worker, analysis mode, and UI prop shaping.
  */
 export function useSlantGame() {
-    const [isAnalysisMode, setIsAnalysisMode] = React.useState(false);
-    const { open: infoOpen, toggleOpen: toggleInfo } = useGameInfo();
+    const [isAnalysisMode, setIsAnalysisMode] = useState(false);
+
+    // Inline redundant useGameInfo
+    const [infoOpen, setInfoOpen] = useState(false);
+    const toggleInfo = useCallback(() => {
+        setInfoOpen(prev => !prev);
+    }, []);
 
     // Refs kept in sync with useBaseGame output, shared with the worker hook.
-    const dispatchRef = useRef<React.Dispatch<
-        SlantAction | { type: 'hydrate'; state: SlantState }
-    > | null>(null);
-    const dimsRef = useRef({ rows: 0, cols: 0 });
-
-    const handleStaleResult = useCallback(
-        (staleState: SlantState, r: number, c: number) => {
-            if (isAnalysisMode) return;
-            persistSlantState(staleState, r, c);
-        },
-        [isAnalysisMode],
-    );
-
-    const {
-        generating,
-        requestGeneration,
-        handleNextAsync,
-        prefetch,
-        cancelGeneration,
-    } = useGenerationWorker({
-        getInitialState,
-        dispatchRef,
-        dimsRef,
-        onStaleResult: handleStaleResult,
+    // We use a broader type for the ref to bridge useBaseGame's generic with useGenerationWorker's needs
+    const dispatchRef = useRef<SlantDispatch | null>(null);
+    const dimsRef = useRef<{ rows: number; cols: number }>({
+        rows: 0,
+        cols: 0,
     });
 
     const baseGame = useBaseGame<SlantState, SlantAction>({
         ...getSlantGameConfig(),
         logic: {
             reducer: handleBoard,
-            getInitialState: (rows: number, cols: number) =>
-                getInitialState(rows, cols),
-            onNext: handleNextAsync,
+            getInitialState,
             isSolved: (s: SlantState) => s.solved,
-            manualResize: true,
+            manualResize: true, // we handle generation via useGenerationWorker
             persistence: {
-                enabled: !isAnalysisMode,
                 serialize: serializeSlantState,
                 deserialize: (saved: unknown) => {
                     if (!isSavedSlantState(saved)) {
-                        throw new Error(
-                            `Corrupt Slant state in localStorage: expected a valid SavedSlantState object but received ${JSON.stringify(saved).slice(0, 100)}`,
-                        );
+                        throw new Error('Corrupt Slant state');
                     }
                     return deserializeSlantState(saved);
                 },
@@ -79,34 +64,28 @@ export function useSlantGame() {
         },
     });
 
-    const { state, dispatch, layout } = baseGame;
-    const { rows, cols, size, mobile, scaling } = layout;
+    const { state, dispatch, solved, layout, controlsProps } = baseGame;
+    const { rows, cols, size, mobile, scaling: rawScaling } = layout;
 
-    // Keep refs in sync with latest values from useBaseGame.
-    dispatchRef.current = dispatch;
+    // Explicitly cast scaling to avoid resolution errors in the linter
+    const scaling = rawScaling as {
+        iconSize: string;
+        containerSize: string;
+        padding: number;
+    };
+
+    // Keep refs in sync for the worker
+    dispatchRef.current = dispatch as unknown as SlantDispatch;
     dimsRef.current = { rows, cols };
 
-    // Analysis mode state and handlers.
-    const {
-        analysisMoves,
-        boardSx,
-        handleAnalysisMove,
-        handleAnalysisCopy,
-        handleAnalysisClear,
-        handleAnalysisClose,
-        handleAnalysisApply,
-        handleBoxClick,
-        handleOpenAnalysis,
-    } = useAnalysisMode({
-        isAnalysisMode,
-        setIsAnalysisMode,
-        state,
-        rows,
-        cols,
-        storageKey: STORAGE_KEYS.ANALYSIS_MOVES,
-        toggleInfo,
-        dispatch,
-    });
+    // 1. Worker and Dimension Regeneration logic
+    const { generating, handleNextAsync, requestGeneration, cancelGeneration } =
+        useGenerationWorker({
+            getInitialState,
+            dispatchRef,
+            dimsRef,
+            onStaleResult: persistSlantState,
+        });
 
     useDimensionRegeneration({
         rows,
@@ -116,31 +95,33 @@ export function useSlantGame() {
         cancelGeneration,
     });
 
-    // Prefetch the next puzzle as soon as the current one is solved so
-    // generation overlaps with the win animation instead of waiting.
-    useEffect(() => {
-        if (state.solved && !isAnalysisMode) {
-            prefetch(rows, cols);
-        }
-    }, [state.solved, isAnalysisMode, rows, cols, prefetch]);
+    // 2. Interaction logic (useDrag)
+    const { getDragProps: getBaseDragProps } = useDrag<CellState>({
+        onToggle: (r, c, isRight, draggingValue, isInitial) => {
+            if (isAnalysisMode) return;
 
-    const { getDragProps: getBaseDragProps } = useDrag({
-        onToggle: (r: number, c: number, isRightClick: boolean) => {
-            dispatch({
-                type: 'toggle',
-                row: r,
-                col: c,
-                reverse: isRightClick,
-            });
+            const gridRow = state.grid[r];
+            if (!gridRow) return;
+            const current = gridRow[c];
+            const target = isRight ? 2 : 1;
+            const next = (current === target ? 0 : target) as CellState;
+
+            if (isInitial) {
+                dispatch({ type: 'toggle', row: r, col: c, reverse: isRight });
+                return next;
+            } else if (
+                draggingValue !== undefined &&
+                current !== draggingValue
+            ) {
+                dispatch({ type: 'toggle', row: r, col: c, reverse: isRight });
+            }
+            return draggingValue;
         },
-        checkEnabled: () => !state.solved,
-        touchTimeout: GAME_CONSTANTS.timing.touchHoldDelay,
+        checkEnabled: () => !solved && !generating,
+        touchTimeout: GAME_CONSTANTS.timing.interactionDelay,
     });
 
-    const { handleKeyDown: handleGridNav } = useGridNavigation({
-        rows,
-        cols,
-    });
+    const { handleKeyDown: handleGridNav } = useGridNavigation({ rows, cols });
 
     const getDragProps = useCallback(
         (pos: string) => {
@@ -156,96 +137,106 @@ export function useSlantGame() {
         [getBaseDragProps, handleGridNav],
     );
 
-    // UI Props derivations (formerly in useSlantProps)
+    // 3. Analysis mode logic
+    const analysis = useAnalysisMode({
+        state,
+        dispatch,
+        isAnalysisMode,
+        setIsAnalysisMode,
+        rows,
+        cols,
+        storageKey: STORAGE_KEYS.ANALYSIS_MOVES,
+        toggleInfo,
+    });
+
+    // 4. UI Props derivation
     const { cellProps, overlayProps } = useSlantBoard({
         state,
         size,
         getDragProps,
     });
 
-    const contentSx = useMemo(
-        () => ({
-            px: mobile ? '1rem' : '2rem',
-            pt: mobile ? '1rem' : '2rem',
-        }),
-        [mobile],
-    );
-    const dimensionsMismatch = rows !== state.rows || cols !== state.cols;
-
-    const boardProps = useMemo(
-        () => ({
-            isAnalysisMode,
-            generating,
-            dimensionsMismatch,
-            rows,
-            cols,
-            state,
-            size,
-            analysis: {
-                moves: analysisMoves,
-                onMove: handleAnalysisMove,
-                onCopy: handleAnalysisCopy,
-                onClear: handleAnalysisClear,
-                onClose: handleAnalysisClose,
-                onApply: handleAnalysisApply,
-            },
-            cellProps,
-            overlayProps,
-        }),
-        [
-            isAnalysisMode,
-            generating,
-            dimensionsMismatch,
-            rows,
-            cols,
-            state,
-            size,
-            analysisMoves,
-            handleAnalysisMove,
-            handleAnalysisCopy,
-            handleAnalysisClear,
-            handleAnalysisClose,
-            handleAnalysisApply,
-            cellProps,
-            overlayProps,
-        ],
-    );
-
     const layoutProps = useMemo(
         () => ({
-            boardSx,
-            contentSx,
-            iconSizeRatio: LAYOUT_CONSTANTS.ICON_SIZE_RATIO,
+            boardSx: {
+                marginTop: mobile
+                    ? `${String(LAYOUT_CONSTANTS.PADDING_OFFSET)}px`
+                    : `${String(LAYOUT_CONSTANTS.PADDING_OFFSET)}px`,
+            },
         }),
-        [boardSx, contentSx],
+        [mobile],
     );
 
     const infoProps = useMemo(
         () => ({
             open: infoOpen,
+            solved,
             toggleOpen: toggleInfo,
-            handleOpenAnalysis,
-            handleBoxClick,
+            board: { rows, cols, size },
+            rendering: {
+                palette: { primary: '', secondary: '' }, // placeholder
+                getFrontProps: () => ({}), // placeholder
+                getBackProps: () => ({}), // placeholder
+            },
+            handleBoxClick: analysis.handleBoxClick,
+            handleOpenAnalysis: analysis.handleOpenAnalysis,
         }),
-        [infoOpen, toggleInfo, handleOpenAnalysis, handleBoxClick],
+        [
+            infoOpen,
+            solved,
+            toggleInfo,
+            rows,
+            cols,
+            size,
+            analysis.handleBoxClick,
+            analysis.handleOpenAnalysis,
+        ],
     );
 
-    const trophyProps = useMemo(
+    const trophyProps = useMemo(() => ({ scaling }), [scaling]);
+
+    const activeControlsProps = useMemo(
         () => ({
-            scaling,
+            ...controlsProps,
+            hidden: isAnalysisMode,
+            onRefresh: () => {
+                handleNextAsync();
+                controlsProps.onRefresh();
+            },
         }),
-        [scaling],
+        [controlsProps, isAnalysisMode, handleNextAsync],
     );
+
+    const dimensionsMismatch = state.rows !== rows || state.cols !== cols;
 
     return {
-        boardProps,
+        boardProps: {
+            state,
+            size,
+            rows,
+            cols,
+            cellProps,
+            overlayProps,
+            isAnalysisMode,
+            generating,
+            dimensionsMismatch,
+            analysis: {
+                moves: analysis.analysisMoves,
+                onMove: analysis.handleAnalysisMove,
+                onCopy: analysis.handleAnalysisCopy,
+                onClear: analysis.handleAnalysisClear,
+                onClose: analysis.handleAnalysisClose,
+                onApply: analysis.handleAnalysisApply,
+            },
+        },
         layoutProps,
         infoProps,
         gameState: {
             ...baseGame,
-            solved: state.solved,
+            controlsProps: activeControlsProps,
             handleNext: handleNextAsync,
         },
+        analysis,
         trophyProps,
     };
 }

@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from 'react';
 
-import { useLocalStorage, useWindow, useMobile } from '@/hooks';
+import { useWindow, useMobile } from '../../../hooks/layout';
+import { useLocalStorage } from '../../../hooks/useLocalStorage';
 
 /**
  * Convert pixel dimensions to grid rows/cols based on cell size
@@ -47,35 +48,6 @@ interface GridSizeConfig {
 
 /**
  * Custom hook for calculating and managing game grid dimensions.
- *
- * Features:
- * - Responsive grid sizing based on viewport
- * - Persistence of user preferences to localStorage
- * - Separate dynamic (auto) and user-selected sizes
- * - Size increment/decrement controls
- *
- * @param config - Grid sizing configuration
- * @returns Object with current dimensions, handlers, and sizing state
- *
- * @example
- * ```tsx
- * const { rows, cols, handlePlus, handleMinus } = useGridSize({
- *   storageKey: 'slant-size',
- *   defaultSize: null,
- *   minSize: 2,
- *   maxSize: 10,
- *   headerOffset: { mobile: 56, desktop: 64 },
- *   cellSizeReference: 1.5
- * });
- *
- * return (
- *   <div>
- *     <button onClick={handlePlus}>+</button>
- *     Grid: {rows}x{cols}
- *     <button onClick={handleMinus}>-</button>
- *   </div>
- * );
- * ```
  */
 export function useGridSize({
     storageKey,

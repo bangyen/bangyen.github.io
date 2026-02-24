@@ -1,19 +1,33 @@
 import { renderHook, act } from '@testing-library/react';
+import React from 'react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 import { useGridSize } from '../useGridSize';
 
-import { useWindow } from '@/hooks';
+import { useWindow } from '@/hooks/layout';
 
 // Mock the base hooks
-vi.mock('@/hooks', async importOriginal => {
-    const actual = await importOriginal<Record<string, unknown>>();
-    return {
-        ...actual,
-        useWindow: vi.fn().mockReturnValue({ width: 1000, height: 1000 }),
-        useMobile: vi.fn().mockReturnValue(false),
-    };
-});
+vi.mock('@/hooks/layout', () => ({
+    useWindow: vi.fn().mockReturnValue({ width: 1000, height: 1000 }),
+    useMobile: vi.fn().mockReturnValue(false),
+}));
+
+vi.mock('@/hooks/useLocalStorage', () => ({
+    useLocalStorage: vi
+        .fn()
+        .mockImplementation((key, defaultValue, options) => {
+            const raw = localStorage.getItem(key);
+            // Simplified deserialization matching useGridSize usage
+            const initial =
+                raw === null
+                    ? defaultValue
+                    : options?.deserialize
+                      ? options.deserialize(raw)
+                      : JSON.parse(raw);
+            const [val, setVal] = React.useState(initial);
+            return [val, setVal];
+        }),
+}));
 
 describe('useGridSize', () => {
     const defaultGridConfig = {
@@ -79,8 +93,6 @@ describe('useGridSize', () => {
         });
 
         // Should set desiredSize to null to switch to dynamic size
-        // (Wait, the logic in useGridSize says if dynamicSize.rows !== dynamicSize.cols and (rows !== dynamicSize.rows || cols !== dynamicSize.cols))
-        // If it's 5x5 and dynamic is 5x5, it won't change unless it can go higher.
     });
 
     it('should respect minSize and maxSize', () => {
@@ -94,7 +106,6 @@ describe('useGridSize', () => {
 
         // Very small window
         vi.mocked(useWindow).mockReturnValue({ width: 10, height: 10 });
-        // Trigger rerender if needed or just re-calculate dynamicSize
 
         // Dynamic size will be below minSize
         const { result: result2 } = renderHook(() =>

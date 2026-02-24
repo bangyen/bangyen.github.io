@@ -1,9 +1,8 @@
-import { useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useDrag } from '../../hooks/useDrag';
-import { useGameInfo } from '../../hooks/useGameInfo';
 import { useGridNavigation } from '../../hooks/useGridNavigation';
 import { useSkipTransition } from '../../hooks/useSkipTransition';
 import {
@@ -45,7 +44,12 @@ export function useLightsOutGame() {
     });
 
     const { state, dispatch, solved, layout } = baseGame;
-    const { rows, cols, size, mobile, scaling } = layout;
+    const { rows, cols, size, mobile, scaling: rawScaling } = layout;
+    const scaling = rawScaling as {
+        iconSize: string;
+        containerSize: string;
+        padding: number;
+    };
 
     const { getDragProps: getBaseDragProps } = useDrag({
         onToggle: (r: number, c: number) => {
@@ -79,7 +83,11 @@ export function useLightsOutGame() {
         [getBaseDragProps, handleGridNav],
     );
 
-    const { open, toggleOpen } = useGameInfo();
+    // Inline redundant useGameInfo
+    const [infoOpen, setInfoOpen] = useState(false);
+    const toggleOpen = useCallback(() => {
+        setInfoOpen(prev => !prev);
+    }, []);
 
     const palette = usePalette(state.score);
     const getters = useHandler(state, palette);
@@ -123,10 +131,9 @@ export function useLightsOutGame() {
         });
 
         return {
-            size,
-            space: 0,
             grid: grid2D,
             palette,
+            size,
             layers: [
                 {
                     rows: rows - 1,
@@ -156,9 +163,9 @@ export function useLightsOutGame() {
 
     const infoProps = useMemo(
         () => ({
-            open,
+            open: infoOpen,
             solved,
-            toggleOpen,
+            toggleOpen: toggleOpen,
             board: { rows, cols, size },
             rendering: {
                 palette,
@@ -169,7 +176,7 @@ export function useLightsOutGame() {
             bottomRow: bottomRowArray,
         }),
         [
-            open,
+            infoOpen,
             solved,
             toggleOpen,
             rows,

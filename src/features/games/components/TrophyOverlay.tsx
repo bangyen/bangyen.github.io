@@ -5,8 +5,7 @@ import {
     TrophyLabel,
 } from './TrophyOverlay.styles';
 import { GAME_TEXT } from '../config/constants';
-import type { GAME_TOKENS, GameScalingVariant } from '../config/tokens';
-import { useGameViewport } from '../hooks/useGameViewport';
+import type { GameScalingVariant } from '../config/tokens';
 
 export interface TrophyOverlayProps {
     /** Whether the win card is visible (default false). */
@@ -15,8 +14,12 @@ export interface TrophyOverlayProps {
     sizeVariant?: GameScalingVariant;
     /** Whether to show the "Solved!" label beneath the icon (default true). */
     showLabel?: boolean;
-    /** Optional pre-calculated scaling data. */
-    scaling?: (typeof GAME_TOKENS.scaling)[GameScalingVariant];
+    /** Required pre-calculated scaling data. */
+    scaling: {
+        iconSize: string;
+        containerSize: string;
+        padding: number;
+    };
 }
 
 /**
@@ -27,14 +30,9 @@ export interface TrophyOverlayProps {
  */
 export function TrophyOverlay({
     show = false,
-    sizeVariant = 'default',
     showLabel = true,
-    scaling: propScaling,
+    scaling,
 }: TrophyOverlayProps) {
-    // Fallback to hook if scaling not provided (for backward compatibility/standalone use)
-    const { scaling: hookScaling } = useGameViewport({ sizeVariant });
-    const scaling = propScaling ?? hookScaling;
-
     return (
         <OverlayContainer show={show}>
             <TrophyCard padding={scaling.padding} size={scaling.containerSize}>

@@ -5,5 +5,4 @@ export * from './useBaseGame';
 export * from './useDrag';
 export * from './useGamePersistence';
 export * from './useGridSize';
-export * from './useWinTransition';
 export * from './useCanvas';
