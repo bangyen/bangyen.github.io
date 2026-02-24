@@ -13,12 +13,6 @@ vi.mock('../../config', () => ({
 }));
 vi.mock('../useGenerationWorker');
 vi.mock('../useAnalysisMode');
-vi.mock('../useSlantBoard', () => ({
-    useSlantBoard: vi.fn().mockReturnValue({
-        cellProps: {},
-        overlayProps: {},
-    }),
-}));
 vi.mock('@/hooks', () => ({
     useMobile: vi.fn().mockReturnValue(false),
     useDebouncedEffect: vi.fn(),
@@ -97,13 +91,14 @@ describe('useSlantGame', () => {
         } as any);
     });
 
-    it('returns the standard GamePageProps shape', () => {
+    it('returns the flattened game state shape', () => {
         const { result } = renderHook(() => useSlantGame());
 
-        expect(result.current).toHaveProperty('boardProps');
-        expect(result.current).toHaveProperty('layoutProps');
+        expect(result.current).toHaveProperty('state');
+        expect(result.current).toHaveProperty('size');
+        expect(result.current).toHaveProperty('cellProps');
         expect(result.current).toHaveProperty('infoProps');
-        expect(result.current).toHaveProperty('gameState');
+        expect(result.current).toHaveProperty('controlsProps');
     });
 
     it('calls useBaseGame with manualResize enabled', () => {
@@ -117,8 +112,9 @@ describe('useSlantGame', () => {
     it('wires up correctly returned props', () => {
         const { result } = renderHook(() => useSlantGame());
 
-        expect(result.current.boardProps).toBeDefined();
-        expect(result.current.layoutProps).toBeDefined();
+        expect(result.current.state).toBeDefined();
+        expect(result.current.size).toBeDefined();
+        expect(result.current.boardSx).toBeDefined();
     });
 
     it('wires up generation worker with correct config', () => {
@@ -133,7 +129,7 @@ describe('useSlantGame', () => {
         );
     });
 
-    it('passes generation worker handle to gameState', () => {
+    it('passes generation worker handle to controlsProps', () => {
         const mockHandleNextAsync = vi.fn();
         vi.mocked(useGenerationWorker).mockReturnValue({
             generating: true,
@@ -145,7 +141,7 @@ describe('useSlantGame', () => {
 
         const { result } = renderHook(() => useSlantGame());
 
-        expect(result.current.boardProps.generating).toBe(true);
-        expect(result.current.gameState.controlsProps.onRefresh).toBeDefined();
+        expect(result.current.generating).toBe(true);
+        expect(result.current.controlsProps.onRefresh).toBeDefined();
     });
 });

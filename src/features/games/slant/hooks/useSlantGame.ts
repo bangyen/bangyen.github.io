@@ -3,7 +3,6 @@ import { useRef, useMemo, useCallback, useState } from 'react';
 
 import { useAnalysisMode } from './useAnalysisMode';
 import { useGenerationWorker } from './useGenerationWorker';
-import { useSlantBoard } from './useSlantBoard';
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useDrag } from '../../hooks/useDrag';
@@ -142,54 +141,53 @@ export function useSlantGame() {
         toggleInfo,
     });
 
-    // 4. UI Props derivation
-    const { cellProps, overlayProps } = useSlantBoard({
+    // 4. UI Props derivation (inlined useSlantBoard)
+    const cellProps = useMemo(
+        () => (r: number, c: number) => {
+            const pos = `${r.toString()},${c.toString()}`;
+            return getDragProps(pos);
+        },
+        [getDragProps],
+    );
+
+    const overlayProps = useMemo(
+        () => (_r: number, _c: number) => ({
+            role: 'presentation',
+            'aria-hidden': true,
+        }),
+        [],
+    );
+
+    const boardSx = useMemo(
+        () => ({
+            marginTop: `${String(LAYOUT_CONSTANTS.PADDING_OFFSET)}px`,
+        }),
+        [],
+    );
+
+    const dimensionsMismatch = state.rows !== rows || state.cols !== cols;
+
+    return {
+        // State & Logic
         state,
+        dispatch,
+        solved: !isAnalysisMode && solved,
+        generating,
+        dimensionsMismatch,
+
+        // Layout & UI
+        rows,
+        cols,
         size,
-        getDragProps,
-    });
+        mobile,
+        scaling,
+        boardSx,
+        handleNext: handleNextAsync,
 
-    const layoutProps = useMemo(
-        () => ({
-            boardSx: {
-                marginTop: mobile
-                    ? `${String(LAYOUT_CONSTANTS.PADDING_OFFSET)}px`
-                    : `${String(LAYOUT_CONSTANTS.PADDING_OFFSET)}px`,
-            },
-        }),
-        [mobile],
-    );
-
-    const infoProps = useMemo(
-        () => ({
-            open: infoOpen,
-            solved,
-            toggleOpen: toggleInfo,
-            board: { rows, cols, size },
-            rendering: {
-                palette: { primary: '', secondary: '' }, // placeholder
-                getFrontProps: () => ({}), // placeholder
-                getBackProps: () => ({}), // placeholder
-            },
-            handleBoxClick: analysis.handleBoxClick,
-            handleOpenAnalysis: analysis.handleOpenAnalysis,
-        }),
-        [
-            infoOpen,
-            solved,
-            toggleInfo,
-            rows,
-            cols,
-            size,
-            analysis.handleBoxClick,
-            analysis.handleOpenAnalysis,
-        ],
-    );
-
-    const trophyProps = useMemo(() => ({ scaling }), [scaling]);
-
-    const activeControlsProps = useMemo(
-        () => ({
+        // Props for child components
+        cellProps,
+        overlayProps,
+        controlsProps: {
             ...controlsProps,
             hidden: isAnalysisMode,
             disabled: generating,
@@ -197,40 +195,25 @@ export function useSlantGame() {
                 handleNextAsync();
                 controlsProps.onRefresh();
             },
-        }),
-        [controlsProps, isAnalysisMode, generating, handleNextAsync],
-    );
-
-    const dimensionsMismatch = state.rows !== rows || state.cols !== cols;
-
-    return {
-        boardProps: {
-            state,
-            size,
-            rows,
-            cols,
-            cellProps,
-            overlayProps,
-            isAnalysisMode,
-            generating,
-            dimensionsMismatch,
-            analysis: {
-                moves: analysis.analysisMoves,
-                onMove: analysis.handleAnalysisMove,
-                onCopy: analysis.handleAnalysisCopy,
-                onClear: analysis.handleAnalysisClear,
-                onClose: analysis.handleAnalysisClose,
-                onApply: analysis.handleAnalysisApply,
-            },
         },
-        layoutProps,
-        infoProps,
-        gameState: {
-            ...baseGame,
-            solved: !isAnalysisMode && solved,
-            controlsProps: activeControlsProps,
+        infoProps: {
+            open: infoOpen,
+            solved,
+            toggleOpen: toggleInfo,
+            board: { rows, cols, size },
+            handleBoxClick: analysis.handleBoxClick,
+            handleOpenAnalysis: analysis.handleOpenAnalysis,
         },
-        analysis,
-        trophyProps,
+        analysis: {
+            active: isAnalysisMode,
+            moves: analysis.analysisMoves,
+            onMove: analysis.handleAnalysisMove,
+            onCopy: analysis.handleAnalysisCopy,
+            onClear: analysis.handleAnalysisClear,
+            onClose: analysis.handleAnalysisClose,
+            onApply: analysis.handleAnalysisApply,
+            ...analysis, // include raw analysis result if needed by page
+        },
+        trophyProps: { scaling },
     };
 }

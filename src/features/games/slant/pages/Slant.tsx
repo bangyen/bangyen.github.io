@@ -8,17 +8,42 @@ import { useSlantGame } from '../hooks/useSlantGame';
 import { PAGE_TITLES } from '@/config/constants';
 
 export function Slant() {
-    const { boardProps, layoutProps, infoProps, gameState, trophyProps } =
-        useSlantGame();
+    const {
+        state,
+        size,
+        rows,
+        cols,
+        cellProps,
+        overlayProps,
+        boardSx,
+        infoProps,
+        controlsProps,
+        analysis,
+        solved,
+        generating,
+        dimensionsMismatch,
+        trophyProps,
+    } = useSlantGame();
 
     return (
         <StandardGameLayout
             title={PAGE_TITLES.slant}
             infoUrl="https://en.wikipedia.org/wiki/Gokigen_Naname"
-            boardProps={boardProps}
-            layoutProps={layoutProps}
+            boardProps={{
+                state,
+                size,
+                rows,
+                cols,
+                cellProps,
+                overlayProps,
+                isAnalysisMode: analysis.active,
+                generating,
+                dimensionsMismatch,
+                analysis,
+            }}
+            layoutProps={{ boardSx }}
             infoProps={infoProps}
-            gameState={gameState}
+            gameState={{ solved, controlsProps }}
             trophyProps={trophyProps}
             renderBoard={props => (
                 <Box onClick={infoProps.handleBoxClick}>
@@ -26,11 +51,7 @@ export function Slant() {
                 </Box>
             )}
             InfoComponent={SlantInfo}
-            onPageClick={
-                boardProps.isAnalysisMode
-                    ? boardProps.analysis.onClose
-                    : undefined
-            }
+            onPageClick={analysis.active ? analysis.onClose : undefined}
         />
     );
 }

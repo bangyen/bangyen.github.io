@@ -1,17 +1,26 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { AnalysisProvider } from './AnalysisContext';
 import { AnalysisControls } from './AnalysisControls';
 import { SlantBoard } from './SlantBoard';
 import { BoardOuterWrapper } from '../../components/InteractiveBoard';
 import { SLANT_STYLES } from '../config/constants';
-import { useSlantAnalysisBoard } from '../hooks/useSlantAnalysisBoard';
+import { useAnalysisSolver } from '../hooks/useAnalysisSolver';
 import { EMPTY } from '../types';
 import type { CellState, SlantState } from '../types';
-import { computeSatisfied } from '../utils/analysisSolver';
+import {
+    computeSatisfied,
+    filterEmptyMoves,
+    getNextAnalysisState,
+} from '../utils/analysisSolver';
 
-import { BOARD_STYLES } from '@/features/games/config/constants';
+import {
+    BOARD_STYLES,
+    GAME_CONSTANTS,
+} from '@/features/games/config/constants';
+import { useDrag } from '@/features/games/hooks/useDrag';
+import { useGridNavigation } from '@/features/games/hooks/useGridNavigation';
 
 export interface SlantAnalysisBoardProps {
     rows: number;
@@ -39,22 +48,59 @@ export function SlantAnalysisBoard({
     onApply,
     ...state
 }: SlantAnalysisBoardProps & Partial<SlantState>) {
-    const {
-        gridState,
-        conflictSet,
-        cycleCells,
-        nodeConflictSet,
-        getEnhancedDragProps,
-        handleApply,
-    } = useSlantAnalysisBoard({
-        rows,
-        cols,
-        numbers,
-        size,
-        initialMoves,
-        onMove,
-        onApply,
+    const { getDragProps } = useDrag<CellState | undefined>({
+        onToggle: (
+            r: number,
+            c: number,
+            isRightClick: boolean,
+            draggingValue: CellState | undefined,
+            isInitialClick?: boolean,
+        ) => {
+            const pos = `${r.toString()},${c.toString()}`;
+
+            if (!isInitialClick) {
+                onMove(pos, draggingValue);
+                return;
+            }
+
+            const current = initialMoves.get(pos);
+            const newState = getNextAnalysisState(current, isRightClick);
+
+            onMove(pos, newState);
+            return newState;
+        },
+        touchTimeout: GAME_CONSTANTS.timing.touchHoldDelay,
+        checkEnabled: () => true,
     });
+
+    const { handleKeyDown: handleGridNav } = useGridNavigation({ rows, cols });
+
+    const getEnhancedDragProps = useCallback(
+        (pos: string) => {
+            const dragProps = getDragProps(pos);
+            return {
+                ...dragProps,
+                onKeyDown: (e: React.KeyboardEvent) => {
+                    dragProps.onKeyDown(e);
+                    handleGridNav(e);
+                },
+            };
+        },
+        [getDragProps, handleGridNav],
+    );
+
+    const { gridState, cycleCells, conflictSet, nodeConflictSet } =
+        useAnalysisSolver({
+            rows,
+            cols,
+            numbers,
+            userMoves: initialMoves,
+        });
+
+    const handleApply = useCallback(() => {
+        if (!onApply) return;
+        onApply(filterEmptyMoves(gridState));
+    }, [onApply, gridState]);
 
     return (
         <AnalysisProvider
