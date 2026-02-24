@@ -20,11 +20,6 @@ export const GAME_CONSTANTS = {
     },
 };
 
-// Re-export from shared config so existing feature-level imports keep working.
-// Uses a relative path (not @/ alias) because this module is transitively
-// imported by web-worker entry points whose Rollup build lacks the alias.
-export { GRID_CONFIG, getSpace } from '../../../config/theme/spacing';
-
 /**
  * Shared user-facing text used across game features.
  * Centralises copy to avoid duplication and make updates easier.

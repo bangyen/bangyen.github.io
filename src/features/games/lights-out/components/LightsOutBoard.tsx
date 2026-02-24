@@ -19,7 +19,7 @@ interface LightsOutBoardProps {
 
 /**
  * A specialized Lights Out board that uses CanvasBoard for high-performance
- * rendering and a transparent CustomGrid overlay for interactions.
+ * rendering and a transparent CSS grid overlay for interactions.
  */
 export function LightsOutBoard({
     grid,
