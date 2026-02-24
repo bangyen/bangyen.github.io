@@ -50,7 +50,7 @@ export function SlantBoard({
     cycleCells,
     nodeConflictSet,
 }: SlantBoardProps): React.ReactElement {
-    const space = 0.2; // rem (matching SlantCanvasBoard's 0.2 * pxScale)
+    const space = 0.3; // rem (matching SlantCanvasBoard's 0.3 * pxScale)
     const padding = size * 0.6; // matching SlantCanvasBoard's padding = numberSize * 1.5 = (size * 0.4) * 1.5
 
     const [hoveredCell, setHoveredCell] = React.useState<string | null>(null);
@@ -92,7 +92,7 @@ export function SlantBoard({
                     gridTemplateRows: `repeat(${rows.toString()}, ${size.toString()}rem)`,
                     gridTemplateColumns: `repeat(${cols.toString()}, ${size.toString()}rem)`,
                     gap: `${space.toString()}rem`,
-                    padding: `${padding.toString()}rem`,
+                    padding: `${(padding + space / 2).toString()}rem`,
                     zIndex: 1,
                     pointerEvents: 'auto',
                 }}

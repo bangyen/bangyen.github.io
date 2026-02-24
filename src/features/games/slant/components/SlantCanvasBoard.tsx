@@ -42,7 +42,7 @@ export function SlantCanvasBoard({
     const cols = grid[0]?.length ?? 0;
     const pxScale = 40;
     const cellSize = remSize * pxScale;
-    const space = 0.2 * pxScale;
+    const space = 0.3 * pxScale;
 
     const numRows = numbers.length;
     const numCols = numbers[0]?.length ?? 0;
@@ -88,8 +88,9 @@ export function SlantCanvasBoard({
         const numberSize = cellSize * 0.4;
         const padding = numberSize * 1.5; // Significantly increased padding to prevent shadow clipping
 
-        const totalWidth = cols * cellSize + (cols - 1) * space + 2 * padding;
-        const totalHeight = rows * cellSize + (rows - 1) * space + 2 * padding;
+        // Mathematically center the board: Node 0 to Node cols covers cols * (cellSize + space)
+        const totalWidth = cols * (cellSize + space) + 2 * padding;
+        const totalHeight = rows * (cellSize + space) + 2 * padding;
 
         canvas.width = totalWidth;
         canvas.height = totalHeight;
@@ -114,8 +115,9 @@ export function SlantCanvasBoard({
             // 1. Draw Cells
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
-                    const x = c * (cellSize + space) + padding;
-                    const y = r * (cellSize + space) + padding;
+                    // Offset by space/2 to center slashes between nodes
+                    const x = c * (cellSize + space) + padding + space / 2;
+                    const y = r * (cellSize + space) + padding + space / 2;
                     const pos = String(r) + ',' + String(c);
                     const isActive = pos === activeCell;
 
@@ -264,7 +266,7 @@ export function SlantCanvasBoard({
                         }
 
                         ctx.fillStyle = textColor;
-                        ctx.fillText(value.toString(), x, y + 1); // Small offset for alignment
+                        ctx.fillText(value.toString(), x, y); // No offset needed with textBaseline=middle
                     }
                 }
             }
