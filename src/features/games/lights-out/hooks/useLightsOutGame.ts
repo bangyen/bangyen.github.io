@@ -2,8 +2,9 @@ import { useCallback } from 'react';
 
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
-import { useEnhancedDrag } from '../../hooks/useEnhancedDrag';
+import { useDrag } from '../../hooks/useDrag';
 import { useGameInfo } from '../../hooks/useGameInfo';
+import { useGridNavigation } from '../../hooks/useGridNavigation';
 import { useSkipTransition } from '../../hooks/useSkipTransition';
 import { LIGHTS_OUT_STYLES, getLightsOutGameConfig } from '../config';
 import { useHandler, usePalette } from '../hooks/boardUtils';
@@ -40,9 +41,7 @@ export function useLightsOutGame() {
     const { state, dispatch, solved, layout } = baseGame;
     const { rows, cols, size, mobile, scaling } = layout;
 
-    const { getDragProps } = useEnhancedDrag({
-        rows,
-        cols,
+    const { getDragProps: getBaseDragProps } = useDrag({
         onToggle: (r: number, c: number) => {
             dispatch({
                 type: 'adjacent' as const,
@@ -54,6 +53,25 @@ export function useLightsOutGame() {
         touchTimeout: GAME_CONSTANTS.timing.interactionDelay,
         transition: LIGHTS_OUT_STYLES.TRANSITION.FAST,
     });
+
+    const { handleKeyDown: handleGridNav } = useGridNavigation({
+        rows,
+        cols,
+    });
+
+    const getDragProps = useCallback(
+        (pos: string) => {
+            const dragProps = getBaseDragProps(pos);
+            return {
+                ...dragProps,
+                onKeyDown: (e: React.KeyboardEvent) => {
+                    dragProps.onKeyDown(e);
+                    handleGridNav(e);
+                },
+            };
+        },
+        [getBaseDragProps, handleGridNav],
+    );
 
     const { open, toggleOpen } = useGameInfo();
 

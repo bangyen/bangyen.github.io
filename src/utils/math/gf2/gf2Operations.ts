@@ -9,6 +9,65 @@
  */
 
 /**
+ * Cache for matrix inversions.
+ * Key format: "rows,cols" -> inverse matrix as bigint array
+ */
+const inverseCache: Record<string, bigint[]> = {};
+
+/**
+ * Computes the solution vector for a Lights Out puzzle using algebraic matrix inversion.
+ *
+ * This function implements the algebraic solution for an $n \times m$ grid.
+ * The system of equations can be reduced from $n \cdot m$ variables to a much smaller
+ * system of $n$ variables by realizing that the relation between rows follows the
+ * polynomial sequence $P_k(A)$.
+ *
+ * Specifically, the entire board state is solvable if and only if $P_{m+1}(A)$ is invertible
+ * (or the target state is in its image). The solution is found by:
+ * 1. Generating $A$, the $n \times n$ adjacency matrix for a 1D line.
+ * 2. Computing $P_{m+1}(x)$ from the predefined sequence.
+ * 3. Evaluating $M = P_{m+1}(A)$ in GF(2).
+ * 4. Finding $M^{-1}$ (the inverse operator).
+ * 5. Operating on the initial state vector with the inverse.
+ *
+ * @param input - Binary array representing the current puzzle state (1 = on)
+ * @param rows - Number of rows ($m$)
+ * @param cols - Number of columns ($n$)
+ * @returns Binary array representing which buttons to press to solve the puzzle
+ */
+export function getProduct(
+    input: number[],
+    rows: number,
+    cols: number,
+): number[] {
+    const key = `${rows.toString()},${cols.toString()}`;
+
+    if (!inverseCache[key]) {
+        const matrix = getMatrix(cols);
+        const weights = getPolynomial(rows + 1);
+        const product = evalPolynomial(matrix, weights);
+
+        inverseCache[key] = invertMatrix(product);
+    }
+
+    const inverse = inverseCache[key] as bigint[] | undefined;
+    const binaryStr = input.join('');
+    const binary = binaryStr ? BigInt('0b' + binaryStr) : 0n;
+
+    const getParity = (row: bigint): number => {
+        const value = row & binary;
+        const count = countBits(value);
+        return count & 1;
+    };
+
+    if (inverse === undefined) {
+        throw new Error('Inverse matrix not found in cache');
+    }
+
+    return inverse.map(getParity);
+}
+
+/**
  * Counts the number of set bits (1s) in a bigint.
  *
  * Uses Brian Kernighan's algorithm for efficient bit counting.
@@ -222,4 +281,87 @@ export function invertMatrix(matrix: bigint[]): bigint[] {
         }
     }
     return inverted;
+}
+
+/**
+ * Generates the adjacency matrix for a 1D line of $n$ lights.
+ * In a 1D grid, each light $i$ affects itself and its neighbors $(i-1, i+1)$.
+ * This matrix is the basis for constructing 2D grid operators in GF(2).
+ *
+ * @param cols - Number of columns (lights) in the 1D line
+ * @returns Adjacency matrix as an array of bitmask rows (bigint[])
+ */
+export function getMatrix(cols: number): bigint[] {
+    if (cols === 1) return [1n];
+    const first = 7n << BigInt(cols - 2);
+    const matrix = [first];
+
+    for (let k = 1; k < cols; k++) {
+        const prev = matrix[k - 1];
+        if (prev !== undefined) {
+            const next = prev >> 1n;
+            matrix.push(next);
+        }
+    }
+
+    const firstVal = matrix[0];
+    if (firstVal !== undefined) matrix[0] = firstVal - (1n << BigInt(cols));
+    return matrix;
+}
+
+/**
+ * Computes the k-th polynomial in the specific sequence used for algebraic analysis of Lights Out.
+ *
+ * This sequence of polynomials is defined by:
+ * $P_0(x) = 0$
+ * $P_1(x) = 1$
+ * $P_k(x) = x \cdot P_{k-1}(x) + P_{k-2}(x)$ (for $k \ge 2$)
+ *
+ * @param index - The index $k$ in the sequence
+ * @returns The $k$-th polynomial as a bitmask (bigint)
+ */
+export function getPolynomial(index: number): bigint {
+    const output = [0n, 1n];
+
+    for (let k = 1; k < index; k++) {
+        const curr = output[k];
+        const prev = output[k - 1];
+        if (curr !== undefined && prev !== undefined) {
+            const double = curr << 1n;
+            output.push(double ^ prev);
+        }
+    }
+
+    return output[index] ?? 0n;
+}
+
+/**
+ * Evaluates a polynomial p(M) where M is a matrix in GF(2).
+ *
+ * @param matrix - The symbolic matrix M
+ * @param poly - The polynomial as a bigint
+ * @param cache - Optional cache for matrix powers
+ * @returns The resulting matrix p(M)
+ */
+export function evalPolynomial(
+    matrix: bigint[],
+    poly: bigint,
+    cache?: Map<number, bigint[]>,
+): bigint[] {
+    const size = matrix.length;
+    let output = new Array<bigint>(size).fill(0n);
+    let degree = 0;
+
+    let p = poly;
+    while (p > 0n) {
+        if (p & 1n) {
+            const power = symmetricPow(matrix, degree, cache);
+            output = addSym(output, power);
+        }
+
+        p >>= 1n;
+        degree++;
+    }
+
+    return output;
 }

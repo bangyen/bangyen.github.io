@@ -1,12 +1,9 @@
-import { AnimatePresence } from 'framer-motion';
-
 import {
     OverlayContainer,
     TrophyCard,
     TrophyIcon,
     TrophyLabel,
 } from './TrophyOverlay.styles';
-import { overlayScalePop, overlayTransition } from '../config/animations';
 import { GAME_TEXT } from '../config/constants';
 import type { GAME_TOKENS, GameScalingVariant } from '../config/tokens';
 import { useGameViewport } from '../hooks/useGameViewport';
@@ -39,25 +36,15 @@ export function TrophyOverlay({
     const scaling = propScaling ?? hookScaling;
 
     return (
-        <AnimatePresence>
-            {show && (
-                <OverlayContainer
-                    {...overlayScalePop}
-                    transition={overlayTransition}
-                >
-                    <TrophyCard
-                        padding={scaling.padding}
-                        size={scaling.containerSize}
-                    >
-                        <TrophyIcon fontSizeRem={scaling.iconSize} />
-                        {showLabel && (
-                            <TrophyLabel variant="h6">
-                                {GAME_TEXT.trophy.solvedLabel}
-                            </TrophyLabel>
-                        )}
-                    </TrophyCard>
-                </OverlayContainer>
-            )}
-        </AnimatePresence>
+        <OverlayContainer show={show}>
+            <TrophyCard padding={scaling.padding} size={scaling.containerSize}>
+                <TrophyIcon fontSizeRem={scaling.iconSize} />
+                {showLabel && (
+                    <TrophyLabel variant="h6">
+                        {GAME_TEXT.trophy.solvedLabel}
+                    </TrophyLabel>
+                )}
+            </TrophyCard>
+        </OverlayContainer>
     );
 }

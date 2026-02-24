@@ -115,9 +115,6 @@ export default defineConfig(() => {
                             if (id.includes('recharts')) {
                                 return 'vendor_recharts';
                             }
-                            if (id.includes('katex')) {
-                                return 'vendor_math';
-                            }
                             if (
                                 id.includes('/node_modules/react/') ||
                                 id.includes('/node_modules/react-dom/') ||

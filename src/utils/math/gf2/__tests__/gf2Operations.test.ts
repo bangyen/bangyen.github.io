@@ -143,4 +143,56 @@ describe('gf2Operations', () => {
             expect(inv).toBeDefined();
         });
     });
+
+    describe('matrixOperations', () => {
+        describe('getMatrix', () => {
+            it('should generate correct 1D adjacency matrix for size 3', () => {
+                const m3 = gf2.getMatrix(3);
+                expect(m3).toEqual([6n, 7n, 3n]);
+            });
+
+            it('should handle size 1', () => {
+                expect(gf2.getMatrix(1)).toEqual([1n]);
+            });
+        });
+    });
+
+    describe('polynomialUtils', () => {
+        describe('evalPolynomial', () => {
+            it('should evaluate polynomial with matrix correctly', () => {
+                const mat = [0b110n, 0b111n, 0b011n];
+                const res = gf2.evalPolynomial(mat, 0b11n);
+                expect(res).toEqual([
+                    0b110n ^ 0b100n,
+                    0b111n ^ 0b010n,
+                    0b011n ^ 0b001n,
+                ]);
+            });
+        });
+
+        describe('getPolynomial', () => {
+            it('should return correct polynomials in the sequence', () => {
+                expect(gf2.getPolynomial(0)).toBe(0n);
+                expect(gf2.getPolynomial(1)).toBe(1n);
+                expect(gf2.getPolynomial(2)).toBe(2n);
+                expect(gf2.getPolynomial(3)).toBe(5n);
+            });
+        });
+    });
+
+    describe('getProduct', () => {
+        it('should compute product for simple grid (3x3)', () => {
+            const input = [1, 0, 0, 0, 0, 0, 0, 0, 0];
+            const result = gf2.getProduct(input, 3, 3);
+            expect(result).toHaveLength(3);
+            expect(result.every(x => x === 0 || x === 1)).toBe(true);
+        });
+
+        it('should handle empty input', () => {
+            const input: number[] = [];
+            const result = gf2.getProduct(input, 3, 3);
+            expect(result).toHaveLength(3);
+            expect(result).toEqual([0, 0, 0]);
+        });
+    });
 });

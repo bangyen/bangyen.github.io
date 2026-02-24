@@ -1,5 +1,4 @@
 import { Typography, Box } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
 import React, { useState, useEffect } from 'react';
 
 import { LIGHTS_OUT_STYLES } from '../config';
@@ -30,23 +29,6 @@ interface FrameRendererProps {
     palette: Palette;
     onClick: () => void;
 }
-
-const variants = {
-    enter: (direction: number) => ({
-        x: direction > 0 ? '100%' : '-100%',
-        opacity: 0,
-    }),
-    center: {
-        zIndex: 1,
-        x: 0,
-        opacity: 1,
-    },
-    exit: (direction: number) => ({
-        zIndex: 0,
-        x: direction < 0 ? '100%' : '-100%',
-        opacity: 0,
-    }),
-};
 
 const FrameRenderer = ({
     remainder,
@@ -88,203 +70,199 @@ const FrameRenderer = ({
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center',
-                minHeight: { xs: '20rem', sm: '22rem' }, // Ensure enough space for transitions
+                minHeight: { xs: '20rem', sm: '22rem' },
                 cursor: 'pointer',
             }}
         >
             <style>{LIGHTS_OUT_STYLES.ANIMATIONS.POP_IN}</style>
-            <AnimatePresence
-                mode="popLayout"
-                custom={direction}
-                initial={false}
+            <Box
+                key={activeView}
+                sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%',
+                    animation:
+                        direction > 0
+                            ? 'slide-in-right 0.3s ease-out'
+                            : direction < 0
+                              ? 'slide-in-left 0.3s ease-out'
+                              : 'none',
+                    '@keyframes slide-in-right': {
+                        '0%': { transform: 'translateX(100%)', opacity: 0 },
+                        '100%': { transform: 'translateX(0)', opacity: 1 },
+                    },
+                    '@keyframes slide-in-left': {
+                        '0%': { transform: 'translateX(-100%)', opacity: 0 },
+                        '100%': { transform: 'translateX(0)', opacity: 1 },
+                    },
+                }}
             >
-                <motion.div
-                    key={activeView}
-                    custom={direction}
-                    variants={variants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{
-                        x: { type: 'spring', stiffness: 300, damping: 30 },
-                        opacity: { duration: 0.2 },
-                    }}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        width: '100%',
-                    }}
-                >
-                    {activeView === 'board' ? (
-                        <Box
-                            sx={{
-                                position: 'relative',
-                                display: 'inline-flex',
-                            }}
-                        >
-                            <CanvasBoard
-                                grid={boardGrid2D}
-                                palette={palette}
-                                size={size}
-                            />
-                            {indicator?.r !== undefined && (
-                                <Box
-                                    key={`board-indicator-${String(remainder)}`}
-                                    sx={{
-                                        width: `${String(size)}rem`,
-                                        height: `${String(size)}rem`,
-                                        position: 'absolute',
-                                        left: `${String(indicator.c * size)}rem`,
-                                        top: `${String(indicator.r * size)}rem`,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        pointerEvents: 'none',
-                                        zIndex: 2,
-                                        '&::after': {
-                                            content: `"${indicator.label}"`,
-                                            fontSize: '1.2rem',
-                                            fontWeight: '600',
-                                            filter: LIGHTS_OUT_STYLES.SHADOWS
-                                                .DROP,
-                                            paddingTop: '0.15rem',
-                                            color:
-                                                ((gridState.grid[indicator.r] ??
-                                                    0) >>
-                                                    indicator.c) &
-                                                1
-                                                    ? palette.secondary
-                                                    : palette.primary,
-                                            animation:
-                                                LIGHTS_OUT_STYLES.ANIMATIONS
-                                                    .POP_IN_STYLE,
-                                        },
-                                    }}
-                                />
-                            )}
-                            {isSolved && (
-                                <Box
-                                    key={`trophy-${String(remainder)}`}
-                                    sx={{
-                                        position: 'absolute',
-                                        inset: 0,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        pointerEvents: 'none',
-                                        zIndex: 10,
+                {activeView === 'board' ? (
+                    <Box
+                        sx={{
+                            position: 'relative',
+                            display: 'inline-flex',
+                        }}
+                    >
+                        <CanvasBoard
+                            grid={boardGrid2D}
+                            palette={palette}
+                            size={size}
+                        />
+                        {indicator?.r !== undefined && (
+                            <Box
+                                key={`board-indicator-${String(remainder)}`}
+                                sx={{
+                                    width: `${String(size)}rem`,
+                                    height: `${String(size)}rem`,
+                                    position: 'absolute',
+                                    left: `${String(indicator.c * size)}rem`,
+                                    top: `${String(indicator.r * size)}rem`,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    pointerEvents: 'none',
+                                    zIndex: 2,
+                                    '&::after': {
+                                        content: `"${indicator.label}"`,
+                                        fontSize: '1.2rem',
+                                        fontWeight: '600',
+                                        filter: LIGHTS_OUT_STYLES.SHADOWS.DROP,
+                                        paddingTop: '0.15rem',
+                                        color:
+                                            ((gridState.grid[indicator.r] ??
+                                                0) >>
+                                                indicator.c) &
+                                            1
+                                                ? palette.secondary
+                                                : palette.primary,
                                         animation:
                                             LIGHTS_OUT_STYLES.ANIMATIONS
                                                 .POP_IN_STYLE,
-                                    }}
-                                >
-                                    {(() => {
-                                        const finalState =
-                                            boardStates[inputStates.length - 1];
-                                        const allOn = finalState?.every(
-                                            (rowVal: number) =>
-                                                rowVal === (1 << dims) - 1,
-                                        );
-                                        return (
-                                            <EmojiEventsRounded
-                                                sx={{
-                                                    fontSize: {
-                                                        xs: '2.5rem',
-                                                        sm: '4rem',
-                                                    },
-                                                    color: allOn
-                                                        ? palette.secondary
-                                                        : palette.primary,
-                                                }}
-                                            />
-                                        );
-                                    })()}
-                                </Box>
-                            )}
-                        </Box>
-                    ) : (
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: 2,
-                            }}
-                        >
-                            <Box sx={{ textAlign: 'center' }}>
-                                <Typography
-                                    variant="subtitle2"
-                                    sx={{ mb: 1, color: COLORS.text.secondary }}
-                                >
-                                    Input
-                                </Typography>
-                                <Box
-                                    sx={{
-                                        position: 'relative',
-                                        display: 'inline-flex',
-                                    }}
-                                >
-                                    <CanvasBoard
-                                        grid={[inputState]}
-                                        size={size}
-                                        palette={palette}
-                                    />
-                                    {indicator && indicator.r === undefined && (
-                                        <Box
-                                            key={`calculator-indicator-${String(remainder)}`}
+                                    },
+                                }}
+                            />
+                        )}
+                        {isSolved && (
+                            <Box
+                                key={`trophy-${String(remainder)}`}
+                                sx={{
+                                    position: 'absolute',
+                                    inset: 0,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    pointerEvents: 'none',
+                                    zIndex: 10,
+                                    animation:
+                                        LIGHTS_OUT_STYLES.ANIMATIONS
+                                            .POP_IN_STYLE,
+                                }}
+                            >
+                                {(() => {
+                                    const finalState =
+                                        boardStates[inputStates.length - 1];
+                                    const allOn = finalState?.every(
+                                        (rowVal: number) =>
+                                            rowVal === (1 << dims) - 1,
+                                    );
+                                    return (
+                                        <EmojiEventsRounded
                                             sx={{
-                                                width: `${String(size)}rem`,
-                                                height: `${String(size)}rem`,
-                                                position: 'absolute',
-                                                left: `${String(indicator.c * size)}rem`,
-                                                top: 0,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                pointerEvents: 'none',
-                                                zIndex: 2,
-                                                '&::after': {
-                                                    content: `"${indicator.label}"`,
-                                                    fontSize: '1.2rem',
-                                                    fontWeight: '600',
-                                                    filter: LIGHTS_OUT_STYLES
-                                                        .SHADOWS.DROP,
-                                                    paddingTop: '0.15rem',
-                                                    color:
-                                                        inputState[
-                                                            indicator.c
-                                                        ] === 1
-                                                            ? palette.secondary
-                                                            : palette.primary,
-                                                    animation:
-                                                        LIGHTS_OUT_STYLES
-                                                            .ANIMATIONS
-                                                            .POP_IN_STYLE,
+                                                fontSize: {
+                                                    xs: '2.5rem',
+                                                    sm: '4rem',
                                                 },
+                                                color: allOn
+                                                    ? palette.secondary
+                                                    : palette.primary,
                                             }}
                                         />
-                                    )}
-                                </Box>
+                                    );
+                                })()}
                             </Box>
-                            <Box sx={{ textAlign: 'center' }}>
+                        )}
+                    </Box>
+                ) : (
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: 2,
+                        }}
+                    >
+                        <Box sx={{ textAlign: 'center' }}>
+                            <Typography
+                                variant="subtitle2"
+                                sx={{ mb: 1, color: COLORS.text.secondary }}
+                            >
+                                Input
+                            </Typography>
+                            <Box
+                                sx={{
+                                    position: 'relative',
+                                    display: 'inline-flex',
+                                }}
+                            >
                                 <CanvasBoard
-                                    grid={[outputState]}
+                                    grid={[inputState]}
                                     size={size}
                                     palette={palette}
                                 />
-                                <Typography
-                                    variant="subtitle2"
-                                    sx={{ mt: 1, color: COLORS.text.secondary }}
-                                >
-                                    Result
-                                </Typography>
+                                {indicator && indicator.r === undefined && (
+                                    <Box
+                                        key={`calculator-indicator-${String(remainder)}`}
+                                        sx={{
+                                            width: `${String(size)}rem`,
+                                            height: `${String(size)}rem`,
+                                            position: 'absolute',
+                                            left: `${String(indicator.c * size)}rem`,
+                                            top: 0,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            pointerEvents: 'none',
+                                            zIndex: 2,
+                                            '&::after': {
+                                                content: `"${indicator.label}"`,
+                                                fontSize: '1.2rem',
+                                                fontWeight: '600',
+                                                filter: LIGHTS_OUT_STYLES
+                                                    .SHADOWS.DROP,
+                                                paddingTop: '0.15rem',
+                                                color:
+                                                    inputState[indicator.c] ===
+                                                    1
+                                                        ? palette.secondary
+                                                        : palette.primary,
+                                                animation:
+                                                    LIGHTS_OUT_STYLES.ANIMATIONS
+                                                        .POP_IN_STYLE,
+                                            },
+                                        }}
+                                    />
+                                )}
                             </Box>
                         </Box>
-                    )}
-                </motion.div>
-            </AnimatePresence>
+                        <Box sx={{ textAlign: 'center' }}>
+                            <CanvasBoard
+                                grid={[outputState]}
+                                size={size}
+                                palette={palette}
+                            />
+                            <Typography
+                                variant="subtitle2"
+                                sx={{ mt: 1, color: COLORS.text.secondary }}
+                            >
+                                Result
+                            </Typography>
+                        </Box>
+                    </Box>
+                )}
+            </Box>
         </Box>
     );
 };

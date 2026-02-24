@@ -1,6 +1,8 @@
 import { PRECOMPUTED_SOLUTIONS } from './precomputedTables';
-import { countBits } from '../../../../utils/math/gf2/gf2Operations';
-import { getProduct } from '../../../../utils/math/gf2/inversion';
+import {
+    countBits,
+    getProduct,
+} from '../../../../utils/math/gf2/gf2Operations';
 import type { BoardState, BoardAction } from '../types';
 
 import { validateGridSize } from '@/features/games/types/types';

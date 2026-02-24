@@ -1,11 +1,12 @@
 import { Typography, styled } from '@mui/material';
-import { motion } from 'framer-motion';
 
 import { EmojiEventsRounded } from '@/components/icons';
 import { GlassCard } from '@/components/ui/GlassCard';
 import { COLORS } from '@/config/theme';
 
-export const OverlayContainer = styled(motion.div)(({ theme }) => ({
+export const OverlayContainer = styled('div', {
+    shouldForwardProp: prop => prop !== 'show',
+})<{ show: boolean }>(({ theme, show }) => ({
     position: 'absolute',
     inset: 0,
     display: 'flex',
@@ -14,6 +15,13 @@ export const OverlayContainer = styled(motion.div)(({ theme }) => ({
     zIndex: theme.zIndex.modal,
     backgroundColor: 'transparent',
     pointerEvents: 'none',
+    opacity: show ? 1 : 0,
+    transform: show ? 'scale(1)' : 'scale(0.8)',
+    transition: theme.transitions.create(['opacity', 'transform'], {
+        duration: theme.transitions.duration.shorter,
+        easing: theme.transitions.easing.easeOut,
+    }),
+    visibility: show ? 'visible' : 'hidden',
     willChange: 'transform, opacity',
 }));
 

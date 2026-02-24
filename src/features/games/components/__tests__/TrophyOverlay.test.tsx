@@ -26,11 +26,13 @@ describe('TrophyOverlay', () => {
         expect(getByText('Solved!')).toBeInTheDocument();
     });
 
-    it('should not be rendered when show is false', () => {
+    it('should be hidden when show is false', () => {
         const { container } = renderWithProviders(
             <TrophyOverlay {...defaultProps} show={false} />,
         );
-        expect(container.firstChild).toBeNull();
+        const overlay = container.firstChild as HTMLElement;
+        expect(overlay).toHaveStyle('visibility: hidden');
+        expect(overlay).toHaveStyle('opacity: 0');
     });
 
     it('should pass accessibility audit', async () => {

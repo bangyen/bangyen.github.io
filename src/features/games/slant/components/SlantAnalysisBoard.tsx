@@ -4,10 +4,7 @@ import React from 'react';
 import { AnalysisProvider } from './AnalysisContext';
 import { AnalysisControls } from './AnalysisControls';
 import { SlantBoard } from './SlantBoard';
-import {
-    boardPopIn,
-    AnimatedBoardContainer,
-} from '../../components/AnimatedBoardContainer';
+import { AnimatedBoardContainer } from '../../components/AnimatedBoardContainer';
 import { SLANT_STYLES } from '../config/constants';
 import { useSlantAnalysisBoard } from '../hooks/useSlantAnalysisBoard';
 import { EMPTY } from '../types';
@@ -64,7 +61,6 @@ export function SlantAnalysisBoard({
             value={{ onCopy, onClear, onClose, onApply: handleApply }}
         >
             <AnimatedBoardContainer
-                {...boardPopIn}
                 sx={{
                     position: 'relative',
                     userSelect: 'none',
