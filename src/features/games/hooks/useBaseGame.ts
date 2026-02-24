@@ -4,12 +4,13 @@
  * This hook is a high-level orchestrator that recomposes lower-level
  * hooks for layout and state management.
  */
-import { useEffect } from 'react';
+import { useEffect, useReducer, useMemo, useCallback, useRef } from 'react';
 
 import type { BaseGameConfig } from './types';
 import { useBoardLayout } from './useBoardLayout';
-import { useGameState } from './useGameState';
-import { createStorageKeys } from '../config/constants';
+import { useGamePersistence } from './useGamePersistence';
+import { useWinTransition } from './useWinTransition';
+import { createStorageKeys, GAME_CONSTANTS } from '../config/constants';
 
 import type { BaseGameState } from '@/utils/gameUtils';
 
@@ -18,7 +19,8 @@ import type { BaseGameState } from '@/utils/gameUtils';
  *
  * Combines:
  * - Grid sizing and responsiveness (via useBoardLayout)
- * - Game state and persistence (via useGameState)
+ * - Game state management (reducer)
+ * - Persistence and transitions (via useGamePersistence, useWinTransition)
  *
  * @template S - Game state type
  * @template A - Game action type
@@ -36,7 +38,15 @@ export function useBaseGame<
 }: BaseGameConfig<S, A>) {
     const keys = createStorageKeys(storageKeyPrefix);
 
-    const { manualResize = false } = logic;
+    const {
+        reducer,
+        getInitialState,
+        isSolved,
+        winAnimationDelay = GAME_CONSTANTS.timing.winAnimationDelay,
+        persistence,
+        onNext,
+        manualResize = false,
+    } = logic;
 
     // 1. Manage layout and sizing
     const layout = useBoardLayout({
@@ -47,15 +57,37 @@ export function useBaseGame<
 
     const { rows, cols } = layout;
 
-    // 2. Manage game state and transitions
-    const { state, dispatch, solved, handleNext } = useGameState({
+    // 2. Manage game state
+    // We use a ref for initial state to ensure it's stable even if getInitialState is unstable
+    const initialRef = useRef<S | null>(null);
+    if (initialRef.current === null) {
+        initialRef.current = getInitialState(rows, cols);
+    }
+    const [state, dispatch] = useReducer(reducer, initialRef.current);
+
+    const solved = useMemo(() => isSolved(state), [state, isSolved]);
+
+    const defaultHandleNext = useCallback(() => {
+        dispatch({ type: 'new' } as unknown as A);
+    }, [dispatch]);
+
+    const handleNext = onNext ?? defaultHandleNext;
+
+    // 3. Coordinate persistence and transitions
+    useGamePersistence<S>({
         storageKey: keys.STATE,
         rows,
         cols,
-        logic,
+        state,
+        onRestore: saved => {
+            dispatch({ type: 'hydrate', state: saved } as unknown as A);
+        },
+        ...persistence,
     });
 
-    // 3. Coordinate resize events
+    useWinTransition(solved, handleNext, winAnimationDelay);
+
+    // 4. Coordinate resize events
     useEffect(() => {
         if (manualResize) return;
         dispatch({
