@@ -4,6 +4,8 @@ import React from 'react';
 import { SlantCanvasBoard } from './SlantCanvasBoard';
 import type { SlantState } from '../types';
 
+import { InteractiveBoard } from '@/features/games/components/InteractiveBoard';
+
 interface InteractionProps {
     sx?: Record<string, unknown>;
     onMouseEnter?: () => void;
@@ -36,7 +38,7 @@ export interface SlantBoardProps {
 
 /**
  * Pure layout component that renders the dual-layer configuration for the Slant board.
- * Uses SlantCanvasBoard for visuals and a transparent CSS grid for interactions.
+ * Uses SlantCanvasBoard for visuals and InteractiveBoard for standard grid layout.
  */
 export function SlantBoard({
     state,
@@ -50,27 +52,28 @@ export function SlantBoard({
     cycleCells,
     nodeConflictSet,
 }: SlantBoardProps): React.ReactElement {
-    const space = 0.3; // rem (matching SlantCanvasBoard's 0.3 * pxScale)
-    const padding = size * 0.6; // matching SlantCanvasBoard's padding = numberSize * 1.5 = (size * 0.4) * 1.5
+    const space = 0.3; // rem
+    const padding = size * 0.6; // matching numberSize * 1.5 = (size * 0.4) * 1.5
 
     const [hoveredCell, setHoveredCell] = React.useState<string | null>(null);
 
     return (
-        <Box
-            sx={{
-                display: 'grid',
-                placeItems: 'center',
-                position: 'relative',
-                userSelect: 'none',
-            }}
-            onContextMenu={e => {
-                e.preventDefault();
-            }}
+        <InteractiveBoard
+            rows={rows}
+            cols={cols}
+            cellHeight={size}
+            gap={space}
+            padding={padding + space / 2}
+            data-testid="slant-board"
             onMouseLeave={() => {
                 setHoveredCell(null);
             }}
-        >
-            <Box sx={{ gridArea: '1/1' }}>
+            sx={{
+                '&:hover': {
+                    // This is just a placeholder to ensure the Box can take events if needed
+                },
+            }}
+            renderCanvas={() => (
                 <SlantCanvasBoard
                     grid={state.grid}
                     numbers={state.numbers}
@@ -82,90 +85,72 @@ export function SlantBoard({
                     cycleCells={cycleCells ?? state.cycleCells}
                     nodeConflictSet={nodeConflictSet ?? state.errorNodes}
                 />
-            </Box>
-
-            {/* Interaction Overlay: Slashes (rows x cols) */}
-            <Box
-                sx={{
-                    gridArea: '1/1',
-                    display: 'grid',
-                    gridTemplateRows: `repeat(${rows.toString()}, ${size.toString()}rem)`,
-                    gridTemplateColumns: `repeat(${cols.toString()}, ${size.toString()}rem)`,
-                    gap: `${space.toString()}rem`,
-                    padding: `${(padding + space / 2).toString()}rem`,
-                    zIndex: 1,
-                    pointerEvents: 'auto',
-                }}
-            >
-                {Array.from({ length: rows * cols }).map((_, i) => {
-                    const r = Math.floor(i / cols);
-                    const c = i % cols;
-                    const props = (cellProps?.(r, c) ?? {}) as InteractionProps;
-                    const pos = `${r.toString()},${c.toString()}`;
-
-                    const interactionProps = props;
-
-                    return (
-                        <Box
-                            key={`cell-${r.toString()}-${c.toString()}`}
-                            {...props}
-                            onMouseEnter={() => {
-                                interactionProps.onMouseEnter?.();
-                                setHoveredCell(pos);
-                            }}
-                            onFocus={() => {
-                                interactionProps.onFocus?.();
-                                setHoveredCell(pos);
-                            }}
-                            sx={{
-                                width: '100%',
-                                height: '100%',
-                                borderRadius: `${(size / 4).toString()}rem`,
-                                cursor: 'pointer',
-                                ...props.sx,
-                                backgroundColor: 'transparent',
-                            }}
-                        />
-                    );
-                })}
-            </Box>
-
-            {/* Decorative Overlay: Hints (rows+1 x cols+1) */}
-            <Box
-                sx={{
-                    gridArea: '1/1',
-                    display: 'grid',
-                    gridTemplateRows: `repeat(${(rows + 1).toString()}, 0)`,
-                    gridTemplateColumns: `repeat(${(cols + 1).toString()}, 0)`,
-                    gap: `${(size + space).toString()}rem`,
-                    padding: `${padding.toString()}rem`,
-                    zIndex: 2,
-                    pointerEvents: 'none',
-                }}
-            >
-                {Array.from({ length: (rows + 1) * (cols + 1) }).map((_, i) => {
-                    const r = Math.floor(i / (cols + 1));
-                    const c = i % (cols + 1);
-                    const props = (overlayProps?.(r, c) ??
-                        {}) as InteractionProps;
-                    return (
-                        <Box
-                            key={`hint-${r.toString()}-${c.toString()}`}
-                            {...props}
-                            role="presentation"
-                            aria-hidden="true"
-                            sx={{
-                                width: '0',
-                                height: '0',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                ...props.sx,
-                            }}
-                        />
-                    );
-                })}
-            </Box>
-        </Box>
+            )}
+            renderOverlayCell={(r, c) => {
+                const props = (cellProps?.(r, c) ?? {}) as InteractionProps;
+                const pos = `${r.toString()},${c.toString()}`;
+                return (
+                    <Box
+                        {...props}
+                        onMouseEnter={() => {
+                            props.onMouseEnter?.();
+                            setHoveredCell(pos);
+                        }}
+                        onFocus={() => {
+                            props.onFocus?.();
+                            setHoveredCell(pos);
+                        }}
+                        sx={{
+                            width: '100%',
+                            height: '100%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            borderRadius: `${(size / 4).toString()}rem`,
+                            cursor: 'pointer',
+                            ...props.sx,
+                            backgroundColor: 'transparent',
+                        }}
+                    />
+                );
+            }}
+            renderExtraOverlay={() => (
+                <Box
+                    sx={{
+                        display: 'grid',
+                        gridTemplateRows: `repeat(${(rows + 1).toString()}, 0)`,
+                        gridTemplateColumns: `repeat(${(cols + 1).toString()}, 0)`,
+                        gap: `${(size + space).toString()}rem`,
+                        padding: `${padding.toString()}rem`,
+                        pointerEvents: 'none',
+                    }}
+                >
+                    {Array.from({ length: (rows + 1) * (cols + 1) }).map(
+                        (_, i) => {
+                            const r = Math.floor(i / (cols + 1));
+                            const c = i % (cols + 1);
+                            const props = (overlayProps?.(r, c) ??
+                                {}) as InteractionProps;
+                            return (
+                                <Box
+                                    key={`hint-${r.toString()}-${c.toString()}`}
+                                    {...props}
+                                    role="presentation"
+                                    aria-hidden="true"
+                                    sx={{
+                                        width: '0',
+                                        height: '0',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        ...props.sx,
+                                    }}
+                                />
+                            );
+                        },
+                    )}
+                </Box>
+            )}
+        />
     );
 }

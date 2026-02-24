@@ -1,6 +1,14 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 
 import type { Palette } from '../types';
+
+import {
+    useCanvas,
+    parseColor,
+    lerpRgb,
+    rgbToCss,
+    type RGB,
+} from '@/features/games/hooks/useCanvas';
 
 interface CanvasBoardProps {
     grid: number[][];
@@ -9,60 +17,14 @@ interface CanvasBoardProps {
     width?: number; // in rem (optional, defaults to size)
 }
 
-interface RGB {
-    r: number;
-    g: number;
-    b: number;
-}
-
-const colorCache = new Map<string, RGB>();
-let sharedCtx: CanvasRenderingContext2D | null = null;
-
-const parseColor = (color: string): RGB => {
-    const cached = colorCache.get(color);
-    if (cached) return cached;
-
-    if (!sharedCtx) {
-        const canvas = document.createElement('canvas');
-        canvas.width = 1;
-        canvas.height = 1;
-        sharedCtx = canvas.getContext('2d', { willReadFrequently: true });
-    }
-    if (!sharedCtx) return { r: 0, g: 0, b: 0 };
-
-    sharedCtx.fillStyle = color;
-    sharedCtx.fillRect(0, 0, 1, 1);
-    const data = sharedCtx.getImageData(0, 0, 1, 1).data;
-    const res = { r: data[0] || 0, g: data[1] || 0, b: data[2] || 0 };
-    colorCache.set(color, res);
-    return res;
-};
-
-const lerp = (start: number, end: number, t: number) =>
-    start + (end - start) * t;
-
-const lerpRgb = (start: RGB, end: RGB, t: number): RGB => ({
-    r: lerp(start.r, end.r, t),
-    g: lerp(start.g, end.g, t),
-    b: lerp(start.b, end.b, t),
-});
-
-const rgbToCss = ({ r, g, b }: RGB) =>
-    `rgb(${String(Math.round(r))}, ${String(Math.round(g))}, ${String(Math.round(b))})`;
-
 export function CanvasBoard({
     grid,
     palette,
     size: remHeight,
     width: remWidth,
 }: CanvasBoardProps): React.ReactElement {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
     const rows = grid.length;
     const cols = grid[0]?.length ?? 0;
-    const pxScale = 40;
-    const h = remHeight * pxScale;
-    const w = (remWidth ?? remHeight) * pxScale;
-    const maxR = Math.min(w, h) * 0.35;
 
     // Animation state refs
     const currentColors = useRef<RGB[][]>([]);
@@ -74,10 +36,16 @@ export function CanvasBoard({
     const currentBgCorners = useRef<number[][][]>([]);
     const targetBgCorners = useRef<number[][][]>([]);
 
-    const animationRef = useRef<number>(0);
-
     // Initialization and Target Updates
     useEffect(() => {
+        const cellSizeRemH = remHeight;
+        const cellSizeRemW = remWidth ?? remHeight;
+
+        const pxScale = 40;
+        const h = cellSizeRemH * pxScale;
+        const w = cellSizeRemW * pxScale;
+        const maxR = Math.min(w, h) * 0.35;
+
         const colorGridRGB = grid.map(row =>
             row.map(cell =>
                 parseColor(cell === 1 ? palette.primary : palette.secondary),
@@ -85,15 +53,10 @@ export function CanvasBoard({
         );
 
         targetColors.current = colorGridRGB;
-        // Ensure currentColors matches target dimensions
-        if (
-            currentColors.current.length !== colorGridRGB.length ||
-            currentColors.current[0]?.length !== colorGridRGB[0]?.length
-        ) {
+        if (currentColors.current.length !== colorGridRGB.length) {
             currentColors.current = structuredClone(colorGridRGB);
         }
 
-        // Background calculation
         const hasBackground = rows > 1 && cols > 1;
         const colorGridStrings = grid.map(row =>
             row.map(cell => (cell === 1 ? palette.primary : palette.secondary)),
@@ -102,45 +65,31 @@ export function CanvasBoard({
         const bgColorsRGB: RGB[][] = [];
         if (hasBackground) {
             for (let y = 0; y < rows - 1; y++) {
-                bgColorsRGB[y] = [];
-                const rowStrings = colorGridStrings[y];
-                const nextRowStrings = colorGridStrings[y + 1];
-                if (!rowStrings || !nextRowStrings) continue;
-
+                const row: RGB[] = [];
                 for (let x = 0; x < cols - 1; x++) {
                     const cluster = [
-                        rowStrings[x],
-                        rowStrings[x + 1],
-                        nextRowStrings[x],
-                        nextRowStrings[x + 1],
+                        colorGridStrings[y]?.[x],
+                        colorGridStrings[y]?.[x + 1],
+                        colorGridStrings[y + 1]?.[x],
+                        colorGridStrings[y + 1]?.[x + 1],
                     ].filter((c): c is string => c !== undefined);
 
                     const counts: Record<string, number> = {};
-                    for (const c of cluster) {
-                        counts[c] = (counts[c] || 0) + 1;
-                    }
+                    for (const c of cluster) counts[c] = (counts[c] || 0) + 1;
 
                     const dominantColor = Object.keys(counts).find(
                         c => (counts[c] ?? 0) >= 3,
                     );
-                    const backgroundColor = bgColorsRGB[y];
-                    if (backgroundColor) {
-                        backgroundColor[x] = parseColor(
-                            dominantColor || palette.secondary,
-                        );
-                    }
+                    row.push(parseColor(dominantColor || palette.secondary));
                 }
+                bgColorsRGB.push(row);
             }
         }
         targetBgColors.current = bgColorsRGB;
-        if (
-            currentBgColors.current.length !== bgColorsRGB.length ||
-            currentBgColors.current[0]?.length !== bgColorsRGB[0]?.length
-        ) {
+        if (currentBgColors.current.length !== bgColorsRGB.length) {
             currentBgColors.current = structuredClone(bgColorsRGB);
         }
 
-        // Corner targets
         const getCorners = (layerGrid: RGB[][], y: number, x: number) => {
             const current = layerGrid[y]?.[x];
             if (!current) return [maxR, maxR, maxR, maxR];
@@ -159,41 +108,36 @@ export function CanvasBoard({
             ];
         };
 
-        const newTargetCorners = colorGridRGB.map((row, y) =>
+        targetCorners.current = colorGridRGB.map((row, y) =>
             row.map((_, x) => getCorners(colorGridRGB, y, x)),
         );
-        targetCorners.current = newTargetCorners;
-        if (
-            currentCorners.current.length !== newTargetCorners.length ||
-            currentCorners.current[0]?.length !== newTargetCorners[0]?.length
-        ) {
-            currentCorners.current = structuredClone(newTargetCorners);
+        if (currentCorners.current.length !== targetCorners.current.length) {
+            currentCorners.current = structuredClone(targetCorners.current);
         }
 
-        const newTargetBgCorners = bgColorsRGB.map((row, y) =>
+        targetBgCorners.current = bgColorsRGB.map((row, y) =>
             row.map((_, x) => getCorners(bgColorsRGB, y, x)),
         );
-        targetBgCorners.current = newTargetBgCorners;
         if (
-            currentBgCorners.current.length !== newTargetBgCorners.length ||
-            currentBgCorners.current[0]?.length !==
-                newTargetBgCorners[0]?.length
+            currentBgCorners.current.length !== targetBgCorners.current.length
         ) {
-            currentBgCorners.current = structuredClone(newTargetBgCorners);
+            currentBgCorners.current = structuredClone(targetBgCorners.current);
         }
-    }, [grid, palette, rows, cols, maxR]);
+    }, [grid, palette, rows, cols, remHeight, remWidth]);
 
-    // Animation Loop
-    useEffect(() => {
-        const render = () => {
-            const canvas = canvasRef.current;
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            if (!ctx) return;
+    const render = useCallback(
+        (ctx: CanvasRenderingContext2D, width: number, height: number) => {
+            const lerpFactor = 0.4;
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const totalWidthRem = (remWidth ?? remHeight) * cols;
+            const totalHeightRem = remHeight * rows;
+            const pxScaleW = width / totalWidthRem;
+            const pxScaleH = height / totalHeightRem;
 
-            const lerpFactor = 0.4; // Speed of transition
+            const drawH = remHeight * pxScaleH;
+            const drawW = (remWidth ?? remHeight) * pxScaleW;
+
+            const radiusFactor = drawW / ((remWidth ?? remHeight) * 40);
 
             const updateLayer = (
                 currentLColors: RGB[][],
@@ -205,43 +149,42 @@ export function CanvasBoard({
             ) => {
                 for (const [y, rowColors] of targetLColors.entries()) {
                     const curRowColors = currentLColors[y];
-                    const curRowCorners = currentLCorners[y];
-                    const targetRowCorners = targetLCorners[y];
-
-                    if (!curRowColors || !curRowCorners || !targetRowCorners)
-                        continue;
+                    if (!curRowColors) continue;
 
                     for (const [x, targetColor] of rowColors.entries()) {
                         const curColor = curRowColors[x];
-                        const targetCellCorners = targetRowCorners[x];
-                        const curCellCorners = curRowCorners[x];
+                        if (!curColor) continue;
 
-                        if (!curColor || !targetCellCorners || !curCellCorners)
-                            continue;
-
-                        // Interpolate Color
                         curRowColors[x] = lerpRgb(
                             curColor,
                             targetColor,
                             lerpFactor,
                         );
 
-                        // Interpolate Corners
-                        for (let i = 0; i < 4; i++) {
-                            const tc = targetCellCorners[i];
-                            const cc = curCellCorners[i];
-                            if (tc !== undefined && cc !== undefined) {
-                                curCellCorners[i] = lerp(cc, tc, lerpFactor);
+                        const targetCellCorners = targetLCorners[y]?.[x];
+                        const curCellCorners = currentLCorners[y]?.[x];
+                        if (targetCellCorners && curCellCorners) {
+                            for (let i = 0; i < 4; i++) {
+                                const tc = targetCellCorners[i];
+                                const cc = curCellCorners[i];
+                                if (tc !== undefined && cc !== undefined) {
+                                    curCellCorners[i] =
+                                        cc + (tc - cc) * lerpFactor;
+                                }
                             }
                         }
 
                         ctx.beginPath();
+                        const scaledCorners = curCellCorners?.map(
+                            c => c * radiusFactor,
+                        ) as [number, number, number, number];
+
                         ctx.roundRect(
-                            x * w + offsetX,
-                            y * h + offsetY,
-                            w + 1,
-                            h + 1,
-                            curCellCorners as [number, number, number, number],
+                            x * drawW + offsetX,
+                            y * drawH + offsetY,
+                            drawW + 0.5,
+                            drawH + 0.5,
+                            scaledCorners,
                         );
                         ctx.fillStyle = rgbToCss(curRowColors[x]);
                         ctx.fill();
@@ -249,14 +192,16 @@ export function CanvasBoard({
                 }
             };
 
+            ctx.clearRect(0, 0, width, height);
+
             if (rows > 1 && cols > 1) {
                 updateLayer(
                     currentBgColors.current,
                     targetBgColors.current,
                     currentBgCorners.current,
                     targetBgCorners.current,
-                    w / 2,
-                    h / 2,
+                    drawW / 2,
+                    drawH / 2,
                 );
             }
             updateLayer(
@@ -267,26 +212,23 @@ export function CanvasBoard({
                 0,
                 0,
             );
+        },
+        [remHeight, remWidth, rows, cols],
+    );
 
-            animationRef.current = requestAnimationFrame(render);
-        };
-
-        animationRef.current = requestAnimationFrame(render);
-        return () => {
-            cancelAnimationFrame(animationRef.current);
-        };
-    }, [w, h, rows, cols, maxR]);
+    const canvasRef = useCanvas({
+        onRender: render,
+        dependencies: [render],
+    });
 
     return (
         <canvas
             ref={canvasRef}
             data-testid="canvas-board"
-            width={w * cols}
-            height={h * rows}
             style={{
                 display: 'block',
-                width: `${String((remWidth ?? remHeight) * cols)}rem`,
-                height: `${String(remHeight * rows)}rem`,
+                width: `${((remWidth ?? remHeight) * cols).toString()}rem`,
+                height: `${(remHeight * rows).toString()}rem`,
                 borderRadius: '8px',
                 overflow: 'hidden',
             }}

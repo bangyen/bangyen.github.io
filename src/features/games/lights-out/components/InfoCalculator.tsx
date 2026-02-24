@@ -129,6 +129,9 @@ export const InfoCalculator = React.memo(function InfoCalculator({
                                         sx={{
                                             width: '100%',
                                             height: '100%',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
                                             cursor: 'pointer',
                                             ...props.sx,
                                         }}
