@@ -4,8 +4,7 @@ import React from 'react';
 import { CanvasBoard } from './CanvasBoard';
 import type { Palette } from '../types';
 
-import { CustomGrid } from '@/components/ui/CustomGrid';
-import { BoardContainer } from '@/features/games/components/Board.styles';
+import { BoardContainer } from '@/features/games/components/AnimatedBoardContainer';
 
 interface LightsOutBoardProps {
     grid: number[][];
@@ -64,7 +63,7 @@ export function LightsOutBoard({
     return (
         <BoardContainer
             data-testid="lights-out-board"
-            onContextMenu={e => {
+            onContextMenu={(e: React.MouseEvent) => {
                 e.preventDefault();
             }}
         >
@@ -79,15 +78,32 @@ export function LightsOutBoard({
                             position: 'absolute',
                             inset: 0,
                             zIndex: 1,
+                            display: 'grid',
+                            gridTemplateRows: `repeat(${frontLayer.rows.toString()}, 1fr)`,
+                            gridTemplateColumns: `repeat(${frontLayer.cols.toString()}, 1fr)`,
                         }}
                     >
-                        <CustomGrid
-                            rows={frontLayer.rows}
-                            cols={frontLayer.cols}
-                            size={size}
-                            space={0}
-                            cellProps={enhancedCellProps}
-                        />
+                        {Array.from({
+                            length: frontLayer.rows * frontLayer.cols,
+                        }).map((_, i) => {
+                            const r = Math.floor(i / frontLayer.cols);
+                            const c = i % frontLayer.cols;
+                            const props = (enhancedCellProps?.(r, c) ?? {}) as {
+                                sx?: Record<string, unknown>;
+                            } & Record<string, unknown>;
+                            return (
+                                <Box
+                                    key={`input-${i.toString()}`}
+                                    {...props}
+                                    sx={{
+                                        width: '100%',
+                                        height: '100%',
+                                        cursor: 'pointer',
+                                        ...props.sx,
+                                    }}
+                                />
+                            );
+                        })}
                     </Box>
                 )}
             </Box>

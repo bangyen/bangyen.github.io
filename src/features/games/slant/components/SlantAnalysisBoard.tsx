@@ -3,18 +3,18 @@ import React from 'react';
 
 import { AnalysisProvider } from './AnalysisContext';
 import { AnalysisControls } from './AnalysisControls';
-import { AnalysisGridCell } from './AnalysisGridCell';
-import { AnalysisGridHint } from './AnalysisGridHint';
 import { SlantBoard } from './SlantBoard';
 import {
-    AnimatedBoardContainer,
     boardPopIn,
+    AnimatedBoardContainer,
 } from '../../components/AnimatedBoardContainer';
-import { BOARD_STYLES } from '../../config/constants';
 import { SLANT_STYLES } from '../config/constants';
 import { useSlantAnalysisBoard } from '../hooks/useSlantAnalysisBoard';
-import { EMPTY, type CellState } from '../types';
+import { EMPTY } from '../types';
+import type { CellState, SlantState } from '../types';
 import { computeSatisfied } from '../utils/analysisSolver';
+
+import { BOARD_STYLES } from '@/features/games/config/constants';
 
 export interface SlantAnalysisBoardProps {
     rows: number;
@@ -40,13 +40,13 @@ export function SlantAnalysisBoard({
     onClear,
     onClose,
     onApply,
-}: SlantAnalysisBoardProps) {
+    ...state
+}: SlantAnalysisBoardProps & Partial<SlantState>) {
     const {
         gridState,
         conflictSet,
         cycleCells,
         nodeConflictSet,
-        numberSize,
         getEnhancedDragProps,
         handleApply,
     } = useSlantAnalysisBoard({
@@ -84,47 +84,59 @@ export function SlantAnalysisBoard({
                         size={size}
                         rows={rows}
                         cols={cols}
-                        renderCell={(r, c) => {
-                            const pos = `${r.toString()},${c.toString()}`;
-                            const info = gridState.get(pos);
-                            return (
-                                <AnalysisGridCell
-                                    r={r}
-                                    c={c}
-                                    value={info?.state ?? EMPTY}
-                                    source={info?.source}
-                                    isConflict={conflictSet.has(pos)}
-                                    isCycle={cycleCells.has(pos)}
-                                    size={size}
-                                    pos={pos}
-                                    getDragProps={getEnhancedDragProps}
-                                />
-                            );
+                        state={{
+                            ...state,
+                            grid: Array.from({ length: rows }, (_, r) =>
+                                Array.from({ length: cols }, (_, c) => {
+                                    const pos = `${r.toString()},${c.toString()}`;
+                                    return gridState.get(pos)?.state ?? EMPTY;
+                                }),
+                            ),
+                            numbers,
+                            satisfiedNodes: new Set(
+                                Array.from({ length: rows + 1 }, (_, r) =>
+                                    Array.from({ length: cols + 1 }, (_, c) => {
+                                        const value = numbers[r]?.[c];
+                                        if (
+                                            value === null ||
+                                            value === undefined
+                                        )
+                                            return null;
+                                        return computeSatisfied(
+                                            r,
+                                            c,
+                                            value,
+                                            gridState,
+                                            rows,
+                                            cols,
+                                        )
+                                            ? `${r.toString()},${c.toString()}`
+                                            : null;
+                                    }),
+                                )
+                                    .flat()
+                                    .filter(
+                                        (pos): pos is string => pos !== null,
+                                    ),
+                            ),
+                            errorNodes: new Set(),
+                            cycleCells: new Set(),
                         }}
-                        renderOverlay={(r, c) => {
-                            const value = numbers[r]?.[c] ?? null;
-                            const hasConflict = nodeConflictSet.has(
+                        cellSources={
+                            new Map(
+                                Array.from(gridState.entries()).map(
+                                    ([pos, info]) => [pos, info.source],
+                                ),
+                            )
+                        }
+                        conflictSet={conflictSet}
+                        cycleCells={cycleCells}
+                        nodeConflictSet={nodeConflictSet}
+                        cellProps={(r: number, c: number) =>
+                            getEnhancedDragProps(
                                 `${r.toString()},${c.toString()}`,
-                            );
-                            const isSatisfied = computeSatisfied(
-                                r,
-                                c,
-                                value,
-                                gridState,
-                                rows,
-                                cols,
-                            );
-                            return (
-                                <AnalysisGridHint
-                                    r={r}
-                                    c={c}
-                                    value={value}
-                                    hasConflict={hasConflict}
-                                    isSatisfied={isSatisfied}
-                                    numberSize={numberSize}
-                                />
-                            );
-                        }}
+                            )
+                        }
                     />
                 </Box>
 

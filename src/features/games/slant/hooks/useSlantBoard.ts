@@ -1,8 +1,6 @@
 import { useMemo } from 'react';
 
-import { NUMBER_SIZE_RATIO } from '../config/constants';
 import type { SlantState } from '../types';
-import { getBackProps, getFrontProps } from '../utils/renderers.logic';
 
 import type { DragProps } from '@/features/games/hooks/useDrag';
 
@@ -16,20 +14,24 @@ export interface UseSlantBoardProps {
 }
 
 export function useSlantBoard({
-    state,
-    size,
+    state: _state,
+    size: _size,
     getDragProps,
 }: UseSlantBoardProps) {
-    const numberSize = size * NUMBER_SIZE_RATIO;
-
     const backProps = useMemo(
-        () => getBackProps(getDragProps, state, size),
-        [getDragProps, state, size],
+        () => (r: number, c: number) => {
+            const pos = `${r.toString()},${c.toString()}`;
+            return getDragProps(pos);
+        },
+        [getDragProps],
     );
 
     const frontProps = useMemo(
-        () => getFrontProps(state, numberSize),
-        [state, numberSize],
+        () => (_r: number, _c: number) => ({
+            role: 'presentation',
+            'aria-hidden': true,
+        }),
+        [],
     );
 
     return {

@@ -20,6 +20,7 @@ export interface DragProps {
         transition: string;
         [key: string]: unknown;
     };
+    [key: string]: unknown;
 }
 
 /**

@@ -17,7 +17,6 @@ import {
     Refresh,
     FileDownloadRounded,
 } from '@/components/icons';
-import { CustomGrid } from '@/components/ui/CustomGrid';
 
 export interface InfoCalculatorProps {
     cols: number;
@@ -110,15 +109,32 @@ export const InfoCalculator = React.memo(function InfoCalculator({
                             size={cellSize}
                             width={cellWidth}
                         />
-                        <Box sx={{ position: 'absolute', inset: 0, zIndex: 1 }}>
-                            <CustomGrid
-                                space={0}
-                                rows={1}
-                                cols={cols}
-                                size={cellSize}
-                                width={cellWidth}
-                                cellProps={inputProps}
-                            />
+                        <Box
+                            sx={{
+                                position: 'absolute',
+                                inset: 0,
+                                zIndex: 1,
+                                display: 'grid',
+                                gridTemplateColumns: `repeat(${cols.toString()}, ${cellWidth.toString()}rem)`,
+                            }}
+                        >
+                            {Array.from({ length: cols }).map((_, i) => {
+                                const props = inputProps(0, i) as {
+                                    sx?: Record<string, unknown>;
+                                } & Record<string, unknown>;
+                                return (
+                                    <Box
+                                        key={`input-${i.toString()}`}
+                                        {...props}
+                                        sx={{
+                                            width: '100%',
+                                            height: '100%',
+                                            cursor: 'pointer',
+                                            ...props.sx,
+                                        }}
+                                    />
+                                );
+                            })}
                         </Box>
                     </Box>
                 </Box>

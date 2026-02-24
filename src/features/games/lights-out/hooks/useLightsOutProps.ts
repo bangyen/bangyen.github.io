@@ -7,7 +7,19 @@
 
 import { useMemo } from 'react';
 
-import type { BoardProps } from '../../components/Board';
+// import type { BoardProps } from '../../components/Board';
+interface BoardProps {
+    size: number;
+    space: number;
+    grid: number[][];
+    palette: Palette;
+    layers: {
+        rows: number;
+        cols: number;
+        cellProps: (row: number, col: number) => Record<string, unknown>;
+        decorative?: boolean;
+    }[];
+}
 import type { GameControlsProps } from '../../components/GameControls';
 import type { GAME_TOKENS, GameScalingVariant } from '../../config/tokens';
 import type { GamePageProps } from '../../hooks/types';

@@ -1,7 +1,6 @@
-// Games components exports
-export { Board } from './Board';
+export { AnimatedBoardContainer, boardPopIn } from './AnimatedBoardContainer';
+export { StandardGameLayout } from './StandardGameLayout';
 export { GameControls } from './GameControls';
 export { GameInfo } from './GameInfo';
 export { GamePage } from './GamePage';
 export { TrophyOverlay } from './TrophyOverlay';
-export { AnimatedBoardContainer, boardPopIn } from './AnimatedBoardContainer';

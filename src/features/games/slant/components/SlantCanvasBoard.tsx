@@ -14,6 +14,11 @@ interface SlantCanvasBoardProps {
     activeCell: string | null;
     size: number; // cell size in rem
     lineWidth?: number;
+    // Analysis mode specific props
+    cellSources?: Map<string, 'user' | 'propagated'>;
+    conflictSet?: Set<string>;
+    cycleCells?: Set<string>;
+    nodeConflictSet?: Set<string>;
 }
 
 export function SlantCanvasBoard({
@@ -23,6 +28,10 @@ export function SlantCanvasBoard({
     activeCell,
     size: remSize,
     lineWidth,
+    cellSources,
+    conflictSet,
+    cycleCells,
+    nodeConflictSet,
 }: SlantCanvasBoardProps): React.ReactElement {
     const theme = useTheme();
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -92,6 +101,11 @@ export function SlantCanvasBoard({
         const nodeTextDim = resolveColor(COLORS.interactive.disabledText);
         const nodeTextPrimary = resolveColor(COLORS.text.primary);
         const borderColor = resolveColor(COLORS.border.subtle);
+
+        const conflictColor = resolveColor(COLORS.data.red);
+        const propagatedColor = resolveColor(COLORS.data.green);
+        const userColor = resolveColor(COLORS.primary.main);
+
         const borderRadius = cellSize / 4;
 
         const render = () => {
@@ -165,7 +179,23 @@ export function SlantCanvasBoard({
                             strokeWidth,
                             99,
                         );
-                        ctx.fillStyle = lineColor;
+
+                        // Determine slash color based on analysis state
+                        let slashColor = lineColor;
+                        if (conflictSet?.has(pos)) {
+                            slashColor = conflictColor;
+                        } else if (cycleCells?.has(pos)) {
+                            slashColor = conflictColor;
+                        } else {
+                            const source = cellSources?.get(pos);
+                            if (source === 'user') {
+                                slashColor = userColor;
+                            } else if (source === 'propagated') {
+                                slashColor = propagatedColor;
+                            }
+                        }
+
+                        ctx.fillStyle = slashColor;
                         ctx.fill();
                         ctx.restore();
                     }
@@ -191,32 +221,49 @@ export function SlantCanvasBoard({
                     const y = r * (cellSize + space) + padding;
                     const pos = String(r) + ',' + String(c);
                     const isSatisfied = satisfiedNodes.has(pos);
+                    const hasConflict = nodeConflictSet?.has(pos);
 
                     // Node background circle
                     ctx.beginPath();
                     ctx.arc(x, y, numberSize / 2, 0, Math.PI * 2);
-                    ctx.fillStyle = nodeBg;
 
-                    if (isSatisfied) {
-                        ctx.fill();
-                    } else {
+                    if (hasConflict) {
                         ctx.save();
-                        ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
-                        ctx.shadowBlur = 20;
-                        ctx.shadowOffsetY = 10;
+                        ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+                        ctx.shadowBlur = 10;
+                        ctx.shadowOffsetY = 5;
+                        ctx.fillStyle = conflictColor;
                         ctx.fill();
                         ctx.restore();
+                    } else {
+                        ctx.fillStyle = nodeBg;
+                        if (isSatisfied) {
+                            ctx.fill();
+                        } else {
+                            ctx.save();
+                            ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+                            ctx.shadowBlur = 20;
+                            ctx.shadowOffsetY = 10;
+                            ctx.fill();
+                            ctx.restore();
 
-                        ctx.strokeStyle = borderColor;
-                        ctx.lineWidth = 5;
-                        ctx.stroke();
+                            ctx.strokeStyle = borderColor;
+                            ctx.lineWidth = 5;
+                            ctx.stroke();
+                        }
                     }
 
                     // Node text
                     if (value !== undefined) {
-                        ctx.fillStyle = isSatisfied
+                        let textColor = isSatisfied
                             ? nodeTextDim
                             : nodeTextPrimary;
+
+                        if (hasConflict) {
+                            textColor = '#FFFFFF'; // High contrast white for red background
+                        }
+
+                        ctx.fillStyle = textColor;
                         ctx.fillText(value.toString(), x, y + 1); // Small offset for alignment
                     }
                 }
@@ -244,6 +291,10 @@ export function SlantCanvasBoard({
         numbers,
         satisfiedNodes,
         activeCell,
+        cellSources,
+        conflictSet,
+        cycleCells,
+        nodeConflictSet,
         cellSize,
         space,
         numRows,

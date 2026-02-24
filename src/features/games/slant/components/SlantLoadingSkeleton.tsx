@@ -46,6 +46,23 @@ export function SlantLoadingSkeleton({
                 size={size}
                 rows={rows}
                 cols={cols}
+                state={{
+                    grid: new Array(rows)
+                        .fill(null)
+                        .map(() => new Array(cols).fill(0) as (0 | 1 | 2)[]),
+                    numbers: new Array(rows + 1)
+                        .fill(null)
+                        .map(
+                            () =>
+                                new Array(cols + 1).fill(null) as (
+                                    | number
+                                    | null
+                                )[],
+                        ),
+                    satisfiedNodes: new Set<string>(),
+                    errorNodes: new Set<string>(),
+                    cycleCells: new Set<string>(),
+                }}
                 cellProps={skeletonBack}
                 overlayProps={skeletonFront}
             />
