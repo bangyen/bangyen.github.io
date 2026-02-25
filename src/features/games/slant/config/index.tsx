@@ -125,7 +125,7 @@ export function getSlantGameConfig() {
         board: {
             boardPadding: (mobile: boolean) => ({
                 x: mobile ? 48 : 80,
-                y: LAYOUT_CONSTANTS.PADDING_OFFSET,
+                y: mobile ? 160 : 200,
             }),
             maxCellSize: LAYOUT_CONSTANTS.MAX_CELL_SIZE,
             rowOffset: 1,

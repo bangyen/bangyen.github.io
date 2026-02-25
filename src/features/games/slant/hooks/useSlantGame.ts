@@ -160,9 +160,11 @@ export function useSlantGame() {
 
     const boardSx = useMemo(
         () => ({
-            marginTop: `${String(LAYOUT_CONSTANTS.PADDING_OFFSET)}px`,
+            marginTop: mobile
+                ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
+                : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
         }),
-        [],
+        [mobile],
     );
 
     const dimensionsMismatch = state.rows !== rows || state.cols !== cols;

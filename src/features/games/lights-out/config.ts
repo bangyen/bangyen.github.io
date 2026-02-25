@@ -27,8 +27,8 @@ export const LIGHTS_OUT_STYLES = {
 export const LAYOUT_CONSTANTS = {
     ICON_SIZE_RATIO: 1.25,
     OFFSET: {
-        MOBILE: -28,
-        DESKTOP: -40,
+        MOBILE: 0,
+        DESKTOP: 0,
     },
 };
 

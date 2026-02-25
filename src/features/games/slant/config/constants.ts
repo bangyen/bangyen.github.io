@@ -11,9 +11,12 @@ export function getDerivedBoardDimensions(size: number) {
 export const LAYOUT_CONSTANTS = {
     LINE_WIDTH: '130%',
     LINE_THICKNESS: '6px',
-    PADDING_OFFSET: 100,
+    OFFSET: {
+        MOBILE: 0,
+        DESKTOP: 0,
+    },
     WIDTH_LIMIT: 1000,
-    MAX_CELL_SIZE: 100,
+    MAX_CELL_SIZE: 80,
     ICON_SIZE_RATIO: 0.8,
 };
 
