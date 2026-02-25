@@ -3,8 +3,7 @@ import React from 'react';
 
 import { DevErrorDetail } from '@/components/ui/DevErrorDetail';
 import { ReloadButton, ReturnToHomeButton } from '@/components/ui/ErrorActions';
-import { ErrorCard } from '@/components/ui/ErrorCard';
-import { errorContainerSx } from '@/components/ui/ErrorCard.styles';
+import { ErrorCard, errorContainerSx } from '@/components/ui/ErrorCard';
 import { ERROR_TEXT } from '@/config/constants';
 
 export interface ErrorFallbackProps {

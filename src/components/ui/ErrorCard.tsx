@@ -3,8 +3,54 @@ import type { SxProps, Theme } from '@mui/material';
 import type { ReactNode } from 'react';
 import React from 'react';
 
-import { errorCardSx, errorTitleSx, errorMessageSx } from './ErrorCard.styles';
 import { GlassCard } from './GlassCard';
+
+import { COLORS, SPACING } from '@/config/theme';
+
+/** Full-viewport centering container used by full-page error screens. */
+// eslint-disable-next-line react-refresh/only-export-components
+export const errorContainerSx: SxProps<Theme> = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    p: 4,
+    minHeight: '100vh',
+};
+
+/** GlassCard wrapper for error content. */
+const errorCardSx: SxProps<Theme> = {
+    p: 4,
+    maxWidth: '500px',
+    width: '100%',
+    textAlign: 'center',
+    boxSizing: 'border-box',
+    overflow: 'hidden',
+};
+
+/** Error title heading. */
+const errorTitleSx: SxProps<Theme> = {
+    mb: 2,
+    color: COLORS.text.primary,
+    fontWeight: 'bold',
+};
+
+/** Error message body text. */
+const errorMessageSx: SxProps<Theme> = {
+    mb: 3,
+    color: COLORS.text.secondary,
+    fontFamily: 'monospace',
+    fontSize: '0.9rem',
+    overflowWrap: 'anywhere',
+    wordBreak: 'break-word',
+};
+
+/** Shared action button styling with a fixed width for visual consistency. */
+// eslint-disable-next-line react-refresh/only-export-components
+export const errorButtonSx: SxProps<Theme> = {
+    borderRadius: SPACING.borderRadius.md,
+    textTransform: 'none',
+    width: '180px',
+};
 
 export interface ErrorCardProps {
     /** Bold heading displayed at the top of the card. */

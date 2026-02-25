@@ -1,19 +1,55 @@
-import type { SxProps, Theme } from '@mui/material';
+import { Box, styled, type SxProps, type Theme } from '@mui/material';
 import React from 'react';
 
 import { GameControls, type GameControlsProps } from './GameControls';
-import {
-    BoardContainerBase,
-    ContentContainer,
-} from './StandardGameLayout.styles';
 import { TrophyOverlay, type TrophyOverlayProps } from './TrophyOverlay';
-import { DEFAULT_CONTENT_PADDING, GAME_TEXT } from '../config/constants';
+import {
+    DEFAULT_CONTENT_PADDING,
+    GAME_TEXT,
+    BOARD_STYLES,
+} from '../config/constants';
 import type { BaseControlsProps } from '../hooks/types';
 
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
 import { FeatureErrorFallback } from '@/components/layout/FeatureErrorFallback';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { COLORS } from '@/config/theme';
+
+const ContentContainer = styled(Box)({
+    flex: 1,
+    position: 'relative',
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+});
+
+interface BoardContainerBaseProps {
+    customPadding?: { mobile: string | number; desktop: string | number };
+    customBorderRadius?: string | number;
+    customBorder?: string;
+}
+
+const BoardContainerBase = styled(Box, {
+    shouldForwardProp: prop =>
+        !['customPadding', 'customBorderRadius', 'customBorder'].includes(
+            prop as string,
+        ),
+})<BoardContainerBaseProps>(
+    ({ theme, customPadding, customBorderRadius, customBorder }) => ({
+        position: 'relative',
+        width: 'fit-content',
+        userSelect: 'none',
+        padding: customPadding?.mobile ?? BOARD_STYLES.PADDING.MOBILE,
+        [theme.breakpoints.up('sm')]: {
+            padding: customPadding?.desktop ?? BOARD_STYLES.PADDING.DESKTOP,
+        },
+        borderRadius: customBorderRadius ?? BOARD_STYLES.BORDER_RADIUS,
+        border: customBorder ?? BOARD_STYLES.BORDER,
+    }),
+);
 
 export interface StandardGameLayoutProps<TBoardProps, TInfoProps> {
     /** Page title (e.g., "Lights Out"). */

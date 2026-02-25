@@ -1,14 +1,33 @@
 import { Box, Typography, Fade } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material';
 import React from 'react';
 
 import { ProjectCard } from './FeaturedWork/ProjectCard';
 import { PublicationCard } from './FeaturedWork/PublicationCard';
-import { sectionTitleSx, cardGridSx } from './FeaturedWork.styles';
 import { Section } from './Layout';
 import { HOME_TEXT } from '../config/constants';
 
 import { PUBLICATIONS, PROJECTS } from '@/config/constants';
-import { ANIMATIONS } from '@/config/theme';
+import { COLORS, TYPOGRAPHY, ANIMATIONS } from '@/config/theme';
+
+/** Section heading that reads "Featured Work". */
+const sectionTitleSx: SxProps<Theme> = {
+    color: COLORS.text.primary,
+    fontSize: TYPOGRAPHY.fontSize.h2,
+    fontWeight: TYPOGRAPHY.fontWeight.semibold,
+    textAlign: 'center',
+    marginBottom: 6,
+};
+
+/** Responsive 1/2-column grid for publication and project cards. */
+const cardGridSx: SxProps<Theme> = {
+    display: 'grid',
+    gridTemplateColumns: {
+        xs: '1fr',
+        md: 'repeat(2, 1fr)',
+    },
+    gap: 4,
+};
 
 export interface AnimatedCardProps {
     index: number;

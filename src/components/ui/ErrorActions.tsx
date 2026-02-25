@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { errorButtonSx } from './ErrorCard.styles';
+import { errorButtonSx } from './ErrorCard';
 
 import { ERROR_TEXT, ERROR_ICONS } from '@/config/constants';
 

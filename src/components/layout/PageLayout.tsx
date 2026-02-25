@@ -3,9 +3,43 @@ import { Box } from '@mui/material';
 import React, { useMemo } from 'react';
 
 import { GlobalHeader } from './GlobalHeader';
-import { getContainerSx, getMainSx } from './PageLayout.styles';
 
 import { COLORS } from '@/config/theme';
+
+/**
+ * Base styles for the outermost page wrapper.
+ */
+const getContainerSx = (
+    background: string = COLORS.surface.background,
+    containerSx: SxProps<Theme> = {},
+): SxProps<Theme> =>
+    [
+        {
+            minHeight: '100vh',
+            display: 'flex',
+            flexDirection: 'column',
+            background,
+            position: 'relative',
+            overflow: 'hidden',
+        },
+        containerSx,
+    ] as SxProps<Theme>;
+
+/**
+ * Base styles for the `<main>` content area inside the page layout.
+ */
+const getMainSx = (sx: SxProps<Theme> = {}): SxProps<Theme> =>
+    [
+        {
+            flex: 1,
+            minHeight: 0,
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            position: 'relative',
+        },
+        sx,
+    ] as SxProps<Theme>;
 
 export interface PageLayoutProps {
     children: React.ReactNode;
