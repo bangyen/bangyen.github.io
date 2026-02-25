@@ -77,17 +77,12 @@ export function useCalculator({
     const inputGetters = useHandler(calcRow, cols, palette);
     const inputProps = getInput(inputGetters, getEnhancedDragProps);
 
-    const handleReset = useCallback(() => {
-        setCalcRow(new Array(cols).fill(0));
-    }, [cols]);
-
     const handleSetRow = useCallback((row: number[]) => {
         setCalcRow(row);
     }, []);
 
     return {
         inputProps,
-        handleReset,
         handleSetRow,
         res,
         inputGrid: [calcRow],

@@ -56,15 +56,8 @@ export function LightsOutInfo({
     const isMobile = useMobile('md');
     const isMobileSm = useMobile('sm');
 
-    const {
-        inputProps,
-        handleReset,
-        handleSetRow,
-        res,
-        inputGrid,
-        outputGrid,
-        hasPattern,
-    } = useCalculator({ rows, cols, palette, solved });
+    const { inputProps, handleSetRow, res, inputGrid, outputGrid, hasPattern } =
+        useCalculator({ rows, cols, palette, solved });
 
     const exampleSize = isMobileSm ? EXAMPLE_SIZE.MOBILE : EXAMPLE_SIZE.DESKTOP;
 
@@ -86,7 +79,6 @@ export function LightsOutInfo({
                     inputGrid={inputGrid}
                     outputGrid={outputGrid}
                     inputProps={inputProps}
-                    onReset={handleReset}
                     onApply={() => {
                         onApply(res);
                     }}

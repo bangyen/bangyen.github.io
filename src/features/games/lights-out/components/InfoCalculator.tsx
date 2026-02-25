@@ -12,11 +12,7 @@ import {
 } from './LightsOutInfo.styles';
 import type { Palette } from '../types';
 
-import {
-    ContentCopyRounded,
-    Refresh,
-    FileDownloadRounded,
-} from '@/components/icons';
+import { ContentCopyRounded, FileDownloadRounded } from '@/components/icons';
 
 export interface InfoCalculatorProps {
     cols: number;
@@ -27,7 +23,6 @@ export interface InfoCalculatorProps {
     inputGrid: number[][];
     outputGrid: number[][];
     inputProps: (row: number, col: number) => Record<string, unknown>;
-    onReset: () => void;
     onApply: () => void;
     onFillFromBoard: () => void;
     hasPattern: boolean;
@@ -47,7 +42,6 @@ export const InfoCalculator = React.memo(function InfoCalculator({
     inputGrid,
     outputGrid,
     inputProps: rawInputProps,
-    onReset,
     onApply,
     onFillFromBoard,
     hasPattern,
@@ -176,15 +170,6 @@ export const InfoCalculator = React.memo(function InfoCalculator({
                         sx={calculatorButtonSx}
                     >
                         Apply Solution
-                    </Button>
-                    <Button
-                        variant="outlined"
-                        size="small"
-                        startIcon={<Refresh />}
-                        onClick={onReset}
-                        sx={calculatorButtonSx}
-                    >
-                        Clear
                     </Button>
                 </Box>
             </Box>

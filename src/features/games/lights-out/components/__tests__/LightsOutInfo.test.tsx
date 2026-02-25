@@ -309,19 +309,6 @@ describe('Lights Out Info Component', () => {
         expect(screen.getByText('Chase to Bottom')).toBeInTheDocument();
     });
 
-    it('handles reset in calculator step', async () => {
-        await renderInfo();
-        const nextBtn = screen.getByText('Next');
-        fireEvent.click(nextBtn); // To Example
-        fireEvent.click(nextBtn); // To Calculator
-
-        const clearBtn = screen.getByText('Clear');
-        fireEvent.click(clearBtn);
-
-        // Verify it doesn't crash
-        expect(screen.getByText(/Input/i)).toBeInTheDocument();
-    });
-
     it('calls onApply when Apply Solution is clicked with a non-zero solution', async () => {
         // Make getProduct return a non-zero solution so the button is enabled
         (mathUtils.getProduct as Mock).mockReturnValue([1, 0, 1]);
