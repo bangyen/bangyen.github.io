@@ -1,5 +1,5 @@
 import { Typography, Box } from '@mui/material';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { LIGHTS_OUT_STYLES } from '../config';
 import type { Palette } from '../types';
@@ -285,26 +285,27 @@ export function Example({ size, palette }: ExampleProps): React.ReactElement {
     const animation = useExampleAnimation({
         frameCount: inputStates.length,
     });
-    const { frameIdx, isPlaying, setIsPlaying } = animation;
+    const { frameIdx, setIsPlaying } = animation;
 
     const [[activeView, direction], setView] = useState<
         ['board' | 'calculator', number]
     >(['board', 0]);
 
+    const lastSyncedFrame = useRef<number>(-1);
+
     // Handle auto-switching logic
     useEffect(() => {
-        if (!isPlaying) return;
-
         const nextView =
             frameIdx >= phaseIndices.calculatorStart &&
             frameIdx < phaseIndices.secondChaseStart
                 ? 'calculator'
                 : 'board';
 
-        if (nextView !== activeView) {
+        if (frameIdx !== lastSyncedFrame.current && nextView !== activeView) {
             setView([nextView, nextView === 'calculator' ? 1 : -1]);
         }
-    }, [frameIdx, isPlaying, phaseIndices, activeView]);
+        lastSyncedFrame.current = frameIdx;
+    }, [frameIdx, phaseIndices, activeView]);
 
     const handleToggleView = () => {
         setIsPlaying(false);
