@@ -1,12 +1,8 @@
 import { Box, Grid } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material';
 import { lazy, useMemo } from 'react';
 
 import { ResearchControls } from './ResearchControls';
-import {
-    demoContentBoxSx,
-    demoContentGridSx,
-    demoContainerSx,
-} from './ResearchDemo.styles';
 import { ResearchHeader } from './ResearchHeader';
 import { ResearchViewSelector } from './ResearchViewSelector';
 import { DEFAULT_CHART_CONFIG } from '../config/constants';
@@ -15,7 +11,45 @@ import type { ResearchDemoProps } from '../types';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { LazySuspense } from '@/components/ui/LazySuspense';
+import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
 import { MobileProvider } from '@/hooks';
+
+/** Outer Grid container that fills the page and constrains content width. */
+const demoContainerSx: SxProps<Theme> = {
+    position: 'relative',
+    padding: SPACING.padding.md,
+    paddingTop: SPACING.padding.xl,
+    paddingBottom: {
+        xs: SPACING.padding.md,
+        md: 0,
+    },
+    boxSizing: 'border-box',
+    width: '100%',
+    maxWidth: '100vw',
+    overflowX: 'hidden',
+};
+
+/** Inner Grid item that centres content vertically. */
+const demoContentGridSx: SxProps<Theme> = {
+    ...COMPONENT_VARIANTS.flexCenter,
+    flexDirection: 'column',
+    zIndex: 1,
+    padding: 0,
+    minHeight: 0,
+};
+
+/** Content wrapper that constrains child width and adds horizontal padding. */
+const demoContentBoxSx: SxProps<Theme> = {
+    textAlign: 'center',
+    maxWidth: SPACING.maxWidth.md,
+    width: '100%',
+    padding: {
+        xs: '0 0.5rem',
+        md: '0 2rem',
+    },
+    boxSizing: 'border-box',
+    overflow: 'hidden',
+};
 
 const ResearchChart = lazy(() =>
     import('./ResearchChart').then(m => ({ default: m.ResearchChart })),

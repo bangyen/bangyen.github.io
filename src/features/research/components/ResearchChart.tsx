@@ -1,5 +1,7 @@
 import { Box, Typography } from '@mui/material';
+import type { SxProps, Theme } from '@mui/material';
 import React, { useCallback } from 'react';
+import type { CSSProperties } from 'react';
 import {
     LineChart,
     Line,
@@ -10,23 +12,79 @@ import {
     ResponsiveContainer,
 } from 'recharts';
 
-import {
-    chartCardSx,
-    chartTitleSx,
-    chartContainerSx,
-    loadingBoxSx,
-    axisTickStyle,
-    xAxisLineStyle,
-    tooltipContentStyle,
-    tooltipItemStyle,
-    tooltipLabelStyle,
-} from './ResearchChart.styles';
 import { CHART_DIMENSIONS, CHART_FORMATTING } from '../config';
 import type { ChartConfig } from '../types';
 
 import { GlassCard } from '@/components/ui/GlassCard';
-import { COLORS } from '@/config/theme';
+import { COLORS, SPACING, TYPOGRAPHY } from '@/config/theme';
 import { useMobileContext } from '@/hooks';
+
+/** Outer GlassCard wrapper for the chart area. */
+const chartCardSx: SxProps<Theme> = {
+    marginBottom: 3,
+    width: '100%',
+    boxSizing: 'border-box',
+    overflow: 'hidden',
+};
+
+/** Chart title above the graph. */
+const chartTitleSx: SxProps<Theme> = {
+    color: COLORS.text.secondary,
+    marginBottom: 2,
+    textAlign: 'center',
+    fontWeight: TYPOGRAPHY.fontWeight.medium,
+    fontSize: TYPOGRAPHY.fontSize.subheading,
+};
+
+/** Container that holds the chart or loading placeholder. */
+const chartContainerSx: SxProps<Theme> = {
+    height: CHART_DIMENSIONS.height,
+    width: '100%',
+    position: 'relative',
+};
+
+/** Centred placeholder shown while data loads. */
+const loadingBoxSx: SxProps<Theme> = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+    color: COLORS.text.secondary,
+};
+
+/** Shared tick style for both axes. */
+const axisTickStyle = {
+    fill: COLORS.text.secondary,
+    fontSize: 10,
+} as const;
+
+/** X-axis line style. */
+const xAxisLineStyle = {
+    stroke: COLORS.border.subtle,
+} as const;
+
+/** Recharts tooltip `contentStyle` — the glass card around the tooltip. */
+const tooltipContentStyle: CSSProperties = {
+    backgroundColor: COLORS.surface.glass,
+    backdropFilter: 'blur(8px) saturate(180%)',
+    border: `1px solid ${COLORS.border.subtle}`,
+    borderRadius: SPACING.borderRadius.md,
+    color: COLORS.text.primary,
+    boxShadow: 'none',
+};
+
+/** Recharts tooltip `itemStyle` — each data row inside the tooltip. */
+const tooltipItemStyle: CSSProperties = {
+    fontSize: '12px',
+    padding: '2px 0',
+};
+
+/** Recharts tooltip `labelStyle` — the header label inside the tooltip. */
+const tooltipLabelStyle: CSSProperties = {
+    fontWeight: 'bold',
+    marginBottom: '4px',
+    color: COLORS.text.primary,
+};
 
 export interface ResearchChartProps<T> {
     currentData: T[];
