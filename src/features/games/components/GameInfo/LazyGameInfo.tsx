@@ -6,8 +6,8 @@ import {
     infoModalSx,
     infoOuterBoxSx,
     infoCardSx,
-} from './index';
-import type { GameInfoProps } from './index';
+} from './styles';
+import type { GameInfoProps } from './types';
 
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
 import { DevErrorDetail } from '@/components/ui/DevErrorDetail';

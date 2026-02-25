@@ -53,11 +53,6 @@ export function GlobalStyles(): React.ReactElement {
                     boxShadow: '0 0 0 3px hsl(217deg 91% 60% / 15%)',
                 },
 
-                /* Modern backdrop filter support */
-                '.glass-effect': {
-                    backdropFilter: 'blur(20px) saturate(180%)',
-                },
-
                 /* Smooth text rendering */
                 body: {
                     WebkitFontSmoothing: 'antialiased',
@@ -71,7 +66,7 @@ export function GlobalStyles(): React.ReactElement {
                 },
 
                 /* Ensure proper scroll positioning */
-                '.featured-work-section': {
+                '#featured-work': {
                     scrollMarginTop: '2rem',
                 },
 
