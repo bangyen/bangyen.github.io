@@ -2,9 +2,6 @@ import { ThemeProvider as MuiThemeProvider, CssBaseline } from '@mui/material';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
-import { registerSW } from 'virtual:pwa-register';
-
-registerSW({ immediate: true });
 
 import { router } from './config/routes';
 import { createAppTheme } from './config/theme';

@@ -1,5 +1,5 @@
 import { Box, Grid } from '@mui/material';
-import { lazy } from 'react';
+import { lazy, useMemo } from 'react';
 
 import { ResearchControls } from './ResearchControls';
 import {
@@ -9,8 +9,7 @@ import {
 } from './ResearchDemo.styles';
 import { ResearchHeader } from './ResearchHeader';
 import { ResearchViewSelector } from './ResearchViewSelector';
-import { useCurrentView } from '../hooks/useCurrentView';
-import { resolveResearchDemoDefaults } from '../hooks/useResearchDemoDefaults';
+import { DEFAULT_CHART_CONFIG } from '../config/constants';
 import type { ResearchDemoProps } from '../types';
 
 import { PageLayout } from '@/components/layout/PageLayout';
@@ -29,10 +28,6 @@ const chartErrorFallback = (
 /**
  * Generic research demo page shell that provides a consistent layout
  * (header, chart, view selector, controls) for every research tool.
- *
- * Exists so individual research pages (Oligopoly, ZSharp, etc.) only
- * need to supply data-specific configuration while the common chrome
- * and responsive behaviour is handled once.
  */
 export const ResearchDemo = <T,>({
     title,
@@ -41,33 +36,62 @@ export const ResearchDemo = <T,>({
     githubUrl,
     children,
     backUrl,
-    ...rest
+    chart = {},
+    view = {},
+    controls = [],
+    onReset,
+    resetLabel = 'Reset',
 }: ResearchDemoProps<T>) => {
+    // resolveResearchDemoDefaults inline
     const {
-        chartData,
-        chartConfig,
-        chartTitle,
-        loading,
-        loadingMessage,
-        viewTypes,
-        currentViewType,
-        onViewTypeChange,
-        controls,
-        onReset,
-        resetLabel,
-    } = resolveResearchDemoDefaults(rest);
+        data: chartData = [],
+        config: chartConfig = DEFAULT_CHART_CONFIG,
+        title: chartTitleOverride = null,
+        loading = false,
+        loadingMessage = 'Loading data...',
+    } = chart;
 
+    const {
+        types: viewTypes = [],
+        current: currentViewType = 'default',
+        onChange: onViewTypeChange = () => {},
+    } = view;
+
+    // useCurrentView inline
     const {
         data: currentData,
         chartConfig: currentChartConfig,
         title: calculatedChartTitle,
-    } = useCurrentView(
+    } = useMemo(() => {
+        const activeView = viewTypes.find(v => v.key === currentViewType);
+
+        const data =
+            chartData.length === 0
+                ? []
+                : activeView?.dataProcessor
+                  ? activeView.dataProcessor(chartData)
+                  : chartData;
+
+        const resolvedConfig = activeView?.chartConfig ?? chartConfig;
+
+        const chartAreaTitle =
+            chartTitleOverride ??
+            (viewTypes.length > 0
+                ? (activeView?.chartTitle ?? 'Data Visualization')
+                : 'Data Visualization');
+
+        return {
+            data,
+            chartConfig: resolvedConfig,
+            title: chartAreaTitle,
+        };
+    }, [
         viewTypes,
         currentViewType,
         chartData,
         chartConfig,
-        chartTitle ?? null,
-    );
+        chartTitleOverride,
+    ]);
 
     return (
         <PageLayout title={pageTitle ?? title} githubUrl={githubUrl}>

@@ -8,7 +8,6 @@ import {
     useMobile,
     useLocalStorage,
     useDebouncedEffect,
-    useStableCallback,
 } from '../../../hooks';
 import {
     createStorageKeys,
@@ -163,35 +162,44 @@ export function useBaseGame<
     const [state, dispatch] = useReducer(reducer, initialRef.current);
     const solved = useMemo(() => isSolved(state), [state, isSolved]);
 
-    const handleNext = useStableCallback(
-        onNext ??
-            (() => {
-                dispatch({ type: 'new' } as unknown as A);
-            }),
-    );
+    const onNextRef = useRef(onNext);
+    onNextRef.current = onNext;
+
+    const handleNext = useCallback(() => {
+        if (onNextRef.current) {
+            onNextRef.current();
+        } else {
+            dispatch({ type: 'new' } as unknown as A);
+        }
+    }, []);
 
     // 4. Persistence (formerly useGamePersistence)
     const persistenceKey = `${keys.STATE}-${String(rows)}x${String(cols)}`;
     const lastRestoredKey = useRef<string | null>(null);
-    const stableDeserialize = useStableCallback(
-        persistence?.deserialize ?? ((s: unknown) => s as S),
-    );
+
+    const deserializeRef = useRef(persistence?.deserialize);
+    deserializeRef.current = persistence?.deserialize;
 
     useEffect(() => {
         if (lastRestoredKey.current === persistenceKey) return;
         const saved = localStorage.getItem(persistenceKey);
         if (saved) {
             try {
+                const parsed = JSON.parse(saved) as unknown;
+                const hydratedState = deserializeRef.current
+                    ? deserializeRef.current(parsed)
+                    : (parsed as S);
+
                 dispatch({
                     type: 'hydrate',
-                    state: stableDeserialize(JSON.parse(saved)),
+                    state: hydratedState,
                 } as unknown as A);
             } catch {
                 localStorage.removeItem(persistenceKey);
             }
         }
         lastRestoredKey.current = persistenceKey;
-    }, [persistenceKey, stableDeserialize]);
+    }, [persistenceKey]);
 
     useDebouncedEffect(
         () => {
