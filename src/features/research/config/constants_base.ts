@@ -6,6 +6,7 @@ export const RESEARCH_CONSTANTS: ResearchConfig = {
         defaultElasticity: 2,
         defaultBasePrice: 40,
         maxRounds: 15,
+        priceAxisMax: 250,
         hhiAxisPadding: 0.1,
         options: {
             firms: [

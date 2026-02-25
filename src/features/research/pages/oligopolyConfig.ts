@@ -1,10 +1,6 @@
 import { RESEARCH_CONSTANTS } from '../config';
 import type { ChartConfig, Control } from '../types';
-import {
-    buildAxisDomain,
-    buildTooltipLabelFormatter,
-    fetchGzippedJson,
-} from '../utils';
+import { buildTooltipLabelFormatter, fetchGzippedJson } from '../utils';
 
 import {
     BusinessRounded,
@@ -105,12 +101,10 @@ export const oligopolyChartConfig: ChartConfig = {
     type: 'line',
     xAxisKey: 'round',
     yAxisFormatter: (value: number) => `$${value.toFixed(2)}`,
-    yAxisDomain: buildAxisDomain(5),
+    yAxisDomain: ['0', String(RESEARCH_CONSTANTS.oligopoly.priceAxisMax)],
     dualYAxis: true,
     rightYAxisFormatter: (value: number) => value.toFixed(2),
-    rightYAxisDomain: buildAxisDomain(
-        RESEARCH_CONSTANTS.oligopoly.hhiAxisPadding,
-    ),
+    rightYAxisDomain: ['0', '1'],
     tooltipLabelFormatter: buildTooltipLabelFormatter('Round'),
     tooltipFormatter: (value: number, name: string): [string, string] => [
         name === 'Market Price' ? `$${value.toFixed(2)}` : value.toFixed(2),

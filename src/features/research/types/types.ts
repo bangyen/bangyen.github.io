@@ -105,6 +105,7 @@ export interface OligopolyConstants {
     defaultElasticity: number;
     defaultBasePrice: number;
     maxRounds: number;
+    priceAxisMax: number;
     hhiAxisPadding: number;
     options: {
         firms: { value: number; label: string }[];

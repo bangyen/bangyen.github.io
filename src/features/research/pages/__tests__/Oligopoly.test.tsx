@@ -1,5 +1,5 @@
 import { screen, fireEvent, act, waitFor } from '@testing-library/react';
-import { vi } from 'vitest';
+import { describe, test, expect, vi } from 'vitest';
 
 import type { ResearchDemoProps, Control } from '../../types';
 import { Oligopoly } from '../Oligopoly';
