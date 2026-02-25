@@ -21,19 +21,20 @@ export interface StandardGameLayoutProps<TBoardProps, TInfoProps> {
     /** External URL for game information. */
     infoUrl: string;
     /** Props for the board or game container. */
-    boardProps: TBoardProps;
+    boardProps?: TBoardProps;
     /** Standardised game state from useBaseGame. */
-    gameState: {
+    gameState?: {
         controlsProps: BaseControlsProps & Partial<GameControlsProps>;
         solved: boolean;
     };
-    /** Page/Content layout overrides. */
-    layoutProps: {
-        boardSx?: SxProps<Theme>;
-        contentSx?: SxProps<Theme>;
-        paddingBottom?: string | object;
-    };
-    /** Props for the info modal. Must include toggleOpen. */
+    /** Top-level layout properties. */
+    boardSx?: SxProps<Theme>;
+    contentSx?: SxProps<Theme>;
+    paddingBottom?: string | object;
+    /** Standard base game props if passed directly. */
+    controlsProps?: BaseControlsProps & Partial<GameControlsProps>;
+    solved?: boolean;
+    /** Props for the info modal. */
     infoProps: TInfoProps & { toggleOpen: () => void };
     /** Props for the win overlay. */
     trophyProps: TrophyOverlayProps;
@@ -58,7 +59,11 @@ export function StandardGameLayout<TBoardProps, TInfoProps>({
     infoUrl,
     boardProps,
     gameState,
-    layoutProps,
+    boardSx,
+    contentSx,
+    paddingBottom,
+    controlsProps,
+    solved,
     infoProps,
     trophyProps,
     renderBoard,
@@ -66,6 +71,11 @@ export function StandardGameLayout<TBoardProps, TInfoProps>({
     onPageClick,
     background = COLORS.surface.background,
 }: StandardGameLayoutProps<TBoardProps, TInfoProps>) {
+    // Flattened source of truth
+    const finalSolved = solved ?? gameState?.solved ?? false;
+    const finalControlsProps = controlsProps ?? gameState?.controlsProps;
+    const finalBoardProps = (boardProps ?? {}) as TBoardProps;
+
     return (
         <PageLayout
             title={title}
@@ -93,31 +103,28 @@ export function StandardGameLayout<TBoardProps, TInfoProps>({
                     sx={
                         [
                             {
-                                pb:
-                                    layoutProps.paddingBottom ??
-                                    DEFAULT_CONTENT_PADDING,
+                                pb: paddingBottom ?? DEFAULT_CONTENT_PADDING,
                             },
-                            ...(Array.isArray(layoutProps.contentSx)
-                                ? (layoutProps.contentSx as readonly SxProps<Theme>[])
-                                : [layoutProps.contentSx]),
+                            ...(Array.isArray(contentSx)
+                                ? (contentSx as readonly SxProps<Theme>[])
+                                : [contentSx]),
                         ].filter(Boolean) as SxProps<Theme>
                     }
                 >
-                    <BoardContainerBase sx={layoutProps.boardSx}>
-                        {renderBoard(boardProps)}
-                        <TrophyOverlay
-                            show={gameState.solved}
-                            {...trophyProps}
-                        />
+                    <BoardContainerBase sx={boardSx}>
+                        {renderBoard(finalBoardProps)}
+                        <TrophyOverlay show={finalSolved} {...trophyProps} />
                     </BoardContainerBase>
                 </ContentContainer>
             </ErrorBoundary>
-            <GameControls {...gameState.controlsProps}>
-                <GameControls.Refresh />
-                <GameControls.ResizeMinus />
-                <GameControls.ResizePlus />
-                <GameControls.Info onClick={infoProps.toggleOpen} />
-            </GameControls>
+            {finalControlsProps && (
+                <GameControls {...finalControlsProps}>
+                    <GameControls.Refresh />
+                    <GameControls.ResizeMinus />
+                    <GameControls.ResizePlus />
+                    <GameControls.Info onClick={infoProps.toggleOpen} />
+                </GameControls>
+            )}
             <InfoComponent {...infoProps} />
         </PageLayout>
     );

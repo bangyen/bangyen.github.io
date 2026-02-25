@@ -1,5 +1,3 @@
-import { Box } from '@mui/material';
-
 import { StandardGameLayout } from '../../components/StandardGameLayout';
 import { SlantGameContainer } from '../components/SlantGameContainer';
 import { SlantInfo } from '../components/SlantInfo';
@@ -9,49 +7,31 @@ import { PAGE_TITLES } from '@/config/constants';
 
 export function Slant() {
     const {
-        state,
-        size,
-        rows,
-        cols,
-        cellProps,
-        overlayProps,
         boardSx,
         infoProps,
-        controlsProps,
-        analysis,
-        solved,
-        generating,
-        dimensionsMismatch,
         trophyProps,
+        controlsProps,
+        solved,
+        analysis,
+        ...boardProps
     } = useSlantGame();
 
     return (
         <StandardGameLayout
             title={PAGE_TITLES.slant}
-            infoUrl="https://en.wikipedia.org/wiki/Gokigen_Naname"
+            infoUrl="https://en.wikipedia.org/wiki/Slant_(puzzle)"
+            boardSx={boardSx}
             boardProps={{
-                state,
-                size,
-                rows,
-                cols,
-                cellProps,
-                overlayProps,
+                ...boardProps,
                 isAnalysisMode: analysis.active,
-                generating,
-                dimensionsMismatch,
                 analysis,
             }}
-            layoutProps={{ boardSx }}
             infoProps={infoProps}
-            gameState={{ solved, controlsProps }}
             trophyProps={trophyProps}
-            renderBoard={props => (
-                <Box onClick={infoProps.handleBoxClick}>
-                    <SlantGameContainer {...props} />
-                </Box>
-            )}
+            controlsProps={controlsProps}
+            solved={solved}
+            renderBoard={props => <SlantGameContainer {...props} />}
             InfoComponent={SlantInfo}
-            onPageClick={analysis.active ? analysis.onClose : undefined}
         />
     );
 }

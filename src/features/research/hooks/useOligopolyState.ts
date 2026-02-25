@@ -14,7 +14,7 @@ interface OligopolyState {
     /** Control panel definitions bound to current values and setters. */
     controls: Control[];
     /** Resets all parameters to their default values. */
-    resetToDefaults: () => void;
+    reset: () => void;
 }
 
 /**
@@ -74,5 +74,5 @@ export function useOligopolyState(matrixData: MatrixItem[]): OligopolyState {
         [numFirms, demandElasticity, basePrice],
     );
 
-    return { marketData, controls, resetToDefaults };
+    return { marketData, controls, reset: resetToDefaults };
 }

@@ -6,18 +6,25 @@ import { useLightsOutGame } from '../hooks/useLightsOutGame';
 import { PAGE_TITLES } from '@/config/constants';
 
 export function LightsOut() {
-    const { boardProps, layoutProps, infoProps, gameState, trophyProps } =
-        useLightsOutGame();
+    const {
+        boardSx,
+        infoProps,
+        trophyProps,
+        controlsProps,
+        solved,
+        ...boardProps
+    } = useLightsOutGame();
 
     return (
         <StandardGameLayout
             title={PAGE_TITLES.lightsOut}
             infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
+            boardSx={boardSx}
             boardProps={boardProps}
-            layoutProps={layoutProps}
             infoProps={infoProps}
-            gameState={gameState}
             trophyProps={trophyProps}
+            controlsProps={controlsProps}
+            solved={solved}
             renderBoard={props => <Board {...props} />}
             InfoComponent={Info}
         />

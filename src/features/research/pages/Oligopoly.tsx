@@ -9,8 +9,7 @@ import { URLS, PAGE_TITLES } from '@/config/constants';
 
 export function Oligopoly() {
     const matrixData = useLoaderData<MatrixItem[]>();
-    const { marketData, controls, resetToDefaults } =
-        useOligopolyState(matrixData);
+    const { marketData, controls, reset } = useOligopolyState(matrixData);
 
     return (
         <ResearchDemo
@@ -24,7 +23,7 @@ export function Oligopoly() {
                 title: 'Market Dynamics',
             }}
             controls={controls}
-            onReset={resetToDefaults}
+            onReset={reset}
             resetLabel="Reset"
         />
     );

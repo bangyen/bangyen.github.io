@@ -2,37 +2,20 @@
  * @vitest-environment happy-dom
  */
 import { renderHook } from '@testing-library/react';
-import { vi, type Mock, describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 import type { DragProps } from '../../../hooks/useDrag';
-import { useGetters } from '../../hooks/boardUtils';
 import { getInput, getOutput, useHandler } from '../Calculator';
-
-// Mock useGetters from boardUtils
-vi.mock('../../hooks/boardUtils', () => ({
-    useGetters: vi.fn(
-        (
-            _getTile: (r: number, c: number) => number,
-            palette: { primary: string; secondary: string },
-        ) => ({
-            getColor: (_r: number, _c: number) => ({
-                front: palette.primary,
-                back: palette.secondary,
-                isLit: false,
-            }),
-            getBorder: (_r: number, _c: number) => ({
-                border: '1px solid black',
-            }),
-        }),
-    ),
-}));
 
 describe('Lights Out Calculator UI Helpers', () => {
     const mockPalette = { primary: 'red', secondary: 'blue' };
     const mockGetters = {
-        getColor: vi.fn(() => ({ front: 'red', back: 'blue', isLit: false })),
+        getColor: vi.fn((r: number, c: number) => ({
+            front: 'red',
+            back: 'blue',
+            isLit: r === 0 && c === 0,
+        })),
         getBorder: vi.fn(() => ({ border: '1px solid' })),
-        getFiller: vi.fn(() => 'red'),
     };
 
     describe('getInput', () => {
@@ -100,23 +83,27 @@ describe('Lights Out Calculator UI Helpers', () => {
     });
 
     describe('useHandler', () => {
-        it('calls useGetters with correct getTile function', () => {
+        it('derives correct color and border from state', () => {
             const row = [1, 0, 1];
+            const { result } = renderHook(() =>
+                useHandler(row, 3, mockPalette),
+            );
 
-            renderHook(() => useHandler(row, 3, mockPalette));
+            const { getColor, getBorder } = result.current;
 
-            expect(useGetters).toHaveBeenCalled();
-            const calls = (useGetters as Mock).mock.calls as [
-                (r: number, c: number) => number,
-            ][];
-            const getTile = calls[0]![0];
+            // Test getColor
+            expect(getColor(0, 0).isLit).toBe(true);
+            expect(getColor(0, 0).front).toBe('red');
+            expect(getColor(0, 1).isLit).toBe(false);
+            expect(getColor(0, 1).front).toBe('blue');
 
-            expect(getTile(0, 0)).toBe(1); // row 0, col 0 -> valid
-            expect(getTile(0, 1)).toBe(0); // row 0, col 1 -> valid
-            expect(getTile(0, 2)).toBe(1); // row 0, col 2 -> valid
-            expect(getTile(1, 0)).toBe(-1); // row 1 -> invalid (only 1 row)
-            expect(getTile(0, -1)).toBe(-1); // col -1 -> invalid
-            expect(getTile(0, 3)).toBe(-1); // col 3 -> invalid (size 3)
+            // Test getBorder
+            const border00 = getBorder(0, 0);
+            expect(border00).toBeDefined();
+
+            // Test invalid coordinates
+            expect(getColor(1, 0).isLit).toBe(false); // Out of bounds r
+            expect(getColor(0, 3).isLit).toBe(false); // Out of bounds c
         });
     });
 });

@@ -97,13 +97,14 @@ describe('useLightsOutGame', () => {
         vi.mocked(useSkipTransition).mockReturnValue(false);
     });
 
-    it('returns the standard GamePageProps shape', () => {
+    it('returns the flattened game state shape', () => {
         const { result } = renderHook(() => useLightsOutGame());
 
-        expect(result.current).toHaveProperty('boardProps');
-        expect(result.current).toHaveProperty('layoutProps');
+        expect(result.current).toHaveProperty('state');
+        expect(result.current).toHaveProperty('size');
+        expect(result.current).toHaveProperty('layers');
         expect(result.current).toHaveProperty('infoProps');
-        expect(result.current).toHaveProperty('gameState');
+        expect(result.current).toHaveProperty('controlsProps');
     });
 
     it('calls useBaseGame with a valid config', () => {
@@ -121,8 +122,7 @@ describe('useLightsOutGame', () => {
     it('passes enhanced drag props with grid navigation to UI props', () => {
         const { result } = renderHook(() => useLightsOutGame());
 
-        expect(result.current.boardProps).toBeDefined();
-        expect(result.current.boardProps).toHaveProperty('layers');
+        expect(result.current.layers).toBeDefined();
     });
 
     it('enhanced onKeyDown invokes both drag and grid navigation handlers', () => {
@@ -141,11 +141,7 @@ describe('useLightsOutGame', () => {
         const { result } = renderHook(() => useLightsOutGame());
 
         act(() => {
-            (
-                result.current.infoProps as unknown as {
-                    onApply: (s: number[]) => void;
-                }
-            ).onApply([1, 0, 1, 0, 0]);
+            result.current.infoProps.onApply([1, 0, 1, 0, 0]);
         });
 
         expect(mockDispatch).toHaveBeenCalledWith({
@@ -161,11 +157,7 @@ describe('useLightsOutGame', () => {
         const { result } = renderHook(() => useLightsOutGame());
 
         act(() => {
-            (
-                result.current.infoProps as unknown as {
-                    onApply: (s: number[]) => void;
-                }
-            ).onApply([0, 0, 0]);
+            result.current.infoProps.onApply([0, 0, 0]);
         });
 
         expect(mockDispatch).not.toHaveBeenCalled();
