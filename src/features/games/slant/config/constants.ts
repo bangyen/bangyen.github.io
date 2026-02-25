@@ -12,7 +12,7 @@ export const LAYOUT_CONSTANTS = {
     LINE_WIDTH: '130%',
     LINE_THICKNESS: '6px',
     OFFSET: {
-        MOBILE: 0,
+        MOBILE: -60,
         DESKTOP: 0,
     },
     WIDTH_LIMIT: 1000,
