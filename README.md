@@ -107,8 +107,7 @@ src/
 │   │   ├── types/      # Game type definitions
 │   │   └── config/     # Game configuration & constants
 │   ├── research/       # Research data visualization
-│   │   ├── pages/      # ZSharp, Oligopoly pages
-│   │   └── workers/    # Web Workers for computation
+│   │   └── pages/      # ZSharp, Oligopoly pages
 │   └── home/           # Landing page with projects
 ├── hooks/              # Global React hooks (useTheme, useWorker, etc.)
 ├── utils/              # Shared utilities

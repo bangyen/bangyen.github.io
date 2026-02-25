@@ -8,7 +8,7 @@ import {
     getSatisfiedNodes,
 } from './validation';
 
-import { validateGridSize } from '@/features/games/types/types';
+import { validateGridSize } from '@/features/games/types';
 import { createGameReducer } from '@/utils/gameUtils';
 
 // Export everything from types for backward compatibility where needed,

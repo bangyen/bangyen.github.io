@@ -5,7 +5,7 @@ import {
 } from '../../../../utils/math/gf2/gf2Operations';
 import type { BoardState, BoardAction } from '../types';
 
-import { validateGridSize } from '@/features/games/types/types';
+import { validateGridSize } from '@/features/games/types';
 import { createGameReducer } from '@/utils/gameUtils';
 
 export const getGrid = (rows: number): number[] =>

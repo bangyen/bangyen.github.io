@@ -7,7 +7,7 @@ import {
 } from '../boardHandlers';
 
 import type { BoardAction } from '@/features/games/lights-out/types';
-import type { CellIndex } from '@/features/games/types/types';
+import type { CellIndex } from '@/features/games/types';
 
 // Helper to access bitmask grid
 function getBit(grid: number[], r: number, c: number): number {
