@@ -23,13 +23,14 @@ export const ExampleContainer = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: theme.spacing(4),
-    width: 'fit-content',
+    gap: theme.spacing(0),
+    width: '100%',
     maxWidth: '800px',
     margin: 'auto',
     [theme.breakpoints.up('sm')]: {
         flexDirection: 'row',
-        gap: theme.spacing(4),
+        gap: theme.spacing(10),
+        width: 'fit-content',
     },
 }));
 
@@ -45,7 +46,7 @@ export const ExampleActions = styled(Box)(({ theme }) => ({
     justifyItems: 'center',
     alignItems: 'center',
     width: '100%',
-    maxWidth: '320px',
+    maxWidth: '300px',
     margin: '0 auto',
     px: 1.5,
     [theme.breakpoints.up('sm')]: {
@@ -64,7 +65,7 @@ export const ExampleActionButton = styled(Button)(({ theme }) => ({
     borderColor: COLORS.border.subtle,
     color: COLORS.text.secondary,
     width: '100%',
-    maxWidth: '175px',
+    maxWidth: '140px',
     [theme.breakpoints.up('sm')]: {
         width: '180px',
         maxWidth: 'none',
