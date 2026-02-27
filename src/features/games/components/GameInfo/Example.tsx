@@ -24,12 +24,12 @@ export const ExampleContainer = styled(Box)(({ theme }) => ({
     justifyContent: 'center',
     alignItems: 'center',
     gap: theme.spacing(4),
-    width: '100%',
+    width: 'fit-content',
     maxWidth: '800px',
     margin: 'auto',
     [theme.breakpoints.up('sm')]: {
         flexDirection: 'row',
-        gap: theme.spacing(8),
+        gap: theme.spacing(4),
     },
 }));
 
@@ -51,8 +51,6 @@ export const ExampleActions = styled(Box)(({ theme }) => ({
         gridTemplateColumns: 'minmax(0, 1fr)',
         width: 'auto',
         maxWidth: 'none',
-        flex: 1,
-        justifyContent: 'flex-start',
     },
 }));
 
@@ -185,16 +183,12 @@ export function GameInfoExample({
         <ExampleContainer>
             {/* Visual Frame */}
             <Box
-                sx={theme => ({
+                sx={{
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                     flexShrink: 0,
-                    [theme.breakpoints.up('sm')]: {
-                        flex: 1,
-                        justifyContent: 'flex-end',
-                    },
-                })}
+                }}
             >
                 {renderFrame(frameIdx)}
             </Box>
