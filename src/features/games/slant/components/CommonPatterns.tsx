@@ -17,14 +17,15 @@ const patternContainerSx = {
     gap: 4,
     width: '100%',
     py: 2,
-    pr: 4,
+    pl: 2,
+    pr: { xs: 2, sm: 2, md: 4 },
 };
 
 const patternItemSx = {
     display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 0,
+    flexDirection: { xs: 'column', sm: 'row' },
+    alignItems: { xs: 'center', sm: 'center' },
+    gap: { xs: 1, sm: 0 },
     width: '100%',
 };
 
@@ -41,6 +42,7 @@ const patternTextSx = {
     gap: 1,
     flex: 1,
     minWidth: 0,
+    textAlign: { xs: 'center', sm: 'left' } as const,
 };
 
 // ---------------------------------------------------------------------------
