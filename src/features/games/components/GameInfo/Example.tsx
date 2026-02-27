@@ -64,7 +64,8 @@ export const ExampleActionButton = styled(Button)(({ theme }) => ({
     width: '100%',
     maxWidth: '140px',
     [theme.breakpoints.up('sm')]: {
-        maxWidth: '180px',
+        width: '180px',
+        maxWidth: 'none',
     },
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
