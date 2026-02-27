@@ -47,10 +47,12 @@ export const ExampleActions = styled(Box)(({ theme }) => ({
     width: '100%',
     maxWidth: '320px',
     margin: '0 auto',
+    px: 1.5,
     [theme.breakpoints.up('sm')]: {
         gridTemplateColumns: 'minmax(0, 1fr)',
         width: 'auto',
         maxWidth: 'none',
+        px: 0,
     },
 }));
 
@@ -62,13 +64,13 @@ export const ExampleActionButton = styled(Button)(({ theme }) => ({
     borderColor: COLORS.border.subtle,
     color: COLORS.text.secondary,
     width: '100%',
-    maxWidth: '140px',
+    maxWidth: '160px',
     [theme.breakpoints.up('sm')]: {
         width: '180px',
         maxWidth: 'none',
     },
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1),
+    paddingLeft: theme.spacing(1.5),
+    paddingRight: theme.spacing(1.5),
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
