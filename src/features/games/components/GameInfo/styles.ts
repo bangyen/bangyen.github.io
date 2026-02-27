@@ -33,8 +33,8 @@ export const infoOuterBoxSx: SxProps<Theme> = {
 export const infoCardSx: SxProps<Theme> = {
     width: '100%',
     maxWidth: '1000px',
-    height: { xs: '630px', sm: '495px' },
-    minHeight: { xs: '630px', sm: '495px' },
+    height: { xs: '600px', sm: '500px' },
+    minHeight: { xs: '600px', sm: '500px' },
     display: 'flex',
     flexDirection: 'column',
     p: 0,
@@ -118,6 +118,7 @@ export const instructionTextSx: SxProps<Theme> = {
     lineHeight: 1.6,
     fontSize: TYPOGRAPHY.fontSize.body,
     ml: 6.5,
+    pr: 2,
 };
 
 /** Outer wrapper for a step with fade-in animation. */

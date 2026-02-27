@@ -3,7 +3,6 @@ import { Example } from './Example';
 import {
     SLANT_INFO_TITLES,
     SLANT_INSTRUCTIONS,
-    SLANT_INFO_CARD_SX,
     slantInfoContentSx,
 } from '../config';
 
@@ -39,7 +38,6 @@ export function SlantInfo({
                     handleOpenAnalysis={handleOpenAnalysis}
                 />
             }
-            cardSx={SLANT_INFO_CARD_SX}
             contentSxOverride={slantInfoContentSx}
             persistenceKey="slant_info_step"
             extraSteps={[<CommonPatterns key="patterns" />]}

@@ -83,11 +83,6 @@ export const SLANT_INSTRUCTIONS = [
     },
 ];
 
-export const SLANT_INFO_CARD_SX: SxProps<Theme> = {
-    height: { xs: '660px', sm: '525px' },
-    minHeight: { xs: '660px', sm: '525px' },
-};
-
 export const slantInfoContentSx = (step: number): SxProps<Theme> => {
     const normalized = infoContentSx(step);
     return [
