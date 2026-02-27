@@ -1,4 +1,8 @@
-import { BOARD_STYLES, createStorageKeys } from '../../config/constants';
+import {
+    BOARD_STYLES,
+    createStorageKeys,
+    GAME_CONSTANTS,
+} from '../../config/constants';
 
 export const NUMBER_SIZE_RATIO = 0.4;
 
@@ -38,8 +42,8 @@ export const SLANT_STYLES = {
         WHITE: '#fff',
     },
     SHADOWS: {
-        LINE: BOARD_STYLES.SHADOW,
-        HINT: '0 4px 8px rgba(0,0,0,0.1)',
+        LINE: BOARD_STYLES.DROP_SHADOW,
+        HINT: BOARD_STYLES.SHADOW,
     },
     ANALYSIS: {
         BORDER: 'var(--slant-analysis-border)',
@@ -60,7 +64,6 @@ export const SLANT_STYLES = {
                 100% { transform: var(--slant-base-transform) scale(1); opacity: 1; }
             }
         `,
-        POP_IN_STYLE:
-            'slant-pop-in 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+        POP_IN_STYLE: `slant-pop-in ${GAME_CONSTANTS.animations.celebration.duration} ${GAME_CONSTANTS.animations.celebration.easing} forwards`,
     },
 };

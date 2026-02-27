@@ -9,7 +9,7 @@ import {
     LIGHTS_OUT_STYLES,
     getLightsOutGameConfig,
     LIGHTS_OUT_LAYOUT_CONSTANTS,
-} from '../config';
+} from '../config/index';
 import type { BoardState, BoardAction } from '../types';
 import { handleBoard, isSolved, getInitialState } from '../utils/boardHandlers';
 import { isBoardState } from '../utils/persistence';

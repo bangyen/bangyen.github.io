@@ -22,8 +22,8 @@ const OverlayContainer = styled('div', {
     opacity: show ? 1 : 0,
     transform: show ? 'scale(1)' : 'scale(0.8)',
     transition: theme.transitions.create(['opacity', 'transform'], {
-        duration: theme.transitions.duration.shorter,
-        easing: theme.transitions.easing.easeOut,
+        duration: '0.3s',
+        easing: 'linear',
     }),
     visibility: show ? 'visible' : 'hidden',
     willChange: 'transform, opacity',

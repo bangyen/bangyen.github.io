@@ -6,7 +6,7 @@ import {
     LIGHTS_OUT_INFO_TITLES as INFO_TITLES,
     LIGHTS_OUT_INSTRUCTIONS as INSTRUCTIONS,
     LIGHTS_OUT_EXAMPLE_SIZE as EXAMPLE_SIZE,
-} from '../config';
+} from '../config/index';
 import { useCalculator } from '../hooks/useCalculator';
 import type { Palette } from '../types';
 

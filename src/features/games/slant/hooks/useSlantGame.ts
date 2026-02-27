@@ -7,8 +7,8 @@ import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useDrag } from '../../hooks/useDrag';
 import { useGridNavigation } from '../../hooks/useGridNavigation';
-import { getSlantGameConfig } from '../config';
 import { LAYOUT_CONSTANTS, STORAGE_KEYS } from '../config/constants';
+import { getSlantGameConfig } from '../config/index';
 import type { SlantState, SlantAction, CellState } from '../types';
 import { handleBoard, getInitialState } from '../utils/boardHandlers';
 import {

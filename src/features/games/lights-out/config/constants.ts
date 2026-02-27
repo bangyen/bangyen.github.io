@@ -1,25 +1,22 @@
-import { BOARD_STYLES, createStorageKeys } from '../../config/constants';
+import {
+    BOARD_STYLES,
+    createStorageKeys,
+    GAME_CONSTANTS,
+} from '../../config/constants';
 
 import { KeyboardArrowDown, Calculate, Replay } from '@/components/icons';
 
 export const LIGHTS_OUT_STYLES = {
     TRANSITION: {
-        FAST: 'background-color 100ms ease-in-out, color 100ms ease-in-out, opacity 100ms ease-in-out, border-radius 100ms ease-in-out',
-        DEFAULT:
-            'background-color 200ms ease, color 200ms ease, opacity 200ms ease, border-radius 200ms ease',
+        FAST: BOARD_STYLES.TRANSITION,
+        DEFAULT: BOARD_STYLES.TRANSITION,
     },
     SHADOWS: {
         DROP: BOARD_STYLES.DROP_SHADOW,
     },
     ANIMATIONS: {
-        POP_IN_STYLE: 'popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
-        POP_IN: `
-            @keyframes popIn {
-                0% { opacity: 0; transform: scale(0.5); }
-                70% { opacity: 1; transform: scale(1.1); }
-                100% { opacity: 1; transform: scale(1); }
-            }
-        `,
+        POP_IN_STYLE: `shared-pop-in ${GAME_CONSTANTS.animations.celebration.duration} ${GAME_CONSTANTS.animations.celebration.easing} forwards`,
+        POP_IN: GAME_CONSTANTS.animations.celebration.keyframes,
     },
 };
 

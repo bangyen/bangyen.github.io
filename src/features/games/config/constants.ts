@@ -11,6 +11,20 @@ export const GAME_CONSTANTS = {
         interactionDelay: 500,
         autoPlaySpeed: 300,
         touchHoldDelay: 500,
+        standardTransition: '150ms ease-in-out',
+    },
+    animations: {
+        celebration: {
+            duration: '0.3s',
+            easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+            keyframes: `
+                @keyframes shared-pop-in {
+                    0% { opacity: 0; transform: scale(0.5); }
+                    70% { opacity: 1; transform: scale(1.1); }
+                    100% { opacity: 1; transform: scale(1); }
+                }
+            `,
+        },
     },
     layout: {
         headerHeight: {
@@ -49,8 +63,9 @@ export const BOARD_STYLES = {
     PADDING: { MOBILE: '30px', DESKTOP: '36px' },
     BORDER_RADIUS: '24px',
     BORDER: '2px solid transparent',
-    SHADOW: '0 2px 4px rgba(0,0,0,0.2)',
-    DROP_SHADOW: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))',
+    SHADOW: '0 4px 12px rgba(0,0,0,0.15)',
+    DROP_SHADOW: 'drop-shadow(0 4px 12px rgba(0,0,0,0.15))',
+    TRANSITION: '150ms cubic-bezier(0.4, 0, 0.2, 1)',
 };
 
 /**

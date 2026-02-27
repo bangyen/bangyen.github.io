@@ -47,6 +47,7 @@ const BoardContainerBase = styled(Box, {
             padding: customPadding?.desktop ?? BOARD_STYLES.PADDING.DESKTOP,
         },
         borderRadius: customBorderRadius ?? BOARD_STYLES.BORDER_RADIUS,
+        boxShadow: BOARD_STYLES.SHADOW,
         border: customBorder ?? BOARD_STYLES.BORDER,
     }),
 );

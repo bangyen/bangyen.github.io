@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react';
 
 import type { DragProps } from '../../hooks/useDrag';
-import { LIGHTS_OUT_STYLES } from '../config';
+import { LIGHTS_OUT_STYLES } from '../config/index';
 import type { Palette } from '../types';
 import { FOCUS_VISIBLE_SX } from '../utils/renderers';
 

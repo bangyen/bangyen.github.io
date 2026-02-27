@@ -118,7 +118,7 @@ export function useDrag<T = void>({
     touchTimeout = 500,
     posAttribute = 'data-pos',
     preventDefault = true,
-    transition = 'all 0.2s',
+    transition = 'all 150ms ease-in-out',
     ...callbacks
 }: UseDragOptions<T>) {
     // Grid-mode: wrap onToggle into an onAction with coordinate parsing

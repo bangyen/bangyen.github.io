@@ -117,7 +117,7 @@ export function SlantCanvasBoard({
                         const now = performance.now();
                         const birthday = slashBirthdays.current.get(pos) || 0;
                         const age = now - birthday;
-                        const duration = 200;
+                        const duration = 150;
 
                         let scale = 1;
                         let opacity = 1;
@@ -142,9 +142,9 @@ export function SlantCanvasBoard({
                             ctx.rotate(Math.PI / 4);
                         }
 
-                        ctx.shadowColor = `rgba(0, 0, 0, ${(0.4 * opacity).toString()})`;
-                        ctx.shadowBlur = 10 * (pxScale / 16);
-                        ctx.shadowOffsetY = 5 * (pxScale / 16);
+                        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+                        ctx.shadowBlur = 12 * (pxScale / 16);
+                        ctx.shadowOffsetY = 4 * (pxScale / 16);
 
                         ctx.beginPath();
                         const lineLength = cellSize * 1.1;
@@ -264,7 +264,7 @@ export function SlantCanvasBoard({
                 display: 'block',
                 width: `${totalWidthRem.toString()}rem`,
                 height: `${totalHeightRem.toString()}rem`,
-                borderRadius: '4px',
+                borderRadius: '8px',
                 overflow: 'hidden',
             }}
         />

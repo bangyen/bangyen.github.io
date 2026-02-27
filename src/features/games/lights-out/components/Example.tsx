@@ -1,7 +1,7 @@
 import { Typography, Box } from '@mui/material';
 import React, { useState, useEffect, useRef } from 'react';
 
-import { LIGHTS_OUT_STYLES } from '../config';
+import { LIGHTS_OUT_STYLES } from '../config/index';
 import type { Palette } from '../types';
 import { CanvasBoard } from './CanvasBoard';
 import { EXAMPLE_ANIMATION_DATA } from '../utils/animationData';
