@@ -27,6 +27,8 @@ export interface GameInfoProps {
     cardSx?: SxProps<Theme>;
     /** Optional per-step override for the scrollable content area sx. */
     contentSxOverride?: (step: number) => SxProps<Theme>;
+    /** Optional boolean array indicating which steps scroll and need padding. Defaults to `true` for steps >= 2. */
+    scrollableSteps?: boolean[];
     /** Optional key to persist the current step in localStorage. */
     persistenceKey?: string;
 }

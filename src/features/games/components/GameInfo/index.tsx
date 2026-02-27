@@ -208,6 +208,7 @@ export function GameInfoContent({
     extraSteps = [],
     cardSx,
     contentSxOverride,
+    scrollableSteps,
     persistenceKey,
     titleId,
 }: GameInfoContentProps) {
@@ -242,6 +243,10 @@ export function GameInfoContent({
         ? contentSxOverride(step)
         : infoContentSx(step);
 
+    const hasScrollPadding = scrollableSteps
+        ? !!scrollableSteps[step]
+        : step >= 2;
+
     return (
         <GlassCard
             onClick={(e: React.MouseEvent) => {
@@ -262,7 +267,9 @@ export function GameInfoContent({
                     </IconButton>
                 </Box>
 
-                <Box sx={infoStepContentSx(step)}>{steps[step]}</Box>
+                <Box sx={infoStepContentSx(hasScrollPadding)}>
+                    {steps[step]}
+                </Box>
             </Box>
 
             <StepNavigation

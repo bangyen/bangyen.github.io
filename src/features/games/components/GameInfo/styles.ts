@@ -67,18 +67,20 @@ export const infoCloseButtonSx: SxProps<Theme> = {
     color: COLORS.text.secondary,
 };
 
-/** Step-content wrapper. Accepts an optional step index so the scrollbar-
- *  compensating right padding only applies to steps that actually scroll. */
-export const infoStepContentSx = (step?: number): SxProps<Theme> => ({
+/** Step-content wrapper. Accepts a boolean indicating if the step should
+ *  receive scrollbar-compensating right padding on mobile. */
+export const infoStepContentSx = (
+    hasScrollPadding: boolean,
+): SxProps<Theme> => ({
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
-    // Apply right spacing to scrolling steps (2+) on mobile to
+    // Apply right spacing to scrolling steps on mobile to
     // prevent text from running too close to the edge/scrollbar.
     // Shifted from 'pr' to 'mr' to move the scrollbar itself further left.
-    mr: (step ?? 0) < 2 ? 0 : 2,
-    pr: (step ?? 0) < 2 ? 0 : { xs: 1, md: 0 },
-    overflowY: (step ?? 0) < 2 ? 'hidden' : 'auto',
+    mr: hasScrollPadding ? 2 : 0,
+    pr: hasScrollPadding ? { xs: 1, md: 0 } : 0,
+    overflowY: hasScrollPadding ? 'auto' : 'hidden',
     minHeight: 0,
 });
 

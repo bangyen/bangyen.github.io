@@ -15,6 +15,8 @@ const calculatorRootSx: SxProps<Theme> = {
     flex: 1,
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
     overflow: 'clip',
 };
 
@@ -95,7 +97,7 @@ export const InfoCalculator = React.memo(function InfoCalculator({
 }: InfoCalculatorProps) {
     const MAX_CELL = 3; // rem
     const cellSize = Math.min(size * (isMobile ? 0.9 : 0.8), MAX_CELL);
-    const cellWidth = cols < 7 ? cellSize * Math.pow(1.5, 3 / cols) : cellSize;
+    const cellWidth = cols < 6 ? cellSize * Math.pow(1.5, 3 / cols) : cellSize;
 
     // Use horizontal layout only when the two grid rows, buttons, and gaps
     // can comfortably fit side-by-side inside the modal (~55rem usable).
@@ -198,7 +200,18 @@ export const InfoCalculator = React.memo(function InfoCalculator({
                     />
                 </Box>
 
-                <Box sx={calculatorButtonGroupSx(useHorizontal, isMobileSm)}>
+                <Box
+                    sx={
+                        [
+                            calculatorButtonGroupSx(useHorizontal, isMobileSm),
+                            {
+                                width: useHorizontal
+                                    ? undefined
+                                    : `${BUTTON_WIDTH_REM.toString()}rem`,
+                            },
+                        ] as SxProps<Theme>
+                    }
+                >
                     <Button
                         variant="outlined"
                         size="small"

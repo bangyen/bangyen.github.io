@@ -88,6 +88,7 @@ export function LightsOutInfo({
                     hasPattern={hasPattern}
                 />,
             ]}
+            scrollableSteps={[false, false, false]}
             persistenceKey="lights_out_info_step"
         />
     );
