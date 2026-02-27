@@ -1,7 +1,6 @@
-import { BOARD_STYLES, createStorageKeys } from '../config/constants';
+import { BOARD_STYLES, createStorageKeys } from '../../config/constants';
 
 import { KeyboardArrowDown, Calculate, Replay } from '@/components/icons';
-import { LAYOUT } from '@/config/theme';
 
 export const LIGHTS_OUT_STYLES = {
     TRANSITION: {
@@ -24,7 +23,7 @@ export const LIGHTS_OUT_STYLES = {
     },
 };
 
-export const LAYOUT_CONSTANTS = {
+export const LIGHTS_OUT_LAYOUT_CONSTANTS = {
     ICON_SIZE_RATIO: 1.25,
     OFFSET: {
         MOBILE: -60,
@@ -32,15 +31,15 @@ export const LAYOUT_CONSTANTS = {
     },
 };
 
-export const STORAGE_KEYS = createStorageKeys('lights-out');
+export const LIGHTS_OUT_STORAGE_KEYS = createStorageKeys('lights-out');
 
-// ---------------------------------------------------------------------------
-// Info modal content (previously inline in Info.tsx)
-// ---------------------------------------------------------------------------
+export const LIGHTS_OUT_INFO_TITLES = [
+    'Chasing Lights',
+    'How It Works',
+    'Calculator',
+];
 
-export const INFO_TITLES = ['Chasing Lights', 'How It Works', 'Calculator'];
-
-export const INSTRUCTIONS = [
+export const LIGHTS_OUT_INSTRUCTIONS = [
     {
         Icon: KeyboardArrowDown,
         title: 'Chase to Bottom',
@@ -59,36 +58,7 @@ export const INSTRUCTIONS = [
 ];
 
 /** Example grid size constants for the info modal. */
-export const EXAMPLE_SIZE = {
+export const LIGHTS_OUT_EXAMPLE_SIZE = {
     MOBILE: 3,
     DESKTOP: 4,
 } as const;
-
-/**
- * Returns the `useBaseGame` configuration for Lights Out.
- * Note: responsive board padding (which depends on mobile state computed
- * in useBaseGame) should be inlined directly in the game hook or config.
- */
-export function getLightsOutGameConfig() {
-    return {
-        storageKey: 'lights-out',
-        grid: {
-            maxSize: 10,
-            headerOffset: {
-                mobile: LAYOUT.headerHeight.xs,
-                desktop: LAYOUT.headerHeight.md,
-            },
-            gridPadding: {
-                x: 80,
-                y: 60,
-            },
-        },
-        board: {
-            boardPadding: (mobile: boolean) => ({
-                x: mobile ? 40 : 120,
-                y: mobile ? 120 : 160,
-            }),
-            maxCellSize: 80,
-        },
-    };
-}

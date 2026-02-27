@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { GAME_CONSTANTS } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
@@ -8,7 +8,7 @@ import { useSkipTransition } from '../../hooks/useSkipTransition';
 import {
     LIGHTS_OUT_STYLES,
     getLightsOutGameConfig,
-    LAYOUT_CONSTANTS,
+    LIGHTS_OUT_LAYOUT_CONSTANTS,
 } from '../config';
 import type { BoardState, BoardAction } from '../types';
 import { handleBoard, isSolved, getInitialState } from '../utils/boardHandlers';
@@ -20,6 +20,7 @@ import {
 } from '../utils/renderers';
 
 import { COLORS } from '@/config/theme';
+import { useGameInfoState } from '@/features/games/hooks/useGameInfoState';
 
 /**
  * Orchestrates Lights Out game logic and prepares props for the UI.
@@ -92,10 +93,7 @@ export function useLightsOutGame() {
     }, []);
 
     // 2. Logic Handlers (inlined useHandler/useGetters)
-    const [infoOpen, setInfoOpen] = useState(false);
-    const toggleOpen = useCallback(() => {
-        setInfoOpen(prev => !prev);
-    }, []);
+    const { infoOpen, toggleInfo } = useGameInfoState();
 
     const handleApply = useCallback(
         (solution: number[]) => {
@@ -105,9 +103,9 @@ export function useLightsOutGame() {
             if (moves.length > 0) {
                 dispatch({ type: 'multi_adjacent', moves });
             }
-            toggleOpen();
+            toggleInfo();
         },
-        [dispatch, toggleOpen],
+        [dispatch, toggleInfo],
     );
 
     const getTile = useCallback(
@@ -180,8 +178,8 @@ export function useLightsOutGame() {
     const boardSx = useMemo(
         () => ({
             marginTop: mobile
-                ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
-                : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
+                ? `${String(LIGHTS_OUT_LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
+                : `${String(LIGHTS_OUT_LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
         }),
         [mobile],
     );
@@ -233,7 +231,7 @@ export function useLightsOutGame() {
         infoProps: {
             open: infoOpen,
             solved,
-            toggleOpen: toggleOpen,
+            toggleOpen: toggleInfo,
             board: { rows, cols, size },
             rendering: {
                 palette,

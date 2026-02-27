@@ -17,7 +17,7 @@ vi.mock('../../config', () => ({
         .fn()
         .mockReturnValue({ storageKey: 'lights-out' }),
     LIGHTS_OUT_STYLES: { TRANSITION: { FAST: 'fast' } },
-    LAYOUT_CONSTANTS: { OFFSET: { MOBILE: 1, DESKTOP: 2 } },
+    LIGHTS_OUT_LAYOUT_CONSTANTS: { OFFSET: { MOBILE: 1, DESKTOP: 2 } },
 }));
 vi.mock('@/hooks', () => ({
     useMobile: vi.fn().mockReturnValue(false),

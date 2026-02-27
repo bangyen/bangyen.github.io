@@ -18,6 +18,8 @@ import {
     persistSlantState,
 } from '../utils/persistence';
 
+import { useGameInfoState } from '@/features/games/hooks/useGameInfoState';
+
 type SlantDispatch = React.Dispatch<
     SlantAction | { type: 'hydrate'; state: SlantState }
 >;
@@ -29,11 +31,8 @@ type SlantDispatch = React.Dispatch<
 export function useSlantGame() {
     const [isAnalysisMode, setIsAnalysisMode] = useState(false);
 
-    // Inline redundant useGameInfo
-    const [infoOpen, setInfoOpen] = useState(false);
-    const toggleInfo = useCallback(() => {
-        setInfoOpen(prev => !prev);
-    }, []);
+    // Use shared info modal hook
+    const { infoOpen, toggleInfo } = useGameInfoState();
 
     // Refs kept in sync with useBaseGame output, shared with the worker hook.
     // We use a broader type for the ref to bridge useBaseGame's generic with useGenerationWorker's needs

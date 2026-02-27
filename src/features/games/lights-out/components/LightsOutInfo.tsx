@@ -2,7 +2,11 @@ import React from 'react';
 
 import { Example } from './Example';
 import { InfoCalculator } from './InfoCalculator';
-import { INFO_TITLES, INSTRUCTIONS, EXAMPLE_SIZE } from '../config';
+import {
+    LIGHTS_OUT_INFO_TITLES as INFO_TITLES,
+    LIGHTS_OUT_INSTRUCTIONS as INSTRUCTIONS,
+    LIGHTS_OUT_EXAMPLE_SIZE as EXAMPLE_SIZE,
+} from '../config';
 import { useCalculator } from '../hooks/useCalculator';
 import type { Palette } from '../types';
 
