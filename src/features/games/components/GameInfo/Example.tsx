@@ -64,7 +64,7 @@ export const ExampleActionButton = styled(Button)(({ theme }) => ({
     borderColor: COLORS.border.subtle,
     color: COLORS.text.secondary,
     width: '100%',
-    maxWidth: '160px',
+    maxWidth: '175px',
     [theme.breakpoints.up('sm')]: {
         width: '180px',
         maxWidth: 'none',
