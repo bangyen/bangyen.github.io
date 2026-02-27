@@ -34,7 +34,7 @@ export function SlantInfo({
             instructions={SLANT_INSTRUCTIONS}
             exampleContent={
                 <Example
-                    size={isMobile ? 4 : 4.5}
+                    size={isMobile ? 3 : 4}
                     handleOpenAnalysis={handleOpenAnalysis}
                 />
             }

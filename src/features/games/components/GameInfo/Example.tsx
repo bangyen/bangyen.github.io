@@ -23,13 +23,13 @@ export const ExampleContainer = styled(Box)(({ theme }) => ({
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: theme.spacing(0),
+    gap: theme.spacing(3), // Standardized 24px gap for mobile
     width: '100%',
     maxWidth: '800px',
     margin: 'auto',
     [theme.breakpoints.up('sm')]: {
         flexDirection: 'row',
-        gap: theme.spacing(10),
+        gap: theme.spacing(5),
         width: 'fit-content',
     },
 }));
@@ -51,7 +51,7 @@ export const ExampleActions = styled(Box)(({ theme }) => ({
     px: 1.5,
     [theme.breakpoints.up('sm')]: {
         gridTemplateColumns: 'minmax(0, 1fr)',
-        width: 'auto',
+        width: '180px', // Standardized width for actions container
         maxWidth: 'none',
         px: 0,
     },
@@ -191,6 +191,8 @@ export function GameInfoExample({
                     justifyContent: 'center',
                     alignItems: 'center',
                     flexShrink: 0,
+                    width: { xs: '100%', sm: '300px' }, // Standardized width
+                    minHeight: { xs: '240px', sm: '320px' }, // Standardized height (xs: 240px)
                 }}
             >
                 {renderFrame(frameIdx)}

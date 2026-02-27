@@ -72,7 +72,6 @@ const FrameRenderer = ({
                 width: '100%',
                 display: 'flex',
                 justifyContent: 'center',
-                minHeight: { xs: '20rem', sm: '22rem' },
                 cursor: 'pointer',
             }}
         >
