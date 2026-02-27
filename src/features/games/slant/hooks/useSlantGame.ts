@@ -3,7 +3,7 @@ import { useRef, useMemo, useCallback, useState } from 'react';
 
 import { useAnalysisMode } from './useAnalysisMode';
 import { useGenerationWorker } from './useGenerationWorker';
-import { GAME_CONSTANTS } from '../../config/constants';
+import { GAME_CONSTANTS, BOARD_STYLES } from '../../config/constants';
 import { useBaseGame } from '../../hooks/useBaseGame';
 import { useDrag } from '../../hooks/useDrag';
 import { useGridNavigation } from '../../hooks/useGridNavigation';
@@ -162,6 +162,14 @@ export function useSlantGame() {
             marginTop: mobile
                 ? `${String(LAYOUT_CONSTANTS.OFFSET.MOBILE)}px`
                 : `${String(LAYOUT_CONSTANTS.OFFSET.DESKTOP)}px`,
+            padding: {
+                xs: 0,
+                sm: BOARD_STYLES.PADDING.DESKTOP,
+            },
+            borderRadius: {
+                xs: 0,
+                sm: BOARD_STYLES.BORDER_RADIUS,
+            },
         }),
         [mobile],
     );
