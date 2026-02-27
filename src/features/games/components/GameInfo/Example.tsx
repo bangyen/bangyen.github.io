@@ -39,15 +39,16 @@ export const ExampleContainer = styled(Box)(({ theme }) => ({
  */
 export const ExampleActions = styled(Box)(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
+    gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
     gap: theme.spacing(1.5),
     justifyContent: 'center',
     justifyItems: 'center',
     alignItems: 'center',
     width: '100%',
     maxWidth: '320px',
+    margin: '0 auto',
     [theme.breakpoints.up('sm')]: {
-        gridTemplateColumns: '1fr',
+        gridTemplateColumns: 'minmax(0, 1fr)',
         width: 'auto',
         maxWidth: 'none',
     },
@@ -60,12 +61,16 @@ export const ExampleActions = styled(Box)(({ theme }) => ({
 export const ExampleActionButton = styled(Button)(({ theme }) => ({
     borderColor: COLORS.border.subtle,
     color: COLORS.text.secondary,
-    width: '140px',
+    width: '100%',
+    maxWidth: '140px',
     [theme.breakpoints.up('sm')]: {
-        width: '180px',
+        maxWidth: '180px',
     },
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1),
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
     '& .MuiButton-startIcon': {
         marginRight: theme.spacing(0.5),
         [theme.breakpoints.up('sm')]: {
