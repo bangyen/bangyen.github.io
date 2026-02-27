@@ -97,15 +97,48 @@ export const InfoCalculator = React.memo(function InfoCalculator({
 }: InfoCalculatorProps) {
     const MAX_CELL = 3; // rem
     const cellSize = Math.min(size * (isMobile ? 0.9 : 0.8), MAX_CELL);
-    const cellWidth = cols < 6 ? cellSize * Math.pow(1.5, 3 / cols) : cellSize;
 
-    // Use horizontal layout only when the two grid rows, buttons, and gaps
-    // can comfortably fit side-by-side inside the modal (~55rem usable).
-    const ROW_WIDTH_REM = cols * cellWidth;
-    const BUTTON_WIDTH_REM = 10; // approximate width of the button group
-    const GAP_REM = 3 * 0.5; // MUI gap: 3 → 24px ≈ 1.5rem per gap, ×2
-    const totalWidth = ROW_WIDTH_REM * 2 + BUTTON_WIDTH_REM + GAP_REM * 2;
-    const useHorizontal = !isMobile && totalWidth < 55;
+    // Calculate scaling factor for width.
+    const scaledCellWidth = cellSize * Math.pow(1.5, 3 / cols);
+
+    // Layout constants/thresholds.
+    const HORIZONTAL_THRESHOLD_REM = 55;
+    const BUTTON_WIDTH_REM = 10;
+    const GAP_REM = 3 * 0.5; // MUI gap: 3 → 24px ≈ 1.5rem per gap
+
+    // Check if scaled version fits horizontally.
+    const totalScaledWidthHorizontal =
+        cols * scaledCellWidth * 2 + BUTTON_WIDTH_REM + GAP_REM * 2;
+    const fitsScaledHorizontal =
+        !isMobile && totalScaledWidthHorizontal < HORIZONTAL_THRESHOLD_REM;
+
+    // Check if base version fits horizontally.
+    const totalBaseWidthHorizontal =
+        cols * cellSize * 2 + BUTTON_WIDTH_REM + GAP_REM * 2;
+    const fitsBaseHorizontal =
+        !isMobile && totalBaseWidthHorizontal < HORIZONTAL_THRESHOLD_REM;
+
+    // Determine cell width and layout orientation.
+    let cellWidth: number;
+    let useHorizontal: boolean;
+
+    if (fitsScaledHorizontal) {
+        cellWidth = scaledCellWidth;
+        useHorizontal = true;
+    } else if (fitsBaseHorizontal) {
+        cellWidth = cellSize;
+        useHorizontal = true;
+    } else {
+        // Fallback to vertical layout (always for mobile, or if horizontal doesn't fit).
+        useHorizontal = false;
+
+        // In vertical layout, we check if the grid is too wide for the container.
+        const VERTICAL_THRESHOLD_REM = isMobileSm ? 20 : isMobile ? 30 : 50;
+        const fitsScaledVertical =
+            cols * scaledCellWidth < VERTICAL_THRESHOLD_REM;
+
+        cellWidth = fitsScaledVertical ? scaledCellWidth : cellSize;
+    }
 
     // Enhance input props to be transparent while maintaining interaction
     const inputProps = React.useMemo(() => {
@@ -207,7 +240,7 @@ export const InfoCalculator = React.memo(function InfoCalculator({
                             {
                                 width: useHorizontal
                                     ? undefined
-                                    : `${BUTTON_WIDTH_REM.toString()}rem`,
+                                    : `${(isMobileSm ? BUTTON_WIDTH_REM : 25).toString()}rem`,
                             },
                         ] as SxProps<Theme>
                     }
