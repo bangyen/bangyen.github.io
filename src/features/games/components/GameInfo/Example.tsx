@@ -51,6 +51,8 @@ export const ExampleActions = styled(Box)(({ theme }) => ({
         gridTemplateColumns: 'minmax(0, 1fr)',
         width: 'auto',
         maxWidth: 'none',
+        flex: 1,
+        justifyContent: 'flex-start',
     },
 }));
 
@@ -183,12 +185,16 @@ export function GameInfoExample({
         <ExampleContainer>
             {/* Visual Frame */}
             <Box
-                sx={{
+                sx={theme => ({
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
                     flexShrink: 0,
-                }}
+                    [theme.breakpoints.up('sm')]: {
+                        flex: 1,
+                        justifyContent: 'flex-end',
+                    },
+                })}
             >
                 {renderFrame(frameIdx)}
             </Box>
