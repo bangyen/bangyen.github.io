@@ -27,6 +27,10 @@ export interface BoardSizeConfig {
     maxCellSize: number;
     /** Rem base value (typically 16) */
     remBase: number;
+    /** Extra row offset for board size calculation (e.g. +1 for Slant numbers). */
+    rowOffset?: number;
+    /** Extra col offset for board size calculation. */
+    colOffset?: number;
 }
 
 /**
@@ -67,6 +71,8 @@ export function calculateBoardSize({
     boardSizeFactor,
     maxCellSize,
     remBase,
+    rowOffset = 0,
+    colOffset = 0,
 }: BoardSizeConfig): number {
     const currentHeaderOffset = mobile
         ? headerOffset.mobile
@@ -78,9 +84,14 @@ export function calculateBoardSize({
     const maxW = (Math.min(width, boardMaxWidth) - pX) * boardSizeFactor;
     const maxH = (height - currentHeaderOffset - pY) * boardSizeFactor;
 
-    // Note: rows/cols are the base grid dims.
-    // For Slant, we use cols+1/rows+1 for divisions.
-    const pxSize = Math.min(maxW / cols, maxH / rows, maxCellSize);
+    const effectiveCols = cols + colOffset;
+    const effectiveRows = rows + rowOffset;
+
+    const pxSize = Math.min(
+        maxW / effectiveCols,
+        maxH / effectiveRows,
+        maxCellSize,
+    );
 
     return pxSize / remBase; // rem
 }
