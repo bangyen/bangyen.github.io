@@ -17,7 +17,7 @@ const patternContainerSx = {
     gap: 4,
     width: '100%',
     py: 2,
-    pl: { xs: 6, sm: 0 },
+    pl: { xs: 4, sm: 0 },
     pr: { xs: 2, sm: 4 },
 };
 
