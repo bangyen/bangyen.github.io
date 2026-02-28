@@ -27,9 +27,9 @@ A personal portfolio showcasing interactive games, algorithm implementation, and
 - **Pure TypeScript**: All game logic and algorithms implemented in TypeScript (no WASM)
 - **Algorithm Showcase**: Lights Out (GF(2) linear algebra), Slant (graph theory + DSU)
 - **Responsive Design**: Glassmorphism UI with dark/light theme toggle
-- **Game Features**: Grid sizing, localStorage persistence, algebraic solving, procedural generation
+- **Game Features**: Standardized UI visuals and harmonized game architecture
 - **Modern React**: React 19 with hooks, Material-UI 7, Vite 7 for fast builds
-- **Streamlined Tooling**: ESLint 9 (Flat Config) + Prettier for code quality
+- **Streamlined Tooling**: Automated research data updates with Python-based generation
 
 ## Tech Stack
 
@@ -77,7 +77,7 @@ bun start
 - `bun run build:analyze` - Build and analyze bundle sizes
 - `bun test` - Run Vitest tests
 - `bun run test:watch` - Run tests in watch mode
-- `bun run test:ci` - Run tests in CI mode (used by GitHub Actions)
+- `bun run ci` - Run tests in CI mode (used by GitHub Actions)
 - `bun run test:coverage` - Generate coverage report
 - `bun run type-check` - Run TypeScript type checking
 - `bun run lint` - Run ESLint checks
@@ -85,6 +85,7 @@ bun start
 - `bun run format` - Format code with Prettier
 - `bun run format:check` - Check Prettier formatting
 - `bun run lint:all` - Run lint and format checking
+- `bun run data:update` - Update research data (clones external repos, runs Python generation, and compresses results)
 - `bun run deploy` - Deploy to GitHub Pages (gh-pages branch)
 
 ## Project Structure
@@ -107,7 +108,11 @@ src/
 │   │   ├── types/      # Game type definitions
 │   │   └── config/     # Game configuration & constants
 │   ├── research/       # Research data visualization
-│   │   └── pages/      # ZSharp, Oligopoly pages
+│   │   ├── pages/      # ZSharp, Oligopoly pages
+│   │   ├── components/ # Research visualization components
+│   │   ├── hooks/      # Data handling hooks
+│   │   ├── utils/      # Analysis & simulation utilities
+│   │   └── types/      # Research data definitions
 │   └── home/           # Landing page with projects
 ├── hooks/              # Global React hooks (useTheme, useWorker, etc.)
 ├── utils/              # Shared utilities
