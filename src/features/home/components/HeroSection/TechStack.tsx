@@ -56,7 +56,12 @@ export function TechStack(): React.ReactElement {
                             key={skill.name}
                         >
                             <Box
+                                component="a"
+                                href={skill.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 sx={{
+                                    textDecoration: 'none',
                                     backgroundColor:
                                         COLORS.interactive.selected,
                                     border: `1px solid ${COLORS.interactive.selected}`,

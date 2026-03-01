@@ -30,6 +30,7 @@ export interface Urls {
 export interface Skill {
     name: string;
     icon: string;
+    url: string;
 }
 
 export interface Publication {
@@ -99,12 +100,20 @@ export const URLS: Urls = {
 };
 
 export const SKILLS: Skill[] = [
-    { name: 'Python', icon: 'Code' },
-    { name: 'PyTorch', icon: 'Psychology' },
-    { name: 'JavaScript', icon: 'Code' },
-    { name: 'AWS/GCP', icon: 'Cloud' },
-    { name: 'Docker', icon: 'Work' },
-    { name: 'TensorFlow', icon: 'Psychology' },
+    { name: 'Python', icon: 'Code', url: 'https://www.python.org/' },
+    { name: 'PyTorch', icon: 'Psychology', url: 'https://pytorch.org/' },
+    {
+        name: 'JavaScript',
+        icon: 'Code',
+        url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript',
+    },
+    { name: 'AWS/GCP', icon: 'Cloud', url: 'https://cloud.google.com/' }, // Using GCP as it's common, AWS is also fine. I'll use a general cloud link or just GCP. Actually let me just use GCP.
+    { name: 'Docker', icon: 'Work', url: 'https://www.docker.com/' },
+    {
+        name: 'TensorFlow',
+        icon: 'Psychology',
+        url: 'https://www.tensorflow.org/',
+    },
 ];
 
 export const META: Meta = {
