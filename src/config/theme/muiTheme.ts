@@ -89,8 +89,7 @@ export function createAppTheme(mode: 'light' | 'dark' = 'dark') {
                         ...buildCssVars(FEATURE_CSS_VARS, mode),
                     },
                     body: {
-                        transition:
-                            'background-color 200ms ease, color 200ms ease',
+                        // Removed non-composited transition to improve Lighthouse performance
                     },
                     '@keyframes fadeInUp': {
                         from: {
