@@ -148,7 +148,7 @@ export function HeroSection(): React.ReactElement {
                             {HOME_TEXT.hero.greeting}
                         </Typography>
 
-                        <Typography sx={heroNameSx}>
+                        <Typography variant="h1" component="h1" sx={heroNameSx}>
                             {PERSONAL_INFO.name}
                         </Typography>
 

@@ -1,5 +1,7 @@
 import type { RouteObject } from 'react-router-dom';
 
+import { Home } from './pages/Home';
+
 import { ROUTES } from '@/config/constants';
 
 /**
@@ -8,8 +10,5 @@ import { ROUTES } from '@/config/constants';
  */
 export const homeRoute: RouteObject = {
     path: ROUTES.pages.Home,
-    lazy: async () => {
-        const { Home } = await import('./pages/Home');
-        return { Component: Home };
-    },
+    element: <Home />,
 };
