@@ -26,8 +26,6 @@ const heroGreetingSx: SxProps<Theme> = {
     letterSpacing: '0.025em',
     textAlign: { xs: 'center', md: 'left' },
     marginBottom: 3,
-    opacity: 0,
-    animation: 'fadeInUp 0.35s ease-out forwards',
 };
 
 /** Full name heading. */
@@ -46,7 +44,7 @@ const heroNameSx: SxProps<Theme> = {
     textAlign: { xs: 'center', md: 'left' },
     opacity: 0,
     animation: 'fadeInUp 0.35s ease-out forwards',
-    animationDelay: '0.04s',
+    animationDelay: '0.02s',
 };
 
 /** Role / title subtitle. */
@@ -64,7 +62,7 @@ const heroTitleSx: SxProps<Theme> = {
     textAlign: { xs: 'center', md: 'left' },
     opacity: 0,
     animation: 'fadeInUp 0.35s ease-out forwards',
-    animationDelay: '0.08s',
+    animationDelay: '0.04s',
 };
 
 /** Row containing the location icon + text. */
@@ -75,7 +73,7 @@ const heroLocationRowSx: SxProps<Theme> = {
     marginBottom: 4,
     opacity: 0,
     animation: 'fadeInUp 0.35s ease-out forwards',
-    animationDelay: '0.12s',
+    animationDelay: '0.06s',
 };
 
 /** Location icon styling. */
@@ -99,7 +97,7 @@ const heroCtaRowSx: SxProps<Theme> = {
     justifyContent: { xs: 'center', md: 'flex-start' },
     opacity: 0,
     animation: 'fadeInUp 0.35s ease-out forwards',
-    animationDelay: '0.16s',
+    animationDelay: '0.08s',
 };
 
 /** "View Work" pill button. */
@@ -214,7 +212,7 @@ export function HeroSection(): React.ReactElement {
                             sx={{
                                 opacity: 0,
                                 animation: 'fadeInUp 0.35s ease-out forwards',
-                                animationDelay: '0.12s',
+                                animationDelay: '0.06s',
                             }}
                         >
                             <TechStack />
@@ -223,7 +221,7 @@ export function HeroSection(): React.ReactElement {
                             sx={{
                                 opacity: 0,
                                 animation: 'fadeInUp 0.35s ease-out forwards',
-                                animationDelay: '0.2s',
+                                animationDelay: '0.1s',
                             }}
                         >
                             <ConnectSection />
