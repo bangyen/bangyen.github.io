@@ -57,9 +57,6 @@ const heroTitleSx: SxProps<Theme> = {
     wordBreak: 'keep-all',
     hyphens: 'none',
     textAlign: { xs: 'center', md: 'left' },
-    opacity: 0,
-    animation: 'fadeInUp 0.35s ease-out forwards',
-    animationDelay: '0.04s',
 };
 
 /** Row containing the location icon + text. */
@@ -68,9 +65,6 @@ const heroLocationRowSx: SxProps<Theme> = {
     alignItems: 'center',
     justifyContent: { xs: 'center', md: 'flex-start' },
     marginBottom: 4,
-    opacity: 0,
-    animation: 'fadeInUp 0.35s ease-out forwards',
-    animationDelay: '0.06s',
 };
 
 /** Location icon styling. */
