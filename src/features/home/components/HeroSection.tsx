@@ -46,7 +46,7 @@ const heroNameSx: SxProps<Theme> = {
     textAlign: { xs: 'center', md: 'left' },
     opacity: 0,
     animation: 'fadeInUp 0.8s ease-out forwards',
-    animationDelay: '0.15s',
+    animationDelay: '0.1s',
 };
 
 /** Role / title subtitle. */
@@ -64,7 +64,7 @@ const heroTitleSx: SxProps<Theme> = {
     textAlign: { xs: 'center', md: 'left' },
     opacity: 0,
     animation: 'fadeInUp 0.8s ease-out forwards',
-    animationDelay: '0.3s',
+    animationDelay: '0.2s',
 };
 
 /** Row containing the location icon + text. */
@@ -75,7 +75,7 @@ const heroLocationRowSx: SxProps<Theme> = {
     marginBottom: 4,
     opacity: 0,
     animation: 'fadeInUp 0.8s ease-out forwards',
-    animationDelay: '0.45s',
+    animationDelay: '0.3s',
 };
 
 /** Location icon styling. */
@@ -99,7 +99,7 @@ const heroCtaRowSx: SxProps<Theme> = {
     justifyContent: { xs: 'center', md: 'flex-start' },
     opacity: 0,
     animation: 'fadeInUp 0.8s ease-out forwards',
-    animationDelay: '0.6s',
+    animationDelay: '0.4s',
 };
 
 /** "View Work" pill button. */
@@ -214,7 +214,7 @@ export function HeroSection(): React.ReactElement {
                             sx={{
                                 opacity: 0,
                                 animation: 'fadeInUp 0.8s ease-out forwards',
-                                animationDelay: '0.4s',
+                                animationDelay: '0.3s',
                             }}
                         >
                             <TechStack />
@@ -223,7 +223,7 @@ export function HeroSection(): React.ReactElement {
                             sx={{
                                 opacity: 0,
                                 animation: 'fadeInUp 0.8s ease-out forwards',
-                                animationDelay: '0.6s',
+                                animationDelay: '0.45s',
                             }}
                         >
                             <ConnectSection />
