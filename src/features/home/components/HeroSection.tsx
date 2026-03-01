@@ -27,7 +27,7 @@ const heroGreetingSx: SxProps<Theme> = {
     textAlign: { xs: 'center', md: 'left' },
     marginBottom: 3,
     opacity: 0,
-    animation: 'fadeInUp 0.4s ease-out forwards',
+    animation: 'fadeInUp 0.35s ease-out forwards',
 };
 
 /** Full name heading. */
@@ -45,8 +45,8 @@ const heroNameSx: SxProps<Theme> = {
     hyphens: 'none',
     textAlign: { xs: 'center', md: 'left' },
     opacity: 0,
-    animation: 'fadeInUp 0.4s ease-out forwards',
-    animationDelay: '0.05s',
+    animation: 'fadeInUp 0.35s ease-out forwards',
+    animationDelay: '0.04s',
 };
 
 /** Role / title subtitle. */
@@ -63,8 +63,8 @@ const heroTitleSx: SxProps<Theme> = {
     hyphens: 'none',
     textAlign: { xs: 'center', md: 'left' },
     opacity: 0,
-    animation: 'fadeInUp 0.4s ease-out forwards',
-    animationDelay: '0.1s',
+    animation: 'fadeInUp 0.35s ease-out forwards',
+    animationDelay: '0.08s',
 };
 
 /** Row containing the location icon + text. */
@@ -74,8 +74,8 @@ const heroLocationRowSx: SxProps<Theme> = {
     justifyContent: { xs: 'center', md: 'flex-start' },
     marginBottom: 4,
     opacity: 0,
-    animation: 'fadeInUp 0.4s ease-out forwards',
-    animationDelay: '0.15s',
+    animation: 'fadeInUp 0.35s ease-out forwards',
+    animationDelay: '0.12s',
 };
 
 /** Location icon styling. */
@@ -98,8 +98,8 @@ const heroCtaRowSx: SxProps<Theme> = {
     flexWrap: 'wrap',
     justifyContent: { xs: 'center', md: 'flex-start' },
     opacity: 0,
-    animation: 'fadeInUp 0.4s ease-out forwards',
-    animationDelay: '0.2s',
+    animation: 'fadeInUp 0.35s ease-out forwards',
+    animationDelay: '0.16s',
 };
 
 /** "View Work" pill button. */
@@ -213,8 +213,8 @@ export function HeroSection(): React.ReactElement {
                         <Box
                             sx={{
                                 opacity: 0,
-                                animation: 'fadeInUp 0.4s ease-out forwards',
-                                animationDelay: '0.15s',
+                                animation: 'fadeInUp 0.35s ease-out forwards',
+                                animationDelay: '0.12s',
                             }}
                         >
                             <TechStack />
@@ -222,8 +222,8 @@ export function HeroSection(): React.ReactElement {
                         <Box
                             sx={{
                                 opacity: 0,
-                                animation: 'fadeInUp 0.4s ease-out forwards',
-                                animationDelay: '0.25s',
+                                animation: 'fadeInUp 0.35s ease-out forwards',
+                                animationDelay: '0.2s',
                             }}
                         >
                             <ConnectSection />

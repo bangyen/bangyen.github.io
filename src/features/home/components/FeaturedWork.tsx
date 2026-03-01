@@ -35,8 +35,8 @@ export function FeaturedWork(): React.ReactElement {
             <Box
                 sx={{
                     opacity: 0,
-                    animation: 'fadeInUp 0.4s ease-out forwards',
-                    animationDelay: '0.3s',
+                    animation: 'fadeInUp 0.35s ease-out forwards',
+                    animationDelay: '0.2s',
                 }}
             >
                 <Typography sx={sectionTitleSx}>
@@ -49,8 +49,8 @@ export function FeaturedWork(): React.ReactElement {
                             key={publication.title}
                             sx={{
                                 opacity: 0,
-                                animation: 'fadeInUp 0.4s ease-out forwards',
-                                animationDelay: `${(0.4 + index * 0.05).toFixed(2)}s`,
+                                animation: 'fadeInUp 0.35s ease-out forwards',
+                                animationDelay: `${(0.25 + index * 0.04).toFixed(2)}s`,
                             }}
                         >
                             <PublicationCard publication={publication} />
@@ -61,8 +61,8 @@ export function FeaturedWork(): React.ReactElement {
                             key={project.title}
                             sx={{
                                 opacity: 0,
-                                animation: 'fadeInUp 0.4s ease-out forwards',
-                                animationDelay: `${(0.5 + index * 0.05).toFixed(2)}s`,
+                                animation: 'fadeInUp 0.35s ease-out forwards',
+                                animationDelay: `${(0.35 + index * 0.04).toFixed(2)}s`,
                             }}
                         >
                             <ProjectCard project={project} />
