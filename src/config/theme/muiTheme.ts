@@ -92,6 +92,16 @@ export function createAppTheme(mode: 'light' | 'dark' = 'dark') {
                         transition:
                             'background-color 200ms ease, color 200ms ease',
                     },
+                    '@keyframes fadeInUp': {
+                        from: {
+                            opacity: 0,
+                            transform: 'translateY(20px)',
+                        },
+                        to: {
+                            opacity: 1,
+                            transform: 'translateY(0)',
+                        },
+                    },
                 },
             },
             MuiButton: {

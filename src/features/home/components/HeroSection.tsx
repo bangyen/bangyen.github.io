@@ -47,16 +47,6 @@ const heroNameSx: SxProps<Theme> = {
     opacity: 0,
     animation: 'fadeInUp 0.8s ease-out forwards',
     animationDelay: '0.15s',
-    '@keyframes fadeInUp': {
-        from: {
-            opacity: 0,
-            transform: 'translateY(20px)',
-        },
-        to: {
-            opacity: 1,
-            transform: 'translateY(0)',
-        },
-    },
 };
 
 /** Role / title subtitle. */

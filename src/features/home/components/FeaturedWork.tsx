@@ -1,4 +1,4 @@
-import { Box, Typography, Fade } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import React from 'react';
 
@@ -8,7 +8,7 @@ import { Section } from './Layout';
 import { HOME_TEXT } from '../config/constants';
 
 import { PUBLICATIONS, PROJECTS } from '@/config/constants';
-import { COLORS, TYPOGRAPHY, ANIMATIONS } from '@/config/theme';
+import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
 /** Section heading that reads "Featured Work". */
 const sectionTitleSx: SxProps<Theme> = {
@@ -29,55 +29,47 @@ const cardGridSx: SxProps<Theme> = {
     gap: 4,
 };
 
-export interface AnimatedCardProps {
-    index: number;
-    baseTimeout: number;
-    children: React.ReactNode;
-}
-
-function AnimatedCard({
-    index,
-    baseTimeout,
-    children,
-}: AnimatedCardProps): React.ReactElement {
-    return (
-        <Fade in timeout={baseTimeout + index * ANIMATIONS.durations.stagger}>
-            <div>{children}</div>
-        </Fade>
-    );
-}
-
 export function FeaturedWork(): React.ReactElement {
     return (
         <Section id="featured-work">
-            <Fade in timeout={ANIMATIONS.durations.long + 800}>
-                <Box>
-                    <Typography sx={sectionTitleSx}>
-                        {HOME_TEXT.featuredWork.sectionTitle}
-                    </Typography>
+            <Box
+                sx={{
+                    opacity: 0,
+                    animation: 'fadeInUp 0.8s ease-out forwards',
+                    animationDelay: '0.8s',
+                }}
+            >
+                <Typography sx={sectionTitleSx}>
+                    {HOME_TEXT.featuredWork.sectionTitle}
+                </Typography>
 
-                    <Box sx={cardGridSx}>
-                        {PUBLICATIONS.map((publication, index) => (
-                            <AnimatedCard
-                                key={publication.title}
-                                index={index}
-                                baseTimeout={ANIMATIONS.durations.long + 1000}
-                            >
-                                <PublicationCard publication={publication} />
-                            </AnimatedCard>
-                        ))}
-                        {PROJECTS.map((project, index) => (
-                            <AnimatedCard
-                                key={project.title}
-                                index={index}
-                                baseTimeout={ANIMATIONS.durations.long + 1400}
-                            >
-                                <ProjectCard project={project} />
-                            </AnimatedCard>
-                        ))}
-                    </Box>
+                <Box sx={cardGridSx}>
+                    {PUBLICATIONS.map((publication, index) => (
+                        <Box
+                            key={publication.title}
+                            sx={{
+                                opacity: 0,
+                                animation: 'fadeInUp 0.8s ease-out forwards',
+                                animationDelay: `${(1 + index * 0.15).toFixed(2)}s`,
+                            }}
+                        >
+                            <PublicationCard publication={publication} />
+                        </Box>
+                    ))}
+                    {PROJECTS.map((project, index) => (
+                        <Box
+                            key={project.title}
+                            sx={{
+                                opacity: 0,
+                                animation: 'fadeInUp 0.8s ease-out forwards',
+                                animationDelay: `${(1.4 + index * 0.15).toFixed(2)}s`,
+                            }}
+                        >
+                            <ProjectCard project={project} />
+                        </Box>
+                    ))}
                 </Box>
-            </Fade>
+            </Box>
         </Section>
     );
 }
