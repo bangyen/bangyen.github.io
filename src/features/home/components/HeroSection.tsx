@@ -1,4 +1,4 @@
-import { Grid, Box, Typography, Fade } from '@mui/material';
+import { Grid, Box, Typography } from '@mui/material';
 import type { SxProps, Theme } from '@mui/material';
 import React from 'react';
 
@@ -219,12 +219,26 @@ export function HeroSection(): React.ReactElement {
                     size={{ xs: 12, md: 6 }}
                     sx={{ display: { xs: 'none', md: 'block' } }}
                 >
-                    <Fade in timeout={ANIMATIONS.durations.long}>
-                        <Box sx={heroRightColumnSx}>
+                    <Box sx={heroRightColumnSx}>
+                        <Box
+                            sx={{
+                                opacity: 0,
+                                animation: 'fadeInUp 0.8s ease-out forwards',
+                                animationDelay: '0.4s',
+                            }}
+                        >
                             <TechStack />
+                        </Box>
+                        <Box
+                            sx={{
+                                opacity: 0,
+                                animation: 'fadeInUp 0.8s ease-out forwards',
+                                animationDelay: '0.6s',
+                            }}
+                        >
                             <ConnectSection />
                         </Box>
-                    </Fade>
+                    </Box>
                 </Grid>
             </Grid>
         </HeroContainer>

@@ -50,7 +50,7 @@ function AnimatedCard({
 export function FeaturedWork(): React.ReactElement {
     return (
         <Section id="featured-work">
-            <Fade in timeout={ANIMATIONS.durations.long + 400}>
+            <Fade in timeout={ANIMATIONS.durations.long + 800}>
                 <Box>
                     <Typography sx={sectionTitleSx}>
                         {HOME_TEXT.featuredWork.sectionTitle}
@@ -61,7 +61,7 @@ export function FeaturedWork(): React.ReactElement {
                             <AnimatedCard
                                 key={publication.title}
                                 index={index}
-                                baseTimeout={ANIMATIONS.durations.long + 600}
+                                baseTimeout={ANIMATIONS.durations.long + 1000}
                             >
                                 <PublicationCard publication={publication} />
                             </AnimatedCard>
@@ -70,7 +70,7 @@ export function FeaturedWork(): React.ReactElement {
                             <AnimatedCard
                                 key={project.title}
                                 index={index}
-                                baseTimeout={ANIMATIONS.durations.long + 1000}
+                                baseTimeout={ANIMATIONS.durations.long + 1400}
                             >
                                 <ProjectCard project={project} />
                             </AnimatedCard>
