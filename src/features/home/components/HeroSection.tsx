@@ -25,6 +25,7 @@ const heroGreetingSx: SxProps<Theme> = {
     textTransform: 'uppercase',
     letterSpacing: '0.025em',
     textAlign: { xs: 'center', md: 'left' },
+    marginLeft: { md: '4px' },
     marginBottom: 3,
 };
 
@@ -57,6 +58,7 @@ const heroTitleSx: SxProps<Theme> = {
     wordBreak: 'keep-all',
     hyphens: 'none',
     textAlign: { xs: 'center', md: 'left' },
+    marginLeft: { md: '3px' },
 };
 
 /** Row containing the location icon + text. */
@@ -71,6 +73,7 @@ const heroLocationRowSx: SxProps<Theme> = {
 const heroLocationIconSx: SxProps<Theme> = {
     color: COLORS.text.secondary,
     fontSize: '1.25rem',
+    marginLeft: { md: '1px' },
 };
 
 /** Location text label. */
