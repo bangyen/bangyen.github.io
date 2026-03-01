@@ -42,9 +42,6 @@ const heroNameSx: SxProps<Theme> = {
     wordBreak: 'keep-all',
     hyphens: 'none',
     textAlign: { xs: 'center', md: 'left' },
-    opacity: 0,
-    animation: 'fadeInUp 0.35s ease-out forwards',
-    animationDelay: '0.02s',
 };
 
 /** Role / title subtitle. */
