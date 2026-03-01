@@ -8,12 +8,6 @@ import { createAppTheme } from './config/theme';
 import { ThemeProvider, useThemeContext } from './hooks/useTheme';
 import { GlobalStyles } from './styles/GlobalStyles';
 
-import '@fontsource/inter/300.css';
-import '@fontsource/inter/400.css';
-import '@fontsource/inter/500.css';
-import '@fontsource/inter/600.css';
-import '@fontsource/inter/700.css';
-
 /**
  * Root application component that provides MUI theming and renders
  * the data router.  Lazy route loading and error boundaries are
