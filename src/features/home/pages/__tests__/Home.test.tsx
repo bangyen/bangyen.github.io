@@ -33,17 +33,26 @@ const TestWrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 // Mock Material-UI icons
-vi.mock('@mui/icons-material', async importOriginal => {
-    const original = await importOriginal<Record<string, any>>();
-    return {
-        ...original,
-        LightModeRounded: () => <div data-testid="light-mode-icon" />,
-        DarkModeRounded: () => <div data-testid="dark-mode-icon" />,
-        ViewModuleRounded: () => <div data-testid="view-module-icon" />,
-        GitHub: () => <div data-testid="github-icon" />,
-        LocationOn: () => <div data-testid="location-icon" />,
-    };
-});
+vi.mock('@mui/icons-material', () => ({
+    LightModeRounded: () => <div data-testid="light-mode-icon" />,
+    DarkModeRounded: () => <div data-testid="dark-mode-icon" />,
+    ViewModuleRounded: () => <div data-testid="view-module-icon" />,
+    GitHub: () => <div data-testid="github-icon" />,
+    LocationOn: () => <div data-testid="location-icon" />,
+    ArrowForward: () => <div data-testid="arrow-forward-icon" />,
+    OpenInNew: () => <div data-testid="open-in-new-icon" />,
+    Work: () => <div data-testid="work-icon" />,
+    Code: () => <div data-testid="code-icon" />,
+    Psychology: () => <div data-testid="psychology-icon" />,
+    Cloud: () => <div data-testid="cloud-icon" />,
+    Refresh: () => <div data-testid="refresh-icon" />,
+    ArrowBackRounded: () => <div data-testid="arrow-back-icon" />,
+    HomeRounded: () => <div data-testid="home-icon" />,
+    NavigateBeforeRounded: () => <div data-testid="navigate-before-icon" />,
+    NavigateNextRounded: () => <div data-testid="navigate-next-icon" />,
+    CloseRounded: () => <div data-testid="close-icon" />,
+    GamepadRounded: () => <div data-testid="gamepad-icon" />,
+}));
 
 // Mock the Pages module
 vi.mock('../../../../pages', () => ({
