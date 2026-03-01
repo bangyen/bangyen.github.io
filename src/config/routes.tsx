@@ -4,6 +4,7 @@ import { ROUTES } from './constants';
 
 import { RouteFeatureError } from '@/components/layout/RouteFeatureError';
 import { RouteRootError } from '@/components/layout/RouteRootError';
+import { LoadingFallback } from '@/components/ui/LoadingFallback';
 import { lightsOutRoute } from '@/features/games/lights-out/route';
 import { slantRoute } from '@/features/games/slant/route';
 import { homeRoute } from '@/features/home/route';
@@ -21,6 +22,7 @@ export const router = createHashRouter(
     [
         {
             errorElement: <RouteRootError />,
+            hydrateFallbackElement: <LoadingFallback />,
             element: <Outlet />,
             children: [
                 {
