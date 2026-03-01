@@ -26,6 +26,8 @@ const heroGreetingSx: SxProps<Theme> = {
     letterSpacing: '0.025em',
     textAlign: { xs: 'center', md: 'left' },
     marginBottom: 3,
+    opacity: 0,
+    animation: 'fadeInUp 0.8s ease-out forwards',
 };
 
 /** Full name heading. */
@@ -42,7 +44,9 @@ const heroNameSx: SxProps<Theme> = {
     wordBreak: 'keep-all',
     hyphens: 'none',
     textAlign: { xs: 'center', md: 'left' },
+    opacity: 0,
     animation: 'fadeInUp 0.8s ease-out forwards',
+    animationDelay: '0.15s',
     '@keyframes fadeInUp': {
         from: {
             opacity: 0,
@@ -68,6 +72,9 @@ const heroTitleSx: SxProps<Theme> = {
     wordBreak: 'keep-all',
     hyphens: 'none',
     textAlign: { xs: 'center', md: 'left' },
+    opacity: 0,
+    animation: 'fadeInUp 0.8s ease-out forwards',
+    animationDelay: '0.3s',
 };
 
 /** Row containing the location icon + text. */
@@ -76,6 +83,9 @@ const heroLocationRowSx: SxProps<Theme> = {
     alignItems: 'center',
     justifyContent: { xs: 'center', md: 'flex-start' },
     marginBottom: 4,
+    opacity: 0,
+    animation: 'fadeInUp 0.8s ease-out forwards',
+    animationDelay: '0.45s',
 };
 
 /** Location icon styling. */
@@ -97,6 +107,9 @@ const heroCtaRowSx: SxProps<Theme> = {
     gap: 2,
     flexWrap: 'wrap',
     justifyContent: { xs: 'center', md: 'flex-start' },
+    opacity: 0,
+    animation: 'fadeInUp 0.8s ease-out forwards',
+    animationDelay: '0.6s',
 };
 
 /** "View Work" pill button. */
