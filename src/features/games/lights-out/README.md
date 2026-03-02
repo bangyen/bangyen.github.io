@@ -108,11 +108,15 @@ bun src/features/games/lights-out/scripts/verify_periodicity.ts 1-20 --proof
 bun src/features/games/lights-out/scripts/verify_periodicity.ts 1-10 1000
 ```
 
-Example (search up to 50x50):
-
 ```bash
 bun src/features/games/lights-out/scripts/verify_identity.ts 50
 ```
+
+## Developer Quick Start
+
+- **Modifying the Solver**: The core solving logic is in `src/utils/math/gf2/`. You don't need to touch the matrix recurrences unless you're changing the game's fundamental underlying algebra.
+- **UI Integration**: The `LightsOut` board component uses the `useLightsOut` hook to manage state. To change how the grid is rendered, focus on `src/features/games/lights-out/components/Board.tsx`.
+- **Debugging**: Use `verify_identity.ts` to test if your changes to the solver still produce valid identity grids.
 
 ## References
 

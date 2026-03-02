@@ -8,7 +8,7 @@
 
 A personal portfolio showcasing interactive games, algorithm implementation, and research visualization. Built with React and optimized with Vite.
 
-**Live Site**: [https://bangyen.github.io](https://bangyen.github.io)
+**Live Site**: [https://bangyen.github.io](https://bangyen.github.io) | **System Overview**: [ARCHITECTURE.md](ARCHITECTURE.md)
 
 ## Features
 
@@ -46,6 +46,7 @@ A personal portfolio showcasing interactive games, algorithm implementation, and
 ### Prerequisites
 
 - [Bun](https://bun.sh/) (v1.1 or higher)
+- **Python 3.x** (Required for `bun run data:update`)
 
 ### Installation
 
