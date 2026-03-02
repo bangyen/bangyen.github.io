@@ -87,6 +87,9 @@ bun start
 - `bun run format:check` - Check Prettier formatting
 - `bun run lint:all` - Run lint and format checking
 - `bun run data:update` - Update research data (clones external repos, runs Python generation, and compresses results)
+  - **Prerequisites**: Requires Python 3.x and `git`.
+  - **Note**: This script creates a virtual environment in `temp_research_repos/` and installs dependencies automatically.
+  - **Troubleshooting**: If it fails, try `bun run data:update -- --clean` to start from a fresh state.
 - `bun run deploy` - Deploy to GitHub Pages (gh-pages branch)
 
 ## Project Structure

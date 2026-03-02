@@ -26,7 +26,7 @@ To keep the codebase maintainable, we strictly separate the "Engine" (mathematic
 
 ### Key Implementation Patterns
 
-1.  **Web Workers**: Computationally expensive algorithms (like puzzle generation) are often offloaded to Web Workers. See `src/hooks/useWorker.ts` and feature-specific `workers/` directories.
+1.  **Web Workers**: Computationally expensive algorithms (like puzzle generation) are often offloaded to Web Workers. See feature-specific `hooks/` directories (e.g., `src/features/games/slant/hooks/useGenerationWorker.ts`) and `workers/` directories.
 2.  **Domain-Specific Math**: 
     - **Lights Out**: Uses GF(2) linear algebra. The "brain" is in `src/utils/math/gf2/`.
     - **Slant**: Uses graph theory and Disjoint Set Union (DSU). The "brain" is in `src/features/games/slant/utils/cycleDetection.ts` and `src/utils/DSU.ts`.

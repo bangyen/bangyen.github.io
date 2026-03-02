@@ -11,6 +11,17 @@ import { createGameReducer, getPosKey } from '@/utils/gameUtils';
 export const getGrid = (rows: number): number[] =>
     new Array<number>(rows).fill(0);
 
+/**
+ * Bitwise operations for row-major grid representation.
+ * Each number in the grid array represents a row, with bits
+ * corresponding to column indices.
+ */
+const getBitMask = (col: number) => 1 << col;
+const isBitSet = (rowVal: number, col: number) =>
+    (rowVal & getBitMask(col)) !== 0;
+const toggleBit = (rowVal: number, col: number) => rowVal ^ getBitMask(col);
+const toggleRowMask = (rowVal: number, mask: number) => rowVal ^ mask;
+
 export function flipAdj(
     row: number,
     col: number,
@@ -21,23 +32,24 @@ export function flipAdj(
     const newGrid = [...grid];
 
     // Toggle self and left/right
-    let mask = 1 << col;
+    let mask = getBitMask(col);
     // Check boundaries for left/right
-    if (col > 0) mask |= 1 << (col - 1);
-    if (col < cols - 1) mask |= 1 << (col + 1);
+    if (col > 0) mask |= getBitMask(col - 1);
+    if (col < cols - 1) mask |= getBitMask(col + 1);
 
-    if (newGrid[row] !== undefined) newGrid[row] ^= mask;
+    if (newGrid[row] !== undefined)
+        newGrid[row] = toggleRowMask(newGrid[row], mask);
 
     // Toggle up
     if (row > 0) {
         const val = newGrid[row - 1];
-        if (val !== undefined) newGrid[row - 1] = val ^ (1 << col);
+        if (val !== undefined) newGrid[row - 1] = toggleBit(val, col);
     }
 
     // Toggle down
     if (row < rows - 1) {
         const val = newGrid[row + 1];
-        if (val !== undefined) newGrid[row + 1] = val ^ (1 << col);
+        if (val !== undefined) newGrid[row + 1] = toggleBit(val, col);
     }
 
     return newGrid;
@@ -50,20 +62,20 @@ function flipAdjInPlace(
     rows: number,
     cols: number,
 ): void {
-    let mask = 1 << col;
-    if (col > 0) mask |= 1 << (col - 1);
-    if (col < cols - 1) mask |= 1 << (col + 1);
+    let mask = getBitMask(col);
+    if (col > 0) mask |= getBitMask(col - 1);
+    if (col < cols - 1) mask |= getBitMask(col + 1);
 
-    if (grid[row] !== undefined) grid[row] ^= mask;
+    if (grid[row] !== undefined) grid[row] = toggleRowMask(grid[row], mask);
 
     if (row > 0) {
         const val = grid[row - 1];
-        if (val !== undefined) grid[row - 1] = val ^ (1 << col);
+        if (val !== undefined) grid[row - 1] = toggleBit(val, col);
     }
 
     if (row < rows - 1) {
         const val = grid[row + 1];
-        if (val !== undefined) grid[row + 1] = val ^ (1 << col);
+        if (val !== undefined) grid[row + 1] = toggleBit(val, col);
     }
 }
 
@@ -102,7 +114,7 @@ function solveLastRow(
             if (rowInv !== undefined) {
                 const dot = rowInv & lastRow;
                 if (countBits(BigInt(dot)) % 2 === 1) {
-                    solutionMask |= 1 << i;
+                    solutionMask |= getBitMask(i);
                 }
             }
         }
@@ -110,20 +122,20 @@ function solveLastRow(
         // Fallback to calculateSolutionVector
         const input: number[] = [];
         for (let i = 0; i < cols; i++) {
-            input.push((lastRow >> i) & 1);
+            input.push(isBitSet(lastRow, i) ? 1 : 0);
         }
 
         const result = calculateSolutionVector(input, rows, cols);
         if (result) {
             for (const [idx, val] of result.entries()) {
-                if (val) solutionMask |= 1 << idx;
+                if (val) solutionMask |= getBitMask(idx);
             }
         }
     }
 
     const indices: number[] = [];
     for (let c = 0; c < cols; c++) {
-        if ((solutionMask >> c) & 1) {
+        if (isBitSet(solutionMask, c)) {
             indices.push(c);
         }
     }
@@ -143,7 +155,7 @@ export function getNextMove(
         const currentRow = tempGrid[r];
         if (currentRow === undefined) continue;
         for (let c = 0; c < cols; c++) {
-            if ((currentRow >> c) & 1) {
+            if (isBitSet(currentRow, c)) {
                 moves.push({ row: r + 1, col: c });
                 flipAdjInPlace(r + 1, c, tempGrid, rows, cols);
             }
