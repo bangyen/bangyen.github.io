@@ -1,12 +1,16 @@
 import { describe, it, expect } from 'vitest';
 
-import { createGameReducer, type BaseGameAction } from '../gameUtils';
+import {
+    createGameReducer,
+    getPosKey,
+    type BaseGameAction,
+} from '../gameUtils';
 
 describe('gameUtils', () => {
     describe('getPosKey', () => {
         it('should return correct key for given coordinates', () => {
-            expect(`0,0`).toBe('0,0');
-            expect(`10,20`).toBe('10,20');
+            expect(getPosKey(0, 0)).toBe('0,0');
+            expect(getPosKey(10, 20)).toBe('10,20');
         });
     });
 

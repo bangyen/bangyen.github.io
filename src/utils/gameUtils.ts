@@ -1,4 +1,14 @@
 /**
+ * Generates a unique string key for a grid position.
+ * @param r - Row index
+ * @param c - Column index
+ * @returns String in format "r,c"
+ */
+export function getPosKey(r: number, c: number): string {
+    return `${String(r)},${String(c)}`;
+}
+
+/**
  * Base state properties common to all grid-based games.
  */
 export interface BaseGameState {

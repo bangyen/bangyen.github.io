@@ -5,7 +5,6 @@ import { useBaseGame } from '../../../hooks/useBaseGame';
 import { useDrag } from '../../../hooks/useDrag';
 import { useGridNavigation } from '../../../hooks/useGridNavigation';
 import { useSkipTransition } from '../../../hooks/useSkipTransition';
-import { getFrontProps } from '../../utils/renderers';
 import { useLightsOutGame } from '../useLightsOutGame';
 
 vi.mock('../../../hooks/useBaseGame');
@@ -33,7 +32,12 @@ vi.mock('../hooks/boardUtils', () => ({
     }),
 }));
 vi.mock('../../utils/renderers', () => ({
-    getFrontProps: vi.fn().mockReturnValue(() => ({})),
+    getFrontProps: vi
+        .fn()
+        .mockImplementation(
+            getDragProps => (r: number, c: number) =>
+                getDragProps(`${String(r)},${String(c)}`),
+        ),
     getBackProps: vi.fn().mockReturnValue(() => ({})),
     getCellVisualProps: vi.fn().mockReturnValue(() => ({})),
 }));
@@ -122,13 +126,33 @@ describe('useLightsOutGame', () => {
     it('passes enhanced drag props with grid navigation to UI props', () => {
         const { result } = renderHook(() => useLightsOutGame());
 
-        expect(result.current.layers).toBeDefined();
+        expect(result.current.layers).toHaveLength(2);
+        const frontLayer = result.current.layers[1];
+        expect(frontLayer).toBeDefined();
+
+        const cellProps = frontLayer!.cellProps(0, 0);
+        expect(cellProps).toHaveProperty('onKeyDown');
     });
 
     it('enhanced onKeyDown invokes both drag and grid navigation handlers', () => {
-        renderHook(() => useLightsOutGame());
+        const { result } = renderHook(() => useLightsOutGame());
+        const frontLayer = result.current.layers[1];
+        const cellProps = frontLayer!.cellProps(0, 0) as any;
 
-        expect(getFrontProps).toHaveBeenCalled();
+        const mockEvent = {
+            key: 'ArrowRight',
+            preventDefault: vi.fn(),
+            stopPropagation: vi.fn(),
+        } as unknown as React.KeyboardEvent;
+
+        act(() => {
+            cellProps.onKeyDown(mockEvent);
+        });
+
+        // Verify it called grid navigation
+        expect(mockHandleGridNav).toHaveBeenCalledWith(mockEvent);
+        // Verify it also called drag handler
+        expect(mockDragOnKeyDown).toHaveBeenCalledWith(mockEvent);
     });
 
     it('calls useGridNavigation with correct dimensions', () => {
