@@ -1,12 +1,8 @@
-import { PRECOMPUTED_SOLUTIONS } from './precomputedTables';
-import {
-    countBits,
-    calculateSolutionVector,
-} from '../../../../utils/math/gf2/gf2Operations';
+import { calculateSolutionVector } from '../../../../utils/math/gf2/gf2Operations';
 import type { BoardState, BoardAction } from '../types';
 
 import { validateGridSize } from '@/features/games/types';
-import { createGameReducer, getPosKey } from '@/utils/gameUtils';
+import { createGameReducer } from '@/utils/gameUtils';
 
 export const getGrid = (rows: number): number[] =>
     new Array<number>(rows).fill(0);
@@ -125,32 +121,17 @@ function solveLastRow(
     cols: number,
     lastRow: number,
 ): number[] | null {
-    const key = getPosKey(rows, cols);
-    const precomputed = PRECOMPUTED_SOLUTIONS[key];
-
     let solutionMask = 0;
 
-    if (precomputed) {
-        for (let i = 0; i < cols; i++) {
-            const rowInv = precomputed[i];
-            if (rowInv !== undefined) {
-                const dot = rowInv & lastRow;
-                if (countBits(BigInt(dot)) % 2 === 1) {
-                    solutionMask |= getBitMask(i);
-                }
-            }
-        }
-    } else {
-        const input: number[] = [];
-        for (let i = 0; i < cols; i++) {
-            input.push(isBitSet(lastRow, i) ? 1 : 0);
-        }
+    const input: number[] = [];
+    for (let i = 0; i < cols; i++) {
+        input.push(isBitSet(lastRow, i) ? 1 : 0);
+    }
 
-        const result = calculateSolutionVector(input, rows, cols);
-        if (result) {
-            for (const [idx, val] of result.entries()) {
-                if (val) solutionMask |= getBitMask(idx);
-            }
+    const result = calculateSolutionVector(input, rows, cols);
+    if (result) {
+        for (const [idx, val] of result.entries()) {
+            if (val) solutionMask |= getBitMask(idx);
         }
     }
 
