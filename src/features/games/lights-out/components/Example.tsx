@@ -5,6 +5,7 @@ import { LIGHTS_OUT_STYLES } from '../config/index';
 import type { Palette } from '../types';
 import { CanvasBoard } from './CanvasBoard';
 import { EXAMPLE_ANIMATION_DATA } from '../utils/animationData';
+import { to2DGrid } from '../utils/boardHandlers';
 
 import {
     EmojiEventsRounded,
@@ -55,13 +56,11 @@ const FrameRenderer = ({
 
     const indicator = EXAMPLE_ANIMATION_DATA.indicators[remainder] ?? null;
 
-    const boardGrid2D = gridState.grid.map(rowVal => {
-        const row: number[] = [];
-        for (let c = 0; c < dims; c++) {
-            row.push((rowVal >> c) & 1);
-        }
-        return row;
-    });
+    const boardGrid2D = to2DGrid(
+        gridState.grid,
+        gridState.rows,
+        gridState.cols,
+    );
 
     return (
         <Box

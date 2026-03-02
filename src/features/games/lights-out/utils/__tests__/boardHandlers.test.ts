@@ -1,18 +1,14 @@
 import {
     getGrid,
-    flipAdj,
-    handleBoard,
+    toggleAdjacent,
+    boardReducer,
     getNextMove,
     isSolved,
+    getCellValue,
 } from '../boardHandlers';
 
 import type { BoardAction } from '@/features/games/lights-out/types';
 import type { CellIndex } from '@/features/games/types';
-
-// Helper to access bitmask grid
-function getBit(grid: number[], r: number, c: number): number {
-    return (grid[r]! >> c) & 1;
-}
 
 describe('boardHandlers', () => {
     describe('getGrid', () => {
@@ -34,20 +30,20 @@ describe('boardHandlers', () => {
             const cols = 3;
             const grid = getGrid(rows);
             // Flip center
-            const newGrid = flipAdj(1, 1, grid, rows, cols);
+            const newGrid = toggleAdjacent(1, 1, grid, rows, cols);
 
             // Center should be 1
-            expect(getBit(newGrid, 1, 1)).toBe(1);
+            expect(getCellValue(newGrid, 1, 1)).toBe(1);
             // Neighbors should be 1
-            expect(getBit(newGrid, 0, 1)).toBe(1); // Top
-            expect(getBit(newGrid, 2, 1)).toBe(1); // Bottom
-            expect(getBit(newGrid, 1, 0)).toBe(1); // Left
-            expect(getBit(newGrid, 1, 2)).toBe(1); // Right
+            expect(getCellValue(newGrid, 0, 1)).toBe(1); // Top
+            expect(getCellValue(newGrid, 2, 1)).toBe(1); // Bottom
+            expect(getCellValue(newGrid, 1, 0)).toBe(1); // Left
+            expect(getCellValue(newGrid, 1, 2)).toBe(1); // Right
             // Corners should stay 0
-            expect(getBit(newGrid, 0, 0)).toBe(0);
-            expect(getBit(newGrid, 0, 2)).toBe(0);
-            expect(getBit(newGrid, 2, 0)).toBe(0);
-            expect(getBit(newGrid, 2, 2)).toBe(0);
+            expect(getCellValue(newGrid, 0, 0)).toBe(0);
+            expect(getCellValue(newGrid, 0, 2)).toBe(0);
+            expect(getCellValue(newGrid, 2, 0)).toBe(0);
+            expect(getCellValue(newGrid, 2, 2)).toBe(0);
         });
 
         it('should handle corners correctly', () => {
@@ -55,12 +51,12 @@ describe('boardHandlers', () => {
             const cols = 3;
             const grid = getGrid(rows);
             // Flip top-left
-            const newGrid = flipAdj(0, 0, grid, rows, cols);
+            const newGrid = toggleAdjacent(0, 0, grid, rows, cols);
 
-            expect(getBit(newGrid, 0, 0)).toBe(1);
-            expect(getBit(newGrid, 0, 1)).toBe(1); // Right neighbor
-            expect(getBit(newGrid, 1, 0)).toBe(1); // Bottom neighbor
-            expect(getBit(newGrid, 1, 1)).toBe(0); // Diagonal
+            expect(getCellValue(newGrid, 0, 0)).toBe(1);
+            expect(getCellValue(newGrid, 0, 1)).toBe(1); // Right neighbor
+            expect(getCellValue(newGrid, 1, 0)).toBe(1); // Bottom neighbor
+            expect(getCellValue(newGrid, 1, 1)).toBe(0); // Diagonal
         });
     });
 
@@ -79,9 +75,9 @@ describe('boardHandlers', () => {
                 row: 1,
                 col: 1,
             };
-            const newState = handleBoard(initialState, action);
+            const newState = boardReducer(initialState, action);
 
-            expect(getBit(newState.grid, 1, 1)).toBe(1);
+            expect(getCellValue(newState.grid, 1, 1)).toBe(1);
             expect(newState.score).toBe(0);
         });
 
@@ -89,21 +85,21 @@ describe('boardHandlers', () => {
             // First modify state
             const modifiedState = {
                 ...initialState,
-                grid: flipAdj(1, 1, initialState.grid, 3, 3),
+                grid: toggleAdjacent(1, 1, initialState.grid, 3, 3),
                 score: 5,
                 initialized: true,
             };
 
             const action: BoardAction = { type: 'reset' };
-            const newState = handleBoard(modifiedState, action);
+            const newState = boardReducer(modifiedState, action);
 
             expect(newState.score).toBe(0);
-            expect(getBit(newState.grid, 1, 1)).toBe(0);
+            expect(getCellValue(newState.grid, 1, 1)).toBe(0);
         });
 
         it('should handle random action', () => {
-            const action: BoardAction = { type: 'random' };
-            const newState = handleBoard(initialState, action);
+            const action: BoardAction = { type: 'randomize' };
+            const newState = boardReducer(initialState, action);
 
             expect(newState.grid.length).toBe(3);
         });
@@ -114,7 +110,7 @@ describe('boardHandlers', () => {
                 rows: 4,
                 cols: 4,
             };
-            const newState = handleBoard(initialState, action);
+            const newState = boardReducer(initialState, action);
 
             expect(newState.rows).toBe(4);
             expect(newState.cols).toBe(4);
@@ -184,7 +180,7 @@ describe('boardHandlers', () => {
             };
 
             const action: BoardAction = { type: 'next' };
-            const newState = handleBoard(state, action);
+            const newState = boardReducer(state, action);
 
             expect(newState.score).toBe(1);
             expect(newState.grid.length).toBe(3);
@@ -206,13 +202,13 @@ describe('boardHandlers', () => {
             ];
             const action: BoardAction = { type: 'multi_adjacent', moves };
 
-            const newState = handleBoard(state, action);
+            const newState = boardReducer(state, action);
 
-            expect(getBit(newState.grid, 0, 0)).toBe(0);
-            expect(getBit(newState.grid, 0, 1)).toBe(0);
-            expect(getBit(newState.grid, 1, 0)).toBe(1);
-            expect(getBit(newState.grid, 0, 2)).toBe(1);
-            expect(getBit(newState.grid, 1, 1)).toBe(1);
+            expect(getCellValue(newState.grid, 0, 0)).toBe(0);
+            expect(getCellValue(newState.grid, 0, 1)).toBe(0);
+            expect(getCellValue(newState.grid, 1, 0)).toBe(1);
+            expect(getCellValue(newState.grid, 0, 2)).toBe(1);
+            expect(getCellValue(newState.grid, 1, 1)).toBe(1);
         });
     });
 
@@ -345,7 +341,7 @@ describe('boardHandlers', () => {
                 rows: 4,
                 cols: 5,
             };
-            const newState = handleBoard(state, action);
+            const newState = boardReducer(state, action);
 
             expect(newState.rows).toBe(4);
             expect(newState.cols).toBe(5);
@@ -365,7 +361,7 @@ describe('boardHandlers', () => {
                 rows: 5,
                 cols: 3,
             };
-            const newState = handleBoard(state, action);
+            const newState = boardReducer(state, action);
 
             expect(newState.rows).toBe(5);
         });
@@ -384,7 +380,7 @@ describe('boardHandlers', () => {
                 rows: 3,
                 cols: 6,
             };
-            const newState = handleBoard(state, action);
+            const newState = boardReducer(state, action);
 
             expect(newState.cols).toBe(6);
         });
@@ -403,7 +399,7 @@ describe('boardHandlers', () => {
                 rows: 7,
                 cols: 8,
             } as BoardAction;
-            const newState = handleBoard(state, action);
+            const newState = boardReducer(state, action);
             expect(newState.rows).toBe(7);
             expect(newState.cols).toBe(8);
         });
@@ -419,7 +415,7 @@ describe('boardHandlers', () => {
                 initialized: false,
             };
             const action = { type: 'unknown' } as unknown as BoardAction;
-            const newState = handleBoard(state, action);
+            const newState = boardReducer(state, action);
             expect(newState).toBe(state);
         });
     });

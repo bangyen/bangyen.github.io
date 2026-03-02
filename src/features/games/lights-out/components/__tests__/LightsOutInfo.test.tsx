@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+import React from 'react';
 import { vi, type Mock, describe, it, expect, beforeEach } from 'vitest';
 
 import type { DragProps } from '../../../hooks/useDrag';
@@ -7,12 +8,43 @@ import { LightsOutInfo as Info } from '../LightsOutInfo';
 
 import * as mathUtils from '@/utils/math/gf2';
 
-// Mock dependencies
-vi.mock('../Example', () => ({
-    Example: function MockExample() {
-        return <div data-testid="example-component" />;
-    },
-}));
+// Polyfill sessionStorage for test environment
+if (typeof sessionStorage === 'undefined') {
+    (globalThis as any).sessionStorage = {
+        clear: vi.fn(),
+        getItem: vi.fn(),
+        setItem: vi.fn(),
+        removeItem: vi.fn(),
+        key: vi.fn(),
+        length: 0,
+    };
+}
+
+// Keep icons mocked to simplify DOM
+vi.mock('@/components/icons', async importOriginal => {
+    const actual = await importOriginal<any>();
+    return {
+        ...actual,
+        KeyboardArrowDown: () => <div data-testid="keyboardarrowdown-icon" />,
+        Calculate: () => <div data-testid="calculate-icon" />,
+        Replay: () => <div data-testid="replay-icon" />,
+        NavigateBeforeRounded: () => (
+            <div data-testid="navigatebeforerounded-icon" />
+        ),
+        NavigateNextRounded: () => (
+            <div data-testid="navigatenextrounded-icon" />
+        ),
+        CloseRounded: () => <div data-testid="closerounded-icon" />,
+        ContentCopyRounded: () => <div data-testid="contentcopyrounded-icon" />,
+        Refresh: () => <div data-testid="refresh-icon" />,
+        MenuBookRounded: () => <div data-testid="menubookrounded-icon" />,
+        ArrowBackRounded: () => <div data-testid="arrowbackrounded-icon" />,
+        HomeRounded: () => <div data-testid="homerounded-icon" />,
+        FileDownloadRounded: () => (
+            <div data-testid="filedownloadrounded-icon" />
+        ),
+    };
+});
 vi.mock('@/components/ui/GlassCard', () => ({
     GlassCard: function MockGlassCard({
         children,
@@ -39,54 +71,75 @@ vi.mock('@/components/ui/GlassCard', () => ({
         );
     },
 }));
-vi.mock('../../../../../hooks', () => ({
-    useMobile: vi.fn(() => false),
+vi.mock('@/features/games/components/GameInfo/Example', () => ({
+    GameInfoExample: ({ renderFrame, extraActions, animation }: any) => (
+        <div data-testid="example-component">
+            {renderFrame(animation.frameIdx)}
+            {extraActions}
+        </div>
+    ),
+    ExampleActionButton: ({ children, ...props }: any) => (
+        <button {...props}>{children}</button>
+    ),
+    useExampleAnimation: () => ({
+        frameIdx: 0,
+        isPlaying: false,
+        setIsPlaying: vi.fn(),
+        handleTogglePlay: vi.fn(),
+        handleStepBack: vi.fn(),
+        handleStepForward: vi.fn(),
+    }),
 }));
+
+vi.mock('@/features/games/components/GameInfo/LazyGameInfo', async () => {
+    const { GameInfoContent } = await vi.importActual<any>(
+        '@/features/games/components/GameInfo/index',
+    );
+    return {
+        LazyGameInfo: function MockLazyGameInfo({
+            open,
+            toggleOpen,
+            ...props
+        }: any) {
+            if (!open) return null;
+            return (
+                <div data-testid="modal">
+                    <GameInfoContent {...props} toggleOpen={toggleOpen} />
+                </div>
+            );
+        },
+    };
+});
+
+vi.mock('@/hooks', async importOriginal => {
+    const actual = await importOriginal<any>();
+    return {
+        ...actual,
+        useMobile: vi.fn(() => false),
+    };
+});
+
 vi.mock('@/utils/math/gf2', () => ({
     calculateSolutionVector: vi.fn(() => [0, 0, 0]),
     countBits: vi.fn(n => Number(n.toString(2).replaceAll('0', '').length)),
 }));
 
 // Mock MUI components
-vi.mock('@mui/material', () => ({
-    Modal: ({ children, open, ...props }: any) =>
-        open ? (
-            <div data-testid="modal" {...props}>
-                {children}
-            </div>
-        ) : null,
-    Backdrop: (props: any) => <div data-testid="backdrop" {...props} />,
-    Box: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    Typography: ({ children, ...props }: any) => (
-        <div {...props}>{children}</div>
-    ),
-    Button: ({ children, ...props }: any) => (
-        <button {...props}>{children}</button>
-    ),
-    IconButton: ({ children, ...props }: any) => (
-        <button {...props}>{children}</button>
-    ),
-    Stack: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-    Tooltip: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-}));
+vi.mock('@mui/material', async importOriginal => {
+    const actual = await importOriginal<any>();
+    return {
+        ...actual,
+        Modal: ({ children, open, ...props }: any) =>
+            open ? (
+                <div data-testid="modal" {...props}>
+                    {children}
+                </div>
+            ) : null,
+        Backdrop: (props: any) => <div data-testid="backdrop" {...props} />,
+    };
+});
 
-// Mock Icons
-vi.mock('@/components/icons', () => ({
-    KeyboardArrowDown: () => <div data-testid="keyboardarrowdown-icon" />,
-    Calculate: () => <div data-testid="calculate-icon" />,
-    Replay: () => <div data-testid="replay-icon" />,
-    NavigateBeforeRounded: () => (
-        <div data-testid="navigatebeforerounded-icon" />
-    ),
-    NavigateNextRounded: () => <div data-testid="navigatenextrounded-icon" />,
-    CloseRounded: () => <div data-testid="closerounded-icon" />,
-    ContentCopyRounded: () => <div data-testid="contentcopyrounded-icon" />,
-    Refresh: () => <div data-testid="refresh-icon" />,
-    MenuBookRounded: () => <div data-testid="menubookrounded-icon" />,
-    ArrowBackRounded: () => <div data-testid="arrowbackrounded-icon" />,
-    HomeRounded: () => <div data-testid="homerounded-icon" />,
-    FileDownloadRounded: () => <div data-testid="filedownloadrounded-icon" />,
-}));
+// Icon mocks handled above
 
 // Mock calculator helpers
 vi.mock('../Calculator', () => ({

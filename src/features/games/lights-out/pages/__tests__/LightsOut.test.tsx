@@ -11,7 +11,7 @@ import { renderWithProviders } from '@/utils/test-utils';
 
 // Keep icons mocked to simplify DOM
 vi.mock('@/components/icons', async importOriginal => {
-    const actual = await importOriginal<Record<string, any>>();
+    const actual = await importOriginal<any>();
     return {
         ...actual,
         MenuBookRounded: () => <div data-testid="menu-icon" />,
@@ -24,7 +24,7 @@ vi.mock('@/components/icons', async importOriginal => {
 
 // Mock hooks that interact with browser environment
 vi.mock('@/hooks', async importOriginal => {
-    const actual = await importOriginal<Record<string, unknown>>();
+    const actual = await importOriginal<any>();
     return {
         ...actual,
         useWindow: vi.fn(() => ({ height: 800, width: 1200 })),
@@ -43,7 +43,7 @@ describe('LightsOut', () => {
     let handleBoardSpy: any;
 
     beforeEach(() => {
-        handleBoardSpy = vi.spyOn(boardHandlers, 'handleBoard');
+        handleBoardSpy = vi.spyOn(boardHandlers, 'boardReducer');
         vi.clearAllMocks();
     });
 

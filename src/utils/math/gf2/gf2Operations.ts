@@ -48,24 +48,20 @@ export function calculateSolutionVector(
         const weights = getPolynomial(rows + 1);
         const product = evalPolynomial(matrix, weights);
 
-        const inverse = invertMatrix(product);
-        if (inverse === null) return null;
-        inverseCache[key] = inverse;
+        const solution = getSolutionMatrix(product);
+        if (solution === null) return null;
+        inverseCache[key] = solution;
     }
 
     const inverse = inverseCache[key] as bigint[] | undefined;
     if (inverse === undefined) return null;
 
-    const binaryStr = input.join('');
-    const binary = binaryStr ? BigInt('0b' + binaryStr) : 0n;
+    const binary = input.reduce(
+        (acc, val, i) => acc | (BigInt(val) << BigInt(i)),
+        0n,
+    );
 
-    const getParity = (row: bigint): number => {
-        const value = row & binary;
-        const count = countBits(value);
-        return count & 1;
-    };
-
-    return inverse.map(getParity);
+    return inverse.map(row => countBits(row & binary) & 1);
 }
 
 /**
@@ -114,12 +110,7 @@ export function countBits(num: bigint): number {
  * ```
  */
 export function getIdentity(size: number): bigint[] {
-    const output = new Array<bigint>(size).fill(1n);
-    for (let r = 0; r < size; r++) {
-        const val = output[r];
-        if (val !== undefined) output[r] = val << BigInt(size - r - 1);
-    }
-    return output;
+    return Array.from({ length: size }, (_, i) => 1n << BigInt(i));
 }
 
 /**
@@ -161,7 +152,7 @@ export function multiplySym(matrixA: bigint[], matrixB: bigint[]): bigint[] {
         let outputRow = 0n;
         if (rowA !== undefined) {
             for (let c = 0; c < size; c++) {
-                if (rowA & (1n << BigInt(size - 1 - c))) {
+                if (rowA & (1n << BigInt(c))) {
                     const rowB = matrixB[c];
                     if (rowB !== undefined) {
                         outputRow ^= rowB;
@@ -241,49 +232,100 @@ export function sortMatrices(
 }
 
 /**
- * Inverts a matrix in GF(2) using Gaussian elimination.
+ * Computes a "solution matrix" S such that x = S*b is a particular solution to Mx=b.
+ * If the matrix is invertible, S is the unique inverse matrix.
+ * If the matrix is singular, S provides one valid solution for any b in the image of M.
  *
- * Performs row reduction on [M | I] to produce [I | M^(-1)].
+ * Uses Gaussian-Jordan elimination to compute the reduced row-echelon form of [M | I].
+ * For each pivot column j in row i, row j of S becomes row i of E (the operations matrix).
  *
- * @param matrix - Invertible matrix to invert
- * @returns Inverse matrix, or null if the matrix is singular (non-invertible)
+ * @param matrix - Matrix M to solve for
+ * @returns Solution matrix S, or null if M is the zero matrix (unlikely in this context)
  */
-export function invertMatrix(matrix: bigint[]): bigint[] | null {
+export function getSolutionMatrix(matrix: bigint[]): bigint[] | null {
     const size = matrix.length;
     const identity = getIdentity(size);
-    let original = matrix;
-    let inverted = identity;
+    const original = [...matrix];
+    const operations = [...identity];
+
+    let pivotRow = 0;
+    const pivotCols = new Array<number>(size).fill(-1);
 
     for (let c = 0; c < size; c++) {
-        const pow = 1n << BigInt(size - c - 1);
-        [original, inverted] = sortMatrices(original, inverted);
+        const pow = 1n << BigInt(c);
 
-        // Pivot check: if no row has a 1 in this column, matrix is singular
-        const pivotRow = original[c];
-        if (pivotRow === undefined || !(pivotRow & pow)) {
-            return null;
-        }
-
-        for (let r = 0; r < size; r++) {
-            const alt = original[r];
-            if (alt === undefined) continue;
-            if (r === c) continue;
-
-            if (alt & pow) {
-                const rowC = original[c];
-                const invC = inverted[c];
-                if (rowC !== undefined) {
-                    const targetRow = original[r];
-                    if (targetRow !== undefined) original[r] = targetRow ^ rowC;
-                }
-                if (invC !== undefined) {
-                    const targetInv = inverted[r];
-                    if (targetInv !== undefined) inverted[r] = targetInv ^ invC;
-                }
+        // Find pivot row
+        let pivot = -1;
+        for (let r = pivotRow; r < size; r++) {
+            const row = original[r];
+            if (row !== undefined && row & pow) {
+                pivot = r;
+                break;
             }
         }
+
+        if (pivot === -1) continue;
+
+        // Swap rows in both original and operations matrices
+        const rowToPivot = original[pivot];
+        const rowToCurrent = original[pivotRow];
+        const opToPivot = operations[pivot];
+        const opToCurrent = operations[pivotRow];
+
+        if (
+            rowToPivot !== undefined &&
+            rowToCurrent !== undefined &&
+            opToPivot !== undefined &&
+            opToCurrent !== undefined
+        ) {
+            original[pivotRow] = rowToPivot;
+            original[pivot] = rowToCurrent;
+            operations[pivotRow] = opToPivot;
+            operations[pivot] = opToCurrent;
+        }
+
+        const pRow = original[pivotRow];
+        const oRow = operations[pivotRow];
+
+        if (pRow === undefined || oRow === undefined) continue;
+
+        // Eliminate column c in all other rows
+        for (let r = 0; r < size; r++) {
+            if (r === pivotRow) continue;
+            const targetRow = original[r];
+            const targetOp = operations[r];
+            if (
+                targetRow !== undefined &&
+                targetOp !== undefined &&
+                targetRow & pow
+            ) {
+                original[r] = targetRow ^ pRow;
+                operations[r] = targetOp ^ oRow;
+            }
+        }
+
+        pivotCols[pivotRow] = c;
+        pivotRow++;
     }
-    return inverted;
+
+    if (pivotRow === 0) return null;
+
+    // Build the solution matrix S
+    // If row i had a pivot in column j, then row j of S is row i of operations
+    const solutionMatrix = new Array<bigint>(size).fill(0n);
+    for (let i = 0; i < pivotRow; i++) {
+        const targetCol = pivotCols[i];
+        const opRow = operations[i];
+        if (
+            targetCol !== undefined &&
+            targetCol !== -1 &&
+            opRow !== undefined
+        ) {
+            solutionMatrix[targetCol] = opRow;
+        }
+    }
+
+    return solutionMatrix;
 }
 
 /**
@@ -296,20 +338,12 @@ export function invertMatrix(matrix: bigint[]): bigint[] | null {
  */
 export function getMatrix(cols: number): bigint[] {
     if (cols === 1) return [1n];
-    const first = 7n << BigInt(cols - 2);
-    const matrix = [first];
-
-    for (let k = 1; k < cols; k++) {
-        const prev = matrix[k - 1];
-        if (prev !== undefined) {
-            const next = prev >> 1n;
-            matrix.push(next);
-        }
-    }
-
-    const firstVal = matrix[0];
-    if (firstVal !== undefined) matrix[0] = firstVal - (1n << BigInt(cols));
-    return matrix;
+    return Array.from({ length: cols }, (_, i) => {
+        let row = 1n << BigInt(i);
+        if (i > 0) row |= 1n << BigInt(i - 1);
+        if (i < cols - 1) row |= 1n << BigInt(i + 1);
+        return row;
+    });
 }
 
 /**

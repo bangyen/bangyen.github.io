@@ -7,10 +7,18 @@ import { useGridNavigation } from '../../../hooks/useGridNavigation';
 import { useSkipTransition } from '../../../hooks/useSkipTransition';
 import { useLightsOutGame } from '../useLightsOutGame';
 
-vi.mock('../../../hooks/useBaseGame');
-vi.mock('../../../hooks/useDrag');
-vi.mock('../../../hooks/useGridNavigation');
-vi.mock('../../../hooks/useSkipTransition');
+vi.mock('../../../hooks/useBaseGame', () => ({
+    useBaseGame: vi.fn(),
+}));
+vi.mock('../../../hooks/useDrag', () => ({
+    useDrag: vi.fn(),
+}));
+vi.mock('../../../hooks/useGridNavigation', () => ({
+    useGridNavigation: vi.fn(),
+}));
+vi.mock('../../../hooks/useSkipTransition', () => ({
+    useSkipTransition: vi.fn(),
+}));
 vi.mock('../../config', () => ({
     getLightsOutGameConfig: vi
         .fn()

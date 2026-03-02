@@ -11,7 +11,13 @@ import {
     LIGHTS_OUT_LAYOUT_CONSTANTS,
 } from '../config/index';
 import type { BoardState, BoardAction } from '../types';
-import { handleBoard, isSolved, getInitialState } from '../utils/boardHandlers';
+import {
+    boardReducer,
+    isSolved,
+    getInitialState,
+    to2DGrid,
+    getCellValue,
+} from '../utils/boardHandlers';
 import { isBoardState } from '../utils/persistence';
 import {
     getBackProps,
@@ -29,7 +35,7 @@ export function useLightsOutGame() {
     const baseGame = useBaseGame<BoardState, BoardAction>({
         ...getLightsOutGameConfig(),
         logic: {
-            reducer: handleBoard,
+            reducer: boardReducer,
             getInitialState,
             isSolved: (s: BoardState) => s.initialized && isSolved(s.grid),
             persistence: {
@@ -56,7 +62,7 @@ export function useLightsOutGame() {
     const { getDragProps: getBaseDragProps } = useDrag({
         onToggle: (r: number, c: number) => {
             dispatch({
-                type: 'adjacent' as const,
+                type: 'adjacent',
                 row: r,
                 col: c,
             });
@@ -85,14 +91,14 @@ export function useLightsOutGame() {
         [getBaseDragProps, handleGridNav],
     );
 
-    // 1. Theme/Palette (inlined usePalette)
+    // 1. Theme/Palette
     const palette = useMemo(() => {
         const primary = COLORS.primary.main;
         const secondary = COLORS.primary.dark;
         return { primary, secondary };
     }, []);
 
-    // 2. Logic Handlers (inlined useHandler/useGetters)
+    // 2. Logic Handlers
     const { infoOpen, toggleInfo } = useGameInfoState();
 
     const handleApply = useCallback(
@@ -108,30 +114,20 @@ export function useLightsOutGame() {
         [dispatch, toggleInfo],
     );
 
-    const getTile = useCallback(
-        (row: number, col: number) => {
-            if (row < 0 || col < 0 || row >= rows || col >= cols) return -1;
-            const r = state.grid[row];
-            if (r === undefined) return 0;
-            return (r >> col) & 1;
-        },
-        [state.grid, rows, cols],
-    );
-
     const getters = useMemo(() => {
         const getColor = (r: number, c: number) => {
-            const value = getTile(r, c);
-            const front = value ? palette.primary : palette.secondary;
-            const back = value ? palette.secondary : palette.primary;
-            return { front, back, isLit: value > 0 };
+            const isLit = getCellValue(state.grid, r, c);
+            const front = isLit ? palette.primary : palette.secondary;
+            const back = isLit ? palette.secondary : palette.primary;
+            return { front, back, isLit: isLit > 0 };
         };
 
         const getBorder = (r: number, c: number) => {
-            const self = getTile(r, c);
-            const up = getTile(r - 1, c);
-            const down = getTile(r + 1, c);
-            const left = getTile(r, c - 1);
-            const right = getTile(r, c + 1);
+            const self = getCellValue(state.grid, r, c);
+            const up = getCellValue(state.grid, r - 1, c);
+            const down = getCellValue(state.grid, r + 1, c);
+            const left = getCellValue(state.grid, r, c - 1);
+            const right = getCellValue(state.grid, r, c + 1);
             const props: React.CSSProperties = {};
 
             if (self === up || self === left) props.borderTopLeftRadius = 0;
@@ -144,17 +140,17 @@ export function useLightsOutGame() {
         };
 
         const getFiller = (r: number, c: number) => {
-            const tl = getTile(r, c);
-            const tr = getTile(r, c + 1);
-            const bl = getTile(r + 1, c);
-            const br = getTile(r + 1, c + 1);
+            const tl = getCellValue(state.grid, r, c);
+            const tr = getCellValue(state.grid, r, c + 1);
+            const bl = getCellValue(state.grid, r + 1, c);
+            const br = getCellValue(state.grid, r + 1, c + 1);
             const total = tl + tr + bl + br;
             const colored = !((!tl || !br) && total < 3);
             return colored ? palette.primary : palette.secondary;
         };
 
         return { getColor, getBorder, getFiller };
-    }, [getTile, palette]);
+    }, [state.grid, palette]);
 
     const boardKey = `${String(rows)},${String(cols)},${String(state.score)}`;
     const skipTransition = useSkipTransition(boardKey);
@@ -184,18 +180,6 @@ export function useLightsOutGame() {
         [mobile],
     );
 
-    const grid2D = useMemo(
-        () =>
-            Array.from({ length: rows }, (_, r) => {
-                const rowVal = state.grid[r] ?? 0;
-                return Array.from(
-                    { length: cols },
-                    (_, c) => (rowVal >> c) & 1,
-                );
-            }),
-        [rows, cols, state.grid],
-    );
-
     return {
         // State & Layout
         state,
@@ -210,7 +194,10 @@ export function useLightsOutGame() {
         handleNext: baseGame.handleNext,
 
         // Board Components Props
-        grid: grid2D,
+        grid: useMemo(
+            () => to2DGrid(state.grid, rows, cols),
+            [state.grid, rows, cols],
+        ),
         palette,
         layers: [
             {
