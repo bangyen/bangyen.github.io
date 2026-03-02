@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Example } from './Example';
-import { InfoCalculator } from './InfoCalculator';
+import { SolutionCalculator } from './SolutionCalculator';
 import {
     LIGHTS_OUT_INFO_TITLES as INFO_TITLES,
     LIGHTS_OUT_INSTRUCTIONS as INSTRUCTIONS,
@@ -26,7 +26,7 @@ interface InfoRenderingProps {
     palette: Palette;
 }
 
-export interface LightsOutInfoProps extends BaseInfoProps {
+export interface LightsOutTutorialProps extends BaseInfoProps {
     /** Board dimensions and visual cell size. */
     board: InfoBoardProps;
     /** Rendering factories for the example animation. */
@@ -45,7 +45,7 @@ export interface LightsOutInfoProps extends BaseInfoProps {
  * Calculator state is managed by `useCalculator` so it persists
  * when switching steps.
  */
-export function LightsOutInfo({
+export function LightsOutTutorial({
     open,
     solved,
     toggleOpen,
@@ -53,7 +53,7 @@ export function LightsOutInfo({
     rendering,
     onApply,
     bottomRow,
-}: LightsOutInfoProps): React.ReactElement | null {
+}: LightsOutTutorialProps): React.ReactElement | null {
     const { rows, cols, size } = board;
     const { palette } = rendering;
 
@@ -73,7 +73,7 @@ export function LightsOutInfo({
             instructions={INSTRUCTIONS}
             exampleContent={<Example size={exampleSize} palette={palette} />}
             extraSteps={[
-                <InfoCalculator
+                <SolutionCalculator
                     key="calculator"
                     cols={cols}
                     size={size}

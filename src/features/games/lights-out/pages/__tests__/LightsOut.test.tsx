@@ -10,8 +10,8 @@ import * as hooks from '@/hooks';
 import { renderWithProviders } from '@/utils/test-utils';
 
 // Keep icons mocked to simplify DOM
-vi.mock('@/components/icons', async importOriginal => {
-    const actual = await importOriginal<any>();
+vi.mock('@/components/icons', async () => {
+    const actual = await vi.importActual<any>('@/components/icons');
     return {
         ...actual,
         MenuBookRounded: () => <div data-testid="menu-icon" />,
@@ -23,8 +23,8 @@ vi.mock('@/components/icons', async importOriginal => {
 });
 
 // Mock hooks that interact with browser environment
-vi.mock('@/hooks', async importOriginal => {
-    const actual = await importOriginal<any>();
+vi.mock('@/hooks', async () => {
+    const actual = await vi.importActual<any>('@/hooks');
     return {
         ...actual,
         useWindow: vi.fn(() => ({ height: 800, width: 1200 })),
@@ -32,9 +32,9 @@ vi.mock('@/hooks', async importOriginal => {
     };
 });
 
-// Mock LightsOutInfo specifically to verify its presence via testid
-vi.mock('@/features/games/lights-out/components/LightsOutInfo', () => ({
-    LightsOutInfo: function MockInfo({ open }: { open: boolean }) {
+// Mock LightsOutTutorial specifically to verify its presence via testid
+vi.mock('@/features/games/lights-out/components/LightsOutTutorial', () => ({
+    LightsOutTutorial: function MockTutorial({ open }: { open: boolean }) {
         return open ? <div data-testid="info-modal">Info</div> : null;
     },
 }));

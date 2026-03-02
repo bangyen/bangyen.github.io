@@ -5,7 +5,7 @@ import { renderHook } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
 import type { DragProps } from '../../../hooks/useDrag';
-import { getInput, getOutput, useHandler } from '../Calculator';
+import { getInput, getOutput, useHandler } from '../calculatorHelpers';
 
 describe('Lights Out Calculator UI Helpers', () => {
     const mockPalette = { primary: 'red', secondary: 'blue' };

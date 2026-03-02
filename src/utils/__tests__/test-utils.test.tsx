@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment happy-dom
+ */
 import { render, screen } from '@testing-library/react';
 import React from 'react';
+import { describe, test, expect, vi } from 'vitest';
 
 import {
     createTestTheme,
@@ -8,7 +12,7 @@ import {
     mockData,
     mockFetchResponses,
     testUtils,
-} from '../utils';
+} from '../test-utils';
 
 // Mock component for testing
 const MockComponent: React.FC = () => (

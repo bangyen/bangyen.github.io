@@ -3,8 +3,8 @@ import React from 'react';
 import { vi, type Mock, describe, it, expect, beforeEach } from 'vitest';
 
 import type { DragProps } from '../../../hooks/useDrag';
-import * as calculator from '../Calculator';
-import { LightsOutInfo as Info } from '../LightsOutInfo';
+import * as calculator from '../../utils/calculatorHelpers';
+import { LightsOutTutorial as Tutorial } from '../LightsOutTutorial';
 
 import * as mathUtils from '@/utils/math/gf2';
 
@@ -142,13 +142,13 @@ vi.mock('@mui/material', async importOriginal => {
 // Icon mocks handled above
 
 // Mock calculator helpers
-vi.mock('../Calculator', () => ({
+vi.mock('../../utils/calculatorHelpers', () => ({
     getInput: vi.fn(),
     getOutput: vi.fn(),
     useHandler: vi.fn(),
 }));
 
-describe('Lights Out Info Component', () => {
+describe('Lights Out Tutorial Component', () => {
     const mockToggleOpen = vi.fn();
     const mockOnApply = vi.fn();
     const mockPalette = { primary: 'red', secondary: 'blue' };
@@ -171,8 +171,8 @@ describe('Lights Out Info Component', () => {
     const mockUseHandler = calculator.useHandler as Mock;
 
     /** Renders `<Info>` and waits for the lazy-loaded GameInfo to mount. */
-    async function renderInfo(
-        props: Parameters<typeof render>[0] = <Info {...defaultProps} />,
+    async function renderTutorial(
+        props: Parameters<typeof render>[0] = <Tutorial {...defaultProps} />,
     ) {
         const result = render(props);
         await screen.findByText('Chasing Lights');
@@ -201,7 +201,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('renders instruction step initially', async () => {
-        await renderInfo();
+        await renderTutorial();
         expect(screen.getByText('Chase to Bottom')).toBeInTheDocument();
         expect(
             screen.queryByTestId('example-component'),
@@ -209,7 +209,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('navigates to next step (Example)', async () => {
-        await renderInfo();
+        await renderTutorial();
         const nextBtn = screen.getByText('Next');
         fireEvent.click(nextBtn);
 
@@ -217,7 +217,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('navigates to calculator step', async () => {
-        await renderInfo();
+        await renderTutorial();
         const nextBtn = screen.getByText('Next');
         fireEvent.click(nextBtn); // To Example
         fireEvent.click(nextBtn); // To Calculator
@@ -227,7 +227,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('allows toggling input bits in calculator', async () => {
-        await renderInfo();
+        await renderTutorial();
         const nextBtn = screen.getByText('Next');
         fireEvent.click(nextBtn); // To Example
         fireEvent.click(nextBtn); // To Calculator
@@ -240,7 +240,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('closes modal on Close button click', async () => {
-        await renderInfo();
+        await renderTutorial();
         // Find the close icon and click it
         const closeIcon = screen.getByTestId('closerounded-icon');
         fireEvent.click(closeIcon);
@@ -248,7 +248,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('handles back navigation between steps', async () => {
-        await renderInfo();
+        await renderTutorial();
         const nextBtn = screen.getByText('Next');
 
         // Navigate to step 2
@@ -264,7 +264,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('shows all three steps in sequence', async () => {
-        await renderInfo();
+        await renderTutorial();
         const nextBtn = screen.getByText('Next');
 
         // Step 0: Instructions
@@ -280,7 +280,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('does not go back past first step', async () => {
-        await renderInfo();
+        await renderTutorial();
         const backBtn = screen.getByText('Back');
 
         // Try to go back at first step
@@ -291,7 +291,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('resets calculator state on config change', async () => {
-        const { rerender } = await renderInfo();
+        const { rerender } = await renderTutorial();
 
         // Navigate to calculator
         const nextBtn = screen.getByText('Next');
@@ -303,7 +303,7 @@ describe('Lights Out Info Component', () => {
 
         // Simulate cols change (should trigger reset)
         rerender(
-            <Info
+            <Tutorial
                 {...defaultProps}
                 board={{ ...defaultProps.board, cols: 4 }}
             />,
@@ -314,7 +314,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('handles reset button in calculator', async () => {
-        await renderInfo();
+        await renderTutorial();
         const nextBtn = screen.getByText('Next');
 
         // Navigate to calculator
@@ -326,7 +326,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('prevents modal from closing when clicking inside GlassCard', async () => {
-        await renderInfo();
+        await renderTutorial();
         const glassCard = screen.getByTestId('glass-card');
 
         fireEvent.click(glassCard);
@@ -336,7 +336,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('manages calcRow state for each column independently', async () => {
-        await renderInfo();
+        await renderTutorial();
         const nextBtn = screen.getByText('Next');
 
         // Navigate to calculator
@@ -348,18 +348,18 @@ describe('Lights Out Info Component', () => {
     });
 
     it('renders info instructions on first step', async () => {
-        await renderInfo();
+        await renderTutorial();
 
         // Should show instructions content
         expect(screen.getByText('Chase to Bottom')).toBeInTheDocument();
     });
 
     it('palette changes trigger calculator reset', async () => {
-        const { rerender } = await renderInfo();
+        const { rerender } = await renderTutorial();
 
         const newPalette = { primary: 'green', secondary: 'yellow' };
         rerender(
-            <Info
+            <Tutorial
                 {...defaultProps}
                 rendering={{ ...defaultProps.rendering, palette: newPalette }}
             />,
@@ -373,7 +373,7 @@ describe('Lights Out Info Component', () => {
         // Make calculateSolutionVector return a non-zero solution so the button is enabled
         (mathUtils.calculateSolutionVector as Mock).mockReturnValue([1, 0, 1]);
 
-        await renderInfo();
+        await renderTutorial();
         const nextBtn = screen.getByText('Next');
         fireEvent.click(nextBtn); // To Example
         fireEvent.click(nextBtn); // To Calculator
@@ -385,7 +385,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('disables Apply Solution when solution is all zeros', async () => {
-        await renderInfo();
+        await renderTutorial();
         const nextBtn = screen.getByText('Next');
         fireEvent.click(nextBtn); // To Example
         fireEvent.click(nextBtn); // To Calculator
@@ -395,7 +395,7 @@ describe('Lights Out Info Component', () => {
     });
 
     it('handles back navigation', async () => {
-        await renderInfo();
+        await renderTutorial();
         const nextBtn = screen.getByText('Next');
         fireEvent.click(nextBtn); // To Step 1
 
@@ -412,7 +412,7 @@ describe('Lights Out Info Component', () => {
     it('renders with correct backdrop colors', async () => {
         // This is a bit hard to test deeply without real theme,
         // but we can at least ensure it renders.
-        await renderInfo();
+        await renderTutorial();
         expect(screen.getByTestId('modal')).toBeInTheDocument();
     });
 
@@ -432,7 +432,7 @@ describe('Lights Out Info Component', () => {
             },
         );
 
-        await renderInfo();
+        await renderTutorial();
         const nextBtn = screen.getByText('Next');
         fireEvent.click(nextBtn);
         fireEvent.click(nextBtn);

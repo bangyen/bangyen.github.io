@@ -7,6 +7,14 @@ import { FOCUS_VISIBLE_SX } from '../utils/renderers';
 
 import { CircleRounded } from '@/components/icons';
 
+export interface Getters {
+    getColor: (
+        r: number,
+        c: number,
+    ) => { front: string; back: string; isLit: boolean };
+    getBorder: (r: number, c: number) => React.CSSProperties;
+}
+
 export function getInput(
     getters: Getters,
     getDragProps: (pos: string) => DragProps,
@@ -50,14 +58,6 @@ export function getOutput({ getColor, getBorder }: Getters) {
             },
         };
     };
-}
-
-export interface Getters {
-    getColor: (
-        r: number,
-        c: number,
-    ) => { front: string; back: string; isLit: boolean };
-    getBorder: (r: number, c: number) => React.CSSProperties;
 }
 
 export function useHandler(row: number[], size: number, palette: Palette) {

@@ -46,7 +46,7 @@ A personal portfolio showcasing interactive games, algorithm implementation, and
 ### Prerequisites
 
 - [Bun](https://bun.sh/) (v1.1 or higher)
-- **Python 3.x** (Required for `bun run data:update`)
+- **Python 3.x** (Required **only** for `bun run data:update`; research data is pre-bundled for standard development)
 
 ### Installation
 

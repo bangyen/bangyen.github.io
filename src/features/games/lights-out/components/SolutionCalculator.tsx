@@ -63,7 +63,7 @@ const calculatorButtonSx: SxProps<Theme> = {
     whiteSpace: 'nowrap',
 };
 
-export interface InfoCalculatorProps {
+export interface SolutionCalculatorProps {
     cols: number;
     size: number;
     isMobile: boolean;
@@ -78,11 +78,11 @@ export interface InfoCalculatorProps {
 }
 
 /**
- * Calculator step inside the Info modal, letting users toggle a bottom-row
+ * Calculator step inside the Tutorial modal, letting users toggle a bottom-row
  * pattern and see the resulting top-row solution.  Cell size is capped so
  * the rows stay proportional inside the fixed-height modal.
  */
-export const InfoCalculator = React.memo(function InfoCalculator({
+export const SolutionCalculator = React.memo(function SolutionCalculator({
     cols,
     size,
     isMobile,
@@ -94,7 +94,7 @@ export const InfoCalculator = React.memo(function InfoCalculator({
     onApply,
     onFillFromBoard,
     hasPattern,
-}: InfoCalculatorProps) {
+}: SolutionCalculatorProps) {
     const MAX_CELL = 3; // rem
     const cellSize = Math.min(size * (isMobile ? 0.9 : 0.8), MAX_CELL);
 

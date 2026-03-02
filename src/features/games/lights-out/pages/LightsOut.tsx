@@ -1,6 +1,6 @@
 import { StandardGameLayout } from '../../components/StandardGameLayout';
 import { LightsOutBoard as Board } from '../components/LightsOutBoard';
-import { LightsOutInfo as Info } from '../components/LightsOutInfo';
+import { LightsOutTutorial as Tutorial } from '../components/LightsOutTutorial';
 import { useLightsOutGame } from '../hooks/useLightsOutGame';
 
 import { PAGE_TITLES } from '@/config/constants';
@@ -26,7 +26,7 @@ export function LightsOut() {
             controlsProps={controlsProps}
             solved={solved}
             renderBoard={props => <Board {...props} />}
-            InfoComponent={Info}
+            InfoComponent={Tutorial}
         />
     );
 }

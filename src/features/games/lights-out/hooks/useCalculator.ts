@@ -3,8 +3,8 @@ import { useState, useEffect, useCallback } from 'react';
 
 import { useDrag } from '../../hooks/useDrag';
 import { useGridNavigation } from '../../hooks/useGridNavigation';
-import { getInput, useHandler } from '../components/Calculator';
 import type { Palette } from '../types';
+import { getInput, useHandler } from '../utils/calculatorHelpers';
 
 import { calculateSolutionVector } from '@/utils/math/gf2';
 

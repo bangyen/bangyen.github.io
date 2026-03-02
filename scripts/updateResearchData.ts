@@ -123,6 +123,18 @@ function main() {
     const args = process.argv.slice(2);
     const clean = args.includes('--clean');
 
+    // Check for Python 3 availability
+    try {
+        execSync('python3 --version', { stdio: 'ignore' });
+    } catch {
+        console.error(
+            'Error: python3 is not available in your PATH.\n' +
+            'Python 3.x is required for bun run data:update.\n' +
+            'Please refer to the Prerequisites section in README.md.',
+        );
+        process.exit(1);
+    }
+
     if (clean && fs.existsSync(TEMP_DIR)) {
         console.log(`Cleaning ${TEMP_DIR}...`);
         fs.rmSync(TEMP_DIR, { recursive: true, force: true });
