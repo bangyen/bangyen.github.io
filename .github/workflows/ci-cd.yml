@@ -12,53 +12,81 @@ permissions:
     pages: write
 
 jobs:
-    quality-check:
-        name: Quality Check
+    lint:
+        name: Lint
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-
             - uses: oven-sh/setup-bun@v2
               with:
                   bun-version: latest
-
-            - name: Restore Bun Cache
-              uses: actions/cache@v4
-              with:
-                  path: ~/.bun/install/cache
-                  key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json') }}
-                  restore-keys: |
-                      ${{ runner.os }}-bun-
-
+                  cache: 'bun'
             - name: Install dependencies
               run: bun install --frozen-lockfile
+            - name: Run Linting
+              run: bun run lint:all
 
-            - name: Run Quality Checks
-              run: bun run ci
+    type-check:
+        name: Type Check
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+                  cache: 'bun'
+            - name: Install dependencies
+              run: bun install --frozen-lockfile
+            - name: Run Type Check
+              run: bun run type-check
+
+    test:
+        name: Test
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+                  cache: 'bun'
+            - name: Install dependencies
+              run: bun install --frozen-lockfile
+            - name: Run Tests
+              run: bun run test
+
+    build:
+        name: Build
+        needs: [lint, type-check, test]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: oven-sh/setup-bun@v2
+              with:
+                  bun-version: latest
+                  cache: 'bun'
+            - name: Install dependencies
+              run: bun install --frozen-lockfile
+            - name: Build
+              run: bun run build
+            - name: Upload Build Artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: build-output
+                  path: build/
+                  retention-days: 1
 
     deploy:
         name: Deploy
-        needs: quality-check
+        needs: build
         runs-on: ubuntu-latest
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         steps:
             - uses: actions/checkout@v4
-
-            - uses: oven-sh/setup-bun@v2
+            - name: Download Build Artifact
+              uses: actions/download-artifact@v4
               with:
-                  bun-version: latest
-
-            - name: Restore Bun Cache
-              uses: actions/cache@v4
-              with:
-                  path: ~/.bun/install/cache
-                  key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock', '**/package.json') }}
-
-            - name: Install and Build
-              run: |
-                  bun install --frozen-lockfile
-                  bun run build
-
+                  name: build-output
+                  path: ./build
             - name: Deploy to GitHub Pages
               uses: peaceiris/actions-gh-pages@v4
               with:
