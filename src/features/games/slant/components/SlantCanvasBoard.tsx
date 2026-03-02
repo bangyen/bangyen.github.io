@@ -142,7 +142,10 @@ export function SlantCanvasBoard({
                             ctx.rotate(Math.PI / 4);
                         }
 
-                        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+                        ctx.shadowColor =
+                            theme.palette.mode === 'dark'
+                                ? 'rgba(0, 0, 0, 0.15)'
+                                : 'transparent';
                         ctx.shadowBlur = 12 * (pxScale / 16);
                         ctx.shadowOffsetY = 4 * (pxScale / 16);
 
@@ -197,7 +200,10 @@ export function SlantCanvasBoard({
 
                     if (hasConflict) {
                         ctx.save();
-                        ctx.shadowColor = 'rgba(0, 0, 0, 0.2)';
+                        ctx.shadowColor =
+                            theme.palette.mode === 'dark'
+                                ? 'rgba(0, 0, 0, 0.2)'
+                                : 'transparent';
                         ctx.shadowBlur = 10 * (pxScale / 16);
                         ctx.shadowOffsetY = 5 * (pxScale / 16);
                         ctx.fillStyle = conflictColor;
@@ -209,7 +215,10 @@ export function SlantCanvasBoard({
                             ctx.fill();
                         } else {
                             ctx.save();
-                            ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+                            ctx.shadowColor =
+                                theme.palette.mode === 'dark'
+                                    ? 'rgba(0, 0, 0, 0.1)'
+                                    : 'transparent';
                             ctx.shadowBlur = 20 * (pxScale / 16);
                             ctx.shadowOffsetY = 10 * (pxScale / 16);
                             ctx.fill();
@@ -244,6 +253,7 @@ export function SlantCanvasBoard({
             rows,
             cols,
             lineWidth,
+            theme.palette.mode,
         ],
     );
 
