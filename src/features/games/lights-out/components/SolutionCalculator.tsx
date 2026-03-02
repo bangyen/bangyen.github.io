@@ -95,7 +95,8 @@ export const SolutionCalculator = React.memo(function SolutionCalculator({
     onFillFromBoard,
     hasPattern,
 }: SolutionCalculatorProps) {
-    const MAX_CELL = 3; // rem
+    // Account for modal padding on very narrow screens (~17rem available on 320px width)
+    const MAX_CELL = isMobileSm ? Math.min(3, 17 / cols) : 3; // rem
     const cellSize = Math.min(size * (isMobile ? 0.9 : 0.8), MAX_CELL);
 
     // Calculate scaling factor for width.
@@ -133,7 +134,7 @@ export const SolutionCalculator = React.memo(function SolutionCalculator({
         useHorizontal = false;
 
         // In vertical layout, we check if the grid is too wide for the container.
-        const VERTICAL_THRESHOLD_REM = isMobileSm ? 20 : isMobile ? 30 : 50;
+        const VERTICAL_THRESHOLD_REM = isMobileSm ? 17 : isMobile ? 24 : 50;
         const fitsScaledVertical =
             cols * scaledCellWidth < VERTICAL_THRESHOLD_REM;
 
