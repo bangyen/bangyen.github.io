@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material';
 import React, { useRef, useEffect, useCallback } from 'react';
 
 import { SLANT_STYLES } from '../config/constants';
@@ -34,7 +33,6 @@ export function SlantCanvasBoard({
     cycleCells,
     nodeConflictSet,
 }: SlantCanvasBoardProps): React.ReactElement {
-    const theme = useTheme();
     const slashBirthdays = useRef<Map<string, number>>(new Map());
     const prevGrid = useRef<CellState[][]>([]);
 
@@ -142,10 +140,7 @@ export function SlantCanvasBoard({
                             ctx.rotate(Math.PI / 4);
                         }
 
-                        ctx.shadowColor =
-                            theme.palette.mode === 'dark'
-                                ? 'rgba(0, 0, 0, 0.15)'
-                                : 'transparent';
+                        ctx.shadowColor = 'transparent';
                         ctx.shadowBlur = 12 * (pxScale / 16);
                         ctx.shadowOffsetY = 4 * (pxScale / 16);
 
@@ -200,10 +195,7 @@ export function SlantCanvasBoard({
 
                     if (hasConflict) {
                         ctx.save();
-                        ctx.shadowColor =
-                            theme.palette.mode === 'dark'
-                                ? 'rgba(0, 0, 0, 0.2)'
-                                : 'transparent';
+                        ctx.shadowColor = 'transparent';
                         ctx.shadowBlur = 10 * (pxScale / 16);
                         ctx.shadowOffsetY = 5 * (pxScale / 16);
                         ctx.fillStyle = conflictColor;
@@ -215,10 +207,7 @@ export function SlantCanvasBoard({
                             ctx.fill();
                         } else {
                             ctx.save();
-                            ctx.shadowColor =
-                                theme.palette.mode === 'dark'
-                                    ? 'rgba(0, 0, 0, 0.1)'
-                                    : 'transparent';
+                            ctx.shadowColor = 'transparent';
                             ctx.shadowBlur = 20 * (pxScale / 16);
                             ctx.shadowOffsetY = 10 * (pxScale / 16);
                             ctx.fill();
@@ -253,13 +242,12 @@ export function SlantCanvasBoard({
             rows,
             cols,
             lineWidth,
-            theme.palette.mode,
         ],
     );
 
     const canvasRef = useCanvas({
         onRender: render,
-        dependencies: [render, theme.palette.mode],
+        dependencies: [render],
     });
 
     const spaceRem = 0.3;
