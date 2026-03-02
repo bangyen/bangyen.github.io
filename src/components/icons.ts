@@ -22,7 +22,6 @@ export {
     Refresh,
     OpenInNew,
     ArrowForward,
-    LaunchRounded,
     PlayArrowRounded,
     PauseRounded,
     DoneRounded,
@@ -55,11 +54,10 @@ export {
     ContentCopyRounded,
     DeleteRounded,
     FileDownloadRounded,
-    RestartAltRounded,
 } from '@mui/icons-material';
 
 // Code Icons
-export { EmojiEventsRounded, HelpOutlineRounded } from '@mui/icons-material';
+export { EmojiEventsRounded } from '@mui/icons-material';
 
 // Dashboard & Charts Icons
 export {

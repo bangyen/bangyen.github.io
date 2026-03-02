@@ -18,15 +18,6 @@ export const validateGridSize = (n: number): void => {
         throw new Error('Invalid grid size: must be between 1 and 100');
 };
 
-/**
- * Validates a cell index.
- * @param idx - The index to validate.
- * @throws Error if the index is negative.
- */
-export const validateCellIndex = (idx: number): void => {
-    if (idx < 0) throw new Error('Invalid cell index: cannot be negative');
-};
-
 // ---------------------------------------------------------------------------
 // Game info modal base interface
 // ---------------------------------------------------------------------------
@@ -42,25 +33,4 @@ export interface BaseInfoProps {
     open: boolean;
     /** Toggle the modal open/close state. */
     toggleOpen: () => void;
-}
-
-// ---------------------------------------------------------------------------
-// Game configuration interfaces
-// ---------------------------------------------------------------------------
-
-export interface LightsOutConstants {
-    defaultSize: number;
-}
-
-export interface GridSizes {
-    mobile: number;
-    desktop: number;
-}
-
-export interface GameConfig {
-    lightsOut: LightsOutConstants;
-    gridSizes: GridSizes;
-    controls: {
-        arrowPrefix: string;
-    };
 }

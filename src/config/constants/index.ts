@@ -4,7 +4,7 @@ import { Refresh, ArrowBackRounded, HomeRounded } from '@/components/icons';
  * Type definitions for application configuration
  */
 
-export interface PersonalInfo {
+interface PersonalInfo {
     name: string;
     title: string;
     location: string;
@@ -12,7 +12,7 @@ export interface PersonalInfo {
     email: string;
 }
 
-export interface Urls {
+interface Urls {
     githubProfile: string;
     zsharpRepo: string;
     oligopolyRepo: string;
@@ -27,7 +27,7 @@ export interface Urls {
     };
 }
 
-export interface Skill {
+interface Skill {
     name: string;
     icon: string;
     url: string;
@@ -47,7 +47,7 @@ export interface Project {
     description: string;
 }
 
-export interface PageTitles {
+interface PageTitles {
     home: string;
     lightsOut: string;
     zsharp: string;
@@ -56,7 +56,7 @@ export interface PageTitles {
     slant: string;
 }
 
-export interface Routes {
+interface Routes {
     pages: {
         Home: string;
         Error: string;
@@ -65,13 +65,6 @@ export interface Routes {
         LightsOut: string;
         Slant: string;
     };
-}
-
-export interface Meta {
-    title: string;
-    description: string;
-    themeColor: string;
-    backgroundColor: string;
 }
 
 // --- ACTUAL CONSTANTS ---
@@ -116,12 +109,7 @@ export const SKILLS: Skill[] = [
     },
 ];
 
-export const META: Meta = {
-    title: `${PERSONAL_INFO.name} - ${PERSONAL_INFO.title}`,
-    description: `${PERSONAL_INFO.name} - Backend Developer and AI/ML Engineer specializing in cloud architecture, HPC systems, and machine learning research. Northwestern MS Computer Science graduate with experience at Volta Health and Center for Nuclear Femtography.`,
-    themeColor: '#ffffff',
-    backgroundColor: '#ffffff',
-};
+// --- ACTUAL CONSTANTS ---
 
 export const PUBLICATIONS: Publication[] = [
     {
