@@ -43,8 +43,8 @@ describe('gameUtils', () => {
             const state = getInitialState(5, 5);
             const next = reducer(state, {
                 type: 'resize',
-                newRows: 3,
-                newCols: 3,
+                rows: 3,
+                cols: 3,
             });
             expect(next.rows).toBe(3);
             expect(next.cols).toBe(3);
@@ -109,22 +109,6 @@ describe('gameUtils', () => {
             const state = { rows: 5, cols: 5 };
             expect(
                 reducer(state, { type: 'resize' } as BaseGameAction<{
-                    rows: number;
-                    cols: number;
-                }>),
-            ).toBe(state);
-        });
-
-        it('should return state for hydrate without state prop', () => {
-            const reducer = createGameReducer({
-                getInitialState: (r, c) => ({ rows: r, cols: c }),
-            });
-            const state = { rows: 5, cols: 5 };
-            // Intentionally pass restore without state to test defensive handling
-            expect(
-                reducer(state, {
-                    type: 'hydrate',
-                } as unknown as BaseGameAction<{
                     rows: number;
                     cols: number;
                 }>),

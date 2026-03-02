@@ -1,1 +1,1 @@
-export * from './gf2Operations';
+export { calculateSolutionVector } from './gf2Operations';

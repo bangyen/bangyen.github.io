@@ -33,13 +33,14 @@ const inverseCache: Record<string, bigint[]> = {};
  * @param input - Binary array representing the current puzzle state (1 = on)
  * @param rows - Number of rows ($m$)
  * @param cols - Number of columns ($n$)
- * @returns Binary array representing which buttons to press to solve the puzzle
+ * @returns Binary array representing which buttons to press to solve the puzzle,
+ *          or null if no unique solution exists (singular matrix).
  */
-export function getProduct(
+export function calculateSolutionVector(
     input: number[],
     rows: number,
     cols: number,
-): number[] {
+): number[] | null {
     const key = `${rows.toString()},${cols.toString()}`;
 
     if (!inverseCache[key]) {
@@ -47,10 +48,14 @@ export function getProduct(
         const weights = getPolynomial(rows + 1);
         const product = evalPolynomial(matrix, weights);
 
-        inverseCache[key] = invertMatrix(product);
+        const inverse = invertMatrix(product);
+        if (inverse === null) return null;
+        inverseCache[key] = inverse;
     }
 
     const inverse = inverseCache[key] as bigint[] | undefined;
+    if (inverse === undefined) return null;
+
     const binaryStr = input.join('');
     const binary = binaryStr ? BigInt('0b' + binaryStr) : 0n;
 
@@ -59,10 +64,6 @@ export function getProduct(
         const count = countBits(value);
         return count & 1;
     };
-
-    if (inverse === undefined) {
-        throw new Error('Inverse matrix not found in cache');
-    }
 
     return inverse.map(getParity);
 }
@@ -245,13 +246,9 @@ export function sortMatrices(
  * Performs row reduction on [M | I] to produce [I | M^(-1)].
  *
  * @param matrix - Invertible matrix to invert
- * @returns Inverse matrix
- * @throws May produce incorrect results if matrix is singular (non-invertible)
- *
- * @remarks
- * For large matrices (>64 columns), consider using WASM implementation for better performance.
+ * @returns Inverse matrix, or null if the matrix is singular (non-invertible)
  */
-export function invertMatrix(matrix: bigint[]): bigint[] {
+export function invertMatrix(matrix: bigint[]): bigint[] | null {
     const size = matrix.length;
     const identity = getIdentity(size);
     let original = matrix;
@@ -260,6 +257,12 @@ export function invertMatrix(matrix: bigint[]): bigint[] {
     for (let c = 0; c < size; c++) {
         const pow = 1n << BigInt(size - c - 1);
         [original, inverted] = sortMatrices(original, inverted);
+
+        // Pivot check: if no row has a 1 in this column, matrix is singular
+        const pivotRow = original[c];
+        if (pivotRow === undefined || !(pivotRow & pow)) {
+            return null;
+        }
 
         for (let r = 0; r < size; r++) {
             const alt = original[r];

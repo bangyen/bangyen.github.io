@@ -6,7 +6,7 @@ import { useGridNavigation } from '../../hooks/useGridNavigation';
 import { getInput, useHandler } from '../components/Calculator';
 import type { Palette } from '../types';
 
-import { getProduct } from '@/utils/math/gf2';
+import { calculateSolutionVector } from '@/utils/math/gf2';
 
 interface UseCalculatorParams {
     rows: number;
@@ -40,7 +40,9 @@ export function useCalculator({
         }
     }, [solved, cols]);
 
-    const res = getProduct(calcRow, rows, cols);
+    const res =
+        calculateSolutionVector(calcRow, rows, cols) ??
+        new Array<number>(cols).fill(0);
 
     const { handleKeyDown: handleGridNav } = useGridNavigation({
         rows: 1,
@@ -87,6 +89,6 @@ export function useCalculator({
         res,
         inputGrid: [calcRow],
         outputGrid: [res],
-        hasPattern: res.some(v => v !== 0),
+        hasPattern: res.some((v: number) => v !== 0),
     };
 }

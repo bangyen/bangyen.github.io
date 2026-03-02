@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { vi, type Mock } from 'vitest';
+import { vi, type Mock, describe, it, expect, beforeEach } from 'vitest';
 
 import type { DragProps } from '../../../hooks/useDrag';
 import * as calculator from '../Calculator';
@@ -43,25 +43,32 @@ vi.mock('../../../../../hooks', () => ({
     useMobile: vi.fn(() => false),
 }));
 vi.mock('@/utils/math/gf2', () => ({
-    getProduct: vi.fn(() => [0, 0, 0]),
+    calculateSolutionVector: vi.fn(() => [0, 0, 0]),
     countBits: vi.fn(n => Number(n.toString(2).replaceAll('0', '').length)),
 }));
 
 // Mock MUI components
-vi.mock('@mui/material', async importOriginal => {
-    const actual = await importOriginal<Record<string, any>>();
-    return {
-        ...actual,
-        Modal: ({
-            children,
-            open,
-        }: {
-            children: React.ReactNode;
-            open: boolean;
-        }) => (open ? <div data-testid="modal">{children}</div> : null),
-        Backdrop: () => <div data-testid="backdrop" />,
-    };
-});
+vi.mock('@mui/material', () => ({
+    Modal: ({ children, open, ...props }: any) =>
+        open ? (
+            <div data-testid="modal" {...props}>
+                {children}
+            </div>
+        ) : null,
+    Backdrop: (props: any) => <div data-testid="backdrop" {...props} />,
+    Box: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    Typography: ({ children, ...props }: any) => (
+        <div {...props}>{children}</div>
+    ),
+    Button: ({ children, ...props }: any) => (
+        <button {...props}>{children}</button>
+    ),
+    IconButton: ({ children, ...props }: any) => (
+        <button {...props}>{children}</button>
+    ),
+    Stack: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+    Tooltip: ({ children, ...props }: any) => <div {...props}>{children}</div>,
+}));
 
 // Mock Icons
 vi.mock('@/components/icons', () => ({
@@ -123,7 +130,7 @@ describe('Lights Out Info Component', () => {
         vi.clearAllMocks();
         // Clear session storage to prevent step persistence from previous tests
         sessionStorage.clear();
-        (mathUtils.getProduct as Mock).mockReturnValue([0, 0, 0]);
+        (mathUtils.calculateSolutionVector as Mock).mockReturnValue([0, 0, 0]);
         mockUseHandler.mockReturnValue({}); // simplistic mock
         // Mock getInput to return a function that returns props with onClick
         mockGetInput.mockImplementation(
@@ -310,8 +317,8 @@ describe('Lights Out Info Component', () => {
     });
 
     it('calls onApply when Apply Solution is clicked with a non-zero solution', async () => {
-        // Make getProduct return a non-zero solution so the button is enabled
-        (mathUtils.getProduct as Mock).mockReturnValue([1, 0, 1]);
+        // Make calculateSolutionVector return a non-zero solution so the button is enabled
+        (mathUtils.calculateSolutionVector as Mock).mockReturnValue([1, 0, 1]);
 
         await renderInfo();
         const nextBtn = screen.getByText('Next');

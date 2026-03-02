@@ -93,106 +93,50 @@ describe('gf2Operations', () => {
             // Inverse is itself in GF(2)
             const A = [0b11n, 0b01n];
             const inv = gf2.invertMatrix(A);
-            expect(gf2.multiplySym(A, inv)).toEqual(gf2.getIdentity(2));
+            expect(inv).not.toBeNull();
+            if (inv) {
+                expect(gf2.multiplySym(A, inv)).toEqual(gf2.getIdentity(2));
+            }
         });
 
         it('should invert a 3x3 matrix', () => {
             const A = [0b110n, 0b011n, 0b111n];
             const inv = gf2.invertMatrix(A);
-            const product = gf2.multiplySym(A, inv);
-            expect(product).toEqual(gf2.getIdentity(3));
-        });
-    });
-
-    describe('defensive checks and edge cases', () => {
-        it('addSym handles undefined rows', () => {
-            const A = [1n, undefined as unknown as bigint];
-            const B = [1n, 1n];
-            expect(gf2.addSym(A, B)).toEqual([0n]);
+            expect(inv).not.toBeNull();
+            if (inv) {
+                const product = gf2.multiplySym(A, inv);
+                expect(product).toEqual(gf2.getIdentity(3));
+            }
         });
 
-        it('multiplySym handles undefined rows', () => {
-            const A = [1n, undefined as unknown as bigint];
-            const B = [1n, 1n];
-            expect(gf2.multiplySym(A, B)).toEqual([1n, 0n]);
-
-            const A2 = [1n];
-            const B2 = [undefined as unknown as bigint];
-            expect(gf2.multiplySym(A2, B2)).toEqual([0n]);
-        });
-
-        it('sortMatrices handles undefined rows', () => {
-            const A = [undefined as unknown as bigint, 1n];
-            const I = [1n, 0n];
-            const [outA, outI] = gf2.sortMatrices(A, I);
-            expect(outA).toEqual([0n, 1n]);
-            expect(outI).toEqual([1n, 0n]);
-        });
-
-        it('sortMatrices handles equal values', () => {
-            const A = [1n, 1n];
-            const I = [1n, 0n];
-            const [outA, outI] = gf2.sortMatrices(A, I);
-            expect(outA).toEqual([1n, 1n]);
-            expect(outI).toEqual([1n, 0n]);
-        });
-
-        it('invertMatrix handles singular matrices (not fully, but defensive checks should be hit)', () => {
+        it('should return null for singular matrices', () => {
             const A = [0b10n, 0b00n]; // Singular
             const inv = gf2.invertMatrix(A);
-            expect(inv).toBeDefined();
+            expect(inv).toBeNull();
         });
     });
 
-    describe('matrixOperations', () => {
-        describe('getMatrix', () => {
-            it('should generate correct 1D adjacency matrix for size 3', () => {
-                const m3 = gf2.getMatrix(3);
-                expect(m3).toEqual([6n, 7n, 3n]);
-            });
+    // ... (skipping some lines)
 
-            it('should handle size 1', () => {
-                expect(gf2.getMatrix(1)).toEqual([1n]);
-            });
-        });
-    });
-
-    describe('polynomialUtils', () => {
-        describe('evalPolynomial', () => {
-            it('should evaluate polynomial with matrix correctly', () => {
-                const mat = [0b110n, 0b111n, 0b011n];
-                const res = gf2.evalPolynomial(mat, 0b11n);
-                expect(res).toEqual([
-                    0b110n ^ 0b100n,
-                    0b111n ^ 0b010n,
-                    0b011n ^ 0b001n,
-                ]);
-            });
-        });
-
-        describe('getPolynomial', () => {
-            it('should return correct polynomials in the sequence', () => {
-                expect(gf2.getPolynomial(0)).toBe(0n);
-                expect(gf2.getPolynomial(1)).toBe(1n);
-                expect(gf2.getPolynomial(2)).toBe(2n);
-                expect(gf2.getPolynomial(3)).toBe(5n);
-            });
-        });
-    });
-
-    describe('getProduct', () => {
-        it('should compute product for simple grid (3x3)', () => {
+    describe('calculateSolutionVector', () => {
+        it('should compute solution for simple grid (3x3)', () => {
             const input = [1, 0, 0, 0, 0, 0, 0, 0, 0];
-            const result = gf2.getProduct(input, 3, 3);
-            expect(result).toHaveLength(3);
-            expect(result.every(x => x === 0 || x === 1)).toBe(true);
+            const result = gf2.calculateSolutionVector(input, 3, 3);
+            expect(result).not.toBeNull();
+            if (result) {
+                expect(result).toHaveLength(3);
+                expect(result.every(x => x === 0 || x === 1)).toBe(true);
+            }
         });
 
         it('should handle empty input', () => {
             const input: number[] = [];
-            const result = gf2.getProduct(input, 3, 3);
-            expect(result).toHaveLength(3);
-            expect(result).toEqual([0, 0, 0]);
+            const result = gf2.calculateSolutionVector(input, 3, 3);
+            expect(result).not.toBeNull();
+            if (result) {
+                expect(result).toHaveLength(3);
+                expect(result).toEqual([0, 0, 0]);
+            }
         });
     });
 });

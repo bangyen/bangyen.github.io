@@ -111,8 +111,8 @@ describe('boardHandlers', () => {
         it('should handle resize action', () => {
             const action: BoardAction = {
                 type: 'resize',
-                newRows: 4,
-                newCols: 4,
+                rows: 4,
+                cols: 4,
             };
             const newState = handleBoard(initialState, action);
 
@@ -331,7 +331,7 @@ describe('boardHandlers', () => {
     });
 
     describe('handleBoard - resize action', () => {
-        it('should handle resize with explicit newRows and newCols', () => {
+        it('should handle resize', () => {
             const state = {
                 grid: getGrid(3),
                 score: 0,
@@ -342,8 +342,8 @@ describe('boardHandlers', () => {
 
             const action: BoardAction = {
                 type: 'resize',
-                newRows: 4,
-                newCols: 5,
+                rows: 4,
+                cols: 5,
             };
             const newState = handleBoard(state, action);
 
@@ -351,7 +351,7 @@ describe('boardHandlers', () => {
             expect(newState.cols).toBe(5);
         });
 
-        it('should handle resize with only newRows', () => {
+        it('should handle resize with only rows (providing default for required cols)', () => {
             const state = {
                 grid: getGrid(3),
                 score: 0,
@@ -362,14 +362,15 @@ describe('boardHandlers', () => {
 
             const action: BoardAction = {
                 type: 'resize',
-                newRows: 5,
+                rows: 5,
+                cols: 3,
             };
             const newState = handleBoard(state, action);
 
             expect(newState.rows).toBe(5);
         });
 
-        it('should handle resize with only newCols', () => {
+        it('should handle resize with only cols (providing default for required rows)', () => {
             const state = {
                 grid: getGrid(3),
                 score: 0,
@@ -380,7 +381,8 @@ describe('boardHandlers', () => {
 
             const action: BoardAction = {
                 type: 'resize',
-                newCols: 6,
+                rows: 3,
+                cols: 6,
             };
             const newState = handleBoard(state, action);
 

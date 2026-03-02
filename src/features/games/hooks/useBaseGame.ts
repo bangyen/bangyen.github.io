@@ -232,8 +232,6 @@ export function useBaseGame<
             type: 'resize',
             rows,
             cols,
-            newRows: rows,
-            newCols: cols,
         } as unknown as A);
     }, [rows, cols, manualResize]);
 

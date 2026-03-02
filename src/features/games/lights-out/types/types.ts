@@ -14,10 +14,8 @@ export type BoardAction =
     | { type: 'random' | 'randomize' }
     | {
           type: 'resize';
-          rows?: number;
-          cols?: number;
-          newRows?: number;
-          newCols?: number;
+          rows: number;
+          cols: number;
       }
     | { type: 'reset' }
     | { type: 'new' | 'next' }

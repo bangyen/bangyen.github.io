@@ -16,13 +16,7 @@ export interface BaseGameState {
  * - `hydrate`: Load saved state
  */
 export type BaseGameAction<S> =
-    | {
-          type: 'resize';
-          rows?: number;
-          cols?: number;
-          newRows?: number;
-          newCols?: number;
-      }
+    | { type: 'resize'; rows?: number; cols?: number }
     | { type: 'new' }
     | { type: 'hydrate'; state: S };
 
@@ -86,28 +80,26 @@ export function createGameReducer<
             if (next !== null) return next;
         }
 
+        const baseAction = action as BaseGameAction<S>;
+
         switch (action.type) {
             case 'resize': {
-                if (
-                    'newRows' in action ||
-                    'rows' in action ||
-                    'cols' in action
-                ) {
-                    const r = action.newRows ?? action.rows ?? state.rows;
-                    const c = action.newCols ?? action.cols ?? state.cols;
-                    if (r === state.rows && c === state.cols) return state;
-                    return config.getInitialState(r, c);
-                }
-                return state;
+                const r =
+                    baseAction.type === 'resize'
+                        ? (baseAction.rows ?? state.rows)
+                        : state.rows;
+                const c =
+                    baseAction.type === 'resize'
+                        ? (baseAction.cols ?? state.cols)
+                        : state.cols;
+                if (r === state.rows && c === state.cols) return state;
+                return config.getInitialState(r, c);
             }
             case 'new': {
                 return config.getInitialState(state.rows, state.cols);
             }
             case 'hydrate': {
-                if ('state' in action) {
-                    return action.state;
-                }
-                return state;
+                return baseAction.type === 'hydrate' ? baseAction.state : state;
             }
             default: {
                 return state;

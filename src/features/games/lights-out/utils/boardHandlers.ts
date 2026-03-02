@@ -1,7 +1,7 @@
 import { PRECOMPUTED_SOLUTIONS } from './precomputedTables';
 import {
     countBits,
-    getProduct,
+    calculateSolutionVector,
 } from '../../../../utils/math/gf2/gf2Operations';
 import type { BoardState, BoardAction } from '../types';
 
@@ -107,15 +107,17 @@ function solveLastRow(
             }
         }
     } else {
-        // Fallback to getProduct
+        // Fallback to calculateSolutionVector
         const input: number[] = [];
         for (let i = 0; i < cols; i++) {
             input.push((lastRow >> i) & 1);
         }
 
-        const result = getProduct(input, rows, cols);
-        for (const [idx, val] of result.entries()) {
-            if (val) solutionMask |= 1 << idx;
+        const result = calculateSolutionVector(input, rows, cols);
+        if (result) {
+            for (const [idx, val] of result.entries()) {
+                if (val) solutionMask |= 1 << idx;
+            }
         }
     }
 
@@ -209,8 +211,9 @@ export const handleBoard = createGameReducer<BoardState, BoardAction>({
                 };
             }
             case 'resize': {
-                const r = action.newRows ?? action.rows ?? state.rows;
-                const c = action.newCols ?? action.cols ?? state.cols;
+                const resizeAction = action as { rows?: number; cols?: number };
+                const r = resizeAction.rows ?? state.rows;
+                const c = resizeAction.cols ?? state.cols;
                 return {
                     ...getInitialState(r, c),
                     grid: randomize(r, c),
