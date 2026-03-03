@@ -205,7 +205,7 @@ function ResearchChartInner<T>({
 
     return (
         <GlassCard sx={chartCardSx}>
-            <Typography variant="subtitle1" sx={chartTitleSx}>
+            <Typography variant="h3" sx={chartTitleSx}>
                 {chartTitle}
             </Typography>
             <Box sx={chartContainerSx}>
