@@ -43,10 +43,10 @@ const getGridSx = (columnCount: number): SxProps<Theme> => ({
  */
 const getButtonSx = (isActive: boolean): SxProps<Theme> => ({
     width: '100%',
-    color: isActive ? COLORS.text.primary : COLORS.text.secondary,
+    color: isActive ? '#1a1a1a' : COLORS.text.secondary,
     backgroundColor: isActive ? COLORS.primary.main : COLORS.surface.elevated,
     '&.MuiButton-root': {
-        color: isActive ? COLORS.text.primary : COLORS.text.secondary,
+        color: isActive ? '#1a1a1a' : COLORS.text.secondary,
     },
     borderColor: COLORS.border.subtle,
     borderWidth: '1px',

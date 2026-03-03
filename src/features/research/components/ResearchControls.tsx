@@ -105,8 +105,9 @@ function resolveSelectedTextColor(control: Control): string {
         control.color === COLORS.data.amber ||
         control.color === COLORS.primary.main;
 
-    // Use dark primary text for vibrant/light backgrounds, white for others
-    return isVibrantOrLight ? COLORS.text.primary : '#fff';
+    // Use hardcoded dark charcoal for high-vibrancy backgrounds to ensure
+    // enough contrast even in dark mode (where text.primary is white).
+    return isVibrantOrLight ? '#1a1a1a' : '#fff';
 }
 
 /**
