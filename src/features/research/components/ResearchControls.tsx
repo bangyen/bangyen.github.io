@@ -100,12 +100,13 @@ function resolveSelectedColor(control: Control): string {
  * ambers require dark text for optimal contrast.
  */
 function resolveSelectedTextColor(control: Control): string {
-    const isVibrant =
+    const isVibrantOrLight =
         control.color === COLORS.data.green ||
-        control.color === COLORS.data.amber;
+        control.color === COLORS.data.amber ||
+        control.color === COLORS.primary.main;
 
-    // Use dark primary text for vibrant backgrounds, white for others
-    return isVibrant ? COLORS.text.primary : '#fff';
+    // Use dark primary text for vibrant/light backgrounds, white for others
+    return isVibrantOrLight ? COLORS.text.primary : '#fff';
 }
 
 /**
