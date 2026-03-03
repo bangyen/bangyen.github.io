@@ -88,14 +88,26 @@ function getIconStyles(color: string | undefined): SxProps<Theme> {
 }
 
 /**
+ * Resolves the base colour for a selected toggle button. If the
+ * control uses a high-vibrancy data colour (green/amber), we use a
+ * darkened version to ensure sufficient contrast with white text.
+ */
+function resolveSelectedColor(control: Control): string {
+    if (control.color === COLORS.data.green) return 'hsl(141, 64%, 35%)';
+    if (control.color === COLORS.data.amber) return 'hsl(34, 95%, 35%)';
+    if (control.color === COLORS.primary.main) return COLORS.primary.dark;
+    return control.color ?? COLORS.primary.dark;
+}
+
+/**
  * Resolves the hover colour for a selected toggle button based on
  * the control's explicit `hoverColor` or its base `color`.
  */
 function resolveSelectedHoverColor(control: Control): string {
     if (control.hoverColor) return control.hoverColor;
     if (control.color === COLORS.primary.main) return COLORS.primary.dark;
-    if (control.color === COLORS.data.green) return RESEARCH_STYLES.GREEN.HOVER;
-    if (control.color === COLORS.data.amber) return RESEARCH_STYLES.AMBER.HOVER;
+    if (control.color === COLORS.data.green) return 'hsl(141, 64%, 30%)';
+    if (control.color === COLORS.data.amber) return 'hsl(34, 95%, 30%)';
     return control.color ?? COLORS.primary.dark;
 }
 
@@ -104,6 +116,7 @@ function resolveSelectedHoverColor(control: Control): string {
  * dynamic selected/hover colour logic that depends on `control`.
  */
 function getToggleButtonGroupStyles(control: Control): SxProps<Theme> {
+    const selectedColor = resolveSelectedColor(control);
     const selectedHover = resolveSelectedHoverColor(control);
 
     return {
@@ -129,9 +142,9 @@ function getToggleButtonGroupStyles(control: Control): SxProps<Theme> {
             borderRadius: 0,
             transition: ANIMATIONS.transitions.standard,
             '&.Mui-selected': {
-                backgroundColor: control.color ?? COLORS.primary.main,
-                color: COLORS.text.primary,
-                borderColor: control.color ?? COLORS.primary.main,
+                backgroundColor: selectedColor,
+                color: '#fff',
+                borderColor: selectedColor,
                 '&:hover': {
                     backgroundColor: selectedHover,
                     borderColor: selectedHover,
