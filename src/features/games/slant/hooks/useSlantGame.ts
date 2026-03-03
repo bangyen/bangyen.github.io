@@ -144,9 +144,22 @@ export function useSlantGame() {
     const cellProps = useMemo(
         () => (r: number, c: number) => {
             const pos = `${r.toString()},${c.toString()}`;
-            return getDragProps(pos);
+            const dragProps = getDragProps(pos);
+            const gridRow = state.grid[r];
+            const value = gridRow ? gridRow[c] : 0;
+            const label =
+                value === 1
+                    ? 'Forward Slash'
+                    : value === 2
+                      ? 'Backward Slash'
+                      : 'Empty';
+
+            return {
+                ...dragProps,
+                'aria-label': `Cell at row ${(r + 1).toString()}, column ${(c + 1).toString()} - ${label}`,
+            };
         },
-        [getDragProps],
+        [getDragProps, state.grid],
     );
 
     const overlayProps = useMemo(

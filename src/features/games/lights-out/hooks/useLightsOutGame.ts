@@ -80,15 +80,25 @@ export function useLightsOutGame() {
     const getDragProps = useCallback(
         (pos: string) => {
             const dragProps = getBaseDragProps(pos);
+            const parts = pos.split(',').map(Number);
+            const r = parts[0];
+            const c = parts[1];
+
+            if (r === undefined || c === undefined) return dragProps;
+
+            const isLit = getCellValue(state.grid, r, c);
+            const label = isLit ? 'On' : 'Off';
+
             return {
                 ...dragProps,
+                'aria-label': `Cell at row ${(r + 1).toString()}, column ${(c + 1).toString()} - ${label}`,
                 onKeyDown: (e: React.KeyboardEvent) => {
                     dragProps.onKeyDown(e);
                     handleGridNav(e);
                 },
             };
         },
-        [getBaseDragProps, handleGridNav],
+        [getBaseDragProps, handleGridNav, state.grid],
     );
 
     // 1. Theme/Palette
