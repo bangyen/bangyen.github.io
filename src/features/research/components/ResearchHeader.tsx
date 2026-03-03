@@ -124,7 +124,7 @@ export const ResearchHeader = React.memo(function ResearchHeader({
         backUrl && isMobile ? (
             <BackButton backUrl={backUrl} sx={backButtonFlushSx} />
         ) : (
-            <Typography variant="h5" sx={subtitleSx}>
+            <Typography variant="h2" sx={subtitleSx}>
                 {subtitle}
             </Typography>
         );
