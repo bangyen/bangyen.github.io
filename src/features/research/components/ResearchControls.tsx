@@ -88,15 +88,24 @@ function getIconStyles(color: string | undefined): SxProps<Theme> {
 }
 
 /**
- * Resolves the base colour for a selected toggle button. If the
- * control uses a high-vibrancy data colour (green/amber), we use a
- * darkened version to ensure sufficient contrast with white text.
+ * Resolves the base colour for a selected toggle button.
  */
 function resolveSelectedColor(control: Control): string {
-    if (control.color === COLORS.data.green) return 'hsl(141, 64%, 35%)';
-    if (control.color === COLORS.data.amber) return 'hsl(34, 95%, 35%)';
-    if (control.color === COLORS.primary.main) return COLORS.primary.dark;
-    return control.color ?? COLORS.primary.dark;
+    return control.color ?? COLORS.primary.main;
+}
+
+/**
+ * Resolves the text colour for a selected toggle button based on
+ * the perceived lightness of its background. Vibrant greens and
+ * ambers require dark text for optimal contrast.
+ */
+function resolveSelectedTextColor(control: Control): string {
+    const isVibrant =
+        control.color === COLORS.data.green ||
+        control.color === COLORS.data.amber;
+
+    // Use dark primary text for vibrant backgrounds, white for others
+    return isVibrant ? COLORS.text.primary : '#fff';
 }
 
 /**
@@ -106,8 +115,8 @@ function resolveSelectedColor(control: Control): string {
 function resolveSelectedHoverColor(control: Control): string {
     if (control.hoverColor) return control.hoverColor;
     if (control.color === COLORS.primary.main) return COLORS.primary.dark;
-    if (control.color === COLORS.data.green) return 'hsl(141, 64%, 30%)';
-    if (control.color === COLORS.data.amber) return 'hsl(34, 95%, 30%)';
+    if (control.color === COLORS.data.green) return RESEARCH_STYLES.GREEN.HOVER;
+    if (control.color === COLORS.data.amber) return RESEARCH_STYLES.AMBER.HOVER;
     return control.color ?? COLORS.primary.dark;
 }
 
@@ -117,6 +126,7 @@ function resolveSelectedHoverColor(control: Control): string {
  */
 function getToggleButtonGroupStyles(control: Control): SxProps<Theme> {
     const selectedColor = resolveSelectedColor(control);
+    const selectedTextColor = resolveSelectedTextColor(control);
     const selectedHover = resolveSelectedHoverColor(control);
 
     return {
@@ -143,7 +153,7 @@ function getToggleButtonGroupStyles(control: Control): SxProps<Theme> {
             transition: ANIMATIONS.transitions.standard,
             '&.Mui-selected': {
                 backgroundColor: selectedColor,
-                color: '#fff',
+                color: selectedTextColor,
                 borderColor: selectedColor,
                 '&:hover': {
                     backgroundColor: selectedHover,
