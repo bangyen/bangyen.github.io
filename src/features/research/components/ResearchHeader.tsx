@@ -59,13 +59,14 @@ const headerContainerSx: SxProps<Theme> = {
 /** Row that holds the title and subtitle side by side. */
 const headerRowSx: SxProps<Theme> = {
     display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: { xs: 'column', md: 'row' },
+    justifyContent: { xs: 'center', md: 'space-between' },
     alignItems: {
         xs: 'center',
         md: 'baseline',
     },
     width: '100%',
+    gap: { xs: 1, md: 0 },
 };
 
 /** Main h1 title text. */
