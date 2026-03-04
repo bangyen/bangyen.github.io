@@ -91,16 +91,9 @@ export function createAppTheme(mode: 'light' | 'dark' = 'dark') {
                     body: {
                         // Removed non-composited transition to improve Lighthouse performance
                     },
-                    '@keyframes fadeInUp': {
-                        from: {
-                            opacity: 0,
-                            transform: 'translateY(20px)',
-                        },
-                        to: {
-                            opacity: 1,
-                            transform: 'translateY(0)',
-                        },
-                    },
+                    '@keyframes fadeInUp': ANIMATIONS.keyframes['fadeInUp'],
+                    '@keyframes fadeIn': ANIMATIONS.keyframes['fadeIn'],
+                    '@keyframes scaleIn': ANIMATIONS.keyframes['scaleIn'],
                 },
             },
             MuiButton: {

@@ -35,6 +35,12 @@ export interface Animations {
         menu: number;
     };
     presets: AnimationPresets;
+    keyframes: Record<string, Record<string, Record<string, string | number>>>;
+    motion: {
+        fadeInUp: (delay?: number) => Record<string, string | number>;
+        fadeIn: (delay?: number) => Record<string, string | number>;
+        scaleIn: (delay?: number) => Record<string, string | number>;
+    };
 }
 
 export const ANIMATIONS: Animations = {
@@ -67,5 +73,42 @@ export const ANIMATIONS: Animations = {
             backdropFilter: 'blur(8px) saturate(140%)',
             border: `1px solid ${COLORS.border.subtle}`,
         },
+    },
+    keyframes: {
+        fadeInUp: {
+            from: {
+                opacity: 0,
+                transform: 'translateY(20px)',
+            },
+            to: {
+                opacity: 1,
+                transform: 'translateY(0)',
+            },
+        },
+        fadeIn: {
+            from: { opacity: 0 },
+            to: { opacity: 1 },
+        },
+        scaleIn: {
+            from: { opacity: 0, transform: 'scale(0.95)' },
+            to: { opacity: 1, transform: 'scale(1)' },
+        },
+    },
+    motion: {
+        fadeInUp: (delay = 0) => ({
+            opacity: 0,
+            animation: `fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards`,
+            animationDelay: `${String(delay)}s`,
+        }),
+        fadeIn: (delay = 0) => ({
+            opacity: 0,
+            animation: `fadeIn 0.3s ease-out forwards`,
+            animationDelay: `${String(delay)}s`,
+        }),
+        scaleIn: (delay = 0) => ({
+            opacity: 0,
+            animation: `scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards`,
+            animationDelay: `${String(delay)}s`,
+        }),
     },
 };

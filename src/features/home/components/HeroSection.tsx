@@ -90,8 +90,7 @@ const heroCtaRowSx: SxProps<Theme> = {
     flexWrap: 'wrap',
     justifyContent: { xs: 'center', md: 'flex-start' },
     opacity: 0,
-    animation: 'fadeInUp 0.35s ease-out forwards',
-    animationDelay: '0.08s',
+    ...ANIMATIONS.motion.fadeInUp(0.08),
 };
 
 /** "View Work" pill button. */
@@ -205,8 +204,7 @@ export function HeroSection(): React.ReactElement {
                         <Box
                             sx={{
                                 opacity: 0,
-                                animation: 'fadeInUp 0.35s ease-out forwards',
-                                animationDelay: '0.06s',
+                                ...ANIMATIONS.motion.fadeInUp(0.06),
                             }}
                         >
                             <TechStack />
@@ -214,8 +212,7 @@ export function HeroSection(): React.ReactElement {
                         <Box
                             sx={{
                                 opacity: 0,
-                                animation: 'fadeInUp 0.35s ease-out forwards',
-                                animationDelay: '0.1s',
+                                ...ANIMATIONS.motion.fadeInUp(0.1),
                             }}
                         >
                             <ConnectSection />

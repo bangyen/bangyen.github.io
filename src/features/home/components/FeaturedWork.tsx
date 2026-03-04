@@ -8,7 +8,7 @@ import { Section } from './Layout';
 import { HOME_TEXT } from '../config/constants';
 
 import { PUBLICATIONS, PROJECTS } from '@/config/constants';
-import { COLORS, TYPOGRAPHY } from '@/config/theme';
+import { COLORS, TYPOGRAPHY, ANIMATIONS } from '@/config/theme';
 
 /** Section heading that reads "Featured Work". */
 const sectionTitleSx: SxProps<Theme> = {
@@ -35,8 +35,7 @@ export function FeaturedWork(): React.ReactElement {
             <Box
                 sx={{
                     opacity: 0,
-                    animation: 'fadeInUp 0.35s ease-out forwards',
-                    animationDelay: '0.2s',
+                    ...ANIMATIONS.motion.fadeInUp(0.2),
                 }}
             >
                 <Typography sx={sectionTitleSx}>
@@ -49,8 +48,9 @@ export function FeaturedWork(): React.ReactElement {
                             key={publication.title}
                             sx={{
                                 opacity: 0,
-                                animation: 'fadeInUp 0.35s ease-out forwards',
-                                animationDelay: `${(0.25 + index * 0.04).toFixed(2)}s`,
+                                ...ANIMATIONS.motion.fadeInUp(
+                                    0.25 + index * 0.04,
+                                ),
                             }}
                         >
                             <PublicationCard publication={publication} />
@@ -61,8 +61,9 @@ export function FeaturedWork(): React.ReactElement {
                             key={project.title}
                             sx={{
                                 opacity: 0,
-                                animation: 'fadeInUp 0.35s ease-out forwards',
-                                animationDelay: `${(0.35 + index * 0.04).toFixed(2)}s`,
+                                ...ANIMATIONS.motion.fadeInUp(
+                                    0.35 + index * 0.04,
+                                ),
                             }}
                         >
                             <ProjectCard project={project} />

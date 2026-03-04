@@ -16,6 +16,8 @@ export interface ComponentVariants {
         display: string;
         flexDirection: string;
         transition: string;
+        boxShadow: string;
+        borderTop?: string;
     };
     badge: {
         fontSize: string;
@@ -47,6 +49,8 @@ export interface ComponentVariants {
         '&:hover': {
             backgroundColor: string;
             transform: string;
+            boxShadow: string;
+            borderColor: string;
         };
         '&:focus': {
             outline: string;
@@ -64,11 +68,13 @@ export const BASE_CARD = {
     backgroundColor: COLORS.surface.glass,
     backdropFilter: 'blur(24px) saturate(180%)',
     border: `1px solid ${COLORS.border.subtle}`,
+    borderTop: `1px solid hsla(0, 0%, 100%, 0.1)`,
     borderRadius: SPACING.borderRadius.lg,
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
     transition: ANIMATIONS.transition,
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
 };
 
 export const COMPONENT_VARIANTS: ComponentVariants = {
@@ -78,7 +84,9 @@ export const COMPONENT_VARIANTS: ComponentVariants = {
         cursor: 'pointer',
         '&:hover': {
             backgroundColor: COLORS.interactive.selected,
-            transform: 'translateY(-2px)',
+            transform: 'translateY(-4px)',
+            boxShadow: '0 12px 24px rgba(0, 0, 0, 0.2)',
+            borderColor: COLORS.primary.main,
         },
         '&:focus': {
             outline: 'none',

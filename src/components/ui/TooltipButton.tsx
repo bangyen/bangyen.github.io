@@ -1,4 +1,4 @@
-import type { IconButtonProps } from '@mui/material';
+import type { IconButtonProps, SxProps, Theme } from '@mui/material';
 import { Tooltip, IconButton } from '@mui/material';
 import React from 'react';
 
@@ -33,12 +33,16 @@ export interface TooltipButtonProps extends Omit<
     rel?: string;
     /** React Router `to` prop when `component={Link}`. */
     to?: string;
+    /** Whether the button is in an active/selected state. */
+    active?: boolean;
 }
 
 export function TooltipButton({
     Icon,
     title,
     size = 'large',
+    active = false,
+    sx,
     ...rest
 }: TooltipButtonProps) {
     const iconButtonSize = size === 'inherit' ? undefined : size;
@@ -46,7 +50,29 @@ export function TooltipButton({
     return (
         <Tooltip title={title}>
             <span>
-                <IconButton size={iconButtonSize} aria-label={title} {...rest}>
+                <IconButton
+                    size={iconButtonSize}
+                    aria-label={title}
+                    sx={
+                        [
+                            {
+                                color: active
+                                    ? 'var(--primary-main)'
+                                    : 'inherit',
+                                backgroundColor: active
+                                    ? 'var(--interactive-selected)'
+                                    : 'transparent',
+                                '&:hover': {
+                                    backgroundColor: 'var(--interactive-hover)',
+                                },
+                            },
+                            ...(Array.isArray(sx)
+                                ? (sx as SxProps<Theme>[])
+                                : [sx]),
+                        ] as SxProps<Theme>
+                    }
+                    {...rest}
+                >
                     <Icon fontSize="inherit" aria-hidden="true" />
                 </IconButton>
             </span>
