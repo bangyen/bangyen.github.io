@@ -91,6 +91,8 @@ export function InteractiveBoard({
 
                 {/* Interaction Overlay Layer */}
                 <Box
+                    role="grid"
+                    aria-label="Game board"
                     sx={{
                         gridArea: '1/1',
                         display: 'grid',
@@ -108,6 +110,8 @@ export function InteractiveBoard({
                         return (
                             <Box
                                 key={`cell-${r.toString()}-${c.toString()}`}
+                                role="gridcell"
+                                aria-label={`Row ${String(r + 1)}, Column ${String(c + 1)}`}
                                 sx={{
                                     display: 'flex',
                                     alignItems: 'center',
