@@ -143,5 +143,35 @@ describe('gf2Operations', () => {
                 expect(result).toEqual([0, 0, 0]);
             }
         });
+        describe('sortMatrices', () => {
+            it('should sort matrices based on the values in the first matrix', () => {
+                const matrix = [0b10n, 0b11n, 0b01n];
+                const identity = [0b100n, 0b010n, 0b001n];
+                const [sorted, sortedId] = gf2.sortMatrices(matrix, identity);
+
+                expect(sorted).toEqual([0b11n, 0b10n, 0b01n]);
+                expect(sortedId).toEqual([0b010n, 0b100n, 0b001n]);
+            });
+        });
+
+        describe('getPolynomial', () => {
+            it('should compute the k-th polynomial in the sequence', () => {
+                expect(gf2.getPolynomial(0)).toBe(0n);
+                expect(gf2.getPolynomial(1)).toBe(1n);
+                expect(gf2.getPolynomial(2)).toBe(2n); // x*1 + 0 = x (represented as 0b10n)
+                expect(gf2.getPolynomial(3)).toBe(5n); // x*x + 1 (represented as 0b101n)
+            });
+        });
+
+        describe('evalPolynomial', () => {
+            it('should evaluate a polynomial of a matrix', () => {
+                const A = [1n, 1n]; // Example matrix
+                const poly = 0b11n; // 1 + x
+                const result = gf2.evalPolynomial(A, poly);
+                // Result should be I + A
+                const expected = gf2.addSym(gf2.getIdentity(2), A);
+                expect(result).toEqual(expected);
+            });
+        });
     });
 });

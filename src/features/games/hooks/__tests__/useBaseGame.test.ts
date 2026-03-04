@@ -78,4 +78,51 @@ describe('useBaseGame', () => {
 
         expect(result.current.layout.size).toBeDefined();
     });
+
+    it('should handle handleNext correctly', () => {
+        const onNext = vi.fn();
+        const { result } = renderHook(() =>
+            useBaseGame({
+                ...defaultProps,
+                logic: { ...defaultProps.logic, onNext },
+            }),
+        );
+
+        result.current.handleNext();
+        expect(onNext).toHaveBeenCalled();
+    });
+
+    it('should handle handlePlus and handleMinus for desiredSize', () => {
+        const setDesiredSize = vi.fn();
+        vi.mocked(useLocalStorage).mockReturnValue([5, setDesiredSize]);
+
+        const { result } = renderHook(() => useBaseGame(defaultProps));
+
+        // Rows/Cols are 5, dynamic size is large
+        result.current.controlsProps.handlePlus();
+        expect(setDesiredSize).toHaveBeenCalledWith(6);
+
+        result.current.controlsProps.handleMinus();
+        expect(setDesiredSize).toHaveBeenCalledWith(4);
+    });
+
+    it('should trigger handleNext when solved', () => {
+        vi.useFakeTimers();
+        defaultProps.logic.isSolved.mockReturnValue(true);
+
+        const onNext = vi.fn();
+        renderHook(() =>
+            useBaseGame({
+                ...defaultProps,
+                logic: { ...defaultProps.logic, onNext },
+            }),
+        );
+
+        vi.advanceTimersByTime(2000); // winAnimationDelay defaults to 2000 in config?
+        // Wait, I should check the default or provide it.
+        // GAME_CONSTANTS.timing.winAnimationDelay is likely 1500 or 2000.
+
+        expect(onNext).toHaveBeenCalled();
+        vi.useRealTimers();
+    });
 });

@@ -6,6 +6,7 @@ import { RouterProvider } from 'react-router-dom';
 import { router } from './config/routes';
 import { createAppTheme } from './config/theme';
 import { ThemeProvider, useThemeContext } from './hooks/useTheme';
+import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import { GlobalStyles } from './styles/GlobalStyles';
 
 /**
@@ -38,3 +39,5 @@ root.render(
         </ThemeProvider>
     </React.StrictMode>,
 );
+
+serviceWorkerRegistration.register();

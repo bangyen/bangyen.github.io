@@ -129,8 +129,8 @@ function main() {
     } catch {
         console.error(
             'Error: python3 is not available in your PATH.\n' +
-            'Python 3.x is required for bun run data:update.\n' +
-            'Please refer to the Prerequisites section in README.md.',
+                'Python 3.x is required for bun run data:update.\n' +
+                'Please refer to the Prerequisites section in README.md.',
         );
         process.exit(1);
     }

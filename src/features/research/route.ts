@@ -16,8 +16,11 @@ export const researchRoutes: RouteObject[] = [
         lazy: async () => {
             const { ZSharp } = await import('./pages/ZSharp');
             const { loadRealZSharpData } = await import('./pages/zsharpConfig');
+            const { LoadingFallback } =
+                await import('@/components/ui/LoadingFallback');
             return {
                 Component: ZSharp,
+                HydrateFallback: LoadingFallback,
                 loader: async () => {
                     try {
                         return await loadRealZSharpData();
@@ -34,8 +37,11 @@ export const researchRoutes: RouteObject[] = [
             const { Oligopoly } = await import('./pages/Oligopoly');
             const { loadRealSimulationMatrix } =
                 await import('./pages/oligopolyConfig');
+            const { LoadingFallback } =
+                await import('@/components/ui/LoadingFallback');
             return {
                 Component: Oligopoly,
+                HydrateFallback: LoadingFallback,
                 loader: async () => {
                     try {
                         return await loadRealSimulationMatrix();

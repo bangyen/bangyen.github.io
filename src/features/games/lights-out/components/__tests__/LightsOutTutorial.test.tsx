@@ -78,8 +78,12 @@ vi.mock('@/features/games/components/GameInfo/Example', () => ({
             {extraActions}
         </div>
     ),
-    ExampleActionButton: ({ children, ...props }: any) => (
-        <button {...props}>{children}</button>
+    ExampleActionButton: ({ children, startIcon, endIcon, ...props }: any) => (
+        <button {...props}>
+            {startIcon}
+            {children}
+            {endIcon}
+        </button>
     ),
     useExampleAnimation: () => ({
         frameIdx: 0,
