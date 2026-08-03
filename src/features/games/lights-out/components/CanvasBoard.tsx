@@ -17,6 +17,13 @@ interface CanvasBoardProps {
     width?: number; // in rem (optional, defaults to size)
 }
 
+/** Canvas render resolution in px per rem. */
+const PX_PER_REM = 40;
+/** Maximum corner radius as a fraction of the smaller cell dimension. */
+const MAX_CORNER_RADIUS_RATIO = 0.35;
+/** Color / corner interpolation speed per frame (0-1). */
+const LERP_FACTOR = 0.4;
+
 export function CanvasBoard({
     grid,
     palette,
@@ -41,10 +48,10 @@ export function CanvasBoard({
         const cellSizeRemH = remHeight;
         const cellSizeRemW = remWidth ?? remHeight;
 
-        const pxScale = 40;
+        const pxScale = PX_PER_REM;
         const h = cellSizeRemH * pxScale;
         const w = cellSizeRemW * pxScale;
-        const maxR = Math.min(w, h) * 0.35;
+        const maxR = Math.min(w, h) * MAX_CORNER_RADIUS_RATIO;
 
         const colorGridRGB = grid.map(row =>
             row.map(cell =>
@@ -127,7 +134,7 @@ export function CanvasBoard({
 
     const render = useCallback(
         (ctx: CanvasRenderingContext2D, width: number, height: number) => {
-            const lerpFactor = 0.4;
+            const lerpFactor = LERP_FACTOR;
 
             const totalWidthRem = (remWidth ?? remHeight) * cols;
             const totalHeightRem = remHeight * rows;
@@ -137,7 +144,7 @@ export function CanvasBoard({
             const drawH = remHeight * pxScaleH;
             const drawW = (remWidth ?? remHeight) * pxScaleW;
 
-            const radiusFactor = drawW / ((remWidth ?? remHeight) * 40);
+            const radiusFactor = drawW / ((remWidth ?? remHeight) * PX_PER_REM);
 
             const updateLayer = (
                 currentLColors: RGB[][],

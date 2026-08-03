@@ -18,6 +18,17 @@ export const validateGridSize = (n: number): void => {
         throw new Error('Invalid grid size: must be between 1 and 100');
 };
 
+/**
+ * Validates a grid dimension pair (rows and columns).
+ * @param rows - Number of rows.
+ * @param cols - Number of columns.
+ * @throws Error if either dimension is invalid.
+ */
+export const validateGridDimensions = (rows: number, cols: number): void => {
+    validateGridSize(rows);
+    validateGridSize(cols);
+};
+
 // ---------------------------------------------------------------------------
 // Game info modal base interface
 // ---------------------------------------------------------------------------

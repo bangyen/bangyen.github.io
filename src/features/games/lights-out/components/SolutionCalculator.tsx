@@ -4,6 +4,7 @@ import React from 'react';
 
 import { CanvasBoard } from './CanvasBoard';
 import type { Palette } from '../types';
+import { mergeTransparentCellSx } from '../utils/transparentCellSx';
 
 import { ContentCopyRounded, FileDownloadRounded } from '@/components/icons';
 import { COLORS } from '@/config/theme';
@@ -96,11 +97,12 @@ export const SolutionCalculator = React.memo(function SolutionCalculator({
     hasPattern,
 }: SolutionCalculatorProps) {
     // Account for modal padding on very narrow screens (~17rem available on 320px width)
-    const MAX_CELL = isMobileSm ? Math.min(3, 17 / cols) : 3; // rem
-    const cellSize = Math.min(size * (isMobile ? 0.9 : 0.8), MAX_CELL);
+    const MAX_CELL_REM = isMobileSm ? Math.min(3, 17 / cols) : 3;
+    const cellSize = Math.min(size * (isMobile ? 0.9 : 0.8), MAX_CELL_REM);
 
     // Calculate scaling factor for width.
-    const scaledCellWidth = cellSize * Math.pow(1.5, 3 / cols);
+    const CELL_WIDTH_SCALING = Math.pow(1.5, 3 / cols);
+    const scaledCellWidth = cellSize * CELL_WIDTH_SCALING;
 
     // Layout constants/thresholds.
     const HORIZONTAL_THRESHOLD_REM = 55;
@@ -145,27 +147,12 @@ export const SolutionCalculator = React.memo(function SolutionCalculator({
     const inputProps = React.useMemo(() => {
         return (row: number, col: number) => {
             const props = rawInputProps(row, col);
-            /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
-            const sx = (props['sx'] as any) || {};
             return {
                 ...props,
                 backgroundColor: 'transparent',
                 // Icons (children) are only visible on hover/focus.
-                ['sx']: {
-                    ...sx,
-                    backgroundColor: 'transparent !important',
-                    color: 'transparent',
-                    '&:hover': {
-                        ...sx['&:hover'],
-                        color: sx['&:hover']?.color ?? 'inherit',
-                    },
-                    '&:focus-visible': {
-                        ...sx['&:focus-visible'],
-                        color: sx['&:focus-visible']?.color ?? 'inherit',
-                    },
-                },
+                sx: mergeTransparentCellSx(props['sx']),
             };
-            /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
         };
     }, [rawInputProps]);
 

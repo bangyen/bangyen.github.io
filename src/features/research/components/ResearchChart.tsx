@@ -260,6 +260,4 @@ function ResearchChartInner<T>({
     );
 }
 
-export const ResearchChart = React.memo(
-    ResearchChartInner,
-) as typeof ResearchChartInner;
+export const ResearchChart = React.memo(ResearchChartInner);

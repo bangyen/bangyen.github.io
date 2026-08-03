@@ -16,6 +16,15 @@ const WORKER_PROBE_TIMEOUT_MS = 2000;
  */
 const GENERATION_DEBOUNCE_MS = 250;
 
+/**
+ * Logs a worker warning with a consistent prefix.
+ * Wrapped in a helper so callers don't each need a `no-console` disable.
+ */
+const warnWorker = (message: string) => {
+    // eslint-disable-next-line no-console
+    console.warn(`[Slant] ${message}`);
+};
+
 type SlantDispatch = React.Dispatch<
     SlantAction | { type: 'hydrate'; state: SlantState }
 >;
@@ -319,8 +328,7 @@ export function useGenerationWorker({
         // If the probe doesn't respond in time, mark the worker broken.
         const probeTimer = setTimeout(() => {
             if (!cancelled && workerStatus.current === 'probing') {
-                // eslint-disable-next-line no-console
-                console.warn('[Slant] generation worker probe timed out');
+                warnWorker('generation worker probe timed out');
                 workerStatus.current = 'broken';
                 workerPendingRef.current = 0;
                 genWorkerRef.current = null;
@@ -332,9 +340,8 @@ export function useGenerationWorker({
             if (cancelled) return;
 
             if (e.data.type === 'ERROR') {
-                // eslint-disable-next-line no-console
-                console.warn(
-                    `[Slant] generation worker error: ${String(e.data.payload.message)}`,
+                warnWorker(
+                    `generation worker error: ${String(e.data.payload.message)}`,
                 );
                 clearTimeout(probeTimer);
                 workerStatus.current = 'broken';
@@ -410,8 +417,7 @@ export function useGenerationWorker({
         };
 
         worker.onerror = () => {
-            // eslint-disable-next-line no-console
-            console.warn('[Slant] generation worker script error');
+            warnWorker('generation worker script error');
             clearTimeout(probeTimer);
             workerStatus.current = 'broken';
             workerPendingRef.current = 0;

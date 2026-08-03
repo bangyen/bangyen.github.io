@@ -8,7 +8,7 @@ import {
     getSatisfiedNodes,
 } from './validation';
 
-import { validateGridSize } from '@/features/games/types';
+import { validateGridDimensions } from '@/features/games/types';
 import { createGameReducer } from '@/utils/gameUtils';
 
 // Export everything from types for backward compatibility where needed,
@@ -140,8 +140,7 @@ function getValidationState(
 }
 
 export function getInitialState(rows: number, cols: number): SlantState {
-    validateGridSize(rows);
-    validateGridSize(cols);
+    validateGridDimensions(rows, cols);
     const { numbers, solution } = generatePuzzle(rows, cols);
     return {
         grid: Array.from(

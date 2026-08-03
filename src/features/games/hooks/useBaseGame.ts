@@ -1,8 +1,14 @@
-import { useEffect, useReducer, useMemo, useCallback, useRef } from 'react';
-import type { Dispatch } from 'react';
+import {
+    useEffect,
+    useReducer,
+    useMemo,
+    useCallback,
+    useRef,
+    useState,
+} from 'react';
 
 import { calculateBoardSize } from './boardSizeUtils';
-import type { BaseGameConfig, BaseControlsProps } from './types';
+import type { BaseGameConfig, BaseGameResult } from './types';
 import {
     useWindow,
     useMobile,
@@ -17,7 +23,7 @@ import {
 } from '../config/constants';
 import { GAME_TOKENS } from '../config/tokens';
 
-import type { BaseGameState, BaseGameAction } from '@/utils/gameUtils';
+import type { BaseGameState } from '@/utils/gameUtils';
 
 /**
  * Custom hook that orchestrates all game state management, including layout,
@@ -88,7 +94,7 @@ export function useBaseGame<
         const pY =
             typeof gridPadding === 'number' ? gridPadding : gridPadding.y;
 
-        const remToPx = 16;
+        const remToPx = DEFAULT_BOARD_CONFIG.remBase;
         const cellSizePx = referenceSize * remToPx;
         const availableH = height - currentHeaderOffset - pY;
         const availableW =
@@ -155,11 +161,8 @@ export function useBaseGame<
     ]);
 
     // 3. State Management
-    const initialRef = useRef<S | null>(null);
-    if (initialRef.current === null) {
-        initialRef.current = getInitialState(rows, cols);
-    }
-    const [state, dispatch] = useReducer(reducer, initialRef.current);
+    const [initialState] = useState<S>(() => getInitialState(rows, cols));
+    const [state, dispatch] = useReducer(reducer, initialState);
     const solved = useMemo(() => isSolved(state), [state, isSolved]);
 
     const onNextRef = useRef(onNext);
@@ -169,7 +172,7 @@ export function useBaseGame<
         if (onNextRef.current) {
             onNextRef.current();
         } else {
-            dispatch({ type: 'new' } as unknown as A);
+            dispatch({ type: 'new' });
         }
     }, []);
 
@@ -193,7 +196,7 @@ export function useBaseGame<
                 dispatch({
                     type: 'hydrate',
                     state: hydratedState,
-                } as unknown as A);
+                });
             } catch {
                 localStorage.removeItem(persistenceKey);
             }
@@ -210,7 +213,7 @@ export function useBaseGame<
                 JSON.stringify(serialize(state)),
             );
         },
-        300,
+        GAME_CONSTANTS.timing.persistenceDelay,
         [persistenceKey, state, persistence?.serialize],
     );
 
@@ -232,7 +235,7 @@ export function useBaseGame<
             type: 'resize',
             rows,
             cols,
-        } as unknown as A);
+        });
     }, [rows, cols, manualResize]);
 
     // 6. UI Controls
@@ -277,24 +280,7 @@ export function useBaseGame<
         setDesiredSize,
     ]);
 
-    const result: {
-        state: S;
-        dispatch: Dispatch<A | BaseGameAction<S>>;
-        solved: boolean;
-        handleNext: () => void;
-        layout: {
-            rows: number;
-            cols: number;
-            size: number;
-            mobile: boolean;
-            scaling: {
-                iconSize: string;
-                containerSize: string;
-                padding: number;
-            };
-        };
-        controlsProps: BaseControlsProps;
-    } = {
+    const result: BaseGameResult<S, A> = {
         state,
         dispatch,
         solved,

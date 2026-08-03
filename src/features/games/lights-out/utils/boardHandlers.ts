@@ -1,7 +1,7 @@
 import { calculateSolutionVector } from '../../../../utils/math/gf2/gf2Operations';
 import type { BoardState, BoardAction } from '../types';
 
-import { validateGridSize } from '@/features/games/types';
+import { validateGridDimensions } from '@/features/games/types';
 import { createGameReducer } from '@/utils/gameUtils';
 
 export const getGrid = (rows: number): number[] =>
@@ -180,8 +180,7 @@ export function getNextMove(
 }
 
 export function getInitialState(rows: number, cols: number): BoardState {
-    validateGridSize(rows);
-    validateGridSize(cols);
+    validateGridDimensions(rows, cols);
     return {
         grid: getGrid(rows),
         score: 0,

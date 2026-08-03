@@ -1,4 +1,14 @@
 /**
+ * Type guard for non-null objects.
+ *
+ * Useful for validating data loaded from external sources (e.g. localStorage)
+ * where values arrive as `unknown` and must be narrowed before field access.
+ */
+export function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null;
+}
+
+/**
  * Generates a unique string key for a grid position.
  * @param r - Row index
  * @param c - Column index

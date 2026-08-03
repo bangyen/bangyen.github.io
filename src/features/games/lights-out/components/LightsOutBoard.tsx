@@ -3,6 +3,7 @@ import React from 'react';
 
 import { CanvasBoard } from './CanvasBoard';
 import type { Palette } from '../types';
+import { mergeTransparentCellSx } from '../utils/transparentCellSx';
 
 import { InteractiveBoard } from '@/features/games/components/InteractiveBoard';
 
@@ -33,26 +34,10 @@ export function LightsOutBoard({
         if (!frontLayer) return;
         return (row: number, col: number) => {
             const props = frontLayer.cellProps(row, col);
-            /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
-            const sx = (props['sx'] || {}) as any;
-
             return {
                 ...props,
-                ['sx']: {
-                    ...sx,
-                    backgroundColor: 'transparent !important',
-                    color: 'transparent',
-                    '&:hover': {
-                        ...sx['&:hover'],
-                        color: sx['&:hover']?.color ?? 'inherit',
-                    },
-                    '&:focus-visible': {
-                        ...sx['&:focus-visible'],
-                        color: sx['&:focus-visible']?.color ?? 'inherit',
-                    },
-                },
+                sx: mergeTransparentCellSx(props['sx']),
             };
-            /* eslint-enable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
         };
     }, [frontLayer]);
 

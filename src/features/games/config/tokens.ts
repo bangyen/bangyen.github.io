@@ -17,4 +17,6 @@ export const GAME_TOKENS = {
     },
 } as const;
 
+export type GameScaling =
+    (typeof GAME_TOKENS.scaling)[keyof typeof GAME_TOKENS.scaling];
 export type GameScalingVariant = keyof typeof GAME_TOKENS.scaling;

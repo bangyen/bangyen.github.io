@@ -1,3 +1,6 @@
+import type { Dispatch } from 'react';
+
+import type { GameScaling } from '../config/tokens';
 import type { GameFeatureState } from '../types/gameState';
 
 import type { BaseGameAction } from '@/utils/gameUtils';
@@ -5,6 +8,31 @@ import type { BaseGameAction } from '@/utils/gameUtils';
 // ---------------------------------------------------------------------------
 // Shared return-shape types
 // ---------------------------------------------------------------------------
+
+/**
+ * The game-resolved board layout derived from viewport size.
+ * (Scaling token keys like `iconSize` / `containerSize` are CSS strings.)
+ */
+export interface GameLayout {
+    rows: number;
+    cols: number;
+    size: number;
+    mobile: boolean;
+    scaling: GameScaling;
+}
+
+/**
+ * Everything `useBaseGame` returns: current state, dispatch, win flag,
+ * advance callback, resolved layout, and the control-bar props.
+ */
+export interface BaseGameResult<S, A> {
+    state: S;
+    dispatch: Dispatch<A | BaseGameAction<S>>;
+    solved: boolean;
+    handleNext: () => void;
+    layout: GameLayout;
+    controlsProps: BaseControlsProps;
+}
 
 /**
  * The control-bar props that `useBaseGame` returns.

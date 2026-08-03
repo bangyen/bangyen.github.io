@@ -11,6 +11,7 @@ export const GAME_CONSTANTS = {
         interactionDelay: 500,
         autoPlaySpeed: 300,
         touchHoldDelay: 500,
+        persistenceDelay: 300,
         standardTransition: '150ms ease-in-out',
     },
     animations: {

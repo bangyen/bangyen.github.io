@@ -61,8 +61,8 @@ function useSteppedModal(
         if (!persistenceKey) return 0;
         try {
             const saved = sessionStorage.getItem(persistenceKey);
-            const parsed = saved ? parseInt(saved, 10) : 0;
-            return isNaN(parsed) || parsed < 0 || parsed >= totalSteps
+            const parsed = saved ? Number.parseInt(saved, 10) : 0;
+            return Number.isNaN(parsed) || parsed < 0 || parsed >= totalSteps
                 ? 0
                 : parsed;
         } catch {
@@ -71,31 +71,26 @@ function useSteppedModal(
     });
 
     const handleNext = useCallback(() => {
-        setStep(prev => {
-            const next = prev + 1;
-            if (next < totalSteps) {
-                if (persistenceKey) {
-                    sessionStorage.setItem(persistenceKey, String(next));
-                }
-                return next;
+        const next = step + 1;
+        if (next < totalSteps) {
+            if (persistenceKey) {
+                sessionStorage.setItem(persistenceKey, String(next));
             }
+            setStep(next);
+        } else {
             onClose();
-            return prev;
-        });
-    }, [totalSteps, onClose, persistenceKey]);
+        }
+    }, [step, totalSteps, onClose, persistenceKey]);
 
     const handleBack = useCallback(() => {
-        setStep(prev => {
-            if (prev > 0) {
-                const next = prev - 1;
-                if (persistenceKey) {
-                    sessionStorage.setItem(persistenceKey, String(next));
-                }
-                return next;
+        const next = step - 1;
+        if (next >= 0) {
+            if (persistenceKey) {
+                sessionStorage.setItem(persistenceKey, String(next));
             }
-            return prev;
-        });
-    }, [persistenceKey]);
+            setStep(next);
+        }
+    }, [step, persistenceKey]);
 
     return { step, handleNext, handleBack };
 }

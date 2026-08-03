@@ -1,6 +1,8 @@
 import { STORAGE_KEYS } from '../config/constants';
 import type { SlantState } from '../types';
 
+import { isRecord } from '@/utils/gameUtils';
+
 /**
  * Serialised form of `SlantState` where the `Set` fields have been
  * converted to plain arrays for JSON storage.
@@ -43,20 +45,18 @@ export function serializeSlantState(state: SlantState): SavedSlantState {
  * from crashing the game when stored data is corrupt or stale.
  */
 export function isSavedSlantState(value: unknown): value is SavedSlantState {
-    if (typeof value !== 'object' || value === null) return false;
-
-    const obj = value as Record<string, unknown>;
+    if (!isRecord(value)) return false;
 
     return (
-        Array.isArray(obj['grid']) &&
-        Array.isArray(obj['numbers']) &&
-        Array.isArray(obj['solution']) &&
-        typeof obj['rows'] === 'number' &&
-        typeof obj['cols'] === 'number' &&
-        typeof obj['solved'] === 'boolean' &&
-        Array.isArray(obj['errorNodes']) &&
-        Array.isArray(obj['cycleCells']) &&
-        Array.isArray(obj['satisfiedNodes'])
+        Array.isArray(value['grid']) &&
+        Array.isArray(value['numbers']) &&
+        Array.isArray(value['solution']) &&
+        typeof value['rows'] === 'number' &&
+        typeof value['cols'] === 'number' &&
+        typeof value['solved'] === 'boolean' &&
+        Array.isArray(value['errorNodes']) &&
+        Array.isArray(value['cycleCells']) &&
+        Array.isArray(value['satisfiedNodes'])
     );
 }
 
@@ -103,9 +103,8 @@ export function hasSavedUnsolvedPuzzle(rows: number, cols: number): boolean {
 
     try {
         const parsed: unknown = JSON.parse(saved);
-        if (typeof parsed !== 'object' || parsed === null) return false;
-        const obj = parsed as Record<string, unknown>;
-        return obj['solved'] === false;
+        if (!isRecord(parsed)) return false;
+        return parsed['solved'] === false;
     } catch {
         return false;
     }
