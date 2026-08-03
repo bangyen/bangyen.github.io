@@ -1,6 +1,6 @@
 {
     "short_name": "Bangyen",
-    "name": "Bangyen Pham - Portfolio",
+    "name": "Bangyen Pham - AI & Backend Portfolio",
     "icons": [
         {
             "src": "favicon.ico",
@@ -22,6 +22,7 @@
     ],
     "start_url": ".",
     "display": "standalone",
+    "orientation": "any",
     "theme_color": "#f2f2f2",
     "background_color": "#ffffff"
 }
