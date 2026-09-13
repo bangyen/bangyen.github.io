@@ -4,6 +4,9 @@
             "startServerCommand": "bun run preview --host 127.0.0.1",
             "startServerReadyPattern": "Local",
             "numberOfRuns": 1,
+            "settings": {
+                "chromeFlags": "--no-sandbox"
+            },
             "url": [
                 "http://127.0.0.1:4173/",
                 "http://127.0.0.1:4173/lights-out"
