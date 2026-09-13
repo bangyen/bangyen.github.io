@@ -6,6 +6,26 @@ import * as axeMatchers from 'vitest-axe/matchers';
 
 expect.extend(axeMatchers);
 
+const storage = new Map<string, string>();
+const localStorageMock: Storage = {
+    get length() {
+        return storage.size;
+    },
+    clear: () => {
+        storage.clear();
+    },
+    getItem: key => storage.get(key) ?? null,
+    key: index => [...storage.keys()][index] ?? null,
+    removeItem: key => {
+        storage.delete(key);
+    },
+    setItem: (key, value) => storage.set(key, value),
+};
+Object.defineProperty(globalThis, 'localStorage', {
+    configurable: true,
+    value: localStorageMock,
+});
+
 // Mock window.matchMedia
 Object.defineProperty(globalThis, 'matchMedia', {
     writable: true,

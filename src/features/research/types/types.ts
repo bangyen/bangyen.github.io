@@ -76,6 +76,8 @@ export interface ResearchPageChromeProps {
     title: string;
     /** Document title set via PageLayout. Falls back to `title` if omitted. */
     pageTitle?: string;
+    /** Route-specific summary used by search and social metadata. */
+    description?: string;
     subtitle: string;
     githubUrl: string;
     children?: React.ReactNode;

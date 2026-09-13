@@ -15,6 +15,7 @@ export function Oligopoly() {
         <ResearchDemo
             title="Oligopoly"
             pageTitle={PAGE_TITLES.oligopoly}
+            description="Explore an interactive agent-based Cournot competition simulation and compare market concentration and pricing dynamics."
             subtitle="Agent-Based Economic Competition Analysis"
             githubUrl={URLS.oligopolyRepo}
             chart={{

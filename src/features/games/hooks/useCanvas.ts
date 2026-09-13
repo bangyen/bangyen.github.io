@@ -5,25 +5,21 @@ interface UseCanvasOptions {
         ctx: CanvasRenderingContext2D,
         width: number,
         height: number,
-    ) => void;
-    dependencies: unknown[];
+    ) => boolean;
 }
 
 /**
  * A hook that manages a canvas element's lifecycle and rendering.
  */
-export function useCanvas({
-    onRender,
-    dependencies: _dependencies,
-}: UseCanvasOptions) {
+export function useCanvas({ onRender }: UseCanvasOptions) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const render = useCallback(() => {
         const canvas = canvasRef.current;
-        if (!canvas) return;
+        if (!canvas) return true;
 
         const ctx = canvas.getContext('2d');
-        if (!ctx) return;
+        if (!ctx) return true;
 
         const dpr = globalThis.window.devicePixelRatio || 1;
         const rect = canvas.getBoundingClientRect();
@@ -39,7 +35,7 @@ export function useCanvas({
         // Always set scale and clean clear to be sure
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-        onRender(ctx, rect.width, rect.height);
+        return onRender(ctx, rect.width, rect.height);
     }, [onRender]);
 
     useEffect(() => {
@@ -61,8 +57,9 @@ export function useCanvas({
         let animationFrameId: number;
 
         const loop = () => {
-            render();
-            animationFrameId = requestAnimationFrame(loop);
+            if (render()) {
+                animationFrameId = requestAnimationFrame(loop);
+            }
         };
 
         animationFrameId = requestAnimationFrame(loop);
@@ -97,6 +94,7 @@ export interface RGB {
 }
 
 const colorCache = new Map<string, RGB>();
+const COLOR_CACHE_LIMIT = 128;
 let sharedCtx: CanvasRenderingContext2D | null = null;
 
 export const parseColor = (color: string): RGB => {
@@ -115,6 +113,7 @@ export const parseColor = (color: string): RGB => {
     sharedCtx.fillRect(0, 0, 1, 1);
     const data = sharedCtx.getImageData(0, 0, 1, 1).data;
     const res = { r: data[0] || 0, g: data[1] || 0, b: data[2] || 0 };
+    if (colorCache.size >= COLOR_CACHE_LIMIT) colorCache.clear();
     colorCache.set(color, res);
     return res;
 };

@@ -37,7 +37,7 @@ const cardHeaderSx: SxProps<Theme> = {
 
 /** Category label (e.g. "Engineering", "Research"). */
 const cardCategoryTextSx: SxProps<Theme> = {
-    color: COLORS.primary.main,
+    color: 'var(--primary-readable)',
     fontSize: TYPOGRAPHY.fontSize.caption,
     fontWeight: TYPOGRAPHY.fontWeight.medium,
     textTransform: COMPONENT_VARIANTS.badge.textTransform,
@@ -46,7 +46,7 @@ const cardCategoryTextSx: SxProps<Theme> = {
 
 /** Category icon colour. */
 const cardCategoryIconSx: SxProps<Theme> = {
-    color: COLORS.primary.main,
+    color: 'var(--primary-readable)',
 };
 
 /** Card title. */
@@ -126,7 +126,6 @@ export function BaseCard({
             href={url}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`${title} — ${category}`}
             sx={cardLinkSx}
         >
             <GlassCard sx={cardGlassSx}>

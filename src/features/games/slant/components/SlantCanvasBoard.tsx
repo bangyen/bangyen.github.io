@@ -62,6 +62,7 @@ export function SlantCanvasBoard({
         (ctx: CanvasRenderingContext2D, width: number) => {
             const spaceRem = 0.3;
             const paddingRem = remSize * 0.6;
+            let animating = false;
 
             // Calculate pxScale dynamically to match the CSS layout exactly
             const totalWidthRem = cols * (remSize + spaceRem) + 2 * paddingRem;
@@ -116,6 +117,8 @@ export function SlantCanvasBoard({
                         const birthday = slashBirthdays.current.get(pos) || 0;
                         const age = now - birthday;
                         const duration = 150;
+
+                        if (age < duration) animating = true;
 
                         let scale = 1;
                         let opacity = 1;
@@ -226,6 +229,8 @@ export function SlantCanvasBoard({
                     ctx.fillText(value.toString(), x, y);
                 }
             }
+
+            return animating;
         },
         [
             grid,
@@ -247,7 +252,6 @@ export function SlantCanvasBoard({
 
     const canvasRef = useCanvas({
         onRender: render,
-        dependencies: [render],
     });
 
     const spaceRem = 0.3;

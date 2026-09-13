@@ -15,6 +15,7 @@ export function ZSharp() {
         <ResearchDemo
             title="ZSharp"
             pageTitle={PAGE_TITLES.zsharp}
+            description="Explore ZSharp experiments comparing sharpness-aware neural-network optimization methods across accuracy, loss, and convergence metrics."
             subtitle="Neural Network Optimization Research"
             githubUrl={URLS.zsharpRepo}
             chart={{ data: chartData }}

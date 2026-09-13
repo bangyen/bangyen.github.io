@@ -1,133 +1,107 @@
-# Bangyen's Personal Website
+# Bangyen's Portfolio
 
-[![React](https://img.shields.io/badge/React-19.2.3-blue.svg?logo=react)](https://react.dev/)
-[![MUI](https://img.shields.io/badge/MUI-7.3.7-007FFF?logo=mui)](https://mui.com/)
-[![Vite](https://img.shields.io/badge/Vite-7.3.1-646CFF?logo=vite)](https://vitejs.dev/)
-[![GitHub Pages](https://img.shields.io/badge/Deployed%20on-GitHub%20Pages-green.svg?logo=github)](https://pages.github.com/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI/CD](https://github.com/bangyen/bangyen.github.io/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/bangyen/bangyen.github.io/actions/workflows/ci-cd.yml)
+[![React](https://img.shields.io/badge/React-19-149eca?logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6?logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-7-646cff?logo=vite)](https://vite.dev/)
 
-A personal portfolio showcasing interactive games, algorithm implementation, and research visualization. Built with React and optimized with Vite.
+An interactive engineering portfolio combining research visualizations with
+algorithmic puzzle games. The site is a typed React application deployed as an
+installable PWA on GitHub Pages.
 
-**Live Site**: [https://bangyen.github.io](https://bangyen.github.io) | **System Overview**: [ARCHITECTURE.md](ARCHITECTURE.md)
+**[Visit the live site](https://bangyen.github.io)** ·
+**[Architecture](ARCHITECTURE.md)** · **[Contributing](CONTRIBUTING.md)**
 
-## Features
+![Bangyen Pham portfolio home page](public/og-image.png)
 
-### Interactive Games
+## What is inside
 
-- **Lights Out**: Grid puzzle game with [algebraic solver](src/features/games/lights-out/README.md) (pure TypeScript GF(2) linear algebra)
-- **Slant**: Diagonal line logic puzzle with procedural generation and cycle detection
+- **Lights Out** — an interactive grid puzzle with Gaussian elimination over
+  GF(2).
+- **Slant** — procedurally generated logic puzzles using graph traversal,
+  disjoint-set union, cycle detection, and background workers.
+- **ZSharp** — interactive views of sharpness-aware neural-network optimization
+  experiments.
+- **Oligopoly** — an agent-based Cournot competition visualization with
+  adjustable market parameters.
 
-### Research & Visualization
+Game algorithms and state are written in TypeScript and kept separate from
+React rendering. Expensive Slant generation and solving run in Web Workers.
 
-- **ZSharp**: Sharpness-Aware Minimization (SAM) visualization comparing ML optimization algorithms
-- **Oligopoly**: Cournot competition economic simulation with interactive parameter controls
+## Stack
 
-### Technical Highlights
+- React 19, React Router 7, Material UI 7, and Emotion
+- TypeScript 5 with strict and unchecked-index checks
+- Vite 7 and Bun 1.3.9
+- Recharts for research visualizations
+- Vitest, Testing Library, vitest-axe, Playwright, and Lighthouse CI
+- `vite-plugin-pwa`/Workbox for generated, versioned offline support
 
-- **Pure TypeScript**: All game logic and algorithms implemented in TypeScript (no WASM)
-- **Algorithm Showcase**: Lights Out (GF(2) linear algebra), Slant (graph theory + DSU)
-- **Responsive Design**: Glassmorphism UI with dark/light theme toggle
-- **Game Features**: Standardized UI visuals and harmonized game architecture
-- **Modern React**: React 19 with hooks, Material-UI 7, Vite 7 for fast builds
-- **Streamlined Tooling**: Automated research data updates with Python-based generation
+## Run locally
 
-## Tech Stack
-
-- **Frontend**: React 19, Material-UI 7, React Router 7
-- **Build Tooling**: Vite 7, TypeScript 5, Bun
-- **Styling**: Vanilla CSS, Emotion
-- **Data & Visualization**: KaTeX (Math), Recharts (Charts)
-- **Testing**: Vitest 4, React Testing Library
-- **Quality Control**: ESLint 9 (Flat Config), Prettier 3, Husky, lint-staged
-- **Deployment**: GitHub Pages, Bun (package manager)
-
-## Getting Started
-
-### Prerequisites
-
-- [Bun](https://bun.sh/) (v1.1 or higher)
-- **Python 3.x** (Required **only** for `bun run data:update`; research data is pre-bundled for standard development)
-
-### Installation
-
-1. Clone the repository:
+Requirements: [Bun 1.3.9](https://bun.sh/) and, only when regenerating research
+data, Python 3 and Git.
 
 ```bash
 git clone https://github.com/bangyen/bangyen.github.io.git
 cd bangyen.github.io
+bun install --frozen-lockfile
+bun run dev
 ```
 
-2. Install dependencies:
+Open <http://localhost:3000>.
+
+## Quality commands
+
+| Command                 | Purpose                                                  |
+| ----------------------- | -------------------------------------------------------- |
+| `bun run ci`            | Lint, type-check, cover, build, and check bundle budgets |
+| `bun run test`          | Run unit and component tests                             |
+| `bun run test:coverage` | Test and enforce the current coverage baseline           |
+| `bun run test:e2e`      | Test desktop and mobile production builds in Chromium    |
+| `bun run lighthouse`    | Check performance, accessibility, practices, and SEO     |
+| `bun run build:analyze` | Build and open the bundle visualization                  |
+| `bun run data:update`   | Regenerate and compress the research datasets            |
+
+Install the Playwright browser once before the first local end-to-end run:
 
 ```bash
-bun install
+bunx playwright install chromium
 ```
 
-3. Start the development server:
+Coverage thresholds begin at the measured baseline and should rise over time.
+CI rejects any JavaScript chunk over 400 KiB or a total JavaScript build over
+1 MiB.
 
-```bash
-bun start
-```
+## Structure
 
-4. Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-## Available Scripts
-
-- `bun start` - Start Vite development server on localhost:3000
-- `bun run build` - Create production build in `build/` directory
-- `bun run build:analyze` - Build and analyze bundle sizes
-- `bun test` - Run Vitest tests
-- `bun run test:watch` - Run tests in watch mode
-- `bun run ci` - Run tests in CI mode (used by GitHub Actions)
-- `bun run test:coverage` - Generate coverage report
-- `bun run type-check` - Run TypeScript type checking
-- `bun run lint` - Run ESLint checks
-- `bun run lint:fix` - Auto-fix ESLint issues
-- `bun run format` - Format code with Prettier
-- `bun run format:check` - Check Prettier formatting
-- `bun run lint:all` - Run lint and format checking
-- `bun run data:update` - Update research data (clones external repos, runs Python generation, and compresses results)
-    - **Prerequisites**: Requires Python 3.x and `git`.
-    - **Note**: This script creates a virtual environment in `temp_research_repos/` and installs dependencies automatically.
-    - **Troubleshooting**: If it fails, try `bun run data:update -- --clean` to start from a fresh state.
-- `bun run deploy` - Deploy to GitHub Pages (gh-pages branch)
-
-## Project Structure
-
-```
+```text
 src/
-├── components/           # Shared UI components
-│   ├── layout/          # PageLayout, Navigation, ErrorBoundary
-│   ├── ui/              # Reusable controls (CustomGrid, GlassCard, etc.)
-│   └── icons/           # Material-UI icons
-├── config/              # Global configuration
-│   ├── constants/       # Routes, page titles, app configuration
-│   └── theme/           # MUI theme, colors, typography
-├── features/            # Feature-based architecture
-│   ├── games/          # Lights Out & Slant games
-│   │   ├── lights-out/ # Lights Out solver & UI
-│   │   ├── slant/      # Slant puzzle generator & solver
-│   │   ├── components/ # Shared game components (Board, etc.)
-│   │   ├── hooks/      # Game-specific hooks
-│   │   ├── types/      # Game type definitions
-│   │   └── config/     # Game configuration & constants
-│   ├── research/       # Research data visualization
-│   │   ├── pages/      # ZSharp, Oligopoly pages
-│   │   ├── components/ # Research visualization components
-│   │   ├── hooks/      # Data handling hooks
-│   │   ├── utils/      # Analysis & simulation utilities
-│   │   └── types/      # Research data definitions
-│   └── home/           # Landing page with projects
-├── hooks/              # Global React hooks (useTheme, useWorker, etc.)
-├── utils/              # Shared utilities
-│   ├── math/gf2/      # GF(2) linear algebra (Lights Out solver)
-│   └── DSU.ts         # Disjoint Set Union (Slant cycle detection)
-├── styles/             # Global CSS (animations)
-└── index.tsx          # App entry point with routing
+├── components/          Shared layout and UI primitives
+├── config/              Routes, content, and design tokens
+├── features/
+│   ├── games/           Shared game framework, Lights Out, and Slant
+│   ├── home/            Portfolio landing page
+│   └── research/        Research charts, controls, and data loaders
+├── hooks/               Cross-feature React hooks
+├── styles/              Global MUI styles
+└── utils/               Shared algorithms and test utilities
+e2e/                     Production-build browser tests
+scripts/                 Data generation and build-budget checks
+public/                  Icons, fonts, redirect fallback, and compressed data
 ```
 
-## Development
+Clean browser URLs are supported on GitHub Pages by a small `404.html` recovery
+page. Route titles, descriptions, canonical URLs, and social metadata update on
+navigation. The service worker and manifest are generated during builds; do not
+edit files under `build/`.
 
-**Testing**: Vitest with React Testing Library. Run `bun run test:coverage` for reports.  
-**Code Quality**: Automated via ESLint 9 and Husky pre-commit hooks.  
-**Continuous Integration**: GitHub Actions verify all PRs via linting and unit testing via Bun.
+## Deployment
+
+Pull requests run linting, type checks, coverage, a production build, browser
+tests, Lighthouse, and bundle budgets. A successful push to `main` is deployed
+through the official GitHub Pages artifact workflow.
+
+Research datasets are committed in gzip-compressed form, so normal development
+does not require Python. See [CONTRIBUTING.md](CONTRIBUTING.md) before updating
+them.

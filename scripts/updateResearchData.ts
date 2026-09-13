@@ -1,6 +1,6 @@
 import { execSync } from 'node:child_process';
 import * as fs from 'node:fs';
-import * as path from 'node:path';
+import path from 'node:path';
 import * as zlib from 'node:zlib';
 
 const TEMP_DIR = path.resolve(process.cwd(), 'temp_research_repos');

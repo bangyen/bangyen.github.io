@@ -83,6 +83,10 @@ export function createAppTheme(mode: 'light' | 'dark' = 'dark') {
                         '--selection-text': palette.selectionText,
                         '--text-shadow': palette.textShadow,
                         '--primary-main': COLORS.primary.main,
+                        '--primary-readable':
+                            mode === 'light'
+                                ? 'hsl(217, 91%, 38%)'
+                                : COLORS.primary.main,
                         '--primary-light': COLORS.primary.light,
                         '--primary-dark': COLORS.primary.dark,
                         // Feature-specific CSS variables

@@ -24,7 +24,7 @@ export function ProjectCard({ project }: ProjectCardProps): React.ReactElement {
             title={project.title}
             badge={project.technology}
             badgeColor={COLORS.interactive.selected}
-            badgeTextColor={COLORS.primary.main}
+            badgeTextColor="var(--primary-readable)"
             description={project.description}
         />
     );

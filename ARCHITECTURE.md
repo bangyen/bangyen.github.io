@@ -37,6 +37,24 @@ To keep the codebase maintainable, we strictly separate the "Engine" (mathematic
 - **Python**: Used for data-heavy research updates (see `bun run data:update`).
 - **Vite**: Build pipeline and development server.
 - **Vitest**: Unit testing framework mirroring Jest/Mocha APIs.
+- **Playwright**: Production-build interaction, responsive, and accessibility
+  smoke tests.
+- **Workbox**: Generated precache and runtime caching through `vite-plugin-pwa`.
+
+## Delivery and Quality Boundaries
+
+```text
+source → lint/type-check/unit coverage → production build → bundle budget
+       → Playwright + axe → Lighthouse → GitHub Pages artifact deployment
+```
+
+Route components are lazy-loaded. `PageLayout` owns route metadata so titles,
+descriptions, canonical URLs, and social tags stay synchronized. Clean URLs use
+browser history; `public/404.html` preserves deep links when GitHub Pages first
+serves its fallback document.
+
+The generated service worker precaches versioned assets and removes stale
+caches. Research datasets use stale-while-revalidate runtime caching.
 
 ## Navigation Tips
 

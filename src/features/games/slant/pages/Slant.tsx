@@ -19,6 +19,7 @@ export function Slant() {
     return (
         <StandardGameLayout
             title={PAGE_TITLES.slant}
+            description="Play procedurally generated Slant puzzles powered by graph theory, cycle detection, and web workers."
             infoUrl="https://en.wikipedia.org/wiki/Slant_(puzzle)"
             boardSx={boardSx}
             boardProps={{

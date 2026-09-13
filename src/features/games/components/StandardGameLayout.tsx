@@ -55,6 +55,8 @@ const BoardContainerBase = styled(Box, {
 export interface StandardGameLayoutProps<TBoardProps, TInfoProps> {
     /** Page title (e.g., "Lights Out"). */
     title: string;
+    /** Route-specific summary used by search and social metadata. */
+    description?: string;
     /** External URL for game information. */
     infoUrl: string;
     /** Props for the board or game container. */
@@ -93,6 +95,7 @@ export interface StandardGameLayoutProps<TBoardProps, TInfoProps> {
  */
 export function StandardGameLayout<TBoardProps, TInfoProps>({
     title,
+    description,
     infoUrl,
     boardProps,
     gameState,
@@ -116,6 +119,7 @@ export function StandardGameLayout<TBoardProps, TInfoProps>({
     return (
         <PageLayout
             title={title}
+            description={description}
             infoUrl={infoUrl}
             background={background}
             containerSx={{

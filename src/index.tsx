@@ -12,7 +12,7 @@ import { GlobalStyles } from './styles/GlobalStyles';
 /**
  * Root application component that provides MUI theming and renders
  * the data router.  Lazy route loading and error boundaries are
- * handled by `createHashRouter` via the `lazy` and `errorElement`
+ * handled by React Router via the `lazy` and `errorElement`
  * properties in the route table.
  */
 const App = (): React.ReactElement => {

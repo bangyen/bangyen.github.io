@@ -20,7 +20,7 @@ export function TechStack(): React.ReactElement {
         <GlassCard>
             <Typography
                 sx={{
-                    color: COLORS.primary.main,
+                    color: 'var(--primary-readable)',
                     fontSize: TYPOGRAPHY.fontSize.subheading,
                     fontWeight: TYPOGRAPHY.fontWeight.semibold,
                     marginBottom: 3,
@@ -87,13 +87,13 @@ export function TechStack(): React.ReactElement {
                             >
                                 <IconComponent
                                     sx={{
-                                        color: COLORS.primary.main,
+                                        color: 'var(--primary-readable)',
                                         fontSize: TYPOGRAPHY.fontSize.body,
                                     }}
                                 />
                                 <Typography
                                     sx={{
-                                        color: COLORS.primary.main,
+                                        color: 'var(--primary-readable)',
                                         fontSize: TYPOGRAPHY.fontSize.body,
                                         fontWeight:
                                             TYPOGRAPHY.fontWeight.medium,

@@ -54,3 +54,6 @@ coverage_output_*.txt
 /target/
 **/target/
 stats.html
+.lighthouseci/
+playwright-report/
+test-results/

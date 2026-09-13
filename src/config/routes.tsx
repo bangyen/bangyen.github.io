@@ -1,4 +1,4 @@
-import { createHashRouter, Outlet } from 'react-router-dom';
+import { createBrowserRouter, Outlet } from 'react-router-dom';
 
 import { ROUTES } from './constants';
 
@@ -13,12 +13,13 @@ import { researchRoutes } from '@/features/research/route';
 /**
  * Centralised route table using React Router's data API.
  *
- * Uses `createHashRouter` for GitHub Pages compatibility.  Error
+ * Uses clean browser routes. GitHub Pages deep links are restored by
+ * `public/404.html` before React starts. Error
  * boundaries are handled via `errorElement` at each layout level,
  * and lazy loading uses the native `lazy` property instead of
  * `React.lazy` + `lazyNamed`.
  */
-export const router = createHashRouter(
+export const router = createBrowserRouter(
     [
         {
             errorElement: <RouteRootError />,

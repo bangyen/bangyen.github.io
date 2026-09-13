@@ -1,17 +1,7 @@
-/* eslint-disable no-console */
+import { registerSW } from 'virtual:pwa-register';
+
 export function register() {
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker
-                .register('/sw.js')
-                .then(registration => {
-                    console.log('SW registered:', registration);
-                })
-                .catch((registrationError: unknown) => {
-                    console.log('SW registration failed:', registrationError);
-                });
-        });
-    }
+    registerSW({ immediate: true });
 }
 
 export function unregister() {
@@ -20,10 +10,8 @@ export function unregister() {
             .then(registration => {
                 void registration.unregister();
             })
-            .catch((error: unknown) => {
-                if (error instanceof Error) {
-                    console.error(error.message);
-                }
+            .catch(() => {
+                // Unregistering is best-effort during cleanup and tests.
             });
     }
 }

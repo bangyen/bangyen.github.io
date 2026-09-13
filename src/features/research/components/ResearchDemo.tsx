@@ -66,6 +66,7 @@ const chartErrorFallback = (
 export const ResearchDemo = <T,>({
     title,
     pageTitle,
+    description,
     subtitle,
     githubUrl,
     children,
@@ -128,7 +129,11 @@ export const ResearchDemo = <T,>({
     ]);
 
     return (
-        <PageLayout title={pageTitle ?? title} githubUrl={githubUrl}>
+        <PageLayout
+            title={pageTitle ?? title}
+            description={description}
+            githubUrl={githubUrl}
+        >
             <MobileProvider>
                 <Grid
                     container={true}

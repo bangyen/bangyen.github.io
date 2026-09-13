@@ -17,6 +17,15 @@ interface UseLocalStorageOptions<T> {
     deserialize?: (raw: string) => T | undefined;
 }
 
+const getStorage = (): Storage | undefined => {
+    try {
+        if (!('window' in globalThis)) return undefined;
+        return globalThis.localStorage;
+    } catch {
+        return undefined;
+    }
+};
+
 /**
  * Synchronises a piece of React state with `localStorage`.
  *
@@ -48,8 +57,8 @@ export function useLocalStorage<T>(
 
     const [value, setValue] = useState<T>(() => {
         try {
-            const raw = localStorage.getItem(key);
-            if (raw === null) return defaultValue;
+            const raw = getStorage()?.getItem(key);
+            if (raw == null) return defaultValue;
             const parsed = deserialize(raw);
             return parsed === undefined ? defaultValue : parsed;
         } catch {
@@ -59,7 +68,7 @@ export function useLocalStorage<T>(
 
     useEffect(() => {
         try {
-            localStorage.setItem(key, serialize(value));
+            getStorage()?.setItem(key, serialize(value));
         } catch {
             // Quota exceeded or other storage error; silently ignore.
         }

@@ -104,26 +104,30 @@ export function InteractiveBoard({
                         pointerEvents: 'auto',
                     }}
                 >
-                    {Array.from({ length: rows * cols }).map((_, i) => {
-                        const r = Math.floor(i / cols);
-                        const c = i % cols;
-                        return (
-                            <Box
-                                key={`cell-${r.toString()}-${c.toString()}`}
-                                role="gridcell"
-                                aria-label={`Row ${String(r + 1)}, Column ${String(c + 1)}`}
-                                sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    width: '100%',
-                                    height: '100%',
-                                }}
-                            >
-                                {renderOverlayCell(r, c, i)}
-                            </Box>
-                        );
-                    })}
+                    {Array.from({ length: rows }).map((_, r) => (
+                        <Box
+                            key={`row-${r.toString()}`}
+                            role="row"
+                            sx={{ display: 'contents' }}
+                        >
+                            {Array.from({ length: cols }).map((__, c) => (
+                                <Box
+                                    key={`cell-${r.toString()}-${c.toString()}`}
+                                    role="gridcell"
+                                    aria-label={`Row ${String(r + 1)}, Column ${String(c + 1)}`}
+                                    sx={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        width: '100%',
+                                        height: '100%',
+                                    }}
+                                >
+                                    {renderOverlayCell(r, c, r * cols + c)}
+                                </Box>
+                            ))}
+                        </Box>
+                    ))}
                 </Box>
 
                 {/* Optional Extra Overlay Layer (Hints, etc) */}

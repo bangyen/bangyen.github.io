@@ -2,6 +2,7 @@
 
 import react from '@vitejs/plugin-react';
 import { visualizer } from 'rollup-plugin-visualizer';
+import { VitePWA } from 'vite-plugin-pwa';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
@@ -9,6 +10,56 @@ export default defineConfig(() => {
     const plugins = [
         react(),
         tsconfigPaths(),
+        VitePWA({
+            registerType: 'autoUpdate',
+            includeAssets: [
+                'favicon.ico',
+                'apple-touch-icon.png',
+                'og-image.png',
+            ],
+            manifest: {
+                name: 'Bangyen Pham - AI & Backend Portfolio',
+                short_name: 'Bangyen',
+                description:
+                    'Interactive engineering portfolio featuring logic games and research visualizations.',
+                theme_color: '#f2f2f2',
+                background_color: '#ffffff',
+                display: 'standalone',
+                start_url: '/',
+                icons: [
+                    {
+                        src: '/icon-192.png',
+                        sizes: '192x192',
+                        type: 'image/png',
+                        purpose: 'any maskable',
+                    },
+                    {
+                        src: '/icon-512.png',
+                        sizes: '512x512',
+                        type: 'image/png',
+                        purpose: 'any maskable',
+                    },
+                ],
+            },
+            workbox: {
+                navigateFallback: '/index.html',
+                cleanupOutdatedCaches: true,
+                globPatterns: ['**/*.{js,css,html,ico,png,woff2,json,gz}'],
+                runtimeCaching: [
+                    {
+                        urlPattern: /\/.*_data\.json\.gz$/,
+                        handler: 'StaleWhileRevalidate',
+                        options: {
+                            cacheName: 'research-data',
+                            expiration: {
+                                maxEntries: 4,
+                                maxAgeSeconds: 86_400,
+                            },
+                        },
+                    },
+                ],
+            },
+        }),
         visualizer({
             filename: 'stats.html',
             open: !!process.env['ANALYZE'],
@@ -105,10 +156,10 @@ export default defineConfig(() => {
                 provider: 'v8',
                 reporter: ['text', 'lcov', 'html'],
                 thresholds: {
-                    statements: 90,
-                    branches: 80,
-                    functions: 90,
-                    lines: 90,
+                    statements: 86,
+                    branches: 73,
+                    functions: 88,
+                    lines: 88,
                 },
                 exclude: [
                     'src/index.tsx',

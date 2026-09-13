@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 import React, { useMemo } from 'react';
 
 import { GlobalHeader } from './GlobalHeader';
+import { PageMetadata } from './PageMetadata';
 
 import { COLORS } from '@/config/theme';
 
@@ -46,6 +47,7 @@ export interface PageLayoutProps {
     /** When provided, sets document.title so every page manages its title
      *  through the layout rather than ad-hoc useEffect calls. */
     title?: string;
+    description?: string;
     showHome?: boolean;
     githubUrl?: string;
     infoUrl?: string;
@@ -64,6 +66,7 @@ export interface PageLayoutProps {
 export function PageLayout({
     children,
     title,
+    description,
     showHome = true,
     githubUrl,
     infoUrl,
@@ -73,10 +76,6 @@ export function PageLayout({
     headerTransparent = true,
     onClick,
 }: PageLayoutProps) {
-    React.useEffect(() => {
-        if (title) document.title = title;
-    }, [title]);
-
     const mergedContainerSx = useMemo(
         () => getContainerSx(background, containerSx),
         [background, containerSx],
@@ -85,6 +84,7 @@ export function PageLayout({
 
     return (
         <Box onClick={onClick} sx={mergedContainerSx}>
+            {title && <PageMetadata title={title} description={description} />}
             <GlobalHeader
                 showHome={showHome}
                 githubUrl={githubUrl}

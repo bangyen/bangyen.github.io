@@ -18,6 +18,7 @@ export function LightsOut() {
     return (
         <StandardGameLayout
             title={PAGE_TITLES.lightsOut}
+            description="Play Lights Out and explore a pure TypeScript solver based on linear algebra over GF(2)."
             infoUrl="https://en.wikipedia.org/wiki/Lights_Out_(game)"
             boardSx={boardSx}
             boardProps={boardProps}

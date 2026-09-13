@@ -32,7 +32,7 @@ describe('useCanvas', () => {
 
     it('returns a ref', () => {
         const { result } = renderHook(() =>
-            useCanvas({ onRender: vi.fn(), dependencies: [] }),
+            useCanvas({ onRender: vi.fn().mockReturnValue(false) }),
         );
         expect(result.current).toHaveProperty('current');
     });

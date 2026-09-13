@@ -13,7 +13,7 @@ export function ConnectSection(): React.ReactElement {
         <GlassCard>
             <Typography
                 sx={{
-                    color: COLORS.primary.main,
+                    color: 'var(--primary-readable)',
                     fontSize: TYPOGRAPHY.fontSize.subheading,
                     fontWeight: TYPOGRAPHY.fontWeight.semibold,
                     marginBottom: 3,

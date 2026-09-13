@@ -23,6 +23,7 @@ const PX_PER_REM = 40;
 const MAX_CORNER_RADIUS_RATIO = 0.35;
 /** Color / corner interpolation speed per frame (0-1). */
 const LERP_FACTOR = 0.4;
+const CONVERGENCE_EPSILON = 0.5;
 
 export function CanvasBoard({
     grid,
@@ -146,6 +147,9 @@ export function CanvasBoard({
 
             const radiusFactor = drawW / ((remWidth ?? remHeight) * PX_PER_REM);
 
+            const isConverged = (start: number, end: number) =>
+                Math.abs(start - end) < CONVERGENCE_EPSILON;
+
             const updateLayer = (
                 currentLColors: RGB[][],
                 targetLColors: RGB[][],
@@ -154,6 +158,7 @@ export function CanvasBoard({
                 offsetX: number,
                 offsetY: number,
             ) => {
+                let animating = false;
                 for (const [y, rowColors] of targetLColors.entries()) {
                     const curRowColors = currentLColors[y];
                     if (!curRowColors) continue;
@@ -167,6 +172,13 @@ export function CanvasBoard({
                             targetColor,
                             lerpFactor,
                         );
+                        if (
+                            !isConverged(curColor.r, targetColor.r) ||
+                            !isConverged(curColor.g, targetColor.g) ||
+                            !isConverged(curColor.b, targetColor.b)
+                        ) {
+                            animating = true;
+                        }
 
                         const targetCellCorners = targetLCorners[y]?.[x];
                         const curCellCorners = currentLCorners[y]?.[x];
@@ -177,6 +189,7 @@ export function CanvasBoard({
                                 if (tc !== undefined && cc !== undefined) {
                                     curCellCorners[i] =
                                         cc + (tc - cc) * lerpFactor;
+                                    if (!isConverged(cc, tc)) animating = true;
                                 }
                             }
                         }
@@ -197,12 +210,14 @@ export function CanvasBoard({
                         ctx.fill();
                     }
                 }
+                return animating;
             };
 
             ctx.clearRect(0, 0, width, height);
 
+            let animating = false;
             if (rows > 1 && cols > 1) {
-                updateLayer(
+                animating = updateLayer(
                     currentBgColors.current,
                     targetBgColors.current,
                     currentBgCorners.current,
@@ -211,21 +226,22 @@ export function CanvasBoard({
                     drawH / 2,
                 );
             }
-            updateLayer(
-                currentColors.current,
-                targetColors.current,
-                currentCorners.current,
-                targetCorners.current,
-                0,
-                0,
-            );
+            animating =
+                updateLayer(
+                    currentColors.current,
+                    targetColors.current,
+                    currentCorners.current,
+                    targetCorners.current,
+                    0,
+                    0,
+                ) || animating;
+            return animating;
         },
         [remHeight, remWidth, rows, cols],
     );
 
     const canvasRef = useCanvas({
         onRender: render,
-        dependencies: [render],
     });
 
     return (

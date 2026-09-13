@@ -19,7 +19,7 @@ import {
 
 /** "Hello, I'm" greeting label. */
 const heroGreetingSx: SxProps<Theme> = {
-    color: COLORS.primary.main,
+    color: 'var(--primary-readable)',
     fontSize: TYPOGRAPHY.fontSize.body,
     fontWeight: TYPOGRAPHY.fontWeight.semibold,
     textTransform: 'uppercase',
@@ -109,21 +109,21 @@ const heroCtaButtonSx: SxProps<Theme> = {
         boxShadow: SHADOWS.text,
     },
     '&:focus-visible': {
-        outline: `2px solid ${COLORS.primary.main}`,
+        outline: '2px solid var(--primary-readable)',
         outlineOffset: '2px',
     },
 };
 
 /** Text inside the CTA pill. */
 const heroCtaTextSx: SxProps<Theme> = {
-    color: COLORS.primary.main,
+    color: 'var(--primary-readable)',
     fontWeight: TYPOGRAPHY.fontWeight.semibold,
     fontSize: TYPOGRAPHY.fontSize.body,
 };
 
 /** Arrow icon inside the CTA pill. */
 const heroCtaArrowSx: SxProps<Theme> = {
-    color: COLORS.primary.main,
+    color: 'var(--primary-readable)',
     fontSize: '1rem',
 };
 
