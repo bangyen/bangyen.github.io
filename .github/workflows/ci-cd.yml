@@ -54,7 +54,7 @@ jobs:
                   key: bun-${{ runner.os }}-${{ hashFiles('bun.lock') }}
             - run: bun install --frozen-lockfile
             - run: bunx playwright install --with-deps chromium
-            - uses: actions/download-artifact@v4
+            - uses: actions/download-artifact@v8
               with:
                   name: build-output
                   path: build/
@@ -75,7 +75,7 @@ jobs:
             url: ${{ steps.deployment.outputs.page_url }}
         steps:
             - uses: actions/configure-pages@v5
-            - uses: actions/download-artifact@v4
+            - uses: actions/download-artifact@v8
               with:
                   name: build-output
                   path: build/
