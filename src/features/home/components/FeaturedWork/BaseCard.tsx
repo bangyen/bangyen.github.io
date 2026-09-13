@@ -15,6 +15,7 @@ const cardLinkSx: SxProps<Theme> = {
     textDecoration: 'none',
     position: 'relative',
     overflow: 'hidden',
+    minHeight: '100%',
     ...COMPONENT_VARIANTS.interactiveCard,
     '&:hover .glass-card': {
         backgroundColor: COLORS.interactive.selected,
@@ -25,6 +26,7 @@ const cardLinkSx: SxProps<Theme> = {
 const cardGlassSx: SxProps<Theme> = {
     border: 'none',
     height: '100%',
+    padding: { xs: 3, md: 4 },
 };
 
 /** Header row: category label + icon. */
@@ -47,6 +49,7 @@ const cardCategoryTextSx: SxProps<Theme> = {
 /** Category icon colour. */
 const cardCategoryIconSx: SxProps<Theme> = {
     color: 'var(--primary-readable)',
+    fontSize: '1.15rem',
 };
 
 /** Card title. */
@@ -81,6 +84,7 @@ const cardDescriptionSx: SxProps<Theme> = {
     color: COLORS.text.secondary,
     fontSize: TYPOGRAPHY.fontSize.body,
     lineHeight: 1.5,
+    marginTop: 'auto',
 };
 
 export interface BaseCardProps {

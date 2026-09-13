@@ -23,10 +23,10 @@ const heroGreetingSx: SxProps<Theme> = {
     fontSize: TYPOGRAPHY.fontSize.body,
     fontWeight: TYPOGRAPHY.fontWeight.semibold,
     textTransform: 'uppercase',
-    letterSpacing: '0.025em',
+    letterSpacing: '0.14em',
     textAlign: { xs: 'center', md: 'left' },
     marginLeft: { md: '4px' },
-    marginBottom: 3,
+    marginBottom: 2,
 };
 
 /** Full name heading. */
@@ -35,11 +35,11 @@ const heroNameSx: SxProps<Theme> = {
     fontWeight: TYPOGRAPHY.fontWeight.bold,
     fontSize: {
         xs: 'clamp(2rem, 8vw, 2.5rem)',
-        md: 'clamp(3rem, 6vw, 5rem)',
+        md: 'clamp(3rem, 5vw, 4.5rem)',
     },
-    lineHeight: 1.4,
-    letterSpacing: '0',
-    marginBottom: 2,
+    lineHeight: 1.05,
+    letterSpacing: '-0.045em',
+    marginBottom: 3,
     wordBreak: 'keep-all',
     hyphens: 'none',
     textAlign: { xs: 'center', md: 'left' },
@@ -53,7 +53,7 @@ const heroTitleSx: SxProps<Theme> = {
         md: 'clamp(1.125rem, 2.5vw, 1.5rem)',
     },
     fontWeight: TYPOGRAPHY.fontWeight.semibold,
-    marginBottom: 4,
+    marginBottom: 3,
     lineHeight: 1.4,
     wordBreak: 'keep-all',
     hyphens: 'none',
@@ -66,7 +66,8 @@ const heroLocationRowSx: SxProps<Theme> = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: { xs: 'center', md: 'flex-start' },
-    marginBottom: 4,
+    marginBottom: 5,
+    gap: 0.75,
 };
 
 /** Location icon styling. */
@@ -85,7 +86,7 @@ const heroLocationTextSx: SxProps<Theme> = {
 
 /** Wrapper for the CTA buttons row (desktop only). */
 const heroCtaRowSx: SxProps<Theme> = {
-    display: { xs: 'none', md: 'flex' },
+    display: 'flex',
     gap: 2,
     flexWrap: 'wrap',
     justifyContent: { xs: 'center', md: 'flex-start' },
@@ -98,8 +99,9 @@ const heroCtaButtonSx: SxProps<Theme> = {
     display: 'flex',
     alignItems: 'center',
     gap: 1,
-    padding: `${SPACING.padding.sm} ${SPACING.padding.md}`,
+    padding: `0.75rem ${SPACING.padding.md}`,
     backgroundColor: COLORS.interactive.selected,
+    border: `1px solid ${COLORS.primary.main}`,
     borderRadius: SPACING.borderRadius.full,
     transition: ANIMATIONS.transition,
     cursor: 'pointer',
@@ -131,14 +133,19 @@ const heroCtaArrowSx: SxProps<Theme> = {
 const heroRightColumnSx: SxProps<Theme> = {
     display: 'flex',
     flexDirection: 'column',
-    gap: 4,
+    gap: 3,
+    minWidth: 0,
 };
 
 export function HeroSection(): React.ReactElement {
     return (
         <HeroContainer>
-            <Grid container spacing={{ xs: 4, md: 8 }} alignItems="center">
-                <Grid size={{ xs: 12, md: 6 }}>
+            <Grid
+                container
+                spacing={{ xs: 6, md: 5, lg: 8 }}
+                alignItems="center"
+            >
+                <Grid size={{ xs: 12, md: 6 }} sx={{ minWidth: 0 }}>
                     <Box>
                         <Typography sx={heroGreetingSx}>
                             {HOME_TEXT.hero.greeting}
@@ -196,10 +203,7 @@ export function HeroSection(): React.ReactElement {
                     </Box>
                 </Grid>
 
-                <Grid
-                    size={{ xs: 12, md: 6 }}
-                    sx={{ display: { xs: 'none', md: 'block' } }}
-                >
+                <Grid size={{ xs: 12, md: 6 }} sx={{ minWidth: 0 }}>
                     <Box sx={heroRightColumnSx}>
                         <Box
                             sx={{

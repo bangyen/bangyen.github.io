@@ -33,14 +33,13 @@ export function TechStack(): React.ReactElement {
                 sx={{
                     display: 'grid',
                     gridTemplateColumns: {
-                        xs: '1fr',
-                        md: 'repeat(3, 1fr)',
+                        xs: 'repeat(2, minmax(0, 1fr))',
+                        sm: 'repeat(3, minmax(0, 1fr))',
                     },
                     gap: {
                         xs: 1.5,
                         md: 2,
                     },
-                    marginBottom: 3,
                 }}
             >
                 {SKILLS.map((skill, index) => {

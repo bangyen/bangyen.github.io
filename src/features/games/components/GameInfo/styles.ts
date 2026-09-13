@@ -27,27 +27,33 @@ export const infoOuterBoxSx: SxProps<Theme> = {
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+    padding: { xs: 1, sm: 2 },
+    boxSizing: 'border-box',
 };
 
 /** GlassCard container for the entire Info modal content. */
 export const infoCardSx: SxProps<Theme> = {
     width: '100%',
-    maxWidth: '1000px',
-    height: { xs: '600px', sm: '500px' },
-    minHeight: { xs: '600px', sm: '500px' },
+    maxWidth: '880px',
+    height: {
+        xs: 'calc(100dvh - 1rem)',
+        sm: 'min(560px, calc(100dvh - 2rem))',
+    },
+    minHeight: 0,
     display: 'flex',
     flexDirection: 'column',
     p: 0,
     overflow: 'hidden',
     position: 'relative',
-    m: 2,
+    m: 0,
+    boxShadow: '0 24px 80px rgba(0, 0, 0, 0.35)',
 };
 
 /** Scrollable content area wrapping steps. */
 export const infoContentSx = (_step: number): SxProps<Theme> => ({
     flex: 1,
     overflow: 'hidden',
-    p: { xs: 2.5, md: 3 },
+    p: { xs: 2, sm: 3, md: 4 },
     display: 'flex',
     flexDirection: 'column',
 });
@@ -57,9 +63,8 @@ export const infoHeaderSx: SxProps<Theme> = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    mb: 2,
-    pl: 3,
-    pr: 1,
+    mb: { xs: 2, sm: 3 },
+    px: 0,
 };
 
 /** Close button colour. */
@@ -86,9 +91,9 @@ export const infoStepContentSx = (
 
 /** Footer row containing back/next buttons and the dot indicator. */
 export const infoFooterSx: SxProps<Theme> = {
-    px: 3,
-    pb: 2,
-    pt: 0,
+    px: { xs: 2, sm: 4 },
+    py: 2,
+    borderTop: `1px solid ${COLORS.border.subtle}`,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -100,25 +105,23 @@ export const instructionTitleSx: SxProps<Theme> = {
     fontWeight: TYPOGRAPHY.fontWeight.semibold,
     display: 'flex',
     alignItems: 'center',
-    mb: 1.5,
-    fontSize: TYPOGRAPHY.fontSize.subheading,
+    mb: 0.75,
+    fontSize: { xs: '1rem', sm: TYPOGRAPHY.fontSize.subheading },
 };
 
 /** Icon preceding the instruction title. */
 export const instructionIconSx: SxProps<Theme> = {
-    ml: 1,
-    mr: 2,
+    mr: 1.5,
     color: COLORS.primary.main,
-    fontSize: '1.75rem',
+    fontSize: '1.5rem',
 };
 
 /** Body text for an instruction. */
 export const instructionTextSx: SxProps<Theme> = {
     color: COLORS.text.secondary,
-    lineHeight: 1.6,
+    lineHeight: 1.45,
     fontSize: TYPOGRAPHY.fontSize.body,
-    ml: 6.5,
-    pr: 2,
+    ml: { xs: 0, sm: 5 },
 };
 
 /** Outer wrapper for a step with fade-in animation. */
@@ -141,8 +144,7 @@ export const stepCenteredContentSx: SxProps<Theme> = {
 /** Instructions list with spacing. */
 export const stepInstructionsListSx: SxProps<Theme> = {
     flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    gap: 4,
+    display: 'grid',
+    gridTemplateRows: 'repeat(3, minmax(0, 1fr))',
+    gap: { xs: 1.5, sm: 2 },
 };

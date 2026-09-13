@@ -112,9 +112,10 @@ export function useBaseGame<
         }
 
         const minSize = callerGridConfig.minSize ?? DEFAULT_GRID_CONFIG.minSize;
+        const maxSize = callerGridConfig.maxSize ?? DEFAULT_GRID_CONFIG.maxSize;
         return {
-            rows: Math.max(minSize, r),
-            cols: Math.max(minSize, c),
+            rows: Math.min(maxSize, Math.max(minSize, r)),
+            cols: Math.min(maxSize, Math.max(minSize, c)),
         };
     }, [callerGridConfig, height, width, mobile]);
 

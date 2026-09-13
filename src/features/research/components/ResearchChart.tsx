@@ -25,6 +25,7 @@ const chartCardSx: SxProps<Theme> = {
     width: '100%',
     boxSizing: 'border-box',
     overflow: 'hidden',
+    padding: { xs: 2, sm: 3 },
 };
 
 /** Chart title above the graph. */
@@ -38,7 +39,7 @@ const chartTitleSx: SxProps<Theme> = {
 
 /** Container that holds the chart or loading placeholder. */
 const chartContainerSx: SxProps<Theme> = {
-    height: CHART_DIMENSIONS.height,
+    height: { xs: 300, sm: CHART_DIMENSIONS.height },
     width: '100%',
     position: 'relative',
 };

@@ -41,7 +41,7 @@ const subtitleSx: SxProps<Theme> = {
     },
     whiteSpace: {
         xs: 'normal',
-        md: 'nowrap',
+        md: 'normal',
     },
     display: { xs: 'none', sm: 'block' },
 };
@@ -66,14 +66,16 @@ const headerRowSx: SxProps<Theme> = {
         md: 'baseline',
     },
     width: '100%',
-    gap: { xs: 1, md: 0 },
+    gap: { xs: 1, md: 4 },
 };
 
 /** Main h1 title text. */
 const headerTitleSx: SxProps<Theme> = {
     color: COLORS.text.primary,
     fontWeight: TYPOGRAPHY.fontWeight.bold,
-    fontSize: TYPOGRAPHY.fontSize.h2,
+    fontSize: { xs: TYPOGRAPHY.fontSize.h2, md: '2.5rem' },
+    letterSpacing: '-0.04em',
+    flexShrink: 0,
     textAlign: { xs: 'center', md: 'left' },
 };
 

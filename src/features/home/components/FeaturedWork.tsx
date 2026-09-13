@@ -15,8 +15,16 @@ const sectionTitleSx: SxProps<Theme> = {
     color: COLORS.text.primary,
     fontSize: TYPOGRAPHY.fontSize.h2,
     fontWeight: TYPOGRAPHY.fontWeight.semibold,
-    textAlign: 'center',
-    marginBottom: 6,
+    letterSpacing: '-0.03em',
+    marginBottom: 1,
+};
+
+const sectionIntroSx: SxProps<Theme> = {
+    color: COLORS.text.secondary,
+    fontSize: TYPOGRAPHY.fontSize.body,
+    lineHeight: 1.6,
+    maxWidth: '38rem',
+    marginBottom: 5,
 };
 
 /** Responsive 1/2-column grid for publication and project cards. */
@@ -40,6 +48,10 @@ export function FeaturedWork(): React.ReactElement {
             >
                 <Typography sx={sectionTitleSx}>
                     {HOME_TEXT.featuredWork.sectionTitle}
+                </Typography>
+                <Typography sx={sectionIntroSx}>
+                    Selected research and engineering work spanning distributed
+                    systems, machine learning, and computational modeling.
                 </Typography>
 
                 <Box sx={cardGridSx}>

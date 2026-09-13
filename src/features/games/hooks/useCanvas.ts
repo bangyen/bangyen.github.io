@@ -6,12 +6,14 @@ interface UseCanvasOptions {
         width: number,
         height: number,
     ) => boolean;
+    /** Value whose identity change should restart a converged render loop. */
+    redrawToken?: unknown;
 }
 
 /**
  * A hook that manages a canvas element's lifecycle and rendering.
  */
-export function useCanvas({ onRender }: UseCanvasOptions) {
+export function useCanvas({ onRender, redrawToken }: UseCanvasOptions) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const render = useCallback(() => {
@@ -54,6 +56,9 @@ export function useCanvas({ onRender }: UseCanvasOptions) {
     }, [render]);
 
     useEffect(() => {
+        // Reading the token documents that this effect intentionally restarts
+        // when externally managed canvas targets change.
+        void redrawToken;
         let animationFrameId: number;
 
         const loop = () => {
@@ -67,7 +72,7 @@ export function useCanvas({ onRender }: UseCanvasOptions) {
         return () => {
             cancelAnimationFrame(animationFrameId);
         };
-    }, [render]);
+    }, [render, redrawToken]);
 
     return canvasRef;
 }

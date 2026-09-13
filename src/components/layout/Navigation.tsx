@@ -14,13 +14,16 @@ import {
 const navigationPaperSx: SxProps<Theme> = {
     transform: 'translateX(-50%)',
     position: 'absolute',
-    bottom: SPACING.padding.xl,
+    bottom: { xs: SPACING.padding.md, md: SPACING.padding.xl },
     left: '50%',
     zIndex: LAYOUT.zIndex.navigation,
     ...ANIMATIONS.presets.glass,
     borderRadius: SPACING.borderRadius.lg,
     boxShadow: SHADOWS.lg,
-    padding: `${SPACING.padding.sm} ${SPACING.padding.lg}`,
+    padding: {
+        xs: `${SPACING.padding.xs} ${SPACING.padding.md}`,
+        md: `${SPACING.padding.sm} ${SPACING.padding.lg}`,
+    },
 };
 
 /** Inner grid container for navigation items. */

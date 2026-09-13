@@ -1,4 +1,10 @@
-import { Box, styled, type SxProps, type Theme } from '@mui/material';
+import {
+    Box,
+    styled,
+    Typography,
+    type SxProps,
+    type Theme,
+} from '@mui/material';
 import React from 'react';
 
 import { GameControls, type GameControlsProps } from './GameControls';
@@ -13,7 +19,7 @@ import type { BaseControlsProps } from '../hooks/types';
 import { ErrorBoundary } from '@/components/layout/ErrorBoundary';
 import { FeatureErrorFallback } from '@/components/layout/FeatureErrorFallback';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { COLORS } from '@/config/theme';
+import { COLORS, TYPOGRAPHY } from '@/config/theme';
 
 const ContentContainer = styled(Box)({
     flex: 1,
@@ -25,6 +31,19 @@ const ContentContainer = styled(Box)({
     alignItems: 'center',
     overflow: 'hidden',
 });
+
+const gameLabelSx: SxProps<Theme> = {
+    position: 'absolute',
+    top: { xs: 8, md: 12 },
+    left: '50%',
+    transform: 'translateX(-50%)',
+    color: COLORS.text.secondary,
+    fontSize: TYPOGRAPHY.fontSize.caption,
+    fontWeight: TYPOGRAPHY.fontWeight.semibold,
+    letterSpacing: '0.14em',
+    textTransform: 'uppercase',
+    whiteSpace: 'nowrap',
+};
 
 interface BoardContainerBaseProps {
     customPadding?: { mobile: string | number; desktop: string | number };
@@ -126,6 +145,14 @@ export function StandardGameLayout<TBoardProps, TInfoProps>({
                 height: '100vh',
                 transition: 'background 0.5s ease-in-out',
                 cursor: onPageClick ? 'pointer' : 'inherit',
+                '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    inset: 0,
+                    pointerEvents: 'none',
+                    background:
+                        'radial-gradient(circle at 50% 42%, hsla(217, 91%, 60%, 0.08), transparent 32rem)',
+                },
             }}
             sx={{
                 justifyContent: 'center',
@@ -152,6 +179,9 @@ export function StandardGameLayout<TBoardProps, TInfoProps>({
                         ].filter(Boolean) as SxProps<Theme>
                     }
                 >
+                    <Typography sx={gameLabelSx}>
+                        {title.split('|')[0]?.trim()}
+                    </Typography>
                     <BoardContainerBase sx={boardSx}>
                         {renderBoard(finalBoardProps)}
                         <TrophyOverlay show={finalSolved} {...trophyProps} />

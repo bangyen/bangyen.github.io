@@ -12,10 +12,21 @@ export function Home(): React.ReactElement {
         <PageLayout
             title={PAGE_TITLES.home}
             description="Bangyen Pham's backend engineering and AI/ML portfolio, featuring research, interactive visualizations, and algorithmic games."
+            showHome={false}
+            containerSx={{
+                '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    inset: 0,
+                    pointerEvents: 'none',
+                    background:
+                        'radial-gradient(circle at 18% 18%, hsla(217, 91%, 60%, 0.08), transparent 28rem), radial-gradient(circle at 88% 36%, hsla(217, 91%, 60%, 0.05), transparent 24rem)',
+                },
+            }}
         >
             <Box
                 sx={{
-                    height: { xs: '10rem', md: '5rem' },
+                    height: { xs: '2.5rem', md: '4rem' },
                 }}
             />
 

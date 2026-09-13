@@ -30,7 +30,7 @@ const getGridSx = (columnCount: number): SxProps<Theme> => ({
     display: 'grid',
     gridTemplateColumns: {
         xs: 'repeat(2, minmax(0, 1fr))',
-        md: `repeat(${Math.min(columnCount, 4).toString()}, 1fr)`,
+        md: `repeat(${Math.min(columnCount, 4).toString()}, minmax(0, 1fr))`,
     },
     gap: 1.5,
     width: '100%',

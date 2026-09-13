@@ -75,8 +75,7 @@ export function MenuButton(): React.ReactElement {
                     marginLeft: 1,
                     marginTop: 1,
                     '& .MuiPaper-root': {
-                        width: 'auto',
-                        maxWidth: '300px',
+                        width: 'min(320px, calc(100vw - 32px))',
                         height: 'auto !important',
                         ...ANIMATIONS.presets.glassSoft,
                         borderRadius: SPACING.borderRadius.lg,

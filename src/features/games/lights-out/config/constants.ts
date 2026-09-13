@@ -44,7 +44,7 @@ export const LIGHTS_OUT_INSTRUCTIONS = [
     },
     {
         Icon: Calculate,
-        title: 'Use Calulator',
+        title: 'Use Calculator',
         text: 'Enter the remaining lights pattern from the bottom row into the calculator on the last page.',
     },
     {

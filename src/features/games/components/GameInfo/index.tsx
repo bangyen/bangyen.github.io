@@ -37,7 +37,16 @@ import { COLORS, TYPOGRAPHY } from '@/config/theme';
  */
 function InstructionItem({ Icon, title, text }: InstructionItemData) {
     return (
-        <Box sx={{ px: 2 }}>
+        <Box
+            sx={{
+                p: { xs: 1.5, sm: 2 },
+                borderRadius: 3,
+                border: `1px solid ${COLORS.border.subtle}`,
+                backgroundColor: COLORS.interactive.disabled,
+                boxSizing: 'border-box',
+                minHeight: 0,
+            }}
+        >
             <Typography variant="h6" sx={instructionTitleSx}>
                 <Icon sx={instructionIconSx} />
                 {title}
@@ -112,6 +121,8 @@ function StepNavigation({
     onBack: () => void;
     onNext: () => void;
 }) {
+    const isLastStep = step === totalSteps - 1;
+
     return (
         <Box sx={infoFooterSx} role="navigation" aria-label="Step navigation">
             <Button
@@ -122,13 +133,15 @@ function StepNavigation({
                 sx={{
                     visibility: step === 0 ? 'hidden' : 'visible',
                     color: COLORS.text.primary,
+                    width: { xs: 80, sm: 104 },
+                    justifyContent: 'flex-start',
                 }}
             >
                 Back
             </Button>
 
             <Box
-                sx={{ display: 'flex', gap: 1 }}
+                sx={{ display: 'flex', alignItems: 'center', gap: 1.25 }}
                 role="group"
                 aria-label={`Step ${String(step + 1)} of ${String(totalSteps)}`}
             >
@@ -148,19 +161,30 @@ function StepNavigation({
                         }}
                     />
                 ))}
+                <Typography
+                    component="span"
+                    sx={{
+                        color: COLORS.text.secondary,
+                        fontSize: '0.75rem',
+                        ml: 0.5,
+                        fontVariantNumeric: 'tabular-nums',
+                    }}
+                >
+                    {step + 1} / {totalSteps}
+                </Typography>
             </Box>
 
             <Button
                 onClick={onNext}
-                disabled={step === totalSteps - 1}
-                endIcon={<NavigateNextRounded />}
-                aria-label="Next step"
+                endIcon={isLastStep ? undefined : <NavigateNextRounded />}
+                aria-label={isLastStep ? 'Close guide' : 'Next step'}
                 sx={{
-                    visibility: step === totalSteps - 1 ? 'hidden' : 'visible',
                     color: COLORS.text.primary,
+                    width: { xs: 80, sm: 104 },
+                    justifyContent: 'flex-end',
                 }}
             >
-                Next
+                {isLastStep ? 'Done' : 'Next'}
             </Button>
         </Box>
     );

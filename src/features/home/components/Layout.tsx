@@ -62,7 +62,9 @@ export function Section({
             }}
             {...props}
         >
-            <Box sx={{ maxWidth, margin: '0 auto' }}>{children}</Box>
+            <Box sx={{ width: '100%', maxWidth, margin: '0 auto' }}>
+                {children}
+            </Box>
         </Container>
     );
 }
@@ -95,7 +97,11 @@ export function HeroContainer({
             }}
             {...props}
         >
-            <Box sx={{ maxWidth, margin: '0 auto' }}>{children}</Box>
+            <Box
+                sx={{ width: '100%', minWidth: 0, maxWidth, margin: '0 auto' }}
+            >
+                {children}
+            </Box>
         </Container>
     );
 }

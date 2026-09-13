@@ -11,21 +11,21 @@ import type { ResearchDemoProps } from '../types';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { ErrorState } from '@/components/ui/ErrorState';
 import { LazySuspense } from '@/components/ui/LazySuspense';
-import { SPACING, COMPONENT_VARIANTS } from '@/config/theme';
+import { COLORS, SPACING, COMPONENT_VARIANTS } from '@/config/theme';
 import { MobileProvider } from '@/hooks';
 
 /** Outer Grid container that fills the page and constrains content width. */
 const demoContainerSx: SxProps<Theme> = {
     position: 'relative',
-    padding: SPACING.padding.md,
-    paddingTop: SPACING.padding.xl,
+    padding: { xs: SPACING.padding.sm, md: SPACING.padding.lg },
+    paddingTop: { xs: SPACING.padding.lg, md: SPACING.padding.xl },
     paddingBottom: {
         xs: SPACING.padding.md,
         md: 0,
     },
     boxSizing: 'border-box',
     width: '100%',
-    maxWidth: '100vw',
+    maxWidth: '100%',
     overflowX: 'hidden',
 };
 
@@ -36,19 +36,19 @@ const demoContentGridSx: SxProps<Theme> = {
     zIndex: 1,
     padding: 0,
     minHeight: 0,
+    minWidth: 0,
 };
 
 /** Content wrapper that constrains child width and adds horizontal padding. */
 const demoContentBoxSx: SxProps<Theme> = {
     textAlign: 'center',
-    maxWidth: SPACING.maxWidth.md,
-    width: '100%',
-    padding: {
-        xs: '0 0.5rem',
-        md: '0 2rem',
+    maxWidth: {
+        xs: 'calc(100vw - 2rem)',
+        md: `min(${SPACING.maxWidth.md}, calc(100vw - 4rem))`,
     },
+    width: '100%',
+    minWidth: 0,
     boxSizing: 'border-box',
-    overflow: 'hidden',
 };
 
 const ResearchChart = lazy(() =>
@@ -133,6 +133,9 @@ export const ResearchDemo = <T,>({
             title={pageTitle ?? title}
             description={description}
             githubUrl={githubUrl}
+            containerSx={{
+                background: `${COLORS.surface.background} radial-gradient(circle at 50% 18%, hsla(217, 91%, 60%, 0.07), transparent 34rem)`,
+            }}
         >
             <MobileProvider>
                 <Grid

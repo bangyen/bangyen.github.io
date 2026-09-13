@@ -18,7 +18,7 @@ const calculatorRootSx: SxProps<Theme> = {
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    overflow: 'clip',
+    overflow: 'auto',
 };
 
 /** Flex container holding input / output grids and buttons. */
@@ -28,14 +28,15 @@ const calculatorContainerSx = (useHorizontal: boolean): SxProps<Theme> => ({
     flexDirection: useHorizontal ? 'row' : 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 3,
+    gap: { xs: 2, sm: 3 },
+    width: '100%',
 });
 
 /** Bold label above each grid row. */
 const calculatorLabelSx: SxProps<Theme> = {
     mb: 1,
     color: COLORS.text.primary,
-    fontWeight: 'bold',
+    fontWeight: 600,
 };
 
 /** Lighter sub-label inside the grid row header. */
@@ -62,6 +63,7 @@ const calculatorButtonSx: SxProps<Theme> = {
     flex: 1,
     width: '100%',
     whiteSpace: 'nowrap',
+    minHeight: 40,
 };
 
 export interface SolutionCalculatorProps {

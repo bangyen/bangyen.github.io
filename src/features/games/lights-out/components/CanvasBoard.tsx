@@ -242,6 +242,9 @@ export function CanvasBoard({
 
     const canvasRef = useCanvas({
         onRender: render,
+        // Clicking a cell updates target refs after the old loop has already
+        // converged, so a new grid identity must explicitly restart it.
+        redrawToken: grid,
     });
 
     return (
