@@ -127,7 +127,9 @@ export function useGenerationWorker({
     // Keep the stale-result callback in a ref so the worker onmessage
     // closure always sees the latest version without re-running the effect.
     const onStaleResultRef = useRef(onStaleResult);
-    onStaleResultRef.current = onStaleResult;
+    useEffect(() => {
+        onStaleResultRef.current = onStaleResult;
+    });
 
     // --- Prefetch buffering ---
     // When a puzzle is solved we immediately start generating the next
@@ -244,6 +246,9 @@ export function useGenerationWorker({
         prevDimsRef.current = key;
 
         if (!isAnalysisMode && hasSavedUnsolvedPuzzle(rows, cols)) {
+            // Cancels an in-flight worker request; clearing the loading flag
+            // is part of tearing that request down, not derived state.
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             cancelGeneration();
             return;
         }

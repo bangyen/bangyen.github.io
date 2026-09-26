@@ -61,6 +61,9 @@ export function useAnalysisMode({
         if (saved) {
             try {
                 const parsed = JSON.parse(saved) as [string, CellState][];
+                // Hydrating from localStorage: an external store that cannot
+                // be read during render, so this write is intentional.
+                // eslint-disable-next-line react-hooks/set-state-in-effect
                 setAnalysisMoves(new Map(parsed));
             } catch {
                 localStorage.removeItem(persistenceKey);

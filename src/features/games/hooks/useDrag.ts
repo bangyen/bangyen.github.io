@@ -125,13 +125,17 @@ export function useDrag<T = void>({
     // and dragging-value persistence.
     const draggingValue = useRef<T | undefined>(undefined);
     const onToggleRef = useRef(callbacks.onToggle);
-    onToggleRef.current = callbacks.onToggle;
+    useEffect(() => {
+        onToggleRef.current = callbacks.onToggle;
+    });
 
     const isGridMode = callbacks.onToggle !== undefined;
     const rawOnAction = callbacks.onAction;
 
     const checkEnabledRef = useRef(checkEnabled);
-    checkEnabledRef.current = checkEnabled;
+    useEffect(() => {
+        checkEnabledRef.current = checkEnabled;
+    });
 
     const onAction = useMemo(() => {
         if (!isGridMode && rawOnAction) return rawOnAction;
