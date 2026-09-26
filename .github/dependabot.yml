@@ -10,6 +10,28 @@ updates:
           production-dependencies:
               dependency-type: production
       open-pull-requests-limit: 5
+      # Major bumps held back because the surrounding ecosystem cannot take
+      # them yet.  Each was verified to break CI; drop the entry once the
+      # blocker named beside it ships support.  Minor/patch updates still flow.
+      ignore:
+          # typescript-eslint peers on typescript <6.1.0, so TS 7 crashes ESLint.
+          - dependency-name: typescript
+            update-types: ['version-update:semver-major']
+          # eslint-plugin-react peers on eslint <=^9.7; no ESLint 10 support exists.
+          - dependency-name: eslint
+            update-types: ['version-update:semver-major']
+          - dependency-name: '@eslint/js'
+            update-types: ['version-update:semver-major']
+          # v75 changed configs.recommended, breaking the rules spread in
+          # eslint.config.mjs.
+          - dependency-name: eslint-plugin-unicorn
+            update-types: ['version-update:semver-major']
+          # v7 is ESM-only; vite.config.ts loads it through require.
+          - dependency-name: rollup-plugin-visualizer
+            update-types: ['version-update:semver-major']
+          # Vite 8 breaks vitest worker startup (fails under vitest 4 and 5).
+          - dependency-name: vite
+            update-types: ['version-update:semver-major']
     - package-ecosystem: github-actions
       directory: /
       schedule:
