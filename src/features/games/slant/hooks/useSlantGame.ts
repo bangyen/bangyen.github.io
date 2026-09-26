@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useRef, useMemo, useCallback, useState } from 'react';
+import { useRef, useMemo, useCallback, useState, useEffect } from 'react';
 
 import { useAnalysisMode } from './useAnalysisMode';
 import { useGenerationWorker } from './useGenerationWorker';
@@ -71,9 +71,12 @@ export function useSlantGame() {
         padding: number;
     };
 
-    // Keep refs in sync for the worker
-    dispatchRef.current = dispatch as unknown as SlantDispatch;
-    dimsRef.current = { rows, cols };
+    // Keep refs in sync for the worker.  The worker only reads these from
+    // async callbacks, so committing them in an effect is soon enough.
+    useEffect(() => {
+        dispatchRef.current = dispatch as unknown as SlantDispatch;
+        dimsRef.current = { rows, cols };
+    });
 
     // 1. Worker and Dimension Regeneration logic
     const { generating, handleNextAsync } = useGenerationWorker({

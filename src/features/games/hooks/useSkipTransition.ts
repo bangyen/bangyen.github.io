@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 /**
  * Suppresses CSS transitions for one animation frame whenever `key` changes.
@@ -13,26 +13,24 @@ import { useEffect, useRef, useState } from 'react';
  *   disabled, `false` otherwise.
  */
 export function useSkipTransition(key: string): boolean {
-    const prevKeyRef = useRef('');
-    const skipRef = useRef(false);
-    const [, setTick] = useState(0);
+    const [prevKey, setPrevKey] = useState('');
+    const [skip, setSkip] = useState(false);
 
-    if (key !== prevKeyRef.current) {
+    if (key !== prevKey) {
         // Skip transitions on every regeneration except the very first render.
-        skipRef.current = prevKeyRef.current !== '';
-        prevKeyRef.current = key;
+        setSkip(prevKey !== '');
+        setPrevKey(key);
     }
 
     useEffect(() => {
-        if (!skipRef.current) return;
+        if (!skip) return;
         const raf = requestAnimationFrame(() => {
-            skipRef.current = false;
-            setTick(t => t + 1);
+            setSkip(false);
         });
         return () => {
             cancelAnimationFrame(raf);
         };
-    }, [key]);
+    }, [skip]);
 
-    return skipRef.current;
+    return skip;
 }

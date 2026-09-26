@@ -134,9 +134,13 @@ export function useAnalysisSolver({
                 numbers,
                 userMoves,
             );
+            // Fallback path only: the worker is broken, so the solve runs
+            // inline here and its result is published like a worker message.
+            /* eslint-disable react-hooks/set-state-in-effect */
             setGridState(result.gridState);
             setConflicts(result.conflicts);
             setCycleCells(result.cycleCells);
+            /* eslint-enable react-hooks/set-state-in-effect */
         }
     }, [userMoves, numbers, rows, cols, workerReady]);
 

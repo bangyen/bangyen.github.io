@@ -52,37 +52,34 @@ export function useThemePreference(): ThemePreference {
         deserialize: THEME_DESERIALIZE,
     });
 
-    const [resolvedMode, setResolvedMode] = useState<ResolvedThemeMode>(() => {
-        if (mode !== 'system') return mode;
-        return globalThis.matchMedia('(prefers-color-scheme: dark)').matches
+    // Only the *system* preference is state; the effective theme is derived
+    // from it, so an explicit mode never needs a second render to apply.
+    const [systemMode, setSystemMode] = useState<ResolvedThemeMode>(() =>
+        globalThis.matchMedia('(prefers-color-scheme: dark)').matches
             ? 'dark'
-            : 'light';
-    });
+            : 'light',
+    );
 
     useEffect(() => {
         const handleSystemChange = (
             e: MediaQueryListEvent | MediaQueryList,
         ) => {
-            if (mode === 'system') {
-                setResolvedMode(e.matches ? 'dark' : 'light');
-            }
+            setSystemMode(e.matches ? 'dark' : 'light');
         };
 
         const mediaQuery = globalThis.matchMedia(
             '(prefers-color-scheme: dark)',
         );
 
-        if (mode === 'system') {
-            handleSystemChange(mediaQuery);
-            mediaQuery.addEventListener('change', handleSystemChange);
-        } else {
-            setResolvedMode(mode);
-        }
+        mediaQuery.addEventListener('change', handleSystemChange);
 
         return () => {
             mediaQuery.removeEventListener('change', handleSystemChange);
         };
-    }, [mode]);
+    }, []);
+
+    const resolvedMode: ResolvedThemeMode =
+        mode === 'system' ? systemMode : mode;
 
     useEffect(() => {
         document.documentElement.dataset['theme'] = resolvedMode;

@@ -167,7 +167,9 @@ export function useBaseGame<
     const solved = useMemo(() => isSolved(state), [state, isSolved]);
 
     const onNextRef = useRef(onNext);
-    onNextRef.current = onNext;
+    useEffect(() => {
+        onNextRef.current = onNext;
+    });
 
     const handleNext = useCallback(() => {
         if (onNextRef.current) {
@@ -182,7 +184,9 @@ export function useBaseGame<
     const lastRestoredKey = useRef<string | null>(null);
 
     const deserializeRef = useRef(persistence?.deserialize);
-    deserializeRef.current = persistence?.deserialize;
+    useEffect(() => {
+        deserializeRef.current = persistence?.deserialize;
+    });
 
     useEffect(() => {
         if (lastRestoredKey.current === persistenceKey) return;

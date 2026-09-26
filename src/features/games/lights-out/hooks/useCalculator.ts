@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 
 import { useDrag } from '../../hooks/useDrag';
 import { useGridNavigation } from '../../hooks/useGridNavigation';
@@ -27,18 +27,26 @@ export function useCalculator({
     palette,
     solved,
 }: UseCalculatorParams) {
-    const [calcRow, setCalcRow] = useState<number[]>(new Array(cols).fill(0));
+    const [calcRow, setCalcRow] = useState<number[]>(() =>
+        new Array<number>(cols).fill(0),
+    );
 
-    useEffect(() => {
-        setCalcRow(new Array(cols).fill(0));
-    }, [cols, palette]);
-
-    // Clear the calculator when the board is solved.
-    useEffect(() => {
-        if (solved) {
-            setCalcRow(new Array(cols).fill(0));
+    // Reset during render rather than in an effect: clearing on a new board
+    // (cols/palette) or once the board is solved would otherwise cost an
+    // extra render pass with the stale row still painted.
+    const [prevInputs, setPrevInputs] = useState({ cols, palette, solved });
+    if (
+        prevInputs.cols !== cols ||
+        prevInputs.palette !== palette ||
+        prevInputs.solved !== solved
+    ) {
+        const boardChanged =
+            prevInputs.cols !== cols || prevInputs.palette !== palette;
+        setPrevInputs({ cols, palette, solved });
+        if (boardChanged || solved) {
+            setCalcRow(new Array<number>(cols).fill(0));
         }
-    }, [solved, cols]);
+    }
 
     const res =
         calculateSolutionVector(calcRow, rows, cols) ??
