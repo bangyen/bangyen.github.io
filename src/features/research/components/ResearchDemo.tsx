@@ -16,6 +16,8 @@ import { MobileProvider } from '@/hooks';
 
 /** Outer Grid container that fills the page and constrains content width. */
 const demoContainerSx: SxProps<Theme> = {
+    flex: 1,
+    flexDirection: 'column',
     position: 'relative',
     padding: { xs: SPACING.padding.sm, md: SPACING.padding.lg },
     paddingTop: { xs: SPACING.padding.lg, md: SPACING.padding.xl },
@@ -33,6 +35,7 @@ const demoContainerSx: SxProps<Theme> = {
 const demoContentGridSx: SxProps<Theme> = {
     ...COMPONENT_VARIANTS.flexCenter,
     flexDirection: 'column',
+    flex: 1,
     zIndex: 1,
     padding: 0,
     minHeight: 0,
@@ -138,13 +141,8 @@ export const ResearchDemo = <T,>({
             }}
         >
             <MobileProvider>
-                <Grid
-                    container={true}
-                    flex={1}
-                    flexDirection="column"
-                    sx={demoContainerSx}
-                >
-                    <Grid size={{ xs: 12 }} flex={1} sx={demoContentGridSx}>
+                <Grid container={true} sx={demoContainerSx}>
+                    <Grid size={{ xs: 12 }} sx={demoContentGridSx}>
                         <Box sx={demoContentBoxSx}>
                             <ResearchHeader
                                 title={title}
