@@ -143,7 +143,7 @@ export function HeroSection(): React.ReactElement {
             <Grid
                 container
                 spacing={{ xs: 6, md: 5, lg: 8 }}
-                alignItems="center"
+                sx={{ alignItems: 'center' }}
             >
                 <Grid size={{ xs: 12, md: 6 }} sx={{ minWidth: 0 }}>
                     <Box>
