@@ -57,7 +57,9 @@ export function useCanvas({ onRender, redrawToken }: UseCanvasOptions) {
 
     useEffect(() => {
         // Reading the token documents that this effect intentionally restarts
-        // when externally managed canvas targets change.
+        // when externally managed canvas targets change.  The void marks the
+        // read as deliberate rather than a dropped expression.
+        // eslint-disable-next-line @typescript-eslint/no-meaningless-void-operator
         void redrawToken;
         let animationFrameId: number;
 

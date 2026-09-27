@@ -70,7 +70,7 @@ export function deserializeSlantState(saved: SavedSlantState): SlantState {
         errorNodes: new Set(saved.errorNodes),
         cycleCells: new Set(saved.cycleCells),
         satisfiedNodes: new Set(saved.satisfiedNodes),
-    } as SlantState;
+    };
 }
 
 /**

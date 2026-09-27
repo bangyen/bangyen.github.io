@@ -132,13 +132,11 @@ export const zsharpViewTypes: ViewType<DataPoint>[] = [
         icon: TrendingUpRounded,
         chartTitle: 'Loss Evaluation',
         dataProcessor: (data: DataPoint[]) =>
-            data.map(
-                (point): ProcessedDataPoint => ({
-                    epoch: point.epoch,
-                    sgd: point.sgdLoss,
-                    zsharp: point.zsharpLoss,
-                }),
-            ),
+            data.map((point): ProcessedDataPoint => ({
+                epoch: point.epoch,
+                sgd: point.sgdLoss,
+                zsharp: point.zsharpLoss,
+            })),
         chartConfig: {
             ...baseChart,
             yAxisFormatter: (value: number) => value.toFixed(3),
@@ -156,12 +154,10 @@ export const zsharpViewTypes: ViewType<DataPoint>[] = [
         icon: ShowChartRounded,
         chartTitle: 'Learning Progress',
         dataProcessor: (data: DataPoint[]) =>
-            data.map(
-                (point): ProcessedDataPoint => ({
-                    epoch: point.epoch,
-                    gap: point.zsharp - point.sgd,
-                }),
-            ),
+            data.map((point): ProcessedDataPoint => ({
+                epoch: point.epoch,
+                gap: point.zsharp - point.sgd,
+            })),
         chartConfig: {
             ...baseChart,
             yAxisFormatter: pctFormatter(1),

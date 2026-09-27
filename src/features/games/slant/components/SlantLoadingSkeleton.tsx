@@ -55,8 +55,7 @@ export function SlantLoadingSkeleton({
                         .map(
                             () =>
                                 new Array(cols + 1).fill(null) as (
-                                    | number
-                                    | null
+                                    number | null
                                 )[],
                         ),
                     satisfiedNodes: new Set<string>(),

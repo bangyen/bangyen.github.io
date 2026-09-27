@@ -55,7 +55,7 @@ globalThis.ResizeObserver = class {
     disconnect = vi.fn();
     observe = vi.fn();
     unobserve = vi.fn();
-} as unknown as typeof ResizeObserver;
+};
 
 // Mock TextEncoder for Node.js environment
 globalThis.TextEncoder = class TextEncoder {
@@ -82,7 +82,7 @@ globalThis.TextDecoder = class TextDecoder {
             bytes instanceof ArrayBuffer ? new Uint8Array(bytes) : bytes;
         return Buffer.from(array).toString('utf-8');
     }
-} as unknown as typeof TextDecoder;
+};
 
 // Mock Response for fetch and decompression
 Object.defineProperty(globalThis, 'Response', {
