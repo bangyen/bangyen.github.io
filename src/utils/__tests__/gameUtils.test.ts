@@ -1,10 +1,6 @@
 import { describe, it, expect } from 'vitest';
 
-import {
-    createGameReducer,
-    getPosKey,
-    type BaseGameAction,
-} from '../gameUtils';
+import { createGameReducer, getPosKey } from '../gameUtils';
 
 describe('gameUtils', () => {
     describe('getPosKey', () => {
@@ -86,21 +82,11 @@ describe('gameUtils', () => {
             const reducer = createGameReducer({ getInitialState });
             const state = { rows: 5, cols: 5 };
 
-            expect(
-                reducer(state, { type: 'resize', rows: 3 } as BaseGameAction<{
-                    rows: number;
-                    cols: number;
-                }>),
-            ).toEqual({
+            expect(reducer(state, { type: 'resize', rows: 3 })).toEqual({
                 rows: 3,
                 cols: 5,
             });
-            expect(
-                reducer(state, { type: 'resize', cols: 3 } as BaseGameAction<{
-                    rows: number;
-                    cols: number;
-                }>),
-            ).toEqual({
+            expect(reducer(state, { type: 'resize', cols: 3 })).toEqual({
                 rows: 5,
                 cols: 3,
             });
@@ -111,12 +97,7 @@ describe('gameUtils', () => {
                 getInitialState: (r, c) => ({ rows: r, cols: c }),
             });
             const state = { rows: 5, cols: 5 };
-            expect(
-                reducer(state, { type: 'resize' } as BaseGameAction<{
-                    rows: number;
-                    cols: number;
-                }>),
-            ).toBe(state);
+            expect(reducer(state, { type: 'resize' })).toBe(state);
         });
 
         it('should work without customHandler', () => {

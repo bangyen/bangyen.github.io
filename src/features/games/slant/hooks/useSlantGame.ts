@@ -74,7 +74,7 @@ export function useSlantGame() {
     // Keep refs in sync for the worker.  The worker only reads these from
     // async callbacks, so committing them in an effect is soon enough.
     useEffect(() => {
-        dispatchRef.current = dispatch as unknown as SlantDispatch;
+        dispatchRef.current = dispatch;
         dimsRef.current = { rows, cols };
     });
 
@@ -98,7 +98,7 @@ export function useSlantGame() {
             if (!gridRow) return;
             const current = gridRow[c];
             const target = isRight ? 2 : 1;
-            const next = (current === target ? 0 : target) as CellState;
+            const next = current === target ? 0 : target;
 
             if (isInitial) {
                 dispatch({ type: 'toggle', row: r, col: c, reverse: isRight });

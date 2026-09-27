@@ -71,7 +71,7 @@ function buildHydrateState(
         errorNodes: new Set<string>(),
         cycleCells: new Set<string>(),
         satisfiedNodes: new Set<string>(),
-    } as unknown as SlantState;
+    };
 }
 
 /**
