@@ -14,20 +14,12 @@ describe('useCanvas', () => {
             })),
         );
 
-        vi.stubGlobal(
-            'requestAnimationFrame',
-            vi.fn().mockImplementation((cb: FrameRequestCallback) => {
-                setTimeout(() => {
-                    cb(performance.now());
-                }, 0);
-            }),
-        );
-        vi.stubGlobal(
-            'cancelAnimationFrame',
-            vi.fn().mockImplementation((id: number) => {
-                clearTimeout(id);
-            }),
-        );
+        // Record frame requests without running them.  Deferring the callback
+        // let the render loop re-enter requestAnimationFrame after the stub was
+        // torn down, which surfaced as an unhandled ReferenceError once vitest
+        // began failing runs on those.  No test here drives the loop.
+        vi.stubGlobal('requestAnimationFrame', vi.fn().mockReturnValue(1));
+        vi.stubGlobal('cancelAnimationFrame', vi.fn());
     });
 
     it('returns a ref', () => {
