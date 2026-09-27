@@ -187,16 +187,19 @@ function ResearchChartInner<T>({
 }: ResearchChartProps<T>) {
     const { sm: isMobile } = useMobileContext();
 
+    // recharts types the formatter's arguments as ValueType/NameType, which
+    // admit strings and arrays.  Accept that widened input and narrow here, so
+    // the chart configs keep their (number, string) contract.
     const tooltipFormatter = useCallback(
-        (value: number | undefined, name: string | undefined) => {
-            if (value === undefined) {
-                throw new Error(
-                    `ResearchChart tooltip: value is undefined for "${String(name)}"`,
+        (value: unknown, name: unknown) => {
+            if (typeof value !== 'number') {
+                throw new TypeError(
+                    `ResearchChart tooltip: expected a numeric value for "${String(name)}", got ${String(value)}`,
                 );
             }
-            if (name === undefined) {
-                throw new Error(
-                    `ResearchChart tooltip: name is undefined for value ${String(value)}`,
+            if (typeof name !== 'string') {
+                throw new TypeError(
+                    `ResearchChart tooltip: expected a string name for value ${String(value)}`,
                 );
             }
             return currentChartConfig.tooltipFormatter(value, name);
