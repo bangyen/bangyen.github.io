@@ -29,9 +29,6 @@ updates:
           # v7 is ESM-only; vite.config.ts loads it through require.
           - dependency-name: rollup-plugin-visualizer
             update-types: ['version-update:semver-major']
-          # Vite 8 breaks vitest worker startup (fails under vitest 4 and 5).
-          - dependency-name: vite
-            update-types: ['version-update:semver-major']
     - package-ecosystem: github-actions
       directory: /
       schedule:
