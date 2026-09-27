@@ -9,10 +9,10 @@
         "@emotion/styled": "^11.14.1",
         "@mui/icons-material": "^9.4.0",
         "@mui/material": "^9.4.0",
-        "react": "^19.2.3",
-        "react-dom": "^19.2.3",
-        "react-router-dom": "^7.12.0",
-        "recharts": "^3.2.1"
+        "react": "^19.3.0",
+        "react-dom": "^19.3.0",
+        "react-router-dom": "^7.18.4",
+        "recharts": "^3.10.1"
     },
     "scripts": {
         "start": "vite",
@@ -86,8 +86,8 @@
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.0",
         "@types/node": "^25.2.2",
-        "@types/react": "^19.2.2",
-        "@types/react-dom": "^19.2.2",
+        "@types/react": "^19.3.0",
+        "@types/react-dom": "^19.3.0",
         "@vitejs/plugin-react": "^5.1.2",
         "@vitest/coverage-v8": "^4.0.18",
         "eslint": "^9.39.2",
