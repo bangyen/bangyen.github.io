@@ -82,6 +82,12 @@ export default defineConfig(() => {
             esbuild: {
                 drop: ['console', 'debugger'],
             },
+            // Terser squeezes noticeably more out of the vendor chunks than
+            // esbuild does, which keeps the JS budget satisfiable.
+            minify: 'terser',
+            terserOptions: {
+                compress: { passes: 3 },
+            },
             // CSS code splitting
             cssCodeSplit: true,
             // Chunk size warnings - reduced to catch issues earlier
