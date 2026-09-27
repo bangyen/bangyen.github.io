@@ -4,7 +4,6 @@
 import { renderHook } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 
-import type { DragProps } from '../../../hooks/useDrag';
 import { getInput, getOutput, useHandler } from '../calculatorHelpers';
 
 describe('Lights Out Calculator UI Helpers', () => {
@@ -47,23 +46,20 @@ describe('Lights Out Calculator UI Helpers', () => {
         it('calls getters with correct coordinates', () => {
             const getProps = getInput(
                 mockGetters,
-                vi.fn(
-                    (pos: string) =>
-                        ({
-                            onMouseDown: vi.fn(),
-                            onMouseEnter: vi.fn(),
-                            onFocus: vi.fn(),
-                            onTouchStart: vi.fn(),
-                            onKeyDown: vi.fn(),
-                            role: 'button',
-                            tabIndex: 0,
-                            'data-pos': pos,
-                            sx: {
-                                touchAction: 'none' as const,
-                                transition: 'none',
-                            },
-                        }) as DragProps,
-                ),
+                vi.fn((pos: string) => ({
+                    onMouseDown: vi.fn(),
+                    onMouseEnter: vi.fn(),
+                    onFocus: vi.fn(),
+                    onTouchStart: vi.fn(),
+                    onKeyDown: vi.fn(),
+                    role: 'button',
+                    tabIndex: 0,
+                    'data-pos': pos,
+                    sx: {
+                        touchAction: 'none' as const,
+                        transition: 'none',
+                    },
+                })),
             );
             getProps(1, 2);
             expect(mockGetters.getColor).toHaveBeenCalledWith(1, 2);

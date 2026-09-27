@@ -21,7 +21,7 @@ function makeMockState(overrides: Partial<SlantState> = {}): SlantState {
         cycleCells: new Set(['1,1']),
         satisfiedNodes: new Set(['2,2']),
         ...overrides,
-    } as SlantState;
+    };
 }
 
 describe('serializeSlantState', () => {

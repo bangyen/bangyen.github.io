@@ -37,7 +37,7 @@ class MockWorker {
         cycleCells: Set<string>;
     }) {
         this.onmessage?.({
-            data: { type: 'RESULT', payload } as SolverMessage,
+            data: { type: 'RESULT', payload },
         });
     }
 

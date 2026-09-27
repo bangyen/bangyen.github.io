@@ -211,8 +211,7 @@ export function useBaseGame<
 
     useDebouncedEffect(
         () => {
-            const serialize =
-                persistence?.serialize ?? ((s: S) => s as unknown);
+            const serialize = persistence?.serialize ?? ((s: S) => s);
             localStorage.setItem(
                 persistenceKey,
                 JSON.stringify(serialize(state)),

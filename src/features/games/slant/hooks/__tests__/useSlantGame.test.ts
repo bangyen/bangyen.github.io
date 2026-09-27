@@ -81,7 +81,7 @@ describe('useSlantGame', () => {
             handleNextAsync: vi.fn(),
             prefetch: vi.fn(),
             cancelGeneration: vi.fn(),
-        } as any);
+        });
 
         vi.mocked(useAnalysisMode).mockReturnValue({
             analysisMoves: new Map(),
@@ -93,14 +93,14 @@ describe('useSlantGame', () => {
             handleAnalysisApply: vi.fn(),
             handleBoxClick: vi.fn(),
             handleOpenAnalysis: vi.fn(),
-        } as any);
+        });
 
         vi.mocked(useDrag).mockReturnValue({
             isDragging: false,
             draggingButton: null,
             getDragProps: mockGetDragProps,
-            lastTouchTime: { current: 0 } as React.RefObject<number>,
-        } as any);
+            lastTouchTime: { current: 0 },
+        });
     });
 
     it('returns the flattened game state shape', () => {

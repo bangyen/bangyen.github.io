@@ -103,8 +103,8 @@ describe('useLightsOutGame', () => {
             isDragging: false,
             draggingButton: null,
             getDragProps: mockGetDragProps,
-            lastTouchTime: { current: 0 } as React.RefObject<number>,
-        } as any);
+            lastTouchTime: { current: 0 },
+        });
 
         vi.mocked(useSkipTransition).mockReturnValue(false);
     });
