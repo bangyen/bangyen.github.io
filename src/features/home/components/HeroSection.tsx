@@ -191,7 +191,7 @@ export function HeroSection(): React.ReactElement {
                                             });
                                     }
                                 }}
-                                aria-label="View featured work"
+                                aria-label="View Work"
                                 sx={heroCtaButtonSx}
                             >
                                 <Typography sx={heroCtaTextSx}>
