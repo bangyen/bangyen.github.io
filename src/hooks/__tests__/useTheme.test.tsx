@@ -22,7 +22,12 @@ describe('useTheme (ThemeProvider and useThemeContext)', () => {
                 matches: false,
                 media: query,
                 onchange: null,
+                // The MediaQueryList type still declares the legacy
+                // members, so the mock must provide them; the code under
+                // test only ever calls add/removeEventListener.
+                // eslint-disable-next-line @typescript-eslint/no-deprecated
                 addListener,
+                // eslint-disable-next-line @typescript-eslint/no-deprecated
                 removeListener,
                 addEventListener: addListener,
                 removeEventListener: removeListener,
